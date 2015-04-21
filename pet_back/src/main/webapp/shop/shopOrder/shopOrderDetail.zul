@@ -1,0 +1,70 @@
+<?page title="订单详情" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./shopOrderDetialWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="shopOrderDetialWin" border="normal" title="订单详情" apply="com.lvmama.pet.web.shop.shopOrder.EditShopOrderAction">
+	<grid>
+		<columns>
+			<column width="120px" height="20px"></column>
+			<column></column>
+		</columns>
+		<rows>	
+			<row>
+				<hbox>订单编号：</hbox>
+				<hbox><label value="@{saction.shopOrder.orderId}"/></hbox>
+			</row>
+			<row>
+				<hbox>用户名：</hbox>
+				<hbox><label value="@{saction.shopOrder.userName}"/></hbox>
+			</row>
+			<row>
+				<hbox>产品编号：</hbox>
+				<hbox><label value="@{saction.shopOrder.productId}"/></hbox>
+			</row>
+			<row>
+				<hbox>兑换时间：</hbox>
+				<hbox><label value="@{saction.shopOrder.createTime}"/></hbox>
+			</row>
+			<row>
+				<hbox>产品类型：</hbox>
+				<hbox><label value="@{saction.shopOrder.formatProductType}"/></hbox>
+			</row>
+			<row>
+				<hbox>产品名称：</hbox>
+				<hbox><label value="@{saction.shopOrder.productName}"/></hbox>
+			</row>
+			<row>
+				<hbox>兑换数量：</hbox>
+				<hbox><label value="@{saction.shopOrder.quantity}"/></hbox>
+			</row>
+			<row>
+				<hbox>所用积分：</hbox>
+				<hbox><label value="@{saction.shopOrder.oughtPay}"/></hbox>
+			</row>
+			<row>
+				<hbox>收货人姓名：</hbox>
+				<hbox><label value="@{saction.shopOrder.name}"/></hbox>
+			</row>
+			<row>
+				<hbox>收货人地址：</hbox>
+				<hbox><label value="@{saction.shopOrder.address}"/></hbox>
+			</row>
+			<row>
+				<hbox>收货人手机：</hbox>
+				<hbox><label value="@{saction.shopOrder.mobile}"/></hbox>
+			</row>
+			<row>
+				<hbox>订单状态：</hbox>
+				<hbox><label value="@{saction.shopOrder.formatOrderStatus}"/></hbox>
+			</row>
+			<row>
+				<hbox>订单产品信息：</hbox>
+				<hbox><label value="@{saction.shopOrder.productInfo}"/></hbox>
+			</row>
+			<row height="80px">
+                <hbox>备注：</hbox>
+                <hbox><label value="@{saction.shopOrder.remark}"/></hbox>
+            </row>			
+		</rows>		
+	</grid>
+	</window>
+</zk>

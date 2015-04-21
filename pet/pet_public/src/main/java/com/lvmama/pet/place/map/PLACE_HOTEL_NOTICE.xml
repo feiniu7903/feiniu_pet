@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PLACE_HOTEL_NOTICE" >
+  <typeAlias alias="placeHoteNotice" type="com.lvmama.comm.pet.po.place.PlaceHotelNotice" />
+  <resultMap id="BaseResultMap" class="placeHoteNotice" >
+    <result column="NOTICE_ID" property="noticeId"  />
+    <result column="PLACE_ID" property="placeId"  />
+    <result column="NOTICE_CONTENT" property="noticeContent"  />
+    <result column="NOTICE_STARTTIME" property="noticeStartTime"  />
+    <result column="NOTICE_ENDTIME" property="noticeEndTime"  />
+    <result column="NOTICE_CREATETIME" property="noticeCreateTime"  />
+    <result column="NOTICE_TYPE" property="noticeType"  />
+  </resultMap>
+   
+  <select id="queryAllPlaceHoteNotice" resultMap="BaseResultMap" parameterClass="placeHoteNotice">
+		select * from place_hotel_notice where 1 = 1
+		<isNotEmpty property="placeId" prepend=" AND ">
+			PLACE_ID=#placeId#
+		</isNotEmpty>
+		<isEqual property="validNotice" compareValue="true" prepend=" AND ">
+ 			<![CDATA[ NOTICE_ENDTIME>=SYSDATE ]]> AND
+ 			<![CDATA[ NOTICE_STARTTIME<=SYSDATE ]]>
+		</isEqual>
+		<isEqual property="noticeType" compareValue="RECOMMEND" prepend=" AND ">
+			NOTICE_TYPE=#noticeType#
+		</isEqual>
+		<isEqual property="noticeType" compareValue="SCENIC" prepend="AND">
+			NOTICE_TYPE=#noticeType#
+		</isEqual>
+		<isEqual property="noticeType" compareValue="INTERNAL" prepend=" AND ">
+			( NOTICE_TYPE = #noticeType# or NOTICE_TYPE = 'ALL'   )
+		</isEqual> 
+		<isEqual property="noticeType" compareValue="ALL" prepend=" AND ">
+			( NOTICE_TYPE = #noticeType# or NOTICE_TYPE = 'INTERNAL'  ) 
+		</isEqual>
+		order by NOTICE_CREATETIME desc
+  </select>
+  
+  <select id="queryPlacehotelNoticeByNoticeId" resultMap="BaseResultMap" parameterClass="placeHoteNotice">
+  		select * from place_hotel_notice where NOTICE_ID = #noticeId#
+  </select>
+  
+  <insert id="insert" parameterClass="placeHoteNotice">
+	    <selectKey resultClass="java.lang.Long" keyProperty="noticeId" >
+	      select place_hotel_notice_seq.nextval as placePhotoId from DUAL
+	    </selectKey>
+		insert into place_hotel_notice (NOTICE_ID,PLACE_ID,NOTICE_CONTENT,NOTICE_STARTTIME,
+		NOTICE_ENDTIME,NOTICE_CREATETIME,NOTICE_TYPE)
+		values (#noticeId#, #placeId#, #noticeContent#,
+		<isNotEmpty property="noticeStartTime" prepend=" ">#noticeStartTime#</isNotEmpty>
+		<isEmpty property="noticeStartTime" prepend=" ">sysdate</isEmpty>
+		,#noticeEndTime#,sysdate,#noticeType#)
+  </insert>
+  <update id="update" parameterClass="placeHoteNotice">
+		update PLACE_HOTEL_NOTICE set  
+			<isNotEmpty prepend=" " property="noticeContent">
+				NOTICE_CONTENT = #noticeContent#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="noticeStartTime">
+				NOTICE_STARTTIME = #noticeStartTime#
+			</isNotEmpty>
+			<isEmpty prepend="," property="noticeStartTime">
+				NOTICE_STARTTIME = sysdate
+			</isEmpty>
+			<isNotEmpty prepend="," property="noticeEndTime">
+				NOTICE_ENDTIME = #noticeEndTime#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="noticeType">
+				NOTICE_TYPE = #noticeType#
+			</isNotEmpty>
+		where NOTICE_ID = #noticeId#
+	</update>
+	<delete id="delete" parameterClass="placeHoteNotice">
+		delete PLACE_HOTEL_NOTICE where NOTICE_ID = #noticeId#
+	</delete>
+</sqlMap>

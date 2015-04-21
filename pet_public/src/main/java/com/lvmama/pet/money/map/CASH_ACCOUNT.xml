@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CASH_ACCOUNT">
+	<!-- 别名 -->
+    <typeAlias alias="cashAccount" type="com.lvmama.comm.pet.po.money.CashAccount"/>
+	<!-- 查询结果集 -->
+    <resultMap id="cashAccountResult" class="cashAccount">
+        <result property="cashAccountId" column="CASH_ACCOUNT_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="rechargeBalance" column="RECHARGE_BALANCE"/>
+        <result property="refundBalance" column="REFUND_BALANCE"/>
+        <result property="bonusBalance" column="BONUS_BALANCE"/>
+        <result property="valid" column="VALID"/>
+        <result property="mobileNumber" column="MOBILE_NUMBER"/>
+        <result property="paymentPassword" column="PAYMENT_PASSWORD"/>
+        <result property="lastPayValidateTime" column="LAST_PAY_VALIDATE_TIME"/>
+        <result property="memo" column="MEMO"/>
+        <result property="newBonusBalance" column="NEW_BONUS_BALANCE"/>
+    </resultMap>
+
+	<resultMap class="com.lvmama.comm.vo.CashAccountVO" id="cashAccountVO">
+		<result column="MAX_PAY_MONEY" property="maxPayMoney" />
+		<result column="TOTAL_MONEY" property="totalMoney" />
+		<result column="MAX_DRAW_MONEY" property="maxDrawMoney" />
+		<result column="RECHARGE" property="rechargeBalance" />
+		<result column="REFUND" property="refundBalance" />
+		<result column="BONUS_BALANCE" property="bonusBalance" />
+		<result column="MOBILE_NUMBER" property="mobileNumber" />
+		<result column="PAYMENT_PASSWORD" property="paymentPassword" />
+		<result column="CASH_ACCOUNT_ID" property="cashAccountId" />
+		<result column="USER_ID" property="userId" />
+		<result column="VALID" property="valid" />
+		<result column="LAST_PAY_VALIDATE_TIME" property="lastPayValidateTime"/>
+		<result column="NEW_BONUS_BALANCE" property="newBonusBalance" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	CASH_ACCOUNT_ID ,
+        	USER_ID ,
+        	RECHARGE_BALANCE ,
+        	REFUND_BALANCE ,
+        	BONUS_BALANCE,
+        	NEW_BONUS_BALANCE,
+        	VALID ,
+        	MOBILE_NUMBER ,
+        	PAYMENT_PASSWORD,
+        	LAST_PAY_VALIDATE_TIME,
+        	MEMO
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="cashAccountId">
+	             CASH_ACCOUNT_ID = #cashAccountId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="userId">
+	             USER_ID = #userId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="rechargeBalance">
+	             RECHARGE_BALANCE = #rechargeBalance#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="refundBalance">
+	             REFUND_BALANCE = #refundBalance#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="bonusBalance">
+	             BONUS_BALANCE = #bonusBalance#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="newBonusBalance">
+	             NEW_BONUS_BALANCE = #newBonusBalance#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="valid">
+	             VALID = #valid#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="mobileNumber">
+	             MOBILE_NUMBER = #mobileNumber#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="paymentPassword">
+	             PAYMENT_PASSWORD = #paymentPassword#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="cashAccount">
+				<selectKey keyProperty="cashAccountId" resultClass="java.lang.Long">
+					SELECT CASH_ACCOUNT_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        CASH_ACCOUNT (
+        	CASH_ACCOUNT_ID ,
+        	USER_ID ,
+        	RECHARGE_BALANCE ,
+        	REFUND_BALANCE ,
+        	BONUS_BALANCE ,
+        	NEW_BONUS_BALANCE,
+        	VALID ,
+        	MOBILE_NUMBER ,
+        	PAYMENT_PASSWORD,
+        	LAST_PAY_VALIDATE_TIME
+        ) VALUES (
+        	#cashAccountId# ,
+        	#userId# ,
+        	#rechargeBalance# ,
+        	#refundBalance# ,
+        	#bonusBalance# ,
+        	#newBonusBalance#,
+        	#valid# ,
+        	#mobileNumber# ,
+        	#paymentPassword#,
+        	#lastPayValidateTime#
+        )
+    ]]>
+    </insert>
+    <!-- 查询记录，根据主键值 -->
+    <select id="getCashAccountById" resultMap="cashAccountResult">
+	    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from CASH_ACCOUNT 
+	        where 
+						CASH_ACCOUNT_ID = #cashAccountId# 
+	    ]]>
+    </select>
+    <!-- 查询记录，根据用户id -->
+    <select id="getCashAccountByUserId" resultMap="cashAccountResult">
+	    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from CASH_ACCOUNT 
+	        where 
+						USER_ID = #userId# 
+	    ]]>
+    </select>
+    <!-- 查询记录，根据用户号 -->
+    <select id="getCashAccountByUserNo" resultMap="cashAccountResult">
+	    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from CASH_ACCOUNT CA
+	        where CA.USER_ID IN (SELECT UU.USER_ID FROM USER_USER UU WHERE UU.USER_NO=#userNo# )
+	    ]]>
+    </select>
+    <!-- 查询记录 根据特定条件 -->
+    <select id="queryCashAccountByParam"  resultMap="cashAccountResult" parameterClass="java.util.Map">
+       select <include refid="commonColumns"/> from CASH_ACCOUNT 
+		<include refid="dynamicWhere"/>    
+    </select>
+    
+    
+	<select id="queryMoneyAccount" resultMap="cashAccountVO"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+			SELECT DECODE(SIGN((RECHARGE + REFUND - FREEZE)),
+              -1,
+              0,
+              (RECHARGE + REFUND - FREEZE)) AS MAX_PAY_MONEY,
+       		   DECODE(SIGN((RECHARGE + REFUND)), -1, 0, (RECHARGE + REFUND)) AS TOTAL_MONEY,
+		       DECODE(SIGN((REFUND - FREEZE)), -1, 0, (REFUND - FREEZE)) AS MAX_DRAW_MONEY,
+		       DECODE(SIGN(RECHARGE), -1, 0, RECHARGE) AS RECHARGE,
+		       DECODE(SIGN(REFUND), -1, 0, REFUND) AS REFUND,
+		       DECODE(SIGN(BONUS_BALANCE), -1, 0, BONUS_BALANCE) AS BONUS_BALANCE,
+		       DECODE(SIGN(NEW_BONUS_BALANCE), -1, 0, NEW_BONUS_BALANCE) AS NEW_BONUS_BALANCE,
+		       MOBILE_NUMBER,
+		       PAYMENT_PASSWORD,
+		       CASH_ACCOUNT_ID,USER_ID,VALID,LAST_PAY_VALIDATE_TIME
+		  FROM (SELECT DISTINCT NVL(SUM(CASH_FREEZE_QUEUE.FREEZE_AMOUNT)
+		                            OVER(PARTITION BY
+		                                 CASH_FREEZE_QUEUE.CASH_ACCOUNT_ID),
+		                            0) AS FREEZE,
+		                        NVL(CASH_ACCOUNT.RECHARGE_BALANCE, 0) AS RECHARGE,
+		                        NVL(CASH_ACCOUNT.REFUND_BALANCE, 0) AS REFUND,
+		                        NVL(CASH_ACCOUNT.BONUS_BALANCE, 0) AS BONUS_BALANCE,
+		                        NVL(CASH_ACCOUNT.NEW_BONUS_BALANCE, 0) AS NEW_BONUS_BALANCE,
+		                        MOBILE_NUMBER,
+		                        PAYMENT_PASSWORD,
+		                        CASH_ACCOUNT.CASH_ACCOUNT_ID, CASH_ACCOUNT.USER_ID,
+		                        CASH_ACCOUNT.VALID,
+		                        CASH_ACCOUNT.LAST_PAY_VALIDATE_TIME
+		          FROM CASH_ACCOUNT
+		          LEFT JOIN CASH_FREEZE_QUEUE ON CASH_ACCOUNT.CASH_ACCOUNT_ID =
+		                                               CASH_FREEZE_QUEUE.CASH_ACCOUNT_ID
+		         WHERE CASH_ACCOUNT.USER_ID = #userId#)
+					]]>
+	</select>
+    
+    <select id="queryMoneyAccountByUserNo" resultMap="cashAccountVO"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			SELECT DECODE(SIGN((RECHARGE + REFUND - FREEZE)),
+              -1,
+              0,
+              (RECHARGE + REFUND - FREEZE)) AS MAX_PAY_MONEY,
+       		   DECODE(SIGN((RECHARGE + REFUND)), -1, 0, (RECHARGE + REFUND)) AS TOTAL_MONEY,
+		       DECODE(SIGN((REFUND - FREEZE)), -1, 0, (REFUND - FREEZE)) AS MAX_DRAW_MONEY,
+		       DECODE(SIGN(RECHARGE), -1, 0, RECHARGE) AS RECHARGE,
+		       DECODE(SIGN(REFUND), -1, 0, REFUND) AS REFUND,
+		       DECODE(SIGN(BONUS_BALANCE), -1, 0, BONUS_BALANCE) AS BONUS_BALANCE,
+		       DECODE(SIGN(NEW_BONUS_BALANCE), -1, 0, NEW_BONUS_BALANCE) AS NEW_BONUS_BALANCE,
+		       MOBILE_NUMBER,
+		       PAYMENT_PASSWORD,
+		       CASH_ACCOUNT_ID,
+		       USER_ID,
+		       VALID,
+		       LAST_PAY_VALIDATE_TIME
+		  FROM (SELECT DISTINCT NVL(SUM(CASH_FREEZE_QUEUE.FREEZE_AMOUNT)
+		                            OVER(PARTITION BY
+		                                 CASH_FREEZE_QUEUE.CASH_ACCOUNT_ID),
+		                            0) AS FREEZE,
+		                        NVL(CASH_ACCOUNT.RECHARGE_BALANCE, 0) AS RECHARGE,
+		                        NVL(CASH_ACCOUNT.REFUND_BALANCE, 0) AS REFUND,
+		                        NVL(CASH_ACCOUNT.BONUS_BALANCE, 0) AS BONUS_BALANCE,
+		                         NVL(CASH_ACCOUNT.NEW_BONUS_BALANCE, 0) AS NEW_BONUS_BALANCE,
+		                        MOBILE_NUMBER,
+		                        PAYMENT_PASSWORD,
+		                        CASH_ACCOUNT.CASH_ACCOUNT_ID,
+		                        CASH_ACCOUNT.USER_ID,
+		                        CASH_ACCOUNT.VALID,
+		                        CASH_ACCOUNT.LAST_PAY_VALIDATE_TIME
+		          FROM CASH_ACCOUNT
+		          LEFT JOIN CASH_FREEZE_QUEUE ON CASH_ACCOUNT.CASH_ACCOUNT_ID =
+		                                               CASH_FREEZE_QUEUE.CASH_ACCOUNT_ID
+		         WHERE CASH_ACCOUNT.USER_ID IN (SELECT UU.USER_ID FROM USER_USER UU WHERE UU.USER_NO=#userNo# )
+		           AND CASH_ACCOUNT.VALID = 'Y')
+					]]>
+	</select>
+    
+    <insert id="createMoneyAccount" parameterClass="cashAccount">
+    	<selectKey keyProperty="cashAccountId" resultClass="java.lang.Long">
+			SELECT CASH_ACCOUNT_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		<![CDATA[
+	  INSERT INTO CASH_ACCOUNT
+	  (CASH_ACCOUNT_ID, USER_ID,RECHARGE_BALANCE, REFUND_BALANCE,BONUS_BALANCE, NEW_BONUS_BALANCE,VALID)
+		VALUES(#cashAccountId#,#userId# , 0, 0, 0, 0,'Y')  
+		]]>
+	</insert>
+	
+	<insert id="protect" parameterClass="java.util.Map">
+		<![CDATA[
+		  INSERT INTO CASH_PROTECT
+			  (BUSINESS_ID, COME_FROM, CREATE_TIME)
+			VALUES (#businessId#, #comeFrom#, SYSDATE)
+		]]>
+	</insert>
+	
+	<select id="selectProtectCount" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		select count(*) FROM  CASH_PROTECT WHERE 
+				BUSINESS_ID = #businessId#
+				AND COME_FROM = #comeFrom#
+	</select>
+	
+	<update id="updateReChargeBalance" parameterClass="java.util.Map">
+		UPDATE
+		CASH_ACCOUNT
+		SET
+		RECHARGE_BALANCE = RECHARGE_BALANCE + #amount#
+		WHERE CASH_ACCOUNT_ID=#cashAccountId#
+	</update>
+	
+    <select id="lock" parameterClass="java.lang.String">
+		<![CDATA[
+			SELECT 1 FROM  CASH_ACCOUNT WHERE  USER_ID = #userId# FOR UPDATE
+		]]>
+	</select>
+	
+	<update id="manipulateRefundBalance" parameterClass="java.util.Map">
+		UPDATE CASH_ACCOUNT	SET
+			REFUND_BALANCE = REFUND_BALANCE + #amount#
+			WHERE CASH_ACCOUNT_ID =	#cashAcountId#
+	</update>
+	
+	<update id="updateBonusBalance" parameterClass="java.util.Map">
+		UPDATE CASH_ACCOUNT	SET
+			BONUS_BALANCE = BONUS_BALANCE + #amount#
+			WHERE CASH_ACCOUNT_ID =	#cashAcountId#
+	</update>
+	
+	<update id="updateNewBonusBalance" parameterClass="java.util.Map">
+		UPDATE CASH_ACCOUNT	SET
+			NEW_BONUS_BALANCE = NEW_BONUS_BALANCE + #amount#
+			WHERE CASH_ACCOUNT_ID =	#cashAcountId#
+	</update>
+	
+	<update id="updateMobileNumber" parameterClass="java.util.Map">
+		<![CDATA[
+		UPDATE CASH_ACCOUNT
+		SET MOBILE_NUMBER = #mobileNumber# WHERE USER_ID = #userId#
+		]]>
+	</update>
+	<update id="updatePaymentPassword" parameterClass="java.util.Map">
+		<![CDATA[
+			UPDATE CASH_ACCOUNT
+			SET PAYMENT_PASSWORD = #paymentPassword# WHERE USER_ID = #userId#
+		]]>
+	</update>
+	
+	
+	<!-- 更新最后支付校验时间 -->
+	<update id="updateLastPayValidateTime" parameterClass="java.util.Map">
+		<![CDATA[
+		UPDATE CASH_ACCOUNT SET LAST_PAY_VALIDATE_TIME = #lastPayValidateTime# WHERE USER_ID = #userId#
+		]]>
+	</update>
+	
+	
+	<select id="balance" resultClass="java.lang.Long">
+		<![CDATA[
+			SELECT A - B - C
+			  FROM (SELECT NVL((SELECT SUM(AMOUNT) FROM CASH_CHANGE), 0) AS A,
+			               NVL((SELECT SUM(CASH_ACCOUNT.REFUND_BALANCE)
+			                     FROM CASH_ACCOUNT
+			                    WHERE CASH_ACCOUNT.REFUND_BALANCE >= 0),
+			                   0) AS B,
+			               NVL((SELECT SUM(CASH_ACCOUNT.RECHARGE_BALANCE)
+			                     FROM CASH_ACCOUNT
+			                    WHERE CASH_ACCOUNT.RECHARGE_BALANCE >= 0),
+			                   0) AS C,
+			               NVL((SELECT SUM(CASH_ACCOUNT.REFUND_BALANCE)
+			                     FROM CASH_ACCOUNT
+			                    WHERE CASH_ACCOUNT.REFUND_BALANCE < 0),
+			                   0) AS D,
+			               NVL((SELECT SUM(CASH_ACCOUNT.RECHARGE_BALANCE)
+			                     FROM CASH_ACCOUNT
+			                    WHERE CASH_ACCOUNT.RECHARGE_BALANCE < 0),
+			                   0) AS E
+			          FROM DUAL)
+			 WHERE A >= 0
+			   AND B >= 0
+			   AND C >= 0
+			   AND D = 0
+			   AND E = 0
+		]]>
+	</select>
+	<update id="changeCashAccountValidByParams" parameterClass="java.util.Map">
+		UPDATE CASH_ACCOUNT set VALID=#valid#,MEMO=#memo# where USER_ID=#userId#
+	</update>
+</sqlMap>

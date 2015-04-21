@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MOBILE_PUSH_SEND_TASK">
+  <resultMap class="com.lvmama.comm.pet.po.mobile.MobilePushSendTask" id="BaseResultMap">
+    <result column="MOBILE_PUSH_SEND_TASK_ID" property="mobilePushSendTaskId" />
+    <result column="MOBILE_PUSH_JOG_TASK_ID" property="mobilePushJogTaskId" />
+    <result column="PUSH_OBJECT_ID" property="pushObjectId" />
+    <result column="PLAFORM" property="plaform" />
+  </resultMap>
+  
+  <update id="syncJobToSendTaskByTaskId" parameterClass="java.util.HashMap">
+  	<![CDATA[ 
+	declare
+	    cursor c_job_task is
+	      select t.mobile_push_jog_task_id, t.plaform
+	        from MOBILE_PUSH_JOG_TASK$pushSuffix$ t
+	       where  t.mobile_push_jog_task_id=#taskId#;
+	    cursor c_mobile_push_device is
+	      select t.object_id from mobile_push_device t where t.plaform in ('IPHONE','IPAD');
+	  
+	    c_job_task_row           c_job_task%rowtype;
+	    c_mobile_push_device_row c_mobile_push_device%rowtype;
+	  begin
+	    for c_mobile_push_device_row in c_mobile_push_device loop
+	      for c_job_task_row in c_job_task loop
+	        insert into MOBILE_PUSH_SEND_TASK$pushSuffix$
+	          (mobile_push_send_task_id,
+	           mobile_push_jog_task_id,
+	           push_object_id,
+	           plaform)
+	        values
+	          (mobile_push_send_task_seq.nextval,
+	           c_job_task_row.mobile_push_jog_task_id,
+	           c_mobile_push_device_row.object_id,
+	           c_job_task_row.plaform);
+	      end loop;
+	    end loop;
+	    commit;
+	  end;
+	  ]]>
+  </update>
+
+  <select id="selectTotalMobilePushSendTask" resultClass="java.lang.Long">
+		select count(t.MOBILE_PUSH_SEND_TASK_ID) from MOBILE_PUSH_SEND_TASK t
+  </select>
+	
+  <select id="pagedQueryMobilePushSendTask" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+	select * from (select rownum rn, t.* from( select * from MOBILE_PUSH_SEND_TASK$pushSuffix$ where PLAFORM=#plaform# )
+	t where rownum <![CDATA[<=]]> #end# ) where rn <![CDATA[>=]]> #start#
+   </select>
+	
+  <select id="selectByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushSendTask" resultMap="BaseResultMap">
+    select MOBILE_PUSH_SEND_TASK_ID, MOBILE_PUSH_JOG_TASK_ID, PUSH_OBJECT_ID, PLAFORM
+    from MOBILE_PUSH_SEND_TASK$pushSuffix$
+    where MOBILE_PUSH_SEND_TASK_ID = #mobilePushSendTaskId:DECIMAL#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushSendTask">
+    delete from MOBILE_PUSH_SEND_TASK$pushSuffix$
+    where MOBILE_PUSH_SEND_TASK_ID = #mobilePushSendTaskId:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushSendTask">
+  	<selectKey keyProperty="mobilePushSendTaskId" resultClass="java.lang.Long">
+		SELECT MOBILE_PUSH_SEND_TASK_SEQ.nextval FROM DUAL
+	</selectKey>
+    insert into MOBILE_PUSH_SEND_TASK$pushSuffix$ (MOBILE_PUSH_SEND_TASK_ID, MOBILE_PUSH_JOG_TASK_ID,
+      PUSH_OBJECT_ID, PLAFORM)
+    values (#mobilePushSendTaskId:DECIMAL#, #mobilePushJogTaskId:DECIMAL#, #pushObjectId:VARCHAR#,
+      #plaform:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushSendTask">
+    insert into MOBILE_PUSH_SEND_TASK$pushSuffix$
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="mobilePushSendTaskId">
+        MOBILE_PUSH_SEND_TASK_ID
+      </isNotNull>
+      <isNotNull prepend="," property="mobilePushJogTaskId">
+        MOBILE_PUSH_JOG_TASK_ID
+      </isNotNull>
+      <isNotNull prepend="," property="pushObjectId">
+        PUSH_OBJECT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="plaform">
+        PLAFORM
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="mobilePushSendTaskId">
+        #mobilePushSendTaskId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="mobilePushJogTaskId">
+        #mobilePushJogTaskId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="pushObjectId">
+        #pushObjectId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="plaform">
+        #plaform:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushSendTask">
+    update MOBILE_PUSH_SEND_TASK$pushSuffix$
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="mobilePushJogTaskId">
+        MOBILE_PUSH_JOG_TASK_ID = #mobilePushJogTaskId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="pushObjectId">
+        PUSH_OBJECT_ID = #pushObjectId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="plaform">
+        PLAFORM = #plaform:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where MOBILE_PUSH_SEND_TASK_ID = #mobilePushSendTaskId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushSendTask">
+    update MOBILE_PUSH_SEND_TASK$pushSuffix$
+    set MOBILE_PUSH_JOG_TASK_ID = #mobilePushJogTaskId:DECIMAL#,
+      PUSH_OBJECT_ID = #pushObjectId:VARCHAR#,
+      PLAFORM = #plaform:VARCHAR#
+    where MOBILE_PUSH_SEND_TASK_ID = #mobilePushSendTaskId:DECIMAL#
+  </update>
+</sqlMap>

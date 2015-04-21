@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_BLACK_LIST" >
+  <typeAlias alias="ProdBlackList" type="com.lvmama.comm.bee.po.prod.ProdBlackList"/>
+  <resultMap id="BaseResultMap" class="ProdBlackList" >
+    <result column="BLACK_ID" property="blackId" />
+    <result column="BLACK_IS_PHONE" property="blackIsPhone" />
+    <result column="BLACK_PHONE_NUM" property="blackPhoneNum" />
+    <result column="BLACK_CIRCULATION" property="blackCirculation" />
+    <result column="BLACK_START_TIME" property="blackStartTime" />
+    <result column="BLACK_END_TIME" property="blackEndTime" />
+    <result column="BLACK_LIMIT" property="blackLimit" />
+    <result column="BLACK_REASON" property="blackReason" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="BLACK_CREATE_TIME" property="blackCreateTime" />
+  </resultMap>
+  
+  <sql id="commonColumns">
+	 <![CDATA[
+	 	 BLACK_ID,
+	     BLACK_IS_PHONE,
+		 BLACK_PHONE_NUM,
+		 BLACK_CIRCULATION,
+		 BLACK_START_TIME,
+		 BLACK_END_TIME,
+		 BLACK_LIMIT,
+		 BLACK_REASON,
+		 PRODUCT_ID,
+		 BLACK_CREATE_TIME
+	  ]]>
+  </sql>
+  
+   <insert id="insert" parameterClass="ProdBlackList">
+	    <selectKey keyProperty="blackId" resultClass="java.lang.Long">
+	      select LVMAMA_PET.PROD_BLACK_LIST_SEQ.nextval as id from DUAL
+	    </selectKey>
+	    insert into LVMAMA_PET.PROD_BLACK_LIST (
+	    	<include refid="commonColumns"/>
+	    	)
+	    values 
+	    	(#blackId#,#blackIsPhone#,#blackPhoneNum#,#blackCirculation#,#blackStartTime#,#blackEndTime#,#blackLimit#,#blackReason#,#productId#,sysdate)
+  </insert>
+   
+   <update id="update" parameterClass="ProdBlackList">
+   		update LVMAMA_PET.PROD_BLACK_LIST
+   		set BLACK_IS_PHONE = #blackIsPhone#
+   		and BLACK_CIRCULATION = #blackCirculation#
+   		and BLACK_START_TIME = #blackStartTime#
+   		and BLACK_END_TIME = #blackEndTime#
+   		and BLACK_LIMIT = #blackLimit#
+   		and BLACK_REASON = #blackReason#
+   		where BLACK_ID = #blackId# 
+   </update>
+   
+   <delete id="delete" parameterClass="java.lang.Long">
+		delete from LVMAMA_PET.PROD_BLACK_LIST where BLACK_ID = #blackId#
+   </delete>
+  	
+   	<select id="queryBlackListByParam" parameterClass="java.util.Map" resultMap="BaseResultMap">
+			 select black.*,ROWNUM RN from LVMAMA_PET.PROD_BLACK_LIST black
+			 where 1 = 1
+			 <isNotEmpty prepend="and" property="blackPhoneNum">
+				  black.BLACK_PHONE_NUM = #blackPhoneNum#
+			 </isNotEmpty>
+			 <isNotEmpty prepend="and" property="productId">
+			 	  black.PRODUCT_ID = #productId#
+			 </isNotEmpty>
+			 <isNotEmpty prepend="and" property="blackStartTime">
+			 	  black.BLACK_START_TIME = #blackStartTime#
+			 </isNotEmpty>
+			 <isNotEmpty prepend="and" property="blackEndTime">
+			 	  black.BLACK_END_TIME = #blackEndTime#
+			 </isNotEmpty>
+			 <isNotEmpty prepend="and" property="blackIsPhone">
+			 	  black.BLACK_IS_PHONE = #blackIsPhone#
+			 </isNotEmpty>
+			 <isNotEmpty prepend="AND" property="blackIsPhones">
+				<iterate property="blackIsPhones" open="(" close=")" conjunction="or">
+		        	black.BLACK_IS_PHONE = #blackIsPhones[]#
+		        </iterate>
+			 </isNotEmpty>
+			 <isNotEmpty prepend="and" property="validateTime">
+			 	#validateTime# BETWEEN black.BLACK_START_TIME AND black.BLACK_END_TIME
+			 </isNotEmpty>
+			order by black.BLACK_START_TIME
+	</select>
+  	
+  	<select id="queryBlackListByBlack" parameterClass="ProdBlackList" resultMap="BaseResultMap">
+		 select black.*,ROWNUM RN from LVMAMA_PET.PROD_BLACK_LIST black
+		 where 1 = 1
+		 <isNotEmpty prepend="and" property="blackPhoneNum">
+			  black.BLACK_PHONE_NUM = #blackPhoneNum#
+		 </isNotEmpty>
+		 <isNotEmpty prepend="and" property="productId">
+		 	  black.PRODUCT_ID = #productId#
+		 </isNotEmpty>
+	     <isNotEmpty prepend="and" property="blackIsPhone">
+		 	  black.BLACK_IS_PHONE = #blackIsPhone#
+		 </isNotEmpty>
+		 and (
+	     (#blackStartTime# BETWEEN black.BLACK_START_TIME AND black.BLACK_END_TIME)
+			or
+	 	 (#blackEndTime# BETWEEN black.BLACK_START_TIME AND black.BLACK_END_TIME)	)
+	</select>
+  	
+  	<select id="selectRowCount" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+  		 select count(*) from LVMAMA_PET.PROD_BLACK_LIST black
+		 where 1 = 1
+		 <isNotEmpty prepend="and" property="blackPhoneNum">
+			  black.BLACK_PHONE_NUM = #blackPhoneNum#
+		 </isNotEmpty>
+		 <isNotEmpty prepend="and" property="productId">
+		 	  black.PRODUCT_ID = #productId#
+		 </isNotEmpty>
+		 <isNotEmpty prepend="and" property="blackStartTime">
+		 	  black.BLACK_START_TIME = #blackStartTime#
+		 </isNotEmpty>
+		 <isNotEmpty prepend="and" property="blackEndTime">
+		 	  black.BLACK_END_TIME = #blackEndTime#
+		 </isNotEmpty>
+		 <isNotEmpty prepend="and" property="blackIsPhone">
+		 	  black.BLACK_IS_PHONE = #blackIsPhone#
+		 </isNotEmpty>
+		 <isNotEmpty prepend="AND" property="blackIsPhones">
+			<iterate property="blackIsPhones" open="(" close=")" conjunction="or">
+	        	black.BLACK_IS_PHONE = #blackIsPhones[]#
+	        </iterate>
+		 </isNotEmpty>
+		 <isNotEmpty prepend="and" property="validateTime">
+		 	#validateTime# BETWEEN black.BLACK_START_TIME AND black.BLACK_END_TIME
+		 </isNotEmpty>
+  	</select>
+</sqlMap>

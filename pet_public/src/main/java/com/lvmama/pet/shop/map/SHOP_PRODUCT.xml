@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SHOP_PRODUCT" >
+ 	<typeAlias alias="ShopProductCondition" type="com.lvmama.comm.pet.po.shop.ShopProductCondition"/>   
+	<resultMap id="ProductMap" class="com.lvmama.comm.pet.po.shop.ShopProduct">          
+		<result property="productId" column="PRODUCT_ID"/>
+		<result property="productCode" column="PRODUCT_CODE"/>
+		<result property="productName" column="PRODUCT_NAME"/>
+		<result property="pointChange" column="POINT_CHANGE"/>
+		<result property="marketPrice" column="MARKET_PRICE"/>
+		<result property="stocks" column="STOCKS"/>
+		<result property="isValid" column="IS_VALID"/>
+		<result property="productType" column="PRODUCT_TYPE"/>
+		<result property="changeType" column="CHANGE_TYPE"/>
+		<result property="isHotProduct" column="IS_HOT_PRODUCT"/>
+		<result property="isRecommend" column="IS_RECOMMEND"/>
+		<result property="pictures" column="PICTURES"/>
+		<result property="content" column="CONTENT"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="winningRate" column="WINNING_RATE"/>
+		<result property="beginTime" column="BEGIN_TIME"/>
+		<result property="endTime" column="END_TIME"/>
+		<result property="isValidate" column="IS_VALIDATE"></result>
+	</resultMap>
+	
+	<resultMap id="CouponProductMap" class="com.lvmama.comm.pet.po.shop.ShopProductCoupon" extends="ProductMap">
+		<result property="productCouponId" column="PRODUCT_COUPON_ID" />
+		<result property="couponId" column="COUPON_ID" />
+	</resultMap>
+	
+	<resultMap id="ShopProductConditionMap" class="ShopProductCondition">
+		<result property="shopProductConditionId" column="SHOP_PRODUCT_CONDITION_ID"/>
+		<result property="productId" column="PRODUCT_ID"/>
+		<result property="conditionX" column="CONDITION_X"/>
+		<result property="conditionY" column="CONDITION_Y"/>
+		<result property="conditionZ" column="CONDITION_Z"/>
+	</resultMap>
+	
+	<sql id="reuserSQL">
+		SELECT * FROM SHOP_PRODUCT
+		<dynamic prepend=" WHERE ">
+			<isNotNull property="productType" prepend=" AND ">PRODUCT_TYPE = #productType#</isNotNull>
+			<isNotNull property="changeType" prepend=" AND ">CHANGE_TYPE = #changeType#</isNotNull>
+			<isNotNull property="isHotProduct" prepend=" AND ">IS_HOT_PRODUCT = #isHotProduct#</isNotNull>
+			<isNotNull property="isRecommend" prepend=" AND ">IS_RECOMMEND = #isRecommend#</isNotNull>
+			<isNotNull property="productCode" prepend=" AND ">PRODUCT_CODE = #productCode#</isNotNull>
+			<isNotNull property="productName" prepend=" AND ">PRODUCT_NAME LIKE '%$productName$%'</isNotNull>
+			<isNotNull property="isValid" prepend=" AND ">IS_VALID = #isValid#</isNotNull>
+		    <isNotNull property="startPoints" prepend=" AND ">POINT_CHANGE &gt;= #startPoints#</isNotNull>
+		    <isNotNull property="endPoints" prepend=" AND ">POINT_CHANGE &lt;= #endPoints#</isNotNull>
+		</dynamic>	
+		order by MODIFY_TIME desc
+	</sql>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="ProductMap">
+		SELECT row_.* FROM ( 
+			SELECT rownum rowunm_,p.* from ( 
+				select * from(<include refid="reuserSQL"/> )
+			) p 
+		) row_ 
+		<dynamic prepend=" where">
+		<isNotNull prepend=" and " property="_startRow">
+			<![CDATA[row_.rowunm_ between  #_startRow# and #_endRow#]]> 
+		</isNotNull>
+		</dynamic>
+	</select>
+	
+	<select id="count" parameterClass="java.util.Map" resultClass="long">
+		select count(*) from (
+			<include refid="reuserSQL"/>
+		)
+	</select>	
+	
+	<select id="queryByPk" parameterClass="long" resultMap="ProductMap">
+		SELECT * FROM SHOP_PRODUCT WHERE PRODUCT_ID = #id#
+	</select>
+	
+	<select id="queryCouponByPk" parameterClass="long" resultMap="CouponProductMap">
+		SELECT * FROM SHOP_PRODUCT, SHOP_PRODUCT_COUPON WHERE  SHOP_PRODUCT.PRODUCT_ID = SHOP_PRODUCT_COUPON.PRODUCT_ID AND SHOP_PRODUCT.PRODUCT_ID = #id#
+	</select>	
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.shop.ShopProduct">
+		<selectKey resultClass="java.lang.Long" keyProperty="productId" >
+			select shop_product_seq.nextval as productId from DUAL
+		</selectKey>
+		INSERT INTO SHOP_PRODUCT 
+			(PRODUCT_ID,PRODUCT_CODE,PRODUCT_NAME,POINT_CHANGE,MARKET_PRICE,STOCKS,IS_VALID,CHANGE_TYPE,PRODUCT_TYPE,IS_HOT_PRODUCT,IS_RECOMMEND,PICTURES,CONTENT,CREATE_TIME,MODIFY_TIME,WINNING_RATE,BEGIN_TIME,END_TIME,IS_VALIDATE)
+		VALUES
+			(#productId#,#productCode#,#productName#,#pointChange#,#marketPrice#,#stocks#,#isValid#,#changeType#,#productType#,#isHotProduct#,#isRecommend#,#pictures#,#content#,sysdate,sysdate,#winningRate#,#beginTime#,#endTime#,#isValidate#)
+	</insert>
+	
+	<insert id="insertCouponProduct" parameterClass="com.lvmama.comm.pet.po.shop.ShopProductCoupon">
+		<selectKey resultClass="java.lang.Long" keyProperty="productCouponId" >
+			select shop_product_coupon_seq.nextval as productCouponId from DUAL
+		</selectKey>
+		INSERT INTO SHOP_PRODUCT_COUPON (PRODUCT_COUPON_ID, PRODUCT_ID, COUPON_ID) VALUES (#productCouponId#, #productId#, #couponId#)
+	</insert>
+	
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.shop.ShopProduct">
+		UPDATE
+			SHOP_PRODUCT
+		SET
+			PRODUCT_CODE = #productCode#,
+			PRODUCT_NAME = #productName#,
+			POINT_CHANGE = #pointChange#,
+			MARKET_PRICE = #marketPrice#,
+			STOCKS = #stocks#,
+			IS_VALID = #isValid#,
+			PRODUCT_TYPE = #productType#,
+			CHANGE_TYPE = #changeType#,
+			IS_HOT_PRODUCT = #isHotProduct#,
+			IS_RECOMMEND = #isRecommend#,
+			PICTURES = #pictures#,
+			CONTENT = #content#,
+			MODIFY_TIME = sysdate,
+			WINNING_RATE = #winningRate#,
+			BEGIN_TIME = #beginTime#,
+			END_TIME = #endTime#,
+			IS_VALIDATE = #isValidate#
+		WHERE
+			PRODUCT_ID = #productId#	
+	</update>
+	
+	<update id="updateCouponProduct" parameterClass="com.lvmama.comm.pet.po.shop.ShopProductCoupon">
+		UPDATE
+			SHOP_PRODUCT_COUPON
+		SET
+			COUPON_ID = #couponId#
+		WHERE
+			PRODUCT_ID = #productId#	
+	</update>
+	
+	<update id="reduceStocks" parameterClass="java.util.Map">
+		UPDATE
+			SHOP_PRODUCT
+		SET
+			STOCKS = STOCKS - #quantity#
+		WHERE
+			PRODUCT_ID = #productId#		
+	</update>
+	<select id="getShopProductConditionByShopProductId" parameterClass="long" resultMap="ShopProductConditionMap" >
+		 <![CDATA[
+		 	Select SHOP_PRODUCT_CONDITION_ID,PRODUCT_ID,CONDITION_X,CONDITION_Y,CONDITION_Z From SHOP_PRODUCT_CONDITION Where PRODUCT_ID=#productId# 
+		 ]]>  
+	</select>
+	<insert id="insertShopProductCondition" parameterClass="ShopProductCondition" >
+		<selectKey resultClass="java.lang.Long" keyProperty="shopProductConditionId" >
+			select SHOP_PRODUCT_CONDITION_SEQ.nextval as shopProductConditionId from DUAL
+		</selectKey>
+		INSERT INTO SHOP_PRODUCT_CONDITION 
+			(SHOP_PRODUCT_CONDITION_ID,PRODUCT_ID,CONDITION_X,CONDITION_Y,CONDITION_Z)
+		VALUES
+			(#shopProductConditionId#,#productId#,#conditionX#,#conditionY#,#conditionZ#)
+	</insert>
+	<delete id="deleteShopProductConditionByProductId" parameterClass="long">
+		Delete From SHOP_PRODUCT_CONDITION Where PRODUCT_ID =#productId#
+	</delete>
+</sqlMap>

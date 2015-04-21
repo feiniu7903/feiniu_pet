@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_CONTAINER_FROM_PLACE">
+	<typeAlias alias="prodContainerFromPlace" type="com.lvmama.comm.pet.po.prod.ProdContainerFromPlace" />
+
+	<resultMap id="prodContainerFromPlaceResultMap" class="prodContainerFromPlace">
+		<result column="CONTAINER_FROM_PLACE_ID" property="id" />
+		<result column="FROM_PLACE_CODE" property="fromPlaceCode" />
+		<result column="FROM_PLACE_SEQ" property="fromPlaceSeq" />
+		<result column="BLOCK_ID" property="blockId" />
+		<result column="SEARCH_BLOCK_ID" property="searchBlockId" />
+		<result column="IS_FROM_PLACE_HIDDEN" property="isFromPlaceHidden" />
+		<result column="CONTAINER_CODE" property="containerCode" />
+		<result column="FROM_PLACE_NAME" property="fromPlaceName" />
+		<result column="FROM_PLACE_ID" property="fromPlaceId" />
+	</resultMap>
+	
+	<select id="selectFromPlaces" parameterClass="java.util.Map" resultMap="prodContainerFromPlaceResultMap">
+		select * from prod_container_from_place
+		<dynamic prepend="where">
+			<isNotNull property="id" prepend="and">
+				CONTAINER_FROM_PLACE_ID = #id#
+			</isNotNull>
+			<isNotNull property="fromPlaceCode" prepend="and">
+				from_place_code = #fromPlaceCode#
+			</isNotNull>
+			<isNotNull property="fromPlaceSeq" prepend="and">
+				from_place_seq = #fromPlaceSeq#
+			</isNotNull>
+			<isNotNull property="blockId" prepend="and">
+				block_id = #blockId#
+			</isNotNull>
+			<isNotNull property="searchBlockId" prepend="and">
+				search_block_id = #searchBlockId#
+			</isNotNull>
+			<isNotNull property="isFromPlaceHidden" prepend="and">
+				nvl(is_from_place_hidden, 'N') = #isFromPlaceHidden#
+			</isNotNull>
+			<isNotNull property="containerCode" prepend="and">
+				container_code = #containerCode#
+			</isNotNull>
+			<isNotNull property="fromPlaceName" prepend="and">
+				from_place_name = #fromPlaceName#
+			</isNotNull>
+			<isNotNull property="fromPlaceId" prepend="and">
+				from_place_id = #fromPlaceId#
+			</isNotNull>
+		</dynamic>
+		order by container_code, from_place_seq,from_place_id
+	</select>
+	
+	<insert id="insertFromPlace" parameterClass="prodContainerFromPlace">
+		<selectKey resultClass="java.lang.Long" keyProperty="id">
+			select prod_container_from_place_seq.nextval as id from DUAL
+		</selectKey>
+		insert into prod_container_from_place (CONTAINER_FROM_PLACE_ID, from_place_code, from_place_seq, block_id, search_block_id,
+		is_from_place_hidden, container_code, from_place_name, from_place_id
+		) values (
+		 #id#, #fromPlaceCode#, #fromPlaceSeq#, #blockId#, #searchBlockId#,
+		 #isFromPlaceHidden#, #containerCode#, #fromPlaceName#, #fromPlaceId#
+		)
+	</insert>
+	
+	<update id="updateFromPlace" parameterClass="prodContainerFromPlace">
+		update prod_container_from_place 
+		set from_place_code = #fromPlaceCode#,
+		from_place_seq = #fromPlaceSeq#,
+		block_id = #blockId#,
+		search_block_id = #searchBlockId#,
+		is_from_place_hidden = #isFromPlaceHidden#,
+		container_code = #containerCode#,
+		from_place_name = #fromPlaceName#,
+		from_place_id = #fromPlaceId#
+		where CONTAINER_FROM_PLACE_ID = #id#
+	</update>
+	
+	<delete id="deleteFromPlace" parameterClass="java.lang.Long">
+		delete from prod_container_from_place where CONTAINER_FROM_PLACE_ID=#id#
+	</delete>
+</sqlMap>

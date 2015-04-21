@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.cashaccount.mapper.TntCashRechargeMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.cashaccount.po.TntCashRecharge">
+        <result property="cashRechargeId" column="CASH_RECHARGE_ID"/>
+        <result property="cashAccountId" column="CASH_ACCOUNT_ID"/>
+        <result property="billNo" column="bill_No"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="status" column="STATUS"/>
+        <result property="billTime" column="bill_Time"/>
+        <result property="bankAccount" column="bank_Account"/>
+        <result property="bankName" column="bank_Name"/>
+        <result property="bankAccountName" column="BANK_ACCOUNT_NAME"/>
+        <result property="reason" column="reason"/>
+        <result property="createTime" column="CREATE_TIME"/>
+	</resultMap>
+	
+	<resultMap id="queryResultMap" type="com.lvmama.tnt.cashaccount.po.TntCashRecharge" extends="baseResultMap">
+        <result property="tntUser.userName" column="user_name"/>
+        <result property="tntUser.realName" column="real_name"/>
+        <result property="tntUser.detail.companyName" column="COMPANY_NAME" />
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		CASH_RECHARGE_ID,CASH_ACCOUNT_ID,bill_No,bill_Time,reason,AMOUNT,bank_Account,bank_Name,BANK_ACCOUNT_NAME,STATUS,CREATE_TIME
+	    ]]>
+	</sql>
+
+	<insert id="insert" parameterType="com.lvmama.tnt.cashaccount.po.TntCashRecharge">
+		<selectKey resultType="java.lang.Long" keyProperty="cashRechargeId"
+			order="BEFORE">
+			select  TNT_CASH_RECHARGE_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_CASH_RECHARGE (
+        	CASH_RECHARGE_ID ,
+        	CASH_ACCOUNT_ID ,
+        	bill_No ,
+        	PAYMENT_GATEWAY ,
+        	AMOUNT ,
+        	STATUS ,
+        	bill_Time ,
+        	bank_Account ,
+        	bank_Name ,
+        	BANK_ACCOUNT_NAME,
+        	reason ,
+        	CREATE_TIME 
+        ) VALUES (
+        	#{cashRechargeId} ,
+        	#{cashAccountId,jdbcType=DECIMAL} ,
+        	#{billNo,jdbcType=VARCHAR} ,
+        	#{paymentGateway,jdbcType=VARCHAR} ,
+        	#{amount,jdbcType=DECIMAL} ,
+        	#{status,jdbcType=VARCHAR} ,
+        	#{billTime,jdbcType=VARCHAR} ,
+        	#{bankAccount,jdbcType=VARCHAR} ,
+        	#{bankName,jdbcType=VARCHAR} ,
+        	#{bankAccountName,jdbcType=VARCHAR} ,
+        	#{reason,jdbcType=VARCHAR} ,
+        	sysdate
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.cashaccount.po.TntCashRecharge">
+        UPDATE TNT_CASH_RECHARGE SET
+	        CASH_ACCOUNT_ID = #{cashAccountId} ,
+	        bill_Time = #{billTime,jdbcType=VARCHAR} ,
+	        bill_No = #{billNo,jdbcType=VARCHAR} ,
+	        bank_Account = #{bankAccount,jdbcType=VARCHAR} ,
+	        bank_Name = #{bankName,jdbcType=VARCHAR} ,
+	        BANK_ACCOUNT_NAME = #{bankAccountName,jdbcType=VARCHAR} ,
+	        reason = #{reason,jdbcType=VARCHAR} ,
+	        PAYMENT_GATEWAY = #{paymentGateway,jdbcType=VARCHAR} ,
+	        AMOUNT = #{amount,jdbcType=DECIMAL} ,
+	        STATUS = #{status,jdbcType=VARCHAR} 
+        WHERE 
+        	<if test="cashRechargeId !=null">
+	        	CASH_RECHARGE_ID = #{cashRechargeId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_CASH_RECHARGE WHERE
+        CASH_RECHARGE_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CASH_RECHARGE 
+	        WHERE 
+		        CASH_RECHARGE_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+			<if test="cashRechargeId != null and cashRechargeId !=''">
+				AND f.CASH_RECHARGE_ID = #{cashRechargeId}
+	       	</if> 
+			<if test="cashAccountId != null and cashAccountId !=''">
+				AND f.CASH_ACCOUNT_ID = #{cashAccountId}
+	       	</if> 
+			<if test="billNo != null and billNo !=''">
+				AND f.bill_No = #{billNo}
+	       	</if> 
+			<if test="paymentGateway != null and paymentGateway !=''">
+				AND f.PAYMENT_GATEWAY = #{paymentGateway}
+	       	</if> 
+			<if test="amount != null and amount !=''">
+				AND f.AMOUNT = #{amount}
+	       	</if> 
+	       	<if test="isWaiting != null and isWaiting =='true'">
+				AND (f.STATUS = 'DOUBLE_AUDIT' or f.STATUS = 'PENDING_AUDIT')
+	       	</if>
+	       		<if test="isWaiting != null and isWaiting =='false'">
+				AND (f.STATUS != 'DOUBLE_AUDIT' and f.STATUS != 'PENDING_AUDIT')
+	       	</if>  
+			<if test="status != null and status !=''">
+				AND f.STATUS = #{status}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND f.CREATE_TIME = #{createTime}
+	       	</if>
+	       	<if test="tntUser.realName != null and tntUser.realName !=''">
+				AND u.REAL_NAME like
+				CONCAT(CONCAT('%',#{tntUser.realName}),'%')
+			</if>
+			<if test="tntUser.userName != null and tntUser.userName !=''">
+				AND u.user_NAME like
+				CONCAT(CONCAT('%',#{tntUser.userName}),'%')
+			</if> 
+	</sql>
+		
+	<sql id="pageWhere">
+			<if test="param.cashRechargeId != null and param.cashRechargeId !=''">
+				AND f.CASH_RECHARGE_ID = #{param.cashRechargeId}
+	       	</if>
+			<if test="param.cashAccountId != null and param.cashAccountId !=''">
+				AND f.CASH_ACCOUNT_ID = #{param.cashAccountId}
+	       	</if>
+			<if test="param.billNo != null and param.billNo !=''">
+				AND f.bill_No = #{param.billNo}
+	       	</if>
+			<if test="param.paymentGateway != null and param.paymentGateway !=''">
+				AND f.PAYMENT_GATEWAY = #{param.paymentGateway}
+	       	</if>
+			<if test="param.amount != null and param.amount !=''">
+				AND f.AMOUNT = #{param.amount}
+	       	</if>
+			<if test="param.status != null and param.status !=''">
+				AND f.STATUS = #{param.status}
+	       	</if>
+	       	<if test="param.isWaiting != null and param.isWaiting =='true'">
+				AND (f.STATUS = 'DOUBLE_AUDIT' or f.STATUS = 'PENDING_AUDIT')
+	       	</if>
+	       		<if test="param.isWaiting != null and param.isWaiting =='false'">
+				AND (f.STATUS != 'DOUBLE_AUDIT' and f.STATUS != 'PENDING_AUDIT')
+	       	</if>  
+			<if test="param.createTime != null and param.createTime !=''">
+				AND f.CREATE_TIME = #{param.createTime}
+	       	</if>
+	       	<if test="param.tntUser.realName != null and param.tntUser.realName !=''">
+				AND u.REAL_NAME like
+				CONCAT(CONCAT('%',#{param.tntUser.realName}),'%')
+			</if>
+			<if test="param.tntUser.userName != null and param.tntUser.userName !=''">
+				AND u.user_NAME like
+				CONCAT(CONCAT('%',#{param.tntUser.userName}),'%')
+			</if>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.cashaccount.po.TntCashRecharge">
+        SELECT 
+        	count(*)
+        FROM 
+        	TNT_CASH_RECHARGE  f, TNT_USER u, TNT_CASH_ACCOUNT a 
+	    where 
+	    	f.CASH_ACCOUNT_ID = a.CASH_ACCOUNT_ID and u.user_id = a.user_id
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="queryResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT 
+    		CASH_RECHARGE_ID,f.CASH_ACCOUNT_ID,bill_No,bill_Time,f.reason,AMOUNT,bank_Account,bank_Name,BANK_ACCOUNT_NAME,f.STATUS,f.CREATE_TIME,u.user_name,u.real_Name,d.COMPANY_NAME
+	    FROM 
+	    	TNT_CASH_RECHARGE  f, TNT_USER u,TNT_CASH_ACCOUNT a ,TNT_USER_DETAIL d
+	    where	
+	    	f.CASH_ACCOUNT_ID = a.CASH_ACCOUNT_ID and u.user_id = a.user_id  and a.USER_ID = d.USER_ID
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+
+</mapper>
+

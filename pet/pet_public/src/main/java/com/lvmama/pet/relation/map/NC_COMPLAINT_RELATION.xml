@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="NC_COMPLAINT_RELATION">
+    <resultMap id="ComplaintRelationMap" class="com.lvmama.comm.pet.po.relation.NcComplaintRelation">
+    	<result column="RELATION_ID" property="relationId"/>
+        <result column="COMPLAINT_ID" property="complaintId"/>
+        <result column="SMS_ID" property="smsId"/>
+        <result column="EMAIL_ID" property="emailId"/>
+    </resultMap>
+    
+    <insert id="insertRelation" parameterClass="com.lvmama.comm.pet.po.relation.NcComplaintRelation">
+        <selectKey resultClass="java.lang.Long" keyProperty="relationId">
+            select nc_complaint_relation_seq.nextval from DUAL
+        </selectKey>
+        insert into NC_COMPLAINT_RELATION (RELATION_ID,COMPLAINT_ID ,SMS_ID,EMAIL_ID)
+        values (#relationId#,#complaintId#,#smsId#,#emailId#)
+    </insert>
+</sqlMap>

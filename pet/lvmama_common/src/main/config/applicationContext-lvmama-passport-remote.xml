@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="supplierStockCheckService"
+ 			class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${passportPublic.serviceUrl}/supplierStockCheckService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.SupplierStockCheckService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	
+	<bean id="trainDataSyncServiceProxy"
+ 			class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${passportPublic.serviceUrl}/trainDataSyncServiceProxy" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.TrainDataSyncService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+</beans>

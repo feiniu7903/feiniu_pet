@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="AUTO_COMPLETE_ONE">
+
+ <!--中文~pingyin~py字符串算法 -->
+	 <sql id="nameWithPinyin">
+	 select wmsys.wm_concat( sp.object_name||'~'||sp.pin_yin ||'~'|| sp.jian_pin)
+                      		from lvmama_pet.place_search_pinyin sp
+                        		where psi.place_id = sp.object_id
+                          			and sp.object_type = 'PLACE_NAME'
+	 </sql>
+
+	<resultMap id="autoCompletePlace" class="com.lvmama.comm.search.vo.AutoCompletePlaceDto">
+		<result property="name" column="NAME" nullValue="" />
+		<result property="hfkw" column="HFKW" nullValue="" />
+		<result property="destTagsName" column="DEST_TAGS_NAME" nullValue="" />
+		<result property="destSubjects" column="DEST_SUBJECTS" nullValue="0" />
+		<result property="destPersentStr" column="DEST_PERSENT_STR" nullValue="" />
+		<result property="topic" column="TOPIC" nullValue="" />
+		<result property="tagsName" column="TAGS_NAME" nullValue="" />
+		<result property="productAlltoPlaceContent" column="PRODUCT_ALLTO_PLACE_CONTENT" nullValue="" />
+		<result property="placeKeywordBind" column="PLACE_KEYWORD_BIND" nullValue="" />
+		<result property="departArea" column="DEPART_AREA" nullValue="" />
+		<result property="seq" column="SEQ_NUM" nullValue="0" />
+		<result property="shortId" column="PLACE_ID" nullValue="" />
+		<result property="stage" column="STAGE" nullValue="" />
+		<result property="pinyin" column="PIN_YIN" nullValue="" />
+	</resultMap>
+	
+	
+	 <!-- 目的地搜索自动补全  -->
+	<!-- 注意借用PINYIN字段来装载目的地的DEST页面链接地址PIN_YIN_URL  -->
+	<select id="getDest_AutoCompletePlace" resultMap="autoCompletePlace">
+		select  distinct psi.PLACE_ID, (<include refid="nameWithPinyin"/>) name, psi.pin_yin_url PIN_YIN,psi.hfkw,'' DEST_TAGS_NAME,'' DEST_SUBJECTS ,'' DEST_PERSENT_STR  , psi.SEQ_NUM  ,'' TOPIC ,'' TAGS_NAME ,'' PRODUCT_ALLTO_PLACE_CONTENT , '' PLACE_KEYWORD_BIND , '' DEPART_AREA ,'' STAGE
+		from lvmama_pet.place_search_info psi
+		where psi.is_valid='Y' 
+		and  stage &lt; 3
+	</select>
+	
+	 <!-- 自由行(景点+酒店)sql -->
+	<sql id="freetour_selecter">
+		select distinct  ppsi.play_area||','||ppsi.play_features||','||ppsi.play_brand||','||ppsi.route_topic NAME ,
+		'' HFKW ,
+		'' DEST_TAGS_NAME ,
+		 '' DEST_SUBJECTS ,
+		 '' DEST_PERSENT_STR ,
+		 psi.product_id PLACE_ID,
+		 '' PIN_YIN,'FREETOUR' STAGE , 
+		 psi.topic,psi.tags_name ,
+		 psi.product_allto_place_content ,
+		 psi.place_keyword_bind	,
+		 psi.depart_area ,
+		 psi.SEQ_NUM
+		from lvmama_pet.product_search_info psi , lvmama_pet.product_property_search_info ppsi
+		where psi.SUB_PRODUCT_TYPE = 'FREENESS'
+		and psi.product_id =ppsi.product_id
+		and psi.is_valid='Y'
+		and psi.channel_front='FRONTEND'	
+	</sql>
+	<select id="getFreetour_autoCompletePlace" resultMap="autoCompletePlace">
+		<include refid="freetour_selecter"/>
+	</select>
+	
+	<!-- 自由行(机票+酒店) -->
+	<sql id="freelong_selecter">
+		select distinct ppsi.play_area||','||ppsi.play_features||','||ppsi.play_brand||','||ppsi.route_topic NAME ,
+		'' HFKW ,
+		'' DEST_TAGS_NAME ,
+		 '' DEST_SUBJECTS ,
+		 '' DEST_PERSENT_STR ,
+		 psi.product_id PLACE_ID,
+		 '' PIN_YIN,'FREELONG' STAGE , 
+		 psi.topic,
+		 psi.tags_name ,
+		 psi.product_allto_place_content ,
+		 psi.place_keyword_bind ,
+		 psi.depart_area  ,
+		 psi.SEQ_NUM 
+		from lvmama_pet.product_search_info psi, lvmama_pet.product_product_place ppp , lvmama_pet.product_property_search_info ppsi
+		where psi.SUB_PRODUCT_TYPE IN ( 'FREENESS_LONG', 'FREENESS_FOREIGN')
+		and  psi.product_id = ppp.product_id
+		and psi.product_id =ppsi.product_id
+		and ppp.from_place_id = #fromPlaceId#
+		and psi.is_valid='Y'
+		and psi.channel_front='FRONTEND'
+	</sql>
+	<select id="getFreeLong_autoCompletePlace" resultMap="autoCompletePlace" parameterClass="java.lang.Long">
+		<include refid="freelong_selecter"/>
+	</select>
+	<!-- 跟团游  -->
+	<sql id="group_selecter">
+			select distinct ppsi.play_area||','||ppsi.play_features||','||ppsi.play_brand||','||ppsi.route_topic NAME ,
+			'' HFKW ,
+			'' DEST_TAGS_NAME ,
+			 '' DEST_SUBJECTS ,
+			 '' DEST_PERSENT_STR ,
+			 psi.product_id PLACE_ID,
+			 '' PIN_YIN,
+			 'GROUP' STAGE , 
+			 psi.topic,
+			 psi.tags_name ,
+			 psi.product_allto_place_content ,
+			 psi.place_keyword_bind ,
+			 psi.depart_area ,
+			 psi.SEQ_NUM
+			from lvmama_pet.product_search_info psi , lvmama_pet.product_product_place ppp , lvmama_pet.product_property_search_info ppsi
+			where psi.SUB_PRODUCT_TYPE IN ('GROUP_LONG', 'GROUP_FOREIGN','GROUP', 'SELFHELP_BUS')
+			and psi.product_id = ppp.product_id
+			and psi.product_id =ppsi.product_id
+			and ppp.from_place_id = #fromPlaceId#
+			and psi.is_valid='Y'
+			and psi.channel_front='FRONTEND'		
+	</sql>
+    	<!-- 门票栏目 -->	
+	<sql id="ticket_selecter">
+		select distinct (<include refid="nameWithPinyin"/>) name,
+		psi.hfkw,
+		psi.dest_tags_name,
+		psi.dest_subjects,
+		psi.dest_persent_str , 
+		psi.place_id, 
+		psi.PIN_YIN PIN_YIN,
+		'TICKET' STAGE,
+		'' TOPIC ,
+		'' TAGS_NAME ,
+		'' PRODUCT_ALLTO_PLACE_CONTENT , 
+		'' PLACE_KEYWORD_BIND , 
+		'' DEPART_AREA ,
+		psi.SEQ_NUM
+		
+		from lvmama_pet.place_search_info psi
+		where psi.is_valid='Y' 
+		and   psi.ticket_num >0 
+		and  (stage=1 or stage=2 )
+	</sql>
+	<select id="getGroup_autoCompletePlace" resultMap="autoCompletePlace" parameterClass="java.lang.Long">
+ 		<include refid="group_selecter"/>
+	</select>	
+
+	<select id="getTicket_autoCompletePlace" resultMap="autoCompletePlace">
+		<include refid="ticket_selecter"/>
+	</select>
+	
+	<!-- 酒店自动补全 -->
+	<sql id="hotel_selecter" >
+		SELECT DISTINCT PSI.PLACE_ID as shortId,
+	                (<include refid="nameWithPinyin"/>)  NAME,
+	                PSI.HFKW,
+	                PSI.DEST_TAGS_NAME AS tagsName,
+	                (SELECT DISTINCT FIRST_VALUE(NAME) OVER (ORDER BY LEVEL  ROWS UNBOUNDED PRECEDING)|| '，' ||FIRST_VALUE(NAME) OVER (ORDER BY LEVEL DESC  ROWS UNBOUNDED PRECEDING) 
+						FROM LVMAMA_PET.PLACE
+						WHERE PLACE_ID IS NOT NULL 
+						AND IS_VALID = 'Y' 
+						START WITH PLACE_ID = PSI.PARENT_PLACE_ID  
+						CONNECT BY PRIOR PARENT_PLACE_ID =  PLACE_ID AND STAGE!=0) AS destPersentStr,
+	                PSI.SEQ_NUM as seq,
+	                (SELECT HOTEL_TOPIC
+	                   FROM LVMAMA_PET.PLACE_HOTEL PH
+	                  WHERE PH.PLACE_ID = PSI.PLACE_ID) TOPIC,
+	                psi.longitude,
+					psi.latitude,
+	                'HOTEL' STAGE,
+	                '' AS landmarkAddress,
+					'' AS coordinateAddress
+	  FROM 
+	  	LVMAMA_PET.PLACE_SEARCH_INFO PSI
+	 WHERE 
+	 	PSI.HOTLE_NUM > 0
+	   	AND PSI.STAGE = 3
+	</sql>
+	<!-- 酒店城市补全 -->
+	<sql id="city_selecter">
+		select distinct psi.PLACE_ID as shortId,
+		(<include refid="nameWithPinyin"/>) name,
+		'' AS HFKW,
+		'' AS tagsName,
+		(SELECT NAME FROM LVMAMA_PET.PLACE WHERE PLACE_ID = PSI.PARENT_PLACE_ID AND STAGE!=0)  as destPersentStr,
+		PSI.SEQ_NUM as seq,
+		'' AS TOPIC,
+		psi.longitude,
+		psi.latitude,
+		'PLACE' STAGE,
+		'' AS  landmarkAddress,
+		'' AS  coordinateAddress
+		from lvmama_pet.place_search_info psi
+		where psi.stage=1
+		and   psi.hotle_num>0 
+		and  psi.PLACE_TYPE IN ('TBXZQ' , 'ZXS' , 'CITY' ,'OTHER' , 'ZZQ' )	
+	</sql>
+	
+	<sql id="place_selecter">
+		select distinct psi.PLACE_ID as shortId,
+		(<include refid="nameWithPinyin"/>) name,
+		'' AS HFKW,
+		'' AS tagsName,
+		 (SELECT DISTINCT FIRST_VALUE(NAME) OVER (ORDER BY LEVEL  ROWS UNBOUNDED PRECEDING)|| '，' ||FIRST_VALUE(NAME) OVER (ORDER BY LEVEL DESC  ROWS UNBOUNDED PRECEDING) 
+						FROM LVMAMA_PET.PLACE
+						WHERE PLACE_ID IS NOT NULL 
+						AND IS_VALID = 'Y' 
+						START WITH PLACE_ID = PSI.PARENT_PLACE_ID  
+						CONNECT BY PRIOR PARENT_PLACE_ID =  PLACE_ID AND STAGE!=0) AS destPersentStr,
+		PSI.SEQ_NUM as seq,
+		'' AS TOPIC,
+		psi.longitude,
+		psi.latitude,
+		'SCENIC' STAGE,
+		'' AS  landmarkAddress,
+		'' AS  coordinateAddress
+		from lvmama_pet.place_search_info psi
+		where psi.is_valid='Y' 
+		and   psi.hotle_num >0 
+		and   stage=2
+	</sql>
+	<sql id="landmark_selecter">
+		SELECT 
+		   PLM.PLACE_LAND_MARK_ID AS shortId,
+		   LAND_MARK_NAME || '~' || PLM.PIN_YIN AS NAME,
+	       PLM.HFKW,
+	       '' AS tagsName,
+	        (SELECT DISTINCT FIRST_VALUE(NAME) OVER (ORDER BY LEVEL  ROWS UNBOUNDED PRECEDING)|| '，' ||FIRST_VALUE(NAME) OVER (ORDER BY LEVEL DESC  ROWS UNBOUNDED PRECEDING) 
+						FROM LVMAMA_PET.PLACE
+						WHERE PLACE_ID IS NOT NULL 
+						AND IS_VALID = 'Y' 
+						START WITH PLACE_ID = PLM.PLACE_ID  
+						CONNECT BY PRIOR PARENT_PLACE_ID =  PLACE_ID AND STAGE!=0) AS destPersentStr,
+	       PSI.SEQ_NUM as seq,
+	       '' AS TOPIC,
+	       PLM.longitude,
+		   PLM.latitude,
+		   'LANDMARK' STAGE,
+	       LAND_MARK_ADDRESS as landmarkAddress,
+		   PLM.COORDINATE_ADDRESS as coordinateAddress
+	  FROM LVMAMA_PET.PLACE_LAND_MARK PLM, LVMAMA_PET.PLACE_SEARCH_INFO PSI
+	 WHERE PLM.PLACE_ID = PSI.PLACE_ID
+	</sql>
+	<!-- 酒店周边景点自动补全  -->
+	<sql id="hotelAround_selecter" >
+		select distinct  psi.PLACE_ID, 
+			psi.ROUND_PLACE_NAME NAME  , psi.SEQ_NUM  ,psi.pin_yin PIN_YIN,'HOTEL' STAGE
+		from    lvmama_pet.place_search_info psi 
+		where 		psi.hotle_num>0 		
+		and 		psi.stage=3
+		and			psi.round_place_name is not null
+	</sql>
+	
+	<select id="getHotel_AutoComplete" resultClass="com.lvmama.comm.search.vo.AutoCompletePlaceDto">
+	 	select 
+	 		distinct  
+	 			PPSI.PRODUCT_ID AS shortId,
+	 			ppsi.route_topic NAME ,
+	 			'' AS HFKW,
+	 			  psi.tags_name as tagsName,
+	 			  '' AS destPersentStr,
+	 			  PSI.SEQ_NUM as seq,
+	 			  '' TOPIC,
+	 			  null AS longitude,
+	 			  null AS latitude,
+	 			  'PRODUCT' STAGE,
+	 			'' AS landmarkAddress,
+				'' AS coordinateAddress
+		from 
+			lvmama_pet.product_search_info psi , lvmama_pet.product_property_search_info ppsi
+		where 
+			psi.SUB_PRODUCT_TYPE IN('FREENESS','HOTEL_SUIT') 
+			and psi.product_id =ppsi.product_id
+			and psi.is_valid='Y'
+			and psi.channel_front='FRONTEND'	
+		UNION ALL
+		<include refid="hotel_selecter"/>
+		UNION ALL
+		<include refid="city_selecter"/>
+        UNION ALL
+        <include refid="landmark_selecter"/>
+        UNION ALL
+        <include refid="place_selecter"/>
+	</select>
+	
+	
+	
+	
+	
+	
+	 <!-- 一次查询所有栏目结果-->
+	<select id="getOneSearch_autoCompletePlace" resultMap="autoCompletePlace" parameterClass="java.lang.Long">
+	 	<!-- 自由行(景点+酒店) -->
+		<include refid="freetour_selecter"/>
+	UNION ALL
+		<!-- 自由行(机票+酒店) -->
+		<include refid="freelong_selecter"/>
+	UNION ALL	
+	    <!-- 跟团游  -->
+		<include refid="group_selecter"/>
+	UNION ALL
+		<!-- 门票栏目 -->		
+		<include refid="ticket_selecter"/>
+	UNION ALL	
+	<!-- 酒店名称自动补全 -->	
+		select  distinct  ( select wmsys.wm_concat( sp.object_name||'~'||sp.pin_yin ||'~'|| sp.jian_pin)
+                      		from lvmama_pet.place_search_pinyin sp
+                        		where psi.place_id = sp.object_id
+                          			and sp.object_type = 'PLACE_NAME') name  ,'' HFKW,'' DEST_TAGS_NAME,'' DEST_SUBJECTS,'' DEST_PERSENT_STR , psi.PLACE_ID  ,'' PIN_YIN,'HOTEL' STAGE,'' TOPIC ,'' TAGS_NAME ,'' PRODUCT_ALLTO_PLACE_CONTENT , '' PLACE_KEYWORD_BIND , '' DEPART_AREA ,psi.SEQ_NUM
+        from    lvmama_pet.place_search_info psi 
+		where 		psi.hotle_num>0 		
+		and 		psi.stage=3
+	UNION ALL	
+	<!-- 酒店城市自动补全 -->	
+		select distinct ( select wmsys.wm_concat( sp.object_name||'~'||sp.pin_yin ||'~'|| sp.jian_pin)
+                      		from lvmama_pet.place_search_pinyin sp
+                        		where psi.place_id = sp.object_id
+                          			and sp.object_type = 'PLACE_NAME') name ,psi.hfkw,'' DEST_TAGS_NAME,'' DEST_SUBJECTS,'' DEST_PERSENT_STR ,psi.PLACE_ID ,'' PIN_YIN,'HOTEL' STAGE ,'' TOPIC ,'' TAGS_NAME ,'' PRODUCT_ALLTO_PLACE_CONTENT , '' PLACE_KEYWORD_BIND , '' DEPART_AREA , psi.SEQ_NUM
+        from lvmama_pet.place_search_info psi
+		where psi.stage=1
+		and   psi.hotle_num>0 
+		and  (psi.PLACE_TYPE = 'TBXZQ' 
+		       OR psi.PLACE_TYPE = 'ZXS' 
+		          OR psi.PLACE_TYPE = 'CITY' 
+		             OR psi.PLACE_TYPE = 'OTHER' 
+		            	 OR psi.PLACE_TYPE = 'ZZQ' )			 
+	UNION ALL	
+	<!-- 酒店周边景点自动补全  -->	
+	    select distinct  psi.ROUND_PLACE_NAME NAME  ,'' HFKW,'' DEST_TAGS_NAME,'' DEST_SUBJECTS,'' DEST_PERSENT_STR , psi.PLACE_ID ,psi.pin_yin PIN_YIN,'HOTEL' STAGE,'' TOPIC ,'' TAGS_NAME ,'' PRODUCT_ALLTO_PLACE_CONTENT , '' PLACE_KEYWORD_BIND , '' DEPART_AREA , psi.SEQ_NUM 
+    	from    lvmama_pet.place_search_info psi 
+		where 		psi.hotle_num>0 		
+		and 		psi.stage=3
+		and			psi.round_place_name is not null
+	</select>	
+	
+</sqlMap>

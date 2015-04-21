@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE taglib PUBLIC
+    "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+    "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+	<tlib-version>1.0.0</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>lvmama</short-name>
+	<uri>/lvmama-tags</uri>
+	<display-name>"lvmama Tags"</display-name>
+	<tag>
+		<name>mapValueShow</name>
+		<tag-class>
+			com.lvmama.tnt.comm.util.web.tag.MapValueShow
+		</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>map</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>
+				<![CDATA[
+   				this is a map
+   			]]>
+			</description>
+		</attribute>
+		<attribute>
+			<name>key</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>
+				<![CDATA[
+   				this is key of a map
+   			]]>
+			</description>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>dateOutput</name>
+		<tag-class>
+			com.lvmama.tnt.comm.util.web.tag.DataOutput
+		</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>date</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>
+				<![CDATA[
+   				this is a date
+   			]]>
+			</description>
+		</attribute>
+		<attribute>
+			<name>format</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>
+				<![CDATA[
+   				this is date format
+   			]]>
+			</description>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>checkPerm</name>
+		<tag-class>
+			com.lvmama.comm.utils.tag.PermJspTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>permCode</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				<![CDATA[
+   				this is code or id of a permission
+   			]]>
+			</description>
+		</attribute>
+		<attribute>
+			<name>permParentCode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>
+				<![CDATA[
+   				this is code or id of a permission
+   			]]>
+			</description>
+		</attribute>
+	</tag>
+</taglib>

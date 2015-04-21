@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  - Application context definition for JPetStore's business layer.
+	- Contains bean references to the transaction manager and to the DAOs in
+	- dataAccessContext-local/jta.xml (see web.xml's "contextConfigLocation").
+	-->
+<beans>
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName"><value>${jdbc.driverClassName}</value></property>
+		<property name="url"><value>${jdbc.url}</value></property>
+		<property name="username"><value>${jdbc.username}</value></property>
+		<property name="password"><value>${jdbc.password}</value></property>
+		<property name="maxActive"><value>${jdbc.maxActive}</value></property>
+		<property name="maxWait"><value>${jdbc.maxWait}</value></property>
+		<property name="maxIdle"><value>${jdbc.maxIdle}</value></property>
+		<property name="initialSize"><value>${jdbc.initSize}</value></property>
+		<property name="removeAbandoned"><value>true</value></property>
+		<property name="testWhileIdle"><value>true</value></property>
+		<property name="testOnBorrow"><value>false</value></property>
+		<property name="validationQuery"><value>SELECT 1 FROM SYS.DUAL</value></property> 
+	</bean>
+	
+	<!-- SqlMap setup for iBATIS Database Layer -->
+    <bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+        <property name="configLocation">
+            <value>classpath:sqlmap-config.xml</value>
+        </property>
+        <property name="mappingLocations"> 
+			<value>classpath*:/com/lvmama/**/**/map/*.xml</value>
+		</property>
+    </bean>
+
+	<!-- Transaction manager for a single JDBC DataSource -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource">
+            <ref local="dataSource"/>
+        </property>
+    </bean>
+    
+	<bean id="txInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager">
+			<ref bean="txManager"/>
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="get*">PROPAGATION_SUPPORTS</prop>
+				<prop key="query*">PROPAGATION_SUPPORTS</prop>
+				<prop key="select*">PROPAGATION_SUPPORTS</prop>
+				<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				<!--<prop key="update">PROPAGATION_REQUIRED</prop>
+				<prop key="delete">PROPAGATION_REQUIRED</prop>-->
+			</props>
+		</property>
+	</bean>
+	
+	<!-- <bean id="txBeanNameProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="interceptorNames">
+			<list>
+				<value>txInterceptor</value>
+			</list>
+		</property>
+		<property name="beanNames">
+			<list>
+				<value>*Service</value>
+			</list>
+		</property>
+	</bean> -->
+	
+	<bean id="autoProxyCreator" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+	<bean id="regexpMethodPointcutAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="advice">
+		    <ref bean="txInterceptor" />
+		</property>
+		<property name="pattern">
+		    <value>.*ServiceImpl.((?!get|query|select)\w)+</value>
+		</property>
+	</bean>
+</beans>

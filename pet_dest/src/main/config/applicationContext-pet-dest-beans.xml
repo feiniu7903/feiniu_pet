@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+			<value>classpath:const.properties</value>
+			</list>
+        </property>
+    </bean>  
+    
+	<!-- 引用Service接口-->
+	<import resource="classpath*:applicationContext-lvmama-comm-remote.xml"/>
+	<import resource="classpath*:applicationContext-lvmama-comm-remote-dest.xml"/>
+    <import resource="classpath*:applicationContext-lvmama-search.xml"/>
+    <import resource="classpath*:applicationContext-pet-dest-quartz.xml"/>
+</beans>

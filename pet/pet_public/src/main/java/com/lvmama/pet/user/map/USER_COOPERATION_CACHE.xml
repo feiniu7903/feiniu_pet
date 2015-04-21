@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+                   
+<sqlMap namespace="USER_COOPERATION_CACHE">
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.user.UserCooperationCache">
+	    <selectKey resultClass="java.lang.Long" keyProperty="cooperationCacheId" >
+			select USER_COOPERATION_CACHE_SEQ.nextval as cooperationCacheId from DUAL
+		</selectKey>
+		INSERT INTO USER_COOPERATION_CACHE
+			<dynamic prepend="(">
+				COOPERATION_CACHE_ID,
+				COOPERATION_TYPE,
+				COOPERATION_USER_ACCOUNT,
+				COOPERATION_USER_NAME,
+				CREATE_TIME
+				<isNotEmpty property="email" prepend=",">EMAIL</isNotEmpty>
+				)
+			</dynamic>
+			VALUES
+			<dynamic prepend="(">
+				#cooperationCacheId#,
+				#cooperationType#,
+				#cooperationUserAccount#,
+				#cooperationUserName#,
+				sysdate
+				<isNotEmpty property="email" prepend=",">#email#</isNotEmpty>
+				)
+			</dynamic>
+	</insert>
+
+
+	<select id="query"  parameterClass="java.util.Map" resultClass="com.lvmama.comm.pet.po.user.UserCooperationCache">
+		SELECT 
+			COOPERATION_CACHE_ID cooperationCacheId,
+			COOPERATION_TYPE cooperationType, 
+			COOPERATION_USER_ACCOUNT cooperationUserAccount, 
+			COOPERATION_USER_NAME cooperationUserName, 
+			CREATE_TIME createTime,
+			EMAIL email
+		FROM 
+			USER_COOPERATION_CACHE
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="cooperationType" prepend=" AND ">COOPERATION_TYPE = #cooperationType#</isNotEmpty>
+			<isNotEmpty property="cooperationUserAccount" prepend=" AND ">COOPERATION_USER_ACCOUNT = #cooperationUserAccount#</isNotEmpty>
+		</dynamic>
+		order by createTime desc
+	</select>
+
+    <delete id="delete" parameterClass="Map">
+		DELETE FROM USER_COOPERATION_CACHE WHERE COOPERATION_TYPE = #cooperationType# and COOPERATION_USER_ACCOUNT = #cooperationUserAccount# 
+	</delete>
+
+</sqlMap>

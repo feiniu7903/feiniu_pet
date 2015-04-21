@@ -1,0 +1,172 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./newProductWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="newProductWin" title="新建产品" closable="true" sizable="false" border="normal" mode="embedded" apply="com.lvmama.pet.web.shop.shopProduct.NewProductAction">
+		<script type="text/JavaScript"><![CDATA[//@DECLARATION
+		      function readData() { 
+		        if (document.getElementById("tmp_content").innerHTML != "") {
+		      		jq('$content').val(document.getElementById("tmp_content").innerHTML);
+		      		jq('$content').blur();
+		      	}
+			  }  ]]> 
+		  </script>
+		
+		<zscript><![CDATA[//@DECLARATION
+			public void preView() {
+				Clients.evalJavaScript("readData()");
+				timer2.start();
+			}
+			
+			public void executePreview() {
+				Clients.evalJavaScript("window.open('showProductDetail.do','_blank')");
+			}
+			
+		    public void submit() {
+		    	Clients.evalJavaScript("readData()");
+			    timer.start();
+		    }
+		    
+			public void checkValue(){
+				if (productName.getValue()==null) {
+					return ;
+				} else if (productCode.getValue()==null) {
+					return ;
+				} else if (pointChange.getValue()==null) {
+				    alert("兑换积分不能为空");
+					return ;
+				} else if (pointChange.getValue() < 0) {
+					alert("兑换积分不能为负");
+					return;
+				} else if (marketPrice.getValue() == null) {
+					alert("市场价不能为空");
+					return;
+				} else if (marketPrice.getValue() < 0) {
+					alert("市场价不能为负数");
+					return;
+				} else if (stocks.getValue() == null) {
+					alert("库存不能为空");
+					return;
+				} else if (stocks.getValue() < 0) {
+					alert("库存不能为负数");
+					return;
+				} else if (furl.getValue() == null || (null!=furl.getValue() && furl.getValue().trim().length()==0)) {
+					alert("请上传产品的图片");
+					return;
+				} else if (saction.isNullOfProductContent()) {
+					alert("请输入产品的详细信息");
+					return;
+				} else if (productType.getSelectedItem().getValue().equals("COUPON") && couponId.getValue() == null) {
+					alert("优惠券类的产品必须输入优惠券标识");
+					return;
+				}
+				saction.save(online.getValue().equals("true"));	
+			}	]]>
+		</zscript>
+
+		<grid>
+			<columns>
+				<column width="100px"></column>
+				<column></column>
+				<column width="100px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>产品名称： <label value="[*]" style="color:red;" /></hbox>
+					<hbox><textbox id="productName" value="@{saction.product.productName}" maxlength="25" constraint="no empty:产品名称不能为空"/></hbox>
+					<hbox>产品编号：<label value="[*]" style="color:red;" /></hbox>
+					<hbox><textbox id="productCode" value="@{saction.product.productCode}" maxlength="5" constraint="no empty:产品编号不能为空"/></hbox>
+				</row>
+				<row>
+					<hbox>所需积分：<label value="[*]" style="color:red;" /></hbox>
+					<hbox><intbox id="pointChange" value="@{saction.product.pointChange}" constraint="no negative,no empty:兑换积分不能为负"/></hbox>
+					<hbox>市场价：<label value="[*]" style="color:red;" /></hbox>
+					<hbox><longbox id="marketPrice" value="@{saction.product.marketPrice}" constraint="no negative,no empty:市场价格不能为负或零"/></hbox>						
+				</row>
+				<row>
+					<hbox>库存：<label value="[*]" style="color:red;" /></hbox>
+					<hbox><intbox id="stocks" disabled="@{saction.stocksDisabled}" value="@{saction.product.stocks,after-load='productType.change'}" constraint="no empty:库存不能为空"/></hbox>
+					<hbox>推荐位置</hbox>
+					<hbox>
+						 <checkbox label="首页热门推荐" onCheck='saction.changeHotProduct(self.checked);' checked="${saction.product.isHotProduct == 'Y'}"/><span/><checkbox label="首页呈现" onCheck='saction.changeRecommend(self.checked);' checked="${saction.product.isRecommend == 'Y'}"/>
+					</hbox>			
+				</row>
+				<row>
+					<hbox>兑换类别：<label value="[*]" style="color:red;" /></hbox>
+					<hbox>
+						<radiogroup id="changeType" selectedItem="@{saction.product.changeType}">
+							<radio label="积分兑换" value="POINT_CHANGE"/>
+							<span/>
+							<radio label="抽奖" value="RAFFLE" />
+						</radiogroup>
+					</hbox>				
+					<hbox>产品类别：<label value="[*]" style="color:red;" /></hbox>
+					<hbox>
+						<radiogroup id="productType" selectedItem="@{saction.product.productType}">
+							<radio label="实物" value="PRODUCT" onCheck='couponId.setVisible(false);saction.getCooperateStock("PRODUCT");stocks.disabled=false;'/>
+							<span/>
+							<radio label="合作网站优惠券" value="COOPERATION_COUPON" onCheck='couponId.setVisible(false);saction.getCooperateStock("COOPERATION_COUPON");stocks.disabled=true;'/>
+							<span/>
+							<radio label="优惠券" value="COUPON" onCheck='couponId.setVisible(true);saction.getCooperateStock("COUPON");stocks.disabled=false;'/><longbox id="couponId" value="@{saction.couponId}" visible='${saction.product.productType == "COUPON"}'/>
+						</radiogroup>
+					</hbox>
+				</row>
+				<row>
+					<hbox>图片：<label value="[*]" style="color:red;" /></hbox>
+					<hbox>
+				 		<vbox>
+							<hbox>上传图片：<textbox id="furl" readonly="true" value="@{saction.product.pictures}" />
+								<button id="upBtn" label="上传图片" upload="true" apply="com.lvmama.pet.web.upload.UploadCtrl" onUpload='upBtn$composer.onUpload(event, furl, false, false); saction.addImage(furl.value); Events.postEvent("onClick",refreshPictureList,null);'></button>
+							</hbox>
+							<button id="refreshPictureList" visible="false"/>
+							<listbox id="abc" model="@{saction.pictureList, load-after='refreshPictureList.onClick'}">
+								<listitem self="@{each='product'}" value="@{product}" height="25px">
+									<listcell>
+										<div>
+											<image src="@{product.absolutePictureUrl}" width="170px" height="100px"></image>
+										</div>
+									</listcell>
+								</listitem>
+							</listbox>
+						</vbox>
+					</hbox>
+					<hbox>
+					</hbox>							
+				</row>
+				<row spans="4">
+					<hbox>
+						产品详细信息<label value="[*]" style="color:red;" />
+						<textbox id="content" maxlength="2000" readonly="true" value="@{saction.product.content}" visible="false"/>
+						<html id="html">
+							<attribute name="content">
+								<div id="tmp_content" style="display:none"></div>
+							</attribute>
+						</html>
+					</hbox>
+				</row>
+				<row spans="4">
+					<iframe id="editor"  width="100%" height="500px" style="padding: 0 0 0 0; margin:0 0 0 0;">
+					</iframe>
+					<button visible="false">
+						<attribute name="onCreate" >
+							<![CDATA[
+								editor.src="/view/toedit.do"+(null == saction.product.productId ?"" : "?productId=" + saction.product.productId);
+							]]>
+						</attribute>
+					</button>	
+				</row>																									
+			</rows>
+		</grid>	
+		<separator/>
+		<separator/>
+		<toolbar align="center">
+		     <textbox id="online" value="false" visible="false" />
+			 <button label="预览" id="btnPreview" width="100px" onClick="preView()"/>
+			 <span/>
+			 <button label="保存并上线" id="btnSaveAndOnline" width="100px" onClick='online.setValue("true");submit()'/>
+			 <span/>
+			 <button label="保存" id="btnSave"  width="100px" onClick='online.setValue("false");submit()'/>
+			 <timer id="timer" delay="1000" repeats="false" onTimer="checkValue()" running="false"/> 
+			 <timer id="timer2" delay="1000" repeats="false" onTimer="executePreview()" running="false"/> 
+		</toolbar>		
+	</window>
+</zk>

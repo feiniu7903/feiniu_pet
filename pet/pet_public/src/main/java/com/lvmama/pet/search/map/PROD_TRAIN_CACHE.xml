@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_TRAIN_CACHE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.search.ProdTrainCache" >
+    <result column="TIME_PRICE_ID" property="timePriceId" />
+    <result column="STATION_STATION_ID" property="stationStationId" />
+    <result column="VISIT_TIME" property="visitTime" />
+    <result column="LINE_NAME" property="lineName" />
+    <result column="CATEGORY" property="category" />
+    <result column="SEAT_TYPE" property="seatType" />
+    <result column="PRICE" property="price" />
+    <result column="DEPARTURE_TIME" property="departureTime" />
+    <result column="ARRIVAL_TIME" property="arrivalTime" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="PRODUCT_NAME" property="productName" />
+    <result column="PROD_BRANCH_ID" property="prodBranchId" />
+    <result column="PROD_BRANCH_NAME" property="prodBranchName" />
+    <result column="LINE_INFO_ID" property="lineInfoId" />
+    <result column="SOLD_OUT" property="soldout" />
+    <result column="DEPARTURE_CITY" property="departureCity"/>
+    <result column="ARRIVAL_CITY" property="arrivalCity"/>
+    <result column="DEPARTURE_STATION" property="departureStation"/>
+    <result column="ARRIVAL_STATION" property="arrivalStation"/>
+    <result column="DEPARTURE_STATION_NAME" property="departureStationName"/>
+    <result column="ARRIVAL_STATION_NAME" property="arrivalStationName"/>
+    <result column="TAKEN_TIME" property="takenTime"/>
+    <result column="START_STATION" property="startStation"/>
+    <result column="END_STATION" property="endStation"/>
+  </resultMap>
+  
+  <select id="selectLastCache" resultMap="BaseResultMap" parameterClass="java.util.Date">
+  	select * from (select * from prod_train_cache where VISIT_TIME=#date# ORDER BY TIME_PRICE_ID desc) where
+  	ROWNUM = 1
+  </select>
+  
+  <select id="selectByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+    select *
+    from PROD_TRAIN_CACHE
+    <dynamic prepend="where">
+    	<isNotEmpty property="visitTime" prepend="and">
+    	VISIT_TIME = #visitTime#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="departureStation">
+    	DEPARTURE_STATION =#departureStation#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="arrivalStation">
+    	ARRIVAL_STATION =#arrivalStation#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="departureCity">
+    	DEPARTURE_CITY =#departureCity#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="arrivalCity">
+    	ARRIVAL_CITY =#arrivalCity#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="lineName">
+    	LINE_NAME = #lineName#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="productId">
+    	PRODUCT_ID = #productId#
+    	</isNotEmpty>
+    </dynamic>
+  </select>
+  
+  <select id="selectByBranchIdAndVisitTime" resultMap="BaseResultMap" parameterClass="java.util.Map">
+	select * from PROD_TRAIN_CACHE where VISIT_TIME = #visitTime# and
+	PROD_BRANCH_ID=#prodBranchId# and ROWNUM=1
+  </select>
+  
+  <select id="selectCountCache" resultClass="java.lang.Long" parameterClass="java.util.Map" >
+    select count(*)
+    from PROD_TRAIN_CACHE
+    <dynamic prepend="where">
+    	<isNotEmpty property="visitTime" prepend="and">
+    	VISIT_TIME = #visitTime#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="departureStation">
+    	DEPARTURE_STATION =#departureStation#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="arrivalStation">
+    	ARRIVAL_STATION =#arrivalStation#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="departureCity">
+    	DEPARTURE_CITY =#departureCity#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="arrivalCity">
+    	ARRIVAL_CITY =#arrivalCity#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="lineName">
+    	LINE_NAME = #lineName#
+    	</isNotEmpty>
+    </dynamic>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.search.ProdTrainCache" >
+    select *
+    from PROD_TRAIN_CACHE
+    where TIME_PRICE_ID = #timePriceId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.search.ProdTrainCache" >
+    delete from PROD_TRAIN_CACHE
+    where TIME_PRICE_ID = #timePriceId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.search.ProdTrainCache" >
+  	<selectKey keyProperty="timePriceId" resultClass="java.lang.Long">
+  		select PROD_TRAIN_CACHE_SEQ.nextval from dual
+  	</selectKey>
+    insert into PROD_TRAIN_CACHE (TIME_PRICE_ID, STATION_STATION_ID, VISIT_TIME,
+      LINE_NAME, CATEGORY, SEAT_TYPE, PRICE, DEPARTURE_TIME, ARRIVAL_TIME, PRODUCT_ID, PRODUCT_NAME,
+      PROD_BRANCH_ID,PROD_BRANCH_NAME, LINE_INFO_ID,SOLD_OUT,DEPARTURE_CITY,ARRIVAL_CITY,DEPARTURE_STATION,ARRIVAL_STATION,
+      DEPARTURE_STATION_NAME, ARRIVAL_STATION_NAME, TAKEN_TIME,START_STATION,END_STATION)
+    values (#timePriceId#, #stationStationId#,
+      #visitTime#, #lineName#, #category#, #seatType#, #price#,
+      #departureTime#, #arrivalTime#, #productId#, #productName#,
+      #prodBranchId#,#prodBranchName#, #lineInfoId#,#soldout#,#departureCity#,#arrivalCity#,#departureStation#,#arrivalStation#,
+      #departureStationName#,#arrivalStationName#, #takenTime#,#startStation#,#endStation#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.search.ProdTrainCache" >
+    insert into PROD_TRAIN_CACHE
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="timePriceId" >
+        TIME_PRICE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="stationStationId" >
+        STATION_STATION_ID
+      </isNotNull>
+      <isNotNull prepend="," property="visitTime" >
+        VISIT_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="lineName" >
+        LINE_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="category" >
+        CATEGORY
+      </isNotNull>
+      <isNotNull prepend="," property="seatType" >
+        SEAT_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        PRICE
+      </isNotNull>
+      <isNotNull prepend="," property="departureTime" >
+        DEPARTURE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="arrivalTime" >
+        ARRIVAL_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="productName" >
+        PRODUCT_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchId" >
+        PROD_BRANCH_ID
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchName" >
+        PROD_BRANCH_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="lineInfoId" >
+        LINE_INFO_ID
+      </isNotNull>
+      <isNotNull prepend="," property="soldout" >
+        SOLD_OUT
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="timePriceId" >
+        #timePriceId#
+      </isNotNull>
+      <isNotNull prepend="," property="stationStationId" >
+        #stationStationId#
+      </isNotNull>
+      <isNotNull prepend="," property="visitTime" >
+        #visitTime#
+      </isNotNull>
+      <isNotNull prepend="," property="lineName" >
+        #lineName#
+      </isNotNull>
+      <isNotNull prepend="," property="category" >
+        #category#
+      </isNotNull>
+      <isNotNull prepend="," property="seatType" >
+        #seatType#
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        #price#
+      </isNotNull>
+      <isNotNull prepend="," property="departureTime" >
+        #departureTime#
+      </isNotNull>
+      <isNotNull prepend="," property="arrivalTime" >
+        #arrivalTime#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        #productId#
+      </isNotNull>
+      <isNotNull prepend="," property="productName" >
+        #productName#
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchId" >
+        #prodBranchId#
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchName" >
+        #prodBranchName#
+      </isNotNull>
+      <isNotNull prepend="," property="lineInfoId" >
+        #lineInfoId#
+      </isNotNull>
+      <isNotNull prepend="," property="soldout" >
+        #soldout#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.search.ProdTrainCache" >
+    update PROD_TRAIN_CACHE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="stationStationId" >
+        STATION_STATION_ID = #stationStationId#
+      </isNotNull>
+      <isNotNull prepend="," property="visitTime" >
+        VISIT_TIME = #visitTime#
+      </isNotNull>
+      <isNotNull prepend="," property="lineName" >
+        LINE_NAME = #lineName#
+      </isNotNull>
+      <isNotNull prepend="," property="category" >
+        CATEGORY = #category#
+      </isNotNull>
+      <isNotNull prepend="," property="seatType" >
+        SEAT_TYPE = #seatType#
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        PRICE = #price#
+      </isNotNull>
+      <isNotNull prepend="," property="departureTime" >
+        DEPARTURE_TIME = #departureTime#
+      </isNotNull>
+      <isNotNull prepend="," property="arrivalTime" >
+        ARRIVAL_TIME = #arrivalTime#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID = #productId#
+      </isNotNull>
+      <isNotNull prepend="," property="productName" >
+        PRODUCT_NAME = #productName#
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchId" >
+        PROD_BRANCH_ID = #prodBranchId#
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchName" >
+        PROD_BRANCH_NAME = #prodBranchName#
+      </isNotNull>
+      <isNotNull prepend="," property="lineInfoId" >
+        LINE_INFO_ID = #lineInfoId#
+      </isNotNull>
+      <isNotNull prepend="," property="soldout" >
+        SOLD_OUT = #soldout#
+      </isNotNull>
+    </dynamic>
+    where TIME_PRICE_ID = #timePriceId#
+  </update>
+  
+  <update id="makeSoldout" parameterClass="com.lvmama.comm.pet.po.search.ProdTrainCache" >
+    update PROD_TRAIN_CACHE set SOLD_OUT = 'true'
+    where PROD_BRANCH_ID = #prodBranchId# and VISIT_TIME = #visitTime#
+  </update>
+  
+  <update id="updatePrice" parameterClass="com.lvmama.comm.pet.po.search.ProdTrainCache">
+  	update PROD_TRAIN_CACHE set PRICE = #price#
+    where PROD_BRANCH_ID = #prodBranchId# and VISIT_TIME = #visitTime#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.search.ProdTrainCache" >
+    update PROD_TRAIN_CACHE
+    set STATION_STATION_ID = #stationStationId#,
+      VISIT_TIME = #visitTime#,
+      LINE_NAME = #lineName#,
+      CATEGORY = #category#,
+      SEAT_TYPE = #seatType#,
+      PRICE = #price#,
+      DEPARTURE_TIME = #departureTime#,
+      ARRIVAL_TIME = #arrivalTime#,
+      PRODUCT_ID = #productId#,
+      PRODUCT_NAME = #productName#,
+      PROD_BRANCH_ID = #prodBranchId#,
+      PROD_BRANCH_NAME = #prodBranchName#,
+      LINE_INFO_ID = #lineInfoId#,
+      SOLD_OUT = #soldout#
+    where TIME_PRICE_ID = #timePriceId#
+  </update>
+  <delete id="removeNotValidTrains" parameterClass="java.util.Date">
+  	delete from PROD_TRAIN_CACHE where visit_time &lt; #date#
+  </delete>
+  <insert id="copyData" parameterClass="java.util.Map">
+  	insert into PROD_TRAIN_CACHE(TIME_PRICE_ID, STATION_STATION_ID, VISIT_TIME,
+      LINE_NAME, CATEGORY, SEAT_TYPE, PRICE, DEPARTURE_TIME, ARRIVAL_TIME, PRODUCT_ID, PRODUCT_NAME,
+      PROD_BRANCH_ID,PROD_BRANCH_NAME, LINE_INFO_ID,SOLD_OUT,DEPARTURE_CITY,ARRIVAL_CITY,DEPARTURE_STATION,ARRIVAL_STATION,
+      DEPARTURE_STATION_NAME, ARRIVAL_STATION_NAME, TAKEN_TIME)
+    select PROD_TRAIN_CACHE_SEQ.nextval,STATION_STATION_ID,#newVisitTime#,
+      LINE_NAME, CATEGORY, SEAT_TYPE, PRICE, DEPARTURE_TIME, ARRIVAL_TIME, PRODUCT_ID, PRODUCT_NAME,
+      PROD_BRANCH_ID,PROD_BRANCH_NAME, LINE_INFO_ID,'false',DEPARTURE_CITY,ARRIVAL_CITY,DEPARTURE_STATION,ARRIVAL_STATION,
+      DEPARTURE_STATION_NAME, ARRIVAL_STATION_NAME, TAKEN_TIME
+      from PROD_TRAIN_CACHE where VISIT_TIME=#visitTime#
+  </insert>
+  <select id="selectByCache" parameterClass="com.lvmama.comm.pet.po.search.ProdTrainCache" resultMap="BaseResultMap">
+  	select * from prod_train_cache ptc 
+	where ptc.station_station_id = #stationStationId#
+	and ptc.prod_branch_id = #prodBranchId#
+	and ptc.visit_time = #visitTime#
+  </select>
+  
+  <select id="selectCount" parameterClass="com.lvmama.comm.pet.po.search.ProdTrainCache" resultClass="java.lang.Long">
+  	select count(*) from prod_train_cache ptc 
+	where ptc.station_station_id = #stationStationId#
+	and ptc.prod_branch_id = #prodBranchId#
+	and ptc.visit_time = #visitTime#
+  </select>
+  
+  <select id="selectCountByDate" parameterClass="java.util.Date" resultClass="java.lang.Long">
+  	select count(*) from prod_train_cache
+  	where visit_time = #date#
+  </select>
+</sqlMap>

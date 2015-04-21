@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+			<value>classpath:const.properties</value>
+			</list>
+        </property>
+    </bean>  
+    
+	<!-- 引用Service接口-->
+	<bean id="shopProductService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${shopProductService.serviceUrl}" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.shop.ShopProductService" />
+		<property name="chunkedPost" value="false" />
+	</bean>
+
+	<bean id="shopUserService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${shopUserService.serviceUrl}" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.shop.ShopUserService" />
+		<property name="chunkedPost" value="false" />
+	</bean>
+    
+    <bean id="shopOrderService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${shopOrderService.serviceUrl}" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.shop.ShopOrderService" />
+        <property name="chunkedPost" value="false" />
+    </bean>    
+
+</beans>

@@ -1,0 +1,50 @@
+<?page title="修改手机号" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./managerMobileWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window title="修改手机号" border="normal"
+		apply="com.lvmama.pet.web.user.manager.ManagerMobileAction" id="managerMobileWin" width="100px">
+		<grid id="conditions">
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+			     <hbox>用户名：</hbox>
+			     <hbox>
+			      <label value="@{saction.userName}"/>
+			     </hbox>
+			    </row>
+			    <row>
+			     <hbox>手机号：</hbox>
+			     <hbox>
+			      <textbox id="mobile" value="@{saction.mobile}"/>
+			     </hbox>
+			    </row>
+			    <row>
+			     <hbox></hbox>
+			     <hbox>
+			      <button label="发送验证码" width="100px" onClick='saction.sendAuthenticationCode();' />
+			     </hbox>
+			    </row>
+			    <row>
+			     <hbox>验证码：</hbox>
+			     <hbox>
+			      <textbox id="authenticationCode" value="@{saction.authenticationCode}"/>
+			     </hbox>
+			    </row>
+				<row>
+					<hbox>备注</hbox>
+					<hbox>
+						<textbox value="@{saction.memo}" rows="4" cols="90" />
+					</hbox>
+				</row>
+				<row spans="2,0" align="right">
+					<hbox>
+						<button label="确认" id="confirm" width="80px" onClick='saction.validateAuthenticationCode();' />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+
+</zk>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FINANCE_ADVANCE_DEPOSIT" >
+	<typeAlias alias="FinAdvanceDeposit" type="com.lvmama.comm.pet.po.fin.FinAdvanceDeposit"/>
+	<typeAlias alias="FinSupplierMoney" type="com.lvmama.comm.pet.po.fin.FinSupplierMoney"/>
+	
+	<!-- 查询达到预警的预存款分页信息  -->
+	<select id="searchAdvanceDepositWarning" parameterClass="map" resultClass="FinSupplierMoney" >
+		<include refid="pageSearchHead"/>
+		SELECT 
+			B.SUPPLIER_ID AS SUPPLIERID,
+			NULL AS SUPPLIERNAME,
+			B.ADVANCE_DEPOSIT_AMOUNT AS advanceDepositAmount,
+			B.ADVANCE_DEPOSIT_ALERT AS advanceDepositAlert
+		FROM 
+			FIN_SUPPLIER_MONEY B
+		WHERE 
+			ADVANCE_DEPOSIT_AMOUNT IS NOT NULL
+		AND
+			ADVANCE_DEPOSIT_AMOUNT &lt;= B.ADVANCE_DEPOSIT_ALERT AND B.BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchAdvanceDepositWarningCount"  resultClass="Long">
+		SELECT  
+			COUNT(*) 
+		FROM  FIN_SUPPLIER_MONEY B
+		WHERE 
+			ADVANCE_DEPOSIT_AMOUNT IS NOT NULL
+		AND  ADVANCE_DEPOSIT_AMOUNT &lt;= B.ADVANCE_DEPOSIT_ALERT AND B.BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+	</select>
+	
+	<!-- 更新供应商预存款金额 -->
+	<update id="updateSupplierAdvanceDepositAmount" parameterClass="map">
+		UPDATE 
+			FIN_SUPPLIER_MONEY
+		SET
+			ADVANCE_DEPOSIT_AMOUNT = NVL(ADVANCE_DEPOSIT_AMOUNT,0)+#amount#
+		WHERE
+			SUPPLIER_ID = #supplierId# AND BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+	</update>
+	
+	<!-- 添加流水记录 -->
+	<insert id="insertFinadvanceDeposit" parameterClass="FinAdvanceDeposit">
+		INSERT INTO
+			FIN_ADVANCE_DEPOSIT
+		(
+			ADVANCE_DEPOSIT_ID,
+			SUPPLIER_ID,
+			TYPE,
+			DIRECTION,
+			BANK,
+			SERIAL,
+			AMOUNT,
+			OPERATETIME,
+			REMARK,
+			CREATOR,
+			CREATETIME,
+			CURRENCY,
+			BUSINESS_NAME
+		)VALUES(
+			FIN_ADVANCE_DEPOSIT_SEQ.NEXTVAL,
+			#supplierId#,
+			#type#,
+			#direction#,
+			#bank#,
+			#serial#,
+			#amount#,
+			#operatetime#,
+			#remark#,
+			#creator#,
+			SYSDATE,
+			#currency#,
+			#businessName#
+		)
+	</insert>
+	
+	<!-- 查询流水记录 -->
+	<select id="searchFinAdvanceDeposit" parameterClass="map" resultClass="FinAdvanceDeposit">
+		SELECT * FROM (
+			SELECT T.*, ROWNUM AS ROWNUM1 FROM ( 
+				select * from (
+					SELECT 
+						ADVANCE_DEPOSIT_ID AS advanceDepositId,
+						SUPPLIER_ID AS supplierId,
+						TYPE AS type,
+						DIRECTION AS direction,
+						BANK AS bank,
+						SERIAL AS serial,
+						AMOUNT AS amount,
+						OPERATETIME AS operatetime,
+						REMARK AS remark,
+						CREATOR AS creator,
+						CREATETIME AS createtime,
+						A.CURRENCY AS currency
+					FROM
+						FIN_ADVANCE_DEPOSIT A
+					WHERE
+						SUPPLIER_ID = #supplierId# AND A.BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+					ORDER BY CREATETIME DESC
+				)
+			) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;#skipResults#
+	</select>
+	
+	<!-- 查询流水记录 -->
+	<select id="searchFinAdvanceDepositCount" parameterClass="map" resultClass="long">
+		SELECT 
+			COUNT(*)
+		FROM
+			FIN_ADVANCE_DEPOSIT A
+		WHERE
+			SUPPLIER_ID = #supplierId# AND A.BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+		ORDER BY CREATETIME DESC
+	</select>
+	
+	  <!-- 查询供应商的预存款支付记录 -->
+	  <select id="searchAdvanceDepositPayment" parameterClass="long" resultClass="com.lvmama.comm.pet.po.fin.SetSettlementPayment">
+	  	SELECT
+	  		A.TARGET_ID as targetId,
+	  		SETTLEMENT_ID as settlementId,
+	  		TRAVEL_GROUP_CODE AS travelGroupCode,
+	  		OPERATETIME as operatetime,
+	  		AMOUNT AS amount,
+	  		NULL AS targetName
+	  	FROM
+	  		SET_SETTLEMENT_PAYMENT A
+	  	WHERE	A.PAYTYPE = 'ADVANCE_DEPOSIT'
+	  	AND
+	  		A.SUPPLIER_ID = #supplierId# AND A.BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+	  	ORDER BY OPERATETIME DESC
+	  </select>
+	  
+	<!-- 更新供应商预存款币种begin -->
+	<update id="updateSupplierCurrency" parameterClass="map">
+		UPDATE 
+			FIN_SUPPLIER_MONEY
+		SET
+			<isNotEmpty property="currency">
+				DEPOSIT_CURRENCY = #forecurrency#
+			</isNotEmpty>
+			<isNotEmpty property="advcurrency">
+				ADVANCE_DEPOSIT_CURRENCY = #currency#
+			</isNotEmpty>
+		WHERE
+			SUPPLIER_ID = #supplierId# AND BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+	</update>
+	
+	<!-- 查询供应商 -->
+	<select id="searchSupplier" parameterClass="long" resultClass="FinSupplierMoney">
+		SELECT 
+				NULL supplierID,
+				NULL supplierName,
+		  		NVL(B.ADVANCE_DEPOSIT_AMOUNT,0) AS ADVANCE_DEPOSIT_AMOUNT,
+	            B.ADVANCE_DEPOSIT_CURRENCY AS advanceDepositCurrency,
+	            B.DEPOSIT_AMOUNT AS depositAmount,
+	       		B.DEPOSIT_CURRENCY AS depositCurrency
+	  	FROM 	FIN_SUPPLIER_MONEY B
+	  	WHERE   B.SUPPLIER_ID = #supplierId# AND B.BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,82 @@
+<?page title="兑换记录" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./userShopOrderListWin"?>
+<?component name="a" extends="a" class="com.lvmama.common.utils.perm.PermALink" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="userShopOrderListWin" border="normal" apply="com.lvmama.pet.web.shop.shopOrder.ListUserOrderAction" title="兑换记录">
+	<grid>
+		<columns>
+			<column width="100px"></column>
+			<column></column>
+		</columns>
+		<rows>
+		    <row>
+                <hbox>用户名：</hbox>
+                <hbox><label value="@{saction.users.userName }"/></hbox>           
+            </row>
+		    <row>
+                <hbox>当前可用积分：</hbox>
+                <hbox><label value="@{saction.currentPoint }"/></hbox>           
+            </row>
+			<row>
+				<hbox>年末到期积分：</hbox>
+				<hbox><label value="@{saction.aboutToExpiredPoint }"/></hbox>			
+			</row>					
+		</rows>		
+	</grid>	   
+    <listbox id="shopOrderListBox" model="@{saction.shopOrderList,load-after='productTypeId.onSelect,orderStatusId.onSelect,paging.onPaging'}">
+			<listhead>			
+				<listheader label="订单号" width="60px"/>
+				<listheader label="兑换时间 " width="140px"/>
+				<listheader width="140px">
+				    <label value="产品类型:"/>
+					<listbox id="productTypeId" mold="select" onSelect="saction.addSearchByProductType(self.selectedItem.value);">
+						<listitem label="全部" selected="true"/>
+						<listitem label="优惠卷" value="COUPON"/>
+						<listitem label="实物" value="PRODUCT"/>
+					</listbox>
+				</listheader>
+				<listheader label="兑换产品名称"/>
+				<listheader label="兑换数量" width="70px"/>
+				<listheader width="140px">
+				    <label value="订单状态:" />
+					<listbox id="orderStatusId" mold="select" onSelect="saction.addSearchByOrderStatus(self.selectedItem.value);">
+						<listitem label="全部" selected="true"/>
+						<listitem label="末发货" value="UNCONFIRM"/>
+						<listitem label="已发货" value="FINISHED"/>
+						<listitem label="取消" value="CANCEL"/>
+					</listbox>
+				</listheader>
+				<listheader label="操作" width="60px"/>
+			</listhead>
+			<listitem height="25px" self="@{each='shopOrder'}" value="@{shopOrder}">
+				<listcell label="@{shopOrder.orderId}"/>
+				<listcell label="@{shopOrder.createTime}"/>
+				<listcell label="@{shopOrder.formatProductType}"/>
+				<listcell label="@{shopOrder.productName}"/>
+				<listcell label="@{shopOrder.quantity}"/>
+				<listcell label="@{shopOrder.formatOrderStatus}"/>				
+				<listcell>
+					<button label="查看" width="50px" id="query" onClick='saction.showWindow("/shop/shopOrder/shopOrderDetail.zul", self.getAttributes());' >
+                        <custom-attributes orderId="@{shopOrder.orderId}" />
+                    </button>                 			
+				</listcell>
+			</listitem>
+		</listbox>
+        
+        <toolbar>
+			<grid style="border:0">
+			<rows >
+				<row >
+					<cell width="60px">
+						共 <label id="totalRowCountLabel" /> 条
+					</cell>
+					<cell  width="200px">
+						<paging id="paging" pageSize = "15" onPaging='saction.search();'/>
+					</cell>
+				</row>
+			</rows>
+			</grid>
+		</toolbar>
+		
+	</window>
+</zk>

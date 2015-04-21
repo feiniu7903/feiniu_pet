@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+	<bean id="ivrSystemService" class="com.lvmama.pet.payment.phonepay.IvrSystemServiceImpl" />
+
+   	<bean id="cashAccountPayIvrSystemService" class="com.lvmama.pet.payment.phonepay.CashAccountPayIvrSystemServiceImpl" />
+
+	<bean id="commPosSocketService" class="com.lvmama.pet.payment.service.impl.CommPosSocketServiceImpl" />
+	
+	<bean id="sandPosService" class="com.lvmama.pet.payment.service.impl.SandPosServiceImpl" />
+
+	<bean id="byPayPaymentService" class="com.lvmama.pet.payment.service.impl.ByPayPaymentServiceImpl" />
+	
+	<bean id="byPayRefundService" class="com.lvmama.pet.refundment.service.impl.ByPayRefundServiceImpl" />
+	
+	<bean id="unionpayPreService" class="com.lvmama.pet.payment.service.impl.UnionpayPreServiceImpl" />
+	
+	<bean id="unionpayPreRefundService" class="com.lvmama.pet.refundment.service.impl.UnionpayPreRefundServiceImpl" />
+	
+	<bean id="unionpayRefundService" class="com.lvmama.pet.refundment.service.impl.UnionpayRefundServiceImpl" />
+	
+	<bean id="spdbRefundService" class="com.lvmama.pet.refundment.service.impl.SPDBRefundServiceImpl" />
+	
+	<bean id="chinaMobileRefundService" class="com.lvmama.pet.refundment.service.impl.ChinaMobileRefundServiceImpl" />
+	
+	<bean id="ningboBankRefundService" class="com.lvmama.pet.refundment.service.impl.NingboBankRefundServiceImpl" />
+	
+	<bean id="cmbInstalmentRefundService" class="com.lvmama.pet.refundment.service.impl.CMBInstalmentRefundServiceImpl" />
+	
+	<bean id="bocInstalmentRefundService" class="com.lvmama.pet.refundment.service.impl.BOCInstalmentRefundServiceImpl" />
+	
+	<bean id="cmbRefundService" class="com.lvmama.pet.refundment.service.impl.CMBRefundServiceImpl" />
+	
+	<bean id="alipayRefundService" class="com.lvmama.pet.refundment.service.impl.AlipayRefundServiceImpl" />
+	
+	<bean id="cashAccountRefundService" class="com.lvmama.pet.refundment.service.impl.CashAccountRefundServiceImpl" />
+	
+	<bean id="alipayBatchRefundService" class="com.lvmama.pet.refundment.service.impl.AlipayBatchRefundServiceImpl" />
+	
+	<bean id="alipayBptbRefundService" class="com.lvmama.pet.refundment.service.impl.AlipayBptbRefundServiceImpl" />
+	
+	<bean id="storedCardRefundService" class="com.lvmama.pet.refundment.service.impl.StoredCardRefundServiceImpl" />
+	
+	<bean id="lvmamaCardRefundService" class="com.lvmama.pet.refundment.service.impl.LvmamaCardRefundServiceImpl" />
+	
+	<bean id="commRefundService" class="com.lvmama.pet.refundment.service.impl.COMMRefundServiceImpl" />
+	
+	<bean id="bocRefundService" class="com.lvmama.pet.refundment.service.impl.BOCRefundServiceImpl" />
+
+	<bean id="lakalaRefundService" class="com.lvmama.pet.refundment.service.impl.LakalaRefundServiceImpl"/>
+
+    <bean id="refundmentServiceFactory" class="com.lvmama.pet.refundment.service.RefundmentServiceFactory" />
+
+    <bean id="chinapnrRefundService" class="com.lvmama.pet.refundment.service.impl.ChinapnrRefundServiceImpl" />
+    
+    <bean id="upompRefundService" class="com.lvmama.pet.refundment.service.impl.UpompRefundServiceImpl" />
+    
+    <bean id="chinapnrClient" class="com.lvmama.pet.payment.phonepay.ChinaPnrClient"/>
+ 
+	<bean id="chinapnrIvrSystem" class="com.lvmama.pet.payment.phonepay.IvrSystemServiceImpl"/>
+	
+	<bean id="icbcRefundService" class="com.lvmama.pet.refundment.service.impl.ICBCRefundServiceImpl"/>
+	<bean id="icbcInstalmentRefundService" class="com.lvmama.pet.refundment.service.impl.ICBCInstalmentRefundServiceImpl"/>
+	
+	<bean id="paymentQueryServiceFactory" class="com.lvmama.pet.payment.service.PaymentQueryServiceFactory" />
+	
+	<bean id="alipayPaymentQueryService" class="com.lvmama.pet.payment.service.impl.AlipayQueryServiceImpl"/>
+	<bean id="unionpayPaymentQueryService" class="com.lvmama.pet.payment.service.impl.UnionpayQueryServiceImpl"/>
+	<bean id="unionpayPrePaymentQueryService" class="com.lvmama.pet.payment.service.impl.UnionpayPreQueryServiceImpl"/>
+	<bean id="ningboBankPaymentQueryService" class="com.lvmama.pet.payment.service.impl.NingboBankQueryServiceImpl"/>
+	<bean id="tenpayQueryService" class="com.lvmama.pet.payment.service.impl.TenPayQueryServiceImpl"/>
+	<bean id="tenpayPhoneQueryService" class="com.lvmama.pet.payment.service.impl.TenPayPhoneQueryServiceImpl"/>
+	<bean id="baiduQueryService" class="com.lvmama.pet.payment.service.impl.BaiduQueryServiceImpl"/>
+	<bean id="upompQueryService" class="com.lvmama.pet.payment.service.impl.UpompQueryServiceImpl"/>
+	
+	<!-- bean id="moneyAccountPayIvrSystem" class="com.lvmama.payment.phonepay.MoneyAccountPayIvrSystemServiceImpl"/>--> 
+    
+    <bean id="alipayAccountService" class="com.lvmama.pet.recon.service.impl.AlipayAccountServiceImpl"/>
+    <bean id="tenpayAccountService" class="com.lvmama.pet.recon.service.impl.TenpayAccountServiceImpl"/>
+    <bean id="chinapnrAccountService" class="com.lvmama.pet.recon.service.impl.ChinapnrAccountServiceImpl"/>
+    <bean id="ningboAccountService" class="com.lvmama.pet.recon.service.impl.NingboAccountServiceImpl"/>
+    <bean id="unionPayAccountService" class="com.lvmama.pet.recon.service.impl.UnionPayAccountServiceImpl"/>
+    <bean id="cashAccountAccountService" class="com.lvmama.pet.recon.service.impl.CashAccountAccountServiceImpl"/>
+    <bean id="cashBonusAccountService" class="com.lvmama.pet.recon.service.impl.CashBonusAccountServiceImpl"/>
+    <bean id="noReconService" class="com.lvmama.pet.recon.service.impl.NoReconServiceImpl"/>
+    <bean id="sandPosAccountService" class="com.lvmama.pet.recon.service.impl.SandPosAccountServiceImpl"/>
+    
+    <bean id="tenpayRefundServiceImpl" class="com.lvmama.pet.refundment.service.impl.TenpayRefundServiceImpl"/>
+    <bean id="baiduPayRefundService" class="com.lvmama.pet.refundment.service.impl.BaidupayRefundServiceImpl"/>
+</beans>

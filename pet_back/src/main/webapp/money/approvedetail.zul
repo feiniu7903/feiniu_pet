@@ -1,0 +1,60 @@
+<?page title="现金账户列表" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_approvedetail"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_approvedetail" mode="embedded" apply="com.lvmama.pet.web.money.ApproveDetailAction" title="提现申请信息">
+<grid>
+		<columns>
+			<column width="100px"></column>
+			<column></column>
+			<column width="80px"></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row >
+				<hbox>提现流水单号：</hbox>
+				<hbox><label value="@{saction.drawInfo.fincMoneyDraw.moneyDrawId}" /></hbox>
+				<hbox>用户姓名:</hbox>
+				<hbox>
+					<label value="@{saction.drawInfo.user.realName }" />
+				</hbox>
+			</row>
+			<row>
+				<hbox>用户名：</hbox>
+				<hbox><label value="@{saction.drawInfo.user.userName }" /></hbox>
+				<hbox>手机号:</hbox>
+				<hbox>
+					<label value="@{saction.drawInfo.user.mobileNumber }" />
+				</hbox>
+			</row>
+			<row>
+				<hbox>提现金额：</hbox>
+				<hbox><label value="@{saction.drawInfo.fincMoneyDraw.drawAmountYuan }" /></hbox>
+				<hbox>申请时间:</hbox>
+				<hbox>
+					<label value="@{saction.drawInfo.fincMoneyDraw.createTime,converter='com.lvmama.pet.utils.DateZKConverter' }" />
+				</hbox>
+			</row>
+			<row>
+				<hbox>提现至：</hbox>
+				<hbox><label value="@{saction.drawInfo.fincMoneyDraw.bankName }" /></hbox>
+				<hbox>帐号,账户名:</hbox>
+				<hbox>
+					<label value="@{saction.drawInfo.fincMoneyDraw.bankAccount}" />,<label value="@{saction.drawInfo.fincMoneyDraw.bankAccountName}" />
+					[<label value="@{saction.drawInfo.moneyDrowCounts}" />]
+				</hbox>
+			</row>
+			<row spans="1,3">
+				<hbox ></hbox>
+				<hbox>
+					<button visible="@{saction.drawInfo.approveAble }" label="确认" onClick="saction.doConfirm()"/>
+					<button visible="@{saction.drawInfo.approveAble }" label="拒绝" onClick='saction.showWindow("/money/approvedetailreject.zul",self.getAttributes());' >
+						<custom-attributes moneyDrawId="@{saction.drawInfo.fincMoneyDraw.moneyDrawId}"/> 
+					</button>
+					<button visible="@{saction.drawInfo.approveAble }" label="待用户确认" onClick="saction.waitUserConfirm()"/>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+
+</window>
+</zk>

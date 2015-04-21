@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CONN_RECORD">
+
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.conn.ConnRecord">
+	    <result column="CONN_RECORD_ID" property="connRecordId" />
+    <result column="CALL_TYPE_ID" property="callTypeId" />
+    <result column="USER_ID" property="userId" />
+    <result column="OPERATOR_USER_ID" property="operatorUserId" />
+    <result column="FEEDBACK_TIME" property="feedbackTime" />
+    <result column="MEMO" property="memo" />
+    <result column="CREATE_DATE" property="createDate" />
+    <result column="MOBILE" property="mobile" />
+    <result column="CALL_BACK" property="callBack" />
+    <result column="CHANNEL_ID" property="channelId" />
+    <result column="VISIT_TIME" property="visitTime" />
+    <result column="TO_PLACE_NAME" property="toPlaceName" />
+    <result column="FROM_PLACE_NAME" property="fromPlaceName" />
+    <result column="DAY" property="day" />
+    <result column="QUANTITY" property="quantity" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="PRODUCT_ZONE" property="productZone" />
+    <result column="BUSINESS_TYPE" property="businessType" />
+    <result column="SERVICE_TYPE" property="serviceType" />
+    <result column="SUB_SERVICE_TYPE" property="subServiceType" />
+    <result column="FILIALE_NAME" property="filialeName" />
+    <result column="GROUP" property="group" />
+    <result column="BRANCH_TYPE_STR" property="branchTypeStr" />
+    <result column="VISA_TYPE" property="visaType" />
+    <result column="VISA_COUNTRY" property="visaCountry" />
+  </resultMap>
+	
+	
+	<sql id="queryConnRecordPageWhere">
+		<dynamic prepend="where">
+				   		<isNotEmpty prepend="and" property="mobile">
+				  			MOBILE = #mobile#
+				   		</isNotEmpty>
+				   		<isNotNull prepend="and" property="userId">
+				   			USER_ID = #userId#
+				   		</isNotNull>
+				   		<isNotEmpty prepend="and" property="feedbackTime">
+				  			FEEDBACK_TIME &gt;= #feedbackTime#
+				   		</isNotEmpty>
+				   		<isNotEmpty prepend="and" property="feedbackTimeEnd">
+				  			FEEDBACK_TIME &lt;= #feedbackTimeEnd#
+				   		</isNotEmpty>
+				   		<isNotEmpty prepend="and" property="callBack">
+				  			CALL_BACK = #callBack#
+				   		</isNotEmpty>
+	    </dynamic>
+	</sql>
+	
+	<select id="queryConnRecordPageCount" resultClass="java.lang.Long">
+		select count(*) from CONN_RECORD 
+	   <include refid="queryConnRecordPageWhere"/>
+	</select>
+	
+	<select id="queryConnRecordPageConfig" resultMap="BaseResultMap" >
+		SELECT * FROM 
+		(
+				SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+				(
+	    			select * from CONN_RECORD 
+	    			<include refid="queryConnRecordPageWhere"/>
+	    			ORDER BY CONN_RECORD_ID DESC
+		        ) T WHERE ROWNUM &lt;= #endRows#
+		)
+		WHERE ROWNUM1 &gt;=#startRows#
+	</select>
+	
+    <insert id="insertSelective" >
+    <selectKey resultClass="java.lang.Long" keyProperty="connRecordId" >
+      select CONN_RECORD_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into CONN_RECORD
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="connRecordId" >
+        CONN_RECORD_ID
+      </isNotNull>
+      <isNotNull prepend="," property="callTypeId" >
+        CALL_TYPE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        USER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="operatorUserId" >
+        OPERATOR_USER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="feedbackTime" >
+        FEEDBACK_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="memo" >
+        MEMO
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+        CREATE_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        MOBILE
+      </isNotNull>
+      <isNotNull prepend="," property="callBack" >
+        CALL_BACK
+      </isNotNull>
+      <isNotNull prepend="," property="channelId" >
+        CHANNEL_ID
+      </isNotNull>
+      <isNotNull prepend="," property="visitTime" >
+        VISIT_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="toPlaceName" >
+        TO_PLACE_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="fromPlaceName" >
+        FROM_PLACE_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="day" >
+        DAY
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        QUANTITY
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="productZone" >
+        PRODUCT_ZONE
+      </isNotNull>
+      <isNotNull prepend="," property="businessType" >
+        BUSINESS_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="serviceType" >
+        SERVICE_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="subServiceType" >
+        SUB_SERVICE_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="filialeName" >
+        FILIALE_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="group" >
+        "GROUP"
+      </isNotNull>
+      <isNotNull prepend="," property="branchTypeStr" >
+        BRANCH_TYPE_STR
+      </isNotNull>
+      <isNotNull prepend="," property="visaType" >
+        VISA_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="visaCountry" >
+        VISA_COUNTRY
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="connRecordId" >
+        #connRecordId#
+      </isNotNull>
+      <isNotNull prepend="," property="callTypeId" >
+        #callTypeId#
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        #userId#
+      </isNotNull>
+      <isNotNull prepend="," property="operatorUserId" >
+        #operatorUserId#
+      </isNotNull>
+      <isNotNull prepend="," property="feedbackTime" >
+        #feedbackTime#
+      </isNotNull>
+      <isNotNull prepend="," property="memo" >
+        #memo#
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+        #createDate#
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        #mobile#
+      </isNotNull>
+      <isNotNull prepend="," property="callBack" >
+        #callBack#
+      </isNotNull>
+      <isNotNull prepend="," property="channelId" >
+        #channelId#
+      </isNotNull>
+      <isNotNull prepend="," property="visitTime" >
+        #visitTime#
+      </isNotNull>
+      <isNotNull prepend="," property="toPlaceName" >
+        #toPlaceName#
+      </isNotNull>
+      <isNotNull prepend="," property="fromPlaceName" >
+        #fromPlaceName#
+      </isNotNull>
+      <isNotNull prepend="," property="day" >
+        #day#
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        #quantity#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        #productId#
+      </isNotNull>
+      <isNotNull prepend="," property="productZone" >
+        #productZone#
+      </isNotNull>
+      <isNotNull prepend="," property="businessType" >
+        #businessType#
+      </isNotNull>
+      <isNotNull prepend="," property="serviceType" >
+        #serviceType#
+      </isNotNull>
+      <isNotNull prepend="," property="subServiceType" >
+        #subServiceType#
+      </isNotNull>
+      <isNotNull prepend="," property="filialeName" >
+        #filialeName#
+      </isNotNull>
+      <isNotNull prepend="," property="group" >
+        #group#
+      </isNotNull>
+      <isNotNull prepend="," property="branchTypeStr" >
+        #branchTypeStr#
+      </isNotNull>
+      <isNotNull prepend="," property="visaType" >
+        #visaType#
+      </isNotNull>
+      <isNotNull prepend="," property="visaCountry" >
+        #visaCountry#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+	 
+</sqlMap>

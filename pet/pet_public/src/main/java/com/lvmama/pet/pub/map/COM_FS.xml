@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_FS">
+	<!-- ComFSConfig -->
+	<typeAlias type="com.lvmama.comm.pet.po.pub.ComFSConfig" alias="ComFSConfig"/>
+	<resultMap id="BaseComFSConfigMap" class="ComFSConfig">
+		<result property="fsId" column="FS_ID"/>
+		<result property="fsType" column="FS_TYPE"/>
+		<result property="fsIP" column="FTP_IP"/>
+		<result property="fsPort" column="FTP_PORT"/>
+		<result property="ftpUsername" column="FTP_USERNAME"/>
+		<result property="ftpPassword" column="FTP_PASSWORD"/>
+		<result property="ftpOSType" column="FTP_OS_TYPE"/>
+		<result property="ftpDefaultControlEncoding" column="FTP_DEFAULT__CONTROL_ENCODING"/>
+	</resultMap>
+	
+	<!-- ComFSServiceConfig -->
+	<typeAlias type="com.lvmama.comm.pet.po.pub.ComFSServiceConfig" alias="ComFSServiceConfig"/>
+	<resultMap id="BaseComFSServiceConfigMap" class="ComFSServiceConfig">
+		<result property="fsServiceConfigId" column="FS_SERVICE_CONFIG_ID"/>
+		<result property="serverType" column="SERVER_TYPE"/>
+		<result property="fsId" column="FS_ID"/>
+		<result property="rootDir" column="ROOT_DIR"/>
+	</resultMap>
+	
+	<!-- ComFSFiles -->
+	<typeAlias type="com.lvmama.comm.pet.po.pub.ComFSFile" alias="ComFSFile"/>
+	<resultMap id="BaseComFSFileMap" class="ComFSFile">
+		<result property="fsFileId" column="FS_FILE_ID"/>
+		<result property="fsId" column="FS_ID"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="serverFileName" column="SERVER_FILE_NAME"/>
+		<result property="filePath" column="FILE_PATH"/>
+		<result property="insertedTime" column="INSERTED_TIME"/>
+	</resultMap>
+	
+	<insert id="insertComFSFile" parameterClass="ComFSFile">
+		<selectKey keyProperty="fsFileId" resultClass="java.lang.Long">
+			SELECT COM_FS_FILE_SEQ.Nextval from dual
+		</selectKey>
+		INSERT INTO COM_FS_FILE
+			(FS_FILE_ID,FS_ID,FILE_NAME,SERVER_FILE_NAME,FILE_PATH,INSERTED_TIME)
+		VALUES
+			(#fsFileId#,#fsId#,#fileName#,#serverFileName#,#filePath#,#insertedTime#)
+	</insert>
+	
+	<select id="selectComFSServiceConfigByServerType" parameterClass="java.lang.String" resultMap="BaseComFSServiceConfigMap">
+		SELECT S.* FROM COM_FS_SERVICE_CONFIG S WHERE S.SERVER_TYPE = #value#
+	</select>
+	
+	<select id="selectFSCofigById" parameterClass="java.lang.Long" resultMap="BaseComFSConfigMap">
+		SELECT S.* FROM COM_FS_CONFIG S WHERE S.FS_ID = #value#
+	</select>
+	
+	<select id="selectComFSFileById" parameterClass="java.lang.Long" resultMap="BaseComFSFileMap">
+		SELECT S.* FROM COM_FS_FILE S WHERE S.FS_FILE_ID = #value#
+	</select>
+</sqlMap>

@@ -1,0 +1,21 @@
+<?page title="用户管理日志列表" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_list_user_log"?>
+<zk>
+<window title="用户管理日志列表" border="normal" id="win_list_user_log" apply="com.lvmama.pet.web.user.manager.ListUserLogAction">
+	<listbox model="@{saction.comLogList}" width="100%">
+		<listhead>
+			<listheader label="创建时间" width="130px"/>
+			<listheader label="操作人" width="100px"/>
+			<listheader label="操作名称" width="200px"/>
+			<listheader label="操作内容" width="400px"/>
+		</listhead>
+		<listitem  self="@{each='log'}" >
+			<listcell><label value="@{log.createTime}"/></listcell>
+			<listcell><label value="@{log.operatorName}"/></listcell>
+			<listcell><label value="@{log.logName}"/></listcell>
+			<listcell><label value="@{log.content}"/></listcell>
+		</listitem>
+	</listbox>
+	<span/>
+</window>
+</zk>

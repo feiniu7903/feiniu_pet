@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="REVIEWCOMMENTPRODUCE" >
+
+   <parameterMap class="map" id="swapParameters">  
+         <parameter property="keyword_b"  javaType="java.util.Date" jdbcType="Date" mode="IN"/>   
+         <parameter property="keyword_e"  javaType="java.util.Date" jdbcType="Date" mode="IN"/>  
+         <parameter property="param_b"  javaType="java.util.Date" jdbcType="Date" mode="IN"/>   
+         <parameter property="param_e"  javaType="java.util.Date" jdbcType="Date" mode="IN"/>   
+         <parameter property="param_r1"  javaType="java.lang.Integer" jdbcType="VARCHAR" mode="IN"/>   
+         <parameter property="param_r2"  javaType="java.lang.Integer" jdbcType="VARCHAR" mode="IN"/>  
+         <parameter property="count"  javaType="java.lang.Integer" jdbcType="VARCHAR" mode="OUT"/>
+    </parameterMap>
+   
+      <procedure  id="exeScanningComment" parameterMap="swapParameters">  
+            <![CDATA[{call test_scanning_cmt_comment(?,?,?,?,?,?,?)}]]>
+      </procedure >
+        <procedure  id="exeScanningCmtReply" parameterMap="swapParameters">  
+            <![CDATA[{call test_scanning_cmt_reply(?,?,?,?,?,?,?)}]]>
+      </procedure > 
+</sqlMap>

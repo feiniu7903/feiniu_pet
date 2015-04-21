@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MOBILE_RECOMMEND_INFO" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.MobileRecommendInfo" >
+    <result column="ID" property="id" />
+    <result column="RECOMMEND_TITLE" property="recommendTitle" />
+    <result column="RECOMMEND_TYPE" property="recommendType" />
+    <result column="RECOMMEND_IMAGE_URL" property="recommendImageUrl" />
+    <result column="RECOMMEND_HD_IMAGE_URL" property="recommendHDImageUrl" />
+    <result column="RECOMMEND_PAREND_ID" property="recommendParendId" />
+    <result column="RECOMMEND_CONTENT" property="recommendContent" />
+    <result column="CREATED_TIME" property="createdTime" />
+    <result column="RECOMMEND_BLOCK_ID" property="recommendBlockId" />
+    <result column="IS_VALID" property="isValid" />
+    <result column="OBJECT_ID" property="objectId" />
+    <result column="OBJECT_TYPE" property="objectType" />
+    <result column="IS_NODE" property="isNode" />
+    <result column="HD_URL" property="hdUrl" />
+    <result column="URL" property="url" />
+    <result column="SEQ_NUM" property="seqNum" />
+    <result column="BEGIN_DATE" property="beginDate" />
+    <result column="END_DATE" property="endDate" />
+    <result column="TAG" property="tag" />
+    <result property="longitude" column="LONGITUDE" />
+    <result property="latitude" column="LATITUDE" />
+    <result property="price" column="PRICE" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobileRecommendInfo" >
+    select ID, RECOMMEND_TITLE, RECOMMEND_TYPE, RECOMMEND_HD_IMAGE_URL, RECOMMEND_IMAGE_URL, RECOMMEND_PAREND_ID,
+      RECOMMEND_CONTENT, CREATED_TIME, RECOMMEND_BLOCK_ID, IS_VALID, OBJECT_ID, OBJECT_TYPE,
+      IS_NODE, HD_URL, URL, SEQ_NUM,BEGIN_DATE,END_DATE,TAG,LONGITUDE,LATITUDE,PRICE
+    from MOBILE_RECOMMEND_INFO
+    where ID = #id#
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileRecommendInfo" >
+    delete from MOBILE_RECOMMEND_INFO where ID = #id#
+  </delete>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileRecommendInfo" >
+	   <selectKey keyProperty="id" resultClass="java.lang.Long">
+			SELECT MOBILE_RECOMMEND_INFO_ID_SEQ.nextval FROM DUAL
+	   </selectKey>
+    insert into MOBILE_RECOMMEND_INFO (ID, RECOMMEND_TITLE, RECOMMEND_TYPE, RECOMMEND_HD_IMAGE_URL, RECOMMEND_IMAGE_URL,
+      RECOMMEND_PAREND_ID, RECOMMEND_CONTENT, CREATED_TIME, RECOMMEND_BLOCK_ID, IS_VALID, OBJECT_ID,
+      OBJECT_TYPE, IS_NODE, HD_URL, URL, SEQ_NUM,BEGIN_DATE,END_DATE,TAG,LONGITUDE,LATITUDE,PRICE)
+    values (#id#, #recommendTitle#, #recommendType#,#recommendHDImageUrl#,
+      #recommendImageUrl#, #recommendParendId#, #recommendContent#,
+      #createdTime#, #recommendBlockId#, #isValid#, #objectId#,
+      #objectType#, #isNode#, #hdUrl#, #url#, #seqNum#,#beginDate#,#endDate#,#tag#,#longitude#,#latitude#,#price#)
+  </insert>
+  
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileRecommendInfo" >
+    insert into MOBILE_RECOMMEND_INFO
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="recommendTitle" >
+        RECOMMEND_TITLE
+      </isNotNull>
+      <isNotNull prepend="," property="recommendType" >
+        RECOMMEND_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="recommendHDImageUrl" >
+        RECOMMEND_HD_IMAGE_URL
+      </isNotNull>
+      <isNotNull prepend="," property="recommendImageUrl" >
+        RECOMMEND_IMAGE_URL
+      </isNotNull>
+      <isNotNull prepend="," property="recommendParendId" >
+        RECOMMEND_PAREND_ID
+      </isNotNull>
+      <isNotNull prepend="," property="recommendContent" >
+        RECOMMEND_CONTENT
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        CREATED_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="recommendBlockId" >
+        RECOMMEND_BLOCK_ID
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        IS_VALID
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        OBJECT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        OBJECT_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="isNode" >
+        IS_NODE
+      </isNotNull>
+      <isNotNull prepend="," property="hdUrl" >
+        HD_URL
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+        URL
+      </isNotNull>
+      <isNotNull prepend="," property="seqNum" >
+        SEQ_NUM
+      </isNotNull>
+       <isNotNull prepend="," property="beginDate" >
+        BEGIN_DATE
+      </isNotNull>
+       <isNotNull prepend="," property="endDate" >
+        END_DATE
+      </isNotNull>
+       <isNotNull prepend="," property="tag" >
+        TAG
+      </isNotNull>
+       <isNotNull prepend="," property="longitude" >
+        LONGITUDE
+      </isNotNull>
+       <isNotNull prepend="," property="latitude" >
+        LATITUDE
+      </isNotNull>
+       <isNotNull prepend="," property="price" >
+        PRICE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+       MOBILE_RECOMMEND_INFO_ID_SEQ.nextval
+      </isNotNull>
+      <isNotNull prepend="," property="recommendTitle" >
+        #recommendTitle#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendType" >
+        #recommendType#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendHDImageUrl" >
+        #recommendHDImageUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendImageUrl" >
+        #recommendImageUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendParendId" >
+        #recommendParendId#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendContent" >
+        #recommendContent#
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        #createdTime#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendBlockId" >
+        #recommendBlockId#
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        #isValid#
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        #objectId#
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        #objectType#
+      </isNotNull>
+      <isNotNull prepend="," property="isNode" >
+        #isNode#
+      </isNotNull>
+      <isNotNull prepend="," property="hdUrl" >
+        #hdUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+        #url#
+      </isNotNull>
+      <isNotNull prepend="," property="seqNum" >
+        #seqNum#
+      </isNotNull>
+        <isNotNull prepend="," property="beginDate" >
+        #beginDate#
+      </isNotNull>
+        <isNotNull prepend="," property="endDate" >
+        #endDate#
+      </isNotNull>
+      <isNotNull prepend="," property="tag" >
+        #tag#
+      </isNotNull>
+       <isNotNull prepend="," property="longitude" >
+        #longitude#
+      </isNotNull>
+       <isNotNull prepend="," property="latitude" >
+        #latitude#
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        #price#
+      </isNotNull>
+      
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileRecommendInfo" >
+    update MOBILE_RECOMMEND_INFO
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="recommendTitle" >
+        RECOMMEND_TITLE = #recommendTitle#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendType" >
+        RECOMMEND_TYPE = #recommendType#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendHDImageUrl" >
+        RECOMMEND_HD_IMAGE_URL = #recommendHDImageUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendImageUrl" >
+        RECOMMEND_IMAGE_URL = #recommendImageUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendParendId" >
+        RECOMMEND_PAREND_ID = #recommendParendId#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendContent" >
+        RECOMMEND_CONTENT = #recommendContent#
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        CREATED_TIME = #createdTime#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendBlockId" >
+        RECOMMEND_BLOCK_ID = #recommendBlockId#
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        IS_VALID = #isValid#
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        OBJECT_ID = #objectId#
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        OBJECT_TYPE = #objectType#
+      </isNotNull>
+      <isNotNull prepend="," property="isNode" >
+        IS_NODE = #isNode#
+      </isNotNull>
+      <isNotNull prepend="," property="hdUrl" >
+        HD_URL = #hdUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+        URL = #url#
+      </isNotNull>
+      <isNotNull prepend="," property="seqNum" >
+        SEQ_NUM = #seqNum#
+      </isNotNull>
+      <isNotNull prepend="," property="beginDate" >
+       BEGIN_DATE = #beginDate#
+      </isNotNull>
+      <isNotNull prepend="," property="endDate" >
+       END_DATE = #endDate#
+      </isNotNull>
+      <isNotNull prepend="," property="tag" >
+       TAG = #tag#
+      </isNotNull>
+      <isNotNull prepend="," property="longitude" >
+        LONGITUDE = #longitude#
+      </isNotNull>
+       <isNotNull prepend="," property="latitude" >
+        LATITUDE = #latitude#
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        PRICE = #price#
+      </isNotNull>
+    </dynamic>
+    where ID = #id#
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileRecommendInfo" >
+    update MOBILE_RECOMMEND_INFO
+    set RECOMMEND_TITLE = #recommendTitle#,
+      RECOMMEND_TYPE = #recommendType#,
+      RECOMMEND_HD_IMAGE_URL = #recommendHDImageUrl#,
+      RECOMMEND_IMAGE_URL = #recommendImageUrl#,
+      RECOMMEND_PAREND_ID = #recommendParendId#,
+      RECOMMEND_CONTENT = #recommendContent#,
+      CREATED_TIME = #createdTime:DATE#,
+      RECOMMEND_BLOCK_ID = #recommendBlockId#,
+      IS_VALID = #isValid#,
+      OBJECT_ID = #objectId#,
+      OBJECT_TYPE = #objectType#,
+      IS_NODE = #isNode#,
+      HD_URL = #hdUrl#,
+      URL = #url#,
+      SEQ_NUM = #seqNum#,
+      BEGIN_DATE = #beginDate#,
+      END_DATE = #endDate#,
+      TAG = #tag#,
+      LONGITUDE = #longitude#,
+      LATITUDE = #latitude#,
+      PRICE = #price#
+    where ID = #id#
+  </update>
+  
+  <!-- 更新状态 -->
+  <update id="updateRecommendInfoStatus" parameterClass="java.util.Map">
+      update MOBILE_RECOMMEND_INFO set IS_VALID = #isValid# where ID = #id#
+  </update>
+  
+  <!-- 更新排序值 -->
+  <update id="updateSeq" parameterClass="java.util.Map">
+      update MOBILE_RECOMMEND_INFO set SEQ_NUM = #seqNum# where ID = #id#
+  </update>
+  
+  <!-- 根据id查找 -->
+  <select id="findByMobileRecommendInfoId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+    select *
+    from MOBILE_RECOMMEND_INFO
+    where ID = #id#
+  </select>
+  
+  <!-- 分页查询 头部 -->
+  <sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+  </sql>
+  
+  <!-- 分页查询 尾部 -->
+  <sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>		
+		</dynamic>
+  </sql>
+  
+  <!-- 查询条件 -->
+  <sql id="queryListWhere">
+      <dynamic prepend=" WHERE ">
+		    <isNotEmpty property="id" prepend=" AND ">ID = #id#</isNotEmpty>
+			<isNotEmpty property="recommendTitle" prepend=" AND ">RECOMMEND_TITLE like '%'||#recommendTitle#||'%'</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=" AND ">IS_VALID = #isValid#</isNotEmpty>
+			<isNotEmpty property="recommendHDImageUrl" prepend=" AND ">RECOMMEND_HD_IMAGE_URL like '%'||#recommendHDImageUrl#||'%'</isNotEmpty>
+			<isNotEmpty property="recommendImageUrl" prepend=" AND ">RECOMMEND_IMAGE_URL like '%'||#recommendImageUrl#||'%'</isNotEmpty>
+			<isNotEmpty property="hdUrl" prepend=" AND ">HD_URL is not null</isNotEmpty>
+			<isNotEmpty property="url" prepend=" AND ">URL is not null</isNotEmpty>
+			<isNotEmpty property="recommendType" prepend=" AND ">RECOMMEND_TYPE = #recommendType#</isNotEmpty>
+			<isNotEmpty property="currentDate" prepend=" AND"> BEGIN_DATE &lt;= #currentDate#  and END_DATE &gt;=#currentDate#  </isNotEmpty>
+			<isNotEmpty property="recommendBlockId" prepend=" AND ">RECOMMEND_BLOCK_ID = #recommendBlockId#</isNotEmpty>
+			<isNotEmpty property="tag" prepend=" AND ">TAG = #tag#</isNotEmpty>
+			<isNotEmpty property="objectId" prepend=" AND ">OBJECT_ID = #objectId#</isNotEmpty>
+			<isNotEmpty property="objectType" prepend=" AND ">OBJECT_TYPE = #objectType#</isNotEmpty>
+			 order by SEQ_NUM desc
+		</dynamic>
+  </sql>
+  
+  <!-- 查询列表  -->
+  <select id="queryRecommendInfoList" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="isPaging">
+		  <include refid="pageHeader"/>
+		</isNotEmpty>
+		SELECT * FROM MOBILE_RECOMMEND_INFO
+		<include refid="queryListWhere"/>
+		<isNotEmpty property="isPaging">
+		   <include refid="pageFooter"/>
+		   order by SEQ_NUM desc
+		</isNotEmpty>
+   </select>
+  
+  <!-- 总数  -->
+  <select id="countRecommendInfoList" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		SELECT COUNT(*) FROM MOBILE_RECOMMEND_INFO
+		<include refid="queryListWhere"/>
+  </select>
+  
+  <!-- 子节点删除 根据id 和 recommendBlockId-->
+  <delete id="deleteByparams" parameterClass="java.util.Map" >
+    delete from MOBILE_RECOMMEND_INFO WHERE 1=1
+    <isNotEmpty property="id" prepend="and">
+				 ID = #id#
+	</isNotEmpty>	
+	<isNotEmpty property="recommendBlockId" prepend="and">
+				 RECOMMEND_BLOCK_ID = #recommendBlockId#
+	</isNotEmpty>	
+  </delete>
+  <!-- 根节点删除  -->
+  <delete id="deleteMobileRecommendInfoByBlockIdAndSon" parameterClass="java.lang.Long" >
+    delete from MOBILE_RECOMMEND_INFO where RECOMMEND_BLOCK_ID in(select RECOMMEND_BLOCK_ID from MOBILE_RECOMMEND_BLOCK where PARENT_ID= #id#)
+  </delete>
+</sqlMap>

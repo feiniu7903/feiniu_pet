@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_NEWS" >
+    <resultMap class="com.lvmama.comm.vo.comment.CmtNewsVO" id="cmtNewsMap">
+    	<result property="id" column="CMT_NEWS_ID"/>
+    	<result property="title" column="TITLE"/>
+    	<result property="url" column="URL"/>
+    	<result property="pic" column="PIC"/>
+    	<result property="picUrl" column="PIC_URL"/>
+    	<result property="summary" column="SUMMARY"/>
+    	<result property="createdTime" column="CREATED_TIME"/>
+    	<result property="relatePlaceId" column="RELATE_PLACE_ID"/>
+    </resultMap>
+    
+	<insert id="insert" parameterClass="com.lvmama.comm.vo.comment.CmtNewsVO">
+		<selectKey resultClass="java.lang.Long" keyProperty="id" >
+			select CMT_NEWS_SEQ.nextval as id from DUAL
+		</selectKey>
+		INSERT INTO CMT_NEWS
+			(CMT_NEWS_ID, TITLE, URL, PIC, PIC_URL, SUMMARY, CREATED_TIME)
+		VALUES
+			(#id#, #title#, #url#, #pic#, #picUrl#, #summary#, sysdate)
+	</insert>
+
+	<update id="update" parameterClass="com.lvmama.comm.vo.comment.CmtNewsVO">
+		UPDATE CMT_NEWS SET
+			TITLE = #title#,
+			URL = #url#,
+			PIC = #pic#,
+			PIC_URL = #picUrl#,
+			SUMMARY = #summary#,
+			RELATE_PLACE_ID=#relatePlaceId#
+		WHERE
+			CMT_NEWS_ID = #id#
+	</update>
+		
+	<sql id="reuserSQL">
+		SELECT * 
+		FROM CMT_NEWS
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="id"  prepend=" AND ">CMT_NEWS_ID=#id#</isNotEmpty>
+			<isNotEmpty property="relatePlaceId"  prepend=" AND ">RELATE_PLACE_ID=#relatePlaceId#</isNotEmpty>
+		</dynamic>
+		ORDER BY CMT_NEWS_ID DESC
+	</sql>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="cmtNewsMap">
+		SELECT row_.* FROM ( 
+			SELECT rownum rowunm_,p.* from ( 
+				select * from(<include refid="reuserSQL"/> )
+			) p 
+		) row_ 
+		<dynamic prepend=" where">
+		<isNotNull prepend=" and " property="_startRow">
+			<![CDATA[row_.rowunm_ between  #_startRow# and #_endRow#]]> 
+		</isNotNull>
+		</dynamic>
+	</select>
+	
+	<sql id="getReviewBackSQL">
+		SELECT * 
+		FROM CMT_NEWS
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="latestId"  prepend=" AND ">CMT_NEWS_ID &lt;#latestId#</isNotEmpty>
+		</dynamic>
+		ORDER BY CMT_NEWS_ID DESC
+	</sql>
+	
+	<select id="queryReview" parameterClass="java.util.Map" resultMap="cmtNewsMap">
+		SELECT row_.* FROM ( 
+			SELECT rownum rowunm_,p.* from ( 
+				select * from(<include refid="getReviewBackSQL"/> )
+			) p 
+		) row_ 
+		<dynamic prepend=" where">
+		<isNotNull prepend=" and " property="_startRow">
+			<![CDATA[row_.rowunm_ between  #_startRow# and #_endRow#]]> 
+		</isNotNull>
+		</dynamic>
+	</select>
+
+	<select id="count" parameterClass="java.util.Map" resultClass="long">
+		select count(*) from (
+			<include refid="reuserSQL"/>
+		)
+	</select>
+	
+	<select id="queryByPk"  resultMap="cmtNewsMap">
+		SELECT * FROM CMT_NEWS WHERE CMT_NEWS_ID = #id#
+	</select>
+	
+</sqlMap>

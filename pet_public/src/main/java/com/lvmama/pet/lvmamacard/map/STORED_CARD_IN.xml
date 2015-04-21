@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="STORED_CARD_IN" >
+   <typeAlias alias="storedCardIn" type="com.lvmama.comm.pet.po.lvmamacard.StoredCardIn"/>
+   <resultMap id="baseMap" class="storedCardIn" >
+    <result column="IN_ID" property="inId" />
+    <result column="IN_CODE" property="inCode" />
+    <result column="IN_COUNT" property="inCount"/>
+    <result column="AMOUNT" property="amount" />
+    <result column="CARD_NO_BEGIN" property="cardNoBegin" />
+    <result column="CARD_NO_END" property="cardNoEnd" />
+    <result column="IN_DATE" property="inDate" />
+    <result column="CREATEDATE" property="createDate"/>
+    <result column="IN_STATUS" property="inStatus"/>
+  </resultMap>
+  
+   <resultMap id="lvmamaCardStatisticsMap" class="com.lvmama.comm.pet.vo.lvmamacard.LvmamaCardStatistics" >
+    <result column="IN_CODE" property="inCode" />
+    <result column="IN_COUNT" property="inCount"/>
+    <result column="AMOUNT" property="amount" />
+    <result column="CARD_NO_BEGIN" property="cardNoBegin" />
+    <result column="CARD_NO_END" property="cardNoEnd" />
+    <result column="IN_DATE" property="inDate" />
+    <result property="outCount" column="out_count"/>
+    <result property="cancelCount" column="cancel_count"/>
+   </resultMap>
+
+  <sql id="whereByParam">
+        <dynamic prepend="where">
+          <isNotEmpty property="amount" prepend="and"> 
+               t.AMOUNT=#amount#
+          </isNotEmpty>
+           <isNotEmpty property="incode" prepend="and"> 
+               t.IN_CODE=#incode#
+          </isNotEmpty>
+           <isNotEmpty property="cardNo" prepend="and"> 
+               t.IN_CODE in(select  s.card_batch_no  from stored_card s   where s.card_no=#cardNo#)  
+          </isNotEmpty>
+           <isNotEmpty property="inStatus" prepend="and"> 
+               t.IN_STATUS=#inStatus#
+          </isNotEmpty>
+      </dynamic>
+  </sql>
+   <select id="countByParamForInStorege" resultClass="java.lang.Long" parameterClass="java.util.Map">
+      select count(*) from stored_card_in t 
+      <include refid="whereByParam"/>
+   </select>
+   <select id="getCardCountByParamForInStorege" resultClass="java.lang.Long" parameterClass="java.util.Map">
+       select count(*) from  stored_card m 
+       where     m.type=1 <isNotEmpty prepend=" and " property="stockStatus">m.STOCK_STATUS=#stockStatus#</isNotEmpty> <isNotEmpty prepend=" and " property="status"> m.status=#status# </isNotEmpty> 
+       and  m.card_batch_no in (select t.in_code from stored_card_in t  <include refid="whereByParam"/> ) 
+   </select>
+   <select id="queryByParamForInStorege"  resultMap="baseMap" parameterClass="java.util.Map" >
+         <include refid="pageSearchHead"/>
+        select t.in_id,t.in_code,t.in_count,t.amount,t.card_no_begin,t.card_no_end,t.in_date,t.createdate,t.in_status 
+        from stored_card_in t 
+         <include refid="whereByParam"/>
+          <include refid="pageSearchFoot"/>
+   </select>
+   <select id="getIncodeForInStorege" resultClass="java.lang.String" parameterClass="java.lang.String" >
+        select  max(t.IN_CODE) from stored_card_in t where t.in_code like #cardPreCode# order by t.in_code desc
+   </select>
+   <insert id="insert" parameterClass="storedCardIn">
+    <selectKey resultClass="java.lang.Integer" keyProperty="inId" >
+      select lvmama_pet.stored_card_in_seq.nextval as id from DUAL
+    </selectKey>
+     insert into stored_card_in (in_id, in_code, amount, card_no_begin, card_no_end, createdate, in_status, in_count)
+     values(#inId# ,#inCode#,#amount#,#cardNoBegin#,#cardNoEnd#,sysdate,#inStatus#,#inCount#)
+   </insert>
+   <update id="updateByParam" parameterClass="java.util.Map">
+    update stored_card_in 
+    <dynamic prepend="set">
+     <isNotEmpty prepend="," property="inStatus">
+      in_status=#inStatus#
+     </isNotEmpty>
+       <isNotEmpty prepend="," property="inDate">
+       IN_DATE=#inDate#
+     </isNotEmpty>
+    </dynamic> 
+   <dynamic prepend="where">
+     <isNotEmpty prepend="and" property="inCode">
+         in_code=#inCode# 
+     </isNotEmpty>
+   </dynamic>    
+   </update>
+   <select id="getLvmamaCardStatisticsByInCode" parameterClass="java.lang.String" resultMap="lvmamaCardStatisticsMap">
+       select s.in_code,s.amount,s.card_no_begin,s.card_no_end,s.in_date,
+        (select count(*)
+          from stored_card m
+         where m.card_batch_no = s.in_code
+           and m.status != 'CANCEL') as in_count,
+       (select count(*)
+          from stored_card m
+         where m.card_batch_no = s.in_code
+           and m.stock_status = 'OUT_STOCK') as out_count,
+            (select count(*)
+          from stored_card m
+         where m.card_batch_no = s.in_code
+           and m.status = 'CANCEL') as cancel_count
+     from lvmama_pet.stored_card_in s
+    where s.in_code = #inCode#
+   </select>
+   
+   
+    <resultMap id="lvmamaCardStatisticsMap2" class="com.lvmama.comm.pet.vo.lvmamacard.LvmamaCardStatistics" >
+        <result column="out_CODE" property="outCode" />
+        <result column="sale_person" property="salePerson"/>
+        <result column="sale_to_company" property="saleToCompany" />
+        <result column="cardno_begin" property="cardNoBegin" />
+        <result column="cardno_end" property="cardNoEnd" />
+        <result column="out_details_count" property="outDetailsCount" />
+    </resultMap>
+   <sql id="selectResultFortongji">
+        select s.out_code,s.sale_person,s.sale_to_company, d.out_details_count,d.cardno_begin ,d.cardno_end
+         from lvmama_pet.stored_card_out s left join  stored_card_out_details d on d.out_code = s.out_code
+          where s.out_code in ( select ss.out_code
+		                        from stored_card ss
+		                       where ss.card_batch_no = #inCode# 
+		                         and ss.stock_status = 'OUT_STOCK'  
+		                         <isNotEmpty prepend=" and " property="cardNo">ss.CARD_NO=#cardNo#</isNotEmpty> ) 
+               and d.out_details_amount=#amount#
+               <isNotEmpty prepend=" and " property="outCode">s.OUT_CODE=#outCode# </isNotEmpty>
+               <isNotEmpty prepend=" and " property="salePerson">s.SALE_PERSON=#salePerson#</isNotEmpty>
+               <isNotEmpty prepend=" and " property="saleToCompany">s.SALE_TO_COMPANY=#saleToCompany#</isNotEmpty>
+   </sql>
+   <select id="countByParamForInStoreAndOutStore" parameterClass="java.util.Map" resultClass="java.lang.Long">
+      select count(*) from ( <include refid="selectResultFortongji"/> ) t
+      
+   </select>
+   <select id="queryByParamForInStoreAndOutStore" resultMap="lvmamaCardStatisticsMap2" parameterClass="java.util.Map">
+          <include refid="pageSearchHead"/>
+          <include refid="selectResultFortongji"/>
+          <include refid="pageSearchFoot"/>
+   </select>
+</sqlMap>

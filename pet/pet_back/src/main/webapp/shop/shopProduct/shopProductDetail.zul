@@ -1,0 +1,72 @@
+<?page title="订单详情" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./shopProductDetialWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="shopProductDetialWin" border="normal" title="产品详情" apply="com.lvmama.pet.web.shop.shopProduct.NewProductAction">
+	<grid>
+			<columns>
+				<column width="100px"></column>
+				<column></column>
+				<column width="100px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>产品名称： </hbox>
+					<hbox><label id="productName" value="@{saction.product.productName}"/></hbox>
+					<hbox>产品编号：</hbox>
+					<hbox><label id="productCode" value="@{saction.product.productCode}"/></hbox>
+				</row>
+				<row>
+					<hbox>所需积分：</hbox>
+					<hbox><label id="pointChange" value="@{saction.product.pointChange}"/></hbox>
+					<hbox>市场价：</hbox>
+					<hbox><label id="marketPrice" value="@{saction.product.marketPrice}"/></hbox>						
+				</row>	
+				<row>
+					<hbox>库存：</hbox>
+					<hbox><label id="stocks" value="@{saction.product.stocks}"/></hbox>
+					<hbox>推荐位置</hbox>
+					<hbox><label id="chCommend" value="@{saction.product.chCommend}"/></hbox>				
+				</row>	
+				<row>
+					<hbox>兑换类别：</hbox>
+					<hbox>
+						<label id="chChangeType" value="@{saction.product.chChangeType}"/>
+					</hbox>				
+					<hbox>产品类别：</hbox>
+					<hbox>
+						<label id="chProductType" value="@{saction.product.chProductType}"/>
+					</hbox>
+				</row>
+				<row>
+					<hbox>图片：</hbox>
+					<hbox>
+				 		<image src="@{saction.product.absolutePictureUrl}" width="170px" height="100px"></image>										
+					</hbox>
+					<hbox></hbox>							
+				</row>			
+				<row spans="1,3" height="100px">
+					<hbox>产品详细信息：</hbox>
+					<hbox><label id="content" value="@{saction.product.content}"/></hbox>					
+				</row>
+				<row spans="4">
+				    <vbox>		
+				    <label value="操作日志："/>	
+					<listbox model="@{saction.logList}">					    
+						<listhead>
+						    <listheader label="操作人" width="15%"/>	
+						    <listheader label="操作内容" width="65%"/>	 		
+							<listheader label="操作日期" width="20%"/>								
+						</listhead>
+						<listitem height="25px" self="@{each='log'}" value="log">
+						    <listcell label="@{log.operatorId}" />	
+							<listcell label="@{log.content}" />	
+							<listcell label="@{log.createTime}" />
+						</listitem>
+					</listbox>	
+					</vbox>
+				</row>																												
+			</rows>
+		</grid>	
+	</window>
+</zk>

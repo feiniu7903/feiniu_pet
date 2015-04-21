@@ -1,0 +1,124 @@
+@charset "utf-8";
+/* reset */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{padding:0;margin:0; font-family:'宋体';}
+body {font:12px/1.5 Tahoma,Helvetica,simsun,sans-serif;color:#666;word-wrap:break-word;word-break:break-all;background-color:#FFFFFF;}
+abbr,article,aside,bb,datagrid,datalist,details,dialog,eventsource,figure,footer,header,mark,menu,meter,nav,output,progress,section,time{margin:0;padding:0;display:block; }
+table{border-collapse:collapse;border-spacing:0;}
+ol,ul{list-style:none outside;}
+em,i,strong,b{font-weight:normal;font-style:normal;}
+caption,th{text-align:left;}
+h1,h2,h3,h4,h5,h6{font-size:100%; font-weight:normal}
+fieldset,img{border:0;}
+a{text-decoration:none;color:#0055ee;}
+a:hover{text-decoration:none;}
+input,textarea{padding:2px;}
+input,select,textarea{font:12px Tahoma,Arial,simsun;}
+
+
+.clearfix:after{content:".";height:0;visibility:hidden;display:block;clear:both;font-size:0;line-height:0}
+.clearfix{*zoom:1;}
+.clear{ clear:both}
+
+
+.card_wapper{ width:980px; margin:0 auto;}
+.card_wapper .card_txt{ background: url(card_images/top_bg.gif) no-repeat left top; width:980px; height:65px; position:relative }
+.card_wapper .card_txt p{font:normal 21px/23px '微软雅黑','黑体'; color:#000; position:absolute; left:35px; top:12px;}
+.card_cont{ background:url(card_images/card_bg.gif) repeat-y left top; width:980px; overflow:hidden;}
+
+.card_cont .card_main{ float:left; width:680px;overflow:hidden; position:relative; height:700px;}
+.card_cont .card_titie{ position:absolute; left:0px; width:318px;}
+
+.card_cont .card_ka{ position:absolute; left:24px; top:50px; float:left;}
+
+.card_cont .card_login{ position:absolute; right:0px; top:50px; width:380px; height:200px;display:none;}
+.card_cont .card_login .p_login{ position:absolute; top:50px;}
+.card_cont .card_login .p_login p{font:normal 16px/35px '宋体'; color:#000;  }
+.card_cont .card_login .card_login_bt{position:absolute;left:197px;top: -5px;
+}
+.card_cont .login_online{position:absolute;top:73px;right:0px;width:380px; }
+.card_cont .login_online p{font:normal 16px/35px '宋体'; color:#000 ;font:normal 16px/35px 'Arial, Helvetica, sans-serif'; text-align:center;}
+.card_cont .login_online .card_names{ text-align:center; color:#cc0066; font-weight:bold}
+.card_cont .login_online .shengqing{ text-align:center}
+
+
+
+.card_cont .card_side{ float:right; width:280px;}
+
+.info_main{position:absolute;top:252px;left:16px;width: 662px;}
+.info_main p{font:normal 14px/25px '宋体'; color:#000}
+.sq_pic{ position:absolute; top:400px; left:24px;}
+
+.hot_tuijian{ background:url(/nsso/images/member_card/card_images/r_pic.jpg) no-repeat left top; width:250px; height:290px; margin-top:25px; position:relative}
+.hot_tuijian .tuijian_pic{ position:absolute; top:53px; left:20px;}
+.hot_tuijian .tuijian_pic .pic_seat{ margin-bottom:15px;}
+
+
+html,body {_height:100%;_width:100%;}
+.bg-tan {background-color:#000;filter:Alpha(opacity=40);-moz-opacity:0.4;opacity:0.4; position:fixed;_position:absolute;width:100%; height:100%;left:0;top:0;z-index:990; display:none; }
+.card_tan{position:absolute;z-index:997; border:#cc0066 solid 3px;left:0px; top:0px;background:#fff; width:408px; height:160px;display:none; }
+.choujiang{ width:382px; margin:0 auto }
+.login_title{ height:30px; border-bottom:1px solid #d8dfea}
+.login_title h4{ float:left; font-family:14px; color:#000; height:30px; line-height:30px; vertical-align:middle; font-weight:bold}
+.login_title .closed{ float:right; margin-top:3px;}
+.login_title .closed a{ cursor:pointer}
+.cj_list{ margin-top:5px;}
+.cj_list p{font:normal 12px/25px '宋体'; color:#000}
+.bt_lv1{ background:url(card_images/buttom_a.jpg) no-repeat left top; width:64px; height:21px; border:0px; margin-left:150px; margin-top:25px; cursor:pointer}
+
+
+.card_tan1{ width:980px; overflow:hidden;margin:0 auto }
+.title_tan{ background:url(card_images/tan_title.gif) no-repeat left top ; width:980px; height:51px; position:relative}
+.title_tan .titile_login{ position:absolute; right:15px; top:20px;font:normal 12px/17px '宋体';}
+.bound_cont{ border-left:#e4e4e4 solid 1px;border-right:#e4e4e4 solid 1px; width:938px; background:#FFF; padding:20px;}
+.bound_info{ margin-top: 30px; margin-left:60px;}
+.bound_info p{font:normal 14px/30px '宋体'; color:#000}
+.card_height{ height:300px;}
+.bound_info .color_succuse{ color:#339900;font:bold 16px/30px '宋体';}
+.bound_photo{ width:334px; height:157px; border:#cc0066 solid 3px; margin-left:100px; margin-top:30px; padding-top:30px; padding-left:50px;}
+.bound_photo a{font:normal 12px/30px 'Arial, Helvetica, sans-serif';}
+.bound_photo span{font:normal 12px/30px 'Arial, Helvetica, sans-serif';color:#cc0066}
+.bound_photo font{ color:#cc0066;font:bold 15px/30px 'Arial, Helvetica, sans-serif';}
+.bound_photo .bound_secend{ margin-top:10px; width:189px; display:block}
+.bound_tips{font:normal 12px/30px '宋体'; margin:50px 0px 20px 0px;}
+.form_txt{font:normal 14px/30px '宋体'; color:#333333}
+.form_txt span{ color:#F00}
+.check_list{ background: url(card_images/form_bt.gif) no-repeat left top; width:189px; height:35px; border:0px; cursor:pointer; margin:20px 0px;}
+.youbian{ background:url(card_images/form_bg.gif) repeat-x left top; width:98px; height:26px; border:#cccccc solid 1px; line-height:26px; vertical-align:middle; margin-top:10px;}
+.youbian1{ background:url(card_images/form_bg.gif) repeat-x left top; width:98px; height:20px; border:#cccccc solid 1px; line-height:20px; vertical-align:middle; margin-top:10px;}
+.jiedao_address{background:url(card_images/form_bg.gif) repeat-x left top; width:398px; height:66px; border:#cccccc solid 1px; margin-top:10px;}
+.shoujian_names{background:url(card_images/form_bg.gif) repeat-x left top; width:138px; height:20px; border:#cccccc solid 1px; line-height:20px; vertical-align:middle; margin-top:10px;}
+
+.head_bg{ width:100%; height:21px; background:#999}
+.head_pic{ width:980px;margin:10px 0px; margin:0 auto; }
+/*bangding*/
+
+html,body {_height:100%;_width:100%;}
+.tanchu{font-size:20px; font-weight:bold;text-align:center;}
+.msgError{color:#f00;padding-left:130px;margin-top:-8px;margin-bottom:5px;}
+#msgDiv{border:3px solid #c06;padding:17px;width:344px;background:#fff;font-size: 12px;left: 50%;margin-left:-190px;position: absolute;top:30%;z-index: 51;color:#000;display:none;}
+	.msgTitle{font-weight:bold;font-size:14px;border-bottom:1px solid #d8dfea;padding-bottom:8px;margin-bottom:20px;}
+	.closeBlock{position:absolute;right:10px;top:8px;cursor:pointer;}
+	.msgNewBlock label{display:block;overflow:hidden;zoom:1;margin-bottom:13px;}
+	.msgNewBlock label input{border:1px solid #93989b;height:24px;line-height:24px;width:118px;}
+	.msgNewBlock label span{width:122px;display:block;float:left;padding-right:4px;text-align:right;height:26px;line-height:26px;}
+	.newbutton{margin-left:130px;padding:0 9px;padding-top:2px;cursor:pointer;}
+	.msgRecord{margin-top:20px;padding-bottom:20px;margin-bottom:10px;border-bottom:1px dashed #cfcfcf;color:#999;}
+	.msgRecord span,.msgSucTel span{color:#c06;}
+	.msgNoMargin{margin-top:18px;margin-bottom:30px;padding-left:32px;}
+	.msgNoMargin .newbutton{margin:0;margin-left:26px;}
+	.msgSucTel{background:url(http://pic.lvmama.com/img/icons/tel.gif) no-repeat left bottom;padding-left:24px;height:20px;line-height:20px;margin-bottom:15px;font-size:14px;}
+	#successInfo2{display:none;}
+#bgDiv{filter:Alpha(opacity=40);-moz-opacity:0.4;opacity:0.4;position:absolute;width:100%; height:100%;top:0;left:0; background:#000000;z-index:50; display:none;}	
+
+
+#mailDiv {display: none;font-size: 12px;height: 200px;left: 50%;margin-left: -225px; position: absolute;top: 45%;width: 400px;z-index: 53;margin-top:-70px;}
+.ticketer_detail_new {background:#FFFFFF;border:3px solid #CC0066;margin:0 0 20px;padding:2px;}
+.ticketer_detail_new th {color: #000000;font-size:12px;font-weight:bold;line-height: 30px;text-indent: 15px;}
+.ticketer_detail_new th strong {font-size: 12px;font-weight: normal;padding-left: 180px;}
+.ticketer_detail_new th strong a {padding: 0 3px;}
+.ticketer_detail_new td { color: #000000;line-height: 24px;}
+.ticketer_detail_new .contact {margin: 10px 0;}
+.indentTd {text-indent: 10px;}
+.ticketer_detail_new .contact td {padding: 6px 0;}
+.ticketer_detail_new .contact input {padding: 3px;width: 200px;}
+.ticketer_detail_new .contact .button {background: url("http://pic.lvmama.com/img/myspace/button_bg_1.gif") no-repeat left top;border:none;color: #FFFFFF;cursor: pointer;height: 23px;text-align: center;width: 83px;}

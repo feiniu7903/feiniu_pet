@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PERM_PERMISSION">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.pet.po.perm.PermPermission">
+		<result column="PERMISSION_ID" property="permissionId" />
+		<result column="NAME" property="name" />
+		<result column="URL" property="url" />
+		<result column="TYPE" property="type" />
+		<result column="EMBED" property="embed" />
+		<result column="CATEGORY" property="category" />
+		<result column="PERM_LEVEL" property="permLevel" />
+		<result column="SEQ" property="seq" />
+		<result column="PARENT_ID" property="parentId" />
+		<result column="VALID" property="valid" />
+		<result column="URL_PATTERN" property="urlPattern" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMapDetail" extends="BaseResultMap" class="com.lvmama.comm.pet.po.perm.PermPermission">
+		<result column="PARENT_NAME" property="parentName" />
+	</resultMap>
+
+	<sql id="selectParam">
+		<dynamic>
+			<isNotEmpty prepend=" and" property="parentId">
+				pp.PARENT_ID =#parentId#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="name">
+				((pp.NAME like '%'||#name#||'%') or (pp.permission_id like #name#))
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="url">
+				pp.URL=#url#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="type">
+				pp.TYPE=#type#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="embed">
+				pp.EMBED=#embed#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="category">
+				pp.CATEGORY=#category#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="permLevel">
+				pp.PERM_LEVEL=#permLevel#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="valid">
+				pp.VALID=#valid#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="seq">
+				pp.SEQ=#seq#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	<select id="selectByParam" resultMap="BaseResultMapDetail"
+		parameterClass="java.util.Map">
+		SELECT * FROM (
+			select pp.*, 
+			(SELECT parent.name
+			  FROM perm_permission parent
+			  WHERE parent.permission_id=pp.parent_id
+			  ) AS PARENT_NAME,
+			  ROWNUM as rn 
+			  from PERM_PERMISSION pp where 1=1
+			   <isNotEmpty prepend=" and" property="roleId">
+			   		  permission_id not in (select permission_id from perm_role_permission where role_id=#roleId#) 
+			   </isNotEmpty> 
+			  <isNotEmpty prepend=" and" property="parentName">
+					pp.parent_id IN
+					  (SELECT parent.permission_id
+					  FROM perm_permission parent
+					  WHERE parent.name like '%'||#parentName#||'%' 
+					  ) 
+			</isNotEmpty> 
+			<include refid="selectParam"/>
+			order by pp.seq
+		)
+		WHERE rn BETWEEN #skipResults# AND #maxResults#
+	</select>
+	
+	<select id="selectByParamCount" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select count(*) from PERM_PERMISSION pp where 1=1
+		   <isNotEmpty prepend=" and" property="roleId">
+			   		  permission_id not in (select permission_id from perm_role_permission where role_id=#roleId#) 
+			   </isNotEmpty> 
+		 <isNotEmpty prepend=" and" property="parentName">
+					pp.parent_id IN
+					  (SELECT parent.permission_id
+					  FROM perm_permission parent
+					  WHERE parent.name like '%'||#parentName#||'%' 
+					  ) 
+			</isNotEmpty> 
+		<include refid="selectParam" />
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		select *
+		from PERM_PERMISSION
+		where PERMISSION_ID =
+		#permissionId#
+   </select>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.perm.PermPermission">
+		<selectKey resultClass="java.lang.Long" keyProperty="permissionId">
+			select
+			PERM_PERMISSION_SEQ.nextval as id from DUAL
+	    </selectKey>
+		insert into PERM_PERMISSION perm (perm.PERMISSION_ID, perm.VALID,
+		perm.NAME, perm.URL, perm.TYPE,
+		perm.EMBED,perm.CATEGORY,perm.PERM_LEVEL,perm.PARENT_ID,perm.SEQ,perm.URL_PATTERN)
+		values (#permissionId#, #valid#, #name#, #url#,#type#,
+		#embed#,#category#,#permLevel#,#parentId#,#seq#,#urlPattern#)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.perm.PermPermission">
+		update PERM_PERMISSION
+		set
+		<isNotNull property="name">
+			NAME = #name#
+  	 	</isNotNull>
+		<isNotNull prepend=" ," property="url">
+			URL = #url#
+  	 	</isNotNull>
+		<isNotNull prepend=" ," property="type">
+			TYPE = #type#
+  	 	</isNotNull>
+		<isNotNull prepend=" ," property="embed">
+			EMBED = #embed#
+  	 	</isNotNull>
+		<isNotNull prepend=" ," property="category">
+			CATEGORY = #category#
+		</isNotNull>
+		<isNotNull prepend=" ," property="permLevel">
+			PERM_LEVEL = #permLevel#
+		</isNotNull>
+		<isNotNull prepend=" ," property="parentId">
+			PARENT_ID = #parentId#
+		</isNotNull>
+		<isNotNull prepend=" ," property="seq">
+			SEQ = #seq#
+  	 	</isNotNull>
+		<isNotNull prepend=" ," property="valid">
+			VALID = #valid#
+  	 	</isNotNull>
+		<isNotNull prepend=" ," property="urlPattern">
+			URL_PATTERN = #urlPattern#
+  	 	</isNotNull>
+		where PERMISSION_ID = #permissionId#
+	</update>
+	
+	<select id="queryPermByUserId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		SELECT DISTINCT(pp.permission_Id),pp.*
+		FROM PERM_USER_ROLE pur,
+		PERM_ROLE pr,
+		PERM_ROLE_PERMISSION prp,
+		PERM_PERMISSION pp
+		WHERE pur.role_id=pr.role_id
+		AND pr.role_id =prp.role_id
+		AND prp.permission_id= pp.permission_id
+		and pr.valid='Y'
+		and pp.valid='Y'
+		and pur.user_id=#userId#
+		order by pp.seq
+	</select>
+	
+	<select id="queryPermPermissionByPermLevel" 
+		resultMap="BaseResultMap">
+		SELECT * FROM perm_permission pp WHERE pp.perm_level=1 AND pp.valid ='Y' ORDER BY pp.seq
+	</select>
+	
+	  <select id="selectSecondItems" resultMap="BaseResultMap" parameterClass="java.lang.String">
+		 select *From PERM_PERMISSION where parent_id=#parentId# order by seq
+	  </select>
+	  
+	   <select id="selectSecondItemsByPermissionId" resultMap="BaseResultMap" parameterClass="java.util.Map">
+	   SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select * from (
+		 select *From perm_permission pp where pp.parent_id=#permissionId# and valid='Y'
+		 	<isNotNull prepend=" and" property="type">
+			TYPE = #type#
+  	 		</isNotNull>
+		)) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;= #skipResults#
+	  </select>
+	  
+	  	<select id="selectSecondItemsByPermissionIdCount" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select count(*) From perm_permission pp where pp.parent_id=#permissionId#  and valid='Y'
+		 	<isNotNull prepend=" and" property="type">
+			TYPE = #type#
+  	 		</isNotNull>
+	</select>
+	
+	<select id="queryPermPermissionFromRole" parameterClass="map" resultMap="BaseResultMap">
+		select distinct p.* from perm_user_role ur, perm_role_permission rp,perm_permission p
+		where ur.role_id = rp.role_id
+		and rp.permission_id = p.permission_id
+		and p.valid = 'Y'
+		<isNotEmpty property="userId">
+		and ur.user_id = #userId#
+		</isNotEmpty>
+		<isNotEmpty property="permissionId">
+		and rp.permission_id = #permissionId#
+		</isNotEmpty>
+	</select>
+	
+	<select id="queryPermPermissionFromPerm" parameterClass="map" resultMap="BaseResultMap">
+		select p.* from perm_user_permission up,perm_permission p
+		where up.permission_id = p.permission_id
+		and p.valid = 'Y'
+		<isNotEmpty property="userId">
+		and up.user_id = #userId#
+		</isNotEmpty>
+		<isNotEmpty property="type">
+		and up.type = #type#
+		</isNotEmpty>
+	</select>
+	
+	<!-- 查询用户角色中的可用权限 -->
+	<sql id="queryEnablePermPermissionFromRoleSql">
+		select child.*,parent.name as PARENT_NAME 
+		from perm_permission child,perm_permission parent
+		where child.parent_id = parent.permission_id(+)
+			and child.valid = 'Y'
+			and child.permission_id in
+				(
+					select distinct p.permission_id
+					from  perm_user_role ur,perm_role_permission rp,perm_permission p
+					where ur.role_id = rp.role_id
+					and rp.permission_id = p.permission_id
+					<isNotEmpty property="userId">
+					and ur.user_id = #userId#
+					</isNotEmpty>
+					<isNotEmpty property="name">
+					and (p.name like '%'||#name#||'%' or p.permission_id like #name#)
+					</isNotEmpty>
+					and not exists(
+					    select * from perm_user_permission up
+					    where up.permission_id = p.permission_id
+					    <isNotEmpty property="userId">
+						and up.user_id = #userId#
+						</isNotEmpty>
+					    and up.type = 'DISABLED'
+					)
+				)
+	</sql>
+	<select id="queryEnablePermPermissionFromRoleCount" parameterClass="map" resultClass="long">
+		select count(*) from(<include refid="queryEnablePermPermissionFromRoleSql"/>)
+	</select>
+	
+	<select id="queryEnablePermPermissionFromRole" parameterClass="map" resultMap="BaseResultMapDetail">
+	 SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM ( 
+			<include refid="queryEnablePermPermissionFromRoleSql"/>
+		) T WHERE ROWNUM &lt;= #maxResults#)
+	 WHERE ROWNUM1 &gt;= #skipResults#
+	</select>
+</sqlMap>

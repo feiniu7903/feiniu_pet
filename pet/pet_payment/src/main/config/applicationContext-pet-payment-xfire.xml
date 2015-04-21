@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	
+	<bean id="AlipayDownPayDataJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="AlipayDownPayDataJobWs"/>
+        <property name="serviceClass" value="com.lvmama.pet.recon.remote.AlipayDownPayDataJobService"/>
+		<property name="implementationClass" value="com.lvmama.pet.recon.remote.impl.AlipayDownPayDataJobServiceImpl"/>
+	</bean>
+	
+	<bean id="CashAccountDownPayDataJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="CashAccountDownPayDataJobWs"/>
+        <property name="serviceClass" value="com.lvmama.pet.recon.remote.CashAccountDownPayDataJobService"/>
+		<property name="implementationClass" value="com.lvmama.pet.recon.remote.impl.CashAccountDownPayDataJobServiceImpl"/>
+	</bean>
+	
+	<bean id="CashBonusDownPayDataJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="CashBonusDownPayDataJobWs"/>
+        <property name="serviceClass" value="com.lvmama.pet.recon.remote.CashBonusDownPayDataJobService"/>
+		<property name="implementationClass" value="com.lvmama.pet.recon.remote.impl.CashBonusDownPayDataJobServiceImpl"/>
+	</bean>
+	
+	<bean id="ChinapnrDownPayDataJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="ChinapnrDownPayDataJobWs"/>
+        <property name="serviceClass" value="com.lvmama.pet.recon.remote.ChinapnrDownPayDataJobService"/>
+		<property name="implementationClass" value="com.lvmama.pet.recon.remote.impl.ChinapnrDownPayDataJobServiceImpl"/>
+	</bean>
+	
+	<bean id="DealNoReconJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="DealNoReconJobWs"/>
+        <property name="serviceClass" value="com.lvmama.pet.recon.remote.DealNoReconJobService"/>
+		<property name="implementationClass" value="com.lvmama.pet.recon.remote.impl.DealNoReconJobServiceImpl"/>
+	</bean>
+	
+	<bean id="NingboDownPayDataJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="NingboDownPayDataJobWs"/>
+        <property name="serviceClass" value="com.lvmama.pet.recon.remote.NingboDownPayDataJobService"/>
+		<property name="implementationClass" value="com.lvmama.pet.recon.remote.impl.NingboDownPayDataJobServiceImpl"/>
+	</bean>
+	
+	<bean id="TenpayDownPayDataJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="TenpayDownPayDataJobWs"/>
+        <property name="serviceClass" value="com.lvmama.pet.recon.remote.TenpayDownPayDataJobService"/>
+		<property name="implementationClass" value="com.lvmama.pet.recon.remote.impl.TenpayDownPayDataJobServiceImpl"/>
+	</bean>
+	
+	<bean id="UnionPayDownPayDataJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="UnionPayDownPayDataJobWs"/>
+        <property name="serviceClass" value="com.lvmama.pet.recon.remote.UnionPayDownPayDataJobService"/>
+		<property name="implementationClass" value="com.lvmama.pet.recon.remote.impl.UnionPayDownPayDataJobServiceImpl"/>
+	</bean>
+	
+	<bean id="SandPosPayDataJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="SandPosPayDownPayDataJobWs"/>
+        <property name="serviceClass" value="com.lvmama.pet.recon.remote.SandPosPayDataJobService"/>
+		<property name="implementationClass" value="com.lvmama.pet.recon.remote.impl.SandPosPayDataJobServiceImpl"/>
+	</bean>
+
+</beans>

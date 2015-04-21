@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="FIN_GL_SUBJECT_CFG" >
+
+  <typeAlias alias="finGlSubjectCfgDO" type="com.lvmama.comm.pet.po.fin.FinGlSubjectCfg" />
+
+  <resultMap id="finGlSubjectCfgDOResultMap" class="finGlSubjectCfgDO" >
+    <result property="subjectConfigId" column="SUBJECT_CONFIG_ID" />
+    <result property="config1" column="CONFIG1" />
+    <result property="config2" column="CONFIG2" />
+    <result property="config3" column="CONFIG3" />
+    <result property="config4" column="CONFIG4" />
+    <result property="config5" column="CONFIG5" />
+    <result property="config6" column="CONFIG6" />
+    <result property="config7" column="CONFIG7" />
+    <result property="borrowSubjectCode" column="B_SUBJECT_CODE" />
+    <result property="lendConfig1" column="L_CONFIG1" />
+    <result property="lendConfig2" column="L_CONFIG2" />
+    <result property="lendConfig3" column="L_CONFIG3" />
+    <result property="lendConfig4" column="L_CONFIG4" />
+    <result property="lendConfig5" column="L_CONFIG5" />
+    <result property="lendConfig6" column="L_CONFIG6" />
+    <result property="lendConfig7" column="L_CONFIG7" />
+    <result property="lendSubjectCode" column="L_SUBJECT_CODE" />
+    <result property="accountType" column="ACCOUNT_TYPE" />
+  </resultMap>
+
+  <sql id="finGlSubjectCfg_columns" >
+    a1.SUBJECT_CONFIG_ID, a1.CONFIG1, a1.CONFIG2, a1.CONFIG3, a1.CONFIG4, a1.CONFIG5, 
+      a1.CONFIG6, a1.CONFIG7, a1.B_SUBJECT_CODE, a1.L_CONFIG1, a1.L_CONFIG2, a1.L_CONFIG3, 
+      a1.L_CONFIG4, a1.L_CONFIG5, a1.L_CONFIG6, a1.L_CONFIG7, a1.L_SUBJECT_CODE, a1.ACCOUNT_TYPE
+      
+  </sql>
+
+  <sql id="finGlSubjectCfg_do_columns" >
+    a1.SUBJECT_CONFIG_ID, a1.CONFIG1, a1.CONFIG2, a1.CONFIG3, a1.CONFIG4, a1.CONFIG5, 
+      a1.CONFIG6, a1.CONFIG7, a1.B_SUBJECT_CODE, a1.L_CONFIG1, a1.L_CONFIG2, a1.L_CONFIG3, 
+      a1.L_CONFIG4, a1.L_CONFIG5, a1.L_CONFIG6, a1.L_CONFIG7, a1.L_SUBJECT_CODE, a1.ACCOUNT_TYPE
+      
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="subjectConfigId" prepend="AND" >
+        <![CDATA[  
+        SUBJECT_CONFIG_ID = #subjectConfigId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config1" prepend="AND" >
+        <![CDATA[  
+        CONFIG1 = #config1#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config2" prepend="AND" >
+        <![CDATA[  
+        CONFIG2 = #config2#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config3" prepend="AND" >
+        <![CDATA[  
+        CONFIG3 = #config3#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config4" prepend="AND" >
+        <![CDATA[  
+        CONFIG4 = #config4#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config5" prepend="AND" >
+        <![CDATA[  
+        CONFIG5 = #config5#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config6" prepend="AND" >
+        <![CDATA[  
+        CONFIG6 = #config6#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config7" prepend="AND" >
+        <![CDATA[  
+        CONFIG7 = #config7#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="borrowSubjectCode" prepend="AND" >
+        <![CDATA[  
+        B_SUBJECT_CODE = #borrowSubjectCode#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig1" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG1 = #lendConfig1#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig2" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG2 = #lendConfig2#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig3" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG3 = #lendConfig3#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig4" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG4 = #lendConfig4#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig5" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG5 = #lendConfig5#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig6" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG6 = #lendConfig6#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig7" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG7 = #lendConfig7#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendSubjectCode" prepend="AND" >
+        <![CDATA[  
+        L_SUBJECT_CODE = #lendSubjectCode#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="accountType" prepend="AND" >
+        <![CDATA[  
+        ACCOUNT_TYPE = #accountType#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <sql id="doQueryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="subjectConfigId" prepend="AND" >
+        <![CDATA[  
+        SUBJECT_CONFIG_ID = #subjectConfigId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config1" prepend="AND" >
+        <![CDATA[  
+        CONFIG1 = #config1#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config2" prepend="AND" >
+        <![CDATA[  
+        CONFIG2 = #config2#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config3" prepend="AND" >
+        <![CDATA[  
+        CONFIG3 = #config3#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config4" prepend="AND" >
+        <![CDATA[  
+        CONFIG4 = #config4#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config5" prepend="AND" >
+        <![CDATA[  
+        CONFIG5 = #config5#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config6" prepend="AND" >
+        <![CDATA[  
+        CONFIG6 = #config6#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config7" prepend="AND" >
+        <![CDATA[  
+        CONFIG7 = #config7#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="borrowSubjectCode" prepend="AND" >
+        <![CDATA[  
+        B_SUBJECT_CODE = #borrowSubjectCode#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig1" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG1 = #lendConfig1#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig2" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG2 = #lendConfig2#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig3" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG3 = #lendConfig3#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig4" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG4 = #lendConfig4#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig5" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG5 = #lendConfig5#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig6" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG6 = #lendConfig6#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig7" prepend="AND" >
+        <![CDATA[  
+        L_CONFIG7 = #lendConfig7#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendSubjectCode" prepend="AND" >
+        <![CDATA[  
+        L_SUBJECT_CODE = #lendSubjectCode#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="accountType" prepend="AND" >
+        <![CDATA[  
+        ACCOUNT_TYPE = #accountType#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <insert id="insert" parameterClass="finGlSubjectCfgDO" >
+     <selectKey keyProperty="subjectConfigId" resultClass="java.lang.Long" >
+       SELECT FIN_GL_SUBJECT_CFG_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO FIN_GL_SUBJECT_CFG( SUBJECT_CONFIG_ID, CONFIG1, CONFIG2, CONFIG3, CONFIG4, CONFIG5, 
+      CONFIG6, CONFIG7, B_SUBJECT_CODE, L_CONFIG1, L_CONFIG2, L_CONFIG3, L_CONFIG4, 
+      L_CONFIG5, L_CONFIG6, L_CONFIG7, L_SUBJECT_CODE, ACCOUNT_TYPE)
+     VALUES ( #subjectConfigId#, #config1#, #config2#, #config3#, #config4#, #config5#, 
+      #config6#, #config7#, #borrowSubjectCode#, #lendConfig1#, #lendConfig2#, #lendConfig3#, #lendConfig4#, 
+      #lendConfig5#, #lendConfig6#, #lendConfig7#, #lendSubjectCode#, #accountType#)
+  </insert>
+
+  <update id="update" parameterClass="finGlSubjectCfgDO" >
+    UPDATE FIN_GL_SUBJECT_CFG   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="subjectConfigId" prepend="," >
+        <![CDATA[  
+        SUBJECT_CONFIG_ID = #subjectConfigId#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="config1" prepend="," >
+        <![CDATA[  
+        CONFIG1 = #config1#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config2" prepend="," >
+        <![CDATA[  
+        CONFIG2 = #config2#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config3" prepend="," >
+        <![CDATA[  
+        CONFIG3 = #config3#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config4" prepend="," >
+        <![CDATA[  
+        CONFIG4 = #config4#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config5" prepend="," >
+        <![CDATA[  
+        CONFIG5 = #config5#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config6" prepend="," >
+        <![CDATA[  
+        CONFIG6 = #config6#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="config7" prepend="," >
+        <![CDATA[  
+        CONFIG7 = #config7#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="borrowSubjectCode" prepend="," >
+        <![CDATA[  
+        B_SUBJECT_CODE = #borrowSubjectCode#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig1" prepend="," >
+        <![CDATA[  
+        L_CONFIG1 = #lendConfig1#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig2" prepend="," >
+        <![CDATA[  
+        L_CONFIG2 = #lendConfig2#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig3" prepend="," >
+        <![CDATA[  
+        L_CONFIG3 = #lendConfig3#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig4" prepend="," >
+        <![CDATA[  
+        L_CONFIG4 = #lendConfig4#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig5" prepend="," >
+        <![CDATA[  
+        L_CONFIG5 = #lendConfig5#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig6" prepend="," >
+        <![CDATA[  
+        L_CONFIG6 = #lendConfig6#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendConfig7" prepend="," >
+        <![CDATA[  
+        L_CONFIG7 = #lendConfig7#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lendSubjectCode" prepend="," >
+        <![CDATA[  
+        L_SUBJECT_CODE = #lendSubjectCode#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="accountType" prepend="," >
+        <![CDATA[  
+        ACCOUNT_TYPE = #accountType#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE SUBJECT_CONFIG_ID = #subjectConfigId#  
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="finGlSubjectCfgDOResultMap" >
+     SELECT 
+    <include refid="finGlSubjectCfg_do_columns" />
+    <![CDATA[  
+     FROM FIN_GL_SUBJECT_CFG a1 WHERE SUBJECT_CONFIG_ID = #subjectConfigId#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM FIN_GL_SUBJECT_CFG WHERE SUBJECT_CONFIG_ID = #subjectConfigId#
+    ]]>  
+  </delete>
+
+  <select id="countByDOTerm" parameterClass="finGlSubjectCfgDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(SUBJECT_CONFIG_ID) AS num FROM FIN_GL_SUBJECT_CFG 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="finGlSubjectCfgDOResultMap" parameterClass="finGlSubjectCfgDO" >
+     SELECT 
+    <include refid="finGlSubjectCfg_do_columns" />
+     FROM FIN_GL_SUBJECT_CFG a1 
+    <include refid="doQueryParams" />
+  </select>
+  
+  
+   <select id="query" resultMap="finGlSubjectCfgDOResultMap" parameterClass="map" >
+       SELECT * FROM (SELECT C.*, ROWNUM RN FROM FIN_GL_SUBJECT_CFG C
+		<include refid="doQueryParams" />
+		) T
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty prepend=" and " property="_startRow">
+				RN &gt;=#_startRow#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and " property="_endRow">
+				rownum &lt;=#_endRow#
+			</isNotEmpty>
+		</dynamic>
+  </select>
+  
+  <select id="queryCount" parameterClass="map" resultClass="java.lang.Long" >
+    SELECT COUNT(1) AS num FROM FIN_GL_SUBJECT_CFG 
+    <include refid="doQueryParams" />
+  </select> 
+  
+  
+  <delete id="deleteAllFinGlSubjectCfg"  >
+    <![CDATA[  
+     DELETE FROM FIN_GL_SUBJECT_CFG
+    ]]>  
+  </delete>
+  
+</sqlMap>

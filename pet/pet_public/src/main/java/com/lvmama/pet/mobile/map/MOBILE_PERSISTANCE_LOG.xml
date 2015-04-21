@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MOBILE_PERSISTANCE_LOG" >
+ <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.MobilePersistanceLog" >
+    <result column="MOBILE_PERSISTANCE_LOG_ID" property="mobilePersistanceLogId" />
+    <result column="OBJECT_ID" property="objectId" />
+    <result column="OBJECT_TYPE" property="objectType" />
+    <result column="CREATED_TIME" property="createdTime" />
+    <result column="LV_VERSION" property="lvVersion" />
+    <result column="DEVICE_ID" property="deviceId" />
+    <result column="DEVICE_ID_TYPE" property="deviceIdType" />
+    <result column="CHANNEL" property="channel" />
+    <result column="OS_VERSION" property="osVersion" />
+    <result column="USER_AGENT" property="userAgent" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePersistanceLog" >
+    select MOBILE_PERSISTANCE_LOG_ID, OBJECT_ID, OBJECT_TYPE, CREATED_TIME, LV_VERSION, DEVICE_ID,
+      DEVICE_ID_TYPE, CHANNEL, OS_VERSION, USER_AGENT
+    from MOBILE_PERSISTANCE_LOG
+    where MOBILE_PERSISTANCE_LOG_ID = #mobilePersistanceLogId:DECIMAL#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePersistanceLog" >
+    delete from MOBILE_PERSISTANCE_LOG
+    where MOBILE_PERSISTANCE_LOG_ID = #mobilePersistanceLogId:DECIMAL#
+  </delete>
+  
+  <select id="selectByParam"  resultMap="BaseResultMap" parameterClass="java.util.Map">
+       select MOBILE_PERSISTANCE_LOG_ID, OBJECT_ID, OBJECT_TYPE, CREATED_TIME, LV_VERSION, DEVICE_ID,
+      DEVICE_ID_TYPE, CHANNEL, OS_VERSION,USER_AGENT
+    from MOBILE_PERSISTANCE_LOG
+    <dynamic prepend="where"> 
+      	<isNotEmpty property="objectId" prepend="and">
+      	    OBJECT_ID=#objectId:DECIMAL#
+      	</isNotEmpty>
+      	<isNotEmpty property="objectType" prepend="and">
+      	    OBJECT_TYPE=#objectType:VARCHAR#
+      	</isNotEmpty>
+      	<isNotEmpty property="deviceId" prepend="and">
+      	    DEVICE_ID=#deviceId#
+      	</isNotEmpty>
+      	<isNotEmpty property="channel" prepend="and">
+      	    CHANNEL=#channel#
+      	</isNotEmpty>      
+     </dynamic>
+  </select>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePersistanceLog" >
+    <selectKey resultClass="java.lang.Long" keyProperty="mobilePersistanceLogId" >
+      select MOBILE_PERSISTANCE_LOG_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+     insert into MOBILE_PERSISTANCE_LOG (MOBILE_PERSISTANCE_LOG_ID, OBJECT_ID, OBJECT_TYPE,
+      CREATED_TIME, LV_VERSION, DEVICE_ID, DEVICE_ID_TYPE, CHANNEL, OS_VERSION, USER_AGENT)
+    values (#mobilePersistanceLogId:DECIMAL#, #objectId:DECIMAL#, #objectType:VARCHAR#,
+      sysdate, #lvVersion:DECIMAL#, #deviceId:VARCHAR#, #deviceIdType:VARCHAR#,
+      #channel:VARCHAR#, #osVersion:VARCHAR#, #userAgent:VARCHAR#)
+  </insert>
+ <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePersistanceLog" >
+    <selectKey resultClass="java.lang.Long" keyProperty="mobilePersistanceLogId" >
+      select MOBILE_PERSISTANCE_LOG_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into MOBILE_PERSISTANCE_LOG
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="mobilePersistanceLogId" >
+        MOBILE_PERSISTANCE_LOG_ID
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        OBJECT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        OBJECT_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        CREATED_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="lvVersion" >
+        LV_VERSION
+      </isNotNull>
+      <isNotNull prepend="," property="deviceId" >
+        DEVICE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="deviceIdType" >
+        DEVICE_ID_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="channel" >
+        CHANNEL
+      </isNotNull>
+      <isNotNull prepend="," property="osVersion" >
+        OS_VERSION
+      </isNotNull>
+      <isNotNull prepend="," property="userAgent" >
+        USER_AGENT
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="mobilePersistanceLogId" >
+        #mobilePersistanceLogId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        #objectId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        #objectType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        #createdTime:DATE#
+      </isNotNull>
+      <isNotNull prepend="," property="lvVersion" >
+        #lvVersion:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="deviceId" >
+        #deviceId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="deviceIdType" >
+        #deviceIdType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="channel" >
+        #channel:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="osVersion" >
+        #osVersion:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="userAgent" >
+        #userAgent:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePersistanceLog" >
+    update MOBILE_PERSISTANCE_LOG
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="objectId" >
+        OBJECT_ID = #objectId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        OBJECT_TYPE = #objectType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        CREATED_TIME = #createdTime:DATE#
+      </isNotNull>
+      <isNotNull prepend="," property="lvVersion" >
+        LV_VERSION = #lvVersion:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="deviceId" >
+        DEVICE_ID = #deviceId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="deviceIdType" >
+        DEVICE_ID_TYPE = #deviceIdType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="channel" >
+        CHANNEL = #channel:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="osVersion" >
+        OS_VERSION = #osVersion:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="userAgent" >
+        USER_AGENT = #userAgent:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where MOBILE_PERSISTANCE_LOG_ID = #mobilePersistanceLogId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePersistanceLog" >
+    update MOBILE_PERSISTANCE_LOG
+    set OBJECT_ID = #objectId:DECIMAL#,
+      OBJECT_TYPE = #objectType:VARCHAR#,
+      CREATED_TIME = #createdTime:DATE#,
+      LV_VERSION = #lvVersion:DECIMAL#,
+      DEVICE_ID = #deviceId:VARCHAR#,
+      DEVICE_ID_TYPE = #deviceIdType:VARCHAR#,
+      CHANNEL = #channel:VARCHAR#,
+      OS_VERSION = #osVersion:VARCHAR#,
+      USER_AGENT = #userAgent:VARCHAR#
+    where MOBILE_PERSISTANCE_LOG_ID = #mobilePersistanceLogId:DECIMAL#
+  </update>
+</sqlMap>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.cashaccount.mapper.TntCashCommissionMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.cashaccount.po.TntCashCommission">
+        <result property="cashCommissionId" column="CASH_COMMISSION_ID"/>
+        <result property="cashAccountId" column="CASH_ACCOUNT_ID"/>
+        <result property="productType" column="product_Type"/>
+        <result property="performBeginDate" column="perform_Begin_Date"/>
+        <result property="performEndDate" column="perform_End_Date"/>
+        <result property="orderCount" column="ORDER_COUNT"/>
+        <result property="totalAmount" column="TOTAL_AMOUNT"/>
+        <result property="commisAmount" column="COMMIS_AMOUNT"/>
+        <result property="commisRate" column="COMMIS_RATE"/>
+        <result property="createTime" column="CREATE_TIME"/>
+	</resultMap>
+	
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.cashaccount.po.TntCashCommission">
+		<selectKey resultType="java.lang.Long" keyProperty="cashCommissionId"
+			order="BEFORE">
+			select  TNT_CASH_COMMISSION_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_CASH_COMMISSION (
+        	CASH_COMMISSION_ID ,
+        	CASH_ACCOUNT_ID ,
+        	PRODUCT_TYPE ,
+        	PERFORM_BEGIN_DATE ,
+        	PERFORM_END_DATE ,
+        	ORDER_COUNT ,
+        	TOTAL_AMOUNT ,
+        	COMMIS_RATE ,
+        	COMMIS_AMOUNT ,
+        	CREATE_TIME 
+        ) VALUES (
+        	#{cashCommissionId} ,
+        	#{cashAccountId,jdbcType=DECIMAL} ,
+        	#{productType,jdbcType=VARCHAR} ,
+        	#{performBeginDate,jdbcType=DATE} ,
+        	#{performEndDate,jdbcType=DATE} ,
+        	#{orderCount,jdbcType=DECIMAL} ,
+        	#{totalAmount,jdbcType=DECIMAL} ,
+        	#{commisRate,jdbcType=DECIMAL} ,
+        	#{commisAmount,jdbcType=DECIMAL} ,
+        	sysdate
+        )
+	</insert>
+    
+	<sql id="where">
+		<where>	      				
+			<if test="cashAccountId != null and cashAccountId !=''">
+				AND CASH_ACCOUNT_ID = #{cashAccountId}
+	       	</if> 
+		</where>
+	</sql>
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.cashAccountId != null and param.cashAccountId !=''">
+				AND CASH_ACCOUNT_ID = #{param.cashAccountId}
+	       	</if>
+		</where>
+	</sql>
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.cashaccount.po.TntCashCommission">
+        SELECT count(*) FROM TNT_CASH_COMMISSION 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT *
+	    FROM TNT_CASH_COMMISSION 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+
+</mapper>
+

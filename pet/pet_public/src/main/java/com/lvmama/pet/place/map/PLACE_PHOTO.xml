@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PLACE_PHOTO">
+	<typeAlias alias="placePhoto" type="com.lvmama.comm.pet.po.place.PlacePhoto" />
+	<resultMap id="BaseResultMap" class="placePhoto">
+		<result column="PLACE_PHOTO_ID" property="placePhotoId" />
+		<result column="PLACE_ID" property="placeId" />
+		<result column="IMAGES_URL" property="imagesUrl" />
+		<result column="TYPE" property="type" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="SEQ_NUM" property="seq" />
+		<result column="PLACE_PHOTO_NAME" property="placePhotoName" />
+		<result column="PLACE_PHOTO_CONTEXT" property="placePhotoContext" />
+		<result column="PLACE_PHOTO_DISPLAY" property="placePhotoDisplay" />
+		<result column="PLACE_PHOTO_TYPE" property="placePhotoType" />
+	</resultMap>
+	<sql id="baseQueryCloum">
+		PLACE_PHOTO_ID, PLACE_ID, IMAGES_URL, TYPE, CREATE_TIME, SEQ_NUM, PLACE_PHOTO_NAME, PLACE_PHOTO_CONTEXT, PLACE_PHOTO_DISPLAY, PLACE_PHOTO_TYPE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="placePhoto">
+		select
+		<include refid="baseQueryCloum" />
+		from PLACE_PHOTO
+		where PLACE_PHOTO_ID = #placePhotoId#
+	</select>
+	<select id="queryPlacePhotos" resultMap="BaseResultMap" parameterClass="placePhoto">
+			select
+			<include refid="baseQueryCloum" />
+			from PLACE_PHOTO
+			<dynamic prepend="where">
+				<isNotEmpty property="placeId" prepend=" AND ">
+					PLACE_ID=#placeId#
+				</isNotEmpty>
+				<isNotEmpty property="type" prepend=" AND ">
+					TYPE=#type#
+				</isNotEmpty>
+			</dynamic>
+			order by TYPE ASC , SEQ_NUM ASC , CREATE_TIME desc
+	</select>
+	<delete id="deleteByPrimaryKey" parameterClass="placePhoto">
+		delete from PLACE_PHOTO
+		where PLACE_PHOTO_ID = #placePhotoId#
+	</delete>
+	<insert id="insert" parameterClass="placePhoto">
+	    <selectKey resultClass="java.lang.Long" keyProperty="placePhotoId" >
+	      select PLACE_PHOTO_SEQ.nextval as placePhotoId from DUAL
+	    </selectKey>
+		insert into PLACE_PHOTO (PLACE_PHOTO_ID, PLACE_ID, IMAGES_URL,
+		TYPE, CREATE_TIME,
+		SEQ_NUM, PLACE_PHOTO_NAME, PLACE_PHOTO_CONTEXT, PLACE_PHOTO_DISPLAY, PLACE_PHOTO_TYPE)
+		values (#placePhotoId#, #placeId#, #imagesUrl#, #type#,
+		sysdate, #seq#, #placePhotoName#, #placePhotoContext#, #placePhotoDisplay#, #placePhotoType#)
+	</insert>
+	<update id="update" parameterClass="placePhoto">
+		update PLACE_PHOTO set CREATE_TIME=sysdate,
+			PLACE_PHOTO_NAME = #placePhotoName#,
+			PLACE_PHOTO_CONTEXT = #placePhotoContext#,
+			PLACE_PHOTO_DISPLAY = #placePhotoDisplay#,
+			PLACE_PHOTO_TYPE = #placePhotoType#
+			<isNotNull prepend="," property="imagesUrl">
+				IMAGES_URL = #imagesUrl#
+			</isNotNull>
+			<isNotNull prepend="," property="seq">
+				SEQ_NUM = #seq#
+			</isNotNull>
+		where PLACE_PHOTO_ID = #placePhotoId#
+	</update>
+</sqlMap>

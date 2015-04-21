@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="BUSINESS_COUPON">
+  <!-- 别名 -->
+  <typeAlias alias="businessCoupon" type="com.lvmama.comm.pet.po.businessCoupon.BusinessCoupon"/>
+  <resultMap id="businessCouponResult" class="businessCoupon">
+    <result column="BUSINESS_COUPON_ID" property="businessCouponId" />
+    <result column="COUPON_NAME" property="couponName" />
+    <result column="COUPON_TYPE" property="couponType" />
+    <result column="BEGIN_TIME" property="beginTime" />
+    <result column="END_TIME" property="endTime" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="DESCRIPTION" property="description" />
+    <result column="VALID" property="valid" />
+    <result column="FAVOR_TYPE" property="favorType" />
+    <result column="ARGUMENT_X" property="argumentX"/>
+    <result column="ARGUMENT_Y" property="argumentY"/>
+    <result column="ARGUMENT_Z" property="argumentZ" />
+    <result column="MEMO" property="memo" />
+    <result column="PLAY_BEGIN_TIME" property="playBeginTime" />
+    <result column="PLAY_END_TIME" property="playEndTime" />
+    <result column="COUPON_TARGET" property="couponTarget" />
+    <result column="META_TYPE"     property="metaType" />
+ 	<result column="PRODUCT_ID" property="productId" />
+    <result column="BRANCH_ID" property="branchId" />
+    <result column="SALE_TYPE" property="saleType" />
+  </resultMap>
+  <resultMap class="businessCoupon" id="minBusinessCoupon">
+  	<result column="BEGIN_TIME" property="beginTime" />
+    <result column="END_TIME" property="endTime" />
+  </resultMap>
+  
+  <!-- 用于select查询公用抽取的列 -->
+  <sql id="commonColumns">
+	 <![CDATA[
+	     BUSINESS_COUPON_ID,
+		 COUPON_NAME,
+		 COUPON_TYPE,
+		 BEGIN_TIME,
+		 END_TIME,
+		 CREATE_TIME,
+		 DESCRIPTION,
+		 VALID,
+		 FAVOR_TYPE,
+		 ARGUMENT_X,
+		 ARGUMENT_Y,
+		 ARGUMENT_Z,
+		 MEMO,
+		 PLAY_BEGIN_TIME,
+		 PLAY_END_TIME,
+		 COUPON_TARGET,
+		 META_TYPE,
+		 PRODUCT_ID,
+		 BRANCH_ID,
+		 SALE_TYPE
+	  ]]>
+  </sql>
+  
+  <!-- 动态查询条件 -->
+  <sql id="dynamicWhere">
+     <dynamic>
+	     <isNotEmpty prepend="AND" property="businessCouponId">
+	           T1.BUSINESS_COUPON_ID = #businessCouponId#
+	     </isNotEmpty>
+	     <isNotEmpty prepend=" AND " property="excludeBusinessCouponId">
+	     		T1.BUSINESS_COUPON_ID != #businessCouponId#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="couponName">
+	            T1.COUPON_NAME = #couponName#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="couponType">
+	            T1.COUPON_TYPE = #couponType#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="beginTime">
+	            T1.BEGIN_TIME = #beginTime#
+	     </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="endTime">
+	            T1.END_TIME = #endTime#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="createTime">
+	            T1.CREATE_TIME = #createTime#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="description">
+	            T1.DESCRIPTION = #description#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="valid">
+	            T1.VALID = #valid#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="favorType">
+	            T1.FAVOR_TYPE = #favorType#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="argumentX">
+	            T1.ARGUMENT_X = #argumentX#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="argumentY">
+	            T1.ARGUMENT_Y = #argumentY#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="argumentZ">
+	            T1.ARGUMENT_Z = #argumentZ#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="memo">
+	            T1.MEMO = #memo#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="playBeginTime">
+	            T1.PLAY_BEGIN_TIME = #playBeginTime#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="playEndTime">
+	            T1.PLAY_END_TIME = #playEndTime#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="couponTarget">
+	            T1.COUPON_TARGET = #couponTarget#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="metaType">
+	            T1.META_TYPE = #metaType#
+	     </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="productId">
+	            T1.PRODUCT_ID = #productId#
+	     </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="branchId">
+	            T1.BRANCH_ID = #branchId#
+	     </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="saleType">
+	            T1.SALE_TYPE = #saleType#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="notStart">
+	           <![CDATA[  T1.BEGIN_TIME>sysdate]]>
+	            and T1.VALID!='false'
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="process">
+	           <![CDATA[  T1.BEGIN_TIME<= sysdate]]>
+	           <![CDATA[ AND  T1.END_TIME>=sysdate]]>
+	           and T1.VALID!='false'
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="over">
+	           <![CDATA[  T1.END_TIME<sysdate]]>
+	            and T1.VALID!='false'
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="validDate">
+	           <![CDATA[  T1.BEGIN_TIME<=sysdate]]>
+	     </isNotEmpty>
+	     <isNotEmpty prepend="AND" property="businessCouponIds">
+     		<iterate property="businessCouponIds" conjunction=" OR " open="(" close=")">
+     		T1.BUSINESS_COUPON_ID = #businessCouponIds[]#
+     		</iterate>
+     	</isNotEmpty>
+     	
+     	<!-- 排序条件 -->
+     	<isNotEmpty prepend="" property="beginTime123">
+	            order by T1.BEGIN_TIME asc
+	    </isNotEmpty>
+	    <isNotEmpty prepend="" property="beginTime321">
+	     		order by T1.BEGIN_TIME desc
+	    </isNotEmpty>
+	    <isNotEmpty prepend="" property="createTime123">
+	            order by T1.CREATE_TIME asc
+	    </isNotEmpty>
+	    <isNotEmpty prepend="" property="createTime321">
+	            order by T1.CREATE_TIME desc
+	    </isNotEmpty>
+	    
+	  </dynamic>	
+	</sql>
+  
+  	<sql id="baseSelectWithProdInfo">
+        select T1.*
+              from  BUSINESS_COUPON T1
+        where 
+              T1.VALID='true'
+              <isNotEmpty property="currentDate">
+                  and #currentDate# BETWEEN T1.BEGIN_TIME  AND  T1.END_TIME
+              </isNotEmpty>
+            <!--   <isEmpty property="branchId">
+                  and T2.BRANCH_ID=null
+              </isEmpty> -->
+               <isNotEmpty property="noBranchId">
+                  and T1.BRANCH_ID = null
+              </isNotEmpty>
+              
+              <include refid="dynamicWhere"/>
+  </sql>
+
+  <select id="selectWithProdInfo" parameterClass="java.util.Map" resultMap="businessCouponResult">
+	  SELECT * FROM (
+		  	SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		  	    <include refid="baseSelectWithProdInfo"/>
+		 	) T 
+	 	<dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_endRow">ROWNUM &lt;= #_endRow#</isNotEmpty>
+	 	</dynamic>
+	  )	
+	  <dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_startRow">ROWNUM1 &gt;=#_startRow#</isNotEmpty>
+	  </dynamic>
+  </select>
+   
+  <insert id="insert" parameterClass="businessCoupon">
+    <selectKey keyProperty="businessCouponId" resultClass="java.lang.Long">
+      select BUSINESS_COUPON_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into BUSINESS_COUPON (
+    	<include refid="commonColumns"/>
+    	)
+    values 
+    	(#businessCouponId#,#couponName#,#couponType#,#beginTime#,#endTime#, sysdate,#description#,#valid#,#favorType#,#argumentX#,#argumentY#,#argumentZ#,#memo#,#playBeginTime#,#playEndTime#,#couponTarget#,#metaType#, #productId#, #branchId#,#saleType#)
+  </insert>
+ 
+  <update id="updateByPrimaryKeySelective" parameterClass="businessCoupon">
+    update BUSINESS_COUPON
+    set 
+    	META_TYPE = #metaType#,
+      	DESCRIPTION = #description#,
+        PLAY_BEGIN_TIME = #playBeginTime#,
+        PLAY_END_TIME = #playEndTime#, 
+        MEMO = #memo#,
+        ARGUMENT_X = #argumentX#,
+        COUPON_NAME = #couponName#,
+        COUPON_TYPE = #couponType#,
+        BEGIN_TIME = #beginTime#,
+        END_TIME = #endTime#,
+        VALID = #valid#,
+        FAVOR_TYPE = #favorType#,
+        ARGUMENT_Y = #argumentY#,
+        ARGUMENT_Z = #argumentZ#,
+        COUPON_TARGET = #couponTarget#,
+        PRODUCT_ID = #productId#,
+        BRANCH_ID = #branchId#,
+        SALE_TYPE = #saleType#
+    where BUSINESS_COUPON_ID = #businessCouponId:DECIMAL#
+  </update>
+  
+  <select id="selectCountByParam" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+  	SELECT count(*) 
+  	  FROM ( SELECT distinct T1.*
+	  	     FROM BUSINESS_COUPON T1
+	  	     WHERE 1=1
+	  	   	 <include refid="dynamicWhere"/> 
+	 	   )
+  </select>
+  
+  <!-- 查询记录，根据条件 -->
+  <select id="selectByParam" resultMap="businessCouponResult" parameterClass="java.util.HashMap">
+	  SELECT * FROM (
+	  	SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+	  	    SELECT distinct T1.*
+	  	    FROM BUSINESS_COUPON T1
+	  	    WHERE 1=1
+	  	    <include refid="dynamicWhere"/>
+	 		 order by T1.CREATE_TIME desc
+	 	) T 
+	 	<dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_endRow">ROWNUM &lt;= #_endRow#</isNotEmpty>
+	 	</dynamic>
+	  )	
+	  <dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_startRow">ROWNUM1 &gt;=#_startRow#</isNotEmpty>
+	  </dynamic>
+  </select>
+  
+  <!-- 查询BusinessCoupon记录，根据条件 -->
+  <select id="selectByIds" resultMap="businessCouponResult" parameterClass="java.util.HashMap">
+	  	SELECT T1.*
+	  	    FROM BUSINESS_COUPON T1
+	  	    WHERE 1=1
+	  	    <include refid="dynamicWhere"/>
+  </select>
+  <!-- 查询有效日期范围，根据条件 -->
+  <select id="selectValidDate"  resultMap="minBusinessCoupon" parameterClass="java.util.HashMap" >
+  	SELECT MIN(t.begin_time) BEGIN_TIME, 
+           MAX(t.end_time) END_TIME
+      FROM business_coupon t
+	 WHERE t.coupon_type = #couponType#
+	   AND t.product_id = #productId#
+	   AND t.valid = 'true'
+  </select>
+  <!-- 删除特卖会 -->
+   <delete id="deleteFromBusinessCoupon" parameterClass="java.lang.Long">
+   delete from lvmama_pet.business_coupon T where T.BUSINESS_COUPON_ID=#businessCouponId#
+  </delete>
+</sqlMap>

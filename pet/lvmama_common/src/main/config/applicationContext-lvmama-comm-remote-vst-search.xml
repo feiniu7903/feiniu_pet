@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 注意这里是vst_search通过vst_pet开放给老系统的所有服务接口,added by wenzhengtao 20140401 -->
+	<bean id="vstAllSearchService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}/vstAllSearchServiceRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.vst.service.search.VstAllSearchService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="vstCfrecommendService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}/vstCfrecommendServiceRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.vst.service.search.VstCfrecommendService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="vstClientHotelSearchService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}/vstClientHotelSearchServiceRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.vst.service.search.VstClientHotelSearchService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="vstClientPlaceService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}/vstClientPlaceServiceRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.vst.service.search.VstClientPlaceService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="vstClientProductService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}/vstClientProductServiceRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.vst.service.search.VstClientProductService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="vstTuangouSearchService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}/vstTuangouSearchServiceRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.vst.service.search.VstTuangouSearchService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+</beans>

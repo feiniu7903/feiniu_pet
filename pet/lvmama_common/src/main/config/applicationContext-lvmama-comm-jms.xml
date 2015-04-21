@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:amq="http://activemq.apache.org/schema/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.5.0.xsd">
+	<!-- ActiveMQ connectionFactory -->
+	<amq:connectionFactory id="jmsConnectionFactory" brokerURL="${jms_server}" />
+
+	<amq:queue name="ORDER_TOPIC" physicalName="ActiveMQ.ORDER.${jms_node}" />
+	<amq:queue name="PASSPORT_TOPIC" physicalName="ActiveMQ.PASSPORT.${jms_node}" />
+	<amq:queue name="PASSPORT_CHIMELONG_TOPIC" physicalName="ActiveMQ.PASSPORT.CHIMELONG.${jms_node}" />
+	<amq:queue name="PRODUCT_TOPIC" physicalName="ActiveMQ.PRODUCT.${jms_node}" />
+	<amq:queue name="POLICY_TOPIC" physicalName="ActiveMQ.POLICY.${jms_node}" />
+	<amq:queue name="SSO_TOPIC" physicalName="ActiveMQ.SSO.${jms_node}" />
+	<amq:queue name="RESOURCE_TOPIC" physicalName="ActiveMQ.RESOURCE.${jms_node}" /><!-- 新增一个基础设施的TOPIC -->
+	
+	<amq:queue name="ORDER_TOPIC_SHIFT" physicalName="ActiveMQ.ORDER.${jms_node}.shift" />
+	
+	<bean id="myJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory">
+			<bean class="org.springframework.jms.connection.SingleConnectionFactory">
+				<property name="targetConnectionFactory" ref="jmsConnectionFactory" />
+			</bean>
+		</property>
+	</bean>
+
+	<!--基于发布订阅的消息产生者  对应多个消息消费者类型一对多-->
+	<bean id="orderMessageProducer" class="com.lvmama.comm.jms.TopicMessageProducer">
+		<property name="template" ref="myJmsTemplate" />
+		<property name="destination" value="ActiveMQ.ORDER" />
+	</bean>
+	
+	<bean id="passportMessageProducer" class="com.lvmama.comm.jms.TopicMessageProducer">
+		<property name="template" ref="myJmsTemplate" />
+		<property name="destination" value="ActiveMQ.PASSPORT" />
+	</bean>
+	
+	<bean id="passportChimelongMessageProducer" class="com.lvmama.comm.jms.TopicMessageProducer">
+		<property name="template" ref="myJmsTemplate" />
+		<property name="destination" value="ActiveMQ.PASSPORT.CHIMELONG" />
+	</bean>
+	
+	<bean id="productMessageProducer" class="com.lvmama.comm.jms.TopicMessageProducer">
+		<property name="template" ref="myJmsTemplate" />
+		<property name="destination" value="ActiveMQ.PRODUCT" />
+	</bean>
+	
+	<bean id="policyMessageProducer" class="com.lvmama.comm.jms.TopicMessageProducer">
+		<property name="template" ref="myJmsTemplate" />
+		<property name="destination" value="ActiveMQ.POLICY" />
+	</bean>
+
+	<bean id="resourceMessageProducer" class="com.lvmama.comm.jms.TopicMessageProducer">
+		<property name="template" ref="myJmsTemplate" />
+		<property name="destination" value="ActiveMQ.RESOURCE" />
+	</bean>
+
+	<bean id="ssoMessageProducer" class="com.lvmama.comm.jms.SSOMessageProducer">
+		<property name="template" ref="myJmsTemplate" />
+		<property name="destination" ref="SSO_TOPIC" />
+	</bean>
+
+</beans>

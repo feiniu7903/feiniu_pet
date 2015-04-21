@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+
+	<bean id="payPaymentNotifier" class="com.lvmama.pet.PayPaymentNotifier"/>
+
+	<!-- 通过Spring HttpInvoker机制暴露远程访问服务，命名规则为xxBean -->
+	<bean id="refundSuccessNotifyProcesser" class="com.lvmama.pet.processor.RefundSuccessNotifyProcesser"/>
+	<bean id="paymentSuccessNotifyProcesser" class="com.lvmama.pet.processor.PaymentSuccessNotifyProcesser"/>
+	<bean id="refundProcesser" class="com.lvmama.pet.processor.RefundProcesser"/>
+	<bean id="orderApproveProcesser" class="com.lvmama.pet.processor.OrderApproveProcesser"/>
+	<bean id="orderPrePayProcesser" class="com.lvmama.pet.processor.OrderPrePayProcesser"/>
+	<bean id="orderPrePayCancelProcesser" class="com.lvmama.pet.processor.OrderPrePayCancelProcesser"/>
+	<bean id="orderPaySuccessUpdateProcesser" class="com.lvmama.pet.processor.OrderPaySuccessUpdateProcesser"/>
+	<bean id="orderTransferPaymentProcesser" class="com.lvmama.pet.processor.OrderTransferPaymentProcesser" />
+	<bean id="paymentQueryProcesser" class="com.lvmama.pet.processor.PaymentQueryProcesser" />
+	
+	<!-- 消息接收 -->
+	<bean id="orderTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.ORDER.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+				<ref bean="orderApproveProcesser" />
+				<ref bean="orderPrePayProcesser" />
+				<ref bean="orderPrePayCancelProcesser" />
+				<ref bean="orderPaySuccessUpdateProcesser" />
+				<ref bean="orderTransferPaymentProcesser" />
+				<ref bean="paymentQueryProcesser" />
+			</list>
+		</property>
+	</bean>
+		<!-- 订阅 -->
+	<bean id="orderMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="orderTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="orderTopicListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="ORDER_TOPIC" />
+		<property name="messageListener" ref="orderMessageListener" />
+		<property name="concurrentConsumers" value="5" /> 
+		<property name="maxConcurrentConsumers" value="20" /> 
+	</bean>
+	
+	<!-- 消息接收 -->
+	<bean id="resourceTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.RESOURCE.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+				<ref bean="paymentSuccessNotifyProcesser" />
+				<ref bean="refundSuccessNotifyProcesser"/>
+				<ref bean="refundProcesser" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 订阅 -->
+	<bean id="resourceMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="resourceTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="resourceTopicListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="RESOURCE_TOPIC" />
+		<property name="messageListener" ref="resourceMessageListener" />
+		<property name="concurrentConsumers" value="5" /> 
+		<property name="maxConcurrentConsumers" value="20" /> 
+	</bean>
+</beans>

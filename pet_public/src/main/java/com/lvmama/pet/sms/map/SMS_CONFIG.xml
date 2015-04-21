@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- 短信全局配置信息 -->
+<sqlMap namespace="SMS_CONFIG">
+	<typeAlias alias="smsConfig" type="com.lvmama.comm.pet.po.sms.SmsConfig" />
+	<resultMap class="smsConfig" id="resultMap">
+		<result column="default_channel" property="defaultChannel" />
+		<result column="resend_first_channel" property="resendFirstChannel" />
+		<result column="resend_secondary_channel" property="resendSecondaryChannel" />
+	</resultMap>
+	<!-- 更新 -->
+	<update id="update" parameterClass="smsConfig">
+		update sms_config
+		set default_channel = #defaultChannel#,
+		resend_first_channel = #resendFirstChannel#,
+		resend_secondary_channel = #resendSecondaryChannel#
+	</update>
+	<!-- 查询 -->
+	<select id="query" resultClass="smsConfig">
+		select default_channel defaultChannel, resend_first_channel resendFirstChannel, resend_secondary_channel resendSecondaryChannel from
+		sms_config
+	</select>
+</sqlMap>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="DEPARTMENT" >
+   <typeAlias alias="department" type="com.lvmama.comm.pet.po.department.Department"/>
+   <resultMap id="baseMap" class="department" >
+    <result column="ID" property="id" />
+    <result column="NAME" property="name" />
+    <result column="SUPERID" property="superId"/>
+  </resultMap>
+  
+  <sql id="pageHeader">
+         SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+    </sql>
+    <sql id="pageFooter">
+         ) A
+        <dynamic prepend="where">
+            <isNotEmpty property="endRows" prepend="and">
+                ROWNUM &lt;= #endRows#
+            </isNotEmpty>
+        </dynamic>
+          )
+        <dynamic prepend="where">
+         <isNotEmpty property="startRows" prepend="and">
+            rn &gt;= #startRows#
+         </isNotEmpty>      
+        </dynamic>
+    </sql>
+  <sql id="whereByParam">
+        <dynamic prepend="where">
+          <isNotEmpty property="id" prepend="and"> 
+               ID=#id#
+          </isNotEmpty>
+          <isNotEmpty property="name" prepend="and"> 
+               NAME = #name#
+          </isNotEmpty>
+          <isNotEmpty property="superId" prepend="and"> 
+               SUPERID=#superId#
+          </isNotEmpty>
+      </dynamic>
+  </sql>
+  
+   <select id="countByParamDepartment" resultClass="java.lang.Long" parameterClass="java.util.Map">
+      select count(*) from department
+      <include refid="whereByParam"/>
+   </select>
+   
+   <select id="queryByParamDepartment"  resultMap="baseMap" parameterClass="java.util.Map" >
+        <include refid="pageHeader"/>
+       select id,name,superid    
+  	 from department
+         <include refid="whereByParam"/> 
+        <include refid="pageFooter"/> 
+   </select>
+</sqlMap>

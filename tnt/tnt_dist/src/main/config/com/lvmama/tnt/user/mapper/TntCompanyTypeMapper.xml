@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.user.mapper.TntCompanyTypeMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.user.po.TntCompanyType">
+		<result property="companyTypeId" column="COMPANY_TYPE_ID" />
+		<result property="companyTypeName" column="COMPANY_TYPE_NAME" />
+		<result property="companyTypeCode" column="COMPANY_TYPE_CODE" />
+		<result property="channelId" column="CHANNEL_ID" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		COMPANY_TYPE_ID,COMPANY_TYPE_NAME,COMPANY_TYPE_CODE,CHANNEL_ID
+	    ]]>
+	</sql>
+
+	<sql id="select">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_COMPANY_TYPE
+		<include refid="whereSQL" />
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true">
+		<selectKey resultType="java.lang.Long" keyProperty="companyTypeId"
+			order="BEFORE">
+			select TNT_COMPANY_TYPE_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_COMPANY_TYPE (
+		COMPANY_TYPE_ID ,
+		COMPANY_TYPE_NAME ,
+		COMPANY_TYPE_CODE,
+		CHANNEL_ID
+		) VALUES (
+		#{companyTypeId} ,
+		#{companyTypeName,jdbcType=VARCHAR} ,
+		#{companyTypeCode,jdbcType=VARCHAR},
+		#{channelId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE TNT_COMPANY_TYPE
+		<set>
+			<if test="companyTypeName != null">
+				COMPANY_TYPE_NAME = #{companyTypeName} ,
+			</if>
+			<if test="companyTypeCode != null">
+				COMPANY_TYPE_CODE = #{companyTypeCode}
+			</if>
+			<if test="channelId != null">
+				CHANNEL_ID = #{channelId}
+			</if>
+		</set>
+		WHERE COMPANY_TYPE_ID = #{companyTypeId}
+	</update>
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM TNT_COMPANY_TYPE
+		WHERE
+		COMPANY_TYPE_ID =
+		#{id}
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_COMPANY_TYPE
+		WHERE
+		COMPANY_TYPE_ID = #{id}
+	</select>
+
+	<select id="selectList" resultMap="baseResultMap"
+		parameterType="com.lvmama.tnt.user.po.TntCompanyType">
+		<include refid="select" />
+	</select>
+
+	<select id="selectOne" resultMap="baseResultMap"
+		parameterType="com.lvmama.tnt.user.po.TntCompanyType">
+		<include refid="select" />
+	</select>
+
+	<sql id="whereSQL">
+		<where>
+			<if test="companyTypeId!=null and companyTypeId!=''">
+				AND COMPANY_TYPE_ID = #{companyTypeId}
+			</if>
+			<if test="companyTypeName!=null and companyTypeName!=''">
+				AND COMPANY_TYPE_NAME = #{companyTypeName}
+			</if>
+			<if test="companyTypeCode!=null and companyTypeCode!=''">
+				AND COMPANY_TYPE_CODE = #{companyTypeCode}
+			</if>
+			<if test="channelId!=null and channelId!=''">
+				AND CHANNEL_ID = #{channelId}
+			</if>
+		</where>
+	</sql>
+
+	<select id="findCount" resultType="Integer"
+		parameterType="com.lvmama.tnt.user.po.TntCompanyType">
+		SELECT count(1) FROM TNT_COMPANY_TYPE
+		<include refid="whereSQL" />
+	</select>
+
+	<select id="fetchPage" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_COMPANY_TYPE
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<sql id="pageWhere">
+		<where>
+			<if test="param.companyTypeId!=null">
+				AND COMPANY_TYPE_ID = #{param.companyTypeId}
+			</if>
+			<if test="param.companyTypeName!=null">
+				AND COMPANY_TYPE_NAME = #{param.companyTypeName}
+			</if>
+			<if test="param.companyTypeCode!=null">
+				AND COMPANY_TYPE_CODE = #{param.companyTypeCode}
+			</if>
+			<if test="param.channelId!=null and param.channelId!=''">
+				AND CHANNEL_ID = #{param.channelId}
+			</if>
+		</where>
+	</sql>
+
+</mapper>
+

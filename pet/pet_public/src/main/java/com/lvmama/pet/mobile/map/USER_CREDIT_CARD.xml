@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_CREDIT_CARD" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.UserCreditCard" >
+    <result column="USER_CREDIT_CARD_ID" property="userCreditCardId" />
+    <result column="CREDIT_CARD_NO" property="creditCardNo" />
+    <result column="CREDIT_CARD_EFFECTIVE_DATE" property="creditCardEffectiveDate" />
+    <result column="CREDIT_CARD_CVV" property="creditCardCvv" />
+    <result column="USER_ID" property="userId" />
+    <result column="CREDIT_CARD_HOLDER" property="creditCardHolder" />
+    <result column="IDENTIFY_CARD_NO" property="identifyCardNo" />
+    <result column="IDENTIFY_CARD_TYPE" property="identifyCardType" />
+  </resultMap>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.UserCreditCard" >
+    insert into USER_CREDIT_CARD (USER_CREDIT_CARD_ID, CREDIT_CARD_NO, CREDIT_CARD_EFFECTIVE_DATE,
+      CREDIT_CARD_CVV, USER_ID, CREDIT_CARD_HOLDER, IDENTIFY_CARD_NO, IDENTIFY_CARD_TYPE)
+    values (USER_CREDIT_CARD_SEQ.nextval, #creditCardNo#, #creditCardEffectiveDate#,
+      #creditCardCvv#, #userId#, #creditCardHolder#,
+      #identifyCardNo#, #identifyCardType#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.UserCreditCard" >
+    insert into USER_CREDIT_CARD
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="userCreditCardId" >
+        USER_CREDIT_CARD_ID
+      </isNotNull>
+      <isNotNull prepend="," property="creditCardNo" >
+        CREDIT_CARD_NO
+      </isNotNull>
+      <isNotNull prepend="," property="creditCardEffectiveDate" >
+        CREDIT_CARD_EFFECTIVE_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="creditCardCvv" >
+        CREDIT_CARD_CVV
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        USER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="creditCardHolder" >
+        CREDIT_CARD_HOLDER
+      </isNotNull>
+      <isNotNull prepend="," property="identifyCardNo" >
+        IDENTIFY_CARD_NO
+      </isNotNull>
+      <isNotNull prepend="," property="identifyCardType" >
+        IDENTIFY_CARD_TYPE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="userCreditCardId" >
+        USER_CREDIT_CARD_SEQ.nextval
+      </isNotNull>
+      <isNotNull prepend="," property="creditCardNo" >
+        #creditCardNo#
+      </isNotNull>
+      <isNotNull prepend="," property="creditCardEffectiveDate" >
+        #creditCardEffectiveDate#
+      </isNotNull>
+      <isNotNull prepend="," property="creditCardCvv" >
+        #creditCardCvv#
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        #userId#
+      </isNotNull>
+      <isNotNull prepend="," property="creditCardHolder" >
+        #creditCardHolder#
+      </isNotNull>
+      <isNotNull prepend="," property="identifyCardNo" >
+        #identifyCardNo#
+      </isNotNull>
+      <isNotNull prepend="," property="identifyCardType" >
+        #identifyCardType#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="selectUserCreditCardByUserId" parameterClass="java.lang.String" resultMap="BaseResultMap">
+  	select * from user_credit_card t where t.user_id=#userId#
+  </select>
+  <select id="selectUserCreditCard" parameterClass="com.lvmama.comm.pet.po.mobile.UserCreditCard" resultMap="BaseResultMap">
+  	select * from user_credit_card t where t.user_id = #userId# and t.credit_card_no = #creditCardNo#
+  </select>
+</sqlMap>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="USER_PERSISTENT_SESSION">
+	<resultMap id="UserPersistentSessionMap" class="com.lvmama.comm.pet.po.user.UserPersistentSession">          
+		<result property="persistentSessionID" column="PERSISTENT_SESSION_ID"/>
+		<result property="sessionKey" column="SESSION_KEY"/>
+		<result property="userID" column="USER_ID"/>
+		<result property="expireDate" column="EXPIRE_DATE"/>
+		<result property="createDate" column="CREATE_DATE" />
+	</resultMap>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.user.UserPersistentSession">
+	<selectKey resultClass="java.lang.Long" keyProperty="persistentSessionID" >
+			select USER_PERSISTENT_SESSION_SEQ.nextval as persistentSessionID from DUAL
+	</selectKey>
+		INSERT INTO USER_PERSISTENT_SESSION (PERSISTENT_SESSION_ID,SESSION_KEY,USER_ID,EXPIRE_DATE,CREATE_DATE) VALUES (#persistentSessionID#,#sessionKey#,#userID#,#expireDate#,sysdate)
+	</insert>
+	
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.user.UserPersistentSession">
+		UPDATE USER_PERSISTENT_SESSION
+		<dynamic prepend="SET">
+				<isNotEmpty property="sessionKey" prepend=",">SESSION_KEY = #sessionKey#</isNotEmpty>
+				<isNotEmpty property="userID" prepend=",">USER_ID = #userID#</isNotEmpty>
+				<isNotEmpty property="expireDate" prepend=",">EXPIRE_DATE = #expireDate#</isNotEmpty>
+			</dynamic>
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="sessionKey" prepend=" AND ">SESSION_KEY = #sessionKey#</isNotEmpty>
+			<isNotEmpty property="userID" prepend=" AND ">USER_ID = #userID#</isNotEmpty>
+		</dynamic>
+	</update>
+	
+	<select id="query"  parameterClass="java.util.Map" resultClass="com.lvmama.comm.pet.po.user.UserPersistentSession">
+		select * from (SELECT 
+			PERSISTENT_SESSION_ID persistentSessionID,
+			SESSION_KEY sessionKey, 
+			USER_ID userID, 
+			EXPIRE_DATE expireDate,
+			CREATE_DATE createDate 
+		FROM 
+			USER_PERSISTENT_SESSION
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="sessionKey" prepend=" AND ">SESSION_KEY = #sessionKey#</isNotEmpty>
+			<isNotEmpty property="userID" prepend=" AND ">USER_ID = #userID#</isNotEmpty>
+		</dynamic>
+		order by CREATE_DATE desc
+		) where rownum=1
+	</select>
+	
+</sqlMap>

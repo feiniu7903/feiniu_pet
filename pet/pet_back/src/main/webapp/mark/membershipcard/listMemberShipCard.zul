@@ -1,0 +1,94 @@
+<?page title="会员卡管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./listMembershipCardWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="listMembershipCardWin" mode="embedded" apply="com.lvmama.pet.web.mark.membershipcard.ListMembershipCardAction">
+		<grid>
+			<columns>
+				<column width="120px"></column>
+				<column></column>
+				<column width="120px"></column>
+				<column></column>
+				<column width="120px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>会员卡批次代码:</hbox>
+					<hbox><textbox value="@{saction.searchConds.cardPrefixNumber}"/></hbox>					
+					<hbox>生成时间</hbox>
+					<hbox><datebox value="@{saction.searchConds.beginCreateTime}"/> -- <datebox value="@{saction.searchConds.endCreateTime}"/></hbox>
+					<hbox>优惠措施绑定时间</hbox>
+					<hbox><datebox value="@{saction.searchConds.beginBindingDiscountTime}"/> -- <datebox value="@{saction.searchConds.endBindingDiscountTime}"/></hbox>
+				</row>
+				<row>
+					<hbox>渠道代码:</hbox>
+					<hbox><textbox value="@{saction.searchConds.channelCode}"/></hbox>
+					<hbox>渠道名称：</hbox>
+					<hbox><textbox value="@{saction.searchConds.channelName}"/></hbox>
+					<hbox>渠道绑定时间</hbox>
+					<hbox><datebox value="@{saction.searchConds.beginBindingChannelTime}"/> -- <datebox value="@{saction.searchConds.endBindingChannelTime}"/></hbox>					
+				</row>				
+			</rows>
+		</grid>
+		<toolbar align="end">
+			<button  label="查询" id="search" width="100px" onClick='_paging.activePage=0;saction.loadDataList();'/>
+			<button  label="新增会员卡" id="add" width="100px" onClick='saction.showWindow("/mark/membershipcard/addMemberShipCardCode.zul", self.getAttributes());'/>
+			<button label="刷新" id="refresh" onClick="saction.loadDataList()" visible="false"></button>
+		</toolbar>
+		<listbox id="membershipCardListBox" multiple="true" checkmark="true" model="@{saction.listMembershipCardDetails,load-after='search.onClick,_paging.onPaging,refresh.onClick'}">
+			<listhead>
+				<listheader width="22px"/>	
+				<listheader label="批次" width="60px"/>
+				<listheader label="数量" width="100px"/>
+				<listheader label="生成日期" width="80px"/>
+				<listheader label="所属渠道"/>
+				<listheader label="渠道代码"/>
+				<listheader label="渠道绑定时间" width="80px"/>
+				<listheader label="绑定优惠" width="80px"/>
+				<listheader label="优惠绑定时间" width="80px"/>
+				<listheader label="激活" width="50px"/>
+				<listheader label="操作"/>
+			</listhead>
+			<listitem height="25px" self="@{each='markMembershipCardDetails'}" value="@{markMembershipCardDetails}">
+				<listcell/>
+				<listcell label="@{markMembershipCardDetails.cardPrefixNumber }"/>
+				<listcell label="@{markMembershipCardDetails.amount }"/>
+				<listcell label="@{markMembershipCardDetails.createTime,converter='com.lvmama.pet.utils.DateZKConverter' }"/>
+				<listcell label="@{markMembershipCardDetails.channelName }"/>
+				<listcell label="@{markMembershipCardDetails.channelCode }"/>
+				<listcell label="@{markMembershipCardDetails.bindingChannelTime,converter='com.lvmama.pet.utils.DateZKConverter' }"/>
+				<listcell label="@{markMembershipCardDetails.chIsBindingDiscount }"/>
+				<listcell label="@{markMembershipCardDetails.bindingDiscountTime,converter='com.lvmama.pet.utils.DateZKConverter' }"/>
+				<listcell label="@{markMembershipCardDetails.chIsIsActivate }"/>
+				<listcell>
+					<button label="下载" onClick='saction.download(self.getAttributes());'>
+						<custom-attributes cardId="@{markMembershipCardDetails.cardId}" />
+					</button>
+					<button label="绑定渠道"  disabled="@{markMembershipCardDetails.disabledCancelButton}" onClick='saction.showWindow("/mark/membershipcard/bindingChannel.zul", self.getAttributes());'>
+						<custom-attributes cardId="@{markMembershipCardDetails.cardId}" />
+					</button>
+					<button label="新增优惠" onClick='saction.showWindow("/mark/membershipcard/bindingCoupon.zul", self.getAttributes());'>
+						<custom-attributes cardId="@{markMembershipCardDetails.cardId}" />
+					</button>
+					<button label="作废" disabled="@{markMembershipCardDetails.disabledCancelButton}" onClick='saction.del(self.getAttributes());'>
+						<custom-attributes cardId="@{markMembershipCardDetails.cardId}" />
+					</button>
+				</listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows >
+					<row >
+						<cell width="60px">
+							共 <label id="_totalRowCountLabel" /> 条
+						</cell>
+						<cell>
+							<paging  id="_paging" pageSize = "15" onPaging='saction.loadDataList();'/>
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>				
+	</window>
+</zk>

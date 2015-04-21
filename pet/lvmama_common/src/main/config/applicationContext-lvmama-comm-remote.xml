@@ -1,0 +1,892 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+	<!-- 通过Spring HttpInvoker机制暴露远程访问服务，命名规则为xxBean -->
+	<!-- <bean id="localProductRemoteBean" class="com.lvmama.product.remote.ProductRemoteServiceImpl" 
+		/> -->
+
+	<!-- 自动扫描配置PetPulic的远程服务 -->
+	<bean class="com.lvmama.comm.hessian.RemoteServiceScanner">
+	   <property name="basePackage" value="com.lvmama.comm.pet.service.fin" />
+	   <property name="remoteServer" value="${petPublic.serviceUrl}" />
+	</bean>
+	
+	<bean id="emailRemoteService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/emailService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.email.EmailService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="comEmailTemplateService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/comEmailTemplateService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComEmailTemplateService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="comFSRemoteService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"	value="${petPublic.serviceUrl}/comFSService"  />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComFSService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="smsRemoteService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/smsRemoteService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.sms.SmsRemoteService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	
+	<bean id="comSmsTemplateRemoteService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"	value="${petPublic.serviceUrl}/comSmsTemplateService"  />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComSmsTemplateService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="smsConfigService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"	value="${petPublic.serviceUrl}/smsConfigService"  />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.sms.SmsConfigService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="userUserProxy" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/userUserProxy" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.user.UserUserProxy" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="userPersistentSessionService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/userPersistentSessionService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.user.UserPersistentSessionService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="comIpsRemoteBean" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/comIpsService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComIpsService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="userCooperationUserService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/userCooperationUserService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.user.UserCooperationUserService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="userCooperationCacheService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/userCooperationCacheService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.user.UserCooperationCacheService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="shopOrderService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/shopOrderService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.shop.ShopOrderService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="shopLogService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/shopLogService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.shop.ShopLogService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+	
+	<bean id="shopProductZhuantiService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/shopProductZhuantiService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.shop.ShopProductZhuantiService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="markMembershipCardDiscountService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/markMembershipCardDiscountService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.mark.MarkMembershipCardDiscountService" />
+		<property name="chunkedPost" value="false" />
+	</bean>	
+	
+	<bean id="shopProductService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/shopProductService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.shop.ShopProductService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>	
+	
+	<bean id="shopUserService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/shopUserService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.shop.ShopUserService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="shopCooperationCouponService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/shopCooperationCouponService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.shop.ShopCooperationCouponService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="comPictureService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/comPictureService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComPictureService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+    
+	<bean id="userActionCollectionService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/userActionCollectionService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.user.UserActionCollectionService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+    <bean id="comUserFeedbackService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/comUserFeedbackService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComUserFeedbackService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true" />
+    </bean>
+	
+	<bean id="infoServiceBean" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/infoService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.info.InfoService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="connRecordService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/connRecordService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.conn.ConnRecordService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>        
+    <bean id="placeCityService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placeCityService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.PlaceCityService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="placeService"
+ 			class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/placeService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlaceService" />
+		<property name="overloadEnabled" value="true"/>
+		<property name="chunkedPost" value="false" />
+	</bean>
+    
+    <bean id="smsInstructionService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/smsInstructionService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.sms.SmsInstructionService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>  
+    
+    <bean id="userBatchRegisterService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/userBatchRegisterService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.user.UserBatchRegisterService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    
+    <bean id="comMobileAreaService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/comMobileAreaService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComMobileAreaService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>  
+    
+    <bean id="markChannelService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/markChannelService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mark.MarkChannelService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="markMembershipCardCodeService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/markMembershipCardCodeService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mark.MarkMembershipCardCodeService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>   
+    <bean id="markMembershipCardService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/markMembershipCardService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mark.MarkMembershipCardService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    
+    <bean id="comParttimeUserService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/comParttimeUserService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComParttimeUserService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+ 
+    <bean id="userBatchUserService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/userBatchUserService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.user.UserBatchUserService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="supplierService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/supplierService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.sup.SupplierService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean> 
+    
+    <bean id="supContractService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/supContractService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.sup.SupContractService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    
+    <bean id="bCertificateTargetService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/bCertificateTargetService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.sup.BCertificateTargetService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    
+    <bean id="settlementTargetService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/settlementTargetService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.sup.SettlementTargetService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    <bean id="performTargetService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/performTargetService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.sup.PerformTargetService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    <bean id="contactService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/contactService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ContactService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    <bean id="finAccountingEntityService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/finAccountingEntityService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.sup.FinAccountingEntityService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    <bean id="comLogRemoteService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/comLogRemoteService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComLogService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    
+     <bean id="placeFlightService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/placeFlightService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlaceFlightService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    
+    
+    <alias name="comLogRemoteService" alias="comLogService"/>
+    
+    <!-- 后台权限用户begin -->
+    <bean id="permUserService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/permUserService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.perm.PermUserService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="permissionService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/permissionService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.perm.PermissionService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="permOrganizationService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/permOrganizationService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.perm.PermOrganizationService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="permRolePermissionService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/permRolePermissionService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.perm.PermRolePermissionService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="permRoleService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/permRoleService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.perm.PermRoleService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="permUserRoleService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/permUserRoleService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.perm.PermUserRoleService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="userOrgAuditPermService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/userOrgAuditPermService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.perm.UserOrgAuditPermService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="permUserPermissionService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/permUserPermissionService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.perm.PermUserPermissionService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <!-- 后台权限用户end -->
+    
+    <!-- 系统日志 -->
+    <bean id="comLogServiceRemote"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/comLogService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComLogService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+     <bean id="supplierServiceRemote"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/supplierService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.sup.SupplierService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+
+     <!-- payment  refundment  -->
+    <bean id="payPaymentService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/payPaymentService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.PayPaymentService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="payPaymentRefundmentService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/payPaymentRefundmentService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.PayPaymentRefundmentService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="payPaymentGatewayService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/payPaymentGatewayService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.PayPaymentGatewayService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="payPaymentGatewayElementService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/payPaymentGatewayElementService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.PayPaymentGatewayElementService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+	<bean id="payPaymentDetailService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/payPaymentDetailService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.PayPaymentDetailService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="payReceivingCompanyService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/payReceivingCompanyService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.PayReceivingCompanyService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="payReceivingBankService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/payReceivingBankService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.PayReceivingBankService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="payPosCommercialService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/payPosCommercialService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.PayPosCommercialService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="payPosService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/payPosService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.PayPosService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="payPosUserService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/payPosUserService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.PayPosUserService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    
+    <bean id="petComLogService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/comLogService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComLogService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    
+    <!-- 现金账户begin -->
+    <bean id="cashAccountService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/cashAccountService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.money.CashAccountService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    
+    <!-- 现金账户end -->
+    <bean id="storedCardService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/storedCardService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.money.StoredCardService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <!-- 容器相关 -->
+    <bean id="prodContainerProductService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/prodContainerProductService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.prod.ProdContainerProductService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="productProductPlaceService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/productProductPlaceService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.prod.ProductProductPlaceService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+     
+     <!-- 点评begin -->
+    <bean id="cmtCommentService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/cmtCommentService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.comment.CmtCommentService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="dicCommentLatitudeService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/dicCommentLatitudeService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.comment.DicCommentLatitudeService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+     <bean id="cmtSpecialSubjectService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/cmtSpecialSubjectService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.comment.CmtSpecialSubjectService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="cmtReplyService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/cmtReplyService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.comment.CmtReplyService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="cmtRecommendPlaceService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/cmtRecommendPlaceService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.comment.CmtRecommendPlaceService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="cmtTitleStatistisService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/cmtTitleStatistisService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.comment.CmtTitleStatistisService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>    
+    <bean id="cmtActivityService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/cmtActivityService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.comment.CmtActivityService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="cmtLatitudeStatistisService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/cmtLatitudeStatistisService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.comment.CmtLatitudeStatistisService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="cmtBusinessUserService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/cmtBusinessUserService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.comment.CmtBusinessUserService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <!-- 点评end -->
+    
+    <bean id="prodInsuranceService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/prodInsuranceService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.prod.ProdInsuranceService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    
+    <bean id="petProdProductRelationService"
+     	class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/petProdProductRelationService" />
+        <property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdProductRelationService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>    
+    	<!-- 站内信 -->
+    <bean id="onlineLetterService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/onlineLetterService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.onlineLetter.OnlineLetterService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <!-- 签证资料管理 -->
+    <bean id="visaApplicationDocumentService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/visaApplicationDocumentService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.visa.VisaApplicationDocumentService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    
+    <!-- 签证材料审核 -->
+    <bean id="visaApprovalService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/visaApprovalService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.visa.VisaApprovalService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    
+        
+    
+    <!-- 优惠券(活动)Service -->
+    <bean id="markCouponService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/markCouponService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mark.MarkCouponService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    
+     <bean id="markCouponUserService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/markCouponUserService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mark.MarkCouponUserService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>  
+    
+    <bean id="markCouponProductService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/markCouponProductService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mark.MarkCouponProductService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="markCouponPointChangeService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/markCouponPointChangeService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mark.MarkCouponPointChangeService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <!-- 优惠二期Service -->
+    <bean id="businessCouponService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/businessCouponService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.businessCoupon.BusinessCouponService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+	<!-- 特卖会Service -->
+	<bean id="prodSeckillRuleService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/prodSeckillRuleService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.businessCoupon.ProdSeckillRuleService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <!-- 黑名单service -->
+    <bean id="prodBlackListService"
+    	class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/prodBlackListService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.prod.ProdBlackListService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="favorService"
+    	class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/favorService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.favor.FavorService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />    	
+    </bean>  
+    
+    <!-- 工单 -->
+    <bean id="workDepartmentService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/workDepartmentService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.work.WorkDepartmentService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="workGroupService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/workGroupService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.work.WorkGroupService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="workGroupUserService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/workGroupUserService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.work.WorkGroupUserService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="workOrderService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/workOrderService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.work.WorkOrderService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="workOrderTypeService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/workOrderTypeService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.work.WorkOrderTypeService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="workTaskService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/workTaskService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.work.WorkTaskService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="publicWorkOrderService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/publicWorkOrderService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.work.PublicWorkOrderService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+
+    <bean id="comKeyDescService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/comKeyDescService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComKeyDescService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    
+    <bean id="comKeJetWordService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/comKeJetWordService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComKeJetWordService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+	<!-- 财务勾兑结果接口 -->
+    <bean id="finReconResultService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/finReconResultService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.FinReconResultService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    <!-- 财务流水接口 -->
+    <bean id="finBizItemService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/finBizItemService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.fin.FinBizItemService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+	<bean id="finReconBankStatementService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/finReconBankStatementService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.FinReconBankStatementService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    
+    <!-- add by zhangwengang 财务对账接口 -->
+    <bean id="finGLService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/finGLService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.fin.FinGLService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    <bean id="finGLCostService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/finGLCostService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.fin.FinGLCostService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean> 
+    <bean id="finGLServiceProxy" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/finGLServiceProxy"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.fin.FinGLBizService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    <bean id="finGLSubjectConfigService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/finGLSubjectConfigService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.fin.FinGLSubjectConfigService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    <bean id="finGlSubjectCfgService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/finGlSubjectCfgService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.fin.FinGlSubjectCfgService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    
+    <bean id="comKeJetAdsService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/comKeJetAdsService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComKeJetAdsService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+
+    </bean>
+    
+    
+    <bean id="ebkPushService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/ebkPushService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebkpush.IEbkPushService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+
+     <bean id="comSearchIntelligentTypeService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/comSearchIntelligentTypeService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.search.ComSearchIntelligentTypeService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="comSearchTranscodeService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/comSearchTranscodeService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.search.ComSearchTranscodeService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>    
+    <bean id="prodTrainCacheService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/prodTrainCacheService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.search.ProdTrainCacheService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>  
+    <bean id="sensitiveKeysService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/sensitiveKeysService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.conn.SensitiveKeysService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="hotelTrafficInfoService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/hotelTrafficInfoService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.HotelTrafficInfoService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>     
+     <bean id="lvmamacardService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/lvmamacardService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.lvmamacard.LvmamacardService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="departmentService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/departmentService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.department.DepartmentService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>     
+    
+    <bean id="ncComplaintRelationService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/ncComplaintRelationService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.relation.NcComplaintRelationService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>     
+	
+	<bean id="sensitiveWordService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/sensitiveWordService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.sensitiveW.SensitiveWordService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>  
+	</bean>    
+	<!-- 行用卡远程服务 -->
+	<bean id="creditCardService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/creditCardService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.mobile.CreditCardService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>    
+	
+	<bean id="lvccChannelService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/lvccChannelService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.conn.LvccChannelService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="lvccPromotionActivityService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/lvccPromotionActivityService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.conn.LvccPromotionActivityService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+</beans>

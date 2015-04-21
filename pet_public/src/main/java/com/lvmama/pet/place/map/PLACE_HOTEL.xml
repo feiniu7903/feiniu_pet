@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PLACE_HOTEL">
+	<typeAlias alias="PlaceHotel" type="com.lvmama.comm.pet.po.place.PlaceHotel" />
+	<resultMap id="BaseResultMap" class="PlaceHotel">
+		<result column="PLACE_ID" property="placeId" />
+		<result column="ADDRESS_ENGLISH" property="addressEnglish" />
+		<result column="HOTEL_POSITION" property="hotelPosition" />
+		<result column="HOTEL_PHONE" property="hotelPhone" />
+		<result column="HOTEL_FAX" property="hotelFax" />
+		<result column="HOTEL_EMAIL" property="hotelEmail" />
+		<result column="HOTEL_ZIP_CODE" property="hotelZipCode" />
+		<result column="HOTEL_ROOM_NUM" property="hotelRoomNum" />
+		<result column="HOTEL_LEVEL" property="hotelLevel" />
+		<result column="HOTEL_TYPE" property="hotelType" />
+		<result column="HOTEL_STAR" property="hotelStar" />
+		<result column="HOTEL_COMPANY" property="hotelCompany" />
+		<result column="HOTEL_BRAND" property="hotelBrand" />
+		<result column="HOTEL_FOREIGNER" property="hotelForeigner" />
+		<result column="HOTEL_TOPIC" property="hotelTopic" />
+		<result column="HOTEL_OPEN_TIME" property="hotelOpenTime" />
+		<result column="HOTEL_DECORATION_TIME" property="hotelDecorationTime" />
+		<result column="CHECKIN_TIME" property="checkinTime" />
+		<result column="CHECKOUT_TIME" property="checkoutTime" />
+		<result column="BREAKFAST_TYPE" property="breakfastType" />
+		<result column="BREAKFAST_PRICE" property="breakfastPrice" />
+		<result column="CREDIT_CARD" property="creditCard" />
+		<result column="INTEGRATED_FACILITIES" property="integratedFacilities" />
+		<result column="ROOM_FACILITIES" property="roomFacilities" />
+		<result column="RECREATIONAL_FACILITIES" property="recreationalFacilities" />
+		<result column="DINING_FACILITIES" property="diningFacilities" />
+		<result column="SERVICES" property="services" />
+		<result column="PIC_DISPLAY" property="picDisplay" />
+		<result column="PET_CARRY" property="petCarry" />
+	</resultMap>
+	
+	<select id="searchPlaceHotel" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		SELECT *  FROM 
+			PLACE_HOTEL 
+		WHERE 
+			PLACE_ID = #placeId#
+	</select>
+	<insert id="insert" parameterClass="PlaceHotel">
+		INSERT INTO PLACE_HOTEL(
+			PLACE_ID,
+			ADDRESS_ENGLISH,
+			HOTEL_POSITION,
+			HOTEL_PHONE,
+			HOTEL_FAX,
+			HOTEL_EMAIL,
+			HOTEL_ZIP_CODE,
+			HOTEL_ROOM_NUM,
+			HOTEL_LEVEL,
+			HOTEL_TYPE,
+			HOTEL_STAR,
+			HOTEL_COMPANY,
+			HOTEL_BRAND,
+			HOTEL_FOREIGNER,
+			HOTEL_TOPIC,
+			HOTEL_OPEN_TIME,
+			HOTEL_DECORATION_TIME,
+			CHECKIN_TIME,
+			CHECKOUT_TIME,
+			BREAKFAST_TYPE,
+			BREAKFAST_PRICE,
+			CREDIT_CARD,
+			INTEGRATED_FACILITIES,
+			ROOM_FACILITIES,
+			RECREATIONAL_FACILITIES,
+			DINING_FACILITIES,
+			SERVICES,
+			PIC_DISPLAY,
+			PET_CARRY
+		) VALUES(
+			#placeId#,
+			#addressEnglish#,
+			#hotelPosition#,
+			#hotelPhone#,
+			#hotelFax#,
+			#hotelEmail#,
+			#hotelZipCode#,
+			#hotelRoomNum#,
+			#hotelLevel#,
+			#hotelType#,
+			#hotelStar#,
+			#hotelCompany#,
+			#hotelBrand#,
+			#hotelForeigner#,
+			#hotelTopic#,
+			#hotelOpenTime#,
+			#hotelDecorationTime#,
+			#checkinTime#,
+			#checkoutTime#,
+			#breakfastType#,
+			#breakfastPrice#,
+			#creditCard#,
+			#integratedFacilities#,
+			#roomFacilities#,
+			#recreationalFacilities#,
+			#diningFacilities#,
+			#services#,
+			#picDisplay#,
+			#petCarry#
+		)
+	</insert>
+	
+	<update id="update" parameterClass="PlaceHotel">
+		UPDATE 
+			PLACE_HOTEL 
+		SET 
+			ADDRESS_ENGLISH = #addressEnglish#,
+			HOTEL_POSITION = #hotelPosition#,
+			HOTEL_PHONE = #hotelPhone#,
+			HOTEL_FAX = #hotelFax#,
+			HOTEL_EMAIL = #hotelEmail#,
+			HOTEL_ZIP_CODE = #hotelZipCode#,
+			HOTEL_ROOM_NUM = #hotelRoomNum#,
+			HOTEL_LEVEL = #hotelLevel#,
+			HOTEL_TYPE = #hotelType#,
+			HOTEL_STAR = #hotelStar#,
+			HOTEL_COMPANY = #hotelCompany#,
+			HOTEL_BRAND = #hotelBrand#,
+			HOTEL_FOREIGNER = #hotelForeigner#,
+			HOTEL_TOPIC = #hotelTopic#,
+			HOTEL_OPEN_TIME = #hotelOpenTime#,
+			HOTEL_DECORATION_TIME = #hotelDecorationTime#,
+			CHECKIN_TIME = #checkinTime#,
+			CHECKOUT_TIME = #checkoutTime#,
+			BREAKFAST_TYPE = #breakfastType#,
+			BREAKFAST_PRICE = #breakfastPrice#,
+			CREDIT_CARD = #creditCard#,
+			INTEGRATED_FACILITIES = #integratedFacilities#,
+			ROOM_FACILITIES = #roomFacilities#,
+			RECREATIONAL_FACILITIES = #recreationalFacilities#,
+			DINING_FACILITIES = #diningFacilities#,
+			SERVICES = #services#,
+			PIC_DISPLAY = #picDisplay#,
+			PET_CARRY = #petCarry#
+		WHERE 
+			PLACE_ID = #placeId#
+	</update>
+</sqlMap>

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.recognizance.mapper.TntRecognizanceChangeMapper">
+
+	<resultMap id="baseResultMap" type="tntRecognizanceChange">
+		<result property="changeId" column="CHANGE_ID" />
+		<result property="recognizanceId" column="RECOGNIZANCE_ID" />
+		<result property="amount" column="AMOUNT" />
+		<result property="type" column="TYPE" />
+		<result property="reason" column="REASON" />
+		<result property="createTime" column="CREATE_TIME" />
+
+		<result property="billNo" column="BILL_NO" />
+		<result property="billTime" column="BILL_TIME" />
+		<result property="bankName" column="BANK_NAME" />
+		<result property="bankAccountName" column="BANK_ACCOUNT_NAME" />
+		<result property="bankAccount" column="BANK_ACCOUNT" />
+
+		<result property="approveStatus" column="APPROVE_STATUS" />
+		<result property="approveReason" column="APPROVE_REASON" />
+		<result property="approveTime" column="APPROVE_TIME" />
+		<result property="approver" column="APPROVER" />
+		<result property="userName" column="USER_NAME" />
+		<result property="realName" column="REAL_NAME" />
+		<result property="companyName" column="COMPANY_NAME" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		a.CHANGE_ID,a.RECOGNIZANCE_ID,a.AMOUNT,a.TYPE,a.REASON,a.CREATE_TIME,a.BILL_NO,a.BILL_TIME,a.BANK_NAME,a.BANK_ACCOUNT,a.BANK_ACCOUNT_NAME,a.APPROVE_STATUS,a.APPROVE_REASON,a.APPROVE_TIME,a.APPROVER
+	</sql>
+
+	<insert id="insert" parameterType="tntRecognizanceChange">
+		<selectKey resultType="java.lang.Long" keyProperty="changeId"
+			order="BEFORE">
+			select TNT_RECOGNIZANCE_CHANGE_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_RECOGNIZANCE_CHANGE (
+		CHANGE_ID ,
+		RECOGNIZANCE_ID ,
+		AMOUNT ,
+		TYPE ,
+		REASON ,
+		CREATE_TIME,
+		BILL_NO,
+		BILL_TIME,
+		BANK_NAME,
+		BANK_ACCOUNT,
+		BANK_ACCOUNT_NAME,
+		APPROVE_STATUS
+		) VALUES (
+		#{changeId
+		,jdbcType=DECIMAL},
+		#{recognizanceId,jdbcType=DECIMAL},
+		#{amount,jdbcType=DECIMAL},
+		#{type,jdbcType=VARCHAR},
+		#{reason,jdbcType=VARCHAR},
+		sysdate,
+		#{billNo,jdbcType=VARCHAR},
+		#{billTime,jdbcType=DATE},
+		#{bankName,jdbcType=VARCHAR},
+		#{bankAccount,jdbcType=VARCHAR},
+		#{bankAccountName,jdbcType=VARCHAR},
+		#{approveStatus,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="approve" parameterType="tntRecognizanceChange">
+		UPDATE TNT_RECOGNIZANCE_CHANGE
+		<set>
+			<if test="approveStatus != null">
+				APPROVE_STATUS = #{approveStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="approveReason != null">
+				APPROVE_REASON = #{approveReason,jdbcType=VARCHAR},
+			</if>
+			<if test="approver != null">
+				APPROVER = #{approver,jdbcType=VARCHAR}
+			</if>
+			<if test="approveTime != null">
+				APPROVE_TIME = sysdate
+			</if>
+		</set>
+		WHERE CHANGE_ID = #{changeId}
+	</update>
+
+
+	<update id="update" parameterType="tntRecognizanceChange">
+		UPDATE TNT_RECOGNIZANCE_CHANGE
+		<set>
+			<if test="userId != null">
+				RECOGNIZANCE_ID =
+				#{recognizanceId,jdbcType=DECIMAL},
+			</if>
+			<if test="amount != null">
+				AMOUNT = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="type != null">
+				TYPE = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="reason != null">
+				REASON = #{reason,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=DATE},
+			</if>
+			<if test="billNo != null">
+				BILL_NO = #{billNo,jdbcType=VARCHAR},
+			</if>
+			<if test="billTime != null">
+				BILL_TIME = #{billTime,jdbcType=DATE},
+			</if>
+			<if test="bankName != null">
+				BANK_NAME = #{bankName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankAccount != null">
+				BANK_ACCOUNT = #{bankAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="bankAccountName != null">
+				BANK_ACCOUNT_NAME = #{bankAccountName,jdbcType=VARCHAR},
+			</if>
+			<if test="approveStatus != null">
+				APPROVE_STATUS = #{approveStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="approveReason != null">
+				APPROVE_REASON = #{approveReason,jdbcType=VARCHAR},
+			</if>
+			<if test="approver != null">
+				APPROVER = #{approver,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE CHANGE_ID = #{changeId}
+	</update>
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM
+		TNT_RECOGNIZANCE_CHANGE WHERE
+		CHANGE_ID = #{id}
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_RECOGNIZANCE_CHANGE a
+		WHERE
+		CHANGE_ID = #{id}
+	</select>
+
+	<sql id="nudeWhere">
+		<if test="changeId != null and changeId !=''">
+			AND a.CHANGE_ID = #{changeId}
+		</if>
+		<if test="recognizanceId != null and recognizanceId !=''">
+			AND a.RECOGNIZANCE_ID = #{recognizanceId}
+		</if>
+		<if test="amount != null and amount !=''">
+			AND a.AMOUNT = #{amount}
+		</if>
+		<if test="type != null and type !=''">
+			AND a.TYPE = #{type}
+		</if>
+		<if test="reason != null and reason !=''">
+			AND a.REASON = #{reason}
+		</if>
+		<if test="createTime != null and createTime !=''">
+			AND a.CREATE_TIME = #{createTime}
+		</if>
+		<if test="notType != null and notType !=''">
+			AND a.TYPE !=#{notType}
+		</if>
+		<if test="approveStatus != null and approveStatus !=''">
+			AND a.APPROVE_STATUS =#{approveStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="approver != null and approver !=''">
+			AND a.APPROVER =#{approver,jdbcType=VARCHAR}
+		</if>
+
+		<if test="dealed!=null and dealed">
+			AND (a.APPROVE_STATUS ='AGREE' or
+			a.APPROVE_STATUS='REJECT')
+		</if>
+		<if test="dealed!=null and !dealed">
+			AND a.APPROVE_STATUS='WAITING'
+		</if>
+		<if test="userName != null and userName !=''">
+			AND c.USER_NAME = #{userName}
+		</if>
+		<if test="realName != null and realName !=''">
+			AND c.REAL_NAME like
+			CONCAT(CONCAT('%',#{realName}),'%')
+		</if>
+	</sql>
+
+	<sql id="where">
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<include refid="nudeWhere" />
+		</trim>
+	</sql>
+
+
+	<sql id="nudePageWhere">
+		<if test="param.changeId != null and param.changeId !=''">
+			AND a.CHANGE_ID = #{param.changeId}
+		</if>
+		<if test="param.recognizanceId != null and param.recognizanceId !=''">
+			AND a.RECOGNIZANCE_ID = #{param.recognizanceId}
+		</if>
+		<if test="param.amount != null and param.amount !=''">
+			AND a.AMOUNT = #{param.amount}
+		</if>
+		<if test="param.type != null and param.type !=''">
+			AND a.TYPE =#{param.type}
+		</if>
+		<if test="param.reason != null and param.reason !=''">
+			AND a.REASON = #{param.reason}
+		</if>
+		<if test="param.createTime != null and param.createTime !=''">
+			AND a.CREATE_TIME =#{param.createTime}
+		</if>
+		<if test="param.approveStatus != null and param.approveStatus !=''">
+			AND a.APPROVE_STATUS =#{param.approveStatus}
+		</if>
+		<if test="param.approver != null and param.approver !=''">
+			AND a.APPROVE_STATUS =#{param.approver}
+		</if>
+
+		<if test="param.notType != null and param.notType !=''">
+			AND a.TYPE !=#{param.notType}
+		</if>
+		<if test="param.dealed!=null and param.dealed">
+			AND (a.APPROVE_STATUS ='AGREE' or
+			a.APPROVE_STATUS='REJECT')
+		</if>
+		<if test="param.dealed!=null and !param.dealed">
+			AND a.APPROVE_STATUS='WAITING'
+		</if>
+		<if test="param.userName != null and param.userName !=''">
+			AND c.USER_NAME = #{param.userName}
+		</if>
+		<if test="param.realName != null and param.realName !=''">
+			AND c.REAL_NAME like
+			CONCAT(CONCAT('%',#{param.realName}),'%')
+		</if>
+	</sql>
+
+	<sql id="pageWhere">
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<include refid="nudePageWhere" />
+		</trim>
+	</sql>
+
+	<select id="count" resultType="Integer" parameterType="tntRecognizanceChange">
+		SELECT count(1) FROM TNT_RECOGNIZANCE_CHANGE a
+		<include refid="where" />
+	</select>
+
+	<select id="findPage" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_RECOGNIZANCE_CHANGE a
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="getWithUser" resultMap="baseResultMap"
+		parameterType="page">
+		SELECT
+		<include refid="columns" />
+		,c.user_id,c.user_name,c.real_name,d.COMPANY_NAME
+		from tnt_recognizance_change
+		a,tnt_recognizance b ,tnt_user c,tnt_user_detail d where
+		a.recognizance_id =
+		b.recognizance_id and b.user_id = c.user_id
+		and c.user_id = d.user_id
+		<include refid="nudeWhere" />
+	</select>
+
+	<select id="findWithUserPage" resultMap="baseResultMap"
+		parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		,c.user_id,c.user_name,c.real_name,d.COMPANY_NAME
+		from tnt_recognizance_change
+		a,tnt_recognizance b ,tnt_user c,tnt_user_detail d where
+		a.recognizance_id =
+		b.recognizance_id and b.user_id = c.user_id
+		and c.user_id = d.user_id
+		<include refid="nudePageWhere" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="withUserCount" resultType="Integer" parameterType="tntRecognizanceChange">
+		SELECT count(1) from tnt_recognizance_change
+		a,tnt_recognizance b
+		,tnt_user c,tnt_user_detail d where
+		a.recognizance_id =
+		b.recognizance_id and b.user_id =
+		c.user_id
+		and c.user_id = d.user_id
+		<include refid="nudeWhere" />
+	</select>
+
+</mapper>
+

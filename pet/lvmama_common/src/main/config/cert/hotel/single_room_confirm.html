@@ -1,0 +1,64 @@
+<#import "/base/func.html" as func>
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>单酒店-支付给驴妈妈</title>
+<style type="text/css">
+<#include "/chuanzhen.css"/>
+</style>
+</head>
+<body>
+<div class="wrap">
+	<div id="header" class="clearfix">
+	    <#include "/base/head_hotel.html"/>
+		<h1>${certificate.entity.zhEbkCertificateType}</h1>
+	</div>
+	<div class="main">
+		<#include "/base/to_target_hotel.html"/>
+		<h3 class="_mt">订单号： ${certificate.baseInfo.orderId}</h3>
+		<table class="table-border table-full">
+			<tr>
+				<td class="number" colspan="8"><b>产品名称：</b><@func.addSpace certificate.baseInfo.metaProductName 40/> </td>
+			</tr>
+			<tr>	
+				<th class="number">房型</th>
+				<th class="number" style="width:60px">入住日期</th>
+				<th class="number" style="width:60px">离店日期</th>
+				<th class="number" style="width:24px">间数</th>
+				<th class="number" style="width:24px">晚数</th>
+				<th class="number" style="width:48px"><@func.showPriceLabel certificate/></th>
+				<th class="number" style="width:48px"><@func.showTotalAmountLabel certificate/></th>
+				<th class="number" style="width:60px">支付方式</th>
+			</tr>
+			<#list items as item>
+			<#list item.baseInfo.nights as night>
+			<tr>
+				<td class="number"><@func.addSpace night.metaBranchName 12/></td>
+				<td class="number">${night.visitTime}</td>
+				<td class="number">${night.leaveTime}</td>
+				<td class="number">${night.quantity}</td>
+				<td class="number">1</td>
+				<td class="number"><@func.showPriceContent certificate night.settlementPrice/></td>
+				<#if night_index==0>
+				<td class="number" rowspan="${item.baseInfo.nights?size}"><@func.showPriceContent certificate item.baseInfo.totalSettlementPrice/></td>
+				<td class="number" rowspan="${item.baseInfo.nights?size}">${certificate.baseInfo.zhPaymentTarget}</td>
+				</#if>
+			</tr>
+			</#list>
+			</#list>			
+		</table>
+		
+		<h4>入住人信息：</h4>
+		<#include "/base/traveller.html"/>
+		
+		<h4>备注栏：（游客特殊需求、调价等）</h4>
+		<div class="box border pb20">
+		    <p><@func.addMemoSpace certificate.baseInfo.faxMemo 40/></p>
+		</div>
+		
+		<#include "/base/foot.html"/>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PAY_TRANSACTION">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pay.PayTransaction">
+		<result column="TRANSACTION_ID" property="transactionId" />
+		<result column="SERIAL" property="serial" />
+		<result column="AMOUNT" property="amount" />
+		<result column="PAYER" property="payer" />
+		<result column="PAYEE" property="payee" />
+		<result column="TRANS_TIME" property="transTime" />
+		<result column="OBJECT_ID" property="objectId" />
+		<result column="OBJECT_TYPE" property="objectType" />
+		<result column="OPERATOR" property="operator" />
+		<result column="TRANSACTION_TYPE" property="transactionType" />
+		<result column="PAYMENT_GATEWAY" property="paymentGateway" />
+		<result column="GATEWAY_TRADE_NO" property="gatewayTradeNo" />
+		<result column="PAYMENT_TYPE" property="paymentType" />
+		<result column="MEMO" property="memo" />
+		<result column="CREATE_TIME" property="createTime" />
+	</resultMap>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.PayTransaction" >
+		<selectKey resultClass="java.lang.Long" keyProperty="transactionId">
+			SELECT
+			PAY_TRANSACTION_SEQ.NEXTVAL FROM DUAL
+    	</selectKey>
+		insert into PAY_TRANSACTION
+		(TRANSACTION_ID, SERIAL, AMOUNT, PAYER, PAYEE, TRANS_TIME, OBJECT_ID, OBJECT_TYPE, OPERATOR, TRANSACTION_TYPE,
+		PAYMENT_GATEWAY, GATEWAY_TRADE_NO, PAYMENT_TYPE, MEMO, CREATE_TIME)
+		values
+		(#transactionId#, #serial#, #amount#, #payer#, #payee#, #transTime#, #objectId#, #objectType#, #operator#, #transactionType#,
+		#paymentGateway#, #gatewayTradeNo#, #paymentType#, #memo#, #createTime#)
+	</insert>
+
+	<select id="selectPayTransactionByObjectId" resultMap="BaseResultMap"
+	  parameterClass="java.lang.Long">
+	  <![CDATA[
+		SELECT *
+		  FROM PAY_TRANSACTION
+		 WHERE OBJECT_ID = #orderId#
+	     AND OBJECT_TYPE = 'ORD_ORDER'
+	  ]]>
+	 </select>
+	 
+	 <sql id="condition">
+	   <dynamic>
+	     <isNotEmpty prepend="and" property="transactionId">
+	     PAY_TRANSACTION.TRANSACTION_ID = #transactionId#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="minTransTime">
+	      <![CDATA[
+	     PAY_TRANSACTION.TRANS_TIME >=#minTransTime#
+	     ]]>
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="maxTransTime">
+	      <![CDATA[
+	     PAY_TRANSACTION.TRANS_TIME <=#maxTransTime#
+	     ]]>
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="serial">
+	     PAY_TRANSACTION.SERIAL=#serial#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="objectId">
+	     PAY_TRANSACTION.OBJECT_ID =#objectId#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="objectType">
+	     PAY_TRANSACTION.OBJECT_TYPE =#objectType#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="gatewayTradeNo">
+	     PAY_TRANSACTION.GATEWAY_TRADE_NO =#gatewayTradeNo#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="transactionType">
+	     PAY_TRANSACTION.TRANSACTION_TYPE =#transactionType#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="hasOperator">
+	     PAY_TRANSACTION.OPERATOR is not null
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="minCreateTime">
+	      <![CDATA[
+	     PAY_TRANSACTION.CREATE_TIME >=#minCreateTime#
+	     ]]>
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="maxCreateTime">
+	      <![CDATA[
+	     PAY_TRANSACTION.CREATE_TIME <=#maxCreateTime#
+	     ]]>
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="userId">
+	      (PAY_TRANSACTION.PAYER=#userId# or PAY_TRANSACTION.PAYEE=#userId#)
+	     </isNotEmpty>
+	   </dynamic>
+	  </sql>
+	  
+	  
+	  <sql id="restriction">
+		 <dynamic prepend="order by">
+		  <isNotEmpty property="orderBy">$orderBy$</isNotEmpty>
+		 </dynamic>
+	  </sql>
+	  
+	  <sql id="maxResults">
+		 <dynamic prepend="where">
+		    <isNotEmpty property="maxResults">
+		    <![CDATA[
+		     rownum<= #maxResults#
+		    ]]>
+		    </isNotEmpty>
+		  <isNotPropertyAvailable property="maxResults">
+		  <![CDATA[
+		     rownum<= 50
+		    ]]>
+		  </isNotPropertyAvailable>
+		   </dynamic>
+	  </sql>
+	  
+	  <select id="selectByParams" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+	   select * from (select PAY_TRANSACTION.* from PAY_TRANSACTION where 1=1
+	   <include refid="condition" />
+	    <include refid="restriction" />
+	    )
+	    <include refid="maxResults" />
+	  </select>
+</sqlMap>

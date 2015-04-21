@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MOBILE_HOTEL">
+  <resultMap class="com.lvmama.comm.pet.po.mobile.MobileHotel" id="BaseResultMap">
+    <result column="HOTEL_ID" property="hotelId" />
+    <result column="PLACE_ID" property="placeId" />
+    <result column="NAME" property="name" />
+    <result column="ADDRESS" property="address" />
+    <result column="POSTALCODE" property="postalcode" />
+    <result column="STARRATE" property="starrate" />
+    <result column="CATEGORY" property="category" />
+    <result column="PHONE" property="phone" />
+    <result column="FAX" property="fax" />
+    <result column="ESTABLISMENTDATE" property="establismentdate" />
+    <result column="RENOVATIONDATE" property="renovationdate" />
+    <result column="GROUPID" property="groupid" />
+    <result column="BRANDID" property="brandid" />
+    <result column="ISECONOMIC" property="iseconomic" />
+    <result column="ISAPARTMENT" property="isapartment" />
+    <result column="GOOGLELAT" property="googlelat" />
+    <result column="GOOGLELON" property="googlelon" />
+    <result column="CITYID" property="cityid" />
+    <result column="BUSINESSZONE" property="businesszone" />
+    <result column="DISTRICT" property="district" />
+    <result column="CREDITCARDS" property="creditcards" />
+    <result column="INTROEDITOR" property="introeditor" />
+    <result column="DESCRIPTION" property="description" />
+    <result column="GENERALAMENITIES" property="generalamenities" />
+    <result column="RECREATIONAMENITIES" property="recreationamenities" />
+    <result column="DININGAMENITIES" property="diningamenities" />
+    <result column="TRAFFIC" property="traffic" />
+    <result column="SURROUNDINGS" property="surroundings" />
+    <result column="FACILITIES" property="facilities" />
+    <result column="HOTEL_DETAIL_NODE_VERSION" property="hotelDetailNodeVersion" />
+    <result column="COUNT" property="count" />
+    <result column="GOOD" property="good" />
+    <result column="POOR" property="poor" />
+    <result column="SCORE" property="score" />
+    <result column="ROOMAMENITIES" property="roomamenities" />
+  </resultMap>
+  <select id="selectByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotel" resultMap="BaseResultMap">
+    select HOTEL_ID, PLACE_ID, NAME, ADDRESS, POSTALCODE, STARRATE, CATEGORY, PHONE, FAX,
+      ESTABLISMENTDATE, RENOVATIONDATE, GROUPID, BRANDID, ISECONOMIC, ISAPARTMENT, GOOGLELAT,
+      GOOGLELON, CITYID, BUSINESSZONE, DISTRICT, CREDITCARDS, INTROEDITOR, DESCRIPTION,
+      GENERALAMENITIES, RECREATIONAMENITIES, DININGAMENITIES, TRAFFIC, SURROUNDINGS, FACILITIES,
+      HOTEL_DETAIL_NODE_VERSION, COUNT, GOOD, POOR, SCORE, ROOMAMENITIES
+    from MOBILE_HOTEL
+    where HOTEL_ID = #hotelId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotel">
+    delete from MOBILE_HOTEL
+    where HOTEL_ID = #hotelId#
+  </delete>
+  
+  <delete id="deleteMobileHotelVerionNotInHotelMobile" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotel">
+       delete from mobile_hotel_list_version t where t.hotel_id not in (select h.hotel_id from mobile_hotel h ) and t.status=0
+  </delete>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotel">
+    insert into MOBILE_HOTEL (HOTEL_ID, PLACE_ID, NAME, ADDRESS, POSTALCODE, STARRATE, CATEGORY,
+      PHONE, FAX, ESTABLISMENTDATE, RENOVATIONDATE, GROUPID, BRANDID, ISECONOMIC, ISAPARTMENT,
+      GOOGLELAT, GOOGLELON, CITYID, BUSINESSZONE, DISTRICT, CREDITCARDS, INTROEDITOR, DESCRIPTION,
+      GENERALAMENITIES, RECREATIONAMENITIES, DININGAMENITIES, TRAFFIC, SURROUNDINGS, FACILITIES,
+      HOTEL_DETAIL_NODE_VERSION, COUNT, GOOD, POOR, SCORE, ROOMAMENITIES)
+    values (#hotelId#, #placeId#, #name#, #address#,
+      #postalcode#, #starrate#, #category#, #phone#, #fax#,
+      #establismentdate#, #renovationdate#, #groupid#, #brandid#,
+      #iseconomic#, #isapartment#, #googlelat#, #googlelon#,
+      #cityid#, #businesszone#, #district#, #creditcards#,
+      #introeditor#, #description#, #generalamenities#,
+      #recreationamenities#, #diningamenities#, #traffic#,
+      #surroundings#, #facilities#, #hotelDetailNodeVersion#,
+      #count#, #good#, #poor#, #score#, #roomamenities#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotel">
+    insert into MOBILE_HOTEL
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="hotelId">
+        HOTEL_ID
+      </isNotNull>
+      <isNotNull prepend="," property="placeId">
+        PLACE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="name">
+        NAME
+      </isNotNull>
+      <isNotNull prepend="," property="address">
+        ADDRESS
+      </isNotNull>
+      <isNotNull prepend="," property="postalcode">
+        POSTALCODE
+      </isNotNull>
+      <isNotNull prepend="," property="starrate">
+        STARRATE
+      </isNotNull>
+      <isNotNull prepend="," property="category">
+        CATEGORY
+      </isNotNull>
+      <isNotNull prepend="," property="phone">
+        PHONE
+      </isNotNull>
+      <isNotNull prepend="," property="fax">
+        FAX
+      </isNotNull>
+      <isNotNull prepend="," property="establismentdate">
+        ESTABLISMENTDATE
+      </isNotNull>
+      <isNotNull prepend="," property="renovationdate">
+        RENOVATIONDATE
+      </isNotNull>
+      <isNotNull prepend="," property="groupid">
+        GROUPID
+      </isNotNull>
+      <isNotNull prepend="," property="brandid">
+        BRANDID
+      </isNotNull>
+      <isNotNull prepend="," property="iseconomic">
+        ISECONOMIC
+      </isNotNull>
+      <isNotNull prepend="," property="isapartment">
+        ISAPARTMENT
+      </isNotNull>
+      <isNotNull prepend="," property="googlelat">
+        GOOGLELAT
+      </isNotNull>
+      <isNotNull prepend="," property="googlelon">
+        GOOGLELON
+      </isNotNull>
+      <isNotNull prepend="," property="cityid">
+        CITYID
+      </isNotNull>
+      <isNotNull prepend="," property="businesszone">
+        BUSINESSZONE
+      </isNotNull>
+      <isNotNull prepend="," property="district">
+        DISTRICT
+      </isNotNull>
+      <isNotNull prepend="," property="creditcards">
+        CREDITCARDS
+      </isNotNull>
+      <isNotNull prepend="," property="introeditor">
+        INTROEDITOR
+      </isNotNull>
+      <isNotNull prepend="," property="description">
+        DESCRIPTION
+      </isNotNull>
+      <isNotNull prepend="," property="generalamenities">
+        GENERALAMENITIES
+      </isNotNull>
+      <isNotNull prepend="," property="recreationamenities">
+        RECREATIONAMENITIES
+      </isNotNull>
+      <isNotNull prepend="," property="diningamenities">
+        DININGAMENITIES
+      </isNotNull>
+      <isNotNull prepend="," property="traffic">
+        TRAFFIC
+      </isNotNull>
+      <isNotNull prepend="," property="surroundings">
+        SURROUNDINGS
+      </isNotNull>
+      <isNotNull prepend="," property="facilities">
+        FACILITIES
+      </isNotNull>
+      <isNotNull prepend="," property="hotelDetailNodeVersion">
+        HOTEL_DETAIL_NODE_VERSION
+      </isNotNull>
+      <isNotNull prepend="," property="count">
+        COUNT
+      </isNotNull>
+      <isNotNull prepend="," property="good">
+        GOOD
+      </isNotNull>
+      <isNotNull prepend="," property="poor">
+        POOR
+      </isNotNull>
+      <isNotNull prepend="," property="score">
+        SCORE
+      </isNotNull>
+      <isNotNull prepend="," property="roomamenities">
+        ROOMAMENITIES
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="hotelId">
+        #hotelId#
+      </isNotNull>
+      <isNotNull prepend="," property="placeId">
+        #placeId#
+      </isNotNull>
+      <isNotNull prepend="," property="name">
+        #name#
+      </isNotNull>
+      <isNotNull prepend="," property="address">
+        #address#
+      </isNotNull>
+      <isNotNull prepend="," property="postalcode">
+        #postalcode#
+      </isNotNull>
+      <isNotNull prepend="," property="starrate">
+        #starrate#
+      </isNotNull>
+      <isNotNull prepend="," property="category">
+        #category#
+      </isNotNull>
+      <isNotNull prepend="," property="phone">
+        #phone#
+      </isNotNull>
+      <isNotNull prepend="," property="fax">
+        #fax#
+      </isNotNull>
+      <isNotNull prepend="," property="establismentdate">
+        #establismentdate#
+      </isNotNull>
+      <isNotNull prepend="," property="renovationdate">
+        #renovationdate#
+      </isNotNull>
+      <isNotNull prepend="," property="groupid">
+        #groupid#
+      </isNotNull>
+      <isNotNull prepend="," property="brandid">
+        #brandid#
+      </isNotNull>
+      <isNotNull prepend="," property="iseconomic">
+        #iseconomic#
+      </isNotNull>
+      <isNotNull prepend="," property="isapartment">
+        #isapartment#
+      </isNotNull>
+      <isNotNull prepend="," property="googlelat">
+        #googlelat#
+      </isNotNull>
+      <isNotNull prepend="," property="googlelon">
+        #googlelon#
+      </isNotNull>
+      <isNotNull prepend="," property="cityid">
+        #cityid#
+      </isNotNull>
+      <isNotNull prepend="," property="businesszone">
+        #businesszone#
+      </isNotNull>
+      <isNotNull prepend="," property="district">
+        #district#
+      </isNotNull>
+      <isNotNull prepend="," property="creditcards">
+        #creditcards#
+      </isNotNull>
+      <isNotNull prepend="," property="introeditor">
+        #introeditor#
+      </isNotNull>
+      <isNotNull prepend="," property="description">
+        #description#
+      </isNotNull>
+      <isNotNull prepend="," property="generalamenities">
+        #generalamenities#
+      </isNotNull>
+      <isNotNull prepend="," property="recreationamenities">
+        #recreationamenities#
+      </isNotNull>
+      <isNotNull prepend="," property="diningamenities">
+        #diningamenities#
+      </isNotNull>
+      <isNotNull prepend="," property="traffic">
+        #traffic#
+      </isNotNull>
+      <isNotNull prepend="," property="surroundings">
+        #surroundings#
+      </isNotNull>
+      <isNotNull prepend="," property="facilities">
+        #facilities#
+      </isNotNull>
+      <isNotNull prepend="," property="hotelDetailNodeVersion">
+        #hotelDetailNodeVersion#
+      </isNotNull>
+      <isNotNull prepend="," property="count">
+        #count#
+      </isNotNull>
+      <isNotNull prepend="," property="good">
+        #good#
+      </isNotNull>
+      <isNotNull prepend="," property="poor">
+        #poor#
+      </isNotNull>
+      <isNotNull prepend="," property="score">
+        #score#
+      </isNotNull>
+      <isNotNull prepend="," property="roomamenities">
+        #roomamenities#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotel">
+    update MOBILE_HOTEL
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="placeId">
+        PLACE_ID = #placeId#
+      </isNotNull>
+      <isNotNull prepend="," property="name">
+        NAME = #name#
+      </isNotNull>
+      <isNotNull prepend="," property="address">
+        ADDRESS = #address#
+      </isNotNull>
+      <isNotNull prepend="," property="postalcode">
+        POSTALCODE = #postalcode#
+      </isNotNull>
+      <isNotNull prepend="," property="starrate">
+        STARRATE = #starrate#
+      </isNotNull>
+      <isNotNull prepend="," property="category">
+        CATEGORY = #category#
+      </isNotNull>
+      <isNotNull prepend="," property="phone">
+        PHONE = #phone#
+      </isNotNull>
+      <isNotNull prepend="," property="fax">
+        FAX = #fax#
+      </isNotNull>
+      <isNotNull prepend="," property="establismentdate">
+        ESTABLISMENTDATE = #establismentdate#
+      </isNotNull>
+      <isNotNull prepend="," property="renovationdate">
+        RENOVATIONDATE = #renovationdate#
+      </isNotNull>
+      <isNotNull prepend="," property="groupid">
+        GROUPID = #groupid#
+      </isNotNull>
+      <isNotNull prepend="," property="brandid">
+        BRANDID = #brandid#
+      </isNotNull>
+      <isNotNull prepend="," property="iseconomic">
+        ISECONOMIC = #iseconomic#
+      </isNotNull>
+      <isNotNull prepend="," property="isapartment">
+        ISAPARTMENT = #isapartment#
+      </isNotNull>
+      <isNotNull prepend="," property="googlelat">
+        GOOGLELAT = #googlelat#
+      </isNotNull>
+      <isNotNull prepend="," property="googlelon">
+        GOOGLELON = #googlelon#
+      </isNotNull>
+      <isNotNull prepend="," property="cityid">
+        CITYID = #cityid#
+      </isNotNull>
+      <isNotNull prepend="," property="businesszone">
+        BUSINESSZONE = #businesszone#
+      </isNotNull>
+      <isNotNull prepend="," property="district">
+        DISTRICT = #district#
+      </isNotNull>
+      <isNotNull prepend="," property="creditcards">
+        CREDITCARDS = #creditcards#
+      </isNotNull>
+      <isNotNull prepend="," property="introeditor">
+        INTROEDITOR = #introeditor#
+      </isNotNull>
+      <isNotNull prepend="," property="description">
+        DESCRIPTION = #description#
+      </isNotNull>
+      <isNotNull prepend="," property="generalamenities">
+        GENERALAMENITIES = #generalamenities#
+      </isNotNull>
+      <isNotNull prepend="," property="recreationamenities">
+        RECREATIONAMENITIES = #recreationamenities#
+      </isNotNull>
+      <isNotNull prepend="," property="diningamenities">
+        DININGAMENITIES = #diningamenities#
+      </isNotNull>
+      <isNotNull prepend="," property="traffic">
+        TRAFFIC = #traffic#
+      </isNotNull>
+      <isNotNull prepend="," property="surroundings">
+        SURROUNDINGS = #surroundings#
+      </isNotNull>
+      <isNotNull prepend="," property="facilities">
+        FACILITIES = #facilities#
+      </isNotNull>
+      <isNotNull prepend="," property="hotelDetailNodeVersion">
+        HOTEL_DETAIL_NODE_VERSION = #hotelDetailNodeVersion#
+      </isNotNull>
+      <isNotNull prepend="," property="count">
+        COUNT = #count#
+      </isNotNull>
+      <isNotNull prepend="," property="good">
+        GOOD = #good#
+      </isNotNull>
+      <isNotNull prepend="," property="poor">
+        POOR = #poor#
+      </isNotNull>
+      <isNotNull prepend="," property="score">
+        SCORE = #score#
+      </isNotNull>
+      <isNotNull prepend="," property="roomamenities">
+        ROOMAMENITIES = #roomamenities#
+      </isNotNull>
+    </dynamic>
+    where HOTEL_ID = #hotelId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotel">
+    update MOBILE_HOTEL
+    set PLACE_ID = #placeId#,
+      NAME = #name#,
+      ADDRESS = #address#,
+      POSTALCODE = #postalcode#,
+      STARRATE = #starrate#,
+      CATEGORY = #category#,
+      PHONE = #phone#,
+      FAX = #fax#,
+      ESTABLISMENTDATE = #establismentdate#,
+      RENOVATIONDATE = #renovationdate#,
+      GROUPID = #groupid#,
+      BRANDID = #brandid#,
+      ISECONOMIC = #iseconomic#,
+      ISAPARTMENT = #isapartment#,
+      GOOGLELAT = #googlelat#,
+      GOOGLELON = #googlelon#,
+      CITYID = #cityid#,
+      BUSINESSZONE = #businesszone#,
+      DISTRICT = #district#,
+      CREDITCARDS = #creditcards#,
+      INTROEDITOR = #introeditor#,
+      DESCRIPTION = #description#,
+      GENERALAMENITIES = #generalamenities#,
+      RECREATIONAMENITIES = #recreationamenities#,
+      DININGAMENITIES = #diningamenities#,
+      TRAFFIC = #traffic#,
+      SURROUNDINGS = #surroundings#,
+      FACILITIES = #facilities#,
+      HOTEL_DETAIL_NODE_VERSION = #hotelDetailNodeVersion#,
+      COUNT = #count#,
+      GOOD = #good#,
+      POOR = #poor#,
+      SCORE = #score#,
+      ROOMAMENITIES = #roomamenities#
+    where HOTEL_ID = #hotelId#
+  </update>
+  
+    <!-- 查询条件 -->
+  <sql id="queryListWhere">
+      <dynamic prepend=" WHERE ">
+          <isEmpty property="hotelId" prepend=" AND "> 1 = 1 </isEmpty>
+		  <isNotEmpty prepend=" AND " property="placeId" >
+	        PLACE_ID = #placeId#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="name" >
+	        NAME = #name#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="address" >
+	        ADDRESS = #address#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="postalcode" >
+	        POSTALCODE = #postalcode#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="starrate" >
+	        STARRATE = #starrate#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="category" >
+	        CATEGORY = #category#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="phone" >
+	        PHONE = #phone#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="fax" >
+	        FAX = #fax#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="establismentdate" >
+	        ESTABLISMENTDATE = #establismentdate#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="renovationdate" >
+	        RENOVATIONDATE = #renovationdate#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="groupid" >
+	        GROUPID = #groupid#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="brandid" >
+	        BRANDID = #brandid#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="iseconomic" >
+	        ISECONOMIC = #iseconomic#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="isapartment" >
+	        ISAPARTMENT = #isapartment#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="googlelat" >
+	        GOOGLELAT = #googlelat#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="googlelon" >
+	        GOOGLELON = #googlelon#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="cityid" >
+	        CITYID = #cityid#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="businesszone" >
+	        BUSINESSZONE = #businesszone#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="district" >
+	        DISTRICT = #district#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="creditcards" >
+	        CREDITCARDS = #creditcards#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="introeditor" >
+	        INTROEDITOR = #introeditor#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="description" >
+	        DESCRIPTION = #description#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="generalamenities" >
+	        GENERALAMENITIES = #generalamenities#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="recreationamenities" >
+	        RECREATIONAMENITIES = #recreationamenities#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="diningamenities" >
+	        DININGAMENITIES = #diningamenities#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="traffic" >
+	        TRAFFIC = #traffic#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="surroundings" >
+	        SURROUNDINGS = #surroundings#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="facilities" >
+	        FACILITIES = #facilities#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="hotelDetailNodeVersion" >
+	        HOTEL_DETAIL_NODE_VERSION = #hotelDetailNodeVersion#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="count" >
+	        COUNT = #count#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="good" >
+	        GOOD = #good#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="poor" >
+	        POOR = #poor#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="score" >
+	        SCORE = #score#
+	      </isNotEmpty>
+		  order by HOTEL_ID desc
+		</dynamic>
+  </sql>
+  
+   <!-- 分页查询 头部 -->
+  <sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+  </sql>
+  
+  <!-- 分页查询 尾部 -->
+  <sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>		
+		</dynamic>
+  </sql>
+  
+  <!-- 查询列表  -->
+  <select id="queryMobileHotelList" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="isPaging">
+		  <include refid="pageHeader"/>
+		</isNotEmpty>
+		SELECT * FROM MOBILE_HOTEL
+		<include refid="queryListWhere"/>
+		<isNotEmpty property="isPaging">
+		   <include refid="pageFooter"/>
+		   order by cityCode desc
+		</isNotEmpty>
+   </select>
+
+  
+    <!-- 总数  -->
+	<select id="countMobileHotelList" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		SELECT COUNT(*) FROM MOBILE_HOTEL
+		<include refid="queryListWhere"/>
+	</select>
+	
+	 <!-- 查询列表  -->
+    <select id="queryMobileHotelListByOrderId" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		SELECT t.*
+		  FROM MOBILE_HOTEL t LEFT JOIN MOBILE_HOTEL_ORDER t1
+		  ON t.hotel_id = t1.hotel_id
+		   WHERE t1.order_id = #orderId#
+   </select>
+	
+	
+</sqlMap>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PROD_BRANCH_SEARCH_INFO">
+  <typeAlias alias="ProdBranchSearchInfo" type="com.lvmama.comm.pet.po.search.ProdBranchSearchInfo" />
+  <resultMap class="ProdBranchSearchInfo" id="baseResult">
+    <result column="PROD_BRANCH_ID" jdbcType="DECIMAL" property="prodBranchId" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="DATE" property="updateTime" />
+    <result column="BRANCH_NAME" jdbcType="VARCHAR" property="branchName" />
+    <result column="BED_TYPE" jdbcType="VARCHAR" property="bedType" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+    <result column="BROADBAND" jdbcType="VARCHAR" property="broadband" />
+    <result column="CASH_REFUND" jdbcType="VARCHAR" property="cashRefund" />
+    <result column="BREAKFAST" jdbcType="VARCHAR" property="breakfast" />
+    <result column="MARKET_PRICE" jdbcType="DECIMAL" property="marketPrice" />
+    <result column="SELL_PRICE" jdbcType="DECIMAL" property="sellPrice" />
+    <result column="ICON" jdbcType="VARCHAR" property="icon" />
+    <result column="ADDITIONAL" jdbcType="VARCHAR" property="additional" />
+    <result column="ON_LINE" jdbcType="VARCHAR" property="onLine" />
+    <result column="VALID" jdbcType="VARCHAR" property="valid" />
+    <result column="PRODUCT_ALL_PLACE_IDS" jdbcType="VARCHAR" property="productAllPlaceIds" />
+    <result column="PRODUCT_ALLTO_PLACE_CONTENT" jdbcType="VARCHAR" property="productAlltoPlaceContent" />
+    <result column="PRODUCT_ID" jdbcType="DECIMAL" property="productId" />
+    <result column="VISIBLE" jdbcType="VARCHAR" property="visible" />
+    <result column="DEFAULT_BRANCH" jdbcType="VARCHAR" property="defaultBranch" />
+    <result column="CHANNEL" jdbcType="VARCHAR" property="channel" />
+    <result column="SUB_PRODUCT_TYPE" jdbcType="VARCHAR" property="subProductType" />
+    <result column="VALID_BEGIN_TIME" jdbcType="DATE" property="validBeginTime" />
+	<result column="VALID_END_TIME" jdbcType="DATE" property="validEndTime" />
+	<result column="INVALID_DATE_MEMO" property="invalidDateMemo"/>
+  </resultMap>
+  <resultMap class="ProdBranchSearchInfo" id="simpleResult">
+    <result column="PRODUCT_ID"  property="productId" />
+    <result column="BRANCH_NAME" property="branchName" />
+  	<result column="SELL_PRICE"  property="sellPrice" />
+  </resultMap>
+  <select id="querySimpleProdBranchSearchInfoListByProductId" parameterClass="java.lang.Long" resultMap="simpleResult">
+  	select pb.branch_name, pb.sell_price, pb.product_id
+	  from prod_branch_search_info pb
+	 where pb.product_id = #productId#
+	 and   pb.valid = 'Y'
+  </select>
+ 
+ 	<select id="queryProductBranch" resultMap="baseResult" parameterClass="java.util.HashMap">
+		select * from PROD_BRANCH_search_info
+		where PRODUCT_ID = #productId# AND VALID='Y' 
+		<isNotNull prepend="and" property="online">
+			ON_LINE=#online#				
+		</isNotNull>
+		<isNotNull prepend="and" property="additional">
+			additional=#additional#
+		</isNotNull>
+		<isNotNull prepend="and" property="visible">
+			VISIBLE=#visible#
+		</isNotNull>
+		ORDER BY BRANCH_SERIAL_NUMBER ASC
+	</select>
+   <select id="query" parameterClass="java.util.Map" resultMap="baseResult">
+   		select * from PROD_BRANCH_SEARCH_INFO
+   		where VALID='Y' and SELL_PRICE is not null and MARKET_PRICE is not null
+   		<isNotEmpty prepend="and" property="online">
+   			ON_LINE=#online#
+   		</isNotEmpty>
+   		<isNotEmpty prepend="and" property="visible">
+   			VISIBLE=#visible#
+   		</isNotEmpty>
+   		<isNotEmpty prepend="and" property="productIds" >
+      	 PRODUCT_ID IN
+         <iterate conjunction="," open="(" close=")">
+  					#productIds[]#
+ 		 </iterate>
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="prodBranchId">
+      	PROD_BRANCH_ID=#prodBranchId#
+      </isNotEmpty>
+   </select>
+</sqlMap>

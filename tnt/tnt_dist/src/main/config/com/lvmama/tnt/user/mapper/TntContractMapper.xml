@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lvmama.tnt.user.mapper.TntContractMapper">
+
+	<resultMap id="BaseResultMap" type="tntContract">
+		<id column="CONTRACT_ID" property="contractId" />
+		<result column="USER_ID" property="userId" />
+		<result column="CONTRACT_NAME" property="contractName" />
+		<result column="CONTRACT_NO" property="contractNo" />
+		<result column="START_TIME" property="startTime" />
+		<result column="END_TIME" property="endTime" />
+		<result column="SIGN_TIME" property="signTime" />
+		<result column="STATUS" property="status" />
+		<result column="UPLOAD_TIME" property="uploadTime" />
+		<result column="ATTACHMENT" property="attachment" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		*
+	</sql>
+
+	<sql id="where">
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="contractNo != null and contractNo != '' ">
+				and contract.CONTRACT_NO = #{contractNo}
+			</if>
+			<if test="userId != null">
+				and contract.USER_ID = #{userId}
+			</if>
+			<if test="contractName != null and contractName != '' ">
+				and contract.CONTRACT_NAME like '%'||#{contractName}||'%'
+			</if>
+			<if test="status != null and status != '' ">
+				and contract.STATUS = #{status}
+			</if>
+			<if test="endTime != null">
+      		<![CDATA[ and contract.END_TIME >= #{endTime} ]]>
+			</if>
+		</trim>
+	</sql>
+
+	<sql id="pageWhere">
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="param.contractNo != null and param.contractNo != '' ">
+				and contract.CONTRACT_NO = #{param.contractNo}
+			</if>
+			<if test="param.userId != null">
+				and contract.USER_ID = #{param.userId}
+			</if>
+			<if test="param.contractName != null and param.contractName != '' ">
+				and contract.CONTRACT_NAME like
+				'%'||#{param.contractName}||'%'
+			</if>
+			<if test="param.status != null and param.status != '' ">
+				and contract.STATUS = #{param.status}
+			</if>
+			<if test="param.endTime != null">
+      		<![CDATA[ and contract.END_TIME >= #{param.endTime} ]]>
+			</if>
+		</trim>
+	</sql>
+
+	<sql id="select_by_param">
+		select contract.*
+		from TNT_CONTRACT contract
+		<include refid="where" />
+	</sql>
+
+	<sql id="joinWithAttach">
+		select contract.*,attach.attachment as ATTACHMENT
+		from
+		TNT_CONTRACT
+		contract left join TNT_CONTRACT_ATTACH attach on
+		contract.CONTRACT_ID
+		=
+		attach.CONTRACT_ID
+	</sql>
+
+	<select id="selectListWithAttach" parameterType="tntContract"
+		resultMap="BaseResultMap">
+		<include refid="joinWithAttach" />
+		<include refid="where" />
+	</select>
+
+	<select id="selectList" parameterType="tntContract" resultMap="BaseResultMap">
+		<include refid="select_by_param" />
+	</select>
+
+	<select id="fetchPageWithAttach" parameterType="page" resultMap="BaseResultMap">
+		<include refid="basic.pageSearchHead" />
+		<include refid="joinWithAttach" />
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="count" parameterType="tntContract" resultType="Integer">
+		select count(contract.CONTRACT_ID)
+		from TNT_CONTRACT contract left
+		join
+		TNT_USER_DETAIL detail
+		on contract.USER_ID =
+		detail.USER_ID
+		<include refid="where" />
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from TNT_CONTRACT
+		where CONTRACT_ID = #{contractId,jdbcType=DECIMAL}
+	</select>
+
+	<!-- 根据分校上ID查询合同列表 -->
+	<select id="selectByUserId" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from TNT_CONTRACT
+		where USER_ID=#{userId,jdbcType=DECIMAL}
+	</select>
+
+	<!-- 根据合同Id -->
+	<select id="selectByContract" resultMap="BaseResultMap"
+		parameterType="String">
+		select
+		<include refid="Base_Column_List" />
+		from TNT_CONTRACT
+		where CONTRACT_NO= #{contractNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="isNameExists" parameterType="tntContract"
+		resultType="Integer">
+		select count(1)
+		from TNT_CONTRACT
+		where CONTRACT_NAME =
+		#{contractName} and CONTRACT_ID != #{contractId}
+	</select>
+
+	<delete id="deleteById" parameterType="Long">
+		DELETE FROM TNT_CONTRACT
+		WHERE
+		CONTRACT_ID =
+		#{id}
+	</delete>
+
+	<insert id="insert" parameterType="tntContract">
+		<selectKey resultType="java.lang.Long" keyProperty="contractId"
+			order="BEFORE">
+			select TNT_CONTRACT_ID_SEQ.nextval from dual
+		</selectKey>
+		insert into TNT_CONTRACT (CONTRACT_ID, USER_ID, CONTRACT_NAME,
+		CONTRACT_NO, START_TIME,
+		END_TIME,SIGN_TIME,STATUS,
+		UPLOAD_TIME)
+		values
+		(#{contractId,jdbcType=DECIMAL},
+		#{userId,jdbcType=DECIMAL},
+		#{contractName,jdbcType=VARCHAR},
+		#{contractNo,jdbcType=VARCHAR},
+		#{startTime,jdbcType=DATE},
+		#{endTime,jdbcType=DATE},
+		#{signTime,jdbcType=DATE},
+		#{status,jdbcType=VARCHAR},
+		sysdate)
+	</insert>
+
+
+	<update id="update" parameterType="tntContract">
+		update TNT_CONTRACT
+		<set>
+			<if test="signTime != null ">
+				SIGN_TIME = #{signTime},
+			</if>
+			<if test="userId != null ">
+				USER_ID = #{userId},
+			</if>
+			<if test="startTime != null ">
+				START_TIME = #{startTime},
+			</if>
+			<if test="contractNo != null and contractNo != '' ">
+				CONTRACT_NO = #{contractNo},
+			</if>
+			<if test="contractName != null and contractName != '' ">
+				CONTRACT_NAME = #{contractName},
+			</if>
+			<if test="status != null and status != '' ">
+				STATUS = #{status},
+			</if>
+			<if test="endTime != null">
+				END_TIME = #{endTime},
+			</if>
+			CONTRACT_ID = #{contractId}
+		</set>
+		WHERE CONTRACT_ID =
+		#{contractId,jdbcType=DECIMAL}
+	</update>
+
+	<update id="updateStatus" parameterType="tntContract">
+		update TNT_CONTRACT
+		<set>
+			STATUS = #{status,jdbcType=VARCHAR}
+		</set>
+		WHERE CONTRACT_ID = #{contractId}
+	</update>
+
+</mapper>

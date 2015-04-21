@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-autowire="byName"
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    <bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:const.properties</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="abroadhotelsearchCityService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${ABROAD_HESSIAN_URL}/searchCity.remote"/>
+		<property name="serviceInterface" value="com.lvmama.comm.abroad.service.ICity"/>
+	</bean>
+	<bean id="abroadhotelsearchHotelService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${ABROAD_HESSIAN_URL}/searchHotel.remote"/>
+		<property name="serviceInterface" value="com.lvmama.comm.abroad.service.IHotel"/>
+	</bean>
+	<bean id="abroadhotelgetRoomDetailsService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${ABROAD_HESSIAN_URL}/roomDetail.remote"/>
+		<property name="serviceInterface" value="com.lvmama.comm.abroad.service.IRoomDetail"/>
+	</bean>
+	<bean id="abroadhoteldownOrderService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${ABROAD_HESSIAN_URL}/downOrder.remote"/>
+		<property name="serviceInterface" value="com.lvmama.comm.abroad.service.IDownOrder"/>
+	</bean>
+	<bean id="abroadhotelgetOrderDetailService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${ABROAD_HESSIAN_URL}/orderDetails.remote"/>
+		<property name="serviceInterface" value="com.lvmama.comm.abroad.service.IOrderDetails"/>
+	</bean>
+	<bean id="abroadhotelHotelDetailsService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${ABROAD_HESSIAN_URL}/getHotelDetails.remote"/>
+		<property name="serviceInterface" value="com.lvmama.comm.abroad.service.IGetHotelDetails"/>
+	</bean>
+	<bean id="abroadhotelCancelReservationService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="overloadEnabled" value="true"/>
+		<property name="serviceUrl" value="${ABROAD_HESSIAN_URL}/cancelReservation.remote"/>
+		<property name="serviceInterface" value="com.lvmama.comm.abroad.service.ICancelReservation"/>
+	</bean>
+	<bean id="abroadhotelAvailAccomService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="overloadEnabled" value="true"/>
+		<property name="serviceUrl" value="${ABROAD_HESSIAN_URL}/getAvailAccomAdvanced.remote"/>
+		<property name="serviceInterface" value="com.lvmama.comm.abroad.service.IGetAvailAccom"/>
+	</bean>
+	<bean id="abroadhotelCancellationPolicyService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${ABROAD_HESSIAN_URL}/getCancellationPolicy.remote"/>
+		<property name="serviceInterface" value="com.lvmama.comm.abroad.service.IGetCancellationPolicy"/>
+	</bean>
+	<bean id="abroadhotelReservationsOrderService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="overloadEnabled" value="true"/>
+		<property name="serviceUrl" value="${ABROAD_HESSIAN_URL}/reservationsOrder.remote"/>
+		<property name="serviceInterface" value="com.lvmama.comm.abroad.service.IReservationsOrder"/>
+	</bean>
+	<bean id="abroadhotelOrderPaymentService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${ABROAD_HESSIAN_URL}/orderPayment.remote"/>
+		<property name="serviceInterface" value="com.lvmama.comm.abroad.service.IOrderPayment"/>
+	</bean>
+	<bean id="abroadhotelSendSmsService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${ABROAD_HESSIAN_URL}/sendSms.remote"/>
+		<property name="serviceInterface" value="com.lvmama.comm.abroad.service.ISendSms"/>
+	</bean>
+</beans>

@@ -1,0 +1,80 @@
+<?page title="会员卡管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./bindingCouponWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="bindingCouponWin" mode="embedded" title="绑定优惠" closable="true" apply="com.lvmama.pet.web.mark.membershipcard.BindingDiscountAction">
+		<grid>
+			<columns>
+				<column width="100px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>会员卡批次代码:</hbox>
+					<hbox><label value="@{saction.markMembershipCardDetails.cardPrefixNumber}"/></hbox>
+				</row>
+				<row>					
+					<hbox>会员卡数量</hbox>
+					<hbox><label value="@{saction.markMembershipCardDetails.amount}"/></hbox>
+				</row>
+				<row>					
+					<hbox>会员卡状态</hbox>
+					<hbox><label value="@{saction.markMembershipCardDetails.chIsIsActivate }"/></hbox>
+				</row>
+				<row>					
+					<hbox>优惠券批次：</hbox>
+					<hbox><longbox id="tempCouponId"/></hbox>
+				</row>				
+				<!--row>
+					<hbox>选择优惠券批次:</hbox>
+					<bandbox id="bindDiscount" apply="com.lvmama.pet.web.mark.coupon.ListCanBindingCouponAction"
+						onChanging="bindDiscount$composer.changeCouponFirstCode(event,saction.cardId)"
+						mold="rounded" autodrop="true">
+						<bandpopup>
+							<vbox>
+								<listbox width="300px" id="bandboxListBox"
+									model="@{bindDiscount$composer.markCouponList, load-after='bindDiscount.onChanging' }"
+									onSelect='bindDiscount.value=self.selectedItem.firstChild.label;;bindDiscount.close();saction.setCouponId(self.selectedItem.value);'>
+									<listhead>
+										<listheader width="200px" label="优惠券名称" />
+										<listheader width="100px" label="优惠幅度" />
+									</listhead>
+									<listitem self="@{each='coupon'}" value="@{coupon.couponId}"
+										height="25px">
+										<listcell label="@{coupon.couponName}" />
+										<listcell label="@{coupon.amountYuan}" />
+									</listitem>
+								</listbox>
+							</vbox>
+						</bandpopup>
+					</bandbox>
+				</row-->											
+			</rows>
+		</grid>
+		<toolbar align="end">
+			<button label="新增优惠" id="btnAddDiscount" width="100px" onClick='saction.binding();'/>
+			<button id="btnRefresh" visible="false" onClick='saction.loadMarkMembershipCardDiscountDetailsList()'/>
+			<span/>
+			<button label="关闭" width="100px" onClick="bindingCouponWin.detach()" />
+		</toolbar>
+		<listbox mold="paging" pageSize="20" model="@{saction.markMembershipCardDiscountDetailsList, load-after='btnAddDiscount.onClick,btnRefresh.onClick'}">
+			<listhead>
+				<listheader label="优惠名称" />
+				<listheader label="优惠金额" />
+				<listheader label="关联时间" />
+				<listheader label="操作人" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem height="25px" self="@{each='markMembershipCardDiscountDetails'}">
+				<listcell label="@{markMembershipCardDiscountDetails.couponName}"></listcell>
+				<listcell label="@{markMembershipCardDiscountDetails.amountDescription}"></listcell>
+				<listcell label="@{markMembershipCardDiscountDetails.createTime,converter='com.lvmama.pet.utils.DateZKConverter'}"></listcell>
+				<listcell label="@{markMembershipCardDiscountDetails.operatorName}" />
+				<listcell>
+					<button label="取消此优惠" disabled="@{saction.markMembershipCardDetails.disabledCancelButton}" onClick="saction.remove(self.getAttributes());">
+						<custom-attributes cardDiscountId="@{markMembershipCardDiscountDetails.cardDiscountId}" />
+					</button>
+				</listcell>
+			</listitem>
+		</listbox> 						
+	</window>
+</zk>

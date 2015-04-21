@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>	
+ 	<bean id="sycOrderInfoJob" class="com.lvmama.tnt.back.job.SycOrderInfoJob">
+	</bean>
+		
+	<bean id="sycOrderInfoJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="sycOrderInfoJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="sycOrderInfoJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="sycOrderInfoJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/1 * * * ? *</value> 
+		</property>
+	</bean> 
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list> 
+				<ref bean="sycOrderInfoJobTrigger" />
+			</list>
+		</property>
+	</bean>
+</beans>

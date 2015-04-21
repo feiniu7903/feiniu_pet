@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+		<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:const.properties</value>
+				<value>classpath:jms.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<bean id="orderPushEbkProcesser" class="com.lvmama.push.processer.OrderPushEbkProcesser">
+	    	<property name="ebkPushService" ref="ebkPushService"/>
+	    	<property name="orderPerformProxy" ref="orderPerformProxy"/>
+	    </bean>
+	    	
+
+	<!-- 消息接收 -->
+	<bean id="passportTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.PASSPORT.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+				<ref bean="orderPushEbkProcesser" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 订阅 -->
+	<bean id="passportMessageListener"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="passportTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="passportListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="PASSPORT_TOPIC" />
+		<property name="messageListener" ref="passportMessageListener" />
+		<!--
+		<property name="concurrentConsumers" value="5" /> 
+		<property name="maxConcurrentConsumers" value="20" />
+		-->	
+	</bean>
+	
+	<!-- 初始化mina 服务器  begin -->
+	<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="customEditors">
+			<map>
+				<entry key="java.net.SocketAddress">
+					<bean class="org.apache.mina.integration.beans.InetSocketAddressEditor" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<!-- 业务处理handler -->
+	<bean id="pushHandler" class="com.lvmama.push.handler.EbkPushIoHandlerAdapter" />
+
+	<bean id="filterChainBuilder"
+		class="org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder">
+		<property name="filters">
+			<map>	
+				<entry key="threadPool">
+					<bean class="org.apache.mina.filter.executor.ExecutorFilter" >
+					    <constructor-arg>
+					        <bean class="org.apache.mina.filter.executor.OrderedThreadPoolExecutor"/>
+					    </constructor-arg>
+					    </bean>
+				</entry>
+				<!-- 初始化日志输出filter -->
+				<entry key="logging">
+					<bean class="org.apache.mina.filter.logging.LoggingFilter" />
+				</entry>
+				<!-- 初始数据编码解码工厂 按照 缓冲区头字节定义长度编码解码 -->
+				<entry key="codec">
+				    <bean class="org.apache.mina.filter.codec.ProtocolCodecFilter">
+				        <constructor-arg>
+				            <bean class="com.lvmama.push.codec.PushCodecFactory"/>
+				        </constructor-arg>
+				    </bean>
+				</entry>
+				<!-- 初始化心跳工厂 -->
+				<entry key="heartBeat">
+				    <bean class="com.lvmama.push.util.KeepAliveFilterBuilder">
+				        
+				        <constructor-arg index="0">
+				            <bean class="com.lvmama.push.util.KeepAliveMessageFactoryImpl"/>
+				        </constructor-arg>
+				         <constructor-arg index="1">
+				            <bean class="com.lvmama.push.util.KeepAliveRequestTimeoutHandlerImpl"/>
+				        </constructor-arg>
+				        <property name="forwardEvent" value="true"/>
+				        <property name="requestInterval" value="30"/>
+				        <property name="requestTimeout" value="110"/>
+				    </bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="ioAcceptor" class="org.apache.mina.transport.socket.nio.NioSocketAcceptor"
+		init-method="bind" destroy-method="unbind">
+		<property name="defaultLocalAddress" value=":1225" />
+		<property name="handler" ref="pushHandler" />
+		<property name="filterChainBuilder" ref="filterChainBuilder" />
+		<property name="reuseAddress" value="true" />
+	</bean>
+	
+	
+	<bean id="sessionConfig" factory-bean="ioAcceptor"
+        factory-method="getSessionConfig" >
+        <property name="bothIdleTime" value="120"/> <!--心跳2分钟超时  -->
+        <property name="writeTimeout" value="120"/>  <!-- 设置服务端写超时120秒 后写不成功超时关闭session  -->
+        <property name="readBufferSize" value="1024"/><!-- 读缓冲区大小1kb  -->
+        <property name="receiveBufferSize" value="20480"/><!-- 写缓冲区大小20kb  -->
+    </bean> 
+    
+	<import resource="applicationContext-lvmama-comm-jms.xml"/>
+	<import resource="applicationContext-product-head-remote.xml"/>
+	<import resource="applicationContext-lvmama-comm-bee-remote.xml"/>
+    <import resource="applicationContext-lvmama-comm-remote.xml"/>
+    <import resource="applicationContext-lvmama-comm-remote-ebk.xml"/>
+		
+	
+	
+</beans>

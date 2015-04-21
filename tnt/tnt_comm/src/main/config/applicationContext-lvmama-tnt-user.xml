@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+
+	<bean id="tntUserService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${tntPublic.serviceUrl}/tntUserService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.user.service.TntUserService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="tntCompanyTypeService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${tntPublic.serviceUrl}/tntCompanyTypeService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntCompanyTypeService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="tntCompanyTypeUserService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${tntPublic.serviceUrl}/tntCompanyTypeUserService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntCompanyTypeUserService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="tntAnnouncementService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${tntPublic.serviceUrl}/tntAnnouncementService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntAnnouncementService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="tntFAQService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${tntPublic.serviceUrl}/tntFAQService" />
+		<property name="serviceInterface" value="com.lvmama.tnt.user.service.TntFAQService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="tntContractService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${tntPublic.serviceUrl}/tntContractService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntContractService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="tntUserMaterialService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${tntPublic.serviceUrl}/tntUserMaterialService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntUserMaterialService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="tntCommissionRuleService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${tntPublic.serviceUrl}/tntCommissionRuleService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntCommissionRuleService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="tntCashaccountService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${tntPublic.serviceUrl}/tntCashaccountService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.cashaccount.service.TntCashaccountService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="tntCertCodeService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${tntPublic.serviceUrl}/tntCertCodeService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.comm.service.TntCertCodeService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="tntLogService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${tntPublic.serviceUrl}/tntLogService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.comm.service.TntLogService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="tntChannelService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${tntPublic.serviceUrl}/tntChannelService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.user.service.TntChannelService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+</beans>

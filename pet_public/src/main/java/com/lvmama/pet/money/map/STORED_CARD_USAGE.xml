@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="STORED_CARD_USAGE" >
+	<typeAlias type="com.lvmama.comm.pet.po.money.StoredCardUsage" alias="StoredCardUsage"/>
+	<resultMap class="com.lvmama.comm.pet.po.money.StoredCardUsage" id="BaseCardUsageGroup">
+		<result property="usageId" column="CARD_USAGE_ID"/>
+		<result property="cardId" column="CARD_ID"/>
+		<result property="orderId" column="ORDER_ID"/>
+		<result property="serial" column="SERIAL"/>
+		<result property="amount" column="AMOUNT"/>
+		<result property="usageType" column="USAGE_TYPE" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="operator" column="USAGE_OPERATOR"/>
+		
+	</resultMap>
+	
+	<insert id="insert" parameterClass="StoredCardUsage">
+		<selectKey keyProperty="usageId" resultClass="java.lang.Long">
+			SELECT STORED_CARD_USAGE_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO STORED_CARD_USAGE
+			(CARD_USAGE_ID,CARD_ID,ORDER_ID,SERIAL,AMOUNT,USAGE_TYPE,CREATE_TIME,USAGE_OPERATOR)
+		VALUES(#usageId#,#cardId#,#orderId#,#serial#,#amount#,#usageType#,#createTime#,#operator#)		
+	</insert>
+    
+	<update id="updateByPrimaryKey" parameterClass="StoredCardUsage">
+		UPDATE STORED_CARD_USAGE SET
+			CARD_ID = #cardId#,
+			ORDER_ID = #orderId#,
+			SERIAL = #serial#,
+			AMOUNT = #amount#,
+			USAGE_TYPE = #usageType#,
+			CREATE_TIME = #createTime#,
+			USAGE_OPERATOR = #operator#,
+		WHERE CARD_USAGE_ID=#usageId#
+	</update>
+	
+	<sql id="selectSQL">
+	   SELECT S.* FROM STORED_CARD_USAGE S
+	    <dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="cardId">
+				S.CARD_ID = #cardId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="orderId">
+				S.ORDER_ID = #orderId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="usageType">
+				S.USAGE_TYPE = #usageType#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="serial">
+				S.SERIAL = #serial#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="operator">
+				S.USAGE_OPERATOR = #operator#
+			</isNotEmpty>
+	    </dynamic>
+    </sql>
+	
+	
+	<select id="queryByParam" resultMap="BaseCardUsageGroup" parameterClass="java.util.HashMap">
+		SELECT * FROM ( 
+			<include refid="selectSQL"/>
+			ORDER BY S.CARD_USAGE_ID DESC
+		)
+	</select>
+	
+	
+</sqlMap>

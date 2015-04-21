@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_AMQ_MESSAGE" >
+
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComAmqMessage" >
+    <result column="AMQ_MESSAGE_ID" property="amqMessageId" />
+    <result column="MESSAGE_CODE" property="messageCode" />
+    <result column="COMPOSITE_TOPIC" property="compositeTopic" />
+    <result column="FORWARD_QUEUE" property="forwardQueue" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="RECEIVE_STATUS" property="receiveStatus" />
+    <result column="RECEIVE_TIME" property="receiveTime" />
+    <result column="OBJECT_JAVA" property="objectJava" />
+  </resultMap>
+
+  <select id="selectMessageUnReceived" resultMap="BaseResultMap" parameterClass="java.util.Map" >
+    select * 
+    from COM_AMQ_MESSAGE
+    where RECEIVE_TIME is null
+    and CREATE_TIME<![CDATA[<]]>sysdate-1/288
+  </select>
+  
+  <select id="countUnReceivedMessage" resultClass="java.lang.Long" parameterClass="java.util.Map" >
+    select count(*)
+    from COM_AMQ_MESSAGE
+    where RECEIVE_TIME is null
+  </select>
+
+  <select id="selectByMessageCodeAndForwardQueue" resultMap="BaseResultMap" parameterClass="java.util.Map" >
+    select * 
+    from COM_AMQ_MESSAGE
+    where MESSAGE_CODE=#messageCode#
+    and FORWARD_QUEUE=#forwardQueue#
+  </select>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComAmqMessage">
+    <selectKey resultClass="java.lang.Long" keyProperty="amqMessageId">
+      select COM_AMQ_MESSAGE_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into COM_AMQ_MESSAGE (AMQ_MESSAGE_ID, MESSAGE_CODE, COMPOSITE_TOPIC, FORWARD_QUEUE, CREATE_TIME, OBJECT_JAVA)
+    values (#amqMessageId#, #messageCode#, #compositeTopic#, #forwardQueue#, #createTime#, #objectJava#)
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.pub.ComAmqMessage">
+		update COM_AMQ_MESSAGE set RECEIVE_STATUS='true', RECEIVE_TIME = #receiveTime# where AMQ_MESSAGE_ID=#amqMessageId#
+  </update>
+
+  <delete id="cleanFinished">
+  		delete from COM_AMQ_MESSAGE where RECEIVE_STATUS='true' and CREATE_TIME<![CDATA[<]]>sysdate-1
+  </delete>
+</sqlMap>

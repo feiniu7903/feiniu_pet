@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="USER_CERT_CODE">
+	<resultMap id="UserCertCodeMap" class="com.lvmama.comm.pet.po.user.UserCertCode">          
+		<result property="authCodeId" column="AUTH_CODE_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="identityTarget" column="IDENTITY_TARGET"/>
+		<result property="type" column="TYPE"/>
+		<result property="code" column="CODE" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.user.UserCertCode">
+	<selectKey resultClass="java.lang.Long" keyProperty="authCodeId" >
+			select USER_CERT_CODE_SEQ.nextval as authCodeId from DUAL
+	</selectKey>
+		INSERT INTO USER_CERT_CODE (AUTH_CODE_ID,USER_ID,IDENTITY_TARGET,TYPE,CODE,CREATE_TIME) VALUES (#authCodeId#,#userId#,#identityTarget#,#type#,#code#,sysdate)
+	</insert>
+
+    <select id="queryByTypeAndIdentityTarget" parameterClass="Map" resultMap="UserCertCodeMap">
+    	SELECT * from 
+	    	(SELECT * 
+	    	FROM USER_CERT_CODE 
+	    	WHERE identity_target = #identityTarget#
+	    	<isEqual property="type" compareValue="MOBILE">   	
+	    		and type = 'MOBILE'
+	    		and create_time &gt;= sysdate - 1/24/4 
+	    	</isEqual>
+	    	<isEqual property="type" compareValue="EMAIL">   	
+	    		and type = 'EMAIL'
+	    		and create_time &gt;= sysdate - 1/24/2
+	    	</isEqual>
+    	     order by auth_code_id desc) a
+    	where rownum = 1
+    </select>
+    
+     <select id="queryByTypeAndIdentityTargetAndCode" parameterClass="Map" resultMap="UserCertCodeMap">
+    	SELECT * from 
+	    	(SELECT * 
+	    	FROM USER_CERT_CODE 
+	    	WHERE identity_target = #identityTarget#
+	    	<isEqual property="type" compareValue="MOBILE">   	
+	    		and type = 'MOBILE'
+	    		and create_time &gt;= sysdate - 1/24/4
+	    	</isEqual>
+	    	<isEqual property="type" compareValue="EMAIL">   	
+	    		and type = 'EMAIL'
+	    		and create_time &gt;= sysdate - 1/24/2
+	    	</isEqual>
+	    	and code = #code#
+    	    order by auth_code_id desc) a
+    	where rownum = 1
+    </select>
+    
+    <select id="queryByTypeAndCode" parameterClass="Map" resultMap="UserCertCodeMap">
+    	SELECT * FROM USER_CERT_CODE
+    	<dynamic prepend="WHERE">
+		        <isNotEmpty prepend=" AND " property="code">code = #code# </isNotEmpty>
+			    	<isEqual property="type" compareValue="MOBILE">   	
+			    		and type = 'MOBILE'
+			    		and create_time &gt;= sysdate - 1/24/4 
+			    	</isEqual>
+			    	<isEqual property="type" compareValue="EMAIL">   	
+			    		and type = 'EMAIL'
+			    		and create_time &gt;= sysdate - 1/24/2
+			    	</isEqual>
+		</dynamic>
+    </select>
+    
+	<delete id="deleteByTypeAndCode" parameterClass="Map">
+		DELETE FROM USER_CERT_CODE WHERE type = #type# and code = #code#
+	</delete>
+	
+	
+	<delete id="delete" parameterClass="Map">
+		DELETE FROM USER_CERT_CODE
+		<dynamic prepend="WHERE">
+				<isNotEmpty prepend=" AND " property="type">type = #type# </isNotEmpty>
+		        <isNotEmpty prepend=" AND " property="code">code = #code# </isNotEmpty>
+		        <isNotEmpty property="30MinutesBefore" prepend=" AND ">create_time &lt; sysdate - 1/24/2</isNotEmpty>
+		</dynamic>
+	</delete>
+	
+	
+	
+</sqlMap>

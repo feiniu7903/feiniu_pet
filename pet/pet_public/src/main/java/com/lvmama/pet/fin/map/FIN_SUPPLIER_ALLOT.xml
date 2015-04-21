@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FIN_SUPPLIER_ALLOT" >
+
+  	<!-- 查询供应商分单信息 -->
+	<select id="search" parameterClass="map" resultClass="com.lvmama.comm.pet.po.fin.FinSupplierAllot">
+		<include refid="pageSearchHead"/>
+		SELECT DISTINCT
+			G.SUPPLIER_ID   AS supplierId,
+       		G.SUPPLIER_NAME AS supplierName,
+       		G.USER_NAME     AS userName,
+       		G.REAL_NAME     AS realName,
+       		G.CREATE_TIME    AS createTime,
+       		G.COMPANY_ID    AS companyName
+  		FROM 
+  			(SELECT 
+				T.SUPPLIER_ID,
+	       		T.SUPPLIER_NAME,
+	       		B.USER_NAME,
+	       		B.REAL_NAME,
+	       		T.CREATE_TIME,
+               	T.COMPANY_ID
+	  		FROM 
+	  			(SELECT 
+	  				A.SUPPLIER_ID, 
+	  				A.SUPPLIER_NAME, 
+	  				C.CREATE_TIME, 
+	  				C.USER_NAME,
+                    A.COMPANY_ID
+	          	FROM 
+	          		SUP_SUPPLIER A, 
+	          		FIN_SUPPLIER_ALLOT C
+	         	WHERE 
+	         		C.SUPPLIER_ID(+) = A.SUPPLIER_ID 
+	         	AND 
+	         		A.VALID = 'Y' 
+	         	AND 
+	         		A.SUPPLIER_NAME &lt;&gt; '作废'
+	         	<isEqual prepend="AND" property="status" compareValue="Y">
+			 		C.USER_NAME IS NOT NULL
+			 	</isEqual>
+			 	<isEqual prepend="AND" property="status" compareValue="N">
+			 		C.USER_NAME IS NULL
+			 	</isEqual>
+				) T,
+	       		lvmama_pet.PERM_USER B
+	 		WHERE 
+	 			B.USER_NAME (+)= T.USER_NAME) G,
+	       	SUP_SETTLEMENT_TARGET T3
+	 	WHERE
+	 		1=1
+   		AND 
+   			G.SUPPLIER_ID = T3.SUPPLIER_ID
+		<isNotNull property="supplierId" prepend="AND">
+			G.SUPPLIER_ID = #supplierId#
+		</isNotNull>
+		<isNotNull property="userName">
+			<isNotEmpty property="userName" prepend="AND">
+				G.USER_NAME = #userName#
+			</isNotEmpty>
+		</isNotNull>
+		<isNotEmpty property="settlementPeriod" prepend="AND">
+			T3.SETTLEMENT_PERIOD = #settlementPeriod#
+		</isNotEmpty>
+		<!--我方结算主体-->
+       <isNotEmpty property="settlementCompany">
+       		AND EXISTS
+       			(
+       				SELECT 
+       					T19.SUPPLIER_ID
+       				FROM 
+       					SUP_SUPPLIER T19
+       				WHERE
+       					T19.SUPPLIER_ID = G.SUPPLIER_ID
+       				AND
+       					T19.COMPANY_ID = #settlementCompany#
+       			)
+       </isNotEmpty>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchCount"  resultClass="long">
+		SELECT  
+			COUNT(*) 
+		FROM
+			(SELECT DISTINCT
+				G.SUPPLIER_ID   AS supplierId,
+	       		G.SUPPLIER_NAME AS supplierName,
+	       		G.USER_NAME     AS userName,
+	       		G.REAL_NAME     AS realName,
+	       		G.CREATE_TIME    AS createTime,
+	       		G.COMPANY_ID    AS companyName
+	       	FROM 
+	  			(SELECT 
+					T.SUPPLIER_ID,
+		       		T.SUPPLIER_NAME,
+		       		B.USER_NAME,
+		       		B.REAL_NAME,
+		       		T.CREATE_TIME,
+	               	T.COMPANY_ID
+		  		FROM 
+		  			(SELECT 
+		  				A.SUPPLIER_ID, 
+		  				A.SUPPLIER_NAME, 
+		  				C.CREATE_TIME, 
+		  				C.USER_NAME,
+	                    A.COMPANY_ID
+		          	FROM 
+		          		SUP_SUPPLIER A, 
+		          		FIN_SUPPLIER_ALLOT C
+		         	WHERE 
+		         		C.SUPPLIER_ID(+) = A.SUPPLIER_ID 
+		         	AND 
+		         		A.VALID = 'Y' 
+		         	AND 
+		         		A.SUPPLIER_NAME &lt;&gt; '作废'
+		         	<isEqual prepend="AND" property="status" compareValue="Y">
+				 		C.USER_NAME IS NOT NULL
+				 	</isEqual>
+				 	<isEqual prepend="AND" property="status" compareValue="N">
+				 		C.USER_NAME IS NULL
+				 	</isEqual>	
+		         		) T,
+	       		lvmama_pet.PERM_USER B
+	 		WHERE 
+	 			B.USER_NAME (+)= T.USER_NAME) G,
+	       	SUP_SETTLEMENT_TARGET T3
+	 	WHERE
+	 		1=1
+   		AND 
+   			G.SUPPLIER_ID = T3.SUPPLIER_ID
+		<isNotNull property="supplierId" prepend="AND">
+			G.SUPPLIER_ID = #supplierId#
+		</isNotNull>
+		<isNotNull property="userName">
+			<isNotEmpty property="userName" prepend="AND">
+				G.USER_NAME = #userName#
+			</isNotEmpty>
+		</isNotNull>
+		<isNotEmpty property="settlementPeriod" prepend="AND">
+			T3.SETTLEMENT_PERIOD = #settlementPeriod#
+		</isNotEmpty>
+		<!--我方结算主体-->
+       <isNotEmpty property="settlementCompany">
+       		AND EXISTS
+       			(
+       				SELECT 
+       					T19.SUPPLIER_ID
+       				FROM 
+       					SUP_SUPPLIER T19
+       				WHERE
+       					T19.SUPPLIER_ID = G.SUPPLIER_ID
+       				AND
+       					T19.COMPANY_ID = #settlementCompany#
+       			)
+       </isNotEmpty>
+		)
+	</select>
+	
+	<select id="searchSupplierDetail" resultClass="com.lvmama.comm.pet.po.fin.FinSupplierMoney" parameterClass="map">
+		SELECT 
+			A.SUPPLIER_NAME          AS supplierName,
+       		A.COMPANY_ID             AS targetName,
+       		A.TELEPHONE              AS telephone,
+       		A.WEBSITE                AS website,
+       		A.FAX                    AS fax,
+       		A.ADDRESS                AS address,
+       		A.POSTCODE               AS postCode,
+       		A.MOBILE                 AS mobile,
+       		B.DEPOSIT_AMOUNT       AS depositAmount,
+       		B.ADVANCE_DEPOSIT_AMOUNT AS advanceDepositAmount,
+       		B.DEPOSIT_ALERT        AS depositAlert,
+       		B.ADVANCE_DEPOSIT_ALERT  AS advanceDepositAlert,
+       		B.GUARANTEE_LIMIT        AS guaranteeLimit
+  		FROM 
+  			SUP_SUPPLIER A, 
+  			FIN_SUPPLIER_MONEY B
+ 		WHERE 
+ 			A.SUPPLIER_ID = B.SUPPLIER_ID(+)
+   		AND 
+   			A.SUPPLIER_ID = #id#
+	</select>
+	
+	<select id="searchTarget" parameterClass="map" resultClass="com.lvmama.comm.pet.po.sup.SupSettlementTarget">
+		SELECT 
+			B.NAME              AS name,
+       		B.SETTLEMENT_PERIOD AS settlementPeriod,
+       		B.CREATE_TIME       AS createTime
+  		FROM 
+  			SUP_SETTLEMENT_TARGET B
+   		WHERE 
+   			B.SUPPLIER_ID = #id#
+	</select>
+
+	<!-- 根据用户名查询用户信息 -->
+	<select id="queryUser" parameterClass="string" resultClass="com.lvmama.comm.pet.po.perm.PermUser">
+		SELECT 
+			P.USER_ID       AS userId,
+       		P.USER_NAME     AS userName,
+       		P.REAL_NAME     AS realName
+  		FROM 
+  			PERM_USER P
+ 		WHERE 
+ 			P.USER_NAME = #userName#
+	</select>
+	
+	<!-- 根据供应商id查询供应商分单信息 -->
+	<select id="queryById" parameterClass="long" resultClass="com.lvmama.comm.pet.po.fin.FinSupplierAllot">
+		SELECT 
+			SUPPLIER_ALLOT_ID AS supplierAllotId,
+       		SUPPLIER_ID       AS supplierId,
+       		USER_NAME         AS userName,
+       		CREATE_USER       AS createUser,
+       		CREATE_TIME       AS createTime
+  		FROM 
+  			FIN_SUPPLIER_ALLOT
+		WHERE 
+			SUPPLIER_ID = #supplierId#
+	</select>
+	
+	<!-- 新增供应商分单信息 -->
+	<insert id="add" parameterClass="com.lvmama.comm.pet.po.fin.FinSupplierAllot">
+		<selectKey keyProperty="supplierAllotId" resultClass="long">
+  			SELECT 
+  				FIN_SUPPLIER_ALLOT_SEQ.NEXTVAL AS supplierAllotId
+  			FROM
+  				DUAL
+  		</selectKey>
+		INSERT INTO FIN_SUPPLIER_ALLOT
+		(
+			SUPPLIER_ALLOT_ID, 
+			SUPPLIER_ID, 
+			USER_NAME, 
+			CREATE_USER, 
+			CREATE_TIME
+		) 
+		VALUES 
+		(
+			#supplierAllotId#,
+			#supplierId#,
+			#userName#,
+			#createUser#,
+			SYSDATE
+		)
+	</insert>
+	
+	<!-- 更新供应商分单信息 -->
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.fin.FinSupplierAllot">
+		UPDATE 
+			FIN_SUPPLIER_ALLOT 
+		SET 
+			USER_NAME = #userName#, 
+			CREATE_TIME = SYSDATE
+		WHERE 
+			SUPPLIER_ID = #supplierId#
+	</update>
+		
+	<!-- 根据供应商id删除供应商分单信息 -->
+	<delete id="delete" parameterClass="long">
+		DELETE FROM FIN_SUPPLIER_ALLOT WHERE SUPPLIER_ID = #supplierId#
+	</delete>
+	
+	
+	<!-- 导出 -->
+	<select id="exportAllot" parameterClass="map" resultClass="com.lvmama.comm.pet.po.fin.FinSupplierAllot">
+		SELECT DISTINCT
+			G.SUPPLIER_ID   AS supplierId,
+       		G.SUPPLIER_NAME AS supplierName,
+       		G.USER_NAME     AS userName,
+       		G.REAL_NAME     AS realName,
+       		G.CREATE_TIME    AS createTime,
+       		G.COMPANY_ID    AS companyName
+  		FROM 
+  			(SELECT 
+				T.SUPPLIER_ID,
+	       		T.SUPPLIER_NAME,
+	       		B.USER_NAME,
+	       		B.REAL_NAME,
+	       		T.CREATE_TIME,
+               	T.COMPANY_ID
+	  		FROM 
+	  			(SELECT 
+	  				A.SUPPLIER_ID, 
+	  				A.SUPPLIER_NAME, 
+	  				C.CREATE_TIME, 
+	  				C.USER_NAME,
+                    A.COMPANY_ID
+	          	FROM 
+	          		SUP_SUPPLIER A, 
+	          		FIN_SUPPLIER_ALLOT C
+	         	WHERE 
+	         		C.SUPPLIER_ID(+) = A.SUPPLIER_ID 
+	         	AND 
+	         		A.VALID = 'Y' 
+	         	AND 
+	         		A.SUPPLIER_NAME &lt;&gt; '作废'
+	         	<isEqual prepend="AND" property="status" compareValue="Y">
+			 		C.USER_NAME IS NOT NULL
+			 	</isEqual>
+			 	<isEqual prepend="AND" property="status" compareValue="N">
+			 		C.USER_NAME IS NULL
+			 	</isEqual>	
+	         	) T,
+	       		lvmama_pet.PERM_USER B
+	 		WHERE 
+	 			B.USER_NAME (+)= T.USER_NAME) G,
+	       	SUP_SETTLEMENT_TARGET T3
+	 	WHERE
+	 		1=1
+   		AND 
+   			G.SUPPLIER_ID = T3.SUPPLIER_ID
+		<isNotNull property="supplierId" prepend="AND">
+			G.SUPPLIER_ID = #supplierId#
+		</isNotNull>
+		<isNotNull property="userName">
+			<isNotEmpty property="userName" prepend="AND">
+				G.USER_NAME = #userName#
+			</isNotEmpty>
+		</isNotNull>
+		<isNotEmpty property="settlementPeriod" prepend="AND">
+			T3.SETTLEMENT_PERIOD = #settlementPeriod#
+		</isNotEmpty>
+		<!--我方结算主体-->
+       <isNotEmpty property="settlementCompany">
+       		AND EXISTS
+       			(
+       				SELECT 
+       					T19.SUPPLIER_ID
+       				FROM 
+       					SUP_SUPPLIER T19
+       				WHERE
+       					T19.SUPPLIER_ID = G.SUPPLIER_ID
+       				AND
+       					T19.COMPANY_ID = #settlementCompany#
+       			)
+       </isNotEmpty>
+	</select>
+	
+</sqlMap>

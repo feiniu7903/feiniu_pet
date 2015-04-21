@@ -1,0 +1,1 @@
+  <@s.if test="null!=productSearchInfo.cashRefund&&productSearchInfo.cashRefund!=0&&(#v2.sellPriceInteger>=50)" ><span class="tagsback" tip-title="写体验点评返奖金" tip-content="预订此产品，游玩后发表体验点评，内容通过审核，即可获得最高&lt;span&gt;${cashRefund}&lt;/span&gt;元点评奖金返现。"><em>返</em><i>${cashRefund?if_exists}元</i></span></@s.if>

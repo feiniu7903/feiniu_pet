@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <!-- START SNIPPET: xfire -->
+    <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="urlMap">
+            <map>
+                <entry key="/receiveData">
+                    <ref bean="receiveIVRImpl"/>
+                </entry>
+                <entry key="/receiveMoneyAccountPayData">
+                    <ref bean="cashAccountPayIvrSystemServiceImpl"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <!-- Declare a parent bean with all properties common to both services -->
+    <bean id="receiveIVRImpl" class="org.codehaus.xfire.spring.remoting.XFireExporter">
+        <property name="serviceFactory">
+            <ref bean="xfire.serviceFactory"/>
+        </property>
+        <property name="xfire">
+            <ref bean="xfire"/>
+        </property>
+        <property name="serviceBean">
+            <ref bean="ivrSystemService"/>
+        </property>
+        <property name="serviceClass">
+            <value>com.lvmama.pet.payment.phonepay.IvrSystemService</value>
+        </property>
+    </bean>
+    
+        <!-- Declare a parent bean with all properties common to both services -->
+    <bean id="cashAccountPayIvrSystemServiceImpl" class="org.codehaus.xfire.spring.remoting.XFireExporter">
+        <property name="serviceFactory">
+            <ref bean="xfire.serviceFactory"/>
+        </property>
+        <property name="xfire">
+            <ref bean="xfire"/>
+        </property>
+        <property name="serviceBean">
+            <ref bean="cashAccountPayIvrSystemService"/>
+        </property>
+        <property name="serviceClass">
+            <value>com.lvmama.pet.payment.phonepay.CashAccountPayIvrSystemService</value>
+        </property>
+    </bean>
+
+</beans>

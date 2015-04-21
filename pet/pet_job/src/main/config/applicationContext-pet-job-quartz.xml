@@ -1,0 +1,692 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+<!-- 暂时不启用
+	<bean id="amqMessageProtectJob" class="com.lvmama.pet.job.quartz.AmqMessageProtectJob">
+		<property name="comAmqMessageService" ref="comAmqMessageService"></property>
+		<property name="jmsServer"><value>${jms_server}</value></property>
+	</bean>
+	
+	<bean id="amqMessageProtectJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="amqMessageProtectJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="amqMessageProtectJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="amqMessageProtectJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>30 * * * * ? *</value>
+		</property>
+	</bean>
+ -->
+ 	
+	<bean id="emailSendTask" class="com.lvmama.pet.job.task.EmailSendTask"  singleton="false">
+		<property name="javaMailSender" ref="javaMailSender"></property>
+		<property name="emailService" ref="emailRemoteService"></property>
+		<property name="fromAddress" value="${mail.from.address}"/>
+		<property name="fromName" value="${mail.from.name}"/>
+		<property name="fsClient" ref="fsClient"/>
+	</bean>
+	
+	<bean id="emailSendTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">   
+		<property name="corePoolSize" value="5" />   
+		<property name="maxPoolSize" value="10" />   
+		<property name="queueCapacity" value="25" /> 
+	</bean>
+	
+	<bean id="emailSendJob" class="com.lvmama.pet.job.quartz.EmailSendJob">
+    	 <property name="emailService" ref="emailRemoteService"></property>
+    	 <property name="emailSendTaskExecutor" ref="emailSendTaskExecutor"></property>
+    	 <property name="reSendTime" value="${mail.resend.time}"/>
+    	 <property name="reSendCount" value="${mail.resend.count}"/>
+	</bean>
+	
+
+	<bean id="autoClearTrainJob" class="com.lvmama.pet.job.train.AutoClearTrainJob"/>
+
+	<bean id="autoClearTrainJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="autoClearTrainJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="emailSendJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="emailSendJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="emailSendJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="emailSendJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 * * * * ? *</value> 
+		</property>
+	</bean> 
+	
+	<bean id="autoClearTrainJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="autoClearTrainJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 2 * * ? *</value> 
+		</property>
+	</bean>
+
+	<!-- begin 过期卡的自动处理 (储值卡和驴游天下卡)-->
+	<bean id="autoFinishedCardTimeOutervice" class="com.lvmama.pet.job.quartz.AutoFinishedStoredCardJob">
+		<property name="storedCardService" ref="storedCardService"></property>
+	</bean>
+	
+	<bean id="autoFinishedCardTimeOutJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="autoFinishedCardTimeOutervice" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="autoFinishedCardTimeOutJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="autoFinishedCardTimeOutJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 10 0 * * ? *</value>
+		</property>
+	</bean>
+	
+	
+	<!-- begin 过期激活码自动删除 -->
+	<bean id="autoDeleteExpiredUserCertCodeService" class="com.lvmama.pet.job.quartz.AutoDeleteExpiredUserCertCodeJob">
+		<property name="userUserProxy" ref="userUserProxy"></property>
+	</bean>
+	
+	<bean id="autoDeleteExpiredUserCertCodeJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="autoDeleteExpiredUserCertCodeService" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="autoDeleteExpiredUserCertCodeJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="autoDeleteExpiredUserCertCodeJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/30 * * * ? *</value>
+		</property>
+	</bean>	
+		
+	
+	<!-- begin 容器相关处理 -->
+	<bean id="prodContainerProductJob" class="com.lvmama.pet.job.quartz.InsertContainerProductJob">
+		<property name="prodContainerProductService" ref="prodContainerProductService"></property>
+	</bean>
+	
+	<bean id="prodContainerProductJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="prodContainerProductJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<!-- 站内信自动删除 -->
+	<bean id="onlineMessageCleanJob" class="com.lvmama.pet.job.quartz.OnlineMessageCleanJob">
+		<property name="onlineLetterService" ref="onlineLetterService"></property>
+	</bean>
+	
+	<bean id="onlineMessageCleanJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="onlineMessageCleanJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<!-- 这个为了测试方便每5分钟执行一次，上线后改为每天执行 -->
+	<bean id="prodContainerProductJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="prodContainerProductJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 1 * * ?</value>
+		</property>
+	</bean>
+	
+	
+	<!-- begin 过期激活码自动删除 -->
+	
+		<!-- begin 点评统计积分JOB -->
+	<bean id="cmtStatisticsScoreJob" class="com.lvmama.pet.job.quartz.CmtStatisticsScoreJob">
+		<property name="cmtTitleStatistisService" ref="cmtTitleStatistisService"></property>
+		<property name="cmtLatitudeStatistisService" ref="cmtLatitudeStatistisService"></property>
+		<property name="productSearchInfoService" ref="productSearchInfoService"></property>
+		<property name="placeSearchInfoService" ref="placeSearchInfoService"></property>
+		<property name="prodProductService" ref="prodProductService"></property>
+	</bean>
+	
+	<bean id="cmtStatisticsScoreJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="cmtStatisticsScoreJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="cmtStatisticsScoreJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="cmtStatisticsScoreJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 2 * * ? *</value>
+		</property>
+	</bean>	
+	
+	
+	
+	
+
+	<bean id="onlineMessageCleanJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="onlineMessageCleanJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 0 * * ? *</value>
+		</property>
+	</bean>	
+	
+	
+	<!-- 首页推荐数据的更新 start -->
+	<bean id="homePageRecommendDataJob" class="com.lvmama.pet.job.quartz.HomePageRecommendDataJob">
+	</bean>
+	
+	<bean id="homePageRecommendDataJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="homePageRecommendDataJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="homePageRecommendDataJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="homePageRecommendDataJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 5 0 * * ? *</value>
+		</property>
+	</bean>		
+	<!-- 首页推荐数据的更新 end -->
+	
+	<!-- 删除comkeyDesc -->
+	<bean id="comKeyDescJob" class="com.lvmama.pet.job.quartz.ComKeyDescJob">
+	</bean>
+	
+	<bean id="comKeyDescJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="comKeyDescJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="comKeyDescJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="comKeyDescJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 * * * ? *</value>
+		</property>
+	</bean>		
+	<!-- 删除comKeyDesc结束 -->
+	
+	<!-- 站内信:邀请写点评 -->
+	<bean id="commentLetterJob" class="com.lvmama.pet.job.quartz.CommentLetterJob">
+		<property name="orderServiceProxy" ref="orderServiceProxy"></property>
+	</bean>
+	
+	<bean id="commentLetterJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="commentLetterJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="commentLetterJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="commentLetterJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 1 * * ?</value>
+		</property>
+	</bean>
+	<!-- 站内信:邀请写点评 -->
+	
+		<!-- 519大促发红包 5月10号凌晨到5月19号凌晨更新-->
+	<bean id="dacunUpdateHongbaoJob" class="com.lvmama.pet.job.quartz.DacunUpdateHongbaoJob">
+		<property name="userUserProxy" ref="userUserProxy"></property>
+	</bean>
+	
+	<bean id="dacunUpdateHongbaoJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="dacunUpdateHongbaoJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="dacunUpdateHongbaoJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="dacunUpdateHongbaoJobFactory" />
+		</property>
+		<property name="cronExpression">
+			  <value>0 59 23 * 5 ? 2014</value> 
+		</property>
+	</bean>
+	<!-- 站内信:邀请写点评 -->
+	
+	
+	<bean id="startQuertz" lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="emailSendJobTimes" />
+				<ref bean="channel01Trigger"/>
+				<ref bean="channel01MonitorTrigger"/>
+				<ref bean="channel01ReceiveTrigger" />
+				<ref bean="channel02Trigger"/>
+				<ref bean="channel03Trigger"/>
+				<ref bean="channel03MonitorTrigger"/>
+				<ref bean="channel03ReceiveTrigger"/>
+				<ref bean="autoFinishedCardTimeOutJobTimes"/>
+				<ref bean="autoDeleteExpiredUserCertCodeJobTimes"/>
+				<ref bean="montnetsSendJobTrigger" />
+				<ref bean="montnetsMonitorJobTrigger" />
+				<ref bean="montnetsReceiveJobTrigger" />
+				<ref bean="prodContainerProductJobTimes"/>
+				<ref bean="cmtStatisticsScoreJobTimes"/>
+				<ref bean="onlineMessageCleanJobTimes"/>
+				<ref bean="homePageRecommendDataJobTimes" />
+				<ref bean="workTaskReDistributeJobTimes"/>
+				<ref bean="keJetAdsJobTimes" />
+				<ref bean="ebkLazyWorkOrderJobTimes"/>
+				<ref bean="workOrderPasscodeAlertJobTimes"/>
+				<ref bean="insertContainerProductJobTimes" />
+				<ref bean="comKeyDescJobTimes" />
+				<ref local="autoClearTrainJobTimes"/>
+				<ref local="contractExpiredEmailSendJobTimes"/>
+				<ref bean="commentLetterJobTimes"/> 
+				<ref bean="dodoCaSendJobTrigger"/>
+				<ref bean="dodoCaStatusReportSendJobTrigger"/>
+				<ref bean="resendSmsJobTrigger"/>
+ 			</list>
+		</property>
+	</bean>
+	<!-- 下面的这两个BEAN必须是prototype的 -->
+	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"  singleton="false">
+		<property name="host" value="${mail.host}"/>
+		<property name="username" value="${mail.username}"/>
+		<property name="password" value="${mail.password}"/>
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+				<prop key="mail.smtp.timeout">${mail.smtp.timeout}</prop>
+			</props>
+		</property>
+	</bean>			
+<!-- 工单重新分配begin-->
+	<bean id="workTaskReDistributeJob" class="com.lvmama.pet.job.quartz.WorkTaskReDistributeJob">
+    	 <property name="workOrderService" ref="workOrderService"></property>
+    	 <property name="workTaskService" ref="workTaskService"></property>
+    	 <property name="reDistributeCount" value="5"/>
+	</bean>
+	
+	<bean id="workTaskReDistributeJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="workTaskReDistributeJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="workTaskReDistributeJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="workTaskReDistributeJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 */5 * * * ? *</value> 
+		</property>
+	</bean> 
+	<!-- 工单重新分配end -->
+	
+	<!-- 科捷广告内容begin-->
+	<bean id="keJetAdsJob" class="com.lvmama.pet.job.quartz.KeJetAdsJob" />
+	
+	<bean id="keJetAdsJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="keJetAdsJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="keJetAdsJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="keJetAdsJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 30 0/2 * * ? *</value> 
+		</property>
+	</bean> 
+	<!-- 科捷广告内容end -->	
+	<bean id="ebkLazyWorkOrderJob" class="com.lvmama.pet.job.ebk.EbkLazyWorkOrderJob"/>	
+	<bean id="ebkLazyWorkOrderJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="ebkLazyWorkOrderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="ebkLazyWorkOrderJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="ebkLazyWorkOrderJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 */10 * * * ? *</value> 
+		</property>
+	</bean> 
+	
+	<!-- 二维码超时未处理begin-->
+	<bean id="workOrderPasscodeAlertJob" class="com.lvmama.pet.job.quartz.WorkOrderPasscodeAlertJob"/>
+	<bean id="workOrderPasscodeAlertJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="workOrderPasscodeAlertJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="workOrderPasscodeAlertJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="workOrderPasscodeAlertJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 */2 * * * ? *</value>
+		</property>
+	</bean> 
+	<!-- 二维码超时未处理end -->
+	
+	<!-- comKeyDesc内容begin-->
+	<bean id="insertContainerProductJob" class="com.lvmama.pet.job.quartz.InsertContainerProductJob" />
+	
+	<bean id="insertContainerProductJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="insertContainerProductJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="insertContainerProductJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="insertContainerProductJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 30 * * * ? *</value> 
+		</property>
+	</bean> 
+	<!-- comKeyDesc内容end -->		
+	<!-- 合同到期邮件提醒 START -->
+	<bean id="contractExpiredEmailSendJob" class="com.lvmama.pet.job.quartz.ContractExpiredEmailSendJob"/>
+	<bean id="contractExpiredEmailSendJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="contractExpiredEmailSendJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="contractExpiredEmailSendJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="contractExpiredEmailSendJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<!-- 每周一到周五早上9点触发 -->
+			<value>0 0 9 ? * MON-FRI</value>
+		</property>
+	</bean>
+	<!-- 合同到期邮件提醒 END -->
+	
+	<!-- mobile push job start -->
+	<bean id="syncMobilePushJob" class="com.lvmama.pet.job.mobile.push.SyncMobilePushJob"></bean>
+	<bean id="iphonePushJob" class="com.lvmama.pet.job.mobile.push.IPHONEPushJob" singleton="true"></bean>
+	<bean id="androidPushJob" class="com.lvmama.pet.job.mobile.push.ANDROIDPushJob" singleton="true"></bean>
+	<bean id="ipadPushJob" class="com.lvmama.pet.job.mobile.push.IPADPushJob" singleton="true"></bean>
+	
+	<bean id="syncMobilePushJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref local="syncMobilePushJob"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>syncMobilePush</value>  
+        </property>  
+    </bean>
+    
+    <bean id="iphonePushJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref local="iphonePushJob"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>sendMobilePush</value>  
+        </property>  
+    </bean>
+    <bean id="androidPushJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref local="androidPushJob"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>sendMobilePush</value>  
+        </property>  
+    </bean>
+    <bean id="ipadPushJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref local="ipadPushJob"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>sendMobilePush</value>  
+        </property>  
+    </bean>
+	
+    <bean id="syncMobilePushJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+        <property name="jobDetail">  
+            <ref bean="syncMobilePushJobTask"/>  
+        </property>  
+        <property name="cronExpression">  
+            <!-- <value>0 0 0-23 * * ?</value> -->
+             <value>0 0-59 * * * ?</value>  
+        </property>  
+    </bean>
+    
+    <bean id="iphonePushJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+        <property name="jobDetail">  
+            <ref local="iphonePushJobTask" />  
+        </property>  
+        <property name="cronExpression">  
+           <!--  <value>0 0/2 * * * ?</value>  -->
+            <value>0/30 * * * * ?</value>  
+        </property>  
+    </bean>
+    <bean id="androidPushJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+        <property name="jobDetail">  
+            <ref local="androidPushJobTask" />  
+        </property>  
+        <property name="cronExpression">  
+           <!--  <value>0 0/2 * * * ?</value>  -->
+            <value>0/30 * * * * ?</value>  
+        </property>  
+    </bean>
+    <bean id="ipadPushJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+        <property name="jobDetail">  
+            <ref local="ipadPushJobTask" />  
+        </property>  
+        <property name="cronExpression">  
+           <!--  <value>0 0/2 * * * ?</value>  -->
+            <value>0/30 * * * * ?</value>  
+        </property>  
+    </bean>
+    
+	<bean id="mobileJobScheduler" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+        <property name="triggers">  
+            <list>  
+                <ref local ="syncMobilePushJobCronTrigger"/> 
+                <ref local ="iphonePushJobCronTrigger"/>
+                <ref local ="androidPushJobCronTrigger"/>
+                <ref local ="ipadPushJobCronTrigger"/>
+                <ref local ="mobileHotelJobCronTrigger"/>
+                <ref local ="mobileHotelGeoJobCronTrigger"/>
+            </list>  
+        </property>  
+    </bean>
+    
+	<!-- mobile push job end -->
+	
+	<!-- mobile hotel start  -->
+	<bean id="mobileHotelJob" class="com.lvmama.pet.job.mobile.hotel.MobileHotelJob"></bean>
+	<bean id="mobileHotelGeoJob" class="com.lvmama.pet.job.mobile.hotel.MobileHotelGeoJob"></bean>
+	
+	<bean id="mobileHotelJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref local="mobileHotelJob"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>updateHotelStaticData</value>  
+        </property>  
+    </bean>
+    
+    <bean id="mobileHotelGeoJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref local="mobileHotelGeoJob"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>updateHotelGeoStaticData</value>  
+        </property>  
+    </bean>  
+    
+     <!--  每天6点10分执行   -->
+	<bean id="mobileHotelJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+        <property name="jobDetail">  
+            <ref bean="mobileHotelJobTask"/>  
+        </property>  
+        <property name="cronExpression">
+             <value>0 10 6 * * ?</value>  
+        </property>  
+    </bean>
+    <!--  每周5凌晨4点10分执行执行   -->
+    <bean id="mobileHotelGeoJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+        <property name="jobDetail">  
+            <ref local="mobileHotelGeoJobTask" />  
+        </property>  
+        <property name="cronExpression">  
+           <!--  <value>0 10 5 * * 5</value>  -->
+           <value>0 10 4 ? * FRI</value>  
+        </property>  
+    </bean>
+	<!-- mobile hotel end  -->
+	
+</beans>

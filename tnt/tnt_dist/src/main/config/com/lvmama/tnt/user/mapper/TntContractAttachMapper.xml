@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lvmama.tnt.user.mapper.TntContractAttachMapper">
+	<resultMap id="BaseResultMap" type="tntContractAttach">
+		<id column="ATTACH_ID" property="attachId" jdbcType="DECIMAL" />
+		<result column="CONTRACT_ID" property="contractId" jdbcType="DECIMAL" />
+		<result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+		<result column="ATTACHMENT" property="attachment" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ATTACH_ID, CONTRACT_ID, FILE_NAME, ATTACHMENT
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from TNT_CONTRACT_ATTACH
+		where ATTACH_ID =
+		#{attachId,jdbcType=DECIMAL}
+	</select>
+
+	<!-- 根据合同ID查找合同附件List -->
+	<select id="selectByContractId" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from TNT_CONTRACT_ATTACH
+		where CONTRACT_ID =
+		#{contractId,jdbcType=DECIMAL}
+		and FILE_NAME is not null
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		TNT_CONTRACT_ATTACH
+		where ATTACH_ID = #{attachId,jdbcType=DECIMAL}
+	</delete>
+
+	<!-- 插入合同附件 -->
+	<insert id="insert" parameterType="tntContractAttach">
+		<selectKey resultType="java.lang.Long" keyProperty="attachId"
+			order="BEFORE">
+			select TNT_CONTRACT_ATTACH_ID_SEQ.nextval from dual
+		</selectKey>
+		insert into TNT_CONTRACT_ATTACH (ATTACH_ID, CONTRACT_ID, FILE_NAME,
+		ATTACHMENT)
+		values (#{attachId,jdbcType=DECIMAL},
+		#{contractId,jdbcType=DECIMAL},
+		#{fileName,jdbcType=VARCHAR},
+		#{attachment,jdbcType=DECIMAL})
+	</insert>
+
+	<select id="selectAttachNumByContractId" parameterType="java.lang.Long"
+		resultType="Integer">
+		select count(1)
+		from TNT_CONTRACT_ATTACH
+		where CONTRACT_ID =
+		#{contractId,jdbcType=DECIMAL}
+	</select>
+
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="VISA_APPLICATION_DOCUMENT">
+	<resultMap id="VisaApplicationDocumentMap" class="com.lvmama.comm.pet.po.visa.VisaApplicationDocument">
+		<result column="DOCUMENT_ID" property="documentId" />
+		<result column="COUNTRY" property="country" />
+		<result column="VISA_TYPE" property="visaType" />
+		<result column="CITY" property="city" />
+		<result column="OCCUPATION" property="occupation" />
+		<result column="CREATE_TIME" property="createTime" />
+	</resultMap>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.visa.VisaApplicationDocument">
+		<selectKey keyProperty="documentId" resultClass="java.lang.Long">
+			SELECT VISA_APPLICATION_DOCUMENT_SEQ.NEXTVAL FROM  DUAL
+		</selectKey>
+		INSERT INTO VISA_APPLICATION_DOCUMENT VALUES (#documentId#,#country#,#visaType#,#city#, #occupation#,sysdate)
+	</insert>
+
+	<delete id="delete" parameterClass="java.lang.Long">
+		DELETE FROM VISA_APPLICATION_DOCUMENT WHERE DOCUMENT_ID = #documentId#
+	</delete>
+	
+	<select id="queryByPrimaryKey" resultMap="VisaApplicationDocumentMap" parameterClass="java.lang.Long">
+		SELECT * FROM VISA_APPLICATION_DOCUMENT WHERE DOCUMENT_ID = #documentId#
+	</select>
+	
+	<sql id="reuse_query_sql">
+		FROM (SELECT
+				*
+			FROM 
+				VISA_APPLICATION_DOCUMENT
+			<dynamic prepend=" WHERE ">
+				<isNotEmpty property="documentId" prepend=" AND "> DOCUMENT_ID = #documentId#</isNotEmpty>
+				<isNotEmpty property="country" prepend=" AND "> COUNTRY = #country#</isNotEmpty>
+				<isNotEmpty property="visaType" prepend=" AND "> VISA_TYPE = #visaType#</isNotEmpty>
+				<isNotEmpty property="city" prepend=" AND "> CITY = #city# </isNotEmpty>
+				<isNotEmpty property="occupation" prepend=" AND "> OCCUPATION = #occupation# </isNotEmpty>
+			</dynamic>
+			ORDER BY COUNTRY,CITY,VISA_TYPE) VAD		
+	</sql>
+
+	<select id="count" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		SELECT COUNT(DOCUMENT_ID) <include refid="reuse_query_sql"/>  	 
+	</select>
+
+	<select id="query" parameterClass="java.util.Map"  resultMap="VisaApplicationDocumentMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT 
+			rownum r,
+			VAD.*
+		<include refid="reuse_query_sql"/>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt; #_startRow# </isNotEmpty>
+		</dynamic>	 
+	</select>
+</sqlMap>

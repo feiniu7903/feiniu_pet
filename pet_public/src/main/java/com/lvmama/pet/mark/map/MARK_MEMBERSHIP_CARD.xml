@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_MEMBERSHIP_CARD" >
+
+   <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.vo.mark.MarkMembershipCardDetails" >
+    <result column="CARD_ID" property="cardId" />
+    <result column="CREATE_TIME" property="createTime" />
+	<result column="CARD_PREFIX_NUMBER" property="cardPrefixNumber" />
+	<result column="AMOUNT" property="amount"/>
+	<result column="CHANNEL_ID" property="channelId" />
+	<result column="BINDING_CHANNEL_TIME" property="bindingChannelTime" />
+	<result column="IS_BINDING_DISCOUNT" property="isBindingDiscount" />
+	<result column="BINDING_DISCOUNT_TIME" property="bindingDiscountTime" />
+	<result column="IS_ACTIVATE" property="isActivate" />
+	<result column="CHANNEL_NAME" property="channelName" />
+	<result column="CHANNEL_CODE" property="channelCode" />
+  </resultMap>
+
+  <sql id="reuseSQL">
+		SELECT
+			card.CARD_ID,
+			card.CREATE_TIME,
+			card.CARD_PREFIX_NUMBER,
+			card.AMOUNT,
+			card.CHANNEL_ID,
+			card.BINDING_CHANNEL_TIME,
+			card.IS_BINDING_DISCOUNT,
+			card.BINDING_DISCOUNT_TIME,
+			card.IS_ACTIVATE,
+			channel.CHANNEL_NAME,
+			channel.CHANNEL_CODE,
+			rownum RN
+		FROM
+			MARK_MEMBERSHIP_CARD card,
+			MARK_CHANNEL channel
+		WHERE
+			card.CHANNEL_ID = channel.CHANNEL_ID(+)
+	<dynamic>
+		<isNotEmpty prepend=" AND " property="cardPrefixNumber">card.CARD_PREFIX_NUMBER = #cardPrefixNumber#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="channelId">card.CHANNEL_ID=#channelId# </isNotEmpty>
+		<isNotEmpty prepend=" AND " property="beginCreateTime">card.CREATE_TIME &gt;= #beginCreateTime#</isNotEmpty>
+	    <isNotEmpty prepend=" AND " property="endCreateTime">card.CREATE_TIME &lt;= #endCreateTime#+1</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="beginBindingChannelTime">card.BINDING_CHANNEL_TIME &gt;= #beginBindingChannelTime#</isNotEmpty>
+	    <isNotEmpty prepend=" AND " property="endBindingChannelTime">card.BINDING_CHANNEL_TIME &lt;= #endBindingChannelTime#+1</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="beginBindingDiscountTime">card.BINDING_DISCOUNT_TIME &gt;= #beginBindingDiscountTime#</isNotEmpty>
+	    <isNotEmpty prepend=" AND " property="endBindingDiscountTime">card.BINDING_DISCOUNT_TIME &lt;= #endBindingDiscountTime#+1</isNotEmpty>		
+		<isNotEmpty prepend=" AND " property="channelName">channel.CHANNEL_NAME = #channelName#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="channelCode">channel.CHANNEL_CODE = #channelCode#</isNotEmpty>
+	</dynamic>	
+  </sql>
+
+  <!-- 查询 -->
+  <select id="query" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		SELECT *
+		  FROM (
+		  	<include refid="reuseSQL"/>
+		  )  A
+		<dynamic prepend=" WHERE "> 
+		    <isNotEmpty property="maxResults" prepend=" AND " > RN  &lt;=#maxResults#   </isNotEmpty>
+		   	<isNotEmpty property="skipResults" prepend=" AND "> RN  &gt;#skipResults#   </isNotEmpty>
+		</dynamic>
+  </select>
+  
+  <!-- 查询总数 -->
+  <select id="count" resultClass="long" parameterClass="java.util.Map">
+  	    SELECT COUNT(1) CT 
+  	      FROM  (
+  	      	<include refid="reuseSQL"/>
+  	      ) A
+  </select>
+
+  <select id="queryByPK" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+		SELECT
+			card.CARD_ID,
+			card.CREATE_TIME,
+			card.CARD_PREFIX_NUMBER,
+			card.AMOUNT,
+			card.CHANNEL_ID,
+			card.BINDING_CHANNEL_TIME,
+			card.IS_BINDING_DISCOUNT,
+			card.BINDING_DISCOUNT_TIME,
+			card.IS_ACTIVATE,
+			channel.CHANNEL_NAME,
+			channel.CHANNEL_CODE,
+			rownum RN
+		FROM
+			MARK_MEMBERSHIP_CARD card,
+			MARK_CHANNEL channel
+		WHERE
+			card.CHANNEL_ID = channel.CHANNEL_ID(+) AND card.CARD_ID = #cardId#	
+  </select>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mark.MarkMembershipCard">
+	<selectKey keyProperty="cardId" resultClass="java.lang.Long">
+      select MARK_MEMBERSHIP_CARD_SEQ.nextval as cardId from DUAL
+    </selectKey>
+	INSERT INTO  MARK_MEMBERSHIP_CARD
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="cardId">CARD_ID</isNotNull>
+	  <isNotNull prepend="," property="channelId">CHANNEL_ID</isNotNull>
+	  <isNotNull prepend="," property="cardPrefixNumber">CARD_PREFIX_NUMBER</isNotNull>
+	  <isNotNull prepend="," property="amount">AMOUNT</isNotNull>
+	  <isNotNull prepend="," property="createTime">CREATE_TIME</isNotNull>
+	  <isNotNull prepend="," property="bindingChannelTime">BINDING_CHANNEL_TIME</isNotNull>
+	  <isNotNull prepend="," property="isBindingDiscount">IS_BINDING_DISCOUNT</isNotNull>
+	  <isNotNull prepend="," property="bindingDiscountTime">BINDING_DISCOUNT_TIME</isNotNull>
+	  <isNotNull prepend="," property="isActivate">IS_ACTIVATE</isNotNull>
+	  )
+	 </dynamic>
+	  VALUES
+     <dynamic prepend="(">
+      <isNotNull prepend="," property="cardId">#cardId#</isNotNull>
+	  <isNotNull prepend="," property="channelId">#channelId#</isNotNull>
+	  <isNotNull prepend="," property="cardPrefixNumber">#cardPrefixNumber#</isNotNull>
+	  <isNotNull prepend="," property="amount">#amount#</isNotNull>
+	  <isNotNull prepend="," property="createTime">#createTime#</isNotNull>
+	  <isNotNull prepend="," property="bindingChannelTime">#bindingChannelTime#</isNotNull>
+	  <isNotNull prepend="," property="isBindingDiscount">#isBindingDiscount#</isNotNull>
+	  <isNotNull prepend="," property="bindingDiscountTime">#bindingDiscountTime#</isNotNull>
+	  <isNotNull prepend="," property="isActivate">#isActivate#</isNotNull>
+	  )
+	 </dynamic>
+  </insert>
+
+  <delete id="delete" parameterClass="java.lang.Long">
+	DELETE FROM MARK_MEMBERSHIP_CARD WHERE CARD_ID = #cardId#
+  </delete>
+
+  <update id="updateBindingDiscount" parameterClass="java.lang.Long">
+	UPDATE MARK_MEMBERSHIP_CARD SET IS_BINDING_DISCOUNT = 'true', BINDING_DISCOUNT_TIME = sysdate WHERE CARD_ID = #cardId#
+  </update>
+
+    <update id="updateUnBindingDiscount" parameterClass="java.lang.Long">
+	UPDATE MARK_MEMBERSHIP_CARD SET IS_BINDING_DISCOUNT = 'false', BINDING_DISCOUNT_TIME = null WHERE CARD_ID = #cardId#
+  </update>
+  <!-- 绑定渠道 -->
+  <update id="updateBindChannel" parameterClass="com.lvmama.comm.pet.po.mark.MarkMembershipCard">
+   UPDATE MARK_MEMBERSHIP_CARD C
+      SET C.CHANNEL_ID = #channelId#, 
+          C.BINDING_CHANNEL_TIME = SYSDATE
+    WHERE C.CARD_ID = #cardId#
+  </update>
+  
+ 	<update id="active" parameterClass="java.lang.String">
+		UPDATE MARK_MEMBERSHIP_CARD SET IS_ACTIVATE = 'true' WHERE CARD_ID IN (SELECT CARD_ID FROM MARK_MEMBERSHIP_CARD_CODE  WHERE CARD_CODE = #cardCode#)
+	</update> 
+  
+  <select id="queryUserIdByCardId" parameterClass="java.lang.Long" resultClass="java.lang.String">
+  	SELECT user_id FROM user_users u WHERE membership_card IN (SELECT CARD_CODE FROM MARK_MEMBERSHIP_CARD_CODE WHERE CARD_ID = #cardId#) 
+  </select>
+ 
+</sqlMap>

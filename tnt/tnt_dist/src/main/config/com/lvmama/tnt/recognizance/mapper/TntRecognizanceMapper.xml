@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.recognizance.mapper.TntRecognizanceMapper">
+
+	<resultMap id="baseResultMap" type="tntRecognizance">
+		<result property="recognizanceId" column="RECOGNIZANCE_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="limits" column="LIMITS" />
+		<result property="balance" column="BALANCE" />
+		<result property="userName" column="USER_NAME" />
+		<result property="realName" column="REAL_NAME" />
+		<result property="companyName" column="COMPANY_NAME" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		RECOGNIZANCE_ID,USER_ID,LIMITS,BALANCE
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="tntRecognizance">
+		<selectKey resultType="java.lang.Long" keyProperty="recognizanceId"
+			order="BEFORE">
+			select TNT_RECOGNIZANCE_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_RECOGNIZANCE (
+		RECOGNIZANCE_ID ,
+		USER_ID ,
+		LIMITS ,
+		BALANCE
+		) VALUES (
+		#{recognizanceId} ,
+		#{userId ,jdbcType=DECIMAL},
+		#{limits,jdbcType=DECIMAL},
+		#{balance,jdbcType=DECIMAL}
+		)
+	</insert>
+
+	<update id="update" parameterType="tntRecognizance">
+		UPDATE TNT_RECOGNIZANCE
+		<set>
+			<if test="userId != null">
+				USER_ID = #{userId,jdbcType=DECIMAL},
+			</if>
+			<if test="limits != null">
+				LIMITS = #{limits,jdbcType=DECIMAL},
+			</if>
+		</set>
+		WHERE RECOGNIZANCE_ID = #{recognizanceId}
+	</update>
+
+	<update id="appendBalance" parameterType="tntRecognizance">
+		UPDATE TNT_RECOGNIZANCE
+		<set>
+			<if test="balance != null">
+				BALANCE = BALANCE + #{balance,jdbcType=DECIMAL}
+			</if>
+		</set>
+		WHERE RECOGNIZANCE_ID = #{recognizanceId}
+	</update>
+
+
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM TNT_RECOGNIZANCE
+		WHERE
+		RECOGNIZANCE_ID = #{id}
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		a.*,b.USER_NAME as USER_NAME
+		FROM TNT_RECOGNIZANCE a left join
+		TNT_USER b
+		on a.USER_ID
+		= b.USER_ID
+		WHERE
+		RECOGNIZANCE_ID = #{id}
+	</select>
+
+	<select id="getByUserId" resultMap="baseResultMap"
+		parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_RECOGNIZANCE
+		WHERE
+		USER_ID = #{id}
+	</select>
+
+	<sql id="where">
+		<if test="recognizanceId != null and recognizanceId !=''">
+			AND RECOGNIZANCE_ID = #{recognizanceId}
+		</if>
+		<if test="userId != null and userId !=''">
+			AND USER_ID = #{userId}
+		</if>
+		<if test="userName != null and userName !=''">
+			AND b.USER_NAME =#{userName}
+		</if>
+		<if test="realName != null and realName !=''">
+			AND b.REAL_NAME like
+			CONCAT(CONCAT('%',#{realName}),'%')
+		</if>
+		<if test="limits != null and limits !=''">
+			AND LIMITS = #{limits}
+		</if>
+		<if test="balance != null and balance !=''">
+			AND BALANCE = #{balance}
+		</if>
+	</sql>
+
+	<sql id="pageWhere">
+		<if test="param.recognizanceId != null and param.recognizanceId !=''">
+			AND RECOGNIZANCE_ID = #{param.recognizanceId}
+		</if>
+		<if test="param.userId != null and param.userId !=''">
+			AND a.USER_ID = #{param.userId}
+		</if>
+		<if test="param.userName != null and param.userName !=''">
+			AND b.USER_NAME = #{param.userName}
+		</if>
+		<if test="param.realName != null and param.realName !=''">
+			AND b.REAL_NAME like
+			CONCAT(CONCAT('%',#{param.realName}),'%')
+		</if>
+		<if test="param.limits != null and param.limits !=''">
+			AND LIMITS =#{param.limits}
+		</if>
+		<if test="param.balance != null and param.balance !=''">
+			AND BALANCE = #{param.balance}
+		</if>
+	</sql>
+
+	<select id="count" resultType="Integer" parameterType="tntRecognizance">
+		SELECT count(1) FROM TNT_RECOGNIZANCE a,TNT_USER b,TNT_USER_DETAIL c
+		where 1=1
+		<include refid="where" />
+		AND a.USER_ID = b.USER_ID
+		AND b.USER_ID = c.USER_ID
+	</select>
+
+	<select id="findPage" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		a.*,b.USER_NAME as USER_NAME,b.REAL_NAME as REAL_NAME,c.COMPANY_NAME
+		FROM
+		TNT_RECOGNIZANCE a,TNT_USER b,TNT_USER_DETAIL c
+		where 1=1
+		<include refid="pageWhere" />
+		AND a.USER_ID = b.USER_ID
+		AND b.USER_ID = c.USER_ID
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+</mapper>
+

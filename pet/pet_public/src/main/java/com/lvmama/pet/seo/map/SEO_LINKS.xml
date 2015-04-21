@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SEO_LINKS" >
+  <typeAlias alias="seoLinks" type="com.lvmama.comm.pet.po.seo.SeoLinks" />
+  <resultMap id="BaseResultMap" class="seoLinks" >
+    <result column="SEO_LINKS_ID" property="seoLinksId" />
+    <result column="PLACE_ID" property="placeId" />
+    <result column="LINK_NAME" property="linkName" />
+    <result column="LINK_URL" property="linkUrl" />
+    <result column="LOCATION" property="location" />
+    <result column="REMARK" property="remark" />
+    
+    <result column="PLACE_NAME" property="placeName" />
+    <result column="PLACE_STAGE" property="placeStage" />
+  </resultMap>
+  
+  <resultMap id="SeoLinksMap" class="seoLinks" >
+    <result column="SEO_LINKS_ID" property="seoLinksId" />
+    <result column="PLACE_ID" property="placeId" />
+    <result column="LINK_NAME" property="linkName" />
+    <result column="LINK_URL" property="linkUrl" />
+    <result column="LOCATION" property="location" />
+    <result column="REMARK" property="remark" />
+   </resultMap>
+   <resultMap id="BaseResultMap2" class="seoLinks" extends="BaseResultMap" >
+    <result column="PIN_YIN_URL" property="pinYinUrl" />
+   </resultMap>
+  
+  <sql id="pageHeader">
+         SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+    </sql>
+    <sql id="pageFooter">
+         ) A
+        <dynamic prepend="where">
+            <isNotEmpty property="endRows" prepend="and">
+                ROWNUM &lt;= #endRows#
+            </isNotEmpty>
+        </dynamic>
+          )
+        <dynamic prepend="where">
+         <isNotEmpty property="startRows" prepend="and">
+            rn &gt;= #startRows#
+         </isNotEmpty>      
+        </dynamic>
+    </sql>
+    <sql id="batchQuerySeoLinksByParamWhere">
+      <dynamic prepend="where ">
+         <isNotEmpty prepend="and " property="placeName">
+           PLACE_NAME like '%$placeName$%'
+         </isNotEmpty>
+         <isNotEmpty prepend="and " property="location"> LOCATION = #location#</isNotEmpty>
+         <isNotEmpty prepend="and " property="linkUrl">LINK_URL like '%$linkUrl$%'</isNotEmpty>
+         <isNotEmpty prepend="and " property="placeStage">PLACE_STAGE = #placeStage#</isNotEmpty>
+         <isNotEmpty prepend="and " property="placeId">PLACE_ID = #placeId#</isNotEmpty>
+      </dynamic>
+    </sql>
+  
+  <insert id="insertSeoLinks" parameterClass="seoLinks" >
+    <selectKey keyProperty="seoLinksId" resultClass="java.lang.Long">
+		select  SEO_LINKS_SEQ.NEXTVAL as id from DUAL
+    </selectKey>
+    insert into SEO_LINKS
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="seoLinksId" >
+        SEO_LINKS_ID
+      </isNotNull>
+       <isNotNull prepend="," property="placeId" >
+        PLACE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="linkName" >
+        LINK_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="linkUrl" >
+        LINK_URL
+      </isNotNull>
+      <isNotNull prepend="," property="location" >
+        LOCATION
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="seoLinksId" >
+        #seoLinksId#
+      </isNotNull>
+      <isNotNull prepend="," property="placeId" >
+        #placeId#
+      </isNotNull>
+      <isNotNull prepend="," property="linkName" >
+        #linkName#
+      </isNotNull>
+      <isNotNull prepend="," property="linkUrl" >
+        #linkUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="location" >
+        #location#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        #remark#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  
+   <update id="update" parameterClass="seoLinks" >
+   update SEO_LINKS
+   set LINK_NAME=#linkName# ,
+       LINK_URL=#linkUrl# ,
+       LOCATION=#location# ,
+       REMARK=#remark#
+   where SEO_LINKS_ID=#seoLinksId#
+  </update>
+  
+  <delete id="deleteSeoLinks" parameterClass="seoLinks">
+    delete from SEO_LINKS
+    where SEO_LINKS_ID=#seoLinksId#
+  </delete>
+  
+   <select id="batchQuerySeoLinksByParam" parameterClass="java.util.Map" resultMap="BaseResultMap2">
+     <include refid="pageHeader"/>
+         select * from (select  p.name as PLACE_NAME,p.stage as PLACE_STAGE,p.PIN_YIN_URL,s.* from SEO_LINKS s left join place p   on s.place_id=p.place_id)   r 
+         <include refid="batchQuerySeoLinksByParamWhere"/>
+     <include refid="pageFooter"/>
+   </select>
+   <select id="getCountSeoLinksByParam" parameterClass="java.util.Map" resultClass="java.lang.Long">
+       select count(*) from   ( select * from (select  p.name as PLACE_NAME,p.stage as PLACE_STAGE,s.* from SEO_LINKS s left join place p   on s.place_id=p.place_id)   r 
+         <include refid="batchQuerySeoLinksByParamWhere"/>)  m
+   </select>
+
+
+    <select id="querySeoBySeoID" parameterClass="seoLinks" resultMap="BaseResultMap">
+         select * from (select  p.name as PLACE_NAME,p.stage as PLACE_STAGE,s.* from SEO_LINKS s left join place p   on s.place_id=p.place_id)   r 
+       where SEO_LINKS_ID=#seoLinksId#
+    </select>
+    
+    <select id="querySeoLinksByParam" parameterClass="java.util.Map" resultMap="SeoLinksMap">
+         select * from seo_links s
+         <dynamic prepend="where">
+           <isNotNull property="placeId"  prepend="and "> s.place_id=#placeId#</isNotNull>
+           <isNotNull property="linkUrl" prepend="and"> s.link_url=#linkUrl# </isNotNull>
+           <isNotNull property="removeSeoId" prepend="and"> s.seo_links_id!=#removeSeoId# </isNotNull>
+         </dynamic> 
+     </select>
+</sqlMap>

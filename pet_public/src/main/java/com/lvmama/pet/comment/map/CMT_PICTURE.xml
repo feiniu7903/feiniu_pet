@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_PICTURE" >
+    <resultMap class="com.lvmama.comm.vo.comment.CmtPictureVO" id="cmtPictureMap">
+    	<result property="pictureId" column="CMT_PICTURE_ID"/>
+    	<result property="commentId" column="CMT_COMMENT_ID"/>
+    	<result property="picUrl" column="PIC_URL"/>
+    	<result property="isAudit" column="IS_AUDIT"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="description" column="DESCRIPTION"/>
+    </resultMap>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.vo.comment.CmtPictureVO">
+		<selectKey resultClass="java.lang.Long" keyProperty="pictureId" >
+			select cmt_picture_seq.nextval as pictureId from DUAL
+		</selectKey>
+		INSERT INTO CMT_PICTURE
+			(CMT_PICTURE_ID, CMT_COMMENT_ID, PIC_URL, IS_AUDIT, USER_NAME,USER_ID,DESCRIPTION)
+		VALUES
+			(#pictureId#, #commentId#, #picUrl#, #isAudit#, #userName#,#userId#, #description#)
+	</insert>
+	
+	<sql id="query_base_sql">
+		select picture.*
+		from cmt_picture picture, cmt_comment cmt
+		where picture.cmt_comment_id = cmt.cmt_comment_id 
+		<isNotEmpty property="isAudit"   prepend=" AND ">picture.IS_AUDIT=#isAudit#</isNotEmpty>
+		<isNotEmpty property="userName"  prepend=" AND ">picture.USER_NAME LIKE '%'||#userName#||'%'</isNotEmpty>
+		<isNotEmpty property="commentId" prepend=" AND ">picture.CMT_COMMENT_ID=#commentId#</isNotEmpty>
+		<isNotEmpty property="pictureId" prepend=" AND ">picture.CMT_PICTURE_ID=#pictureId#</isNotEmpty>
+		<isNotEmpty property="startDate" prepend=" AND ">cmt.CREATED_TIME &gt;= #startDate#</isNotEmpty>
+		<isNotEmpty property="endDate"   prepend=" AND ">cmt.CREATED_TIME &lt; #endDate# + 1</isNotEmpty>
+		order by cmt.CREATED_TIME DESC
+	</sql>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="cmtPictureMap">
+		select t2.*
+		from (
+			select t1.*, rownum as rn 
+			from (
+			<include refid="query_base_sql"/>
+			) t1
+			<dynamic prepend=" WHERE ">
+				    <isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+			</dynamic>	
+			) t2
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow"> rn &gt;= #_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="count" parameterClass="java.util.Map" resultClass="long">
+		select count(CMT_PICTURE_ID) from (
+			<include refid="query_base_sql"/>
+		)
+	</select>
+	
+	<update id="update" parameterClass="com.lvmama.comm.vo.comment.CmtPictureVO">
+		UPDATE CMT_PICTURE
+		<dynamic prepend=" SET ">	        
+	        <isNotEmpty property="isAudit" prepend=" , ">IS_AUDIT = #isAudit#</isNotEmpty>
+		</dynamic>
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty prepend=" AND " property="pictureId">CMT_PICTURE_ID = #pictureId#</isNotEmpty>
+		</dynamic>
+	</update>
+	
+	<select id="queryByKey"  resultMap="cmtPictureMap">
+		SELECT * FROM CMT_PICTURE WHERE CMT_PICTURE_ID = #pictureId#
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,60 @@
+<?page title="客服发放积分" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window title="客服发放积分" border="normal"
+		apply="com.lvmama.pet.web.shop.shopOrder.PutPointAction" id="win" width="500px">
+		<grid id="conditions">
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>客户名称:</hbox>
+					<hbox>
+						<label value="@{saction.users.userName }"></label>
+					</hbox>
+				</row>
+				<row>
+					<hbox>关联订单ID:</hbox>
+					<hbox>
+						<longbox id="orderId" value="@{saction.putPoint.orderId}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>发放事宜：</hbox>
+					<hbox>
+						<listbox rows="1" mold="select" id="things" model="@{saction.things}"
+							onSelect="saction.changeThings(self.selectedItem.value);">
+							<listitem self="@{each='channel'}" label="@{channel}"
+								value="@{channel}">
+							</listitem>
+						</listbox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>发放积分：</hbox>
+					<hbox>
+						<listbox rows="1" mold="select" id="points"
+							model="@{saction.points,load-after='things.onSelect'}" onSelect="saction.changPoint(self.selectedItem.value);">
+							<listitem self="@{each='channel'}" label="@{channel}"
+								value="@{channel}">
+							</listitem>
+						</listbox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>备注</hbox>
+					<hbox>
+						<textbox value="@{saction.putPoint.memo}" rows="6" cols="70" />
+					</hbox>
+				</row>
+				<row spans="2,0" align="right">
+					<hbox>
+						<button label="确认发放" id="send" width="100px" onClick="saction.save()" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+
+</zk>

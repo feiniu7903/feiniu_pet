@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_FAX_TEMPLATE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComFaxTemplate" >
+    <result column="TEMPLATE_ID" property="templateId" />
+    <result column="TEMPLATE_NAME" property="templateName" />
+    <result column="FILE_NAME" property="fileName" />
+  </resultMap>
+  <select id="selectComFaxTemplateList" resultMap="BaseResultMap">
+    select COM_FAX_TEMPLATE.* from COM_FAX_TEMPLATE
+  </select>
+  <select id="selectByTemplateId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComFaxTemplate">
+    select COM_FAX_TEMPLATE.* from COM_FAX_TEMPLATE where TEMPLATE_ID = #templateId:VARCHAR#
+  </select>
+</sqlMap>

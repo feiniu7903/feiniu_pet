@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SUP_PERFORM_TARGET" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.sup.SupPerformTarget" >
+    <result column="TARGET_ID" property="targetId" />
+    <result column="NAME" property="name" />
+    <result column="MEMO" property="memo" />
+    <result column="ADDRESS" property="address" />
+    <result column="OPEN_TIME" property="openTime" />
+    <result column="CLOSE_TIME" property="closeTime" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="SUPPLIER_ID" property="supplierId" />
+    <result column="PAYMENT_INFO" property="paymentInfo" />
+    <result column="PERFORM_INFO" property="performInfo" />
+    <result column="CERTIFICATE_TYPE" property="certificateType" />
+  </resultMap>
+  <sql id="findSupPerformTargetWhere">
+   		<isNotEmpty prepend="and" property="targetId">
+  			TARGET_ID=#targetId#
+   		</isNotEmpty>
+   		<isNotEmpty prepend="and" property="supplierId">
+  			SUPPLIER_ID=#supplierId#
+   		</isNotEmpty>
+   		<isNotEmpty prepend="and" property="name">
+   			NAME like '%$name$%'
+   		</isNotEmpty>
+   		<isNotEmpty prepend="and" property="beginDate">
+   			<![CDATA[
+  			CREATE_TIME >=to_date(#beginDate#,'yyyy-MM-dd hh24:mi:ss')
+  			]]>
+   		</isNotEmpty>
+   		<isNotEmpty prepend="and" property="endDate">
+   			<![CDATA[
+  			CREATE_TIME <=to_date(#endDate#,'yyyy-MM-dd hh24:mi:ss')
+  			]]>
+   		</isNotEmpty>
+  </sql>
+
+  <select id="selectByParams" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+  		SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+    select * from (select * from SUP_PERFORM_TARGET where VALID='Y' <include refid="findSupPerformTargetWhere"/> order by TARGET_ID DESC)
+		) T WHERE ROWNUM &lt;= #_endRow#
+		)
+		WHERE ROWNUM1 &gt;=#_startRow#
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.sup.SupPerformTarget" >
+    select *
+    from SUP_PERFORM_TARGET
+    where TARGET_ID = #targetId# and VALID='Y'
+  </select>
+   
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.sup.SupPerformTarget" >
+    <selectKey resultClass="java.lang.Long" keyProperty="targetId" >
+              select SUP_PERFORM_TARGET_SEQ.nextval  as id  from  DUAL 
+    </selectKey>
+    insert into SUP_PERFORM_TARGET (TARGET_ID, NAME, MEMO, ADDRESS, OPEN_TIME, CLOSE_TIME, SUPPLIER_ID,PAYMENT_INFO,
+    PERFORM_INFO,CERTIFICATE_TYPE, CREATE_TIME,VALID,ORG_ID)
+    values (#targetId#, #name#, #memo#, #address#,
+      #openTime#, #closeTime#,#supplierId#,#paymentInfo#,#performInfo#, #certificateType#, sysdate,'Y',#orgId#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.sup.SupPerformTarget" >
+    update SUP_PERFORM_TARGET
+    set NAME = #name#,
+      MEMO = #memo#,
+      ADDRESS = #address#,
+      OPEN_TIME = #openTime#,
+      CLOSE_TIME = #closeTime#,
+      CREATE_TIME = #createTime#,
+      PAYMENT_INFO = #paymentInfo#,
+      PERFORM_INFO = #performInfo#,
+      CERTIFICATE_TYPE = #certificateType#
+    where TARGET_ID = #targetId#
+  </update>
+  <update id="markIsValid" parameterClass="java.util.Map">
+  	update SUP_PERFORM_TARGET set VALID='N' where TARGET_ID = #targetId#
+  </update>
+
+  <select id="selectRowCount" resultClass="java.lang.Integer">
+  	  select count(*) from (select * from SUP_PERFORM_TARGET where VALID='Y' <include refid="findSupPerformTargetWhere"/> order by TARGET_ID DESC)
+    where rownum <![CDATA[<51]]>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.sup.SupPerformTarget" >
+    delete from SUP_PERFORM_TARGET
+    where TARGET_ID = #targetId#
+  </delete>
+  
+   <select id="selectMetaPerformByMetaProductId" resultMap="BaseResultMap">
+	  	select t.* from META_PERFORM p, SUP_PERFORM_TARGET t
+		where p.TARGET_ID = t.TARGET_ID 
+		and p.META_PRODUCT_ID = #metaProductId# 
+		and p.biz_type=#bizType#
+		and t.VALID='Y'
+  </select>
+</sqlMap>

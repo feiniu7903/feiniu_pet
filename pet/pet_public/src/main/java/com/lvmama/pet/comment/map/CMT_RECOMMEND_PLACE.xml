@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_RECOMMEND_PLACE">
+    <resultMap class="com.lvmama.comm.pet.po.comment.CmtRecommendPlace" id="cmtRecommendPlace" >
+    	<result property="placeId" column="PLACE_ID"/>
+		<result property="cmtRecommendPlaceId" column="CMT_RECOMMEND_PALCE_ID"/>
+		<result property="action" column="ACTION"/>
+    </resultMap>
+	<select id="queryRecommendPlace" resultMap="cmtRecommendPlace">
+		SELECT *
+		  FROM CMT_RECOMMEND_PALCE P
+		 ORDER BY CMT_RECOMMEND_PALCE_ID
+	</select>
+	<update id="updateRecommend" parameterClass="com.lvmama.comm.pet.po.comment.CmtRecommendPlace">
+	UPDATE CMT_RECOMMEND_PALCE
+       SET PLACE_ID = #placeId#, ACTION =#action#
+     WHERE CMT_RECOMMEND_PALCE_ID =#cmtRecommendPlaceId#
+	</update>
+</sqlMap>

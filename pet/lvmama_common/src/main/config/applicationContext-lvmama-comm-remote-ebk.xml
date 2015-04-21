@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<bean id="ebkProductReportService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProductReportService" />
+        <property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProductReportService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+	<bean id="ebkUserService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkUserService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.eplace.EbkUserService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkPerformLogService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkPerformLogService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.eplace.EbkPerformLogService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkUserTargetService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkUserTargetService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.eplace.EbkUserTargetService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkPermissionService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkPermissionService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.eplace.EbkPermissionService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+  
+	<bean id="ebkUserPermissionService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkUserPermissionService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.eplace.EbkUserPermissionService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+
+	<bean id="ebkTaskService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkTaskService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkTaskService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	
+	<!-- EBooking公告Service -->
+	<bean id="ebkAnnouncementService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkAnnouncementService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkAnnouncementService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+
+	<!-- EBooking房价维护Service -->
+	<bean id="ebkHousePriceService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkHousePriceService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkHousePriceService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	
+    <bean id="ebkFaxTaskService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkFaxTaskService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkFaxTaskService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	
+	<bean id="ebkProdProductService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdProductService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdProductService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkProdImportService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdImportService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdImportService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean> 
+	<bean id="ebkProdSnapshotService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdSnapshotService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdSnapshotService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkProdPlaceService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdPlaceService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdPlaceService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkProdModelPropertyService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdModelPropertyService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdModelPropertyService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkProductService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProductService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProductService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkProdTargetService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdTargetService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdTargetService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkProdContentService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdContentService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdContentService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkProdRejectInfoService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdRejectInfoService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdRejectInfoService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkProdJourneyService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdJourneyService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdJourneyService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<!-- ebooking 多行程service -->
+	<bean id="ebkMultiJourneyService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkMultiJourneyService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkMultiJourneyService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkProdTimePriceService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdTimePriceService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdTimePriceService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkProdBranchService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdBranchService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdBranchService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkProdRelationService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdRelationService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdRelationService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="ebkProdAuditService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/ebkProdAuditService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdAuditService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	<bean id="groupTravelTemplateService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superPublic.serviceUrl}/groupTravelTemplateService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.GroupTravelTemplateService"/>
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true"/>
+	</bean>
+	
+</beans>

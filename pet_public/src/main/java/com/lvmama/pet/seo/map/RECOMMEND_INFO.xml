@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="RECOMMEND_INFO" >
+  <typeAlias alias="recommendInfo" type="com.lvmama.comm.pet.po.seo.RecommendInfo" />
+  <resultMap id="BaseResultMap" class="recommendInfo" >
+    <result column="RECOMMEND_INFO_ID" property="recommendInfoId" />
+    <result column="RECOMMEND_BLOCK_ID" property="recommendBlockId" />
+    <result column="PARENT_RECOMMEND_BLOCK_ID" property="parentRecommendBlockId" />
+    <result column="DATA_CODE" property="dataCode" />
+    <result column="TITLE" property="title" />
+    <result column="URL" property="url" />
+    <result column="IMG_URL" property="imgUrl" />
+    <result column="MEMBER_PRICE" property="memberPrice" />
+    <result column="MARKET_PRICE" property="marketPrice" />
+    <result column="NUM" property="num" />
+    <result column="SEQ_NUM" property="seq" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="UPDATE_TIME" property="updateTime" />
+    <result column="RECOMM_OBJECT_ID" property="recommObjectId" />
+    <result column="REMARK" property="remark" />
+    <result column="CASH_REFUND" property="cashRefund" />
+    <result column="STATUS" property="status" />
+    <result column="BAK_WORD1" property="bakWord1" />
+    <result column="BAK_WORD2" property="bakWord2" />
+    <result column="BAK_WORD3" property="bakWord3" />
+    <result column="BAK_WORD4" property="bakWord4" />
+    <result column="BAK_WORD5" property="bakWord5" />
+    <result column="BAK_WORD6" property="bakWord6" />
+    <result column="BAK_WORD7" property="bakWord7" />
+    <result column="BAK_WORD8" property="bakWord8" />
+    <result column="BAK_WORD9" property="bakWord9" />
+    <result column="BAK_WORD10" property="bakWord10" />
+  </resultMap>
+  <resultMap id="PlaceBaseResultMap" class="recommendInfo"  extends="BaseResultMap">
+    <result column="CMT_NUM" property="cmtNum" />
+    <result column="PLACE_ID" property="placeId" />
+    <result column="CMT_AVG_SCORE" property="cmtAvgScore" />
+    <result column="HOTEL_STAR" property="hotelStar"/>
+   </resultMap>
+  
+  <sql id="queryRecommendInfoByParamWhere">
+  <dynamic prepend="where" >
+      <isNotEmpty prepend="and" property="recommendInfoId" >
+        RECOMMEND_INFO_ID = #recommendInfoId#
+      </isNotEmpty>
+      <isGreaterThan prepend="and" property="recommendBlockId" compareValue="0">
+   		RECOMMEND_BLOCK_ID=#recommendBlockId#
+   	  </isGreaterThan>
+      <isNotEmpty prepend="and" property="parentRecommendBlockId" >
+        PARENT_RECOMMEND_BLOCK_ID = #parentRecommendBlockId#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="dataCode" >
+        DATA_CODE = #dataCode#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="title" >
+        TITLE = #title#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="url" >
+        URL = #url#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="imgUrl" >
+        IMG_URL = #imgUrl#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="memberPrice" >
+        MEMBER_PRICE = #memberPrice#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="marketPrice" >
+        MARKET_PRICE = #marketPrice#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="num" >
+        NUM = #num#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="seq" >
+        SEQ_NUM = #seq#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="updateTime" >
+        UPDATE_TIME = #updateTime#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="recommObjectId" >
+        RECOMM_OBJECT_ID = #recommObjectId#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="remark" >
+        REMARK = #remark#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="cashRefund" >
+        CASH_REFUND = #cashRefund#
+      </isNotEmpty>
+    </dynamic>
+    order by SEQ_NUM desc,RECOMMEND_INFO_ID desc
+  </sql>
+  
+  <sql id="queryRecommendInfoByDataCodeWhere">
+  <dynamic prepend="where" >
+      <isNotEmpty prepend="and" property="recommendInfoId" >
+        RECOMMEND_INFO_ID = #recommendInfoId#
+      </isNotEmpty>
+      <isGreaterThan prepend="and" property="recommendBlockId" compareValue="0">
+   		RECOMMEND_BLOCK_ID=#recommendBlockId#
+   	  </isGreaterThan>
+      <isNotEmpty prepend="and" property="parentRecommendBlockId" >
+        PARENT_RECOMMEND_BLOCK_ID = #parentRecommendBlockId#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="dataCode" >
+        DATA_CODE in ($dataCode$)
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="title" >
+        TITLE = #title#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="url" >
+        URL = #url#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="imgUrl" >
+        IMG_URL = #imgUrl#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="memberPrice" >
+        MEMBER_PRICE = #memberPrice#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="marketPrice" >
+        MARKET_PRICE = #marketPrice#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="num" >
+        NUM = #num#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="seq" >
+        SEQ_NUM = #seq#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="updateTime" >
+        UPDATE_TIME = #updateTime#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="recommObjectId" >
+        RECOMM_OBJECT_ID = #recommObjectId#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="remark" >
+        REMARK = #remark#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="cashRefund" >
+        CASH_REFUND = #cashRefund#
+      </isNotEmpty>
+    </dynamic>
+    order by SEQ_NUM desc,RECOMMEND_INFO_ID desc
+  </sql>
+
+  <sql id="queryRecommendInfoByParamField">
+      RECOMMEND_INFO_ID, RECOMMEND_BLOCK_ID, PARENT_RECOMMEND_BLOCK_ID, DATA_CODE, TITLE, URL,
+      IMG_URL, MEMBER_PRICE, MARKET_PRICE, NUM, SEQ_NUM, CREATE_TIME, UPDATE_TIME, RECOMM_OBJECT_ID,
+      REMARK, CASH_REFUND, STATUS, BAK_WORD1, BAK_WORD2, BAK_WORD3, BAK_WORD4, BAK_WORD5, BAK_WORD6,
+      BAK_WORD7, BAK_WORD8, BAK_WORD9, BAK_WORD10
+  </sql>
+  
+  <sql id="queryRecommendInfoByNoPriceField">
+      ri.RECOMMEND_INFO_ID, ri.RECOMMEND_BLOCK_ID, ri.PARENT_RECOMMEND_BLOCK_ID, ri.DATA_CODE, ri.TITLE, ri.URL,
+      ri.IMG_URL, ri.NUM, ri.SEQ_NUM, ri.CREATE_TIME, ri.UPDATE_TIME, ri.RECOMM_OBJECT_ID,
+      ri.REMARK, ri.CASH_REFUND, ri.BAK_WORD1, ri.BAK_WORD2, ri.BAK_WORD3, ri.BAK_WORD4, ri.BAK_WORD5, ri.BAK_WORD6,
+      ri.BAK_WORD7, ri.BAK_WORD8, ri.BAK_WORD9, ri.BAK_WORD10
+  </sql>
+  
+    <!-- 查询推荐产品（包含其他类型） -->
+  <select id="queryRecommendInfoByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+    SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+         select <include refid="queryRecommendInfoByParamField"/> from RECOMMEND_INFO
+         <include refid="queryRecommendInfoByParamWhere"/>
+       ) A
+       <dynamic prepend="where">
+		<isNotEmpty property="endRows" prepend="and">
+			ROWNUM &lt;= #endRows#
+		</isNotEmpty>
+	</dynamic>
+      )
+	<dynamic prepend="where">
+	 <isNotEmpty property="startRows" prepend="and">
+		rn &gt;= #startRows#
+	 </isNotEmpty>		
+	</dynamic>
+  </select>
+	
+	<!-- 产品类型 -->
+    <select id="queryRecommendInfoAndProductByParam" resultMap="BaseResultMap">
+    SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+			select distinct * from (
+			  select <include refid="queryRecommendInfoByNoPriceField" />,psi.sell_price as MEMBER_PRICE,psi.market_price,
+			  (CASE WHEN psi.is_valid='Y' and psi.on_line='true'  and psi.is_hid='Y' THEN 'true' ELSE 'false' END) as status
+			  from recommend_info ri
+			  left join product_search_info psi
+			    on ri.recomm_object_id = psi.product_id
+			    where ri.recomm_object_id is not null
+			    <isEqual property="status" compareValue="true">
+			      and psi.is_valid='Y' and psi.on_line='true' and psi.is_hid='Y'
+			    </isEqual>
+			)
+			<include refid="queryRecommendInfoByParamWhere"/>
+		) A
+       <dynamic prepend="where">
+		<isNotEmpty property="endRows" prepend="and">
+			ROWNUM &lt;= #endRows#
+		</isNotEmpty>
+	  </dynamic>
+      )
+	<dynamic prepend="where">
+	 <isNotEmpty property="startRows" prepend="and">
+		rn &gt;= #startRows#
+	 </isNotEmpty>		
+	</dynamic>
+  </select>
+  
+  
+  <select id="queryRecommendInfoByDataCode" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+    SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+         select <include refid="queryRecommendInfoByParamField"/> from RECOMMEND_INFO
+         <include refid="queryRecommendInfoByDataCodeWhere"/>
+       ) A
+       <dynamic prepend="where">
+		<isNotEmpty property="endRows" prepend="and">
+			ROWNUM &lt;= #endRows#
+		</isNotEmpty>
+	</dynamic>
+      )
+	<dynamic prepend="where">
+	 <isNotEmpty property="startRows" prepend="and">
+		rn &gt;= #startRows#
+	 </isNotEmpty>		
+	</dynamic>
+  </select>
+  
+    <!-- 产品类型 -->
+    <select id="queryRecommendInfoAndProductByDataCode" resultMap="BaseResultMap">
+    SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+			select * from (
+			  select <include refid="queryRecommendInfoByNoPriceField" />,psi.sell_price as MEMBER_PRICE,psi.market_price,
+			  (CASE WHEN psi.is_valid='Y' and psi.on_line='true'  and psi.is_hid='Y' THEN 'true' ELSE 'false' END) as status
+			  from recommend_info ri
+			  left join product_search_info psi
+			    on ri.recomm_object_id = psi.product_id
+			    where ri.recomm_object_id is not null
+			    <isEqual property="status" compareValue="true">
+			      and psi.is_valid='Y' and psi.on_line='true' and psi.is_hid='Y'
+			    </isEqual>
+			)
+			<include refid="queryRecommendInfoByDataCodeWhere"/>
+		) A
+       <dynamic prepend="where">
+		<isNotEmpty property="endRows" prepend="and">
+			ROWNUM &lt;= #endRows#
+		</isNotEmpty>
+	  </dynamic>
+      )
+	<dynamic prepend="where">
+	 <isNotEmpty property="startRows" prepend="and">
+		rn &gt;= #startRows#
+	 </isNotEmpty>		
+	</dynamic>
+  </select>
+  
+  <!-- Place类型 -->
+    <select id="queryRecommendInfoAndPlaceByDataCode" resultMap="PlaceBaseResultMap">
+    SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+			select * from (
+			  select <include refid="queryRecommendInfoByNoPriceField" />,psi.products_price as MEMBER_PRICE,psi.market_price,ri.status,
+			  psi.cmt_num,psi.place_id,psi.CMT_AVG_SCORE
+			  <isNotEmpty  property="isHotel" prepend="">
+			  	<isEqual property="isHotel" compareValue="true" prepend=",">
+			  		(SELECT PH.HOTEL_STAR FROM PLACE_HOTEL PH WHERE PH.PLACE_ID = ri.recomm_object_id) as hotel_star
+			  	</isEqual>
+			  	<isNotEqual property="isHotel" compareValue="true" prepend=",">
+			  	  '' AS HOTEL_STAR
+			  	</isNotEqual>
+			  </isNotEmpty>
+			  <isEmpty property="isHotel" prepend=",">
+			  '' AS HOTEL_STAR
+			  </isEmpty>
+			  from recommend_info ri,place_search_info psi
+			  WHERE 
+			  	ri.recomm_object_id = psi.place_id
+			 	and ri.recomm_object_id is not null
+			    and psi.is_valid='Y'
+			)
+			<include refid="queryRecommendInfoByDataCodeWhere"/>
+		) A
+       <dynamic prepend="where">
+		<isNotEmpty property="endRows" prepend="and">
+			ROWNUM &lt;= #endRows#
+		</isNotEmpty>
+	  </dynamic>
+      )
+	<dynamic prepend="where">
+	 <isNotEmpty property="startRows" prepend="and">
+		rn &gt;= #startRows#
+	 </isNotEmpty>		
+	</dynamic>
+  </select>
+	
+	<!-- Place类型 -->
+    <select id="queryRecommendInfoAndPlaceByParam" resultMap="PlaceBaseResultMap">
+    SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+			select * from (
+			  select <include refid="queryRecommendInfoByNoPriceField" />,psi.products_price as MEMBER_PRICE,psi.market_price,ri.status,
+			  psi.cmt_num,psi.place_id,psi.CMT_AVG_SCORE
+			  <isNotEmpty  property="isHotel" prepend="">
+			  	<isEqual property="isHotel" compareValue="true" prepend=",">
+			  		(SELECT PH.HOTEL_STAR FROM PLACE_HOTEL PH WHERE PH.PLACE_ID = ri.recomm_object_id) as hotel_star
+			  	</isEqual>
+			  	<isNotEqual property="isHotel" compareValue="true" prepend=",">
+			  	  '' AS HOTEL_STAR
+			  	</isNotEqual>
+			  </isNotEmpty>
+			  <isEmpty property="isHotel" prepend=",">
+			  '' AS HOTEL_STAR
+			  </isEmpty>
+			  from recommend_info ri,place_search_info psi
+			  WHERE 
+			  	ri.recomm_object_id = psi.place_id
+			 	and ri.recomm_object_id is not null
+			    and psi.is_valid='Y'
+			)
+			<include refid="queryRecommendInfoByParamWhere"/>
+		) A
+       <dynamic prepend="where">
+		<isNotEmpty property="endRows" prepend="and">
+			ROWNUM &lt;= #endRows#
+		</isNotEmpty>
+	  </dynamic>
+      )
+	<dynamic prepend="where">
+	 <isNotEmpty property="startRows" prepend="and">
+		rn &gt;= #startRows#
+	 </isNotEmpty>		
+	</dynamic>
+  </select>
+  
+  <select id="countRecommendInfoByParam" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+    select count(*) from RECOMMEND_INFO
+    <include refid="queryRecommendInfoByParamWhere"/>
+  </select>
+  
+  <delete id="deleteRecommendInfoByParam"  parameterClass="java.util.HashMap">
+    delete from RECOMMEND_INFO 
+    <dynamic prepend="where">
+		<isNotEmpty property="recommendInfoId" prepend="and">
+			RECOMMEND_INFO_ID = #recommendInfoId#
+		</isNotEmpty>
+		<isNotEmpty property="recommendBlockId" prepend="and">
+			RECOMMEND_BLOCK_ID = #recommendBlockId#
+		</isNotEmpty>
+	  </dynamic>
+  </delete>
+  
+  <delete id="deleteRecommendInfoByBlockIdAndSon" parameterClass="java.lang.Long" >
+    delete from RECOMMEND_INFO where RECOMMEND_BLOCK_ID in(select RECOMMEND_BLOCK_ID from RECOMMEND_BLOCK where PARENT_RECOMMEND_BLOCK_ID= #recommendBlockId#)
+  </delete>
+  
+  <insert id="insertRecommendInfo" parameterClass="recommendInfo" >
+    <selectKey keyProperty="recommendInfoId" resultClass="java.lang.Long">
+		select RECOMMEND_INFO_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into RECOMMEND_INFO
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="recommendInfoId" >
+        RECOMMEND_INFO_ID
+      </isNotNull>
+      <isNotNull prepend="," property="recommendBlockId" >
+        RECOMMEND_BLOCK_ID
+      </isNotNull>
+      <isNotNull prepend="," property="parentRecommendBlockId" >
+        PARENT_RECOMMEND_BLOCK_ID
+      </isNotNull>
+      <isNotNull prepend="," property="dataCode" >
+        DATA_CODE
+      </isNotNull>
+      <isNotNull prepend="," property="title" >
+        TITLE
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+        URL
+      </isNotNull>
+      <isNotNull prepend="," property="imgUrl" >
+        IMG_URL
+      </isNotNull>
+      <isNotNull prepend="," property="memberPrice" >
+        MEMBER_PRICE
+      </isNotNull>
+      <isNotNull prepend="," property="marketPrice" >
+        MARKET_PRICE
+      </isNotNull>
+      <isNotNull prepend="," property="num" >
+        NUM
+      </isNotNull>
+      <isNotNull prepend="," property="seq" >
+        SEQ_NUM
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime" >
+        UPDATE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="recommObjectId" >
+        RECOMM_OBJECT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK
+      </isNotNull>
+      <isNotNull prepend="," property="cashRefund" >
+        CASH_REFUND
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord1" >
+        BAK_WORD1
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord2" >
+        BAK_WORD2
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord3" >
+        BAK_WORD3
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord4" >
+        BAK_WORD4
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord5" >
+        BAK_WORD5
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord6" >
+        BAK_WORD6
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord7" >
+        BAK_WORD7
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord8" >
+        BAK_WORD8
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord9" >
+        BAK_WORD9
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord10" >
+        BAK_WORD10
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="recommendInfoId" >
+        #recommendInfoId#
+      </isNotNull>
+      <isNotNull prepend="," property="recommendBlockId" >
+        #recommendBlockId#
+      </isNotNull>
+      <isNotNull prepend="," property="parentRecommendBlockId" >
+        #parentRecommendBlockId#
+      </isNotNull>
+      <isNotNull prepend="," property="dataCode" >
+        #dataCode#
+      </isNotNull>
+      <isNotNull prepend="," property="title" >
+        #title#
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+        #url#
+      </isNotNull>
+      <isNotNull prepend="," property="imgUrl" >
+        #imgUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="memberPrice" >
+        #memberPrice#
+      </isNotNull>
+      <isNotNull prepend="," property="marketPrice" >
+        #marketPrice#
+      </isNotNull>
+      <isNotNull prepend="," property="num" >
+        #num#
+      </isNotNull>
+      <isNotNull prepend="," property="seq" >
+        #seq#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime" >
+        #updateTime#
+      </isNotNull>
+      <isNotNull prepend="," property="recommObjectId" >
+        #recommObjectId#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        #remark#
+      </isNotNull>
+      <isNotNull prepend="," property="cashRefund" >
+        #cashRefund#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        #status#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord1" >
+        #bakWord1#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord2" >
+        #bakWord2#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord3" >
+        #bakWord3#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord4" >
+        #bakWord4#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord5" >
+        #bakWord5#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord6" >
+        #bakWord6#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord7" >
+        #bakWord7#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord8" >
+        #bakWord8#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord9" >
+        #bakWord9#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord10" >
+        #bakWord10#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="updateRecommendInfo" parameterClass="recommendInfo" >
+    update RECOMMEND_INFO
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="recommendBlockId" >
+        RECOMMEND_BLOCK_ID = #recommendBlockId#
+      </isNotNull>
+      <isNotNull prepend="," property="parentRecommendBlockId" >
+        PARENT_RECOMMEND_BLOCK_ID = #parentRecommendBlockId#
+      </isNotNull>
+      <isNotNull prepend="," property="dataCode" >
+        DATA_CODE = #dataCode#
+      </isNotNull>
+      <isNotNull prepend="," property="title" >
+        TITLE = #title#
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+        URL = #url#
+      </isNotNull>
+      <isNotNull prepend="," property="imgUrl" >
+        IMG_URL = #imgUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="num" >
+        NUM = #num#
+      </isNotNull>
+      <isNotNull prepend="," property="seq" >
+        SEQ_NUM = #seq#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime" >
+        UPDATE_TIME = #updateTime#
+      </isNotNull>
+      <isNotNull prepend="," property="recommObjectId" >
+        RECOMM_OBJECT_ID = #recommObjectId#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK = #remark#
+      </isNotNull>
+      <isNotNull prepend="," property="cashRefund" >
+        CASH_REFUND = #cashRefund#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS = #status#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord1" >
+        BAK_WORD1 = #bakWord1#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord2" >
+        BAK_WORD2 = #bakWord2#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord3" >
+        BAK_WORD3 = #bakWord3#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord4" >
+        BAK_WORD4 = #bakWord4#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord5" >
+        BAK_WORD5 = #bakWord5#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord6" >
+        BAK_WORD6 = #bakWord6#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord7" >
+        BAK_WORD7 = #bakWord7#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord8" >
+        BAK_WORD8 = #bakWord8#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord9" >
+        BAK_WORD9 = #bakWord9#
+      </isNotNull>
+      <isNotNull prepend="," property="bakWord10" >
+        BAK_WORD10 = #bakWord10#
+      </isNotNull>
+    </dynamic>
+    where RECOMMEND_INFO_ID = #recommendInfoId#
+  </update>
+</sqlMap>

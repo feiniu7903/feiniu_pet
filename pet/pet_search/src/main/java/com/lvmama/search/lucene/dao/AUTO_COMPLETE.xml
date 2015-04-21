@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="AutoComplete">
+	<resultMap id="autoCompletePlace" class="com.lvmama.comm.search.vo.AutoCompletePlaceDto">
+		<result property="name" column="NAME" nullValue="" />
+		<result property="hfkw" column="HFKW" nullValue="" />
+		<result property="destTagsName" column="DEST_TAGS_NAME" nullValue="" />
+		<result property="destSubjects" column="DEST_SUBJECTS" nullValue="0" />
+		<result property="destPersentStr" column="DEST_PERSENT_STR" nullValue="" />
+		<result property="topic" column="TOPIC" nullValue="" />
+		<result property="tagsName" column="TAGS_NAME" nullValue="" />
+		<result property="productAlltoPlaceContent" column="PRODUCT_ALLTO_PLACE_CONTENT" nullValue="" />
+		<result property="placeKeywordBind" column="PLACE_KEYWORD_BIND" nullValue="" />
+		<result property="departArea" column="DEPART_AREA" nullValue="" />
+		<result property="seq" column="SEQ_NUM" nullValue="0" />
+		<result property="shortId" column="PLACE_ID" nullValue="" />
+		<result property="stage" column="STAGE" nullValue="" />
+		<result property="pinyin" column="PIN_YIN" nullValue="" />
+	</resultMap>
+	
+	<resultMap class="com.lvmama.comm.search.vo.CitySubject" id="citySubject">
+	    	<result property="cityId" column="city_id" />
+		<result property="subject" column="subject"  />
+	</resultMap>
+	 <!--中文~pingyin~py字符串算法 -->
+	 <sql id="nameWithPinyin">
+	 select  wmsys.wm_concat( sp.object_name||'~'||sp.pin_yin ||'~'|| sp.jian_pin)
+                      		from lvmama_pet.place_search_pinyin sp
+                        		where psi.place_id = sp.object_id
+                          			and sp.object_type = 'PLACE_NAME'
+	 </sql>
+
+
+	<!--  手机栏目下拉提示-->
+	<select id="getClient_autoCompletePlace" resultMap="autoCompletePlace"  >
+		select distinct  psi.PLACE_ID , psi.stage , psi.pin_yin , (<include refid="nameWithPinyin"/>) name ,'' HFKW,'' DEST_TAGS_NAME,psi.dest_subjects ,'' DEST_PERSENT_STR  , psi.SEQ_NUM  ,'' TOPIC ,'' TAGS_NAME ,'' PRODUCT_ALLTO_PLACE_CONTENT , '' PLACE_KEYWORD_BIND , '' DEPART_AREA 
+		from lvmama_pet.place_search_info psi
+		where ( psi.ticket_num >0  or psi.hotle_num>0 )
+	</select>
+	
+	<!--  手机栏目下拉提示/根据STAGE=1,2,3筛选 -->
+	<select id="getClient_autoCompletePlaceByStage" resultMap="autoCompletePlace"  >
+		select distinct  psi.PLACE_ID , psi.stage , psi.pin_yin , (<include refid="nameWithPinyin"/>) name ,'' HFKW,'' DEST_TAGS_NAME,psi.dest_subjects ,'' DEST_PERSENT_STR  , psi.SEQ_NUM  ,'' TOPIC ,'' TAGS_NAME ,'' PRODUCT_ALLTO_PLACE_CONTENT , '' PLACE_KEYWORD_BIND , '' DEPART_AREA 
+		from lvmama_pet.place_search_info psi
+		where ( psi.ticket_num >0  or psi.hotle_num>0 )
+		and  psi.stage= #stage#
+	</select>
+	
+	 <!-- 手机栏目下拉提示/根据STAGE=1,2,3 ,CHANNEL ,PRODUCTTYPE 筛选 -->
+	<select id="getClient_getPlaceAutoComplete" resultMap="autoCompletePlace"
+		parameterClass="java.util.Map">
+		select distinct  psi.PLACE_ID , psi.stage , psi.pin_yin , (<include refid="nameWithPinyin"/>) name ,'' HFKW,'' DEST_TAGS_NAME,psi.dest_subjects ,'' DEST_PERSENT_STR  , psi.seq_num  ,'' TOPIC ,'' TAGS_NAME ,'' PRODUCT_ALLTO_PLACE_CONTENT , '' PLACE_KEYWORD_BIND , '' DEPART_AREA 
+		from lvmama_pet.place_search_info psi
+		where 1=1 
+		<isNotEmpty prepend="and" property="stage">
+			psi.STAGE IN
+			<iterate property="stage" open="(" close=")" conjunction=",">
+				#stage[]#
+			</iterate>
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="productType">
+     		<iterate property="productType" conjunction=" OR " open="(" close=")"> 
+     		$productType[]$ > 0     		
+     		</iterate>
+     	</isNotEmpty>		
+	</select>   
+	
+	
+	<!-- 手机栏目线路下拉提示/根据,CHANNEL ,PRODUCTTYPE,subProdutcType 筛选 -->
+	<select id="getClient_getRouteAutoComplete" resultMap="autoCompletePlace">
+		select  distinct  ppsi.play_area||','||ppsi.play_features||','||ppsi.play_brand||','||ppsi.route_topic NAME ,
+		'' HFKW ,'' DEST_TAGS_NAME , '' DEST_SUBJECTS ,'' DEST_PERSENT_STR ,psi.product_id PLACE_ID,'' PIN_YIN,'' STAGE , psi.topic,psi.tags_name ,psi.product_allto_place_content ,psi.place_keyword_bind	,psi.depart_area ,psi.seq_num
+		from lvmama_pet.product_search_info psi , lvmama_pet.product_property_search_info ppsi
+		where psi.product_id =ppsi.product_id
+		and psi.is_valid='Y'
+
+		and psi.channel like '%CLIENT%'
+		 <dynamic prepend="and" open="(" close=")">
+		     <isNotEmpty prepend="or" property="fromDest" >
+        		psi.from_dest like  '%' || #fromDest#|| '%'
+       		 </isNotEmpty>
+
+			 <isNotEmpty prepend="or" property="fromDest" >
+		        	psi.from_dest  is null
+		      </isNotEmpty>
+		  </dynamic>
+
+		<isNotEmpty prepend="and" property="productType">
+			 psi.product_type IN
+			<iterate property="productType" open="(" close=")" conjunction=",">
+				#productType[]#
+			</iterate>
+		</isNotEmpty> 
+		
+		<isNotEmpty prepend="and" property="subProductType">
+			psi.sub_product_type IN
+			<iterate property="subProductType" open="(" close=")" conjunction=",">
+				#subProductType[]#
+			</iterate>
+		</isNotEmpty>
+	</select>
+	
+	<select id="selectAllCityAllSubjects" parameterClass="java.util.Map" resultMap="citySubject">
+	     SELECT * FROM (
+	  	SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+	 		select ppd.parent_place_id as city_id ,s.subject_name as subject from com_subject s, 
+		place_search_info psi,place_place_dest ppd 
+		where 
+		(s.subject_name = psi.place_first_subject or s.subject_name = psi.place_second_subject)
+		<isNotEmpty prepend="and" property="hasTicket">
+    		 psi.ticket_num>0
+		</isNotEmpty> 
+		and ppd.place_id = psi.place_id and s.subject_type='PLACE'
+	 	) T 	 	
+	 	<dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_endRow">ROWNUM &lt;= #_endRow#</isNotEmpty>
+	 	</dynamic>
+	  )	
+	  <dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_startRow">ROWNUM1 &gt;=#_startRow#</isNotEmpty>
+	  </dynamic>
+	    
+	</select>
+	
+	<select id="countAllCityAllSubjects" resultClass="java.lang.Long" parameterClass="java.util.Map" >
+	    
+	    select count(*) subject from com_subject s, 
+		place_search_info psi,place_place_dest ppd 
+		where 
+		(s.subject_name = psi.place_first_subject or s.subject_name = psi.place_second_subject)
+		<isNotEmpty prepend="and" property="hasTicket">
+    		 psi.ticket_num>0
+		</isNotEmpty> 
+		and ppd.place_id = psi.place_id
+	</select>
+	
+	<!-- 手机栏目获得所有景点主题 ,仅STAGE=2,不包括酒店-->
+	<select id="getClient_subjectAll" resultMap="autoCompletePlace">
+			  select  distinct '' PLACE_ID  , '' STAGE  , ps.if_bold PIN_YIN, ps.subject_name||'~'||ps.subject_pinyin name,'' HFKW,'' DEST_TAGS_NAME,'' DEST_SUBJECTS ,'' DEST_PERSENT_STR  , ps.SEQ_NUM  ,'' TOPIC ,'' TAGS_NAME ,'' PRODUCT_ALLTO_PLACE_CONTENT , '' PLACE_KEYWORD_BIND , '' DEPART_AREA 
+					from lvmama_pet.com_subject ps
+					where (
+								ps.subject_name in (select distinct psi.place_first_subject from lvmama_pet.place_search_info psi where psi.is_valid='Y' and psi.stage =2 )
+								or ps.subject_name in (select distinct psi.place_second_subject from lvmama_pet.place_search_info psi where psi.is_valid='Y'   and psi.stage =2 )
+							)
+					and ps.subject_type = 'PLACE' 
+	</select>
+
+	<!-- 手机栏目获得制定城市的景点主题,仅STAGE=2,不包括酒店-->
+	<select id="getClient_subjectByCity" resultMap="autoCompletePlace">			  
+          select distinct '' PLACE_ID  , '' STAGE  , ps.if_bold PIN_YIN, ps.subject_name||'~'||ps.subject_pinyin name,'' HFKW,'' DEST_TAGS_NAME,'' DEST_SUBJECTS ,'' DEST_PERSENT_STR  , ps.SEQ_NUM  ,'' TOPIC ,'' TAGS_NAME ,'' PRODUCT_ALLTO_PLACE_CONTENT , '' PLACE_KEYWORD_BIND , '' DEPART_AREA 
+					from lvmama_pet.com_subject ps
+					where (
+							ps.subject_name in (select distinct psi.place_first_subject from lvmama_pet.place_search_info psi where psi.ticket_num>0 and   psi.is_valid = 'Y' and psi.parent_place_name_ids like '%,' || #cityId# || ',%' and psi.stage =2 )
+							or ps.subject_name in (select distinct psi.place_second_subject from lvmama_pet.place_search_info psi where psi.ticket_num>0 and psi.is_valid = 'Y' and psi.parent_place_name_ids like '%,' || #cityId# || ',%'   and psi.stage =2 )<!-- 注意更改存储过程,值前后加逗号 -->
+							)
+					and ps.subject_type = 'PLACE'         
+             </select>
+             
+	<!-- 手机栏目获得所以路线的主题/标红主题-->
+	<select id="getClient_routeSubjectAll" resultMap="autoCompletePlace">
+	       select distinct '' PLACE_ID  , '' STAGE  , ps.subject_pinyin PIN_YIN, ps.subject_name||'~'||ps.subject_pinyin name,'' HFKW,'' DEST_TAGS_NAME,'' DEST_SUBJECTS ,'' DEST_PERSENT_STR  , ps.SEQ_NUM  ,'' TOPIC ,'' TAGS_NAME ,'' PRODUCT_ALLTO_PLACE_CONTENT , '' PLACE_KEYWORD_BIND , '' DEPART_AREA 	
+			  from lvmama_pet.com_subject ps ,lvmama_pet.product_search_info psi ,lvmama_pet.product_property_search_info ppsi
+			  where psi.product_id =ppsi.product_id 
+			  and  INSTR( ppsi.route_topic  , ps.subject_name, 1, 1) > 0 
+			  and  psi.is_valid ='Y'
+			  and  psi.sub_product_type ='FREENESS'
+			  and  ps.subject_type = 'ROUTE'
+	</select>
+
+	<!-- 手机栏目获得制定城市下路线的主题/标红主题-->
+	<select id="getClient_routeSubjectByCity" resultMap="autoCompletePlace">
+			 select distinct '' PLACE_ID  , '' STAGE  , ps.subject_pinyin PIN_YIN, ps.subject_name||'~'||ps.subject_pinyin name,'' HFKW,'' DEST_TAGS_NAME,'' DEST_SUBJECTS ,'' DEST_PERSENT_STR  , ps.SEQ_NUM  ,'' TOPIC ,'' TAGS_NAME ,'' PRODUCT_ALLTO_PLACE_CONTENT , '' PLACE_KEYWORD_BIND , '' DEPART_AREA   
+			        from lvmama_pet.com_subject ps ,lvmama_pet.product_search_info psi ,lvmama_pet.product_property_search_info ppsi
+			        where psi.product_id =ppsi.product_id  
+			        and  INSTR( ppsi.route_topic  , ps.subject_name, 1, 1) > 0 
+			        and  psi.is_valid ='Y'
+			        and psi.sub_product_type ='FREENESS'
+			        and ps.subject_type = 'ROUTE'
+			        and psi.product_allto_place_ids like   '%' || #cityId# || '%' <!-- 注意更改存储过程,值前后加逗号 -->
+             </select>
+             	
+
+</sqlMap>

@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_COMMENT" >
+
+	<resultMap class="com.lvmama.comm.vo.comment.CommonCmtCommentVO" id="cmtCommentMap" groupBy="commentId">
+		<result property="commentId" column="CMT_COMMENT_ID"/>
+		<result property="placeId" column="PLACE_ID"/>
+		<result property="productId" column="PRODUCT_ID"/>
+		<result property="orderId" column="ORDER_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="isBest" column="IS_BEST"/>
+		<result property="isAudit" column="IS_AUDIT"/>
+		<result property="content" column="CONTENT"/>
+		<result property="cashRefund" column="CASH_REFUND"/>
+		<result property="usefulCount" column="USEFUL_COUNT"/>
+		<result property="cmtType" column="CMT_TYPE"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="replyCount" column="REPLY_COUNT"/>
+		<result property="auditTime" column="AUDIT_TIME"/>
+		<result property="isHide" column="IS_HIDE"/>
+		<result property="shamUsefulCount" column="SHAM_USEFUL_COUNT"/>
+		<result property="needManageAttention" column="NEED_MANAGE_ATTENTION"/>
+		<result property="lvmamaReplyCount" column="LVMAMA_REPLY_COUNT"/>
+		<result property="merchantReplyCount" column="MERCHANT_REPLY_COUNT"/>
+		<result property="createdTime" column="CREATED_TIME"/>
+		<result property="avgScore" column="AVG_SCORE"/>
+		<result property="pictureCount" column="PICTURE_COUNT"/>
+		<result property="cmtLatitudes" resultMap="CMT_COMMENT_LATITUDE.cmtLatitudeMap"/>
+		<result property="userImg" column="USER_IMG"/>
+		<result property="channel" column="CHANNEL"/>
+		<result property="cmtEffectType" column="CMT_EFFECT_TYPE"/>
+		<result property="isHasSensitivekey" column="IS_HAS_SENSITIVE_KEY"/>
+		<result property="reqIp" column="REQ_IP"/>
+		<result property="reviewStatus" column="REVIEWSTATUS"/>
+	</resultMap>
+	
+	<resultMap id="OrderAndComment"
+		class="com.lvmama.comm.bee.vo.OrderAndComment">
+		<result column="USER_ID" property="userId" />
+		<result column="USER_NAME" property="userName" />
+		<result column="COMMENT_ID" property="commentId" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="CREATED_TIME" property="createDate" />
+	</resultMap>
+	
+	<!-- CMT_COMMENT_ID,CONTENT,IS_HIDE,CREATED_TIME,REVIEWSTATUS  -->
+	<resultMap id="ReviewStatus"
+        class="com.lvmama.comm.vo.comment.CommonCmtCommentVO">
+        <result column="CMT_COMMENT_ID" property="commentId" />
+        <result column="CONTENT" property="content" />
+        <result column="IS_HIDE" property="isHide" />
+        <result column="CREATED_TIME" property="createdTime" />
+        <result column="REVIEWSTATUS" property="reviewStatus" />
+    </resultMap>
+	
+	<sql id="select_query_sql">
+	    (select COUNT(CMT_PICTURE_ID) from  CMT_PICTURE  P where P.CMT_COMMENT_ID = T1.CMT_COMMENT_ID) PICTURE_COUNT, 
+	     NVL2(T1.product_id, (select PCS.AVG_SCORE from CMT_TITLE_STATISTICS PCS where pcs.product_id = T1.product_id),
+            (select PCS.AVG_SCORE from CMT_TITLE_STATISTICS PCS where pcs.place_id = T1.place_id)) AVG_SCORE
+	</sql>
+	
+	<sql id="pageHeader">
+	     SELECT * FROM (
+	   SELECT A.*, ROWNUM RN FROM (
+	</sql>
+	
+	<sql id="pageFooter">
+	      ) A
+	    <dynamic prepend="where">
+	        <isNotEmpty property="endRows" prepend="and">
+	            ROWNUM &lt;= #endRows#
+	        </isNotEmpty>
+	    </dynamic>
+	      )
+	    <dynamic prepend="where">
+	     <isNotEmpty property="startRows" prepend="and">
+	        rn &gt;= #startRows#
+	     </isNotEmpty>      
+	    </dynamic>
+	</sql>
+	
+	<sql id="whereParamByReviewContent">
+	    <dynamic prepend="WHERE " >
+	        <isNotEmpty prepend="and " property="reviewStatus">is_Audit = #isAudit#</isNotEmpty> 
+	        <isNotEmpty prepend="and " property="reviewStatus">REVIEWSTATUS = #reviewStatus#</isNotEmpty> 
+	        <isNotEmpty prepend="and " property="startDate">CREATED_TIME&gt;#startDate#</isNotEmpty>
+	        <isNotEmpty prepend="and " property="endDate">CREATED_TIME&lt;#endDate#</isNotEmpty>
+        </dynamic>
+	</sql>
+	
+	
+	<sql id="base_union_query_sql">
+	    SELECT
+	    	CC.* 
+	    FROM
+	    	CMT_COMMENT CC
+	    <dynamic prepend="WHERE">
+			<isNotEmpty prepend=" AND " property="commentId">CC.CMT_COMMENT_ID = #commentId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="commentIds">CC.CMT_COMMENT_ID   in
+	            <iterate property="commentIds" open="(" close=")" conjunction="," > 
+	                #commentIds[]#
+	            </iterate> 
+	        </isNotEmpty>
+			<isNotEmpty prepend=" AND " property="placeId">CC.PLACE_ID = #placeId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="productId">CC.PRODUCT_ID = #productId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="orderId">CC.ORDER_ID = #orderId#</isNotEmpty>
+			<isEqual prepend=" AND " property="getPlaceCmts" compareValue = "Y">(CC.place_id is not null) AND (CC.PRODUCT_ID is null)</isEqual>
+			<isEqual prepend=" AND " property="getProductCmts" compareValue = "Y">CC.PRODUCT_ID is not null</isEqual>
+			<isNotEmpty prepend="AND" property="placeIds">
+	            CC.PLACE_ID in
+	            <iterate property="placeIds" open="(" close=")" conjunction="," > 
+	                #placeIds[]#
+	            </iterate> 
+	        </isNotEmpty>
+	        <isNotEmpty prepend=" AND " property="productIds">
+		            CC.PRODUCT_ID in
+		            <iterate property="productIds" open="(" close=")" conjunction="," > 
+		                #productIds[]#
+		            </iterate> 
+		     </isNotEmpty>
+		     
+		    <isNotEmpty prepend="AND" property="stage">
+	            CC.PLACE_ID in (SELECT place_id FROM CMT_TITLE_STATISTICS WHERE stage = #stage#)
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="productType">
+	            CC.product_id in (SELECT product_id FROM CMT_TITLE_STATISTICS WHERE PRODUCT_TYPE = #productType#)
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="subProductType">
+                CC.product_id in (SELECT cts.product_id
+								  FROM CMT_TITLE_STATISTICS cts
+								 WHERE cts.PRODUCT_TYPE = 'ROUTE'
+								   and cts.product_id in (SELECT psi.product_id
+								                            FROM product_search_info psi
+								                           where psi.sub_product_type = #subProductType#
+								                             and psi.is_valid = 'Y'))
+            </isNotEmpty>
+	        <isNotEmpty prepend=" AND " property="placeName">CC.place_id IN (SELECT place_id FROM CMT_TITLE_STATISTICS WHERE TITLE_NAME LIKE '%'||#placeName#||'%')</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="productName">CC.PRODUCT_ID IN (SELECT PRODUCT_ID FROM CMT_TITLE_STATISTICS WHERE TITLE_NAME LIKE '%'||#productName#||'%')</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="userId">CC.USER_ID = #userId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="notEqualUserId">CC.USER_ID &lt;&gt; #notEqualUserId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="isBest">CC.IS_BEST = #isBest# </isNotEmpty>
+			<isNotEmpty prepend=" AND " property="isAudit">CC.IS_AUDIT = #isAudit# </isNotEmpty>
+			<isNotEmpty property="audit7day" prepend=" AND ">cc.audit_time &gt; sysdate - 10</isNotEmpty>
+			<isNotEmpty property="lastest7day" prepend=" AND ">cc.CREATED_TIME &gt; sysdate - 10</isNotEmpty>
+			<isNotEmpty property="lastest3day" prepend=" AND ">cc.CREATED_TIME &gt; sysdate - 3</isNotEmpty>
+			<isNotEmpty property="lastest1day" prepend=" AND ">cc.CREATED_TIME &gt; sysdate - 1</isNotEmpty>
+			<isNotEmpty property="isAudits" prepend=" AND ">
+				<iterate property="isAudits" open="(" close=")" conjunction=" OR ">
+	        		CC.IS_AUDIT = #isAudits[]# 
+	    		</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="cmtType">CC.CMT_TYPE = #cmtType#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="userName">CC.USER_NAME LIKE '%'||#userName#||'%'</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="excludeCommendId">CC.CMT_COMMENT_ID != #excludeCommendId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="isHide">CC.IS_HIDE = #isHide# </isNotEmpty>
+			<isNotEmpty prepend=" AND " property="needManageAttention">CC.NEED_MANAGE_ATTENTION = #needManageAttention# </isNotEmpty>
+			<isNotEmpty prepend=" AND " property="hasReply">CC.REPLY_COUNT > 0 </isNotEmpty>
+			<isNotEmpty prepend=" AND " property="hasLvmamaReply">LVMAMA_REPLY_COUNT > 0 </isNotEmpty>
+			<isNotEmpty prepend=" AND " property="hasMerchantReply">MERCHANT_REPLY_COUNT > 0 </isNotEmpty>
+			<isNotEmpty prepend=" AND " property="endDate">CC.CREATED_TIME &lt;= #endDate# + 1</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="startDate">CC.CREATED_TIME &gt;= #startDate#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="endAuditTime">CC.audit_time &lt;= #endAuditTime#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="startAuditTime">CC.audit_time &gt;= #startAuditTime#</isNotEmpty>
+			<isNotEmpty property="channel"><isNotEqual prepend=" AND " property="channel" compareValue="CLIENT">CC.CHANNEL = #channel#</isNotEqual></isNotEmpty>
+			<isEqual prepend=" AND " property="channel" compareValue = "CLIENT">CC.CHANNEL not in ('FRONTEND','BACKEND')</isEqual>
+			<isNotEmpty prepend=" AND " property="cmtEffectType">CC.CMT_EFFECT_TYPE = #cmtEffectType#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="isHasSensitivekey">CC.IS_HAS_SENSITIVE_KEY = #isHasSensitivekey# </isNotEmpty>
+			<isNotEmpty prepend=" AND " property="reqIp">CC.REQ_IP = #reqIp# </isNotEmpty>
+			<isNotEmpty prepend=" AND " property="content">CC.CONTENT LIKE '%'||#content#||'%'</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty  property="replyCount321" prepend=",">REPLY_COUNT DESC</isNotEmpty>
+			<isNotEmpty  property="replyCount123" prepend=",">REPLY_COUNT </isNotEmpty>
+			<isNotEmpty  property="usefulCount321" prepend=",">USEFUL_COUNT DESC</isNotEmpty>
+			<isNotEmpty  property="usefulCount123" prepend=",">USEFUL_COUNT</isNotEmpty>
+			<isNotEmpty  property="auditTime321" prepend=",">AUDIT_TIME desc</isNotEmpty>
+			<isNotEmpty  property="createTime123" prepend=",">CREATED_TIME </isNotEmpty>
+			<isNotEmpty  property="createTime321" prepend=",">CREATED_TIME DESC</isNotEmpty>
+		</dynamic>
+	</sql>
+		
+	<sql id="union_query_sql">
+	        SELECT *
+			FROM (	SELECT 
+						T1.*, rownum as rn , <include refid="select_query_sql"/>
+					FROM 
+						( <include refid="base_union_query_sql"/> ) T1
+				) cmt
+			<dynamic prepend=" WHERE ">
+				 <isEqual prepend=" AND " property="hasPicture" compareValue = "Y">cmt.PICTURE_COUNT > 0</isEqual>
+				 <isEqual prepend=" AND " property="hasPicture" compareValue = "N">cmt.PICTURE_COUNT = 0</isEqual>
+			</dynamic>
+	</sql>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="cmtCommentMap">
+		SELECT 
+			T3.*,
+			CCL.CMT_COMMENT_LATITUDE_ID,
+	    	CCL.LATITUDE_ID,
+	    	CCL.SCORE,
+	    	(SELECT dcl.latitude_name FROM dic_comment_latitude dcl where dcl.latitude_id=ccl.latitude_id) latitude_name,
+	    	(SELECT user_user.image_url FROM user_user where user_user.user_id = T3.user_id) USER_IMG 
+		FROM
+			(SELECT 
+				T2.*
+			FROM (
+				  select CC.*
+				  from	
+				  	 (  <include refid="union_query_sql"/> )CC
+				      <dynamic prepend=" WHERE ">
+							 <isNotEmpty property="_endRow">rownum &lt;= #_endRow# </isNotEmpty> 
+					 </dynamic>
+			) T2
+			<dynamic prepend=" WHERE ">
+				<isNotEmpty property="_startRow"> rn &gt;= #_startRow# </isNotEmpty>
+			</dynamic>)	T3, 
+				cmt_comment_latitude CCL
+			WHERE
+				T3.cmt_comment_id = CCL.cmt_comment_id(+)
+	</select>
+	
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.vo.comment.CommonCmtCommentVO">
+		<selectKey resultClass="java.lang.Long" keyProperty="commentId" >
+			SELECT CMT_COMMENT_SEQ.NEXTVAL AS commentId FROM DUAL
+		</selectKey>
+		INSERT INTO CMT_COMMENT
+		( 	CMT_COMMENT_ID
+			<dynamic>
+				<isNotEmpty prepend="," property="createdTime">CREATED_TIME</isNotEmpty>
+				<isNotEmpty prepend="," property="placeId">PLACE_ID</isNotEmpty>
+				<isNotEmpty prepend="," property="productId">PRODUCT_ID</isNotEmpty>
+				<isNotEmpty prepend="," property="orderId">ORDER_ID</isNotEmpty>
+				<isNotEmpty prepend="," property="userId">USER_ID</isNotEmpty>
+				<isNotEmpty prepend="," property="isBest">IS_BEST</isNotEmpty>
+				<isNotEmpty prepend="," property="isAudit">IS_AUDIT</isNotEmpty>
+				<isNotEmpty prepend="," property="content">CONTENT</isNotEmpty>
+				<isNotEmpty prepend="," property="cashRefund">CASH_REFUND</isNotEmpty>
+				<isNotEmpty prepend="," property="usefulCount">USEFUL_COUNT</isNotEmpty>
+				<isNotEmpty prepend="," property="cmtType">CMT_TYPE</isNotEmpty>
+				<isNotEmpty prepend="," property="userName">USER_NAME</isNotEmpty>
+				<isNotEmpty prepend="," property="replyCount">REPLY_COUNT</isNotEmpty>
+				<isNotEmpty prepend="," property="isHide">IS_HIDE</isNotEmpty>
+				<isNotEmpty prepend="," property="shamUsefulCount">SHAM_USEFUL_COUNT</isNotEmpty>
+				<isNotEmpty prepend="," property="needManageAttention">NEED_MANAGE_ATTENTION</isNotEmpty>
+		        <isNotEmpty prepend="," property="lvmamaReplyCount">LVMAMA_REPLY_COUNT</isNotEmpty>
+		        <isNotEmpty prepend="," property="merchantReplyCount">MERCHANT_REPLY_COUNT</isNotEmpty>
+		        <isNotEmpty prepend="," property="channel">CHANNEL</isNotEmpty>
+		        <isNotEmpty prepend="," property="cmtEffectType">CMT_EFFECT_TYPE</isNotEmpty>
+		        <isNotEmpty prepend="," property="auditTime">AUDIT_TIME</isNotEmpty>
+		        <isNotEmpty prepend="," property="isHasSensitivekey">IS_HAS_SENSITIVE_KEY</isNotEmpty>
+		        <isNotEmpty prepend="," property="reqIp">REQ_IP</isNotEmpty>
+			</dynamic>
+		) 
+		VALUES
+		(	#commentId#
+			<dynamic>
+				<isNotEmpty prepend="," property="createdTime">#createdTime#</isNotEmpty>
+				<isNotEmpty prepend="," property="placeId">#placeId#</isNotEmpty>
+				<isNotEmpty prepend="," property="productId">#productId#</isNotEmpty>
+				<isNotEmpty prepend="," property="orderId">#orderId#</isNotEmpty>
+				<isNotEmpty prepend="," property="userId">#userId#</isNotEmpty>
+				<isNotEmpty prepend="," property="isBest">#isBest#</isNotEmpty>
+				<isNotEmpty prepend="," property="isAudit">#isAudit#</isNotEmpty>
+				<isNotEmpty prepend="," property="content">#content#</isNotEmpty>
+				<isNotEmpty prepend="," property="cashRefund">#cashRefund#</isNotEmpty>
+				<isNotEmpty prepend="," property="usefulCount">#usefulCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="cmtType">#cmtType#</isNotEmpty>
+				<isNotEmpty prepend="," property="userName">#userName#</isNotEmpty>
+				<isNotEmpty prepend="," property="replyCount">#replyCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="isHide">#isHide#</isNotEmpty>
+				<isNotEmpty prepend="," property="shamUsefulCount">#shamUsefulCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="needManageAttention">#needManageAttention#</isNotEmpty>
+		    	<isNotEmpty prepend="," property="lvmamaReplyCount">#lvmamaReplyCount#</isNotEmpty>
+		        <isNotEmpty prepend="," property="merchantReplyCount">#merchantReplyCount#</isNotEmpty>
+		        <isNotEmpty prepend="," property="channel">#channel#</isNotEmpty>
+		        <isNotEmpty prepend="," property="cmtEffectType">#cmtEffectType#</isNotEmpty>
+		        <isNotEmpty prepend="," property="auditTime">#auditTime#</isNotEmpty>
+		        <isNotEmpty prepend="," property="isHasSensitivekey">#isHasSensitivekey#</isNotEmpty>
+		        <isNotEmpty prepend="," property="reqIp">#reqIp#</isNotEmpty>
+			</dynamic>	
+		)
+	</insert>
+	
+	<update id="update" parameterClass="com.lvmama.comm.vo.comment.CommonCmtCommentVO">
+		UPDATE CMT_COMMENT
+		<dynamic prepend=" SET ">
+				<isNotEmpty prepend="," property="placeId">PLACE_ID = #placeId#</isNotEmpty>
+				<isNotEmpty prepend="," property="productId">PRODUCT_ID = #productId#</isNotEmpty>
+				<isNotEmpty prepend="," property="isHide">IS_HIDE = #isHide#</isNotEmpty>
+				<isNotEmpty prepend="," property="shamUsefulCount">SHAM_USEFUL_COUNT = #shamUsefulCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="isBest">IS_BEST = #isBest#</isNotEmpty>
+				<isNotEmpty prepend="," property="isAudit">IS_AUDIT = #isAudit#</isNotEmpty>
+				<isNotEmpty prepend="," property="auditTime">AUDIT_TIME = #auditTime#</isNotEmpty>
+				<isNotEmpty prepend="," property="content">CONTENT = #content#</isNotEmpty>
+				<isNotEmpty prepend="," property="usefulCount">USEFUL_COUNT = #usefulCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="replyCount">REPLY_COUNT = #replyCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="orderId">ORDER_ID = #orderId#</isNotEmpty>
+				<isNotEmpty prepend="," property="needManageAttention">NEED_MANAGE_ATTENTION = #needManageAttention#</isNotEmpty>
+				<isNotEmpty prepend="," property="lvmamaReplyCount">LVMAMA_REPLY_COUNT=#lvmamaReplyCount#</isNotEmpty>
+		        <isNotEmpty prepend="," property="merchantReplyCount">MERCHANT_REPLY_COUNT=#merchantReplyCount#</isNotEmpty>
+		        <isNotEmpty prepend="," property="cashRefund">CASH_REFUND=#cashRefund#</isNotEmpty>
+		        <isNotEmpty prepend="," property="channel">CHANNEL=#channel#</isNotEmpty>
+		        <isNotEmpty prepend="," property="cmtEffectType">CMT_EFFECT_TYPE=#cmtEffectType#</isNotEmpty>
+		        <isNotEmpty prepend="," property="reviewStatus">REVIEWSTATUS=#reviewStatus#</isNotEmpty>
+		</dynamic>
+		<dynamic prepend=" WHERE ">
+				<isNotEmpty prepend=" AND " property="commentId">CMT_COMMENT_ID = #commentId#</isNotEmpty>
+				<isNotEmpty prepend=" AND " property="userId">USER_ID = #userId#</isNotEmpty>
+		</dynamic>
+	</update>
+	
+	<select id="totalCount" parameterClass="java.util.Map" resultClass="Long">
+	    select count(*) 
+	    from (<include refid="union_query_sql"/>)
+	</select>
+	
+	<update id="addUsefulCount" parameterClass="java.util.Map">
+		UPDATE CMT_COMMENT SET USEFUL_COUNT = USEFUL_COUNT + 1, SHAM_USEFUL_COUNT = SHAM_USEFUL_COUNT + #randomUsefulCount#  WHERE CMT_COMMENT_ID = #commentId#
+	</update>
+	
+	<update id="addReply" parameterClass="long">
+		UPDATE CMT_COMMENT SET REPLY_COUNT = REPLY_COUNT + 1 WHERE CMT_COMMENT_ID = #commentId#
+	</update>
+	
+	<update id="addLvmamaReply" parameterClass="long">
+		UPDATE CMT_COMMENT SET LVMAMA_REPLY_COUNT = LVMAMA_REPLY_COUNT + 1 WHERE CMT_COMMENT_ID = #commentId#
+	</update>
+	
+	<update id="addMerchantReply" parameterClass="long">
+		UPDATE CMT_COMMENT SET MERCHANT_REPLY_COUNT = MERCHANT_REPLY_COUNT + 1 WHERE CMT_COMMENT_ID = #commentId#
+	</update>
+	
+	
+	<update id="removeReply" parameterClass="long">
+		UPDATE CMT_COMMENT SET REPLY_COUNT = REPLY_COUNT - 1 WHERE CMT_COMMENT_ID = #commentId#
+	</update>		
+	
+	<update id="removeLvmamaReply" parameterClass="long">
+		UPDATE CMT_COMMENT SET LVMAMA_REPLY_COUNT = LVMAMA_REPLY_COUNT - 1 WHERE CMT_COMMENT_ID = #commentId#
+	</update>
+	
+	<update id="removeMerchantReply" parameterClass="long">
+		UPDATE CMT_COMMENT SET MERCHANT_REPLY_COUNT = MERCHANT_REPLY_COUNT - 1 WHERE CMT_COMMENT_ID = #commentId#
+	</update>	
+	
+	<update id="updateExperienceComment" parameterClass="java.util.Map">
+		UPDATE CMT_COMMENT SET CASH_REFUND = #cashRefund# WHERE ORDER_ID = #orderId#
+	</update>	
+	
+	<select id="cmtUserCount" parameterClass="java.util.Map" resultClass="Long">
+        select count(distinct(user_id)) 
+        from (<include refid="union_query_sql"/>)
+    </select>
+
+	<sql id="baseQueryCommentAndOrderOnPeriod">
+	    <![CDATA[
+			SELECT CMT.USER_ID, CMT.USER_NAME, CMT.CMT_COMMENT_ID COMMENT_ID, CMT.ORDER_ID, CMT.CREATED_TIME
+			FROM CMT_COMMENT CMT
+			WHERE  CMT.CMT_TYPE = 'EXPERIENCE'
+				AND CMT.CASH_REFUND IS NULL
+				AND CMT.IS_AUDIT = #isAudit#
+				AND CMT.CREATED_TIME >= sysdate - 120
+				AND CMT.ORDER_ID IS NOT NULL
+		]]>
+			<isNotNull property="userId">
+				AND CMT.USER_ID = #userId#
+			</isNotNull>
+			<isNotNull property="orderId">
+				AND CMT.ORDER_ID = #orderId#
+			</isNotNull>
+	</sql>
+
+	<select id="queryCommentAndOrderOnPeriod" resultMap="OrderAndComment"
+		parameterClass="java.util.Map">
+	  select CC.*
+	  from	(SELECT 
+				T1.*, rownum as rn 
+			 FROM (<include refid="baseQueryCommentAndOrderOnPeriod"/>) T1
+			 <dynamic prepend=" WHERE ">
+				 <isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+			 </dynamic>
+	  	 )CC
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow"> rn &gt;= #_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="queryCountOfCommentAndOrderOnPeriod"  resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		   SELECT count(T1.COMMENT_ID)
+		   FROM (<include refid="baseQueryCommentAndOrderOnPeriod"/>) T1
+	</select>
+	
+	<select id="selectCanRefundComment" resultMap="OrderAndComment"
+		parameterClass="java.util.Map">
+		<![CDATA[
+		SELECT CMT.USER_ID, CMT.USER_NAME, CMT.CMT_COMMENT_ID COMMENT_ID, CMT.ORDER_ID, CMT.CREATED_TIME
+		  FROM CMT_COMMENT CMT
+		 WHERE  CMT.CMT_TYPE = 'EXPERIENCE'
+		   AND CMT.CASH_REFUND IS NULL
+		   AND CMT.IS_AUDIT = #isAudit#
+		]]>
+		<isNotNull property="orderVisitTime">
+			AND CMT.CREATED_TIME >= #orderVisitTime#
+		</isNotNull>
+		<isNotNull property="userId">
+			AND CMT.USER_ID = #userId#
+		</isNotNull>
+		<isNotNull property="orderId">
+			AND CMT.ORDER_ID = #orderId#
+		</isNotNull>
+	</select>
+	
+	<select id="selectCmtCommentReviewContent" resultMap="ReviewStatus" parameterClass="java.util.Map">
+         <include refid="pageHeader"/>
+	        SELECT CMT_COMMENT_ID,CONTENT,IS_HIDE,CREATED_TIME,REVIEWSTATUS 
+	        FROM LVMAMA_PET.CMT_COMMENT 
+         <include refid="whereParamByReviewContent"/>
+         order by CREATED_TIME desc,CMT_COMMENT_ID asc
+         <include refid="pageFooter"/>
+    </select>
+    
+    <update id="updateCmtCommentReviewStatus" parameterClass="com.lvmama.comm.vo.comment.CommonCmtCommentVO">
+       update lvmama_pet.cmt_comment set REVIEWSTATUS = #reviewStatus#,IS_HIDE=#isHide#
+       where  CMT_COMMENT_ID = #commentId#
+    </update>
+    
+    <select id="selectCmtCountByReviewParam" parameterClass="java.util.Map" resultClass="Long">
+        SELECT COUNT(*) FROM LVMAMA_PET.CMT_COMMENT
+        <include refid="whereParamByReviewContent"/>
+    </select>
+    
+</sqlMap>

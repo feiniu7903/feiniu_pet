@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FIN_RECON_BANK_STATEMENT">
+	<resultMap id="FinReconBankStatementResult" class="com.lvmama.comm.pet.po.pay.FinReconBankStatement">
+		<result column="RECON_BANK_STATEMENT_ID" property="reconBankStatementId" />
+		<result column="GATEWAY" property="gateway" />
+		<result column="BANK_PAYMENT_TRADE_NO" property="bankPaymentTradeNo" />
+		<result column="BANK_GATEWAY_TRADE_NO" property="bankGatewayTradeNo" />
+		<result column="AMOUNT" property="amount" />
+		<result column="OUT_AMOUNT" property="outAmount" />
+		<result column="TRANSACTION_TIME" property="transactionTime" />
+		<result column="TRANSACTION_TYPE" property="transactionType" />
+		<result column="DOWNLOAD_TIME" property="downloadTime" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="MEMO" property="memo" />
+
+	</resultMap>
+	<select id="selectByParamMap" resultMap="FinReconBankStatementResult" parameterClass="java.util.HashMap">
+		SELECT *
+		FROM FIN_RECON_BANK_STATEMENT
+		<dynamic prepend="WHERE">
+			<isNotNull prepend="and" property="gateway">
+				GATEWAY = #gateway#
+			</isNotNull>
+			<isNotNull prepend="and" property="bankPaymentTradeNo">
+				BANK_PAYMENT_TRADE_NO = #bankPaymentTradeNo#
+			</isNotNull>
+			<isNotNull prepend="and" property="bankGatewayTradeNo">
+				BANK_GATEWAY_TRADE_NO = #bankGatewayTradeNo#
+			</isNotNull>
+			<isNotNull prepend="and" property="transactionType">
+				TRANSACTION_TYPE = #transactionType#
+			</isNotNull>
+			<isNotNull prepend="and" property="downloadTimeShort">
+				to_char(DOWNLOAD_TIME,'yyyy-MM-dd') = to_char(#downloadTimeShort#,'yyyy-MM-dd')
+		    </isNotNull>
+		</dynamic>
+	</select>
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.FinReconBankStatement">
+		<selectKey resultClass="java.lang.Long" keyProperty="reconBankStatementId">
+			SELECT
+			FIN_RECON_BANK_STATEMENT_SEQ.NEXTVAL AS ID FROM DUAL
+	</selectKey>
+		INSERT INTO FIN_RECON_BANK_STATEMENT (RECON_BANK_STATEMENT_ID,
+		GATEWAY,
+		BANK_PAYMENT_TRADE_NO, BANK_GATEWAY_TRADE_NO,
+		AMOUNT,OUT_AMOUNT, TRANSACTION_TIME,
+		TRANSACTION_TYPE, DOWNLOAD_TIME,
+		CREATE_TIME, MEMO)
+		VALUES
+		(#reconBankStatementId#, #gateway#,
+		#bankPaymentTradeNo#,
+		#bankGatewayTradeNo#, #amount#,#outAmount#,
+		#transactionTime#,
+		#transactionType#,#downloadTime#, #createTime#,
+		#memo#)
+	</insert>
+	
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.pay.FinReconBankStatement">
+		UPDATE FIN_RECON_BANK_STATEMENT
+		SET
+		<isNotEmpty property="gateway">
+		GATEWAY = #gateway#,
+		</isNotEmpty>
+		<isNotEmpty property="bankPaymentTradeNo">
+		BANK_PAYMENT_TRADE_NO = #bankPaymentTradeNo#,
+		</isNotEmpty>
+		<isNotEmpty property="bankGatewayTradeNo">
+		BANK_GATEWAY_TRADE_NO = #bankGatewayTradeNo#,
+		</isNotEmpty>
+		<isNotEmpty property="amount">
+		AMOUNT = #amount#,
+		</isNotEmpty>
+		<isNotEmpty property="outAmount">
+		OUT_AMOUNT = #outAmount#,
+		</isNotEmpty>
+		<isNotEmpty property="transactionTime">
+		TRANSACTION_TIME = #transactionTime#,
+		</isNotEmpty>
+		<isNotEmpty property="transactionType">
+		TRANSACTION_TYPE=#transactionType#,
+		</isNotEmpty>
+		<isNotEmpty property="downloadTime">
+		DOWNLOAD_TIME=#downloadTime#,
+		</isNotEmpty>
+		MEMO = #memo#
+		WHERE RECON_BANK_STATEMENT_ID = #reconBankStatementId#
+	</update>
+	
+	<delete id="deleteOldData" parameterClass="java.util.HashMap">
+		DELETE FROM
+		FIN_RECON_BANK_STATEMENT
+		WHERE GATEWAY in ($gatewayIN$)
+		AND DOWNLOAD_TIME=#downloadTime#
+	</delete>
+</sqlMap>

@@ -1,0 +1,38 @@
+<?page title="短信系统查询" contentType="text/html;charset=UTF-8"?>                                               
+ <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./smsSend"?>                                                   
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>  
+<zk>  
+<window id="smsSend" title="短信发送"   border="normal"  apply="com.lvmama.pet.web.sms.SmsAction">
+<grid>
+	<columns>
+		<column width="20%" align="left"></column>
+		<column width="80%" align="left"></column>
+	</columns>
+	<rows>
+		<row>
+			<hbox>输入手机号码：</hbox>
+			<textbox id="mobile" value="@{saction.mobile}"
+      					constraint="/^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\d{8}$/:手机号不符合规范" 
+      					 maxlength="11">
+      		</textbox>
+		</row>
+		<row>
+			<hbox>短信内容：</hbox>
+			<textbox id="content" value="@{saction.content}"
+      					constraint="no empty" rows="10" cols="100" maxlength="300">
+      		</textbox>
+		</row>
+		<row>
+			<hbox><checkbox label="定时发送" onCheck="sendDate.disabled = !self.checked"/></hbox>
+			<hbox><datebox width="150" id="sendDate" value="@{saction.sendDate}" format="yyyy-MM-dd hh:mm:ss" disabled="true"/></hbox>
+		</row>		
+		<row>
+		<hbox>
+			<button label="提交" id="search" onClick="saction.sendByhand();"></button>
+		</hbox>
+		</row>
+	</rows>
+</grid>
+     
+</window>
+</zk>

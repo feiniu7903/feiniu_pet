@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PAY_RECEIVING_COMPANY">
+	<resultMap id="PayReceivingCompanyResult" class="com.lvmama.comm.pet.po.pay.PayReceivingCompany">
+		<result column="RECEIVING_COMPANY_ID" property="receivingCompanyId" />
+		<result column="RECEIVING_COMPANY_NAME" property="receivingCompanyName" />
+		<result column="STATUS" property="status" />
+		<result column="CREATE_TIME" property="createTime" />
+	
+	</resultMap>
+	
+    <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.PayReceivingCompany" >
+	    <selectKey resultClass="java.lang.Long" keyProperty="receivingCompanyId">
+				select pay_receiving_company_seq.nextval as id from DUAL
+		</selectKey>
+	    INSERT INTO PAY_RECEIVING_COMPANY(RECEIVING_COMPANY_ID,RECEIVING_COMPANY_NAME,STATUS,CREATE_TIME)
+	    VALUES (#receivingCompanyId#,#receivingCompanyName#,#status#,#createTime#)
+   </insert>
+  
+	<select id="selectReceivingCompanyByPK" resultMap="PayReceivingCompanyResult" parameterClass="java.lang.Long">
+		SELECT * FROM PAY_RECEIVING_COMPANY WHERE RECEIVING_COMPANY_ID = #receivingCompanyId#
+	</select>
+	
+	<sql id="pageHead" >
+		<isNotEmpty property="start">
+			SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM (
+		</isNotEmpty> 
+	</sql>
+	<sql id="pageFoot" >
+		<isNotEmpty property="orderby">
+			ORDER BY $orderby$
+			<isNotEmpty property="order">
+				$order$
+			</isNotEmpty>
+		</isNotEmpty>
+		
+		<isNotEmpty property="start">
+			) P_T ) WHERE RN BETWEEN #start#
+			<isNotEmpty property="end">
+				AND #end#
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	<sql id="selectPayReceivingCompanyConditions">
+		SELECT * FROM PAY_RECEIVING_COMPANY
+		<dynamic prepend="WHERE">
+			 <isNotEmpty prepend="and" property="receivingCompanyId" >
+		        RECEIVING_COMPANY_ID = #receivingCompanyId#
+		     </isNotEmpty>
+			 <isNotEmpty prepend="and" property="receivingCompanyName" >
+		        RECEIVING_COMPANY_NAME = #receivingCompanyName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="status" >
+		        STATUS = #status#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="createTime" >
+		        CREATE_TIME = #createTime#
+		     </isNotEmpty>
+	     </dynamic>
+	</sql>
+
+	
+	<select id="selectPayReceivingCompanyByParamMapCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM(
+			<include refid="selectPayReceivingCompanyConditions" />
+		) TT1
+	</select>
+	<select id="selectPayReceivingCompanyByParamMap" resultMap="PayReceivingCompanyResult" parameterClass="java.util.Map">
+		<include refid="pageHead"/>
+			<include refid="selectPayReceivingCompanyConditions"/>
+		<include refid="pageFoot"/>
+	</select>
+</sqlMap>

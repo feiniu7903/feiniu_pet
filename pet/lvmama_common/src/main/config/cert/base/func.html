@@ -1,0 +1,80 @@
+<#macro showPriceLabel certificate>
+<#if certificate.entity.paymentTarget =='TOLVMAMA'||certificate.entity.paymentTarget =='tolvmama'>
+结算单价
+<#else>
+销售单价
+</#if>
+</#macro>
+<#macro showTotalAmountLabel certificate>
+<#if certificate.entity.paymentTarget =='TOLVMAMA'||certificate.entity.paymentTarget =='tolvmama'>
+结算总价
+<#else>
+销售总价
+</#if>
+</#macro>
+
+<#macro showPaymentTarget certificate>
+<#if certificate.entity.paymentTarget =='TOLVMAMA'||certificate.entity.paymentTarget =='tolvmama'>
+支付驴妈妈
+<#else>
+支付给供应商
+</#if>
+</#macro>
+<#macro showPriceContent certificate price>
+<#if certificate.baseInfo.showSettlementFlag=='true'||certificate.entity.paymentTarget =='TOSUPPLIER'>
+${(price)?string("#.##")}
+<#else>
+<del>不显示</del>
+</#if>
+</#macro>
+
+<#macro showChangeContent baseInfo key len=-1>
+<#if baseInfo[key+"_old"]??>
+<del><@addSpace baseInfo[key+"_old"] len/></del><br/>
+</#if>
+<@addSpace baseInfo[key] len/>
+</#macro>
+
+<#macro showChangePriceContent certificate baseInfo key>
+<#if certificate.baseInfo.showSettlementFlag=='true'||certificate.entity.paymentTarget =='TOSUPPLIER'>
+	<#if baseInfo[key+"_old"]??>
+	<del>${baseInfo[key+"_old"]}</del>
+	</#if>
+	${baseInfo[key]}
+<#else>
+	<del>不显示</del>
+</#if>
+</#macro>
+<#macro addSpace str="" len=-1>
+<#if str !="null">
+<#if len==-1 || str?length lt len>
+${str}
+<#else>
+<#assign total_length=str?length>
+<#assign count = total_length/len>
+<#assign space="<br/>">
+<#if total_length%len gt 0>
+<#assign count=count+1>
+</#if>
+<#assign start=0>
+<#assign end=0>
+<#list 1..count as c>
+    <#assign end=end+len>
+    <#if end gt total_length>
+    	<#assign end=total_length/>
+    </#if>
+	${str?substring(start,end)}${space}
+	<#assign start=end>
+</#list>
+</#if>
+</#if>
+</#macro>
+<#macro addMemoSpace str="" len=-1>
+<#if str?index_of("<br/>") gt -1>
+	<#list str?split("<br/>") as line>
+		<@addSpace line len/>
+	</#list>
+<#else>
+	<@addSpace str len/>
+</#if>
+</#macro>

@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+
+	<bean id="alipayDownPayDataJob" class="com.lvmama.pet.recon.job.AlipayDownPayDataJob" />
+	<bean id="alipayDownPayDataJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="alipayDownPayDataJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="alipayDownPayDataJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="alipayDownPayDataJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>00 00 2 ? * *</value>
+		</property>
+	</bean>
+	<!--
+	<bean id="tenpayDownPayDataJob" class="com.lvmama.pet.recon.job.TenpayDownPayDataJob" />
+	<bean id="tenpayDownPayDataJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="tenpayDownPayDataJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="tenpayDownPayDataJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="tenpayDownPayDataJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>00 10 2 ? * *</value>
+		</property>
+	</bean>
+	-->
+	<bean id="ningboDownPayDataJob" class="com.lvmama.pet.recon.job.NingboDownPayDataJob" />
+	<bean id="ningboDownPayDataJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="ningboDownPayDataJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="ningboDownPayDataJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="ningboDownPayDataJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>00 20 2 ? * *</value>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="unionpayDownPayDataJob" class="com.lvmama.pet.recon.job.UnionPayDownPayDataJob" />
+	<bean id="unionpayDownPayDataJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="unionpayDownPayDataJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="unionpayDownPayDataJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="unionpayDownPayDataJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>00 50 2 ? * *</value>
+		</property>
+	</bean>
+	 
+	<bean id="cashAccountDownPayDataJob" class="com.lvmama.pet.recon.job.CashAccountDownPayDataJob" />
+	<bean id="cashAccountDownPayDataJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="cashAccountDownPayDataJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="cashAccountDownPayDataJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="cashAccountDownPayDataJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>00 00 3 ? * *</value>
+		</property>
+	</bean> 
+	
+	<bean id="cashBonusDownPayDataJob" class="com.lvmama.pet.recon.job.CashBonusDownPayDataJob" />
+	<bean id="cashBonusDownPayDataJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="cashBonusDownPayDataJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="cashBonusDownPayDataJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="cashBonusDownPayDataJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>00 15 3 ? * *</value>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="chinapnrDownPayDataJob" class="com.lvmama.pet.recon.job.ChinapnrDownPayDataJob" />
+	<bean id="chinapnrDownPayDataJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="chinapnrDownPayDataJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="chinapnrDownPayDataJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="chinapnrDownPayDataJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>00 20 3 ? * *</value>
+		</property>
+	</bean> 
+	
+	
+	<bean id="dealNoReconJob" class="com.lvmama.pet.recon.job.DealNoReconJob" />
+	<bean id="dealNoReconJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="dealNoReconJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="dealNoReconJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="dealNoReconJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>00 30 3 ? * *</value>
+		</property>
+	</bean> 
+	
+	
+	
+	
+	
+	
+	<!-- 
+	<bean id="cMBDownPayDataJob" class="com.lvmama.pet.recon.job.CMBDownPayDataJob" />
+	<bean id="cMBDownPayDataJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="cMBDownPayDataJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="cMBDownPayDataJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="cMBDownPayDataJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 20 1 ? * *</value> 
+		</property>
+	</bean> 
+	<bean id="cOMMDownPayDataJob" class="com.lvmama.pet.recon.job.COMMDownPayDataJob" />
+	<bean id="cOMMDownPayDataJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="cOMMDownPayDataJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="cOMMDownPayDataJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="cOMMDownPayDataJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 10 12 ? * *</value> 
+		</property>
+	</bean> 
+	<bean id="bypayDownPayDataJob" class="com.lvmama.pet.recon.job.ByPayDownPayDataJob" />
+	<bean id="bypayDownPayDataJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="bypayDownPayDataJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="bypayDownPayDataJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="bypayDownPayDataJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 30 12 ? * *</value>
+		</property>
+	</bean> 
+	
+	<bean id="financeReconJob" class="com.lvmama.pet.recon.job.FinanceReconJob" />
+	<bean id="financeReconJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="financeReconJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="financeReconJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="financeReconJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 4 ? * *</value>
+		</property>
+	</bean> 
+	<bean id="parsePayDataJob" class="com.lvmama.pet.recon.job.ParsePayDataJob" />
+	<bean id="parsePayDataJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="parsePayDataJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="parsePayDataJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="parsePayDataJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 40 1 ? * *</value>
+		</property>
+	</bean>
+	 -->
+	<bean id="paymentSuccessNotifyJob" class="com.lvmama.pet.job.PaymentSuccessNotifyJob" />
+	<bean id="paymentSuccessNotifyJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="paymentSuccessNotifyJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="paymentSuccessNotifyJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="paymentSuccessNotifyJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 25 * ? * *</value> 
+		</property>
+	</bean>
+
+	<bean id="queuedRefundTaskJob" class="com.lvmama.pet.job.QueuedRefundTaskJob" />
+	<bean id="queuedRefundTaskJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="queuedRefundTaskJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="queuedRefundTaskJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="queuedRefundTaskJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 7 ? * *</value> 
+		</property>
+	</bean>
+	<bean id="quartzTrigger" lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="queuedRefundTaskJobTimes"/>
+				<ref bean="paymentSuccessNotifyJobTimes" />
+				<!--  
+				<ref bean="alipayDownPayDataJobTimes" />
+				<ref bean="ningboDownPayDataJobTimes" />
+				<ref bean="unionpayDownPayDataJobTimes" />
+				<ref bean="cashAccountDownPayDataJobTimes" />
+				<ref bean="cashBonusDownPayDataJobTimes" />
+				<ref bean="dealNoReconJobTimes" />
+				-->
+				<!-- 
+				<ref bean="tenpayDownPayDataJobTimes" />
+				<ref bean="chinapnrDownPayDataJobTimes" />
+				<ref bean="cMBDownPayDataJobTimes" />
+				<ref bean="cOMMDownPayDataJobTimes" />
+				<ref bean="bypayDownPayDataJobTimes" />
+				<ref bean="financeReconJobTimes" />
+				<ref bean="parsePayDataJobTimes" />
+				 -->
+			</list>
+		</property>
+	</bean>
+</beans>

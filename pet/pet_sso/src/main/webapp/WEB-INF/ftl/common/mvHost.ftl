@@ -1,0 +1,1 @@
+<script src="http://pic.lvmama.com/js/common/losc.js" type="text/javascript"></script>

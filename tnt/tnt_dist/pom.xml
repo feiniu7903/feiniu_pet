@@ -1,0 +1,105 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.lvmama.tnt.dist</groupId>
+	<artifactId>tnt_dist</artifactId>
+	<packaging>war</packaging>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>tnt_dist Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>pom_base</groupId>
+			<artifactId>tnt_pom_base</artifactId>
+			<version>1.0</version>
+			<type>pom</type>
+		</dependency>
+
+		<dependency>
+			<groupId>com.tnt.comm</groupId>
+			<artifactId>tnt_comm</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.belerweb</groupId>
+			<artifactId>pinyin4j</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<version>2.1_3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.2.1.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>1.8.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.7.4</version>
+		</dependency>
+		
+		
+	</dependencies>
+	<build>
+		<finalName>tnt_dist</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/config</directory>
+				<excludes>
+					<exclude>*.properties</exclude>
+				</excludes>
+			</resource>
+
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/main/config</directory>
+			</testResource>
+		</testResources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<archiveClasses>true</archiveClasses>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

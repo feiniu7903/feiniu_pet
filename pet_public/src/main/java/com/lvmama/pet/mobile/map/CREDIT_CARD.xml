@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CREDIT_CARD">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.CreditCard">
+		<result column="CREDIT_CARD_ID" property="creditCardId" />
+		<result column="USER_NO" property="userNo" />
+		<result column="CARD_NO" property="cardNo" />
+		<result column="CVV" property="cvv" />
+		<result column="EXPIRATION_YEAR" property="expirationYear" />
+		<result column="EXPIRATION_MONTH" property="expirationMonth" />
+		<result column="HOLDER_NAME" property="holderName" />
+		<result column="ID_TYPE" property="idType" />
+		<result column="ID_NO" property="idNo" />
+	</resultMap>
+	<!-- 获取一个新的信用卡编号 -->
+	<select id="getCreditCardId" resultClass="java.lang.Long">
+		select
+		CREDIT_CARD_SEQ.Nextval from dual
+	</select>
+	<!-- 插入用户信用卡信息 -->
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.CreditCard">
+		insert into credit_card
+		(credit_card_id, user_no, card_no, cvv, expiration_year,
+		expiration_month,
+		holder_name, id_type, id_no)
+		values
+		(#creditCardId#,
+		#userNo#, #cardNo#, #cvv#, #expirationYear#, #expirationMonth#,
+		#holderName#, #idType#, #idNo#)
+	</insert>
+	<!-- 查询用户信用卡信息列表 -->
+	<select id="selectCreditCardByMap" parameterClass="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT CREDIT_CARD_ID, USER_NO, CARD_NO, CVV, EXPIRATION_YEAR,
+		EXPIRATION_MONTH, HOLDER_NAME, ID_TYPE, ID_NO FROM CREDIT_CARD T
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="userNo">
+			<![CDATA[
+			T.USER_NO = #userNo#
+			]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="cardNo">
+			<![CDATA[
+			T.CARD_NO = #cardNo#
+			]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+</sqlMap>

@@ -1,0 +1,39 @@
+<?page title="新增会员卡" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./addMembershipCardWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="addMembershipCardWin" title="新增会员卡" mode="embedded" apply="com.lvmama.pet.web.mark.membershipcard.AddMembershipCardAction">
+		<grid>
+			<columns>
+				<column width="100px"></column>
+				<column></column>
+				<column width="100px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>批次代码:</hbox>
+					<hbox><textbox value="@{saction.cardPrefixNumber}" constraint="/\d{4}/:请输入四位数字"/></hbox>
+					<hbox>数量:</hbox>
+					<hbox><intbox value="@{saction.number}" constraint="no empty,no negative,no zero:请输入正整数"/></hbox>					
+				</row>				
+			</rows>
+		</grid>
+		<toolbar align="end">
+		    <button label="生成会员卡" id="btnGenerate" width="100px" onClick="saction.generate()"/>
+		    <button label="下载" id="btn_download" disabled="true" width="100px" onClick="saction.download()"/>
+        	<button label="关闭" width="100px" onClick='addMembershipCardWin.detach()'/>
+        </toolbar>
+		<listbox mold="paging" pageSize="20" model="@{saction.cardCodeSet, load-after='btnGenerate.onClick'}">
+			<listhead>
+				<listheader label="会员卡号" />
+				<listheader label="是否激活" />
+				<listheader label="数量" />
+			</listhead>
+			<listitem height="25px" self="@{each='membershipCardCode'}">
+				<listcell label="@{membershipCardCode}"></listcell>
+				<listcell label="未激活"></listcell>
+				<listcell label="1"/>
+			</listitem>
+		</listbox>        			
+	</window>
+</zk>

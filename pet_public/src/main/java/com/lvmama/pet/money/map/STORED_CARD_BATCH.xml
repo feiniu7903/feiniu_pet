@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="STORED_CARD_BATCH" >
+	<resultMap class="com.lvmama.comm.pet.po.money.StoredCardBatch" id="BaseCardBatchGroup">
+		<result property="batchId" column="CARD_BATCH_ID"/>
+		<result property="batchNo" column="CARD_BATCH_NO"/>
+		<result property="cardCount" column="CARD_COUNT"/>
+		<result property="amount" column="AMOUNT"/>
+		<result property="beginSerialNo" column="BEGIN_SERIAL_NO" />
+		<result property="endSerialNo" column="END_SERIAL_NO"/>
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="overTime" column="OVER_TIME"/>
+		<result property="operator" column="BATCH_OPERATOR"/>
+		<result property="status" column="BATCH_STATUS"/>
+	</resultMap>
+	
+	<typeAlias type="com.lvmama.comm.pet.po.money.StoredCardBatch" alias="CardBatchGroup"/>
+	<insert id="insert" parameterClass="CardBatchGroup">
+		<selectKey keyProperty="batchId" resultClass="java.lang.Long">
+			SELECT STORED_CARD_BATCH_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO STORED_CARD_BATCH
+			(CARD_BATCH_ID,CARD_BATCH_NO,CARD_COUNT,AMOUNT,BEGIN_SERIAL_NO,END_SERIAL_NO,CREATE_TIME,OVER_TIME,BATCH_OPERATOR,BATCH_STATUS)
+		VALUES(#batchId#,#batchNo#,#cardCount#,#amount#,#beginSerialNo#,#endSerialNo#,#createTime#,#overTime#,#operator#,#status#)		
+	</insert>
+	
+	
+	<update id="updateByPrimaryKey" parameterClass="CardBatchGroup">
+		UPDATE STORED_CARD_BATCH SET
+			CARD_BATCH_NO = #batchNo#,
+			CARD_COUNT = #cardCount#,
+			AMOUNT = #amount#,
+			BEGIN_SERIAL_NO = #beginSerialNo#,
+			END_SERIAL_NO = #endSerialNo#,
+			CREATE_TIME = #createTime#,
+			OVER_TIME = #overTime#,
+			BATCH_OPERATOR = #operator#,
+			BATCH_STATUS = #status#
+		WHERE CARD_BATCH_ID=#batchId#
+	</update>
+	
+	<select id="selectBatchCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		select count(*) FROM STORED_CARD_BATCH
+		WHERE 1=1
+		 <isNotEmpty prepend=" and" property="batchNo">
+			CARD_BATCH_NO like '%'||#batchNo#||'%'
+		 </isNotEmpty>
+	</select>
+	
+	<sql id="selectSQL">
+	SELECT S.* FROM STORED_CARD_BATCH S
+	    <dynamic prepend="WHERE">
+	        <isNotEmpty prepend="AND" property="batchId">
+				S.CARD_BATCH_ID = #batchId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="batchNo">
+				S.CARD_BATCH_NO like '%'||#batchNo#||'%'
+			</isNotEmpty>
+			<isNotNull  prepend="AND" property="beginTime">
+		   	    S.CREATE_TIME &gt;= #beginTime#
+			</isNotNull>
+	        <isNotNull  prepend="AND" property="endTime">
+		   	    S.CREATE_TIME &lt;= #endTime#
+			</isNotNull>
+	    </dynamic>
+    </sql>
+	
+	<select id="queryByParam" resultMap="BaseCardBatchGroup"  parameterClass="java.util.HashMap">
+		SELECT * FROM ( 
+			<include refid="selectSQL"/>
+			ORDER BY S.CARD_BATCH_ID DESC
+		)
+	</select>
+	
+	
+	<select id="selectByParam" resultMap="BaseCardBatchGroup" parameterClass="java.util.HashMap">
+		SELECT * FROM 
+		(
+			SELECT A.*,ROWNUM rn FROM
+			(
+				<include refid="selectSQL"/>
+				ORDER BY S.CREATE_TIME DESC
+			) A
+			<dynamic prepend="where">
+				<isNotEmpty property="endRows">
+					ROWNUM &lt;= #endRows#
+				</isNotEmpty>
+			</dynamic>
+		)
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows">
+				rn &gt;=#startRows#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	
+	<select id="selectByParamCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM ( 
+			<include refid="selectSQL"/>
+		)
+	</select>
+	
+	
+	
+</sqlMap>

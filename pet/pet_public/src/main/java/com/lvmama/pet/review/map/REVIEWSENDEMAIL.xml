@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="REVIEWSENDEMAIL" >
+  <typeAlias alias="reviewSendEmail" type="com.lvmama.comm.businesses.po.review.ReviewSendEmail" />
+  <resultMap id="BaseResultMap" class="reviewSendEmail" >
+     <result column="RSE_ID" property="rseId" />
+     <result column="keyWordStartDate" property="keyWordStartDate" />
+     <result column="keyWordEndDate" property="keyWordEndDate" />
+     <result column="contentStartDate" property="contentStartDate" />
+     <result column="contentEndDate" property="contentEndDate" />
+     <result column="reviewChannel" property="reviewChannel" />
+     <result column="reviewStatus" property="reviewStatus" />
+     <result column="RSE_DATE" property="rseDate" />
+     <result property="count" column="count"/>
+  </resultMap>
+  
+   <sql id="pageHeader">
+         SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+   </sql>
+   <sql id="pageFooter">
+         ) A
+       <dynamic prepend="where">
+           <isNotEmpty property="endRows" prepend="and">
+               ROWNUM &lt;= #endRows#
+           </isNotEmpty>
+       </dynamic>
+         )
+       <dynamic prepend="where">
+        <isNotEmpty property="startRows" prepend="and">
+           rn &gt;= #startRows#
+        </isNotEmpty>      
+       </dynamic>
+   </sql>
+  
+   <insert id="insertReviewSendEmail" parameterClass="reviewSendEmail">
+     <selectKey keyProperty="rseId" resultClass="java.lang.Long">
+         SELECT LVMAMA_PET.REVIEW_SEND_EMAIL_SEQ.NEXTVAL AS ID FROM DUAL
+     </selectKey>
+	INSERT INTO REVIEW_SEND_EMAIL(RSE_ID,keyWordStartDate,keyWordEndDate,contentStartDate,contentEndDate,reviewChannel,reviewStatus,count,RSE_DATE)
+	VALUES
+	(
+	#rseId#, to_date(#keyWordStartDate#,'YYYY-MM-DD HH24:MI:SS'), to_date( #keyWordEndDate#,'YYYY-MM-DD HH24:MI:SS') , to_date( #contentStartDate#,'YYYY-MM-DD HH24:MI:SS')
+	, to_date( #contentEndDate#,'YYYY-MM-DD HH24:MI:SS') , #reviewChannel# , #reviewStatus#,#count#
+	,sysdate )
+   </insert>
+
+
+  <select id="queryReviewSendEmail" parameterClass="java.util.Map" resultMap="BaseResultMap">
+    <include refid="pageHeader"/>
+     SELECT * FROM LVMAMA_PET.REVIEW_SEND_EMAIL ORDER BY RSE_DATE DESC
+    <include refid="pageFooter"/>
+    
+  </select>
+    <select id="count" resultClass="java.lang.Long">
+      SELECT count(*) FROM LVMAMA_PET.REVIEW_SEND_EMAIL  
+  </select>
+
+  
+</sqlMap>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>	
+	<bean id="finGLInterfaceJob" class="com.lvmama.pet.job.fin.FinGLInterfaceJob">
+		<property name="finGLService" ref="finGLService"></property>
+		<property name="finGLServiceProxy" ref="finGLServiceProxy"></property>
+	</bean>
+	<bean id="finGLInterfaceFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="finGLInterfaceJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="finGLInterfaceTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="finGLInterfaceFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>00 30 4 ? * *</value> 
+		</property>
+	</bean>
+	
+	<bean id="finGenGLInterfaceJob" class="com.lvmama.pet.job.fin.FinGenGLInterfaceJob">
+		<property name="finGLService" ref="finGLService"></property>
+		<property name="finReconResultService" ref="finReconResultService"></property>
+	</bean>
+	<bean id="finGenGLInterfaceFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="finGenGLInterfaceJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="finGenGLInterfaceTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="finGenGLInterfaceFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>00 30 3 ? * *</value> 
+		</property>
+	</bean>  
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list> 
+	          	<ref local="finGLInterfaceTimes"/> 
+	          	<ref local="finGenGLInterfaceTimes"/>
+			</list>
+		</property>
+	</bean>
+</beans>

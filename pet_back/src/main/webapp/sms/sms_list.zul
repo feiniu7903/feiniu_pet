@@ -1,0 +1,116 @@
+<?page title="短信系统查询" contentType="text/html;charset=UTF-8"?>                                               
+ <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./smsWin"?>                                                   
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>  
+<zk>  
+<window id="smsWin" title="短信查询"   border="normal"  apply="com.lvmama.pet.web.sms.SmsAction">
+<grid>
+      	<columns>
+      		<column width="20%" align="left"></column>
+      		<column width="30%" align="left"></column>
+      		<column width="20%" align="left"></column>
+      		<column width="30%" align="left"></column>
+      	</columns>
+      	<rows>
+      		<row>
+      			<hbox>输入手机号码：</hbox>
+      			<hbox>
+      				<textbox id="mobile" value="@{saction.mobile}">
+      				</textbox>
+      			</hbox>
+      			<hbox>发送状态：</hbox>
+      			<hbox>
+      			<listbox mold="select" id="status" rows="1" onSelect="saction.changeStatus(self.selectedItem.value)">
+      			<listitem value="" selected="true">
+      			<listcell label="全部" ></listcell>
+      			</listitem>
+      			<listitem value="0">
+      			<listcell label="发送成功" >0</listcell>
+      			</listitem>
+      			<listitem value="1">
+      			<listcell label="发送失败">1</listcell>
+      			</listitem>
+      			<listitem value="9">
+      			<listcell label="已经重发">9</listcell>
+      			</listitem>
+      			</listbox>
+      			</hbox>
+      		</row>
+      		<row>
+      			<hbox>起始日期:</hbox>
+      			<hbox>
+      				<datebox id="startDate"
+      					value="@{saction.startDate}" format="yyyy-MM-dd">
+      				</datebox>
+      			</hbox>
+      			<hbox>结束日期:</hbox>
+      			<hbox>
+      				<datebox id="endDate" value="@{saction.endDate}"
+      					format="yyyy-MM-dd">
+      				</datebox>
+      			</hbox>
+      		</row>
+      		<row>
+      			<hbox>内容关键字:<image width="15px" height="15px" src="/img/qm.gif" tooltip="content_remark"/></hbox>
+      			<hbox>
+      				<textbox id="keyword" value="@{saction.keyword }"/>
+      			</hbox>
+      			<hbox>查询所有：</hbox>
+      			<hbox><checkbox id="searchAll" onClick="saction.setSearchAllFlag(self.checked)"/></hbox>
+      		</row>
+      		<row>
+      			<hbox></hbox>
+      			<hbox></hbox>
+      			<hbox>
+      				<button label="查 询" id="search"
+      					onClick="_paging.activePage=0;saction.forwardSearch();">
+      				</button>
+      			</hbox>
+      			<hbox></hbox>
+      		</row>
+      	</rows>
+      </grid>
+
+      <listbox id="box"
+		model="@{saction.smsContentLoglist,load-after='search.onClick,_paging.onPaging'}">
+		<listhead>
+			<listheader label="序号" width="10%" align="center"/>
+			<listheader label="手机号码" width="10%" align="center"/>
+			<listheader label="发送内容" width="50%" align="left"/>
+			<listheader label="发送时间" width="10%" align="left"/>
+			<listheader label="发送状态" width="10%" align="center"/>
+			<listheader label="操作账号" width="10%" align="center"/>
+			<listheader label="操作" width="10%" align="center"/>
+		</listhead>
+		<listitem self="@{each='sms'}"  height="25px">
+			<listcell label="@{sms.id}" />
+			<listcell label="@{sms.mobile}" />
+			<listcell label="@{sms.contentRlppa}"/>
+			<listcell label="@{sms.formateDate}"/>
+			<listcell label="@{sms.statusGB}"/>
+			<listcell label="@{sms.userId}"/>
+			<listcell><a onClick="saction.resend(self.getAttributes());" label="短信重发">
+			<custom-attributes smsId="@{sms.id}"/>
+			<custom-attributes statusId="@{saction.status}"/>
+			</a></listcell>
+		</listitem>
+		</listbox>
+	  
+	<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell width="200px">
+					<paging  id="_paging" pageSize = "15"  onPaging='saction.forwardSearch();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>     
+</window>
+	<popup id="content_remark" width="400px"> 
+		<div>使用内容关键字查询，系统将自动只显示最多30天之内的短信</div>
+	</popup>
+</zk>

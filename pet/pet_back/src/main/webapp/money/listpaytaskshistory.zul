@@ -1,0 +1,113 @@
+﻿<?page title="现金帐户列表" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_listpaytaskshistory"?>
+<?component name="lvmama_user" macroURI="/macors/user.zul"?>
+<?component name="button" extends="button" class="com.lvmama.pet.utils.PermButton" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_listpaytaskshistory" mode="embedded" apply="com.lvmama.pet.web.money.ListPayTasksHistory">
+	<grid>
+		<columns>
+			<column width="80px"></column>
+			<column></column>
+			<column width="80px"></column>
+			<column></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>用户：</hbox>
+				<hbox>
+					<textbox value="@{saction.userId }" id="userId" visible="false"/>
+					<lvmama_user />
+
+				</hbox>
+				<hbox>状态：</hbox>
+				<hbox>
+					<listbox mold="select" selectedItem="@{saction.status }">
+						<listitem label="--请选择--" value=""	/>
+						<listitem label="被拒绝" value="UnApplyPayCashAndRejected" />
+						<listitem label="打款申请提交成功" value="ApplyPayCashSuccess" />
+						<listitem label="打款申请提交失败" value="ApplyPayCashRejected" />
+						<listitem label="打款成功" value="PayCashSuccess" />
+						<listitem label="打款失败" value="PayCashFailed" />
+						<listitem label="失败已处理完毕" value="Done" />
+					</listbox>
+				</hbox>
+
+				<hbox>
+				</hbox>
+			</row>
+			<row>
+				<hbox>打款时间：</hbox>
+				<hbox>
+					<datebox value="@{saction.createTimeStart}"/>至<datebox value="@{saction.createTimeEnd}"/>
+				</hbox>
+				<hbox></hbox>
+				<hbox>
+					
+				</hbox>
+				<hbox>
+					<button label="搜索" id="search" width="100px" onClick="saction.loadDataList();"/>
+				</hbox>
+			</row>
+
+		</rows>
+	</grid>
+	<listbox multiple="false" model="@{saction.playMoneyList,load-after='search.onClick,_paging.onPaging'}">
+		<listhead>
+			<listheader label="提现单号" width="5%"/>
+			<listheader label="用户名"/>
+			<listheader label="姓名"/> 
+			<listheader label="手机号"/>
+			<listheader label="提现至"/>
+			<listheader label="收款人"/>
+			<listheader label="金额" width="5%"/>
+			<listheader label="文件名" width="25%"/>
+			<listheader label="状态"/>
+			<listheader label="操作"/>
+		</listhead>
+		<listitem height="25px" self="@{each='each'}" >
+			<listcell label="@{each.fincMoneyDraw.moneyDrawId}" />
+			<listcell label="@{each.user.userName}" />
+			<listcell label="@{each.user.realName}" /> 
+			<listcell label="@{each.user.mobileNumber}" />
+			<listcell label="@{each.fincMoneyDraw.bankName}" />
+			<listcell label="@{each.fincMoneyDraw.bankAccountName}" />
+			<listcell label="@{each.amount}" />
+			<listcell label="@{each.aliPayFile}" />
+			<listcell label="@{each.fincMoneyDraw.payStatusName}" />
+			<listcell>
+				<button permCode="1035" label="查看"  style="color:blue;" onClick='saction.showWindow("/money/playmoneyview.zul",self.getAttributes());'> 
+                   <custom-attributes moneyDrawId="@{each.fincMoneyDraw.moneyDrawId}"/>
+                </button>
+				
+				<button permCode="1036" style="color:blue" label="手动成功" onClick="saction.manualHandle(self.getAttributes());" isShow="@{each.fincMoneyDraw.canManualHandle}" >
+					<custom-attributes moneyDrawId="@{each.fincMoneyDraw.moneyDrawId}"/>
+					<custom-attributes manualHandleFlag="true"/>
+				</button>
+				
+				<button permCode="1037" style="color:blue" label="手动失败" onClick="saction.manualHandle(self.getAttributes());" isShow="@{each.fincMoneyDraw.canManualHandle}" >
+					<custom-attributes moneyDrawId="@{each.fincMoneyDraw.moneyDrawId}"/>
+					<custom-attributes manualHandleFlag="false"/>
+				</button>
+			</listcell>						
+		</listitem>
+	</listbox>
+
+	<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="20" onPaging='saction.loadDataList();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+</window>
+</zk>

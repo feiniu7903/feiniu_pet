@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SET_SETTLEMENT_PAYMENT" >
+	<typeAlias alias="SetSettlementPayment" type="com.lvmama.comm.pet.po.fin.SetSettlementPayment"/>
+		<resultMap id="setSettlementPaymentMap" class="com.lvmama.comm.pet.po.fin.SetSettlementPayment" >
+		<result column="SETTLEMENT_PAYMENT_ID" property="settlementPaymentId" />
+		<result column="TARGET_ID" property="targetId" />
+		<result column="SETTLEMENT_ID" property="settlementId"/>
+		<result column="PAYTYPE" property="paytype"/>
+		<result column="AMOUNT" property="amount" />
+		<result column="BANK" property="bank" />
+		<result column="SERIAL" property="serial" />
+		<result column="OPERATETIME" property="operatetime" />
+		<result column="REMARK" property="remark" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATETIME" property="createtime" />
+		<result column="CURRENCY" property="currency" />
+		<result column="INVOICE_RETDATE" property="invoiceRetdate" />
+		<result column="INVOICE_WRITEOFF_MONTH" property="invoiceWriteoffMonth" />
+		<result column="RECOVERY_STATUS" property="recoveryStatus" />
+		<result column="RATE" property="rate" />
+		<result column="TRAVEL_GROUP_CODE" property="travelGroupCode" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="BUSINESS_NAME" property="businessName"/>
+	</resultMap>
+	<sql id="search_subSql">
+		SELECT * FROM SET_SETTLEMENT_PAYMENT 
+		<dynamic prepend=" WHERE ">
+		<isNotNull property="businessName" prepend="AND" > 		BUSINESS_NAME = #businessName# 	</isNotNull>
+		<isNull property="businessName" prepend="AND" > 		BUSINESS_NAME IS NULL 	</isNull>
+		<isNotEmpty prepend="AND" property="targetIds">
+     		<iterate property="targetIds" conjunction=" , " open="(" close=")" prepend="TARGET_ID IN">
+     			#targetIds[]#
+     		</iterate>
+		</isNotEmpty>
+		<isNotEmpty property="settlementId">
+	  		AND SETTLEMENT_ID = #settlementId#
+	  	</isNotEmpty>
+	  	<isNotEmpty property="currency">
+	  		AND CURRENCY = #currency#
+	  	</isNotEmpty>
+	  	<isNotEmpty property="platform">
+		  	AND BANK like #platform#
+	  	</isNotEmpty>
+	  	<isNotEmpty property="payTimeStart">
+	  		AND	 OPERATETIME &gt;= TRUNC(TO_DATE(#payTimeStart#,'YYYY-MM-DD'))
+	  	</isNotEmpty>
+	  	<isNotEmpty property="payTimeEnd">
+		  	AND	 OPERATETIME &lt; TRUNC(TO_DATE(#payTimeEnd#,'YYYY-MM-DD') + 1)
+	  	</isNotEmpty>
+	  	<isNotEmpty property="groupId">
+	  		AND TRAVEL_GROUP_CODE = #groupId#
+	  	</isNotEmpty>
+	  	<isNotEmpty property="supplier">
+	  		AND SUPPLIER_ID = #supplier#
+	  	</isNotEmpty>
+		</dynamic>
+		ORDER BY  CREATETIME DESC
+	</sql>
+	<select id="search" parameterClass="map" resultMap="setSettlementPaymentMap">
+		<include refid="pageSearchHead"/>
+		<include refid="search_subSql"/>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchCount" parameterClass="map" resultClass="long">
+		SELECT COUNT(*)  FROM (
+ 		<include refid="search_subSql"/>
+ 		) A
+  	</select>
+  	<sql id="searchWhere">
+  		FROM 
+	       		SET_SETTLEMENT_PAYMENT T1,
+	           	SUP_SETTLEMENT_TARGET  T2,
+	           	SUP_SUPPLIER           T3
+	       	WHERE 
+	       		T1.TARGET_ID = T2.TARGET_ID
+	       	AND 
+	       		T2.SUPPLIER_ID = T3.SUPPLIER_ID
+	  	<isNotEmpty property="settlementId">
+	  		AND
+	  			T1.SETTLEMENT_ID = #settlementId#
+	  	</isNotEmpty>
+	  	<isEmpty property="settlementId">
+	  	<isNotNull property="businessName" prepend="AND" > 		BUSINESS_NAME = #businessName# 	</isNotNull>
+		<isNull property="businessName" prepend="AND" > 		BUSINESS_NAME IS NULL 	</isNull>
+	  	</isEmpty>
+	  	<isNotEmpty property="currency">
+	  		AND
+	  			T1.CURRENCY = #currency#
+	  	</isNotEmpty>
+	  	<isNotEmpty property="supplier">
+	  		AND
+	  			T3.SUPPLIER_ID = #supplier#
+	  	</isNotEmpty>
+	  	<isNotEmpty property="platform">
+		  	AND
+		  		T1.BANK like #platform#
+	  	</isNotEmpty>
+	  	<isNotEmpty property="payTimeStart">
+	  		AND	
+				T1.OPERATETIME &gt;= TRUNC(TO_DATE(#payTimeStart#,'YYYY-MM-DD'))
+	  	</isNotEmpty>
+	  	<isNotEmpty property="payTimeEnd">
+		  	AND	
+				T1.OPERATETIME &lt; TRUNC(TO_DATE(#payTimeEnd#,'YYYY-MM-DD') + 1)
+	  	</isNotEmpty>
+	  	<isNotEmpty property="groupId">
+	  		AND 
+	  			T1.TRAVEL_GROUP_CODE = #groupId#
+	  	</isNotEmpty>
+  	</sql>
+  	<!-- 根据供应商名称、支付平台查询支付记录 -->
+  	<select id="getSetSettlementPaymentHistory" parameterClass="map" resultClass="SetSettlementPayment">
+  		<include refid="pageSearchHead"/>
+  		SELECT 
+			T1.TRAVEL_GROUP_CODE AS travelGroupCode,
+           	T1.SETTLEMENT_ID AS settlementId,
+           	T1.BANK AS bank,
+           	T1.SERIAL AS serial,
+           	T1.AMOUNT AS amount,
+           	T1.OPERATETIME AS operatetime,
+           	T1.CREATETIME AS createtime,
+           	T3.SUPPLIER_NAME AS supplierName,
+           	T1.CURRENCY AS currency
+       <include refid="searchWhere"/>
+ 	ORDER BY 
+ 		T1.CREATETIME DESC
+  	<include refid="pageSearchFoot"/>
+  </select>
+  <select id="getSetSettlementPaymentHistoryCount" parameterClass="map" resultClass="long">
+		SELECT COUNT(T1.SETTLEMENT_PAYMENT_ID)
+ 		<include refid="searchWhere"/>
+  </select>
+	
+	
+	<!-- 添加供应商的预存款支付记录 begin-->
+	  <insert id="insertPayment" parameterClass="SetSettlementPayment">
+	  	INSERT INTO 
+	  		SET_SETTLEMENT_PAYMENT
+	  	(
+	  		SETTLEMENT_PAYMENT_ID,
+	  		TARGET_ID,
+	  		SETTLEMENT_ID,
+	  		PAYTYPE,
+	  		AMOUNT,
+	  		BANK,
+	  		SERIAL,
+	  		OPERATETIME,
+	  		REMARK,
+	  		CREATOR,
+	  		CREATETIME,
+	  		CURRENCY,
+	  		TRAVEL_GROUP_CODE,
+	  		INVOICE_RETDATE,
+	  		RATE,
+	  		GROUP_SETTLEMENT_ID,
+	  		SUPPLIER_ID,
+	  		BUSINESS_NAME
+	  	)VALUES(
+	  		SET_SETTLEMENT_PAYMENT_SEQ.NEXTVAL,
+	  		#targetId#,
+	  		#settlementId#,
+	  		#paytype#,
+			#amount#,	
+	  		#bank#,
+	  		#serial#,
+	  		#operatetime#,
+	  		#remark#,
+	  		#creator#,
+	  		SYSDATE,
+	  		#currency#,
+	  		#travelGroupCode#,
+	  		#invoiceRetdate#,
+	  		#rate#,
+	  		#groupSettlementId#,
+	  		#supplierId#,
+	  		#businessName#
+	  	)
+	  </insert>
+</sqlMap>

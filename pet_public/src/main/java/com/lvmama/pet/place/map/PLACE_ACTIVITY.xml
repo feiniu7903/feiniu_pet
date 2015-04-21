@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PLACE_ACTIVITY" >
+  <typeAlias alias="placeActivity" type="com.lvmama.comm.pet.po.place.PlaceActivity" />
+  <resultMap id="BaseResultMap" class="placeActivity" >
+    <result column="PLACE_ACTIVITY_ID" property="placeActivityId"  />
+    <result column="PLACE_ID" property="placeId"  />
+    <result column="START_TIME" property="startTime"  />
+    <result column="END_TIME" property="endTime"  />
+    <result column="TITLE" property="title"  />
+    <result column="CONTENT" property="content"  />
+    <result column="IS_VALID" property="isValid"  />
+    <result column="SEQ_NUM" property="seq"  />
+  </resultMap>
+  <select id="selectByPlaceActivityId" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select PLACE_ACTIVITY_ID, PLACE_ID, START_TIME, END_TIME, TITLE, CONTENT, IS_VALID, SEQ_NUM
+    from LVMAMA_PET.PLACE_ACTIVITY
+    where PLACE_ACTIVITY_ID = #placeActivityId#
+  </select>
+  <select id="queryPlaceActivityListByPlaceId" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select PLACE_ACTIVITY_ID, PLACE_ID, START_TIME, END_TIME, TITLE, CONTENT, IS_VALID, SEQ_NUM
+    from LVMAMA_PET.PLACE_ACTIVITY
+    where PLACE_ID = #PLACE_ID#
+  </select>
+  
+    <select id="queryPlaceActivityListByParam" resultMap="BaseResultMap" parameterClass="java.util.Map" >
+    select PLACE_ACTIVITY_ID, PLACE_ID, START_TIME, END_TIME, TITLE, CONTENT, IS_VALID, SEQ_NUM
+    from LVMAMA_PET.PLACE_ACTIVITY
+   <dynamic prepend="where" >
+	    <isNotNull prepend="and" property="placeId" >
+	      PLACE_ID = #placeId#
+	    </isNotNull>
+	    <isEqual prepend="and"   property="timeValid" compareValue="true">
+	       <![CDATA[  END_TIME>=SYSDATE ]]>
+	    </isEqual>
+    </dynamic>
+  </select>
+  
+  <delete id="deletePlaceActivityByPrimaryKey" parameterClass="java.lang.Long" >
+    delete from LVMAMA_PET.PLACE_ACTIVITY
+    where PLACE_ACTIVITY_ID = #placeActivityId#
+  </delete>
+  <insert id="insert" parameterClass="placeActivity" >
+    insert into LVMAMA_PET.PLACE_ACTIVITY (PLACE_ACTIVITY_ID,PLACE_ID, START_TIME, END_TIME, TITLE,
+      CONTENT, IS_VALID, SEQ_NUM)
+    values (place_activity_seq.nextval, #placeId#, #startTime#, #endTime#,
+      #title#, #content#, #isValid#, #seq#)
+  </insert>
+  
+  <update id="updatePlaceActivity" parameterClass="placeActivity" >
+    update LVMAMA_PET.PLACE_ACTIVITY
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="placeId" >
+        PLACE_ID = #placeId#
+      </isNotNull>
+      <isNotNull prepend="," property="startTime" >
+        START_TIME = #startTime#
+      </isNotNull>
+      <isNotNull prepend="," property="endTime" >
+        END_TIME = #endTime#
+      </isNotNull>
+      <isNotNull prepend="," property="title" >
+        TITLE = #title#
+      </isNotNull>
+      <isNotNull prepend="," property="content" >
+        CONTENT = #content#
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        IS_VALID = #isValid#
+      </isNotNull>
+      <isNotNull prepend="," property="seq" >
+        SEQ_NUM = #seq#
+      </isNotNull>
+    </dynamic>
+    where PLACE_ACTIVITY_ID = #placeActivityId#
+  </update>
+</sqlMap>

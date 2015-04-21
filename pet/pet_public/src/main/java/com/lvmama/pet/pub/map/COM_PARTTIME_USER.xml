@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_PARTTIME_USER" >
+	<resultMap id="comParttimeUser" class="com.lvmama.comm.pet.po.pub.ComParttimeUser">
+		<result column="ID" property="id" />
+		<result column="USER_NAME" property="userName" />
+		<result column="PASS_WORD" property="passWord" />
+		<result column="CHANNEL_ID" property="channelId" />
+		<result column="IS_VALID" property="isValid"/>
+		<result column="CITY_ID" property="cityId" />
+		<result column="CONFIRM_SMS" property="confirmSms" />
+		<result column="SMS_TEMPLATE" property="smsTemplate" />
+		<result column="MAIL_TEMPLATE" property="mailTemplate" />
+		<result column="CITY_NAME" property="cityName"/>
+		<result column="PROVINCE_ID" property="provinceId" />
+		<result column="PROVINCE_NAME" property="provinceName"/>
+	</resultMap>
+	<sql id="reuseSql">
+		SELECT U.ID,
+	  		   U.USER_NAME,
+	  		   U.PASS_WORD,
+	  		   U.CHANNEL_ID,
+			   U.IS_VALID,
+			   U.CITY_ID,
+			   U.CONFIRM_SMS,
+			   U.SMS_TEMPLATE,
+			   U.MAIL_TEMPLATE,
+			   C.CITY_NAME,
+			   P.PROVINCE_ID,
+			   P.PROVINCE_NAME,
+			   ROWNUM RN
+		  FROM 
+			  COM_PARTTIME_USER U,
+			  COM_CITY C,
+			  COM_PROVINCE P
+		  WHERE
+			U.CITY_ID = C.CITY_ID AND C.PROVINCE_ID = P.PROVINCE_ID
+		  <dynamic>
+				<isNotEmpty property="channelId" prepend=" AND ">  
+					U.CHANNEL_ID IN (SELECT channel_id FROM mark_channel START WITH channel_id = #channelId# CONNECT BY PRIOR channel_id = father_id) 
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend=" AND ">		   U.ID		   =#id# 		</isNotEmpty>
+				<isNotEmpty property="userName" prepend=" AND ">   U.USER_NAME =#userName#  </isNotEmpty>
+				<isNotEmpty property="passWord" prepend=" AND ">   U.PASS_WORD =#passWord#  </isNotEmpty>
+				<isNotEmpty property="isValid" prepend=" AND ">    U.IS_VALID  =#isValid#   </isNotEmpty>
+		  </dynamic>
+	</sql>
+  	<!-- 根据渠道类型或渠道标识查询促销员与渠道关系 -->
+  	<select id="query" parameterClass="java.util.Map" resultMap="comParttimeUser">
+  	   SELECT A.ID,
+				A.USER_NAME,
+	  		   A.PASS_WORD,
+	  		   A.CHANNEL_ID,
+			   A.IS_VALID,
+			   A.CITY_ID,
+			   A.CITY_NAME,
+			   A.PROVINCE_ID,
+			   A.PROVINCE_NAME,
+			   A.CONFIRM_SMS,
+			   A.SMS_TEMPLATE,
+			   A.MAIL_TEMPLATE,
+			   A.CITY_NAME,
+			   A.PROVINCE_ID,
+			   A.PROVINCE_NAME
+		 FROM (
+		    <include refid="reuseSql"/>
+		) A 
+		   <dynamic  prepend = " WHERE ">
+		        <isNotEmpty property="maxResults" prepend=" AND " > RN  &lt;=#maxResults#   </isNotEmpty>
+		   		<isNotEmpty property="skipResults" prepend=" AND "> RN  &gt;#skipResults#   </isNotEmpty>
+		   </dynamic>
+  	</select>
+	
+	<select id="getChannelName" parameterClass="long" resultClass="String">
+		SELECT MAX(sys_connect_by_path(channel_name,'-->')) FROM mark_channel START WITH channel_id = #channelId# CONNECT BY PRIOR  father_id = channel_id
+	</select>
+	
+  	<!-- 根据渠道类型或渠道标识查询促销员与渠道关系总数 -->
+  	<select id="count" parameterClass="java.util.Map" resultClass="long">
+  		SELECT COUNT(1) CT FROM (
+		   <include refid="reuseSql"/>
+		) A
+  	</select>
+	
+ 	<!-- 新增促销员与渠道关系信息 -->
+  	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComParttimeUser">
+ 	  <selectKey resultClass="java.lang.Long" keyProperty="id"> 
+  	     SELECT COM_PARTTIME_USER_SEQ.NEXTVAL AS ID FROM DUAL 
+  	  </selectKey>
+  		INSERT INTO COM_PARTTIME_USER 
+	        <dynamic prepend="(">
+	  			<isNotEmpty  property="id" prepend=","> 	  ID 		     </isNotEmpty>
+	  			<isNotEmpty  property="userName" prepend=","> USER_NAME      </isNotEmpty>
+	  			<isNotEmpty  property="passWord" prepend=","> PASS_WORD      </isNotEmpty>
+	  			<isNotEmpty  property="channelId" prepend=",">CHANNEL_ID 	 </isNotEmpty>
+				<isNotEmpty  property="isValid" prepend=",">IS_VALID 	 </isNotEmpty>
+				<isNotEmpty  property="confirmSms" prepend=",">CONFIRM_SMS 	 </isNotEmpty>
+				<isNotEmpty  property="smsTemplate" prepend=",">SMS_TEMPLATE 	 </isNotEmpty>
+				<isNotEmpty  property="mailTemplate" prepend=",">MAIL_TEMPLATE 	 </isNotEmpty>
+				<isNotEmpty  property="cityId" prepend=",">CITY_ID</isNotEmpty>
+	  			)
+	  		</dynamic>
+  		VALUES 
+	  		<dynamic prepend="(">
+	  			<isNotEmpty  property="id" prepend=","> 	   #id# 		 </isNotEmpty>
+	  			<isNotEmpty  property="userName" prepend=",">  #userName#    </isNotEmpty>
+	  			<isNotEmpty  property="passWord" prepend=",">  #passWord#    </isNotEmpty>
+	  			<isNotEmpty  property="channelId" prepend=","> #channelId#	 </isNotEmpty>
+				<isNotEmpty  property="isValid" prepend=",">#isValid#	 </isNotEmpty>
+				<isNotEmpty  property="confirmSms" prepend=","> #confirmSms#	 </isNotEmpty>
+				<isNotEmpty  property="smsTemplate" prepend=","> #smsTemplate# </isNotEmpty>
+				<isNotEmpty  property="mailTemplate" prepend=","> #mailTemplate#	 </isNotEmpty>
+				<isNotEmpty  property="cityId" prepend=",">#cityId#</isNotEmpty>
+	  			)
+	  		</dynamic>
+  	</insert>	
+ 
+  	<!-- 更新用户与渠道关系信息 -->
+  	<update id="update" parameterClass="com.lvmama.comm.pet.po.pub.ComParttimeUser">
+  		UPDATE COM_PARTTIME_USER U 
+  		   SET U.USER_NAME =#userName#,
+  		   	   U.PASS_WORD =#passWord#,
+  		       U.CHANNEL_ID=#channelId#,
+			   U.IS_VALID = #isValid#，
+  		       U.CONFIRM_SMS =#confirmSms#，
+			   U.SMS_TEMPLATE = #smsTemplate#,
+			   U.MAIL_TEMPLATE = #mailTemplate#,
+			   U.CITY_ID = #cityId#
+  		WHERE
+			U.ID=#id# 
+  	</update>
+</sqlMap>

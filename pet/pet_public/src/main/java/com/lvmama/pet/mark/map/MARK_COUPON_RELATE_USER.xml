@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="MARK_COUPON_RELATE_USER">
+	<resultMap id="MarkCouponRelateUser" class="com.lvmama.comm.pet.po.mark.MarkCouponRelateUser">
+		<result column="COUPON_RELATE_USER_ID" property="id" />
+		<result column="COUPON_CODE_ID" property="couponCodeId" />
+		<result column="USER_ID" property="userId" />
+	</resultMap>
+	
+<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mark.MarkCouponCode" >
+    <result column="COUPON_CODE_ID" property="couponCodeId" />
+    <result column="COUPON_ID" property="couponId" />
+    <result column="COUPON_CODE" property="couponCode" />
+    <result column="USED" property="used" />
+    <result column="BEGIN_TIME" property="beginTime" />
+    <result column="END_TIME" property="endTime" />
+    <result column="CREATE_TIME" property="createtime" />
+  </resultMap>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.mark.MarkCouponRelateUser">
+		<selectKey resultClass="java.lang.Long" keyProperty="id">
+			select MARK_COUPON_RELATE_USER_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into MARK_COUPON_RELATE_USER (COUPON_RELATE_USER_ID,
+		COUPON_CODE_ID, USER_ID) values (#id#, #couponCodeId#, #userId#)
+	</insert>
+	
+	<delete id="deleteByCodeId" parameterClass="java.lang.Long">
+		delete from MARK_COUPON_RELATE_USER where coupon_code_id=#codeId#
+	</delete>
+	
+	<select id="selectByCodeId" parameterClass="java.lang.Long" resultMap="MarkCouponRelateUser">
+		select * from MARK_COUPON_RELATE_USER where coupon_code_id=#codeId#
+	</select>
+	
+	
+ <!-- 获取用户相关优惠券 -->
+ <select id="selectByRelateUserId"  resultMap="BaseResultMap" parameterClass="java.util.Map">
+  SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+		  	select mcc.*
+		    from MARK_COUPON_CODE mcc, MARK_COUPON_RELATE_USER mcru 
+		    <isEqual property="used" compareValue="false">,MARK_COUPON M </isEqual>
+		    where mcc.COUPON_CODE_ID = mcru.COUPON_CODE_ID 
+		    <dynamic>
+		    	<isNotEmpty prepend=" AND " property="userId"> mcru.USER_ID=#userId# </isNotEmpty>
+		    	<isNotEmpty prepend=" AND " property="used"> mcc.USED = #used# 
+		    		<isEqual  property="used" compareValue="false"> AND M.COUPON_ID = MCC.COUPON_ID AND M.VALID = 'true' 
+		    		AND 
+		    		(
+		    		(M.BEGIN_TIME + M.TERM_OF_VALIDITY >= TRUNC(SYSDATE) and M.VALID_TYPE = 'FIXED') or
+		    		(mcc.END_TIME >= TRUNC(SYSDATE) and M.VALID_TYPE = 'UNFIXED')
+		    		)
+		    		</isEqual>
+		    	</isNotEmpty>
+		    </dynamic>
+		    order by mcru.COUPON_RELATE_USER_ID desc
+ 		) T 
+ 		 <dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_endRow">ROWNUM &lt;= #_endRow#</isNotEmpty>
+	 	</dynamic>
+		)
+		<dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_startRow">ROWNUM1 &gt;=#_startRow#</isNotEmpty>
+	  </dynamic>
+  </select>
+  
+    <!-- 获取用户相关优惠券数 -->
+  	<select id="selectCountByRelateUser" resultClass="java.lang.Long" parameterClass="java.util.Map">
+	  	select count(*)
+	    from MARK_COUPON_CODE mcc, MARK_COUPON_RELATE_USER mcru 
+	    <isEqual property="used" compareValue="false">,MARK_COUPON M </isEqual>
+	    where mcc.COUPON_CODE_ID = mcru.COUPON_CODE_ID 
+		    <dynamic>
+		    	<isNotEmpty prepend=" AND " property="userId"> mcru.USER_ID=#userId# </isNotEmpty>
+		    	<isNotEmpty prepend=" AND " property="used"> mcc.USED = #used# 
+		    		<isEqual  property="used" compareValue="false"> AND M.COUPON_ID = MCC.COUPON_ID AND M.VALID = 'true' 
+		    		AND 
+		    		(
+		    		(M.BEGIN_TIME + M.TERM_OF_VALIDITY >= TRUNC(SYSDATE) and M.VALID_TYPE = 'FIXED') or
+		    		(mcc.END_TIME >= TRUNC(SYSDATE) and M.VALID_TYPE = 'UNFIXED')
+		    		)
+		    		</isEqual>
+		    	</isNotEmpty>
+		    </dynamic>
+ 	</select> 
+	
+</sqlMap>

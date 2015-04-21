@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FIN_RECON_RESULT">
+	<resultMap id="FinReconResultResult" class="com.lvmama.comm.pet.po.pay.FinReconResult">
+		<result column="RECON_RESULT_ID" property="reconResultId" />
+		<result column="PAYMENT_TRADE_NO" property="paymentTradeNo" />
+		<result column="BANK_PAYMENT_TRADE_NO" property="bankPaymentTradeNo" />
+		<result column="GATEWAY_TRADE_NO" property="gatewayTradeNo" />
+		<result column="BANK_GATEWAY_TRADE_NO" property="bankGatewayTradeNo" />
+		<result column="AMOUNT" property="amount" />
+		<result column="BANK_AMOUNT" property="bankAmount" />
+		<result column="CALLBACK_TIME" property="callbackTime" />
+		<result column="TRANSACTION_TIME" property="transactionTime" />
+		<result column="TRANSACTION_TYPE" property="transactionType" />
+		<result column="TRANSACTION_SOURCE" property="transactionSource" />
+		<result column="GATEWAY" property="gateway" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="RECON_STATUS" property="reconStatus" />
+		<result column="RECON_RESULT" property="reconResult" />
+		<result column="BANK_RECON_TIME" property="bankReconTime" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="MEMO" property="memo" />
+		<result column="GL_STATUS" property="glStatus" />
+		<result column="GL_TIME" property="glTime" />
+		<result column="PAYMENT_ID"  property="paymentId"/>
+	</resultMap>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.FinReconResult">
+		<selectKey resultClass="java.lang.Long" keyProperty="reconResultId">
+			SELECT
+			FIN_RECON_RESULT_SEQ.NEXTVAL AS ID FROM DUAL
+	</selectKey>
+		insert into fin_recon_result (RECON_RESULT_ID,
+		PAYMENT_TRADE_NO, BANK_PAYMENT_TRADE_NO, GATEWAY_TRADE_NO,
+		BANK_GATEWAY_TRADE_NO, AMOUNT, BANK_AMOUNT, CALLBACK_TIME,
+		TRANSACTION_TIME, TRANSACTION_TYPE,TRANSACTION_SOURCE, GATEWAY,ORDER_ID, RECON_STATUS,
+		RECON_RESULT, BANK_RECON_TIME, CREATE_TIME, MEMO,GL_STATUS,PAYMENT_ID)
+		values (#reconResultId#, #paymentTradeNo#, #bankPaymentTradeNo#,
+		#gatewayTradeNo#, #bankGatewayTradeNo#, #amount#, #bankAmount#,
+		#callbackTime#, #transactionTime#, #transactionType#,#transactionSource#, #gateway#,#orderId#,
+		#reconStatus#, #reconResult#,
+		#bankReconTime#, #createTime#, #memo#,#glStatus#,#paymentId#)
+	</insert>
+	
+	<delete id="deleteOldData" parameterClass="java.util.HashMap">
+		DELETE FROM
+		FIN_RECON_RESULT
+		WHERE GATEWAY in ($gatewayIN$)
+		AND BANK_RECON_TIME=#bankReconTime#
+		<isNotEmpty property="reconStatus">
+		AND	RECON_STATUS= #reconStatus#
+		</isNotEmpty>
+	</delete>
+	<select id="selectByReconResultId" resultMap="FinReconResultResult" parameterClass="java.lang.Long">
+		<![CDATA[
+		SELECT * FROM FIN_RECON_RESULT WHERE RECON_RESULT_ID = #reconResultId#
+		]]>
+	</select>
+	<update id="updateNoMatchingReconResult" parameterClass="java.util.HashMap">
+		update fin_recon_result rs set rs.recon_status=#setReconStatus#,rs.recon_result=#setReconResult#
+			where rs.gateway in ($gatewayIN$)
+			and to_char(rs.bank_recon_time,'yyyy-MM-dd')=to_char(#bankReconTimeShort#,'yyyy-MM-dd')
+			and rs.recon_status=#reconStatus#
+	</update>
+	
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.pay.FinReconResult">
+		update FIN_RECON_RESULT
+		set
+		<isNotEmpty property="paymentTradeNo">
+			PAYMENT_TRADE_NO = #paymentTradeNo#,
+		</isNotEmpty>
+		<isNotEmpty property="bankPaymentTradeNo">
+			BANK_PAYMENT_TRADE_NO = #bankPaymentTradeNo#,
+		</isNotEmpty>
+		<isNotEmpty property="gatewayTradeNo">
+			GATEWAY_TRADE_NO = #gatewayTradeNo#,
+		</isNotEmpty>
+		<isNotEmpty property="bankGatewayTradeNo">
+			BANK_GATEWAY_TRADE_NO = #bankGatewayTradeNo#,
+		</isNotEmpty>
+		<isNotEmpty property="amount">
+			AMOUNT = #amount#,
+		</isNotEmpty>
+		<isNotEmpty property="bankAmount">
+			BANK_AMOUNT = #bankAmount#,
+		</isNotEmpty>
+		<isNotEmpty property="callbackTime">
+			CALLBACK_TIME = #callbackTime#,
+		</isNotEmpty>
+		<isNotEmpty property="transactionTime">
+			TRANSACTION_TIME = #transactionTime#,
+		</isNotEmpty>
+		<isNotEmpty property="transactionType">
+			TRANSACTION_TYPE = #transactionType#,
+		</isNotEmpty>
+		<isNotEmpty property="transactionSource">
+			TRANSACTION_SOURCE = #transactionSource#,
+		</isNotEmpty>
+		<isNotEmpty property="gateway">
+			GATEWAY = #gateway#,
+		</isNotEmpty>
+		<isNotEmpty property="reconStatus">
+			RECON_STATUS = #reconStatus#,
+		</isNotEmpty>
+		<isNotEmpty property="reconResult">
+			RECON_RESULT = #reconResult#,
+		</isNotEmpty>
+		<isNotEmpty property="bankReconTime">
+			BANK_RECON_TIME = #bankReconTime#,
+		</isNotEmpty>
+		<isNotEmpty property="orderId">
+			ORDER_ID = #orderId#,
+		</isNotEmpty>
+		<isNotEmpty property="glStatus">
+			GL_STATUS = #glStatus#,
+		</isNotEmpty>
+		MEMO = #memo#
+		where RECON_RESULT_ID = #reconResultId#
+	</update>
+	
+	<sql id="selectReconResultListConditions">
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property="paymentTradeNo">
+				PAYMENT_TRADE_NO = #paymentTradeNo#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="and" property="bankPaymentTradeNo">
+				BANK_PAYMENT_TRADE_NO = #bankPaymentTradeNo#
+		    </isNotEmpty>
+			<isNotEmpty prepend="and" property="gatewayTradeNo">
+				GATEWAY_TRADE_NO = #gatewayTradeNo#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="and" property="bankGatewayTradeNo">
+				BANK_GATEWAY_TRADE_NO = #bankGatewayTradeNo#
+		    </isNotEmpty>
+			<isNotEmpty prepend="and" property="transactionType">
+				TRANSACTION_TYPE = #transactionType#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="and" property="transactionSource">
+				TRANSACTION_SOURCE = #transactionSource#
+		    </isNotEmpty>
+			<isNotEmpty prepend="and" property="gateway">
+				GATEWAY = #gateway#
+		      </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId">
+				ORDER_ID = #orderId#
+		      </isNotEmpty>
+			<isNotEmpty prepend="and" property="gatewayIN">
+				GATEWAY IN ($gatewayIN$)
+		      </isNotEmpty>
+			<isNotEmpty prepend="and" property="notInReconResultIds">
+				RECON_RESULT_ID NOT IN ($notInReconResultIds$)
+		      </isNotEmpty>
+			<isNotEmpty prepend="and" property="bankReconTimeStart">
+				BANK_RECON_TIME &gt;= TO_DATE(#bankReconTimeStart#,'yyyy-MM-dd')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="bankReconTimeEnd">
+				BANK_RECON_TIME &lt;= TO_DATE(#bankReconTimeEnd#,'yyyy-MM-dd')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="reconStatus">
+				RECON_STATUS = #reconStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="amountStart">
+				AMOUNT/100 &gt;= #amountStart#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="amountEnd">
+				AMOUNT/100 &lt;= #amountEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="bankAmountStart">
+				BANK_AMOUNT/100 &gt;= #bankAmountStart#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="bankAmountEnd">
+				BANK_AMOUNT/100 &lt;= #bankAmountEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="glStatus">
+				GL_STATUS = #glStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and " property="glStatusesNull">
+				(GL_STATUS IS NULL OR GL_STATUS IN ($glStatusesNull$))
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="paymentId">
+				PAYMENT_ID = #paymentId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="reconResultId">
+				RECON_RESULT_ID = #reconResultId#
+			</isNotEmpty>			
+		</dynamic>
+	</sql>
+	<sql id="pageHead" >
+		<isNotEmpty property="start">
+			SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM (
+		</isNotEmpty> 
+	</sql>
+	<sql id="pageFoot" >
+		<isNotEmpty property="orderby">
+			ORDER BY $orderby$
+			<isNotEmpty property="order">
+				$order$
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="start">
+			) P_T ) WHERE RN BETWEEN #start#
+			<isNotEmpty property="end">
+				AND #end#
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="selectReconResultListByParasCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM(
+			SELECT * FROM FIN_RECON_RESULT
+			<include refid="selectReconResultListConditions" />
+		) TT1
+	</select>
+	<select id="selectReconResultListByParas" resultMap="FinReconResultResult" parameterClass="java.util.HashMap">
+		<include refid="pageHead"/>
+			SELECT * FROM FIN_RECON_RESULT
+			<include refid="selectReconResultListConditions"/>
+		<include refid="pageFoot"/>
+	</select>
+	
+	<select id="selectReconResultListForBatch" resultMap="FinReconResultResult" parameterClass="java.util.HashMap">
+	SELECT * FROM (
+		SELECT *
+		  FROM LVMAMA_PET.FIN_RECON_RESULT R
+		 WHERE R.RECON_STATUS = 'SUCCESS'
+		   AND (R.GL_STATUS = 'INIT' OR R.GL_STATUS IS NULL)
+		 ORDER BY R.ORDER_ID ASC,
+		          (CASE
+		            WHEN R.TRANSACTION_TYPE = 'CANCEL_TO_CREATE_NEW' THEN 0
+		            WHEN R.TRANSACTION_TYPE = 'PAYMENT' THEN 1
+		            WHEN R.TRANSACTION_TYPE = 'REFUNDMENT' THEN 2
+		            WHEN R.TRANSACTION_TYPE = 'PAYMENT_FEE' THEN 3
+		            WHEN R.TRANSACTION_TYPE = 'REFUNDMENT_FEE' THEN 4
+		            WHEN R.TRANSACTION_TYPE = 'CASH_MONEY_DRAW' THEN 5
+		            WHEN R.TRANSACTION_TYPE = 'CASH_MONEY_DRAW_ALIPAY' THEN 6
+		            WHEN R.TRANSACTION_TYPE = 'NORMAL_DRAWCASH' THEN 7
+		            WHEN R.TRANSACTION_TYPE = 'FOREIGN_PAYMENT' THEN 8 
+		            WHEN R.TRANSACTION_TYPE = 'CASH_RECHARGE' THEN 9 
+		            ELSE
+		             10
+		          END) ASC,
+		          R.RECON_RESULT_ID ASC
+		          ) A WHERE ROWNUM &lt;=1000
+	</select>
+	
+	<select id="selectTransactionAmountByParamMap" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT 
+			SUM(AMOUNT)TRANSACTIONAMOUNTSUM,
+		    SUM(BANK_AMOUNT)TRANSACTIONBANKAMOUNTSUM
+		FROM FIN_RECON_RESULT
+		<include refid="selectReconResultListConditions"/>
+	</select>
+	
+	<update id="updateGLStatus" parameterClass="com.lvmama.comm.pet.po.pay.FinReconResult">
+		update FIN_RECON_RESULT
+		set
+		<isNotEmpty property="memo">
+			MEMO = #memo#,
+		</isNotEmpty>		
+		<isNotEmpty property="glStatus">
+			GL_STATUS = #glStatus#,
+		</isNotEmpty>
+		<isNotEmpty property="glTime">
+			GL_TIME = #glTime#
+		</isNotEmpty>		
+		where RECON_RESULT_ID = #reconResultId#
+	</update>
+	
+	<update id="updateFailedReconResultGLStatus" >
+		update FIN_RECON_RESULT set GL_STATUS ='INIT',MEMO=NULL where GL_STATUS='FAILED'
+	</update>
+	
+	
+</sqlMap>

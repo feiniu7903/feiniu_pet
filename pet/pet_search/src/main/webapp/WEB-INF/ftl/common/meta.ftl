@@ -1,0 +1,2 @@
+<link rel="canonical"  href="${base_url}.html">
+<link rel="stylesheet" href="http://pic.lvmama.com/min/index.php?f=/styles/new_v/header-air.css,/styles/v3/core.css,/styles/v3/module.css,/styles/new_v/ob_search/ui-search.css,/styles/new_v/ob_common/ui-components.css" >

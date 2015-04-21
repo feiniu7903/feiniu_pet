@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="COM_PINYIN">
+	<typeAlias alias="comPinyin" type="com.lvmama.comm.pet.po.pub.ComPinyin" />
+	<resultMap class="comPinyin" id="BaseResultMap">
+		<result column="COM_PINYIN_ID" property="comPinyinId" />
+		<result column="WORD" property="word" />
+		<result column="PINYIN" property="pinyin" />
+	</resultMap>
+	<select id="selectByPrimaryKey" parameterClass="comPinyin" resultMap="BaseResultMap">
+		select COM_PINYIN_ID, WORD, PINYIN
+		from LVMAMA_PET.COM_PINYIN
+		where COM_PINYIN_ID = #comPinyinId#
+	</select>
+	<select id="queryPinyibyWords" parameterClass="comPinyin" resultMap="BaseResultMap">
+		select COM_PINYIN_ID, WORD, PINYIN
+		from LVMAMA_PET.COM_PINYIN
+		where WORD in
+		<iterate property="wordList" conjunction="," open="(" close=")">
+			#wordList[]#
+		</iterate>
+	</select>
+</sqlMap>

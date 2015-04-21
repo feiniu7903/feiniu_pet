@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PRODUCT_SEARCH_INFO">
+  <typeAlias alias="productSearchInfo" type="com.lvmama.comm.pet.po.search.ProductSearchInfo" />
+  <resultMap class="productSearchInfo" id="BaseResultMap">
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="PRODUCT_NAME" property="productName" />
+    <result column="RECOMMEND_REASON" property="recommendReason" />
+    <result column="MARKET_PRICE" property="marketPrice" />
+    <result column="SELL_PRICE" property="sellPrice" />
+    <result column="SMALL_IMAGE" property="smallImage" />
+    <result column="FROM_DEST" property="fromDest" />
+    <result column="TO_DEST" property="toDest" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="IS_VALID" property="isValid" />
+    <result column="UPDATE_TIME" property="updateTime" />
+    <result column="IS_TICKET" property="isTicket" />
+    <result column="SEQ_NUM" property="seq" />
+    <result column="IS_HID" property="isHid" />
+    <result column="CASH_REFUND" property="cashRefund" />
+    <result column="PRODUCT_URL" property="productUrl" />
+    <result column="AGIO" property="agio" />
+    <result column="TOPIC" property="topic" />
+    <result column="PAY_METHOD" property="payMethod" />
+    <result column="VISIT_DAY" property="visitDay" />
+    <result column="IS_OLD" property="isOld" />
+    <result column="CHANNEL" property="channel" />
+    <result column="CHANNEL_FRONT" property="channelFront" />
+    <result column="CHANNEL_GROUP" property="channelGroup" />
+    <result column="TO_DEST_CONTENT" property="toDestContent" />
+    <result column="FROM_DEST_CONTENT" property="fromDestContent" />
+    <result column="PRODUCT_TYPE" property="productType" />
+    <result column="SUB_PRODUCT_TYPE" property="subProductType" />
+    <result column="NEAR_DATE" property="nearDate" />
+    <result column="PAY_TO_LVMAMA" property="payToLvmama" />
+    <result column="PAY_TO_SUPPLIER" property="payToSupplier" />
+    <result column="MINIMUM" property="minimum" nullValue="0"/>
+    <result column="MAXIMUM" property="maximum" nullValue="0"/>
+    <result column="OFFLINE_TIME" property="offlineTime" />
+    <result column="SHORT_NAME" property="shortName" />
+    <result column="LARGE_IMAGE" property="largeImage" />
+    <result column="ON_LINE" property="onLine" />
+    <result column="RECOMMEND_INFO_FIRST" property="recommendInfoFirst" />
+    <result column="RECOMMEND_INFO_SECOND" property="recommendInfoSecond" />
+    <result column="RECOMMEND_INFO_THIRD" property="recommendInfoThird" />
+    <result column="TAGIDS" property="tagIds" nullValue="" />
+    <result column="TAGS_NAME" property="tagsName" nullValue="" />
+    <result column="TAGS_DESCRIPT" property="tagsDescript" nullValue="" />
+    <result column="TAGS_CSS" property="tagsCss" nullValue="" />
+    <result column="TAGS_GROUP" property="tagsGroup" nullValue="" />
+    <result column="PRODUCT_ALLTO_PLACE" property="productAlltoPlace" />
+    <result column="PRODUCT_ALLTO_PLACE_IDS" property="productAlltoPlaceIds" />
+    <result column="PROD_ROUTE_TYPE_NAME" property="prodRouteTypeName" />
+    <result column="PROD_ROUTE_TYPE_DES" property="prodRouteTypeDes" />
+    <result column="PROD_ROUTE_TYPE_IMG" property="prodRouteTypeImg" />
+    <result column="PRODUCT_ALLTO_PLACE_PINYIN" property="productAlltoPlacePinyin" />
+    <result column="ORDER_PRICE_SUM" property="orderPriceSum" />
+    <result column="DEPART_AREA" property="departArea" />
+    <result column="DEPART_AREA_CODE" property="departAreaCode" />
+    <result column="SELF_PACK" property="selfPack" />
+    <result column="ORDER_QUANTITY_SUM" property="orderQuantitySum" />
+    <result column="BED_TYPE" property="bedType" />
+    <result column="BROADBAND" property="broadband" />
+    <result column="TRAVEL_TIME" property="travelTime" />
+    <result column="SCENIC_PLACE" property="scenicPlace" />
+    <result column="ROUTE_STANDARD" property="routeStandard" />
+    <result column="CMT_NUM" property="cmtNum"/>
+    <result column="TODAY_ORDER_ABLE" property="todayOrderAble"/>
+    <result column="CAN_PAY_BY_BONUS" property="canPayByBonus"/>
+    <result column="IS_APERIODIC" property="isAperiodic" />
+    <result column="COUPON_ABLE" property="couponAble"/>
+    <result column="COUPON_ACTIVITY" property="couponActivity"/>
+    <result property="shareWeiXin" column="SHAREWEIXIN"/>
+  </resultMap>
+  
+  <resultMap class="com.lvmama.comm.pet.po.search.ProductSearchInfo" id="BaseResultMap_ProductBaseInfo" extends="BaseResultMap">
+	<result column="TRAFFIC" property="traffic"/>
+	<result column="PLAY_NUM" property="playNum"/>
+	<result column="HOTEL_TYPE" property="hotelType"/>
+  </resultMap>
+  
+   <resultMap class="productSearchInfo" id="BaseResultMap_withContainerSeq" extends="BaseResultMap">
+    <result column="container_seq" property="containerSeq" />
+   </resultMap>  
+   <resultMap id="TopDataResultMap" class="productSearchInfo">
+     <result column="PRODUCT_ID" property="productId" />
+    <result column="PRODUCT_NAME" property="productName" />
+    <result column="SELL_PRICE" property="sellPrice" />
+   </resultMap>
+	<resultMap id="prodProductBranchWithProduct" class="com.lvmama.comm.pet.po.search.ProdBranchSearchInfo">
+		<result column="PROD_BRANCH_ID" property="prodBranchId" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="UPDATE_TIME" property="updateTime" />
+		<result column="BRANCH_NAME" property="branchName" />
+		<result column="BED_TYPE" property="bedType" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="BROADBAND" property="broadband" />
+		<result column="CASH_REFUND" property="cashRefund" />
+		<result column="BREAKFAST" property="breakfast" />
+		<result column="SELL_PRICE" property="sellPrice" />
+		<result column="MARKET_PRICE" property="marketPrice" />
+		<result column="ICON" property="icon" />
+		<result column="ADDITIONAL" property="additional" />
+		<result column="ON_LINE" property="online" />
+		<result column="VALID" property="valid" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="VISIBLE" property="visible" />
+		<result column="DEFAULT_BRANCH" property="defaultBranch" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_SEQ" property="productSeq" />
+		<result column="PAY_TO_LVMAMA" property="payToLvmama" />
+		<result column="PAY_TO_SUPPLIER" property="payToSupplier" />
+		<result column="VALID_BEGIN_TIME" property="validBeginTime" />
+		<result column="VALID_END_TIME" property="validEndTime" /> 
+		<result column="TODAY_ORDER_ABLE_TIME" property="todayOrderAbleTime" /> 
+		<result property="invalidDateMemo" column="INVALID_DATE_MEMO"/>
+		<result property="channel" column="CHANNEL"/>
+		<result property="shareWeiXin" column="SHAREWEIXIN"/>
+		<result property="todayOrderLastTime" column="today_order_last_time"/>
+	</resultMap>
+	
+	  <resultMap class="com.lvmama.comm.pet.po.search.Shantou" id="BaseShanTouResultMap"> 
+		<result column="PRODUCT_ID" property="outerId" /> 
+		<result column="PRODUCT_NAME" property="name" /> 
+		<result column="PRODUCT_URL" property="loc" /> 
+		<result column="SELL_PRICE" property="price" /> 
+		<result column="RECOMMEND_REASON" property="title" /> 
+		
+		<result column="PRODUCT_TYPE" property="productType" /> 
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" /> 
+		<result column="MARKET_PRICE" property="value" /> 
+		<result column="SMALL_IMAGE" property="image" /> 
+		
+		<result column="FROM_DEST" property="fromCity" /> 
+		<result column="TO_DEST" property="toCity" /> 
+		<result column="TRAVEL_TIME" property="fromDate" /> 
+		<result column="AVG_SCORE" property="rank" /> 
+		<result column="VISIT_DAY" property="visitDay" /> 
+		<result column="PRODUCT_ALLTO_PLACE_CONTENT" property="productAlltoPlaceContent" /> 
+   </resultMap> 
+	
+ <typeAlias alias="productPlaceSearchInfo" type="com.lvmama.comm.pet.po.search.ProductPlaceSearchInfo" />
+ <resultMap id="SearchResultMap" class="productPlaceSearchInfo" >
+    <result column="province" property="province" />
+	<result column="city" property="city" />
+	<result column="name" property="placeName" />
+	<result column="address" property="placeAddress" />
+	<result column="pin_yin_url" property="placePinYinUrl" />
+	<result column="product_name" property="ticketsName" />
+	<result column="sub_product_type" property="ticketsAttr" />
+	<result column="market_price" property="ticketsPrice" />
+	<result column="sell_price" property="ticketsNowPrice" />
+	<result column="place_id" property="placeId" />
+	<result column="product_id" property="proudtId" />
+	<result column="recommend_reason" property="ticketsContent" />
+  </resultMap>
+  
+  
+	<sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+	</sql>
+	
+	<sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+		 <isNotEmpty property="startRows" prepend="and">
+			rn &gt;= #startRows#
+		 </isNotEmpty>		
+		</dynamic>
+	</sql>
+	
+  <!--删除大字段 COUPON  COSTCONTAIN IMPORTMENTCLEW PRODUCT_ALLTO_PLACE_CONTENT PLACE_KEYWORD_BIND ORDER_TOKNOWN-->
+  <sql id="queryProductSearchInfoField">
+      psi.PRODUCT_ID ,psi.PRODUCT_NAME ,psi.RECOMMEND_REASON ,psi.MARKET_PRICE ,psi.SELL_PRICE ,psi.SMALL_IMAGE,
+      psi.FROM_DEST ,psi.TO_DEST ,psi.CREATE_TIME ,psi.IS_VALID ,psi.UPDATE_TIME ,psi.IS_TICKET ,psi.SEQ_NUM ,psi.IS_HID ,psi.CASH_REFUND,
+      psi.PRODUCT_URL ,psi.AGIO ,psi.TOPIC ,psi.PAY_METHOD ,psi.VISIT_DAY ,psi.IS_OLD ,psi.CHANNEL,psi.CHANNEL_FRONT,psi.CHANNEL_GROUP ,psi.TO_DEST_CONTENT,
+      psi.FROM_DEST_CONTENT ,psi.PRODUCT_TYPE ,psi.SUB_PRODUCT_TYPE ,psi.NEAR_DATE , 
+      psi.PAY_TO_LVMAMA ,psi.PAY_TO_SUPPLIER ,psi.MINIMUM ,psi.MAXIMUM ,psi.OFFLINE_TIME ,psi.SHORT_NAME ,psi.LARGE_IMAGE ,
+      psi.ON_LINE ,psi.RECOMMEND_INFO_FIRST ,psi.RECOMMEND_INFO_SECOND ,psi.RECOMMEND_INFO_THIRD ,
+      psi.PRODUCT_ALLTO_PLACE ,psi.PRODUCT_ALLTO_PLACE_IDS,
+      psi.PROD_ROUTE_TYPE_NAME ,psi.PROD_ROUTE_TYPE_DES ,psi.PROD_ROUTE_TYPE_IMG ,
+      psi.PRODUCT_ALLTO_PLACE_PINYIN ,psi.ORDER_PRICE_SUM ,psi.DEPART_AREA ,psi.DEPART_AREA_CODE ,psi.SELF_PACK,
+      psi.ORDER_QUANTITY_SUM ,psi.BED_TYPE ,psi.BROADBAND ,psi.TRAVEL_TIME ,psi.SCENIC_PLACE,psi.ROUTE_STANDARD,psi.CMT_NUM,psi.today_order_able,
+      psi.CAN_PAY_BY_BONUS,psi.IS_APERIODIC,psi.TAGS_GROUP,psi.TAGS_CSS,psi.TAGS_DESCRIPT ,psi.TAGIDS,psi.TAGS_NAME,psi.COUPON_ABLE,psi.COUPON_ACTIVITY,
+      psi.SHAREWEIXIN
+  </sql>
+  
+  <sql id="queryProductSearchInfoWhere">
+  	  where IS_VALID='Y'
+      <isNotEmpty prepend="and" property="productId" >
+         PRODUCT_ID = #productId#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="productIds" >
+      	 PRODUCT_ID IN (
+      	 	SELECT DISTINCT PRODUCT_ID FROM product_product_place WHERE 1 = 1 		
+      	 		<isNotEmpty prepend="AND" property="fromPlaceId"> FROM_PLACE_ID = #fromPlaceId#</isNotEmpty>
+      	 		<isNotEmpty prepend="AND" property="placeId"> PLACE_ID = #placeId#</isNotEmpty>
+      	 )
+      </isNotEmpty>      
+      <isNotEmpty prepend="and" property="productName" >
+        PRODUCT_NAME like '%$productName$%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="isValid" >
+        IS_VALID = #isValid#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="isTicket" >
+        IS_TICKET = #isTicket#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="isHid" >
+        IS_HID = #isHid#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="isOld" >
+        IS_OLD = #isOld#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="channel" >
+      	<isEqual property="channel" compareValue="FRONTEND" prepend="">
+      		CHANNEL_FRONT = #channel#
+      	</isEqual>
+      	<isEqual property="channel" compareValue="TUANGOU" prepend="">
+      		CHANNEL_GROUP = #channel#
+      	</isEqual>
+      	<isNotEqual property="channel" compareValue="FRONTEND" prepend="">
+      		<isNotEqual property="channel" compareValue="TUANGOU" prepend="">
+      			CHANNEL like '%$channel$%'
+      		</isNotEqual>
+      	</isNotEqual>
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="productType" >
+         PRODUCT_TYPE =#productType#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="productTypes" > 
+		PRODUCT_TYPE IN 
+		<iterate property="productTypes" open="(" close=")" conjunction=","> 
+			#productTypes[]# 
+		</iterate> 
+	  </isNotEmpty>
+      <isNotEmpty prepend="and" property="subProductTypes" >
+      	 SUB_PRODUCT_TYPE in
+      	 <iterate conjunction="," open="(" close=")" property="subProductTypes">
+  			#subProductTypes[]#
+ 		 </iterate>
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="onLine" >
+        ON_LINE = #onLine#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="coupon" >
+        COUPON = #coupon#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="visitDay" >
+        VISIT_DAY = #visitDay#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="isOld" >
+        IS_OLD = #isOld#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="toDest" >          
+       	 TO_DEST = #toDest#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="toDests" > 
+		TO_DEST IN 
+		<iterate property="toDests" open="(" close=")" conjunction=","> 
+			#toDests[]# 
+		</iterate> 
+	  </isNotEmpty>
+	   <isNotEmpty prepend="and" property="placeNames" > 
+	   PRODUCT_ID in(
+	       select distinct ppp.product_id from  lvmama_pet.product_product_place ppp,
+	       lvmama_pet.place_search_info  p where ppp.place_id = p.place_id and 
+	       p.name in
+	       <iterate property="placeNames" open="(" close=")" conjunction=","> 
+			#placeNames[]# 
+		   </iterate> 
+	   )
+ 		
+	  </isNotEmpty>
+	   <isNotEmpty prepend="and" property="placeId" > 
+	   PRODUCT_ID in(
+	        select distinct ppp.product_id from  lvmama_pet.product_product_place ppp
+	         where  ppp.place_id=#placeId#
+	   )
+	  </isNotEmpty>
+      <isNotEmpty prepend="and" property="toDestContent" >
+        TO_DEST_CONTENT = #toDestContent#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="productAlltoPlace" >
+        PRODUCT_ALLTO_PLACE LIKE '%$productAlltoPlace$%' 
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="productAlltoPlaceContent" >
+        PRODUCT_ALLTO_PLACE_CONTENT LIKE '%$productAlltoPlaceContent$%' 
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="productAlltoPlaceIds" >
+        PRODUCT_ALLTO_PLACE_IDS LIKE '%$productAlltoPlaceIds$%' 
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="productAlltoPlacePinyin" >
+        PRODUCT_ALLTO_PLACE_PINYIN = #productAlltoPlacePinyin#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="fromDestContent" >
+        FROM_DEST_CONTENT like '%$fromDestContent$%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="fromDest" >          
+        FROM_DEST LIKE '%$fromDest$%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="selfPack">
+		<isEqual property="selfPack" compareValue="true">
+			self_pack='true'
+		</isEqual>
+		<isEqual property="selfPack" compareValue="false">
+			( self_pack is null or self_pack ='false')
+		</isEqual>
+	 </isNotEmpty>
+	 <!-- 此条件在需要其他字段排序的时候需要设置seqOrder不为空，为互斥参数 -->
+	 <isEqual property="orderField" compareValue="seq_asc">
+	 	order by SEQ_NUM asc,product_id
+	 </isEqual>
+	 <isEqual property="orderField" compareValue="sellerPrice_desc">
+	 	order by sell_price desc,SEQ_NUM asc,product_id
+	 </isEqual>
+	  <isEqual property="orderField" compareValue="sellerPrice_asc">
+	 	order by sell_price asc,SEQ_NUM asc,product_id
+	 </isEqual>
+	  <isEqual property="orderField" compareValue="orderQuantity_desc">
+	 	order by  ORDER_QUANTITY_SUM desc
+	 </isEqual>
+	  <isEqual property="orderField" compareValue="updateTime_desc">
+	 	order by update_time desc,create_time desc
+	  </isEqual>
+	   <isEqual property="orderField" compareValue="subProductTypeBusFirst">
+        order by SUB_PRODUCT_TYPE desc,SEQ_NUM asc
+      </isEqual>
+  </sql>
+   <sql id="selectShantouListForSql">
+			SELECT A.PRODUCT_ID,
+		       A.PRODUCT_NAME,
+		       A.MARKET_PRICE,
+		       A.SELL_PRICE,
+		       A.SUB_PRODUCT_TYPE,
+		       A.RECOMMEND_REASON,
+		       B.PROVINCE,
+		       B.CITY,
+		       B.NAME,
+		       B.ADDRESS,
+		       B.PIN_YIN_URL,
+		       B.place_id
+		  FROM LVMAMA_PET.PLACE_SEARCH_INFO B, LVMAMA_PET.PRODUCT_SEARCH_INFO A
+		 WHERE A.TO_DEST = B.NAME AND A.PRODUCT_TYPE = 'TICKET' AND A.CHANNEL = 'FRONTEND'
+  </sql>
+ 
+  <!--  product_search_info 单表通用查询 -->
+  <select id="queryProductSearchInfoByParam" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  	<include refid="pageHeader"/>
+    select <include refid="queryProductSearchInfoField"/> from PRODUCT_SEARCH_INFO psi
+         <include refid="queryProductSearchInfoWhere"/>
+    <include refid="pageFooter"/>
+  </select>
+   
+  <select id="countProductSearchInfoByParam" resultClass="java.lang.Long" parameterClass="java.util.Map" >
+    select count(*) from PRODUCT_SEARCH_INFO
+    <include refid="queryProductSearchInfoWhere"/>
+  </select>
+
+  
+  <update id="updateProductSearchInfo" parameterClass="productSearchInfo">
+	update PRODUCT_SEARCH_INFO set UPDATE_TIME=sysdate 
+		<isNotNull prepend="," property="seq">
+			SEQ_NUM = #seq#
+		</isNotNull>
+	where PRODUCT_ID = #productId#
+ </update>
+	
+  <update id="updateProductSearchInfoCmtNum">
+	UPDATE product_search_info psi
+	   SET (psi.CMT_NUM) =
+	       (select comment_count
+	          from cmt_title_statistics cmt
+	         where cmt.product_id = psi.product_id
+	           and cmt.product_id is not null),
+	       UPDATE_TIME = sysdate
+	 where psi.is_valid = 'Y'
+  </update>
+  
+  <select id="queryProductSearchInfoByProductId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+  	select * from product_search_info where product_id=#productId#
+  </select>
+  
+  <!-- 根据placeId获取门票产品的类别 -->
+  <select id="getProductBranchByPlaceIdAndTicket" resultMap="prodProductBranchWithProduct" parameterClass="java.util.Map">
+		select distinct ppb.PROD_BRANCH_ID,
+	                ppb.CREATE_TIME,
+	                ppb.UPDATE_TIME,
+	                ppb.BRANCH_NAME,
+	                ppb.BED_TYPE,
+	                ppb.DESCRIPTION,
+	                ppb.BROADBAND,
+	                ppb.CASH_REFUND,
+	                ppb.BREAKFAST,
+	                ppb.MARKET_PRICE,
+	                ppb.SELL_PRICE,
+	                ppb.ICON,
+	                ppb.ADDITIONAL,
+	                ppb.ON_LINE,
+	                ppb.VALID,
+	                ppb.PRODUCT_ID,
+	                ppb.VISIBLE,
+	                ppb.DEFAULT_BRANCH,
+	                ppb.SUB_PRODUCT_TYPE,
+	                ppb.valid_Begin_Time,
+	                ppb.valid_End_Time,
+	                psi.SEQ_NUM as PRODUCT_SEQ,
+	                psi.PRODUCT_NAME,
+	                psi.PAY_TO_SUPPLIER,
+	                psi.PAY_TO_LVMAMA,
+	                psi.CAN_PAY_BY_BONUS,
+	                psi.IS_APERIODIC,
+	                ppb.branch_serial_number,
+	                ppb.TODAY_ORDER_ABLE_TIME,
+	                ppb.INVALID_DATE_MEMO,
+	                ppb.CHANNEL,
+	                ppb.SHAREWEIXIN,
+                    ppb.today_order_last_time
+	  from PRODUCT_SEARCH_INFO     psi,
+	       PRODUCT_PRODUCT_PLACE   PPP,
+	       prod_branch_search_info ppb
+	 WHERE PSI.PRODUCT_ID = PPP.PRODUCT_ID
+	   and psi.is_valid = 'Y'
+	   and ppb.PRODUCT_ID = psi.product_id
+	   and ppb.valid = 'Y'
+	   and ppb.ON_LINE = 'true'
+	   and ppb.VISIBLE = 'true'
+	   and ppb.SELL_PRICE is not null
+	   and ppb.MARKET_PRICE is not null
+    <isNotEmpty prepend="and" property="channel">
+		psi.channel like '%$channel$%'
+ 	</isNotEmpty>
+ 	<isNotEmpty prepend="and" property="channelFront" >      
+        psi.CHANNEL_FRONT = #channelFront#
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="channelGroup" >      
+        psi.CHANNEL_GROUP = #channelGroup#
+    </isNotEmpty>
+	<isNotEmpty prepend="and" property="isTicket">
+		PSI.IS_TICKET=#isTicket#
+	</isNotEmpty>
+	<isNotEmpty prepend="and" property="placeId">
+		PPP.PLACE_ID=#placeId#
+	</isNotEmpty>
+
+	 order by psi.SEQ_NUM,ppb.branch_serial_number asc
+  </select>
+  
+  
+   <select id="getProductBranchPrimaryKey" resultMap="prodProductBranchWithProduct" parameterClass="java.util.Map">
+		select  ppb.PROD_BRANCH_ID,
+	                ppb.CREATE_TIME,
+	                ppb.UPDATE_TIME,
+	                ppb.BRANCH_NAME,
+	                ppb.BED_TYPE,
+	                ppb.DESCRIPTION,
+	                ppb.BROADBAND,
+	                ppb.CASH_REFUND,
+	                ppb.BREAKFAST,
+	                ppb.MARKET_PRICE,
+	                ppb.SELL_PRICE,
+	                ppb.ICON,
+	                ppb.ADDITIONAL,
+	                ppb.ON_LINE,
+	                ppb.VALID,
+	                ppb.PRODUCT_ID,
+	                ppb.VISIBLE,
+	                ppb.DEFAULT_BRANCH,
+	                ppb.SUB_PRODUCT_TYPE,
+	                ppb.valid_Begin_Time,
+	                ppb.valid_End_Time,
+	                psi.SEQ_NUM as PRODUCT_SEQ,
+	                psi.PRODUCT_NAME,
+	                psi.PAY_TO_SUPPLIER,
+	                psi.PAY_TO_LVMAMA,
+	                psi.CAN_PAY_BY_BONUS,
+	                psi.IS_APERIODIC,
+	                ppb.branch_serial_number,
+	                ppb.TODAY_ORDER_ABLE_TIME,
+	                ppb.INVALID_DATE_MEMO,
+	                ppb.CHANNEL,
+	                ppb.SHAREWEIXIN,
+                    ppb.today_order_last_time
+	  	from PRODUCT_SEARCH_INFO     psi,
+	       prod_branch_search_info ppb
+
+	       WHERE  psi.is_valid = 'Y'
+	  		and ppb.PRODUCT_ID = psi.product_id
+	   		and ppb.valid = 'Y'
+	   		and ppb.ON_LINE = 'true'
+	  		and ppb.VISIBLE = 'true'
+	<isNotEmpty prepend="and" property="branchId">
+		ppb.PROD_BRANCH_ID=#branchId#
+	</isNotEmpty>
+
+  </select>
+  
+  
+  
+  <!-- 获取容器产品（主要用于频道页面的容器里 -->
+  <select id="getContainerProductList" parameterClass="java.util.Map" resultMap="BaseResultMap_withContainerSeq">
+	<include refid="pageHeader"/>
+	select distinct psi.*,pcp.SEQ_NUM as container_seq
+	  from product_search_info     psi,
+	       prod_container_product  pcp,
+	       prod_container          pc,
+	       prod_branch_search_info ppb
+	 where psi.product_id = pcp.product_id
+	   and pcp.container_id = pc.container_id
+	   and pc.container_code = #containerCode#
+	   and pcp.is_valid = 'Y'
+	   and ppb.product_id = psi.product_id
+	   and ppb.default_branch = 'true'
+	<isNotEmpty property="fromPlaceId" prepend="and">
+		pc.from_place_id = #fromPlaceId#
+	</isNotEmpty>
+	<isNotEmpty property="toPlaceId" prepend="and">
+		pc.to_place_id = #toPlaceId#
+	</isNotEmpty>
+	<isNotEmpty property="productType" prepend="and">
+		psi.product_type = #productType#
+	</isNotEmpty>
+	<isNotEmpty property="subProductType" prepend="and">
+		psi.sub_product_type in ($subProductType$)
+	</isNotEmpty>
+	order by pcp.SEQ_NUM asc
+	<include refid="pageFooter"/>
+  </select>
+  
+  
+  <!-- 获取销售前10强的门票产品 -->
+  <select id="selectTicketProductTopData" resultMap="TopDataResultMap">
+	 select *
+	  from (select psi.product_id, psi.product_name, psi.sell_price,psi.order_price_sum
+	          from product_search_info psi
+	         where psi.is_valid = 'Y'
+	           and psi.product_type = 'TICKET'
+	           and psi.on_line = 'true'
+	           and psi.channel_front ='FRONTEND'
+	           and psi.order_price_sum > 0
+	         order by psi.order_price_sum desc)
+	 where rownum &lt;=10
+  </select>
+  
+  <!-- 根据订单数量获取前多少条的产品列表，需要类别 -->
+  <select id="selectTopSalesList" parameterClass="java.util.Map" resultMap="BaseResultMap">
+	 select *
+	  from (select distinct psi.*
+	          from product_search_info psi,prod_branch_search_info pbsi,product_product_place ppp
+	         where psi.is_valid = 'Y'
+	           and psi.product_type = 'ROUTE'
+	           and psi.on_line = 'true'
+	           and psi.channel_front = 'FRONTEND'
+	           and pbsi.product_id = psi.product_id
+	           and pbsi.default_branch = 'true'
+	           and ppp.from_place_id = #fromPlaceId#
+	           and ppp.product_id = psi.product_id
+	           <isNotEmpty property="subProductType" prepend="and">
+			     psi.sub_product_type in ($subProductType$)
+			   </isNotEmpty>
+	         order by psi.order_quantity_sum desc) 
+	 where rownum &lt;= #topLimit#
+  </select>
+  
+  <select id="queryProductIdList" resultClass="java.lang.Long" parameterClass="java.util.Map">
+	select psi.product_id
+      from product_search_info psi
+      where psi.channel_front = 'FRONTEND'
+       and psi.product_type in ('ROUTE','TICKET')
+      <isNotEmpty prepend="and" property="tagId">
+		   psi.tagids like '%,$tagId$,%'
+	  </isNotEmpty>
+	  <isNotEmpty prepend="and" property="valid">
+		   psi.is_valid = #valid#
+	  </isNotEmpty>
+  </select>  
+  <select id="getShantouListByParam" parameterClass="java.util.Map" resultMap="BaseShanTouResultMap">
+        <include refid="pageHeader"/>
+	    <include refid="selectShantouListForSql"/>
+	    <include refid="pageFooter"/>
+  </select>  
+  <select id="countSelectShantouListByParam" resultClass="java.lang.Long" parameterClass="java.util.Map" >
+       select count(*) from (<include refid="selectShantouListForSql"/>) t
+  </select>
+  
+  <!-- 查询景点门票 -->
+  <select id="queryProductProductPlaceByParam" parameterClass="java.util.Map" resultMap="SearchResultMap">
+	<include refid="pageHeader"/>
+	   SELECT A.PRODUCT_ID,
+	       A.PRODUCT_NAME,
+	       A.MARKET_PRICE,
+	       A.SELL_PRICE,
+	       A.SUB_PRODUCT_TYPE,
+	       A.RECOMMEND_REASON,
+	       B.PROVINCE,
+	       B.CITY,
+	       B.NAME,
+	       B.ADDRESS,
+	       B.PIN_YIN_URL,
+	       B.place_id
+	  FROM PRODUCT_SEARCH_INFO A,PLACE_SEARCH_INFO B
+	 WHERE A.TO_DEST = B.NAME
+	   AND A.PRODUCT_TYPE = 'TICKET'
+	   AND A.CHANNEL_FRONT='FRONTEND'
+	   AND A.IS_VALID='Y'
+	   AND A.SELL_PRICE is not NULL  
+	   AND a.market_price is not NULL
+	   
+   <include refid="pageFooter"/>
+	</select>
+	
+	<!-- 查询景点门票总数量 -->
+	<select id="queryProductPlaceCount" resultClass="java.lang.Long" >
+           SELECT COUNT(*) FROM  PRODUCT_SEARCH_INFO A,PLACE_SEARCH_INFO B
+  			 WHERE  A.TO_DEST = B.NAME AND A.PRODUCT_TYPE = 'TICKET' AND CHANNEL_FRONT='FRONTEND'  AND A.IS_VALID='Y'
+       			    AND A.SELL_PRICE is not NULL  AND a.market_price is not NULL
+ 	</select>
+	
+	
+	
+	
+</sqlMap>

@@ -1,0 +1,35 @@
+<?page title="会员卡管理" contentType="text/html;charset=UTF-8"?>
+<?component name="lvmama_pchannel" macroURI="/mark/channel/channelRelate.zul"?>
+<zk>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./buildChannelWin"?>
+<window id="buildChannelWin" title="重绑定渠道" border="normal" apply="com.lvmama.pet.web.mark.membershipcard.BindingChannelAction">
+<groupbox style="border: none">
+			<grid>
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+				<row>
+				<hbox>会员卡批次代码</hbox>
+					<hbox><label id="cardPrefixNumber" value="@{saction.card.cardPrefixNumber}"/></hbox>
+				</row>
+				<row>
+				<hbox>会员卡数量</hbox>
+				<hbox><label id="amount" value="@{saction.card.amount}"/></hbox>
+				</row>
+				<row>
+				<hbox>修改渠道</hbox>
+				<hbox><hbox><lvmama_pchannel id="channel_box"></lvmama_pchannel></hbox></hbox>
+				</row>
+				<row spans="2">
+				<hbox align="center">
+				   <button label="提 交" id="update"  onClick="saction.binding();"/>
+				   <button label="取 消" id="cancel"  onClick="saction.closeWindow();"/>   
+				</hbox>
+				</row>
+				</rows>
+				</grid>
+				</groupbox>
+</window>
+</zk>

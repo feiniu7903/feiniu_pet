@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.comm.mapper.TntCertCodeMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.comm.po.TntCertCode">
+        <result property="authCodeId" column="AUTH_CODE_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="identityTarget" column="IDENTITY_TARGET"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="code" column="CODE"/>
+        <result property="type" column="TYPE"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		AUTH_CODE_ID,USER_ID,IDENTITY_TARGET,CREATE_TIME,CODE,TYPE
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.comm.po.TntCertCode">
+		<selectKey resultType="java.lang.Long" keyProperty="authCodeId"
+			order="BEFORE">
+			select  TNT_CERT_CODE_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_CERT_CODE (
+        	AUTH_CODE_ID ,
+        	USER_ID ,
+        	IDENTITY_TARGET ,
+        	CREATE_TIME ,
+        	CODE ,
+        	TYPE 
+        ) VALUES (
+        	#{authCodeId} ,
+        	#{userId} ,
+        	#{identityTarget,jdbcType=VARCHAR} ,
+        	SYSDATE,
+        	#{code,jdbcType=VARCHAR} ,
+        	#{type,jdbcType=VARCHAR} 
+        )
+	</insert>
+    
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_CERT_CODE WHERE
+        AUTH_CODE_ID = #{id} 
+    </delete>
+    
+    <delete id="deleteCertCode" parameterType="java.util.HashMap" >
+        DELETE FROM TNT_CERT_CODE WHERE
+        TYPE = #{type}
+        AND CODE = #{code}
+    </delete>
+    
+	
+	<sql id="where">
+		<where>	      				
+			<if test="authCodeId != null and authCodeId !=''">
+				AND AUTH_CODE_ID = #{authCodeId}
+	       	</if> 
+			<if test="userId != null and userId !=''">
+				AND USER_ID = #{userId}
+	       	</if> 
+			<if test="identityTarget != null and identityTarget !=''">
+				AND IDENTITY_TARGET = #{identityTarget}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+			<if test="code != null and code !=''">
+				AND CODE = #{code}
+	       	</if> 
+			<if test="type != null and type !=''">
+				AND TYPE = #{type}
+	       	</if> 
+		</where>
+	</sql>
+
+    <select id="queryByTypeAndCode" resultMap="baseResultMap" parameterType="java.util.HashMap" >
+   	 SELECT * from 
+	    	(
+    	SELECT <include refid="columns" />
+	    FROM TNT_CERT_CODE 
+	    where code = #{code} 
+	       	<if test="type == 'MOBILE'">
+    				and TYPE = 'MOBILE'
+			    	and CREATE_TIME &gt;= sysdate - 1/24/4
+			</if>
+			<if test="type == 'EMAIL'">
+			    	and TYPE = 'EMAIL'
+			    	and CREATE_TIME &gt;= sysdate - 1/24/2
+			</if>
+			
+			) a
+    	where rownum = 1
+    </select>
+
+	<select id="queryCertCode" resultMap="baseResultMap" parameterType="java.util.HashMap" >
+		SELECT * from 
+	    	(
+	    	SELECT <include refid="columns" />
+		    FROM TNT_CERT_CODE 
+		     where code = #{code} 
+		     AND IDENTITY_TARGET = #{identityTarget}
+		       	<if test="type == 'MOBILE'">
+	    				and TYPE = 'MOBILE'
+				    	and CREATE_TIME &gt;= sysdate - 1/24/4 
+				</if>
+				<if test="type == 'EMAIL'">
+				    	and TYPE = 'EMAIL'
+				    	and CREATE_TIME &gt;= sysdate - 1/24/2
+				</if>
+			) a
+    	where rownum = 1
+    </select>
+
+</mapper>
+

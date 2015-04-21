@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="securityFilter" class="com.lvmama.bee.web.security.SecurityFilter">
+		<!-- 不受权限校验的url列表 -->
+		<property name="excludeUrls">
+			<list>
+				<value>.*\.(js|css|gif|jpg|jpeg|jpe|jfif|bmp|tif|png)</value>
+				<value>/ebooking/(index|adminlogin|login|loginOut|login/validate_code).do</value>
+				<value>/ebooking/error/.*</value>
+				<value>/ebooking/ebk_user/(to_change_pwd|change_pwd|change_pwd_success).do</value>
+				<value>/ebooking/announcement/show_announcement_detail.do</value>
+				<value>/ebooking/announcement/downloadAnnouncementAttachment.do</value>
+				<value>/ebooking/findCreateTaskCount.do</value>
+				<value>/ebooking/findEbookingMessage.do</value>
+				<value>/ebooking/eplace/findPerformOrderCount.do</value>
+			</list>
+		</property>
+		<!-- 权限校验Bean列表 -->
+		<property name="securityCheckList">
+			<list>
+				<ref bean="loginSecurityCheck"/>
+				<ref bean="urlSecurityCheck"/>
+				<ref bean="eplaceProductSecurityCheck"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 登录校验 -->
+	<bean id="loginSecurityCheck" class="com.lvmama.bee.web.security.LoginSecurityCheck"></bean>
+	
+	<!-- url权限校验 -->
+	<bean id="urlSecurityCheck" class="com.lvmama.bee.web.security.UrlSecurityCheck"></bean>
+	
+	<!-- EPLACE产品权限校验 -->
+	<bean id="eplaceProductSecurityCheck" class="com.lvmama.bee.web.security.EplaceProductSecurityCheck">
+	  <property name="targetIdParam">
+	   <value>targetId</value>
+	  </property>
+	  <property name="orderIdParam">
+	   <value>orderId</value>
+	  </property>
+	  <property name="orderServiceProxy">
+	   <ref bean="orderServiceProxy"/>
+	  </property>
+	  <property name="performTargetService">
+	   <ref bean="performTargetService"/>
+	  </property>
+	</bean>
+</beans>

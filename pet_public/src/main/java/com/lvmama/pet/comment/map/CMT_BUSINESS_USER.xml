@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_BUSINESS_USER">
+	<resultMap class="com.lvmama.comm.pet.po.comment.CmtBusinessUser" id="cmtBusinessUserMap">
+		<result property="cmtBusinessUserID" column="CMT_BUSINESS_USER_ID" />
+		<result property="userID" column="USER_ID" />
+		<result property="password" column="PASSWORD" />
+		<result property="userName" column="USER_NAME" />
+		<result property="userType" column="USER_TYPE" />
+		<result property="isValid" column="IS_VALID" />
+		<result property="createDate" column="CREATE_TIME" />
+		<result property="updateDate" column="UPDATE_TIME" />
+	</resultMap>
+	
+     <resultMap id="placeResultMap" class="com.lvmama.comm.pet.po.place.Place">
+		<result column="PLACE_ID" property="placeId" />
+	</resultMap>
+	
+     <select id="getPlaceListByBusinessUserID" resultMap="placeResultMap" parameterClass="Long">
+        SELECT P.PLACE_ID
+		  FROM CMT_BUSINESS_USER_PLACE P
+		 WHERE P.CMT_BUSINESS_USER_ID = #value#
+    </select>
+
+	<sql id="query_businessUser_base_sql">
+		select distinct(CBU.CMT_BUSINESS_USER_ID), CBU.USER_ID, CBU.PASSWORD, CBU.USER_NAME,
+		  CBU.USER_TYPE, CBU.IS_VALID,  CBU.CREATE_TIME, CBU.UPDATE_TIME from CMT_BUSINESS_USER CBU, CMT_BUSINESS_USER_PLACE CBUP
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty prepend=" AND " property="userID" >CBU.USER_ID LIKE '%'||#userID#||'%'</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="userType" >CBU.USER_TYPE = #userType#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="userName" >CBU.USER_NAME LIKE '%'||#userName#||'%'</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="isValid" >CBU.IS_VALID = #isValid#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="password" >CBU.PASSWORD = #password#</isNotEmpty>
+			<isNotEmpty prepend="AND" property="placeIDs">
+              CBUP.PLACE_ID in
+              <iterate property="placeIDs" open="(" close=")" conjunction="," > 
+                #placeIDs[]#
+              </iterate>
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="placeIDs">
+                 CBUP.CMT_BUSINESS_USER_ID = CBU.CMT_BUSINESS_USER_ID
+           </isNotEmpty> 
+		</dynamic>
+
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty  property="createDate123" prepend=",">CREATE_TIME</isNotEmpty>
+			<isNotEmpty  property="createDate321" prepend=",">CREATE_TIME DESC</isNotEmpty>
+			<isNotEmpty  property="updateDate123" prepend=",">UPDATE_TIME</isNotEmpty>
+			<isNotEmpty  property="updateDate321" prepend=",">UPDATE_TIME DESC</isNotEmpty>
+		</dynamic>
+		
+	</sql>
+	
+	
+	<!--查询商家用户-->
+	<select id="query" parameterClass="java.util.Map" resultMap="cmtBusinessUserMap">
+		select T2.* 
+		from (
+		    select T1.* , rownum as rn 
+		    from (
+			      <include refid="query_businessUser_base_sql"/> 
+			      ) T1			      
+			 <dynamic prepend=" WHERE ">
+			    <isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+			 </dynamic>		 	      
+	   	) T2
+	   	<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow"> RN &gt;= #_startRow# </isNotEmpty>
+		</dynamic>
+	</select> 
+	
+	<!-- 插入新的普通商户用户，或驴妈妈商户用户 -->
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.comment.CmtBusinessUser">
+		<selectKey resultClass="java.lang.Long" keyProperty="cmtBusinessUserID" >
+			select CMT_BUSINESS_USER_SEQ.nextval as cmtBusinessUserID from DUAL
+		</selectKey>
+		INSERT INTO CMT_BUSINESS_USER
+			(CMT_BUSINESS_USER_ID, USER_ID, USER_NAME, PASSWORD, USER_TYPE, IS_VALID, CREATE_TIME, UPDATE_TIME)
+		VALUES
+			(#cmtBusinessUserID#, #userID#, #userName#, #password#, #userType#, #isValid#, #createDate#, #updateDate#)
+	</insert>
+	
+	<!-- 插入新的普通商户用户和标的的关联关系-->
+	<insert id="insertPlaceRelation" parameterClass="com.lvmama.comm.pet.po.comment.CmtBusinessUser">
+	INSERT INTO CMT_BUSINESS_USER_PLACE
+	  (CMT_BUSINESS_USER_PLACE_ID, CMT_BUSINESS_USER_ID, PLACE_ID)
+	  select CMT_BUSINESS_USER_SEQ.nextval,
+	         CMT_BUSINESS_USER_ID,
+	         PLACE_ID
+	    from (
+			<iterate conjunction=" union all " property="placeList"> 
+			    select #cmtBusinessUserID# CMT_BUSINESS_USER_ID, #placeList[].placeId# PLACE_ID from dual
+			</iterate> 
+		) q 
+	</insert>
+
+    <!-- 更新普通商户用户，或驴妈妈商户用户 -->
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.comment.CmtBusinessUser">
+		UPDATE CMT_BUSINESS_USER CBU SET CBU.PASSWORD = #password#, CBU.USER_NAME = #userName#,  CBU.IS_VALID = #isValid#, CBU.UPDATE_TIME = #updateDate#, CBU.USER_TYPE = #userType#  
+		where CBU.CMT_BUSINESS_USER_ID = #cmtBusinessUserID#
+	</update>
+	
+	<!--删除普通商户用户和标的的关联关系 -->
+	<update id="deletePlaceRelation" parameterClass="com.lvmama.comm.pet.po.comment.CmtBusinessUser">
+		DELETE FROM CMT_BUSINESS_USER_PLACE CBUP where CBUP.CMT_BUSINESS_USER_ID = #cmtBusinessUserID#
+	</update>
+	
+	  <!--获得商户用户数-->
+	<select id="cmtBusinessUserCount" parameterClass="java.util.Map" resultClass="Long">
+        select count(distinct(CMT_BUSINESS_USER_ID)) 
+        from (<include refid="query_businessUser_base_sql"/>)
+    </select>
+	
+	
+</sqlMap>

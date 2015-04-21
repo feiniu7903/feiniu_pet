@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PLACE_COORDINATE_GOOGLE">
+  <!-- beans -->
+  <typeAlias alias="PlaceCoordinateGoogle" type="com.lvmama.comm.pet.po.place.PlaceCoordinateGoogle" />
+  <typeAlias alias="PlaceCoordinateVo" type="com.lvmama.comm.pet.vo.PlaceCoordinateVo" />
+  <typeAlias alias="ViewPlaceCoordinate" type="com.lvmama.comm.pet.vo.ViewPlaceCoordinate" />
+  
+  <resultMap class="PlaceCoordinateGoogle" id="PlaceCoordinateGoogleResultMap">
+     	<result property="placeCoordinateGoogleId" column="PLACE_COORDINATE_GOOGLE_ID" nullValue="" />
+    	<result property="placeId" column="PLACE_ID" nullValue="" />
+    	<result property="stage" column="STAGE" nullValue="" />
+    	<result property="isValid" column="IS_VALID" nullValue="" />
+    	<result property="coordinateName" column="COORDINATE_NAME" nullValue="" />
+    	<result property="coordinateAddress" column="COORDINATE_ADDRESS" nullValue="" />
+    	<result property="longitude" column="LONGITUDE"  />
+    	<result property="latitude" column="LATITUDE"  />
+    	<result property="updateTime" column="UPDATE_TIME"  />
+  </resultMap>
+  
+  <resultMap class="PlaceCoordinateVo" id="PlaceCoordinateVoResultMap">
+    	<result property="placeId" column="PLACE_ID" nullValue="" />
+    	<result property="placeAddress" column="ADDRESS" nullValue="" />
+    	<result property="isValid" column="IS_VALID" nullValue="" />
+    	<result property="coordinateName" column="COORDINATE_NAME" nullValue="" />
+    	<result property="coordinateAddress" column="COORDINATE_ADDRESS" nullValue="" />
+    	<result property="longitude" column="LONGITUDE" />
+    	<result property="latitude" column="LATITUDE"  />
+    	<result property="updateTime" column="UPDATE_TIME"  />
+  </resultMap>
+
+  <resultMap class="PlaceCoordinateGoogle" id="PlaceCoordinateGoogleAndPlaceResultMap" extends="PlaceCoordinateGoogleResultMap">
+    	<result property="name" column="NAME" />
+    	<result property="parentPlaceId" column="parent_place_id" />
+    	<result property="pinYinUrl" column="PIN_YIN_URL" />
+    	<result property="smallImage" column="small_image" />
+    	<result property="sellPrice" column="sell_price" />
+    	<result property="remarkes" column="remarkes"/>
+  </resultMap>
+
+  <select id="getViewPlaceCoordinateById" resultClass="ViewPlaceCoordinate">
+        select  pc.PLACE_ID          placeId,
+           		pc.COORDINATE_NAME   coordinateName,
+                pc.LONGITUDE         longitude,
+                pc.LATITUDE          latitude,
+                p.address            address,
+                p.pin_yin_url        pinYinUrl,
+                p.stage              stage    
+        from lvmama_pet.Place_Coordinate_google pc right join lvmama_pet.Place p on pc.place_Id=p.place_Id
+        where pc.place_id = #placeId#  
+  </select>
+
+   <select id="getViewPlaceCoordinates" resultClass="ViewPlaceCoordinate">
+    	select  pc.PLACE_ID          placeId,
+           		pc.COORDINATE_NAME   coordinateName,
+                pc.LONGITUDE         longitude,
+                pc.LATITUDE          latitude,
+                p.address            address,
+                p.pin_yin_url        pinYinUrl,
+                p.stage              stage      
+        from lvmama_pet.Place_Coordinate_google pc right join lvmama_pet.Place p on pc.place_Id=p.place_Id
+      where pc.place_id in <iterate property="placeIds" open="(" close=")" conjunction="," >#placeIds[]#</iterate>  
+    </select>
+   
+       <select id="getPlacesByCoordinate" resultClass="ViewPlaceCoordinate">
+ 		select  pc.PLACE_ID          placeId,
+           		pc.COORDINATE_NAME   coordinateName,
+                pc.LONGITUDE         longitude,
+                pc.LATITUDE          latitude,
+                p.address            address,
+                p.pin_yin_url        pinYinUrl,
+                p.stage              stage   
+         from lvmama_pet.Place_Coordinate_google pc right join lvmama_pet.Place p on pc.place_Id=p.place_Id
+         where (pc.longitude between #minLongitude# and #maxLongitude#)
+ 		and (pc.latitude between #minLatitude# and #maxLatitude#)
+    </select>
+    
+    <select id="getPlacesByCoordinateOnce" resultClass="ViewPlaceCoordinate">
+ 		select  pc.PLACE_ID          placeId,
+           		pc.COORDINATE_NAME   coordinateName,
+                pc.LONGITUDE         longitude,
+                pc.LATITUDE          latitude,
+                p.address            address,
+                p.pin_yin_url        pinYinUrl,
+                p.stage              stage   
+         from lvmama_pet.Place_Coordinate_google pc right join lvmama_pet.Place p on pc.place_Id=p.place_Id
+         where  pc.longitude=#longitude# 
+           and  pc.latitude=#latitude#
+    </select>
+   
+  <update id="update" parameterClass="PlaceCoordinateGoogle" >
+    UPDATE LVMAMA_PET.PLACE_COORDINATE_GOOGLE SET 
+    	    PLACE_ID 			= #placeId#,
+      		STAGE  				= #stage#,
+      		IS_VALID			= #isValid#,
+      		COORDINATE_NAME		= #coordinateName#,
+      		COORDINATE_ADDRESS  = #coordinateAddress#,
+      		LONGITUDE			= #longitude#,
+      		LATITUDE			= #latitude#,
+      		UPDATE_TIME 		= #updateTime#  
+		WHERE PLACE_COORDINATE_GOOGLE_ID = #placeCoordinateGoogleId#
+  </update>
+    
+  <insert id="insert" parameterClass="PlaceCoordinateGoogle" >
+     <selectKey resultClass="java.lang.Long" keyProperty="placeCoordinateGoogleId" >
+			select PLACE_COORDINATE_GOOGLE_SEQ.NEXTVAL as placeCoordinateGoogleId from DUAL
+	 </selectKey>
+    INSERT INTO PLACE_COORDINATE_GOOGLE(PLACE_COORDINATE_GOOGLE_ID,
+                                              			PLACE_ID,
+                                              				STAGE,
+                                              					IS_VALID,
+                                         				     		COORDINATE_NAME,
+                                          					    		COORDINATE_ADDRESS,
+                                              								LONGITUDE,
+                                           									   LATITUDE, 
+                                           										   UPDATE_TIME)
+         VALUES(  							#placeCoordinateGoogleId#,
+         									#placeId#,
+         									#stage#,
+         									'Y',
+         									#coordinateName#,
+         									#coordinateAddress#,
+         									#longitude#,
+         									#latitude#,
+         									#updateTime#    )                     
+                                             
+  </insert>
+  
+  <select id="getPlaceCoordinateGoogleByParam" resultMap="PlaceCoordinateGoogleResultMap"  parameterClass="java.util.HashMap">
+	SELECT * FROM  LVMAMA_PET.PLACE_COORDINATE_GOOGLE pc
+	         WHERE 1=1
+	   		 <dynamic>
+				<isNotNull prepend="and" property="placeId">
+			      pc.PLACE_ID = #placeId#
+			    </isNotNull>					
+			 </dynamic>	
+  </select>
+  
+  <select id="getGoogleMapList" resultMap="PlaceCoordinateVoResultMap"  parameterClass="java.util.HashMap">	  
+		SELECT * FROM    
+		    (   
+			       SELECT A.*, ROWNUM RN    
+			       FROM (
+					             SELECT p.place_id , 
+					                    p.address , 
+					                    pc.is_valid, 
+					                    p.name COORDINATE_NAME,            
+					                    pc.coordinate_address,            
+					                    pc.longitude, 
+					                    pc.latitude,
+					                    pc.update_time 
+					              FROM  lvmama_pet.place_coordinate_Google pc right join  lvmama_pet.place p on pc.place_id = p.place_id
+					              WHERE p.is_valid='Y' and (p.stage=2 or p.stage = 3)		
+					              	<dynamic>
+									<isNotNull prepend="and" property="isMarkValid">
+									pc.is_valid = 'N'
+									</isNotNull>
+									<isNotNull prepend="and" property="isCoordinateEmpty">
+							 		(pc.longitude is null or pc.latitude is null)
+									</isNotNull>
+									<isNotNull prepend="and" property="placeName">
+							 		p.name like  '%$placeName$%'
+									</isNotNull>
+									<isNotNull prepend="and" property="placeId">
+							 		p.place_id = #placeId#
+									</isNotNull>
+								    </dynamic>		    
+					              ORDER BY  p.Place_Id desc 
+			              ) A    
+			       WHERE ROWNUM &lt;= #_endRow#
+		      )   
+		WHERE RN &gt;=#_startRow#     
+  </select>
+  
+  <select id="getGoogleMapListCount" resultClass="java.lang.Long">
+	SELECT count(*) FROM (
+					             SELECT p.place_id , 
+					                    p.address , 
+					                    pc.is_valid, 
+					                    p.name COORDINATE_NAME,            
+					                    pc.coordinate_address,            
+					                    pc.longitude, 
+					                    pc.latitude,
+					                    pc.update_time 
+					              FROM  lvmama_pet.place_coordinate_Google pc right join  lvmama_pet.place p on pc.place_id = p.place_id
+					              WHERE p.is_valid='Y' and (p.stage=2 or p.stage = 3)		
+					              	<dynamic>
+									<isNotNull prepend="and" property="isMarkValid">
+									pc.is_valid = 'N'
+									</isNotNull>
+									<isNotNull prepend="and" property="isCoordinateEmpty">
+							 		(pc.longitude is null or pc.latitude is null)
+									</isNotNull>
+									<isNotNull prepend="and" property="placeName">
+							 		p.name like  '%$placeName$%'
+									</isNotNull>
+									<isNotNull prepend="and" property="placeId">
+							 		p.place_id = #placeId#
+									</isNotNull>
+								    </dynamic>	
+			              )
+  </select>
+
+   <select id="getPlacesByCoordinateGoogleAndStage" resultMap="PlaceCoordinateGoogleAndPlaceResultMap">
+		select co.*,pc.name,pc.parent_place_id,pc.PIN_YIN_URL,psi.small_image,psi.PRODUCTS_PRICE as sell_price,pc.remarkes
+		  from place_coordinate_Google co, place pc,place_search_info psi
+		 where co.place_Id = pc.place_id
+		   and psi.place_id = pc.place_id
+		   and (co.longitude between #minLongitude# and #maxLongitude#)
+		   and (co.latitude between #minLatitude# and #maxLatitude#)
+		   and pc.stage = #stage#
+		   and pc.IS_VALID='Y'
+    </select>
+</sqlMap>

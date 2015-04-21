@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+    <bean id="luceneProcesser" class="com.lvmama.search.lucene.processer.LuceneProcesser" />
+
+	<!-- 消息接收 -->
+	<bean id="resourceTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.RESOURCE.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+				<ref bean="luceneProcesser" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 订阅 -->
+	<bean id="resourceMessageListener"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="resourceTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="resourceListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="RESOURCE_TOPIC" />
+		<property name="messageListener" ref="resourceMessageListener" />
+		<!--
+		<property name="concurrentConsumers" value="5" /> 
+		<property name="maxConcurrentConsumers" value="20" />
+		-->			
+	</bean>
+
+
+
+</beans>

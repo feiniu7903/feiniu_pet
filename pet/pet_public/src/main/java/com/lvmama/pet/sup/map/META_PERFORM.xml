@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_PERFORM" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.sup.MetaPerform" >
+    <result column="PRODUCT_PERFORM_ID" property="productPerformId" />
+    <result column="TARGET_ID" property="targetId" />
+    <result column="META_PRODUCT_ID" property="metaProductId" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.sup.MetaPerform" >
+    select *
+    from META_PERFORM
+    where PRODUCT_PERFORM_ID = #productPerformId#
+  </select>
+  
+  <select id="selectByMetaProductIdAndTargetId" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+    select count(*) from META_PERFORM where META_PRODUCT_ID = #metaProductId# and BIZ_TYPE=#bizType#
+  </select>
+  
+  <select id="selectMetaRelationByParam" parameterClass="java.util.Map" resultClass="java.lang.Long">
+  	select META_PRODUCT_ID from META_PERFORM where TARGET_ID = #targetId# and BIZ_TYPE=#bizType#
+  </select>
+  
+  <select id="selectMetaRelationBySupplierId" parameterClass="java.util.Map" resultClass="java.lang.Long">
+  	select META_PRODUCT_ID from META_PERFORM mp,SUP_PERFORM_TARGET target where target.TARGET_ID=mp.TARGET_ID and target.SUPPLIER_ID = #supplierId# and mp.BIZ_TYPE=#bizType#
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.sup.MetaPerform" >
+    delete from META_PERFORM
+    where PRODUCT_PERFORM_ID = #productPerformId#
+  </delete>
+  
+  <delete id="deleteByMetaProductIdAndTargetId" parameterClass="com.lvmama.comm.pet.po.sup.MetaPerform" >
+    delete from META_PERFORM
+    where META_PRODUCT_ID = #metaProductId# and TARGET_ID = #targetId#
+  </delete>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.sup.MetaPerform" >
+		<selectKey keyProperty="productPerformId" resultClass="Long">
+			select META_PERFORM_SEQ.nextVal FROM DUAL
+		</selectKey>
+		insert into META_PERFORM (PRODUCT_PERFORM_ID, TARGET_ID, META_PRODUCT_ID, BIZ_TYPE)
+		values (#productPerformId#, #targetId#, #metaProductId#, #bizType#)
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.sup.MetaPerform" >
+    update META_PERFORM
+    set TARGET_ID = #targetId#,
+      META_PRODUCT_ID = #metaProductId#
+    where PRODUCT_PERFORM_ID = #productPerformId#
+  </update>
+  <select id="getMetaPerformByMetaProductId" parameterClass="java.util.Map" resultMap="BaseResultMap">
+    select * from META_PERFORM where META_PRODUCT_ID = #metaProductId# and BIZ_TYPE=#bizType#
+  </select>
+</sqlMap>

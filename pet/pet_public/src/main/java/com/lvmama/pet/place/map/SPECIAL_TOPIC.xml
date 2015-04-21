@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SPECIAL_TOPIC" >
+  <typeAlias alias="specialTopic" type="com.lvmama.comm.pet.po.place.SpecialTopic" />
+  <resultMap id="BaseResultMap" class="specialTopic" >
+    <result column="ID" property="id"/>
+    <result column="TITLE" property="title"/>
+    <result column="SEO_KEYWORDS" property="seoKeywords"/>
+    <result column="REMARK" property="remark"/>
+    <result column="BANNER_IMAGE" property="bannerImage"/>
+    <result column="SMALL_IMAGE" property="smallImage"/>
+    <result column="START_DATE" property="startDate"/>
+    <result column="END_DATE" property="endDate"/>
+    <result column="CREATED" property="created"/>
+    <result column="JUMPED" property="jumped"/>
+    <result column="JUMPURL" property="jumpurl"/>
+    <result column="REUSED" property="reused"/>
+    <result column="SEO_TITLE" property="seoTitle"/>
+    <result column="SEO_DESCRIPTION" property="seoDescription"/>
+    <result column="IDCODE" property="idcode"/>
+  </resultMap>
+  <select id="getSpecialTopicByIdCode" parameterClass="java.lang.String" resultMap="BaseResultMap">
+  	select * from special_topic where idcode=#idCode#
+  </select>
+</sqlMap>

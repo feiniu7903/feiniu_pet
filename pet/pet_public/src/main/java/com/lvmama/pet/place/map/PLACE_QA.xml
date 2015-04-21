@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="QUESTIONANSWER">
+	<typeAlias alias="placeQa" type="com.lvmama.comm.pet.po.place.PlaceQa"/>
+	<resultMap class="placeQa" id="BaseResultMap">
+		<result column="PLACE_QA_ID" property="placeQaId" />
+		<result column="PLACE_ID" property="placeId" />
+		<result column="QUESTION" property="question" />
+		<result column="ANSWER" property="answer" />
+		<result column="SEQ" property="seq" />
+		<result column="FLAG" property="flag" />
+	</resultMap>
+	
+	<sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+	</sql>
+	<sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+		 <isNotEmpty property="startRows" prepend="and">
+			rn &gt;= #startRows#
+		 </isNotEmpty>		
+		</dynamic>
+	</sql>
+
+
+	<select id="select" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<include refid="pageHeader"/>
+	   SELECT * FROM PLACE_QA
+		WHERE PLACE_ID =  #placeId# 
+		ORDER BY SEQ
+		<include refid="pageFooter"/>
+	</select>
+	
+	<select id="selectQaByQaId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		 SELECT * FROM PLACE_QA
+		 WHERE PLACE_QA_ID =  #placeQaId# 
+	     ORDER BY SEQ
+	</select>
+	
+	<select id="queryCountByPlaceId" parameterClass="java.lang.Long" resultClass="java.lang.Long" >
+		 SELECT count(*) FROM PLACE_QA
+		 WHERE PLACE_ID =  #placeId# 
+	</select>
+	
+ 	<insert id="insert" parameterClass="placeQa">
+		INSERT INTO PLACE_QA
+		(PLACE_QA_ID,PLACE_ID,QUESTION,ANSWER,SEQ,FLAG) values
+		(PLACE_QA_seq.Nextval,#placeId#,#question#,#answer#,#seq#,0)
+	</insert>
+
+	<delete id="delete" parameterClass="java.lang.Long">
+		DELETE FROM PLACE_QA
+		WHERE PLACE_QA_ID = #placeQaId#
+	</delete>
+
+	<update id="update" parameterClass="placeQa">
+		UPDATE PLACE_QA SET
+		<isNotEmpty prepend=" " property="question">
+			QUESTION=#question#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="answer">
+			ANSWER=#answer#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="seq">
+			SEQ=#seq#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="where" property="placeQaId">
+			PLACE_QA_ID =
+			#placeQaId#
+		</isNotEmpty>
+	</update>
+	
+</sqlMap>

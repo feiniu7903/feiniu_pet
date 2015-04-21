@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SHOP_ORDER" >
+	<resultMap id="shopOrderMap" class="com.lvmama.comm.pet.po.shop.ShopOrder">
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="quantity" column="QUANTITY"/>
+		<result property="actualPay" column="ACTUAL_PAY"/>
+		<result property="orderId" column="ORDER_ID"/>
+		<result property="oughtPay" column="OUGHT_PAY"/>
+		<result property="productId" column="PRODUCT_ID"/>
+		<result property="address" column="ADDRESS"/>
+		<result property="mobile" column="MOBILE"/>
+		<result property="name" column="NAME"/>
+		<result property="orderStatus" column="ORDER_STATUS"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="zip" column="ZIP"/>
+		<result property="productName" column="PRODUCT_NAME"/>		
+		<result property="productType" column="PRODUCT_TYPE"/>	
+		<result property="remark" column="REMARK"/>
+		<result property="productInfo" column="PRODUCT_INFO"/>
+	</resultMap>
+	
+	<resultMap id="shopOrderVOMap" class="com.lvmama.comm.pet.vo.ShopOrderVO" extends="shopOrderMap">
+		<result property="userName" column="USER_NAME"/>
+	</resultMap>
+	
+	<sql id="query_Order_sql">
+		SELECT T1.*,
+                 (SELECT T2.USER_NAME
+                  FROM USER_USER T2
+                  WHERE T2.USER_ID = T1.USER_ID
+			   		 <isNotEmpty prepend=" AND " property="userName">T2.user_Name = #userName#</isNotEmpty>
+			    	 <isNotEmpty prepend=" AND " property="mobileNumber">T2.mobile_number = #mobileNumber#</isNotEmpty>
+                  ) USER_NAME
+        FROM SHOP_ORDER T1
+        <dynamic prepend=" WHERE ">
+			<isNotEmpty prepend=" AND " property="orderId">T1.ORDER_ID = #orderId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="userId">T1.USER_ID = #userId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="productId">T1.PRODUCT_ID = #productId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="productType">T1.PRODUCT_TYPE = #productType#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="productName">T1.PRODUCT_NAME LIKE '%$productName$%'</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="orderStatus">T1.ORDER_STATUS = #orderStatus#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="startDate">T1.CREATE_TIME &gt;= #startDate#</isNotEmpty>
+		    <isNotEmpty prepend=" AND " property="endDate">T1.CREATE_TIME &lt;= #endDate# + 1</isNotEmpty>
+	    </dynamic>
+	    ORDER BY T1.CREATE_TIME DESC	
+	</sql>
+	
+	<select id="orderCount" parameterClass="java.util.Map" resultClass="Long">
+		SELECT COUNT(PO.ORDER_ID) 
+		FROM ( <include refid="query_Order_sql"/> ) PO
+	</select>
+	
+	<select id="queryShopOrder" parameterClass="java.util.Map" resultMap="shopOrderVOMap">
+		SELECT PO1.* 
+		FROM (	
+			SELECT PO.*, ROWNUM AS RN 
+			FROM ( 
+				<include refid="query_Order_sql"/> 
+				) PO
+			<dynamic prepend=" WHERE ">
+				<isNotEmpty property="_endRow" >ROWNUM &lt;= #_endRow# </isNotEmpty> 
+			</dynamic>
+			) PO1
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> RN &gt;= #_startRow# </isNotEmpty>
+		</dynamic>	
+	</select>
+	
+	<select id="queryShopOrderByKey" parameterClass="java.lang.Long" resultMap="shopOrderVOMap">
+        SELECT T1.*,
+                 (SELECT T2.USER_NAME
+                  FROM USER_USER T2
+                  WHERE T2.USER_ID = T1.USER_ID) USER_NAME
+        FROM SHOP_ORDER T1
+        WHERE    T1.ORDER_ID = #value#
+	</select>
+	
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.shop.ShopOrder">
+		UPDATE SHOP_ORDER
+		<dynamic prepend=" SET ">	        
+	        <isNotEmpty property="quantity" prepend=" , ">QUANTITY = #quantity#</isNotEmpty>
+			<isNotEmpty property="actualPay" prepend=" , ">ACTUAL_PAY = #actualPay#</isNotEmpty>
+			<isNotEmpty property="oughtPay" prepend=" , ">OUGHT_PAY = #oughtPay#</isNotEmpty>
+			<isNotEmpty property="address" prepend=" , ">ADDRESS = #address#</isNotEmpty>
+			<isNotEmpty property="mobile" prepend=" , ">MOBILE = #mobile#</isNotEmpty>
+			<isNotEmpty property="name" prepend=" , ">NAME = #name#</isNotEmpty>
+			<isNotEmpty property="orderStatus" prepend=" , ">ORDER_STATUS = #orderStatus#</isNotEmpty>
+			<isNotEmpty property="zip" prepend=" , ">ZIP = #zip#</isNotEmpty>
+			<isNotEmpty property="remark" prepend=" , ">REMARK = #remark#</isNotEmpty>
+			<isNotEmpty property="productInfo" prepend=" , ">PRODUCT_INFO = #productInfo#</isNotEmpty>
+		</dynamic>
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty prepend=" AND " property="orderId">ORDER_ID = #orderId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="userId">USER_ID = #userId#</isNotEmpty>
+		</dynamic>
+	</update>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.shop.ShopOrder">
+	    <selectKey resultClass="java.lang.Long" keyProperty="orderId" >
+			SELECT SHOP_ORDER_SEQ.NEXTVAL AS orderId FROM DUAL
+		</selectKey>
+		
+		INSERT INTO SHOP_ORDER
+		(ORDER_ID,
+		 CREATE_TIME
+		<dynamic>
+			<isNotEmpty property="quantity" prepend=" , ">QUANTITY</isNotEmpty>
+			<isNotEmpty property="actualPay" prepend=" , ">ACTUAL_PAY</isNotEmpty>
+			<isNotEmpty property="oughtPay" prepend=" , ">OUGHT_PAY</isNotEmpty>
+			<isNotEmpty property="productId" prepend=" , ">PRODUCT_ID</isNotEmpty>
+			<isNotEmpty property="address" prepend=" , ">ADDRESS</isNotEmpty>
+			<isNotEmpty property="mobile" prepend=" , ">MOBILE</isNotEmpty>
+			<isNotEmpty property="name" prepend=" , ">NAME</isNotEmpty>
+			<isNotEmpty property="orderStatus" prepend=" , ">ORDER_STATUS</isNotEmpty>
+			<isNotEmpty property="userId" prepend=" , ">USER_ID</isNotEmpty>
+			<isNotEmpty property="zip" prepend=" , ">ZIP</isNotEmpty>
+			<isNotEmpty property="productName" prepend=" , ">PRODUCT_NAME</isNotEmpty>
+			<isNotEmpty property="productType" prepend=" , ">PRODUCT_TYPE</isNotEmpty>
+			<isNotEmpty property="remark" prepend=" , ">REMARK</isNotEmpty>
+			<isNotEmpty property="productInfo" prepend=" , ">PRODUCT_INFO</isNotEmpty>
+
+		</dynamic>
+		) VALUES (
+		 #orderId#,
+		 sysdate
+		<dynamic>
+			<isNotEmpty property="quantity" prepend=" , ">#quantity#</isNotEmpty>
+			<isNotEmpty property="actualPay" prepend=" , ">#actualPay#</isNotEmpty>
+			<isNotEmpty property="oughtPay" prepend=" , ">#oughtPay#</isNotEmpty>
+			<isNotEmpty property="productId" prepend=" , ">#productId#</isNotEmpty>
+			<isNotEmpty property="address" prepend=" , ">#address#</isNotEmpty>
+			<isNotEmpty property="mobile" prepend=" , ">#mobile#</isNotEmpty>
+			<isNotEmpty property="name" prepend=" , ">#name#</isNotEmpty>
+			<isNotEmpty property="orderStatus" prepend=" , ">#orderStatus#</isNotEmpty>
+			<isNotEmpty property="userId" prepend=" , ">#userId#</isNotEmpty>
+			<isNotEmpty property="zip" prepend=" , ">#zip#</isNotEmpty>
+			<isNotEmpty property="productName" prepend=" , ">#productName#</isNotEmpty>
+			<isNotEmpty property="productType" prepend=" , ">#productType#</isNotEmpty>
+			<isNotEmpty property="remark" prepend=" , ">#remark#</isNotEmpty>
+			<isNotEmpty property="productInfo" prepend=" , ">#productInfo#</isNotEmpty>
+		</dynamic>
+        )
+	</insert>
+</sqlMap>

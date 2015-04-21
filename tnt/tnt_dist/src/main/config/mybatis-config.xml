@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<settings>
+		<!-- changes from the defaults -->
+		<setting name="lazyLoadingEnabled" value="false" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="tntUser" type="com.lvmama.tnt.user.po.TntUser" />
+		<typeAlias alias="tntUserDetail" type="com.lvmama.tnt.user.po.TntUserDetail" />
+		<typeAlias alias="page" type="com.lvmama.tnt.comm.vo.Page" />
+		<typeAlias alias="tntAnnouncement" type="com.lvmama.tnt.user.po.TntAnnouncement" />
+		<typeAlias alias="tntFAQ" type="com.lvmama.tnt.user.po.TntFAQ" />
+		<typeAlias alias="tntContract" type="com.lvmama.tnt.user.po.TntContract" />
+		<typeAlias alias="tntContractAttach" type="com.lvmama.tnt.user.po.TntContractAttach" />
+		<typeAlias alias="tntCommissionRule" type="com.lvmama.tnt.user.po.TntCommissionRule" />
+		<typeAlias alias="tntUserMaterial" type="com.lvmama.tnt.user.po.TntUserMaterial" />
+		<typeAlias alias="tntRecognizance"
+			type="com.lvmama.tnt.recognizance.po.TntRecognizance" />
+		<typeAlias alias="tntRecognizanceChange"
+			type="com.lvmama.tnt.recognizance.po.TntRecognizanceChange" />
+		<typeAlias alias="tntAccount" type="com.lvmama.tnt.recognizance.po.TntAccount" />
+		<typeAlias alias="tntChannel" type="com.lvmama.tnt.user.po.TntChannel" />
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="oraclePage_sql.xml" />
+	</mappers>
+</configuration>
+

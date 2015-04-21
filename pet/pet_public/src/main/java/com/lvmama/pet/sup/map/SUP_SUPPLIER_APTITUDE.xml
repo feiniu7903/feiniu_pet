@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SUP_SUPPLIER_APTITUDE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.sup.SupSupplierAptitude" >
+    <result column="SUPPLIER_APTITUDE_ID" property="supplierAptitudeId" />
+    <result column="SUPPLIER_ID" property="supplierId" />
+    <result column="APTITUDE_AUDIT" property="aptitudeAudit" />
+    <result column="APTITUDE_END_TIME" property="aptitudeEndTime" />
+    <result column="BUSINESS_LICENCE_FILE" property="businessLicenceFile"/>
+    <result column="ORGANIZATION_FILE" property="organizationFile"/>
+    <result column="OPERATION_PERMISSION_FILE" property="operationPermissionFile"/>
+    <result column="INSURANCE_FILE" property="insuranceFile"/>
+    <result column="TAX_REGISTRATION_FILE" property="taxRegistrationFile"/>
+    <result column="CREATE_TIME" property="createTime"/>
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.sup.SupSupplierAptitude" >
+    select *
+    from SUP_SUPPLIER_APTITUDE
+    where SUPPLIER_APTITUDE_ID = #supplierAptitudeId#
+  </select>
+  <select id="selectBySupplierId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.sup.SupSupplierAptitude" >
+  	select * from SUP_SUPPLIER_APTITUDE
+    where SUPPLIER_ID = #supplierId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.sup.SupSupplierAptitude" >
+    delete from SUP_SUPPLIER_APTITUDE
+    where SUPPLIER_APTITUDE_ID = #supplierAptitudeId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.sup.SupSupplierAptitude" >
+    <selectKey resultClass="java.lang.Long" keyProperty="supplierAptitudeId" >
+      select SUP_SUPPLIER_APTITUDE_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into SUP_SUPPLIER_APTITUDE (SUPPLIER_APTITUDE_ID, SUPPLIER_ID, APTITUDE_AUDIT,
+      APTITUDE_END_TIME,CREATE_TIME,BUSINESS_LICENCE_FILE,
+    ORGANIZATION_FILE,OPERATION_PERMISSION_FILE,INSURANCE_FILE,TAX_REGISTRATION_FILE)
+    values (#supplierAptitudeId#, #supplierId#, #aptitudeAudit#,
+      #aptitudeEndTime#,sysdate,#businessLicenceFile#,#organizationFile#,#operationPermissionFile#,#insuranceFile#,#taxRegistrationFile#)
+  </insert>
+   
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.sup.SupSupplierAptitude" >
+    update SUP_SUPPLIER_APTITUDE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="supplierId" >
+        SUPPLIER_ID = #supplierId#
+      </isNotNull>
+      <isNotNull prepend="," property="aptitudeAudit" >
+        APTITUDE_AUDIT = #aptitudeAudit#
+      </isNotNull>
+      <isNotNull prepend="," property="aptitudeEndTime" >
+        APTITUDE_END_TIME = #aptitudeEndTime#
+      </isNotNull>
+      <isNotNull prepend="," property="businessLicenceFile" >
+        BUSINESS_LICENCE_FILE = #businessLicenceFile#
+      </isNotNull>
+      <isNotNull prepend="," property="organizationFile" >
+        ORGANIZATION_FILE = #organizationFile#
+      </isNotNull>
+      <isNotNull prepend="," property="operationPermissionFile" >
+        OPERATION_PERMISSION_FILE = #operationPermissionFile#
+      </isNotNull>
+      <isNotNull prepend="," property="insuranceFile" >
+        INSURANCE_FILE = #insuranceFile#
+      </isNotNull>
+      <isNotNull prepend="," property="taxRegistrationFile" >
+        TAX_REGISTRATION_FILE = #taxRegistrationFile#
+      </isNotNull>
+    </dynamic>
+    where SUPPLIER_APTITUDE_ID = #supplierAptitudeId#
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.sup.SupSupplierAptitude" >
+    update SUP_SUPPLIER_APTITUDE
+    set
+        SUPPLIER_ID = #supplierId#,
+        APTITUDE_AUDIT = #aptitudeAudit#,
+        APTITUDE_END_TIME = #aptitudeEndTime#,
+        BUSINESS_LICENCE_FILE = #businessLicenceFile#,
+        ORGANIZATION_FILE = #organizationFile#,
+        OPERATION_PERMISSION_FILE = #operationPermissionFile#,
+        INSURANCE_FILE = #insuranceFile#,
+        TAX_REGISTRATION_FILE = #taxRegistrationFile#
+    where SUPPLIER_APTITUDE_ID = #supplierAptitudeId#
+  </update>
+</sqlMap>

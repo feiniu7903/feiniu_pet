@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PLACE_LAND_MARK" >
+  <typeAlias alias="placeLandMark" type="com.lvmama.comm.pet.po.place.PlaceLandMark" />
+  
+  <resultMap id="BaseResultMap" class="placeLandMark" >
+    <result column="PLACE_LAND_MARK_ID" property="placeLandMarkId"  />
+    <result column="PLACE_ID" property="placeId"  />
+    <result column="LAND_MARK_NAME" property="landMarkName"  />
+    <result column="PIN_YIN" property="pinYin"  />
+    <result column="HFKW" property="hfkw"  />
+    <result column="LONGITUDE" property="longitude"/>
+    <result column="LATITUDE" property="latitude"/>
+    <result column="IS_VALID" property="isValid"/>
+    <result column="LAND_MARK_ADDRESS" property="landMarkAddress"/>
+    <result column="COORDINATE_ADDRESS" property="coordinateAddress"/>
+    <result column="UPDATE_TIME"  property="updateTime"/>
+  </resultMap>
+  
+  <resultMap id="placeLandMarkVo" class="com.lvmama.comm.pet.po.place.PlaceLandMark" extends="BaseResultMap">
+		<result column="parent_place_name" property="parentPlaceName" />
+	</resultMap>
+	
+	<resultMap id="placeLandMarkDistance" class="com.lvmama.comm.pet.po.place.PlaceLandMark">
+		<result column="LAND_MARK_NAME" property="landMarkName"/>
+		<result column="distance" property="distance"/>
+	</resultMap>		
+   <insert id="insert" parameterClass="placeLandMark" >
+	    insert into LVMAMA_PET.PLACE_LAND_MARK (PLACE_LAND_MARK_ID, PLACE_ID, LAND_MARK_NAME, PIN_YIN, HFKW, LONGITUDE, LATITUDE, COORDINATE_ADDRESS, IS_VALID, UPDATE_TIME, LAND_MARK_ADDRESS)
+	    values (PLACE_LAND_MARK_ID_SEQ.nextval, #placeId#, #landMarkName#, #pinYin#, #hfkw#, #longitude#, #latitude#, #coordinateAddress#, #isValid#, sysdate, #landMarkAddress#)
+  </insert>
+  
+  <select id="selectByPlaceLandMarkId" resultMap="placeLandMarkVo" parameterClass="java.lang.Long" >
+	    select LM.PLACE_LAND_MARK_ID, LM.PLACE_ID, LM.LAND_MARK_NAME, LM.PIN_YIN, LM.HFKW, LM.LONGITUDE, 
+				LM.LATITUDE, LM.COORDINATE_ADDRESS, LM.IS_VALID, LM.UPDATE_TIME, LM.LAND_MARK_ADDRESS, 
+				PLACE.NAME parent_place_name
+		from PLACE_LAND_MARK LM, PLACE
+		WHERE LM.PLACE_ID = PLACE.PLACE_ID(+)
+	    AND LM.PLACE_LAND_MARK_ID = #placeLandMarkId#
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+	    delete from LVMAMA_PET.PLACE_LAND_MARK
+	    where PLACE_LAND_MARK_ID = #placeLandMarkId#
+  </delete>
+  
+  <update id="update" parameterClass="placeLandMark" >
+	    update LVMAMA_PET.PLACE_LAND_MARK
+	    <dynamic prepend="set" >
+		      <isNotNull prepend="," property="placeId" >
+		        	PLACE_ID = #placeId#
+		      </isNotNull>
+		      <isNotNull prepend="," property="landMarkName" >
+		        	LAND_MARK_NAME = #landMarkName#
+		      </isNotNull>
+		      <isNotNull prepend="," property="pinYin" >
+		       		PIN_YIN = #pinYin#
+		      </isNotNull>
+		      <isNotNull prepend="," property="hfkw" >
+		        	HFKW = #hfkw#
+		      </isNotNull> 
+		      <isNotNull prepend="," property="longitude" >
+		        	LONGITUDE = #longitude#
+		      </isNotNull> 
+		      <isNotNull prepend="," property="latitude" >
+		        	LATITUDE = #latitude#
+		      </isNotNull> 
+		      <isNotNull prepend="," property="coordinateAddress" >
+		        	COORDINATE_ADDRESS = #coordinateAddress#
+		      </isNotNull> 
+		       <isNotNull prepend="," property="isValid" >
+		        	IS_VALID = #isValid#
+		      </isNotNull> 
+		       <isNotNull prepend="," property="updateTime" >
+		        	UPDATE_TIME = sysdate
+		      </isNotNull> 
+		      <isNotNull prepend="," property="landMarkAddress" >
+		        	LAND_MARK_ADDRESS = #landMarkAddress#
+		      </isNotNull> 
+	    </dynamic>
+	    where PLACE_LAND_MARK_ID = #placeLandMarkId#
+  </update>
+  
+	<sql id="selectByParams">
+		select LM.PLACE_LAND_MARK_ID, LM.PLACE_ID, LM.LAND_MARK_NAME, LM.PIN_YIN, LM.HFKW, LM.LONGITUDE, 
+				LM.LATITUDE, LM.COORDINATE_ADDRESS, LM.IS_VALID, LM.UPDATE_TIME, LM.LAND_MARK_ADDRESS, 
+				PLACE.NAME parent_place_name
+		from PLACE_LAND_MARK LM, PLACE
+		WHERE LM.PLACE_ID = PLACE.PLACE_ID(+)
+			<isNotNull prepend=" and " property="landMarkName" >
+			     LM.LAND_MARK_NAME like '%'||#landMarkName#||'%'
+			 </isNotNull>
+			 <isNotNull prepend=" and " property="parentPlaceName" >
+			     PLACE.NAME like '%'||#parentPlaceName#||'%'
+			 </isNotNull>
+			 <isNotNull prepend=" and " property="placeId" >
+			     LM.PLACE_ID = #placeId#
+			 </isNotNull>
+			 <isNotEmpty prepend="and" property="parentPlaceId" >
+		    	LM.PLACE_ID in (select p.place_id
+			          from place_place_dest ppd, place p
+			         where ppd.place_id = p.place_id
+			           and p.is_valid = 'Y'
+			           and p.place_type in ('ZXS', 'ZZQ', 'TBXZQ', 'CITY', 'PROVINCE','OTHER','FOREIGN','COUNTRY')
+			         start with ppd.place_id = #parentPlaceId#
+			        connect by prior ppd.place_id = ppd.parent_place_id)
+		     </isNotEmpty>
+			 <isNotNull prepend="and" property="isValid">
+				LM.IS_VALID = #"isValid"#
+			</isNotNull>
+			<isNotNull prepend="and" property="isCoordinateEmpty">
+				(LM.LONGITUDE is null or LM.LATITUDE is null)
+			</isNotNull>
+	</sql>
+	
+	<select id="selectByParamsSql" parameterClass="java.util.Map" resultMap="placeLandMarkVo">
+		select * from (
+			select t.*, ROWNUM rn from (
+				<include refid="selectByParams"/>
+				order by PLACE_LAND_MARK_ID desc
+			) t
+				<isNotNull prepend="where" property="_endRow">
+					ROWNUM &lt;= #_endRow#
+				</isNotNull>
+		)
+		<isNotNull prepend="where" property="_startRow">
+			rn &gt;= #_startRow#
+		</isNotNull>
+	</select>
+  
+	<select id="selectByParamsCount" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select count(PLACE_LAND_MARK_ID) from (
+			<include refid="selectByParams"/>
+		)
+	</select>
+	
+	<select id="selectByName" parameterClass="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM PLACE_LAND_MARK WHERE LAND_MARK_NAME LIKE  #name# || '%' OR PIN_YIN = #name# 
+	</select>
+	
+	<select id="queryPlaceLandMarkByGeoLocation" parameterClass="java.util.Map" resultMap="placeLandMarkDistance" remapResults="true">
+		select LAND_MARK_NAME,distance from ( 
+	    	select LAND_MARK_NAME,round(FUNC_DISTANCE(latitude,longitude,#latitude#,#longitude#),1) distance from (
+					SELECT * FROM PLACE_LAND_MARK where 1=1
+					<isNotNull prepend=" and " property="maxinLongitude">
+						LONGITUDE &lt; = #maxinLongitude#
+					</isNotNull>
+					<isNotNull prepend=" and " property="minLongitude">
+						LONGITUDE &gt; = #minLongitude#
+					</isNotNull>
+					<isNotNull prepend=" and " property="maxLatitude">
+						LATITUDE &lt; = #maxLatitude#
+					</isNotNull>
+					<isNotNull prepend=" and " property="minLatitude">
+						LATITUDE &gt; = #minLatitude#
+					</isNotNull>
+					and IS_VALID = 'Y'
+			    )
+		)WHERE rownum &lt;= #limit# and distance &gt; 0  order by distance
+	</select>
+</sqlMap>

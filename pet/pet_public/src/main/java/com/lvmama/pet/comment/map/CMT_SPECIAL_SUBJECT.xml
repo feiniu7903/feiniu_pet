@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_SPECIAL_SUBJECT" >
+    <resultMap class="com.lvmama.comm.vo.comment.CmtSpecialSubjectVO" id="cmtSpecialSubjectMap">
+    	<result property="id" column="CMT_SPECIAL_SUBJECT_ID"/>
+    	<result property="title" column="TITLE"/>
+    	<result property="url" column="URL"/>
+    	<result property="pic" column="PIC"/>
+    	<result property="picUrl" column="PIC_URL"/>
+    	<result property="summary" column="SUMMARY"/>
+    	<result property="createdTime" column="CREATED_TIME"/>
+    	<result property="versionNum" column="VERSION_NUM"/>
+    </resultMap>
+    
+	<insert id="insert" parameterClass="com.lvmama.comm.vo.comment.CmtSpecialSubjectVO">
+		<selectKey resultClass="java.lang.Long" keyProperty="id" >
+			select cmt_special_subject_seq.nextval as id from DUAL
+		</selectKey>
+		INSERT INTO CMT_SPECIAL_SUBJECT
+			(CMT_SPECIAL_SUBJECT_ID, TITLE, URL, PIC, PIC_URL, SUMMARY, CREATED_TIME, VERSION_NUM)
+		VALUES
+			(#id#, #title#, #url#, #pic#, #picUrl#, #summary#, sysdate, #versionNum#)
+	</insert>
+
+	<update id="update" parameterClass="com.lvmama.comm.vo.comment.CmtSpecialSubjectVO">
+		UPDATE CMT_SPECIAL_SUBJECT SET
+			TITLE = #title#,
+			URL = #url#,
+			PIC = #pic#,
+			PIC_URL = #picUrl#,
+			SUMMARY = #summary#,
+			VERSION_NUM = #versionNum#
+		WHERE
+			CMT_SPECIAL_SUBJECT_ID = #id#	
+	</update>
+		
+	<sql id="reuserSQL">
+		SELECT * 
+		FROM CMT_SPECIAL_SUBJECT
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="id"  prepend=" AND ">CMT_SPECIAL_SUBJECT_ID = #id#</isNotEmpty>
+		</dynamic>
+		ORDER BY CREATED_TIME DESC
+	</sql>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="cmtSpecialSubjectMap">
+		SELECT row_.* FROM ( 
+			SELECT rownum rowunm_,p.* from (
+				select * from(<include refid="reuserSQL"/> )
+			) p 
+		) row_ 
+		<dynamic prepend=" where">
+		<isNotNull prepend=" and " property="_startRow">
+			<![CDATA[row_.rowunm_ between  #_startRow# and #_endRow#]]> 
+		</isNotNull>
+		</dynamic>
+	</select>
+
+	<select id="count" parameterClass="java.util.Map" resultClass="long">
+		select count(*) from (
+			<include refid="reuserSQL"/>
+		)
+	</select>
+	
+	<select id="queryByPk"  resultMap="cmtSpecialSubjectMap">
+		SELECT * FROM CMT_SPECIAL_SUBJECT WHERE CMT_SPECIAL_SUBJECT_ID = #id#
+	</select>
+	
+</sqlMap>

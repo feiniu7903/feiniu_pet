@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_BATCH_USER" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.user.UserBatchUser" >
+    <result column="BATCH_USER_ID" property="batchUserId" />
+    <result column="BATCH_REGISTER_ID" property="batchRegisterId" />
+	<result column="MOBILE_NUMBER" property="mobileNumber"/>
+	<result column="EMAIL" property="email"/>
+	<result column="REAL_NAME" property="realName"/>
+	<result column="gender" property="gender"/>
+    <result column="CREATE_DATE" property="createDate" />
+	<result column="REGISTER_STATUS" property="registerStatus"/>
+	<result column="REPLY" property="reply"/>
+	<result column="USER_ID" property="userId"/>
+	<result column="VISIT_DATE" property="visitDate"/>
+	<result column="VISIT_RESULT" property="visitResult"/>
+	<result column="OPERATOR" property="operator"/>
+	<result column="CITY_ID" property="cityId"/>
+
+	<result column="CHANNEL_NAME" property="channelName"/>
+	<result column="REMARK" property="remark"/>
+	<result column="REGISTER_DATE" property="registerDate"/>
+  </resultMap>
+
+  <sql id="loadBatchUser">
+	SELECT
+		U.*,
+		R.REMARK,
+		R.REGISTER_DATE,
+		C.CHANNEL_NAME,
+		rownum RN
+	FROM
+		USER_BATCH_USER U,
+		USER_BATCH_REGISTER R,
+		MARK_CHANNEL C
+	WHERE
+		U.BATCH_REGISTER_ID = R.BATCH_ID AND R.CHANNEL_ID = C.CHANNEL_ID
+	   <isNotEmpty  property="batchRegisterId" prepend=" AND ">  U.BATCH_REGISTER_ID =#batchRegisterId#</isNotEmpty>
+	   <isNotEmpty  property="mobileNumber" prepend=" AND ">     U.MOBILE_NUMBER     =#mobileNumber#   </isNotEmpty>
+	   <isNotEmpty  property="reply" prepend=" AND ">     U.REPLY     =#reply#   </isNotEmpty>
+	   <isNotEmpty  property="beginTime" prepend=" AND ">  U.CREATE_DATE &gt;= #beginTime#</isNotEmpty>
+	   <isNotEmpty  property="endTime" prepend=" AND ">  U.CREATE_DATE &lt;= #endTime#</isNotEmpty>
+	   <isNotEmpty  property="needVisit" prepend=" AND "> (U.REPLY = 'N' AND U.OPERATOR IS NULL)</isNotEmpty>
+	   <isNotEmpty property="channelId" prepend=" AND ">  
+					R.CHANNEL_ID IN (SELECT channel_id FROM mark_channel START WITH channel_id = #channelId# CONNECT BY PRIOR channel_id = father_id) 
+				</isNotEmpty>
+	ORDER BY U.CREATE_DATE DESC
+  </sql>
+  <!-- 查询批次客户信息列表 -->
+  <select id="query" resultMap="BaseResultMap" parameterClass="java.util.Map">
+     SELECT *
+       FROM (
+       <include refid="loadBatchUser"/>
+       )  A
+       <dynamic prepend=" WHERE "> 
+		    <isNotEmpty property="maxResults" prepend=" AND " > RN  &lt;=#maxResults#   </isNotEmpty>
+		   	<isNotEmpty property="skipResults" prepend=" AND "> RN  &gt;=#skipResults#   </isNotEmpty>
+	   </dynamic>
+  </select>
+  <!-- 查询批次客户总数-->
+  <select id="count" resultClass="long" parameterClass="java.util.Map">
+  	  SELECT COUNT(1) CT 
+  	    FROM (<include refid="loadBatchUser"/>) A
+  </select>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.user.UserBatchUser" >
+	<selectKey keyProperty="batchUserId" resultClass="Long">
+		SELECT USER_BATCH_USER_SEQ.nextVal FROM DUAL
+	</selectKey>
+    INSERT INTO USER_BATCH_USER     
+	<dynamic prepend="(" >
+      <isNotNull prepend="," property="batchUserId" >
+        BATCH_USER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="batchRegisterId" >
+        BATCH_REGISTER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="mobileNumber" >
+        MOBILE_NUMBER
+      </isNotNull>
+      <isNotNull prepend="," property="email" >
+        EMAIL
+      </isNotNull>
+      <isNotNull prepend="," property="realName" >
+        REAL_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="gender" >
+        GENDER
+      </isNotNull>
+        ,CREATE_DATE
+      <isNotNull prepend="," property="registerStatus" >
+        REGISTER_STATUS
+      </isNotNull>
+	  <isNotNull prepend="," property="reply" >
+        REPLY
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        USER_ID
+      </isNotNull>
+	  <isNotNull prepend="," property="visitDate" >
+		VISIT_DATE	
+	  </isNotNull>
+	  <isNotNull prepend="," property="visitResult" >
+		VISIT_RESULT	
+	  </isNotNull>
+	  <isNotNull prepend="," property="operator" >
+		OPERATOR	
+	  </isNotNull>
+	  <isNotNull prepend="," property="cityId" >
+		CITY_ID
+	  </isNotNull>
+      )
+	</dynamic>
+    VALUES
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="batchUserId" >
+        #batchUserId#
+      </isNotNull>
+      <isNotNull prepend="," property="batchRegisterId" >
+        #batchRegisterId#
+      </isNotNull>
+      <isNotNull prepend="," property="mobileNumber" >
+        #mobileNumber#
+      </isNotNull>
+      <isNotNull prepend="," property="email" >
+        #email#
+      </isNotNull>
+      <isNotNull prepend="," property="realName" >
+        #realName#
+      </isNotNull>
+      <isNotNull prepend="," property="gender" >
+        #gender#
+      </isNotNull>
+     ,sysdate
+	  <isNotNull prepend="," property="registerStatus" >
+        #registerStatus#
+      </isNotNull>
+	  <isNotNull prepend="," property="reply" >
+        #reply#
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        #userId#
+      </isNotNull>
+	  <isNotNull prepend="," property="visitDate" >
+		#visitDate#	
+	  </isNotNull>
+	  <isNotNull prepend="," property="visitResult" >
+		#visitResult#	
+	  </isNotNull>
+	  <isNotNull prepend="," property="operator" >
+		#operator#	
+	  </isNotNull>
+	   <isNotNull prepend="," property="cityId" >
+		#cityId#	
+	  </isNotNull>
+	 )
+	</dynamic>
+  </insert>
+
+  <update id="update" parameterClass="com.lvmama.comm.pet.po.user.UserBatchUser">
+	UPDATE USER_BATCH_USER SET
+	<dynamic prepend=" ">
+      <isNotNull prepend="," property="batchRegisterId" >
+        BATCH_REGISTER_ID = #batchRegisterId#
+      </isNotNull>
+      <isNotNull prepend="," property="mobileNumber" >
+        MOBILE_NUMBER = #mobileNumber#
+      </isNotNull>
+      <isNotNull prepend="," property="email" >
+        EMAIL = #email#
+      </isNotNull>
+      <isNotNull prepend="," property="realName" >
+        REAL_NAME = #realName#
+      </isNotNull>
+      <isNotNull prepend="," property="gender" >
+        GENDER = #gender#
+      </isNotNull>
+      <isNotNull prepend="," property="registerStatus" >
+        REGISTER_STATUS = #registerStatus#
+      </isNotNull>
+	  <isNotNull prepend="," property="reply">
+		REPLY = #reply#
+	  </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        USER_ID = #userId#
+      </isNotNull>
+	  <isNotNull prepend="," property="visitDate" >
+		VISIT_DATE = #visitDate#	
+	  </isNotNull>
+	  <isNotNull prepend="," property="visitResult" >
+		VISIT_RESULT = #visitResult#	
+	  </isNotNull>
+	  <isNotNull prepend="," property="operator" >
+		OPERATOR = #operator#	
+	  </isNotNull>
+	  <isNotNull prepend="," property="cityId" >
+		CITY_ID = #cityId#	
+	  </isNotNull>
+	 </dynamic>
+     WHERE BATCH_USER_ID = #batchUserId#
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="long" >
+   SELECT
+		U.*,
+		R.REMARK,
+		R.REGISTER_DATE,
+		C.CHANNEL_NAME,
+		rownum RN
+	FROM
+		USER_BATCH_USER U,
+		USER_BATCH_REGISTER R,
+		MARK_CHANNEL C
+	WHERE
+		U.BATCH_REGISTER_ID = R.BATCH_ID AND R.CHANNEL_ID = C.CHANNEL_ID AND U.BATCH_USER_ID = #batchUserId#
+  </select>
+  
+</sqlMap>

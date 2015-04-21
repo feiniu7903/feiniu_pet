@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CASH_REFUNDMENT">
+	<!-- 别名 -->
+    <typeAlias alias="cashRefundment" type="com.lvmama.comm.pet.po.money.CashRefundment"/>
+	<!-- 查询结果集 -->
+    <resultMap id="cashRefundmentResult" class="cashRefundment">
+        <result property="fincRefundmentId" column="FINC_REFUNDMENT_ID"/>
+        <result property="cashAccountId" column="CASH_ACCOUNT_ID"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="serial" column="SERIAL"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="orderRefundmentId" column="ORDER_REFUNDMENT_ID"/>
+        <result property="refundmentType" column="REFUNDMENT_TYPE"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="bounsRefundment" column="BOUNS_REFUNDMENT"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	FINC_REFUNDMENT_ID ,
+        	CASH_ACCOUNT_ID ,
+        	AMOUNT ,
+        	SERIAL ,
+        	CREATE_TIME ,
+        	ORDER_REFUNDMENT_ID ,
+        	REFUNDMENT_TYPE ,
+        	ORDER_ID,
+        	BOUNS_REFUNDMENT
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="fincRefundmentId">
+	             FINC_REFUNDMENT_ID = #fincRefundmentId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="cashAccountId">
+	             CASH_ACCOUNT_ID = #cashAccountId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="amount">
+	             AMOUNT = #amount#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="serial">
+	             SERIAL = #serial#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="orderRefundmentId">
+	             ORDER_REFUNDMENT_ID = #orderRefundmentId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="refundmentType">
+	             REFUNDMENT_TYPE = #refundmentType#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="orderId">
+	             ORDER_ID = #orderId#
+	       </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="bounsRefundment">
+	             BOUNS_REFUNDMENT = #bounsRefundment#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="cashRefundment">
+				<selectKey keyProperty="fincRefundmentId" resultClass="java.lang.Long">
+					SELECT CASH_REFUNDMENT_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        CASH_REFUNDMENT (
+        	FINC_REFUNDMENT_ID ,
+        	CASH_ACCOUNT_ID ,
+        	AMOUNT ,
+        	SERIAL ,
+        	CREATE_TIME ,
+        	ORDER_REFUNDMENT_ID ,
+        	REFUNDMENT_TYPE ,
+        	ORDER_ID,
+        	BOUNS_REFUNDMENT
+        ) VALUES (
+        	#fincRefundmentId# ,
+        	#cashAccountId# ,
+        	#amount# ,
+        	#serial# ,
+        	#createTime# ,
+        	#orderRefundmentId# ,
+        	#refundmentType# ,
+        	#orderId#,
+        	#bounsRefundment#
+        )
+    ]]>
+    </insert>
+</sqlMap>

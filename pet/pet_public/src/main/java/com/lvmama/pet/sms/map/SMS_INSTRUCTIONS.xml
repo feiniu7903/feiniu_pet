@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SMS_INSTRUCTION">
+	<resultMap id="smsInstruction" class="com.lvmama.comm.pet.po.sms.SmsInstruction">
+		<result column="INSTRUCTION_CODE" property="instructionCode" />
+		<result column="COUPON_CODE" property="couponCode" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="COUPON_ID" property="couponId" />
+	</resultMap>
+
+	<sql id="smsSql">
+		from (SELECT * FROM sms_instruction
+		where 1=1
+		<isNotNull prepend="and" property="instructionCode">
+			instruction_code like
+			'%$instructionCode$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="couponCode">
+			COUPON_CODE like
+			'%$couponCode$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="description">
+			DESCRIPTION like
+			'%$description$%'
+		</isNotNull>
+		) info
+	</sql>
+
+	<select id="query" resultMap="smsInstruction" parameterClass="java.util.HashMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT
+		rownum r,
+		info.*
+		<include refid="smsSql" />
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow">rownum &lt;= #_endRow#
+			</isNotEmpty>
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;
+				=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.sms.SmsInstruction">
+		INSERT INTO sms_instruction
+		(instruction_code, coupon_code,
+		DESCRIPTION,coupon_id)
+		VALUES
+		(#instructionCode#,
+		#couponCode#, #description#,#couponId#)
+	</insert>
+
+
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.sms.SmsInstruction">
+		UPDATE sms_instruction SET
+		instruction_code = #instructionCode#,
+		coupon_code = #couponCode#,
+		description = #description#,
+		coupon_id = #couponId#
+		WHERE
+		instruction_code =#instructionCode#
+	</update>
+
+	<delete id="delete" parameterClass="java.lang.String">
+		DELETE from sms_instruction
+		WHERE instruction_code =#instructionCode#
+	</delete>
+
+	<select id="queryByPrimaryKey" parameterClass="java.lang.String"
+		resultMap="smsInstruction">
+		SELECT * FROM sms_instruction where instruction_code
+		=#instructionCode#
+	</select>
+
+	<select id="countQuery" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Long">
+		select count(*)
+		<include refid="smsSql" />
+	</select>
+</sqlMap>

@@ -1,0 +1,74 @@
+@charset "utf-8";
+/* ------------------------------------------------------------
+  Css common v0.9
+  Last Updated: 2012-07-25
+  Author: Cloudyan
+  Contact: 1395093509@qq.com
+------------------------------------------------------------ */
+/* RESET */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,select,textarea,p,blockquote,th,td,hr,button,figure,menu{margin:0;padding:0;}article,aside,details,embed,figcaption,figure,footer,header,hgroup,menu,nav,section,summary{display:block}audio,canvas,video,.inblock{display:inline-block;*display:inline;*zoom:1}command,datalist,keygen,mark,meter,progress,rp,rt,ruby,time,wbr{display:inline}table{border-collapse:collapse;border-spacing:0}th{text-align:inherit}fieldset,img{border:0}iframe{display:block}:focus{outline:0}abbr,acronym{border:0;font-variant:normal}del{text-decoration:line-through}address,caption,cite,code,dfn,em,th,var{font-style:normal;font-weight:500}ol,ul{list-style-type:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:bold}button,input,select,textarea{font-size:100%}q:before,q:after{content:''}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-0.5em}sub{bottom:-0.25em}ins,a{text-decoration:none}a:hover{text-decoration:underline}
+img{vertical-align:top}
+/* common.css */
+.clearfix:after,.wrap:after{clear:both;content:' ';display:block;font-size:0;line-height:0;visibility:hidden;width:0;height:0}.clearfix,.wrap{zoom:1}.clr{clear:both}.clear{clear:both;font-size:0;overflow:hidden;visibility:hidden}.fl,.fr{display:inline}.fl{float:left;}.fr{float:right}bc{margin-left:auto;margin-right:auto;}.tc{text-align:center}.f12{font-size:12px}.f14{font-size:14px}.f16{font-size:16px}.f18{font-size:18px}.f22{font-size:22px}.f24{font-size:24px}.f30{font-size:30px}.lh18{line-height:18px}.lh20{line-height:20px}.lh22{line-height:22px}.lh24{line-height:24px}.lh28{line-height:28px}.lh30{line-height:30px}.mt10{margin-top:10px}.mt20{margin-top:20px}.mb10{margin-bottom:10px}.mb20{margin-bottom:20px}.ml10{margin-left:10px}.mr10{margin-right:10px}.pd10{padding:10px}.pt10{padding-top:10px}.pb10{padding-bottom:10px}.plr10{padding-left:10px;padding-right:10px}blockquote,pre{white-space:pre-wrap;word-wrap:break-word;}.text-size{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}.text-justify{text-align:justify;text-justify:inter-ideograph;}.opacity{opacity:.5;filter:alpha(opacity=50);}.text-ell{display:block;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;}.css3_shadow{transition:all 1s ease-out 0s;border-radius:5px;box-shadow:0 0px 4px rgba(206,201,170,0.8)}.css3_shadow:hover{box-shadow:0 0px 5px rgba(206,201,170,1)}.yahei{font-family:"Microsoft YaHei","\5FAE\8F6F\96C5\9ED1","黑体"}
+.pd0{padding:0!important ;}.pl15{padding-left:15px;}.ml20{margin-left:20px;}.m0{padding:0!important ;}.mr20{margin-right:20px;}
+.hr_a,.hr_b,.hr_c{font-size:1px;line-height:1px;display:block;clear:both;overflow:hidden}.hr_a{height:10px}.hr_b{height:5px}.hr_c{height:20px}
+.no_bg{background:none !important}.no_bd{border:none !important}.p_rel{position:relative}.p_abs{position:absolute}
+.B,.fb{font-weight:bold}.fnb{font-weight:normal}.tl{text-align:left}.tc{text-align:center}.tr{text-align:right}.dis{display:block}.undis{display:none}.inline{display:inline}
+.hor li{display:inline;float:left;zoom:1}.hor li a{display:block;float:left}
+.disa a,.g_btn a{display:block;width:100%;height:100%;background:url(about:blank);text-indent:-9999px;}
+/*全站统一样式dfn表示价格*/
+dfn,i{font-style:normal;}
+del,dfn,td.price{ font-family:Tahoma, Geneva, sans-serif; font-family:Arial}
+dfn,td.price{color:#f60;}
+del{color:#888}
+del,dfn,dfn i{display:inline-block;*display:inline;*zoom:1;}
+del i,dfn i{font-style:normal;font-weight:500}
+ol.num{ padding:5px 10px 10px 30px;}
+ol.num li{ list-style:decimal outside; text-indent:0px; line-height:20px; margin:5px 0}
+/* 定制样式 */
+.wrap{width:980px;margin-left:auto;margin-right:auto}
+button,input,select,textarea{font:12px/1 Tahoma,Arial,\5b8b\4f53;}
+/* 驴妈妈UI设计 */
+.link-more{ display:inline-block;*display:inline;*zoom:1; margin-left:3px;}
+.link-more i{color:#08c;}.view_more{ cursor: pointer;}
+/* 字体颜色控制 */
+.lv-c1{color:#f60}
+.lv-ca{color:#333}
+.lv-cb{color:#555}
+.lv-cc{color:#888}
+.lv-cw{color:red}
+
+body{font:12px/22px \5b8b\4f53,Tahoma,Arial; color:#000; background:#fff; position:relative}
+ul.ul{list-style-type: disc}
+ul.ul .ul{list-style-type: circle}
+ol.ol{list-style-type: decimal}
+ol.ol ol{list-style-type: lower-alpha}
+ul.ul,ol.ol{padding-left:3em;}
+
+
+/* 组件样式--自定义上传按钮 */
+.as-file{
+    position:relative;
+    display:inline-block;
+    *display:inline;
+    *zoom:1;
+    cursor:pointer;
+    overflow:hidden;
+    vertical-align:middle;
+}
+
+/* 影响 .ui-input-file 的样式 */
+.as-file .as-input-file{
+    position:absolute;
+    right:0;
+    top:0;
+    _font-size:100px; /* overwrite*/
+    _font-size:12px;
+    _zoom:10; /* overwrite */
+    height:100%;
+    _height:auto;
+    opacity:0;
+    filter:alpha(opacity=0);
+    -ms-filter:"alpha(opacity=0)";
+    cursor:pointer;
+}

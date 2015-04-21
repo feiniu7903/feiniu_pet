@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="urlMap">
+            <map>
+                <entry key="/placeService">
+                    <ref bean="placeServiceExporter"/>
+                </entry>
+                 <entry key="/PepsiService">
+                    <ref bean="pepsiService"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+      
+	<bean id="pepsiService" class="org.codehaus.xfire.spring.remoting.XFireExporter">
+		<property name="serviceFactory">
+			<ref bean="xfire.serviceFactory" />
+		</property>
+		<property name="xfire">
+			<ref bean="xfire" />
+		</property>
+		<property name="serviceBean" ref="pepsiServiceBean" />
+		<property name="serviceClass" value="com.lvmama.clutter.service.PepsiService" />
+	</bean>
+	
+	<bean id="placeServiceExporter" class="org.codehaus.xfire.spring.remoting.XFireExporter">
+		<property name="serviceFactory">
+			<ref bean="xfire.serviceFactory" />
+		</property>
+		<property name="xfire">
+			<ref bean="xfire" />
+		</property>
+		<property name="serviceBean" ref="placeServiceImpl" />
+		<property name="serviceClass" value="com.lvmama.clutter.service.IPlaceWebService" />
+	</bean>
+      
+ </beans>

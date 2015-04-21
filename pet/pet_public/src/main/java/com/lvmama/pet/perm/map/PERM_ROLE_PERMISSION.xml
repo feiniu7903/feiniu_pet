@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PERM_ROLE_PERMISSION">
+
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.pet.po.perm.PermRolePermission">
+		<result column="RP_ID" property="rpId" />
+		<result column="ROLE_ID" property="roleId" />
+		<result column="PERMISSION_ID" property="permissionId" />
+	</resultMap>
+	
+	<resultMap id="baseResultMap_PermRole"
+		class="com.lvmama.comm.pet.po.perm.PermRolePermission" extends="BaseResultMap">
+		<result column="ROLE_NAME" property="roleName" />
+		<result column="PERM_NAME" property="permName" />
+		<result column="PERM_TYPE" property="permType" />
+		<result column="PARENT_PERM_NAME" property="parentPermName" />
+	</resultMap>
+	
+	<sql id="selectParam">
+		<dynamic>
+			<isNotEmpty prepend=" and" property="roleId">
+					permRoleperm.ROLE_ID =#roleId#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="permissionId">
+					permRoleperm.PERMISSION_ID=#permissionId#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="roleName">
+					permrole.role_name like '%'||#roleName#||'%'  
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="perm_permName">
+					permPerm.name like '%'||#perm_permName#||'%'  
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<select id="selectByParamPermRole" resultMap="baseResultMap_PermRole"
+		parameterClass="java.util.Map">
+		SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select * from (
+		
+		SELECT permRoleperm.*,
+		  permrole.role_name AS ROLE_NAME,
+		  permperm.name      AS PERM_NAME,
+		  permPerm.type As PERM_TYPE,
+		   ( select name From perm_permission parent where permission_id=permperm.parent_id
+		   )       AS PARENT_PERM_NAME
+		FROM PERM_ROLE_PERMISSION permRoleperm ,
+		  PERM_ROLE permRole,
+		  PERM_PERMISSION permPerm
+		WHERE permroleperm.role_id     = permrole.role_id
+		AND permroleperm.permission_id = permPerm.permission_id
+		 <isNotEmpty prepend=" and" property="perm_parentName">
+					permPerm.parent_id IN
+					  (SELECT parent.permission_id
+					  FROM perm_permission parent
+					  WHERE parent.name like '%'||#perm_parentName#||'%' 
+					  ) 
+			</isNotEmpty> 
+				
+				<include refid="selectParam"/>
+		order by PARENT_PERM_NAME desc ,permPerm.name desc
+		)) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;=#skipResults#
+	</select>
+	
+	<select id="selectPermRoleByParamCount" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+			
+		SELECT count(*)
+		FROM PERM_ROLE_PERMISSION permRoleperm ,
+		  PERM_ROLE permRole,
+		  PERM_PERMISSION permPerm
+		WHERE permroleperm.role_id     = permrole.role_id
+		AND permroleperm.permission_id = permPerm.permission_id
+		 <isNotEmpty prepend=" and" property="perm_parentName">
+					permPerm.parent_id IN
+					  (SELECT parent.permission_id
+					  FROM perm_permission parent
+					  WHERE parent.name like '%'||#perm_parentName#||'%' 
+					  ) 
+			</isNotEmpty> 
+				<include refid="selectParam"/>
+	</select>
+	
+	<select id="selectByParam" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select * from (
+		
+			select * from PERM_ROLE_PERMISSION permRoleperm where 1=1
+				<include refid="selectParam"/>
+		
+		)) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;#skipResults#
+	</select>
+	
+	<select id="selectByParamCount" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+			select count(*) from  PERM_ROLE_PERMISSION permPerm where 1=1
+				<include refid="selectParam"/>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+	    select *
+	    from PERM_ROLE_PERMISSION
+	    where RP_ID = #rpId#
+   </select>
+   
+   <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long">
+   		 delete  PERM_ROLE_PERMISSION
+	    where RP_ID = #rpId#
+   </delete>
+   
+   <insert id="insert" parameterClass="com.lvmama.comm.pet.po.perm.PermRolePermission" >
+	    <selectKey resultClass="java.lang.Long" keyProperty="rpId" >
+	      select PERM_ROLE_PERMISSION_SEQ.nextval as id from DUAL
+	    </selectKey>
+	    insert into PERM_ROLE_PERMISSION perm (perm.RP_ID, perm.ROLE_ID, perm.PERMISSION_ID)
+	    values (#rpId#, #roleId#, #permissionId#)
+   </insert>
+   
+    <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.perm.PermRolePermission">
+		update PERM_ROLE_PERMISSION
+		set
+		<isNotNull  property="roleId">
+			ROLE_ID =#roleId#
+  	 	</isNotNull>
+  	 	<isNotNull prepend=" ," property="permissionId">
+			PERMISSION_ID=#permissionId#
+  	 	</isNotNull>
+		  where RP_ID = #rpId#
+	</update>
+	
+	<select id="selectByRolePermissionIdCount" resultClass="java.lang.Long"
+		parameterClass="com.lvmama.comm.pet.po.perm.PermRolePermission">
+			select count(*) from  PERM_ROLE_PERMISSION where ROLE_ID=#roleId# and PERMISSION_ID=#permissionId#  
+	</select>
+</sqlMap>

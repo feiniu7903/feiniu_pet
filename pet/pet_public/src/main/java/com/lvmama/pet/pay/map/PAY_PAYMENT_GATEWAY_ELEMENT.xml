@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PAY_PAYMENT_GATEWAY_ELEMENT">
+	<resultMap id="PayPaymentGatewayElementResult" class="com.lvmama.comm.pet.po.pay.PayPaymentGatewayElement">
+		<result column="PAYMENT_GATEWAY_ELEMENT_ID" property="paymentGatewayElementId" />
+		<result column="GATEWAY" property="gateway" />
+		<result column="IS_PAYMENT_TRADE_NO" property="isPaymentTradeNo" />
+		<result column="IS_GATEWAY_TRADE_NO" property="isGatewayTradeNo" />
+		<result column="IS_REFUND_SERIAL" property="isRefundSerial" />
+		<result column="IS_CALLBACK_TIME" property="isCallbackTime" />
+		<result column="IS_CALLBACK_INFO" property="isCallbackInfo" />
+		<result column="IS_RECEIVING_COMPANY" property="isReceivingCompany" />
+		<result column="IS_RECEIVING_PERSON" property="isReceivingPerson" />
+		<result column="IS_RECEIVING_BANK" property="isReceivingBank" />
+		<result column="STATUS" property="status" />
+		<result column="IS_PAYMENT_ACCOUNT" property="isPaymentAccount" />
+		<result column="IS_PAYMENT_BANK_NAME" property="isPaymentBankName" />
+		<result column="IS_PAYMENT_BANK_CARD_NO" property="isPaymentBankCardNo" />
+		<result column="IS_SUMMARY" property="isSummary" />
+		<result column="IS_DETAIL_NAME" property="isDetailName" />
+		<result column="IS_BELONG_CENTER" property="isBelongCenter" />
+		<result column="IS_BELONG_DEPARTMENT" property="isBelongDepartment" />
+	</resultMap>
+	
+    <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.PayPaymentGatewayElement" >
+	    <selectKey resultClass="java.lang.Long" keyProperty="paymentGatewayElementId">
+				select payment_gateway_element_seq.nextval as id from DUAL
+		</selectKey>
+	    INSERT INTO PAY_PAYMENT_GATEWAY_ELEMENT(PAYMENT_GATEWAY_ELEMENT_ID,GATEWAY,IS_PAYMENT_TRADE_NO,IS_GATEWAY_TRADE_NO,IS_REFUND_SERIAL,IS_CALLBACK_TIME,IS_CALLBACK_INFO,IS_RECEIVING_COMPANY,IS_RECEIVING_PERSON,IS_RECEIVING_BANK,STATUS,IS_PAYMENT_ACCOUNT,IS_PAYMENT_BANK_NAME,IS_PAYMENT_BANK_CARD_NO,IS_SUMMARY,IS_DETAIL_NAME,IS_BELONG_CENTER,IS_BELONG_DEPARTMENT)
+	    values (#paymentGatewayElementId#,#gateway#,#isPaymentTradeNo#,#isGatewayTradeNo#,#isRefundSerial#,#isCallbackTime#,#isCallbackInfo#,#isReceivingCompany#,#isReceivingPerson#,#isReceivingBank#,#status#,#isPaymentAccount#,#isPaymentBankName#,#isPaymentBankCardNo#,#isSummary#,#isDetailName#,#isBelongCenter#,#isBelongDepartment#)
+   </insert>
+   <update id="update" parameterClass="com.lvmama.comm.pet.po.pay.PayPaymentGatewayElement">
+		update PAY_PAYMENT_GATEWAY_ELEMENT
+		SET
+		IS_PAYMENT_TRADE_NO = #isPaymentTradeNo#,
+		IS_GATEWAY_TRADE_NO = #isGatewayTradeNo#,
+		IS_REFUND_SERIAL = #isRefundSerial#,
+		IS_CALLBACK_TIME = #isCallbackTime#,
+		IS_CALLBACK_INFO = #isCallbackInfo#,
+		IS_RECEIVING_COMPANY = #isReceivingCompany#,
+		IS_RECEIVING_PERSON = #isReceivingPerson#,
+		IS_RECEIVING_BANK = #isReceivingBank#,
+		STATUS = #status#,
+		IS_PAYMENT_ACCOUNT=#isPaymentAccount#,
+		IS_PAYMENT_BANK_NAME=#isPaymentBankName#,
+		IS_PAYMENT_BANK_CARD_NO=#isPaymentBankCardNo#,
+		IS_SUMMARY=#isSummary#,
+		IS_DETAIL_NAME=#isDetailName#,
+		IS_BELONG_CENTER=#isBelongCenter#,
+		IS_BELONG_DEPARTMENT=#isBelongDepartment#
+		WHERE PAYMENT_GATEWAY_ELEMENT_ID = #paymentGatewayElementId#
+	</update>
+	
+	
+	<select id="selectPaymentGatewayElementByPK" resultMap="PayPaymentGatewayElementResult" parameterClass="java.lang.Long">
+		SELECT * FROM PAY_PAYMENT_GATEWAY_ELEMENT WHERE PAYMENT_GATEWAY_ELEMENT_ID = #paymentGatewayElementId#
+	</select>
+	<select id="selectPaymentGatewayElementByGateway" resultMap="PayPaymentGatewayElementResult" parameterClass="java.lang.String">
+		SELECT * FROM PAY_PAYMENT_GATEWAY_ELEMENT WHERE GATEWAY = #gateway#
+	</select>
+	
+	<sql id="pageHead" >
+		<isNotEmpty property="start">
+			SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM (
+		</isNotEmpty> 
+	</sql>
+	<sql id="pageFoot" >
+		<isNotEmpty property="orderby">
+			ORDER BY $orderby$
+			<isNotEmpty property="order">
+				$order$
+			</isNotEmpty>
+		</isNotEmpty>
+		
+		<isNotEmpty property="start">
+			) P_T ) WHERE RN BETWEEN #start#
+			<isNotEmpty property="end">
+				AND #end#
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	<sql id="selectPayPaymentGatewayElementConditions">
+		SELECT * FROM PAY_PAYMENT_GATEWAY_ELEMENT
+		<dynamic prepend="WHERE">
+			 <isNotEmpty prepend="and" property="paymentGatewayElementId" >
+		        PAYMENT_GATEWAY_ELEMENT_ID = #paymentGatewayElementId#
+		     </isNotEmpty>
+			 <isNotEmpty prepend="and" property="gateway" >
+		        GATEWAY = #gateway#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="#isPaymentTradeNo#" >
+		        IS_PAYMENT_TRADE_NO = #isPaymentTradeNo#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="#isGatewayTradeNo#" >
+		        IS_GATEWAY_TRADE_NO = #isGatewayTradeNo#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="#isRefundSerial#" >
+		        IS_REFUND_SERIAL = #isRefundSerial#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isCallbackTime" >
+		        IS_CALLBACK_TIME = #isCallbackTime#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isCallbackInfo" >
+		        IS_CALLBACK_INFO = #isCallbackInfo#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isReceivingCompany" >
+		        IS_RECEIVING_COMPANY = #isReceivingCompany#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isReceivingPerson" >
+		        IS_RECEIVING_PERSON = #isReceivingPerson#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isReceivingBank" >
+		        IS_RECEIVING_BANK = #isReceivingBank#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="status" >
+		        STATUS = #status#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isPaymentAccount" >
+		        IS_PAYMENT_ACCOUNT = #isPaymentAccount#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isPaymentBankName" >
+		        IS_PAYMENT_BANK_NAME = #isPaymentBankName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isPaymentBankCardNo" >
+		        IS_PAYMENT_BANK_CARD_NO = #isPaymentBankCardNo#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isSummary" >
+		        IS_SUMMARY = #isSummary#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isName" >
+		        IS_DETAIL_NAME = #isDetailName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isBelongCenter" >
+		        IS_BELONG_CENTER = #isBelongCenter#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isBelongDepartment" >
+		        IS_BELONG_DEPARTMENT = #isBelongDepartment#
+		     </isNotEmpty>
+	     </dynamic>
+	</sql>
+
+	
+	<select id="selectPayPaymentGatewayElementByParamMapCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM(
+			<include refid="selectPayPaymentGatewayElementConditions" />
+		) TT1
+	</select>
+	<select id="selectPayPaymentGatewayElementByParamMap" resultMap="PayPaymentGatewayElementResult" parameterClass="java.util.Map">
+		<include refid="pageHead"/>
+			<include refid="selectPayPaymentGatewayElementConditions"/>
+		<include refid="pageFoot"/>
+	</select>
+</sqlMap>

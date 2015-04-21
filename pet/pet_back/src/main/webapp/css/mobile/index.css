@@ -1,0 +1,59 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;padding: 0;border: 0;outline: 0;font-weight: inherit;font-style: inherit;font-size: 100%;font-family: inherit;vertical-align: baseline;}
+body {color: #2f332a;font: 15px/21px Arial, Helvetica, simsun, sans-serif;background: #f0f6e4 \9;}
+h1, h2, h3, h4, h5, h6 {color: #2f332a;font-weight: bold;font-family: Helvetica, Arial, sans-serif;padding-bottom: 5px;}
+h1 {font-size: 24px;line-height: 34px;text-align: center;}
+h2 {font-size: 14px;line-height: 24px;padding-top: 5px;}
+h6 {font-weight: normal;font-size: 12px;letter-spacing: 1px;line-height: 24px;text-align: center;}
+a {color:#3C6E31;text-decoration: underline;}
+a:hover {background-color:#3C6E31;color:white;}
+input.radio {margin: 0 2px 0 8px;}
+input.radio.first {margin-left:0;}
+input.empty {color: lightgray;}
+code {color: #2f332a;}
+.highlight_red {color:#A60000;}
+.highlight_green {color:#A7F43D;}
+li {list-style: circle;font-size: 12px;}
+li.title {list-style: none;}
+ul.list {margin-left: 17px;}
+
+div.content_wrap {width: 600px;height:380px;}
+div.content_wrap div.left{float: left;width: 250px;}
+div.content_wrap div.right{float: right;width: 340px;}
+div.zTreeDemoBackground {width:250px;height:362px;text-align:left;}
+
+ul.ztree {margin-top: 10px;border: 1px solid #617775;background: #f0f6e4;width:220px;height:360px;overflow-y:scroll;overflow-x:auto;}
+ul.log {border: 1px solid #617775;background: #f0f6e4;width:300px;height:170px;overflow: hidden;}
+ul.log.small {height:45px;}
+ul.log li {color: #666666;list-style: none;padding-left: 10px;}
+ul.log li.dark {background-color: #E3E3E3;}
+
+/** 右键***/
+div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #555;text-align: left;padding: 2px;}
+div#rMenu ul li{
+	margin: 1px 0;
+	padding: 0 5px;
+	cursor: pointer;
+	list-style: none outside none;
+	background-color: #DFDFDF;
+}
+
+
+/** outLook 样式**/
+.ztree * {font-size: 10pt;font-family:"Microsoft Yahei",Verdana,Simsun,"Segoe UI Web Light","Segoe UI Light","Segoe UI Web Regular","Segoe UI","Segoe UI Symbol","Helvetica Neue",Arial}
+.ztree li ul{ margin:0; padding:0}
+.ztree li {line-height:30px;}
+.ztree li a {width:200px;height:30px;padding-top: 0px;}
+.ztree li a:hover {text-decoration:none; background-color: #E7E7E7;}
+.ztree li a span.button.switch {visibility:hidden}
+.ztree.showIcon li a span.button.switch {visibility:visible}
+.ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:30px;}
+.ztree li span {line-height:30px;}
+.ztree li span.button {margin-top: -7px;}
+.ztree li span.button.switch {width: 16px;height: 16px;}
+.ztree li a.level0 span {font-size: 150%;font-weight: bold;}
+.ztree li span.button {background-image:url("./zTreeStyle/img/left_menuForOutLook.png"); *background-image:url("./zTreeStyle/img/left_menuForOutLook.gif")}
+.ztree li span.button.switch.level0 {width: 20px; height:20px}
+.ztree li span.button.switch.level1 {width: 20px; height:20px}
+.ztree li span.button.noline_open {background-position: 0 0;}
+.ztree li span.button.noline_close {background-position: -18px 0;}

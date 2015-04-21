@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SUP_SUPPLIER_ASSESS" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.sup.SupSupplierAssess" >
+    <result column="SUPPLIER_ASSESS_ID" property="supplierAssessId" />
+    <result column="SUPPLIER_ID" property="supplierId" />
+    <result column="ASSESS_POINTS" property="assessPoints" />
+    <result column="ASSESS_MEMO" property="assessMemo" />
+    <result column="OPERATOR_NAME" property="operatorName"/>
+    <result column="CREATE_TIME" property="createTime"/>    
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.sup.SupSupplierAssess" >
+    select *
+    from SUP_SUPPLIER_ASSESS
+    where SUPPLIER_ASSESS_ID = #supplierAssessId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.sup.SupSupplierAssess" >
+    delete from SUP_SUPPLIER_ASSESS
+    where SUPPLIER_ASSESS_ID = #supplierAssessId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.sup.SupSupplierAssess" >
+    <selectKey resultClass="java.lang.Long" keyProperty="supplierAssessId" >
+      select SUP_SUPPLIER_ASSESS_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into SUP_SUPPLIER_ASSESS (SUPPLIER_ASSESS_ID, SUPPLIER_ID, ASSESS_POINTS, ASSESS_MEMO,OPERATOR_NAME,CREATE_TIME)
+    values (#supplierAssessId#, #supplierId#, #assessPoints#,
+      #assessMemo#,#operatorName#,sysdate)
+  </insert>
+   
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.sup.SupSupplierAssess" >
+    update SUP_SUPPLIER_ASSESS
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="supplierId" >
+        SUPPLIER_ID = #supplierId#
+      </isNotNull>
+      <isNotNull prepend="," property="assessPoints" >
+        ASSESS_POINTS = #assessPoints#
+      </isNotNull>
+      <isNotNull prepend="," property="assessMemo" >
+        ASSESS_MEMO = #assessMemo#
+      </isNotNull>
+      <isNotNull prepend="," property="operatorName" >
+        OPERATOR_NAME = #operatorName#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>      
+    </dynamic>
+    where SUPPLIER_ASSESS_ID = #supplierAssessId#
+  </update>
+  
+  <select id="selectByParam" parameterClass="java.util.Map" resultMap="BaseResultMap">
+  	select T.* from (
+	  	select s.*,ROWNUM rn from SUP_SUPPLIER_ASSESS s
+	  		<dynamic prepend="where">
+	  			<isNotEmpty prepend="and" property="supplierId">
+	  			s.SUPPLIER_ID = #supplierId#
+	  			</isNotEmpty>
+	  			<isNotEmpty prepend="and" property="_endRow">
+	  			ROWNUM &lt;=#_endRow#
+	  			</isNotEmpty>	  			
+	  		</dynamic>
+	  		ORDER BY s.SUPPLIER_ASSESS_ID desc
+	  ) T where rn &gt;=#_beginRow#
+  </select>
+</sqlMap>

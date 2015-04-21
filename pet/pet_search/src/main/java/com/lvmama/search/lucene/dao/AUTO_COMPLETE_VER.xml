@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="AutoCompleteVer">
+    <sql id="autoComplete1">
+         select t.district_id id,
+           t.district_name autocompleteName,
+           t.pinyin autocompletepinyin,
+           t.district_name || '~' || t.pinyin|| '~' || t.short_pinyin || '~' || t1.district_name || '~' || t1.pinyin|| '~' || t1.short_pinyin  matchword,
+           t.short_pinyin autocompletepinyinSimple,
+           '' baidugeo,
+           to_char(0) longitude,
+           to_char(0) latitude,
+           t1.district_name parentName,
+           t.district_id parentId,
+           '1' autocompleteMark
+      from lvmama_ver.biz_district t, lvmama_ver.biz_district t1
+    
+     where t.district_type in ('COUNTY', 'CITY', 'PROVINCE_DCG', 'PROVINCE_SA')
+       and t.parent_id = t1.district_id(+)
+       and t.cancel_flag = 'Y'
+       and t.district_id in (select distinct bd.district_id districtid
+                               from prod_product        pp,
+                                    biz_category        bc,
+                                    biz_district        bd,
+                                    prod_product_branch ppb,
+                                    supp_goods          sg
+                              where bc.category_code = 'category_hotel'
+                                and pp.category_id = bc.category_id
+                                and bd.district_id = pp.district_id
+                                and ppb.product_id = pp.product_id
+                                and sg.product_id = pp.product_id
+                                and pp.sale_flag = 'Y'
+                                and pp.cancel_flag = 'Y'
+                                and ppb.cancel_flag = 'Y'
+                                and sg.lvmama_flag = 'Y'
+                                and sg.cancel_flag = 'Y'
+                                and sg.package_flag = 'N')
+    
+    </sql>
+	<select id="getAutoCompleteVerHotel" resultClass="com.lvmama.comm.search.vo.AutoCompleteVerHotel"
+		parameterClass="java.util.Map">
+<!-- 		酒店 -->
+			select distinct p.product_id id,
+                    p.product_name autocompleteName,
+                    ppp1.prop_value autocompletepinyin,
+                    p.product_name || '~' || ppp1.prop_value matchword,
+                    '' autocompletepinyinSimple,
+                    ppp2.prop_value baidugeo,
+                    substr(ppp2.prop_value, 0, instr(ppp2.prop_value, ',') - 1) longitude,
+                    substr(ppp2.prop_value,
+                           instr(ppp2.prop_value, ',') + 1,
+                           length(ppp2.prop_value)) latitude,
+                    bd.district_name parentName,
+                    bd.district_id parentId,
+                    '3' autocompleteMark
+      from lvmama_ver.prod_product      p,
+           lvmama_ver.biz_category      c,
+           lvmama_ver.prod_product_prop ppp1,
+           lvmama_ver.biz_category_prop bcp1,
+           lvmama_ver.prod_product_prop ppp2,
+           lvmama_ver.biz_category_prop bcp2,
+           lvmama_ver.biz_district      bd,
+           prod_product_branch          ppb,
+           supp_goods                   sg
+     where p.category_id = c.category_id
+       and ppp1.product_id = p.product_id
+       and ppp1.prop_id = bcp1.prop_id
+       and bcp1.prop_code = 'product_pinyin'
+       and ppb.product_id = p.product_id
+       and sg.product_id = p.product_id
+       and ppp2.product_id = p.product_id
+       and ppp2.prop_id = bcp2.prop_id
+       and bcp2.prop_code = 'baidu_geo'
+          
+       and c.category_code = 'category_hotel'
+       and p.district_id = bd.district_id
+       and p.cancel_flag = 'Y'
+       and p.sale_flag = 'Y'
+       and ppb.cancel_flag = 'Y'
+       and sg.lvmama_flag = 'Y'
+       and sg.cancel_flag = 'Y'
+       and sg.package_flag = 'N'
+    
+    union all
+    select bds.sign_id id,
+           bds.sign_name autocompleteName,
+           '' autocompletepinyin,
+           bds.sign_name || '~' || '' matchword,
+           '' autocompletepinyinSimple,
+           '' baidugeo,
+           to_char(bds.longitude) longitude,
+           to_char(bds.latitude) latitude,
+           bd.district_name parentName,
+           bd.district_id parentId,
+           '2' autocompleteMark
+      from lvmama_ver.biz_district_sign bds, lvmama_ver.biz_district bd
+     where bds.cancel_flag = 'Y'
+       and bds.district_id = bd.district_id
+       and bd.district_id in
+           (select t.district_id id
+            
+              from lvmama_ver.biz_district t, lvmama_ver.biz_district t1
+            
+             where t.district_type in
+                   ('COUNTY', 'CITY', 'PROVINCE_DCG', 'PROVINCE_SA')
+               and t.parent_id = t1.district_id(+)
+               and t.cancel_flag = 'Y'
+               and t.district_id in (select distinct bd.district_id districtid
+                                       from prod_product        pp,
+                                            biz_category        bc,
+                                            biz_district        bd,
+                                            prod_product_branch ppb,
+                                            supp_goods          sg
+                                      where bc.category_code = 'category_hotel'
+                                        and pp.category_id = bc.category_id
+                                        and bd.district_id = pp.district_id
+                                        and ppb.product_id = pp.product_id
+                                        and sg.product_id = pp.product_id
+                                        and pp.sale_flag = 'Y'
+                                        and pp.cancel_flag = 'Y'
+                                        and ppb.cancel_flag = 'Y'
+                                        and sg.lvmama_flag = 'Y'
+                                        and sg.cancel_flag = 'Y'
+                                        and sg.package_flag = 'N'
+                                     
+                                     )
+            
+            )
+    
+    union all
+    <include refid="autoComplete1"/>
+
+	 order by 11
+	</select>
+	<select id="selectAllCities" resultClass="com.lvmama.comm.search.vo.AutoCompleteVerHotelCity"
+		parameterClass="java.util.Map">
+	     <include refid="autoComplete1"/>
+	          order by 3
+	</select>
+</sqlMap>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_MEMBERSHIP_CARD_DISCOUNT" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.vo.mark.MarkMembershipCardDiscountDetails" >
+    <result column="CARD_DISCOUNT_ID" property="cardDiscountId" />
+    <result column="CARD_ID" property="cardId" />
+    <result column="COUPON_ID" property="couponId" />
+    <result column="CREATE_TIME" property="createTime" />
+	<result column="OPERATOR_NAME" property="operatorName" />
+	<result column="COUPON_NAME" property="couponName" />
+	<result column="AMOUNT_DESCRIPTION" property="amountDescription" />
+  </resultMap>
+
+ <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mark.MarkMembershipCardDiscount">
+	<selectKey keyProperty="cardDiscountId" resultClass="java.lang.Long">
+      select MARK_MEM_CARD_DISCOUNT_SEQ.nextval as cardDiscountId from DUAL
+    </selectKey>
+	INSERT INTO MARK_MEMBERSHIP_CARD_DISCOUNT
+	  (CREATE_TIME
+      <isNotNull prepend="," property="cardDiscountId">CARD_DISCOUNT_ID</isNotNull>
+	  <isNotNull prepend="," property="cardId">CARD_ID</isNotNull>
+	  <isNotNull prepend="," property="couponId">COUPON_ID</isNotNull>
+	  <isNotNull prepend="," property="operatorName">OPERATOR_NAME</isNotNull>
+	  )
+	 VALUES
+      (sysdate
+      <isNotNull prepend="," property="cardDiscountId">#cardDiscountId#</isNotNull>
+	  <isNotNull prepend="," property="cardId">#cardId#</isNotNull>
+	  <isNotNull prepend="," property="couponId">#couponId#</isNotNull>
+	  <isNotNull prepend="," property="operatorName">#operatorName#</isNotNull>
+	  )
+  </insert>
+
+  <select id="query" parameterClass="java.util.Map" resultMap="BaseResultMap">
+	SELECT
+		discount.CARD_DISCOUNT_ID,
+		discount.CARD_ID,
+		discount.COUPON_ID,
+		discount.CREATE_TIME,
+		discount.OPERATOR_NAME,
+        '' as COUPON_NAME,
+        '' as AMOUNT_DESCRIPTION
+	FROM
+		MARK_MEMBERSHIP_CARD_DISCOUNT discount
+	WHERE
+	    1=1
+		<isNotEmpty prepend=" AND " property="cardId">discount.CARD_ID = #cardId#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="cardCode">discount.CARD_ID IN (SELECT CARD_ID FROM MARK_MEMBERSHIP_CARD_CODE WHERE CARD_CODE = #cardCode#)</isNotEmpty>		
+	<dynamic prepend=" ORDER BY ">
+		<isNotEmpty property="order">$order$</isNotEmpty>		
+	</dynamic>
+  </select>
+
+  <delete id="delete" parameterClass="java.util.Map">
+	DELETE FROM MARK_MEMBERSHIP_CARD_DISCOUNT 
+	<dynamic prepend=" WHERE ">
+		<isNotNull prepend=" AND " property="cardDiscountId">CARD_DISCOUNT_ID = #cardDiscountId#</isNotNull>
+		<isNotNull prepend=" AND " property="cardId">CARD_ID = #cardId#</isNotNull>
+	</dynamic>
+  </delete>
+</sqlMap>

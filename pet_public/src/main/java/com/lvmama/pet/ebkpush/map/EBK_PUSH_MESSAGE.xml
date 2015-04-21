@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EBK_PUSH_MESSAGE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.ebkpush.EbkPushMessage" >
+    <result column="ID" property="id" />
+    <result column="DEVICE_ID" property="deviceId" />
+    <result column="COMMAND" property="command" />
+    <result column="COMMAND_TYPE" property="commandType" />
+    <result column="IS_SUCCESS" property="isSuccess" />
+    <result column="CREATED_TIME" property="createdTime" />
+    <result column="CALL_BACK_TIME" property="callBackTime" />
+    <result column="RETRY_NUM" property="retryNum" />
+    <result column="PUSH_CONTENT" property="pushContent" />
+    <result column="ADD_INFO" property="addInfo" />
+  </resultMap>
+  
+  	<sql id="fail_query_sql">
+       select * from EBK_PUSH_MESSAGE where DEVICE_ID=#udid# and IS_SUCCESS='N' and COMMAND='PULL' order by ID desc
+  </sql>
+  
+  <select id="countTodyMsgByDeviceId" resultClass="java.lang.Long" parameterClass="java.lang.String">
+      select count(*) from lvmama_pet.EBK_PUSH_MESSAGE where DEVICE_ID = #udid# and CREATED_TIME between trunc(sysdate) and trunc(sysdate+1)
+  </select>
+  
+  <select id="countTodyTimeOutMsgByDeviceId" resultClass="java.lang.Long"  parameterClass="java.lang.String">
+    select  count(*) from EBK_PUSH_MESSAGE where DEVICE_ID = #udid# and IS_SUCCESS='N' and CREATED_TIME between trunc(sysdate) and sysdate-10/(24*60) 
+  </select>
+  
+  
+   <select id="selectCountByParam" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+  	SELECT count(*) FROM ( <include refid="fail_query_sql"/> )
+  </select>
+  
+ 
+  <select id="selectByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+	  SELECT * FROM (
+	  	SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+	 		<include refid="fail_query_sql"/>
+	 	) T 	 	
+	 	<dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_endRow">ROWNUM &lt;= #_endRow#</isNotEmpty>
+	 	</dynamic>
+	  )	
+	  <dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_startRow">ROWNUM1 &gt;=#_startRow#</isNotEmpty>
+	  </dynamic>
+	  </select>
+ 
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.ebkpush.EbkPushMessage" >
+    select ID, DEVICE_ID, COMMAND, COMMAND_TYPE, IS_SUCCESS, CREATED_TIME, CALL_BACK_TIME,
+      RETRY_NUM, PUSH_CONTENT, ADD_INFO
+    from EBK_PUSH_MESSAGE
+    where ID = #id:DECIMAL#
+  </select>
+  
+  <select id="selectPushMessage" resultMap="BaseResultMap" parameterClass="java.util.Map">
+      select * from EBK_PUSH_MESSAGE where DEVICE_ID=#udid# and CREATED_TIME between to_date(#date#,'yyyy-mm-dd,hh24:mi:ss') and to_date(#date#,'yyyy-mm-dd,hh24:mi:ss')+1
+  </select>
+   <delete id="deleteHistoryDate" parameterClass="java.lang.String">
+      
+  </delete>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.ebkpush.EbkPushMessage" >
+    delete from EBK_PUSH_MESSAGE
+    where ID = #id:DECIMAL#
+  </delete>
+  <select id="getMessageIdSeq" resultClass="java.lang.Long">
+        select EBK_PUSH_MESSAGE_ID_SEQ.nextval from dual
+  </select>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.ebkpush.EbkPushMessage" >
+    
+    insert into EBK_PUSH_MESSAGE (ID, DEVICE_ID, COMMAND, COMMAND_TYPE,  PUSH_CONTENT, ADD_INFO)
+    values (#id:DECIMAL#, #deviceId:VARCHAR#, #command:VARCHAR#, #commandType:VARCHAR#,
+      #pushContent:VARCHAR#, #addInfo:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.ebkpush.EbkPushMessage" >
+    insert into EBK_PUSH_MESSAGE
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="deviceId" >
+        DEVICE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="command" >
+        COMMAND
+      </isNotNull>
+      <isNotNull prepend="," property="commandType" >
+        COMMAND_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="pushContent" >
+        PUSH_CONTENT
+      </isNotNull>
+      <isNotNull prepend="," property="addInfo" >
+        ADD_INFO
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="deviceId" >
+        #deviceId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="command" >
+        #command:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="commandType" >
+        #commandType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="pushContent" >
+        #pushContent:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="addInfo" >
+        #addInfo:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.ebkpush.EbkPushMessage" >
+    update EBK_PUSH_MESSAGE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="deviceId" >
+        DEVICE_ID = #deviceId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="command" >
+        COMMAND = #command:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="commandType" >
+        COMMAND_TYPE = #commandType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="isSuccess" >
+        IS_SUCCESS = #isSuccess:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        CREATED_TIME = #createdTime:DATE#
+      </isNotNull>
+      <isNotNull prepend="," property="callBackTime" >
+        CALL_BACK_TIME = #callBackTime:DATE#
+      </isNotNull>
+      <isNotNull prepend="," property="retryNum" >
+        RETRY_NUM = #retryNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="pushContent" >
+        PUSH_CONTENT = #pushContent:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="addInfo" >
+        ADD_INFO = #addInfo:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where ID = #id:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.ebkpush.EbkPushMessage" >
+    update EBK_PUSH_MESSAGE
+    set DEVICE_ID = #deviceId:VARCHAR#,
+      COMMAND = #command:VARCHAR#,
+      COMMAND_TYPE = #commandType:VARCHAR#,
+      IS_SUCCESS = #isSuccess:VARCHAR#,
+      CALL_BACK_TIME =sysdate,
+      RETRY_NUM = #retryNum:DECIMAL#,
+      PUSH_CONTENT = #pushContent:VARCHAR#,
+      ADD_INFO = #addInfo:VARCHAR#
+    where ID = #id:DECIMAL#
+  </update>
+</sqlMap>

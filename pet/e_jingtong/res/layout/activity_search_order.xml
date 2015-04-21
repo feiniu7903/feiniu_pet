@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <!-- 键盘部分 -->
+    <LinearLayout android:id="@+id/search_order_keyboard_layout" 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_b1b1b1"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+    	
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dip"
+            android:layout_marginTop="1dip"
+            android:orientation="horizontal"
+            >
+            <Button android:id="@+id/software_key_1"
+    			style="@style/key_board_no"
+    			android:layout_marginRight="1dip"
+    			android:text="1"/>
+            <Button android:id="@+id/software_key_2"
+    			style="@style/key_board_no"
+    			android:text="2"
+    			android:layout_marginRight="1dip"/>
+            <Button android:id="@+id/software_key_3"
+    			style="@style/key_board_no"
+    			android:text="3"/>
+        </LinearLayout>
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="1dip">
+            <Button android:id="@+id/software_key_4"
+    			style="@style/key_board_no"
+    			android:layout_marginRight="1dip"
+    			android:text="4"/>
+            <Button android:id="@+id/software_key_5"
+    			style="@style/key_board_no"
+    			android:layout_marginRight="1dip"
+    			android:text="5"/>
+            <Button android:id="@+id/software_key_6"
+    			style="@style/key_board_no"
+    			android:text="6"/>
+        </LinearLayout>
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="1dip">
+            <Button android:id="@+id/software_key_7"
+    			style="@style/key_board_no"
+    			android:layout_marginRight="1dip"
+    			android:text="7"/>
+            <Button android:id="@+id/software_key_8"
+    			style="@style/key_board_no"
+    			android:layout_marginRight="1dip"
+    			android:text="8"/>
+            <Button android:id="@+id/software_key_9"
+    			style="@style/key_board_no"
+    			android:text="9"/>
+        </LinearLayout>
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button android:id="@+id/software_key_delete"
+    			style="@style/key_board_delete"
+    			android:layout_marginRight="1dip"
+    			android:text="删除"/>
+            <Button android:id="@+id/software_key_0"
+    			style="@style/key_board_no"
+    			android:text="0"
+    			android:layout_marginRight="1dip"/>
+            <Button android:id="@+id/software_key_search"
+    			style="@style/key_board_search"
+    			android:text="搜索"/>
+        </LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout android:id="@+id/search_order_text_layout" 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/search_order_keyboard_layout"
+        android:orientation="vertical"
+        android:gravity="center">
+        <!-- 
+        <TextView android:id="@+id/search_order_tip_info" 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_order_tip_input_order_no"
+            android:textSize="20sp"
+            android:visibility="gone"
+            android:textColor="@color/gray_333333"
+            />
+         <View android:id="@+id/bold_line"
+        	android:layout_width="match_parent"
+        	android:layout_height="2dip"
+        	android:background="@drawable/line"
+        	android:visibility="gone"
+        />
+          -->
+        <TextView android:id="@+id/search_order_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="36sp"
+            android:padding="10dip"
+            android:background="@color/wihte"
+            android:singleLine="true"
+            android:gravity="center"/>
+        <!-- 
+        <com.ejingtong.view.ViewEditText
+        	    android:id="@+id/search_order_value"
+        	    android:layout_width="250dip"
+        	    android:layout_height="60dip"
+        	    android:gravity="center"
+        	    android:layout_marginBottom="20dip"
+        	    />
+    	     -->
+    </LinearLayout>
+    
+</RelativeLayout>

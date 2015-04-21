@@ -1,0 +1,69 @@
+<?page title="注册促销员" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./listUserChannelWin"?>
+<?component name="lvmama_pchannel" macroURI="/mark/channel/channelRelate.zul"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="listUserChannelWin" mode="embedded" apply="com.lvmama.pet.web.user.parttime.ListParttimeUserAction">
+	<grid>
+			<columns>
+				<column width="100px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="渠道:" />
+						<label value="[*]" style="color:red;" />
+					</hbox>
+					<hbox>
+						<lvmama_pchannel id="channel_box"></lvmama_pchannel>	
+					</hbox>
+				</row>
+				<row>
+					<hbox>	用户名：</hbox>
+					<hbox><textbox id="channelName" value="@{saction.searchConds.userName}"/></hbox>
+				</row>
+				<row spans="2" align="right">
+					<hbox >
+						<button id="search" label="查询" onClick="_paging.activePage=0;saction.search();" width="100px">
+						</button>
+						<button id="add" label="新增" onClick='saction.showWindow("/user/parttime/newUserChannel.zul", null);' width="100px">
+						</button>
+					</hbox>
+				</row>				
+			</rows>
+		</grid>
+		<listbox  model="@{saction.userChannelList,load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader width="22px"/>	
+				<listheader label="登录名"/>
+				<listheader label="渠道名称"/>
+				<listheader label="操作"/>
+			</listhead>
+			<listitem height="25px" self="@{each='userChannel'}" value="@{userChannel}">
+				<listcell/>
+				<listcell label="@{userChannel.userName}"/>
+				<listcell label="@{userChannel.channelName}"/>
+				<listcell>
+					<a label="修 改" style="color:blue" 
+						onClick='saction.showWindow("/user/parttime/updateUserChannel.zul", self.getAttributes());'>
+						<custom-attributes parttimeUserId="@{userChannel.id}"/>	
+					</a>				
+				</listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows >
+					<row >
+						<cell width="60px">
+							共 <label id="_totalRowCountLabel" /> 条
+						</cell>
+						<cell>
+							<paging  id="_paging" pageSize = "15"  onPaging='saction.search();'/>
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>	
+	</window>
+</zk>

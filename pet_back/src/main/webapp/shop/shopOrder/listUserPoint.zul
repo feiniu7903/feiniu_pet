@@ -1,0 +1,55 @@
+<?page title="积分记录" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./userPointListWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"  xmlns:zk="http://www.zkoss.org/2005/zk">
+    <window id="userPointListWin" border="normal" apply="com.lvmama.pet.web.shop.shopOrder.ListUserPointAction" title="积分记录">
+	    <grid>
+	        <columns>
+	            <column width="100px"></column>
+	            <column></column>
+	        </columns>
+	        <rows>
+	            <row>
+                    <hbox>用户名：</hbox>
+                    <hbox><label value="@{saction.users.userName }"/></hbox>           
+                </row>
+	            <row>
+	                <hbox>当前可用积分：</hbox>
+	                <hbox><label value="@{saction.currentPoint }"/></hbox>           
+	            </row>
+	            <row>
+	                <hbox>年末到期积分：</hbox>
+	                <hbox><label value="@{saction.aboutToExpiredPoint }"/></hbox>           
+	            </row>                  
+	        </rows>     
+	    </grid>   
+        
+        <listbox id="userPointListBox" model="@{saction.userPointLogWithDescriptionList,load-after='paging.onPaging'}">
+            <listhead>          
+                <listheader label="日期" width="200px"/>
+                <listheader label="事由"/>
+                <listheader label="获得积分" width="100px"/>
+            </listhead>
+            <listitem height="25px" self="@{each='userPoint'}" value="@{userPoint }">
+                <listcell label="@{userPoint.zhCreatedDate}"/>
+                <listcell label="@{userPoint.description}"/>
+                <listcell label="@{userPoint.point}"/>
+            </listitem>
+        </listbox>
+        
+        <toolbar>
+            <grid style="border:0">
+            <rows >
+                <row >
+                    <cell width="60px">
+                                                                共 <label id="totalRowCountLabel" /> 条
+                    </cell>
+                    <cell width="200px">
+                        <paging id="paging" pageSize = "15" onPaging='saction.search();'/>
+                    </cell>
+                </row>
+            </rows>
+            </grid>
+        </toolbar> 
+             
+    </window>
+</zk>

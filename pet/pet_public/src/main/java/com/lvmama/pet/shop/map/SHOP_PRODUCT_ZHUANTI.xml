@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SHOP_PRODUCT_ZHUANTI" >
+
+    <resultMap class="com.lvmama.comm.pet.po.shop.ShopProductZhuanti" id="shopProductZhuantiMap">
+    	<result property="shopProductZhuantiId" column="SHOP_PRODUCT_ZHUANTI_ID"/>
+    	<result property="productId" column="PRODUCT_ID"/>
+    	<result property="userId" column="USER_ID"/>
+    	<result property="changeRate" column="CHANGE_RATE"/>
+    </resultMap>
+    
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.shop.ShopProductZhuanti">
+		<selectKey resultClass="java.lang.Long" keyProperty="shopProductZhuantiId" >
+			select SHOP_PRODUCT_ZHUANTI_SEQ.nextval as shopProductZhuantiId from DUAL
+		</selectKey>
+		INSERT INTO SHOP_PRODUCT_ZHUANTI
+			(SHOP_PRODUCT_ZHUANTI_ID, PRODUCT_ID,USER_ID,CHANGE_RATE)
+		VALUES
+			(#shopProductZhuantiId#, #productId#, #userId#, #changeRate#)
+	</insert>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="shopProductZhuantiMap">
+		SELECT * 
+		FROM SHOP_PRODUCT_ZHUANTI
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="shopProductZhuantiId"  prepend=" AND ">SHOP_PRODUCT_ZHUANTI_ID=#shopProductZhuantiId#</isNotEmpty>
+			<isNotEmpty property="userId"  prepend=" AND ">USER_ID=#userId#</isNotEmpty>
+			<isNotEmpty property="productId"  prepend=" AND ">PRODUCT_ID=#productId#</isNotEmpty>
+		</dynamic>
+		ORDER BY SHOP_PRODUCT_ZHUANTI_ID DESC
+	</select>
+	
+	<delete id="deleteByProductIdAndUserId"  parameterClass="java.util.Map">
+		Delete From SHOP_PRODUCT_ZHUANTI Where PRODUCT_ID = #productId# and USER_ID=#userId#
+	</delete>
+	
+	
+</sqlMap>

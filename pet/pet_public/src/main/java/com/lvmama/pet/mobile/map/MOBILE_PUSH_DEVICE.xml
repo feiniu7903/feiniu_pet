@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MOBILE_PUSH_DEVICE">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.pet.po.mobile.MobilePushDevice">
+		<result column="MOBILE_PUSH_DEVICE_ID" property="mobilePushDeviceId" />
+		<result column="OBJECT_ID" property="objectId" />
+		<result column="PLAFORM" property="plaform" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="USER_ID" property="userId" />
+		<result column="PUSH_STATU" property="pushStatu" />
+		<result column="UDID" property="udid" />
+		<result column="MQTT_CLIENT_ID" property="mqttClientId"/>
+	</resultMap>
+	
+	
+	<select id=""></select>
+	
+	<select id="selectPushIdWithTargetIds" resultMap="BaseResultMap" parameterClass="java.util.HashMap">    
+	    select distinct * from MOBILE_PUSH_DEVICE
+	    <dynamic prepend="where">
+	        <isNotEmpty property="userList">
+	            	USER_ID IN 
+			<iterate property="userList" open="(" close=")" conjunction=","> 
+				#productTypes[]# 
+			</iterate> 
+	   	 </isNotEmpty>
+	         <isNotEmpty property="deviceList">
+	            	UDID IN 
+					<iterate property="deviceList" open="(" close=")" conjunction=","> 
+						#deviceList[]# 
+					</iterate> 
+	     </isNotEmpty>
+	    </dynamic>
+	</select>
+	
+	
+	<delete id="deleteByDeviceTokens"  parameterClass="java.util.HashMap">    
+	    delete from MOBILE_PUSH_DEVICE
+	    <dynamic prepend="where">
+	        <isNotEmpty property="objectIdList">
+	            	OBJECT_ID IN 
+			<iterate property="objectIdList" open="(" close=")" conjunction=","> 
+				#objectIdList[]# 
+			</iterate>
+			</isNotEmpty>   	 
+	    </dynamic>
+	</delete>
+	
+	
+	<select id="selectTotalMobilPushDevice" resultClass="java.lang.Long">
+		select count(t.mobile_push_device_id) from mobile_push_device t
+	</select>
+	
+	<sql id="countQueryMobilPushDevice">
+	    select rownum rn, t.* from( select * from mobile_push_device 
+		<dynamic prepend="where">
+	        <isNotEmpty property="PLAFORM">
+	            	PLAFORM=#plaform#
+			</isNotEmpty>   	 
+	    </dynamic>
+	</sql>
+	
+	<sql id="whereQueryPushDevice">
+	    
+	    <dynamic prepend="where">
+	        <isNotEmpty property="plaform">
+	            	mpd.PLAFORM=#plaform#
+			</isNotEmpty>  
+			 <isNotEmpty property="provinceIds" >
+			     and 
+			     mpl.mobile_push_device_id = mpd.mobile_push_device_id
+			     and
+			     mpl.province_id in
+			    <iterate property="provinceIds" open="(" close=")" conjunction=",">
+				#provinceIds[]#
+			</iterate>
+			 </isNotEmpty> 	 
+	    </dynamic>
+	</sql>
+	
+	
+	<sql id="queryTargetSql">
+	     select distinct mpd.* from mobile_push_device mpd
+	     <isNotEmpty property="provinceIds">
+	          , mobile_push_location mpl
+	     </isNotEmpty>
+	    
+	    <include refid="whereQueryPushDevice"/>
+	</sql>
+
+	<select id="countQueryMobilPushDevice" resultClass="java.lang.Long">
+	    select count(*) from (<include refid="queryTargetSql"/>)
+	</select>
+
+	<select id="pagedQueryMobilPushDevice" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from (select rownum rn, t.* from(<include refid="queryTargetSql"/>)
+		t where rownum <![CDATA[<=]]> #end# ) where rn <![CDATA[>=]]> #start#
+	</select>
+	
+	
+	<select id="selectByObjectId" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(MOBILE_PUSH_DEVICE_ID)
+		from MOBILE_PUSH_DEVICE
+		where OBJECT_ID = #deviceToken#
+	</select>
+	<select id="selectMobileDeviceByObjectId" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+		select *
+		from MOBILE_PUSH_DEVICE
+		where OBJECT_ID = #deviceToken# and rownum=1
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushDevice">
+		select MOBILE_PUSH_DEVICE_ID, OBJECT_ID, PLAFORM, CREATE_TIME,
+		USER_ID, PUSH_STATU,UDID
+		from MOBILE_PUSH_DEVICE
+		where MOBILE_PUSH_DEVICE_ID = #mobilePushDeviceId:DECIMAL#
+	</select>
+	<delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushDevice">
+		delete from MOBILE_PUSH_DEVICE
+		where MOBILE_PUSH_DEVICE_ID = #mobilePushDeviceId:DECIMAL#
+	</delete>
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushDevice">
+		<selectKey keyProperty="mobilePushDeviceId" resultClass="java.lang.Long">
+			SELECT MOBILE_PUSH_DEVICE_SEQ.nextval FROM DUAL
+		</selectKey>
+		insert into MOBILE_PUSH_DEVICE (MOBILE_PUSH_DEVICE_ID, OBJECT_ID,
+		PLAFORM, CREATE_TIME, USER_ID,
+		PUSH_STATU,UDID)
+		values (#mobilePushDeviceId#, #objectId:VARCHAR#, #plaform:VARCHAR#,
+		#createTime:DATE#,
+		#userId:DECIMAL#, #pushStatu:VARCHAR#,#udid:VARCHAR#)
+	</insert>
+	<insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushDevice">
+		<selectKey keyProperty="mobilePushDeviceId" resultClass="java.lang.Long">
+			SELECT MOBILE_PUSH_DEVICE_SEQ.nextval FROM DUAL
+		</selectKey>
+		insert into MOBILE_PUSH_DEVICE
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="mobilePushDeviceId">
+				MOBILE_PUSH_DEVICE_ID
+			</isNotNull>
+			<isNotNull prepend="," property="objectId">
+				OBJECT_ID
+			</isNotNull>
+			<isNotNull prepend="," property="plaform">
+				PLAFORM
+			</isNotNull>
+			<isNotNull prepend="," property="createTime">
+				CREATE_TIME
+			</isNotNull>
+			<isNotNull prepend="," property="userId">
+				USER_ID
+			</isNotNull>
+			<isNotNull prepend="," property="pushStatu">
+				PUSH_STATU
+			</isNotNull>
+			<isNotNull prepend="," property="udid">
+				UDID
+			</isNotNull>
+			<isNotNull prepend="," property="mqttClientId">
+				MQTT_CLIENT_ID
+			</isNotNull>
+			)
+		</dynamic>
+		values
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="mobilePushDeviceId">
+				#mobilePushDeviceId#
+			</isNotNull>
+			<isNotNull prepend="," property="objectId">
+				#objectId:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="plaform">
+				#plaform:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="createTime">
+				#createTime:DATE#
+			</isNotNull>
+			<isNotNull prepend="," property="userId">
+				#userId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="pushStatu">
+				#pushStatu:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="udid">
+				#udid:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="mqttClientId">
+				#mqttClientId:VARCHAR#
+			</isNotNull>
+			)
+		</dynamic>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushDevice">
+		update MOBILE_PUSH_DEVICE
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="objectId">
+				OBJECT_ID = #objectId:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="plaform">
+				PLAFORM = #plaform:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="createTime">
+				CREATE_TIME = #createTime:DATE#
+			</isNotNull>
+			<isNotNull prepend="," property="userId">
+				USER_ID = #userId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="pushStatu">
+				PUSH_STATU = #pushStatu:VARCHAR#
+			</isNotNull>
+			
+			<isNotNull prepend="," property="mqttClientId">
+				MQTT_CLIENT_ID=#mqttClientId:VARCHAR#
+			</isNotNull>
+		</dynamic>
+		where MOBILE_PUSH_DEVICE_ID = #mobilePushDeviceId:DECIMAL#
+	</update>
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushDevice">
+		update MOBILE_PUSH_DEVICE
+		set OBJECT_ID = #objectId:VARCHAR#,
+		PLAFORM = #plaform:VARCHAR#,
+		CREATE_TIME = #createTime:DATE#,
+		USER_ID = #userId:DECIMAL#,
+		PUSH_STATU = #pushStatu:VARCHAR#,
+		MQTT_CLIENT_ID=#mqttClientId:VARCHAR#
+		where MOBILE_PUSH_DEVICE_ID = #mobilePushDeviceId:DECIMAL#
+	</update>
+</sqlMap>

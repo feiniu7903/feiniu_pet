@@ -1,0 +1,23 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./bandcoupon"?>
+<bandbox id="bandcoupon" apply="com.lvmama.back.web.coupon.MacroChooseCoupon"
+	onChanging="bandcoupon$composer.changeCoupon(event)"
+	 onBlur='if(bandcoupon.getValue().trim().equals("")){couponId.setValue(null);}'
+	mold="rounded" autodrop="true">
+	<bandpopup>
+		<vbox>
+			<listbox width="300px" id="bandboxListBox"
+				model="@{bandcoupon$composer.couponList, load-after='bandcoupon.onChanging' }"
+				onSelect='bandcoupon.value=self.selectedItem.lastChild.label; couponId.value=self.selectedItem.value;Events.postEvent("onChange",couponId,null); bandcoupon.close();'>
+				<listhead>
+					<listheader width="50px" label="编号" />
+					<listheader label="优惠券" />
+				</listhead>
+				<listitem self="@{each='coupon'}" value="@{coupon.couponId}"
+					height="25px">
+					<listcell label="@{coupon.couponId}" />
+					<listcell label="@{coupon.couponName}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

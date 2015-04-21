@@ -1,0 +1,94 @@
+<?page title="站内渠道管理" contentType="text/html;charset=UTF-8"?>
+<zk>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./listChannelWin"?>
+<window  id="listChannelWin" title="站内渠道查询" border="normal" apply="com.lvmama.pet.web.mark.channel.ChannelAction">
+<grid>
+			<columns>
+				<column width="80px"></column>
+				<column></column>
+				<column width="80px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>一级渠道名称:</hbox>
+					<hbox> <textbox value="@{saction.searchConds.firstName}"></textbox>  </hbox>
+					<hbox>一级渠道代码：</hbox>
+					<hbox><textbox value="@{saction.searchConds.firstCode}"></textbox>  </hbox>
+				</row>
+				<row>
+					<hbox>二级渠道名称:</hbox>
+					<hbox> <textbox value="@{saction.searchConds.secondName}"></textbox>  </hbox>
+					<hbox>二级渠道代码：</hbox>
+					<hbox><textbox value="@{saction.searchConds.secondCode}"></textbox>  </hbox>
+				</row>
+				<row>
+					<hbox>三级渠道名称:</hbox>
+					<hbox> <textbox value="@{saction.searchConds.threeName}"></textbox>  </hbox>
+					<hbox>三级渠道代码：</hbox>
+					<hbox><textbox value="@{saction.searchConds.threeCode}"></textbox>  </hbox>
+				</row>
+				<row>
+					<hbox>录入时间</hbox>
+					<hbox>
+					<datebox value="@{saction.searchConds.beginCreateTime}"></datebox>~<datebox value="@{saction.searchConds.endCreateTime}"></datebox>
+					</hbox>
+					<hbox></hbox>
+					<hbox>	
+					<button label="查 询"  id="search" width="100px" onClick="_paging.activePage=0;saction.search();"></button>
+					<button label="新 增"  onClick='saction.showWindow("/mark/channel/addOutterMarkChannel.zul", self.getAttributes());' width="100px"></button>
+					<!--button label="渠道关系对应"  onClick='saction.showWindow("/coupon/channel/RelationChannel.zul", self.getAttributes());' width="100px"></button-->
+					</hbox>
+				</row> 
+			</rows>
+		</grid>
+		
+		<listbox
+			model="@{saction.channelList, load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader label="录入时间" />
+				<listheader label="一级渠道" />
+				<listheader label="一级渠道代码" />
+				<listheader label="二级渠道" />
+				<listheader label="二级渠道代码" />
+				<listheader label="三级渠道" width="300px"/>
+				<listheader label="三级渠道代码" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem height="25px" self="@{each='channel'}">
+				<listcell label="@{channel.createTime}"></listcell>
+				<listcell label="@{channel.firstName}"></listcell>
+				<listcell label="@{channel.firstCode}"></listcell>
+				<listcell label="@{channel.secondName}"></listcell>
+				<listcell label="@{channel.secondCode}"></listcell>
+				<listcell>
+					<label value="@{channel.threeName}"/>
+					<image width="15px" height="15px" src="/img/qm.gif" tooltip="@{channel.uniqueId}"/>
+					<popup id="@{channel.uniqueId}" width="300px"> 
+							<label pre="true" value="@{channel.channelComment}"/>
+					</popup>
+				</listcell>
+				<listcell label="@{channel.threeCode}"></listcell>
+				<listcell>
+				<a onClick='saction.showWindow("/mark/channel/updateMarkChannel.zul", self.getAttributes());'  style="color:blue"  label="修改"><custom-attributes firstId="@{channel.firstId}"/><custom-attributes secondId="@{channel.secondId}"/><custom-attributes threeId="@{channel.threeId}"/></a>
+				<a onClick='saction.showWindow("/mark/channel/innerMarklog.zul", self.getAttributes());'  style="color:blue"  label="日志"><custom-attributes firstId="@{channel.firstId}"/><custom-attributes secondId="@{channel.secondId}"/><custom-attributes threeId="@{channel.threeId}"/></a>	
+				
+				</listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell width="200px">
+					<paging  id="_paging" pageSize = "15" onPaging='saction.search();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+</window>
+</zk>

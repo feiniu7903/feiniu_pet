@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="WORK_GROUP_USER">
+	<!-- 别名 -->
+    <typeAlias alias="workGroupUser" type="com.lvmama.comm.pet.po.work.WorkGroupUser"/>
+	<!-- 查询结果集 -->
+    <resultMap id="workGroupUserResult" class="workGroupUser">
+        <result property="workGroupUserId" column="WORK_GROUP_USER_ID"/>
+        <result property="workDepartmentId" column="WORK_DEPARTMENT_ID"/>
+        <result property="workGroupId" column="WORK_GROUP_ID"/>
+        <result property="permUserId" column="PERM_USER_ID"/>
+        <result property="leader" column="LEADER"/>
+        <result property="valid" column="VALID"/>
+        <result property="createTime" column="CREATE_TIME"/>
+    </resultMap>
+    
+    <resultMap id="workGroupUserWithPermUser" class="workGroupUser" extends="workGroupUserResult">
+    	<result property="userName" column="user_name"/>
+    	<result property="realName" column="real_name"/>
+    	<result property="workStatus" column="work_status"/>
+    </resultMap>
+	<resultMap id="workGroupUserAllinfo" class="workGroupUser" extends="workGroupUserWithPermUser">
+    	<result property="departmentName" column="department_name"/>
+    	<result property="workGroupName" column="group_name"/>
+    </resultMap>
+	<resultMap class="java.util.HashMap" id="groupWithUserOnline">
+        <result property="WORK_GROUP_ID" column="WORK_GROUP_ID" javaType="java.lang.Long"/>
+        <result property="ON_LINE_NUM" column="ON_LINE_NUM" javaType="java.lang.Long"/>
+    </resultMap>
+	<resultMap id="workGroupUserResultByCrCount" class="workGroupUser" extends="workGroupUserResult">
+		<result property="crCount" column="CR_COUNT"/>
+		<result property="userName" column="USER_NAME"/>
+	</resultMap>
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	WORK_GROUP_USER_ID ,
+        	WORK_DEPARTMENT_ID ,
+        	WORK_GROUP_ID ,
+        	PERM_USER_ID ,
+        	LEADER ,
+        	VALID,
+        	CREATE_TIME 
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="workGroupUserId">
+	             WORK_GROUP_USER_ID = #workGroupUserId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="workDepartmentId">
+	             WORK_DEPARTMENT_ID = #workDepartmentId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="workGroupId">
+	             WORK_GROUP_ID = #workGroupId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="permUserId">
+	             PERM_USER_ID = #permUserId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="leader">
+	             LEADER = #leader#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="valid">
+	             VALID = #valid#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 修改记录 -->
+    <update id="update" parameterClass="workGroupUser">
+    <![CDATA[
+        UPDATE WORK_GROUP_USER SET
+	        WORK_DEPARTMENT_ID = #workDepartmentId# ,
+	        WORK_GROUP_ID = #workGroupId# ,
+	        PERM_USER_ID = #permUserId# ,
+	        LEADER = #leader# ,
+	        CREATE_TIME = #createTime# 
+        WHERE 
+	        WORK_GROUP_USER_ID = #workGroupUserId# 
+    ]]>
+    </update>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="workGroupUser">
+				<selectKey keyProperty="workGroupUserId" resultClass="long">
+					SELECT WORK_GROUP_USER_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        WORK_GROUP_USER (
+        	WORK_GROUP_USER_ID ,
+        	WORK_DEPARTMENT_ID ,
+        	WORK_GROUP_ID ,
+        	PERM_USER_ID ,
+        	LEADER ,
+        	CREATE_TIME,
+        	VALID 
+        ) VALUES (
+        	#workGroupUserId# ,
+        	#workDepartmentId# ,
+        	#workGroupId# ,
+        	#permUserId# ,
+        	#leader# ,
+        	#createTime#, 
+        	#valid#
+        )
+    ]]>
+    </insert>
+    <!-- 查询记录，根据主键值 -->
+    <select id="getWorkGroupUserById" resultMap="workGroupUserWithPermUser">
+	    select t1.*,t2.user_name,t2.real_name,t2.work_status from WORK_GROUP_USER t1,perm_user t2
+	        where t1.perm_user_id = t2.user_id and WORK_GROUP_USER_ID = #workGroupUserId# 
+    </select>
+    <!-- 查询记录，根据用户名、id、组织 -->
+    <select id="getWorkGroupUserByPermUserAndGroup" resultMap="workGroupUserWithPermUser" parameterClass="java.util.Map">
+	    select t1.*,t2.user_name,t2.real_name,t2.work_status from WORK_GROUP wg,WORK_GROUP_USER t1,perm_user t2
+	        where t1.perm_user_id = t2.user_id 
+	        and t1.work_group_id = wg.work_group_id
+	        <isNotEmpty property="groupName">
+	        	and wg.group_name = #groupName# 
+	        </isNotEmpty>
+	        <isNotEmpty property="userName">
+	        	and t2.user_name = #userName# 
+	        </isNotEmpty>
+	        <isNotEmpty property="userId">
+	        	and t2.user_id = #userId# 
+	        </isNotEmpty>
+	        <isNotEmpty property="workStatus">
+	        	and t2.work_status = #workStatus#
+	        </isNotEmpty>
+	        <isNotEmpty property="workDepartmentId">
+	        	and t1.work_department_id = #workDepartmentId# 
+	        </isNotEmpty>
+	        <isNotEmpty property="workGroupId">
+	        	and t1.work_group_id = #workGroupId#
+	        </isNotEmpty>
+	        <isNotEmpty property="valid">
+	        	and t2.valid = #valid#
+	        </isNotEmpty>
+	        <isNotEmpty property="workGroupUserValid">
+	        	and t1.valid = #workGroupUserValid#
+	        </isNotEmpty>
+    </select>
+    <!-- 查询记录 根据特定条件 -->
+    <select id="queryWorkGroupUserByParam"  resultMap="workGroupUserResult" parameterClass="java.util.Map">
+       select <include refid="commonColumns"/> from WORK_GROUP_USER 
+		<include refid="dynamicWhere"/>    
+    </select>
+    
+    <!-- 查询记录 根据params条件 -->
+    <select id="queryWorkGroupUserByParams"  resultMap="workGroupUserWithPermUser" parameterClass="java.util.Map">
+      select t1.*,t2.user_name,t2.real_name,t2.work_status from WORK_GROUP_USER t1,perm_user t2
+		where t1.perm_user_id = t2.user_id and t1.valid='true' and t2.valid='Y' 
+		 <isNotEmpty property="workGroupId">
+    		and t1.work_group_id = #workGroupId#
+    	</isNotEmpty>
+    	<isNotEmpty property="workStatus">
+    		and t2.work_status=#workStatus#
+    	</isNotEmpty>
+    	<isNotEmpty property="userName">
+    		and t2.user_name like #userName#
+    	</isNotEmpty>
+	    <isNotEmpty property="userId">
+	        and t2.USER_ID = #userId#
+	    </isNotEmpty>
+    </select>
+    <!-- 查询订单号是否被某个组处理过 -->
+    <select id="queryWorkGroupUserByGroupIdAndOrderOrUserName"  resultMap="workGroupUserResult" parameterClass="java.util.Map">
+      select wgu.* from work_order wo,work_task wt,work_group_user wgu
+		where wo.work_order_id=wt.work_order_id and wt.receiver=wgu.work_group_user_id and wgu.valid='true' 
+		<isNotEmpty property="orderId">
+    		and wo.order_id = #orderId#
+    	</isNotEmpty>
+    	<isNotEmpty property="userName">
+    		and wo.user_name = #userName#
+    	</isNotEmpty>
+    	<isNotEmpty property="mobileNumber">
+    		and wo.mobile_number = #mobileNumber#
+    	</isNotEmpty>
+		and wgu.work_group_id=#workGroupId#
+		order by wt.work_task_id desc
+    </select>
+    <!-- 统计组织下用户订单数 -->
+    <select id="queryWorkGroupUserTaskCountByUserId"  resultClass="long">
+    	select count(1) taskCount from work_task wt
+      		where wt.status='UNCOMPLETED' 
+      		and wt.receiver in (select wgu.work_group_user_id from work_group_user wgu where wgu.perm_user_id=#userId# and wgu.valid='true')
+    </select>
+    <!-- 统计组织下用户当天工单数 -->
+     <select id="queryWorkGroupUserTaskTotalCountByUserId"  resultClass="long">
+    	select count(1) taskCount from work_task wt
+      		where  to_char(wt.create_time,'yyyy-MM-dd')=#createTime# and
+      		wt.receiver in (select wgu.work_group_user_id from work_group_user wgu where wgu.perm_user_id=#userId# and wgu.valid='true')
+    </select>
+    
+    <!-- 获取最大任务编号 -->
+    <select id="getMaxTaskIdByPermUserId"  resultClass="long">
+    	select max(wt.work_task_id) from work_task wt, work_group_user gu
+ 			where wt.receiver = gu.work_group_user_id and gu.perm_user_id =#value#
+    </select>
+    
+    <!-- 查询组用户分页 -->
+    <sql id="getWorkGroupUserPageSql">
+    	select t1.*,t2.user_name,t2.real_name,t2.work_status
+    	from work_group_user t1,perm_user t2
+    	where t1.perm_user_id = t2.user_id
+    	<isNotEmpty property="valid">
+    		and t1.valid = #valid#
+    	</isNotEmpty>
+    	<isNotEmpty property="workGroupId">
+    		and t1.work_group_id = #workGroupId#
+    	</isNotEmpty>
+    	<isNotEmpty property="userName">
+    		and t2.user_name = #userName#
+    	</isNotEmpty>
+    	<isNotEmpty property="workStatus">
+    		and t2.work_status = #workStatus#
+    	</isNotEmpty>
+    </sql>
+    <select id="getWorkGroupUserPageCount" parameterClass="map" resultClass="long">
+    	select count(*) from (
+    		<include refid="getWorkGroupUserPageSql"/>
+    	)
+    </select>
+    <select id="getWorkGroupUserPage" parameterClass="map" resultMap="workGroupUserWithPermUser">
+    	<include refid="pageSearchHead"/>
+    	<include refid="getWorkGroupUserPageSql"/>
+    	<include refid="pageSearchFoot"/>
+    </select>
+    
+    <!-- 查询super用户 -->
+    <sql id="getPermUserSql">
+    	select u.user_id as permUserId,
+    		   u.real_name as realName,
+    		   u.user_name as userName,
+    		   u.valid as valid,
+    		   org.department_name as departmentName
+    	 from perm_user u,perm_organization org
+    	where u.department_id = org.org_id(+) 
+    	 and not exists(
+	    		select t.perm_user_id from work_group_user t
+	    		where t.perm_user_id = u.user_id
+	    		and t.valid = 'true'
+	    		and t.work_group_id = #workGroupId#
+    		)
+    	 <isNotEmpty property="departmentId">
+    	 	and u.department_id = #departmentId#
+    	 </isNotEmpty>
+    	 <isNotEmpty property="realName">
+    	 	and u.real_name like '%'||#realName#||'%'
+    	 </isNotEmpty>
+    	 <isNotEmpty property="userName">
+    	 	and u.user_name = #userName#
+    	 </isNotEmpty>
+    	 <isNotEmpty property="orgId">
+    	 	and org.org_id=#orgId#
+    	 </isNotEmpty>
+    </sql>
+    <select id="getPermUserPageCount" parameterClass="map" resultClass="long">
+    	select count(*) from (<include refid="getPermUserSql"/>)
+    </select>
+    <select id="getPermUserPage" parameterClass="map" resultClass="workGroupUser">
+    	<include refid="pageSearchHead"/>
+    	<include refid="getPermUserSql"/>
+    	<include refid="pageSearchFoot"/>
+    </select>
+    
+    <!-- 更新valid -->
+    <update id="updateValid" parameterClass="map">
+    	update work_group_user t 
+    	set t.valid = #valid#
+    	<isNotEmpty property="leader">
+    		, t.leader = #leader#
+    	</isNotEmpty>
+    	where t.work_group_user_id = #workGroupUserId#
+    </update>
+    
+    <!-- 取消主管 -->
+    <update id="cancelLeader" parameterClass="map">
+    	update work_group_user t
+    	set t.leader = 'false'
+    	where t.work_group_id = #workGroupId#
+    	<isNotEmpty prepend="and" property="permUserId">
+    		t.perm_user_id = #permUserId#
+    	</isNotEmpty>
+    </update>
+    <!-- 设置主管 -->
+    <update id="setLeader" parameterClass="map">
+    	update work_group_user t
+    	set t.leader = 'true'
+    	where t.work_group_id = #workGroupId#
+    	and t.perm_user_id = #permUserId#
+    </update>
+    
+    <!--查询有用户在线的组织及在线用户数-->
+    <select id="getGroupWithUserOnline" resultMap="groupWithUserOnline">
+    	SELECT GU.WORK_GROUP_ID, COUNT(1) ON_LINE_NUM
+     		FROM WORK_GROUP_USER GU, PERM_USER PU
+    			WHERE GU.PERM_USER_ID = PU.USER_ID AND GU.VALID='true' AND PU.WORK_STATUS = 'ONLINE' 
+    				GROUP BY GU.WORK_GROUP_ID
+    </select>
+    <!-- 查询组织主管 -->
+    <select id="getGroupLeaderByGroupId" resultMap="workGroupUserWithPermUser">
+    	   SELECT GU.*, PU.USER_NAME, PU.REAL_NAME,PU.WORK_STATUS
+     		FROM WORK_GROUP_USER GU, PERM_USER PU
+    			WHERE PU.USER_ID = GU.PERM_USER_ID AND GU.LEADER = 'true'
+      				AND GU.VALID = 'true' AND GU.WORK_GROUP_ID = #value#
+    </select>
+     <select id="getWorkGroupUserAllInfoById" resultMap="workGroupUserAllinfo">
+	    select gu.*,pu.user_name,pu.real_name,pu.work_status,wg.group_name,wd.department_name 
+	    	from work_group_user gu,perm_user pu, work_group wg,work_department wd
+			where gu.work_group_id=wg.work_group_id(+)
+			      and gu.perm_user_id=pu.user_id(+)
+			      and wg.work_department_id=wd.work_department_id
+			      and gu.work_group_user_id=#workGroupUserId# 
+    </select>
+	
+    <!-- 工单处理用户 在线工单最少者排序 -->
+	<select id="getOrderProcessUsers" resultMap="workGroupUserResultByCrCount" parameterClass="java.util.Map">		
+	select * from (
+		select  count(1) as cr_Count,wgu.work_group_id,wgu.work_group_user_id,wgu.WORK_DEPARTMENT_ID,wgu.leader,wgu.create_time,wgu.valid,
+                       wgu.perm_user_id,
+                       pu.user_name
+            from work_department wd,
+                 work_group      wg,
+                 work_group_user wgu,
+                 Perm_User       pu,
+                 (select wo.work_order_id,wt.receiver from 
+	               work_task       wt,
+	               work_order      wo
+	               where wt.work_order_id = wo.work_order_id 
+	                 and wo.status = 'UNCOMPLETED'
+	               ) wt_tmp
+           where wd.work_department_id = wg.work_department_id
+             and wg.work_group_id = wgu.work_group_id
+             and wgu.perm_user_id = pu.user_id
+             and pu.user_id=wt_tmp.receiver(+)             
+             and wd.valid = 'true'
+             and wg.valid = 'true'
+             and wgu.valid = 'true'
+             and pu.valid = 'Y'
+	   		   <isNotEmpty property="departmentName">
+	           		and wd.department_name = #departmentName#
+	   		   </isNotEmpty>
+	   		   <isNotEmpty property="groupName">
+	           		and wg.group_name like '%'||#groupName#||'%'
+	   		   </isNotEmpty>
+	   		   <isNotEmpty property="workStatus">
+	   				and pu.work_status=#workStatus#
+	   		   </isNotEmpty>
+	   		   <isNotEmpty property="workGroupId">
+	   				and wgu.work_group_id=#workGroupId#
+	   		   </isNotEmpty>
+	   		   <isNotEmpty property="userId">
+	   				and pu.user_id=#userId#
+	   		   </isNotEmpty>
+	   		   <isNotEmpty property="userIds">
+			          and pu.user_id in
+			          <iterate property="userIds" conjunction="," open="(" close=")">
+			              #userIds[]#
+			          </iterate>
+			   </isNotEmpty>
+			 group by  wgu.work_group_id,
+                       wgu.perm_user_id,
+                       pu.user_name,wgu.work_group_user_id,wgu.WORK_DEPARTMENT_ID,wgu.leader,wgu.create_time,wgu.valid
+           order by cr_Count
+           ) tmp
+         <dynamic prepend=" WHERE ">
+		    <isNotEmpty property="endRow" >rownum &lt;= #endRow# </isNotEmpty> 
+		 </dynamic>		
+	</select>
+</sqlMap>

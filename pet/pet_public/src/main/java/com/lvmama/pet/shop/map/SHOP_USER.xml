@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SHOP_USER" >
+	<resultMap id="shopUserMap" class="com.lvmama.comm.pet.vo.ShopUser">
+		<result property="userId" column="USER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="point" column="POINT"/>
+	</resultMap>
+
+	<select id="queryByPK" parameterClass="java.lang.Long" resultMap="shopUserMap">
+		SELECT user_id, user_name, point FROM USER_USER WHERE user_id = #userId#
+	</select>
+	
+	<update id="refresh" parameterClass="long">
+		UPDATE USER_USER SET POINT = (SELECT SUM(POINT) FROM USER_POINT_LOG WHERE USER_ID = #userId#) WHERE USER_ID = #user_id#
+	</update>
+</sqlMap>

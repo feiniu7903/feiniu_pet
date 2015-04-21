@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="LvmamaStoredCard" >
+   <typeAlias alias="card" type="com.lvmama.comm.pet.po.lvmamacard.LvmamaStoredCard"/>
+    
+    <resultMap class="card" id="BaseCardGroup">
+        <result property="storedCardId" column="STORED_CARD_ID"/>
+        <result property="cardBatchNo" column="CARD_BATCH_NO"/>
+        <result property="cardNo" column="CARD_NO"/>
+        <result property="amount" column="AMOUNT"   />
+        <result property="balance" column="BALANCE"  />
+        <result property="activeStatus" column="ACTIVE_STATUS"/>
+        <result property="stockStatus" column="STOCK_STATUS" />
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="overTime" column="OVER_TIME"/>
+        <result property="intoStockId" column="INTO_CARD_STOCK_ID"/>
+        <result property="intoTime" column="INTO_TIME"/>
+        <result property="outStockId" column="OUT_CARD_STOCK_ID"/>
+        <result property="outTime" column="OUT_TIME"/>
+        <result property="status" column="STATUS"/>
+        <result property="outCode" column="OUT_CODE"/>
+        <result property="type" column="type"/>
+        <result property="password" column="password"/>
+        <result property="beizhu" column="BEIZHU"/>
+        <result property="userId" column="USER_ID"/>
+    </resultMap>
+    <resultMap class="card" id="BaseCardGroup3">
+        <result property="cardNo" column="CARD_NO" />
+    </resultMap>
+    
+    <resultMap class="card" id="BaseCardGroup2">
+    	<result property="notused" column="NOTUSED"/>
+        <result property="used" column="USED"/>
+        <result property="freeze" column="FREEZE"/>
+       </resultMap>
+    
+    <insert id="batchinsert" parameterClass="com.lvmama.comm.pet.po.lvmamacard.LvmamaStoredCard">
+        <selectKey keyProperty="storedCardId" resultClass="java.lang.Long">
+            SELECT STORED_CARD_SEQ.nextval from dual
+        </selectKey>
+        INSERT INTO STORED_CARD
+            (STORED_CARD_ID,CARD_BATCH_NO,CARD_NO,AMOUNT,BALANCE,ACTIVE_STATUS,STOCK_STATUS,
+                STATUS,CREATE_TIME,OVER_TIME,TYPE,PASSWORD)
+        VALUES(#storedCardId#,#cardBatchNo#,#cardNo#,#amount#,#balance#,#activeStatus#,#stockStatus#,
+                #status#,sysdate,#overTime#,#type#,#password#)       
+    </insert>
+    <select id="getLastCardNoByAmountForLvmamaStoredCard" resultClass="java.lang.String" parameterClass="java.lang.String">
+       select max(t.card_no) from stored_card t where t.card_no like #precode#
+    </select>
+    <sql id="wheresql">
+              where type=1    
+             <isNotEmpty property="cardBatchNo" prepend="and">
+                card_batch_no =#cardBatchNo#
+             </isNotEmpty> 
+             <isNotEmpty property="cardNo" prepend="and">
+               card_No=#cardNo#
+             </isNotEmpty>
+             <isNotEmpty property="status" prepend="and">
+                status=#status#
+             </isNotEmpty>
+             <isNotEmpty property="searchValidDate" prepend="and">
+                 over_Time  = #searchValidDate#
+             </isNotEmpty>
+             <isNotEmpty property="statusList" prepend="and">
+              status in <iterate conjunction="," property="statusList" open="(" close=")">
+                 #statusList[]#
+              </iterate>
+             </isNotEmpty>
+            <isNotEmpty property="stockStatusList" prepend="and">
+             stock_status in <iterate conjunction="," property="stockStatusList" open="(" close=")">
+                 #stockStatusList[]#
+              </iterate>
+             </isNotEmpty>
+              <isNotEmpty property="cardNoBegin" prepend="and">
+                <isNotEmpty property="cardNoEnd">
+                     card_no BETWEEN #cardNoBegin# AND #cardNoEnd#
+                </isNotEmpty>
+              </isNotEmpty>
+              <isNotEmpty property="amount" prepend="and">
+                  amount=#amount#
+              </isNotEmpty>
+             <isNotEmpty property="stockStatus" prepend="and">
+                stock_status=#stockStatus#
+             </isNotEmpty>
+             <isNotEmpty property="type" prepend="and">
+                type=#type#
+             </isNotEmpty>
+             <isNotEmpty property="outCode" prepend="and">
+                out_code=#outCode#
+             </isNotEmpty>
+             <isNotEmpty prepend="and" property="userId"> user_id=#userId# </isNotEmpty>
+               order by card_no desc 
+     </sql>
+    <sql id="selectResutSql">
+    stored_card_id, card_batch_no, card_no, amount, balance, active_status, stock_status, create_time, over_time, into_card_stock_id, into_time, out_code, out_time, status, type, password, BEIZHU, out_card_stock_id,user_id 
+    </sql>
+     <select id="countByParamForLvmamaStoredCard" resultClass="java.lang.Long" parameterClass="java.util.Map">
+           select count(*) from stored_card  
+              <include refid="wheresql"/> 
+    </select>
+    <select id="queryByParamForLvmamaStoredCard" resultMap="BaseCardGroup" parameterClass="java.util.Map">
+         <isNull property="FORREPORT">
+            <include refid="pageSearchHead"/>
+         </isNull>
+	           select <include refid="selectResutSql"/>  from stored_card    
+	           <include refid="wheresql"/> 
+          <isNull property="FORREPORT">
+              <include refid="pageSearchFoot"/>
+         </isNull>
+    </select>
+    <select id="getOneStoreCardByCardNo"  resultMap="BaseCardGroup" resultClass="java.lang.String">
+           select <include refid="selectResutSql"  />  from stored_card    
+            where card_no=#cardNo#
+    </select>
+    <select id="queryStoredCardById"  resultMap="BaseCardGroup" resultClass="java.lang.Long">
+           select <include refid="selectResutSql"  />  from stored_card    
+            where STORED_CARD_ID = #storedCardId#
+    </select>
+    <update id="updateByParam" parameterClass="java.util.Map">
+        update stored_card t 
+        <dynamic prepend="set ">
+	        <isNotEmpty property="status" prepend=",">
+	           t.status=#status#
+	        </isNotEmpty> 
+	         <isNotEmpty property="stockStatus" prepend=",">
+               t.stock_status=#stockStatus#
+            </isNotEmpty> 
+            <isNotEmpty prepend="," property="intoCardStockId">
+              t.into_card_stock_id=#intoCardStockId#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="intoTime">
+              t.into_time=#intoTime#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="overTime">
+              t.OVER_TIME=#overTime#
+            </isNotEmpty>
+             <isNotEmpty prepend="," property="balance">
+              t.BALANCE=#balance#
+            </isNotEmpty>
+ 
+            <isNotEmpty prepend="," property="userId">
+              t.user_id=#userId#
+            </isNotEmpty>
+ 
+             <isNotNull prepend="," property="beizhu">
+              t.BEIZHU=#beizhu#
+            </isNotNull>
+             <isNotEmpty prepend="," property="password">
+              t.password=#password#
+            </isNotEmpty>
+ 
+        </dynamic>
+       <dynamic prepend="where ">
+	     <isNotEmpty property="cardNoArray">
+	          t.card_no 
+	          in <iterate property="cardNoArray"  open="(" close=")" conjunction="," >
+	           #cardNoArray[]#
+	         </iterate>
+	     </isNotEmpty >  
+	     <isNotEmpty property="cardBatchNo">
+	         t.card_batch_no=#cardBatchNo#
+	     </isNotEmpty>
+	     <isNotEmpty property="cardNo">
+             t.card_no=#cardNo#
+         </isNotEmpty>
+       </dynamic> 
+    </update>
+    
+    <update id="outStoredUpdateByParam" parameterClass="java.util.Map">
+        update stored_card t 
+        <dynamic prepend="set ">
+	        <isNotEmpty property="status" prepend=",">
+	           t.status=#status#
+	        </isNotEmpty> 
+	        <isNotEmpty property="stockStatus" prepend=",">
+               t.stock_status=#stockStatus#
+            </isNotEmpty>
+            <isNotEmpty property="overTime" prepend=",">
+               t.OVER_TIME=#overTime#
+            </isNotEmpty>
+            <isNotEmpty property="outCode" prepend=",">
+               t.out_Code=#outCode#
+            </isNotEmpty>
+        </dynamic>
+         where t.stored_card_id in 
+		(select  t1.stored_card_id from 
+		(select stored_card_id from stored_card where amount = #amount# and stock_Status='INTO_STOCK' and status = 'INITIALIZATION'
+		 and type =1  order by card_NO) t1  
+		where  rownum &lt;= #count# )
+    </update>
+    
+     <update id="updateByStoredCard" parameterClass="card">
+		UPDATE STORED_CARD SET
+			CARD_BATCH_NO = #cardBatchNo#,
+			CARD_NO = #cardNo#,
+			SERIAL_NO = #serialNo#,
+			AMOUNT = #amount#,
+			BALANCE = #balance#,
+			STATUS = #status#,
+			ACTIVE_STATUS = #activeStatus#,
+			STOCK_STATUS = #stockStatus#,
+			CREATE_TIME = #createTime#,
+			OVER_TIME = #overTime#,
+			INTO_CARD_STOCK_ID = #intoStockId#,
+			INTO_TIME = #intoTime#,
+			OUT_CARD_STOCK_ID = #outStockId#,
+			OUT_TIME = #outTime#
+		WHERE STORED_CARD_ID=#storedCardId#
+	</update>
+    
+    
+    <select id="outStoredByBeginNoAndEndNo"  parameterClass="java.util.Map" resultMap="BaseCardGroup3" >
+           select * from (
+			select t.*,rownum r from(
+   			select card_No from stored_card where amount =#amount# and status = 'INITIALIZATION'
+		 	and type =1 and  stock_Status='INTO_STOCK' order by card_NO) t) a where r = 1 or r=#count# 
+    </select>
+    
+    <select id="outStoredCardStatusByOutCode"  parameterClass="java.util.Map" resultMap="BaseCardGroup2" >
+           select sum(case when t.status='NOTUSED' then 1 else 0 end) NOTUSED,
+			sum(case when t.status='USED' then 1 else 0 end) USED,
+			sum(case when t.status='FREEZE' then 1 else 0 end) FREEZE 
+			from LVMAMA_PET.STORED_CARD t where out_code = #outCode#  
+    </select>
+    <!-- 距离今天过期 过期日期的驴游天下卡查询 -->
+    <select id="getOverTimeStoredCard" parameterClass="java.util.Map" resultMap="BaseCardGroup">
+        select <include refid="selectResutSql"  />  from stored_card   where 
+        type=1 and status in ('NOTUSED','USED')  and over_time &lt; #paramDate#  order by  over_time
+    </select>
+    <select id="queryUsedLvmamaStoredCardByUserId" resultMap="BaseCardGroup" parameterClass="java.util.Map">
+           select s.*  from stored_card s,STORED_CARD_USAGE u    
+            where s.STORED_CARD_ID=u.CARD_ID and s.type=1 and s.status='USED' and u.USAGE_OPERATOR = #userId#
+    </select>
+</sqlMap>

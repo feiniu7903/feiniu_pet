@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CASH_PAY">
+	<!-- 别名 -->
+    <typeAlias alias="cashPay" type="com.lvmama.comm.pet.po.money.CashPay"/>
+	<!-- 查询结果集 -->
+    <resultMap id="cashPayResult" class="cashPay">
+        <result property="cashPayId" column="CASH_PAY_ID"/>
+        <result property="cashAccountId" column="CASH_ACCOUNT_ID"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="serial" column="SERIAL"/>
+        <result property="status" column="STATUS"/>
+        <result property="outTradeNo" column="OUT_TRADE_NO"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="payFrom" column="PAY_FROM"/>
+        <result property="bonusFrom" column="BONUS_FROM"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	CASH_PAY_ID ,
+        	CASH_ACCOUNT_ID ,
+        	AMOUNT ,
+        	SERIAL ,
+        	STATUS ,
+        	OUT_TRADE_NO ,
+        	CREATE_TIME ,
+        	ORDER_ID,
+        	PAY_FROM,
+        	BONUS_FROM
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="cashPayId">
+	             CASH_PAY_ID = #cashPayId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="cashAccountId">
+	             CASH_ACCOUNT_ID = #cashAccountId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="amount">
+	             AMOUNT = #amount#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="serial">
+	             SERIAL = #serial#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="status">
+	             STATUS = #status#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="outTradeNo">
+	             OUT_TRADE_NO = #outTradeNo#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="orderId">
+	             ORDER_ID = #orderId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="payFrom">
+	             PAY_FROM = #payFrom#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="bonusFrom">
+	             BONUS_FROM = #bonusFrom#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="cashPay">
+				<selectKey keyProperty="cashPayId" resultClass="java.lang.Long">
+					SELECT CASH_PAY_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        CASH_PAY (
+        	CASH_PAY_ID ,
+        	CASH_ACCOUNT_ID ,
+        	AMOUNT ,
+        	SERIAL ,
+        	STATUS ,
+        	OUT_TRADE_NO ,
+        	CREATE_TIME ,
+        	ORDER_ID,
+        	PAY_FROM,
+        	BONUS_FROM
+        ) VALUES (
+        	#cashPayId# ,
+        	#cashAccountId# ,
+        	#amount# ,
+        	#serial# ,
+        	#status# ,
+        	#outTradeNo# ,
+        	#createTime# ,
+        	#orderId#,
+        	#payFrom#,
+        	#bonusFrom#
+        )
+    ]]>
+    </insert>
+    
+    <update id="updateFincCashPayByPrimaryKey"
+		parameterClass="cashPay">
+		<![CDATA[
+		UPDATE CASH_PAY
+			SET CASH_PAY_ID = #cashPayId#, 
+			CASH_ACCOUNT_ID = #cashAccountId#,
+			SERIAL = #serial#,
+			AMOUNT = #amount#,
+			STATUS = #status#,
+			OUT_TRADE_NO = #outTradeNo#,
+			ORDER_ID = #orderId# 
+		WHERE CASH_PAY_ID = #cashPayId#
+		]]>
+	</update>
+	
+	<select id="selectFincCashPayByPrimaryKey" resultMap="cashPayResult"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+		SELECT * FROM CASH_PAY WHERE CASH_PAY_ID = #cashPayId#
+ 		]]>
+	</select>
+	
+	<select id="findCashPayByOutTradeNo" resultMap="cashPayResult"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		SELECT * FROM CASH_PAY WHERE OUT_TRADE_NO = #outTradeNo#
+ 		]]>
+	</select>
+	
+	
+	<select id="getCashPayCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Long" >
+   		select count(cp.cash_pay_id) from cash_pay cp where cp.status='PayCashSuccess'
+   		<isNotEmpty prepend="and" property="userId">
+   		   cp.cash_account_id=(select ca.cash_account_id from cash_account ca where ca.user_id=#userId#) 
+   		</isNotEmpty>
+   		<isNotEmpty prepend="and" property="payFrom">
+   		   cp.pay_from=#payFrom#
+   		</isNotEmpty>
+    	<isNotEmpty prepend="and" property="startTime" >
+	       cp.create_time &gt;= TO_DATE(#startTime#,'yyyy-mm-dd hh24:mi:ss')
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="endTime" >
+	        cp.create_time &lt;= TO_DATE(#endTime#,'yyyy-mm-dd hh24:mi:ss')
+	     </isNotEmpty>
+    </select>
+	
+	
+</sqlMap>

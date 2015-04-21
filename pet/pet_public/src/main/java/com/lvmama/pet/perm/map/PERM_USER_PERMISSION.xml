@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PERM_USER_PERMISSION">
+	<typeAlias alias="permUserPermission" type="com.lvmama.comm.pet.po.perm.PermUserPermission"/>
+	
+	<resultMap id="permUserPermissionMap" class="com.lvmama.comm.pet.po.perm.PermUserPermission">
+		<result column="UP_ID" property="upId" />
+		<result column="user_id" property="userId" />
+		<result column="permission_id" property="permissionId" />
+		<result column="enable_days" property="enableDays" />
+		<result column="create_time" property="createTime" />
+		<result column="type" property="type" />
+		<result column="permission_name" property="permissionName" />
+		<result column="permission_type" property="permissionType" />
+		<result column="parent_permission_name" property="parentPermissionName" />
+	</resultMap>
+	<resultMap id="permUserMap" class="com.lvmama.comm.pet.po.perm.PermUser">
+		<result column="user_id" property="userId" />
+		<result column="user_name" property="userName" />
+		<result column="real_name" property="realName" />
+		<result column="department_name" property="departmentName" />
+		<result column="status" property="status" />
+		<result column="permission_id" property="permissionId" />
+		<result column="position" property="position" />
+	</resultMap>
+	<resultMap id="permPermissionMap" class="com.lvmama.comm.pet.po.perm.PermPermission">
+		<result column="permission_id" property="permissionId" />
+		<result column="name" property="name" />
+		<result column="url" property="url" />
+		<result column="type" property="type" />
+		<result column="embed" property="embed" />
+		<result column="category" property="category" />
+		<result column="perm_level" property="permLevel" />
+		<result column="parent_id" property="parentId" />
+		<result column="seq" property="seq" />
+		<result column="valid" property="valid" />
+		<result column="url_pattern" property="urlPattern" />
+		<result column="parent_name" property="parentName" />
+	</resultMap>
+	
+	<insert id="insert" parameterClass="permUserPermission">
+		<selectKey keyProperty="upId" resultClass="long">
+			select perm_user_permission_seq.nextval from dual
+		</selectKey>
+		insert into perm_user_permission(up_id,user_id,permission_id,enable_days,create_time,type)
+		values(#upId#,#userId#,#permissionId#,#enableDays#,#createTime#,#type#)
+	</insert>
+	
+	<select id="getPermUserPermission" parameterClass="map" resultMap="permUserPermissionMap">
+	  select 
+	  		up.up_id,
+	  		up.user_id,
+	  		up.permission_id,
+	  		up.enable_days,
+	  		up.create_time,
+	  		up.type,
+	  		p.name as permission_name,
+	  		p.type as permission_type,
+	  		pp.name as parent_permission_name
+	    from perm_user_permission up, perm_permission p, perm_permission pp
+	    where up.permission_id = p.permission_id
+	    and p.parent_id = pp.permission_id(+)
+	    <isNotEmpty property="permissionId">
+	    	and up.permission_id = #permissionId#
+	    </isNotEmpty>
+	    <isNotEmpty property="userId">
+	    and up.user_id = #userId#
+	    </isNotEmpty>
+	    <isNotEmpty property="type">
+	    and up.type = #type#
+	    </isNotEmpty>
+	</select>
+	
+	<delete id="deletePermUserPermission" parameterClass="map">
+		delete from perm_user_permission
+		where 1 = 1
+		<isNotEmpty property="upId">
+		and up_id = #upId#
+		</isNotEmpty>
+		<isNotEmpty property="userId">
+		and user_id = #userId#
+		</isNotEmpty>
+		<isNotEmpty property="permissionId">
+		and permission_id = #permissionId#
+		</isNotEmpty>
+		<isNotEmpty property="type">
+		and type = #type#
+		</isNotEmpty>
+	</delete>
+	
+	<delete id="deletePermUserPermissionByParam" parameterClass="map">
+		delete from perm_user_permission
+		where user_id = #userId#
+		and permission_id = #permissionId#
+	</delete>
+	
+	<!-- 查询权限所属的用户 -->
+	<sql id="getPermUserPermissionByPermSql">
+	select u.user_id,u.user_name,u.real_name,org.department_name, T.status,T.permission_id,u.position
+	  from perm_user u,
+	  		(
+	  		select distinct user_id,permission_id,status from (
+	  		<isNotEmpty property="status">
+		        <!-- 有效 -->
+		       	<isEqual property="status" compareValue="1">
+		       	(select ur.user_id as user_id, rp.permission_id as permission_id, 1 as status
+		           from perm_user_role ur, perm_role_permission rp
+		          where ur.role_id = rp.role_id
+		          	<isNotEmpty property="permissionId">
+		          	and rp.permission_id = #permissionId#
+		          	</isNotEmpty>
+		            and not exists (select up.user_id
+					                   from perm_user_permission up
+					                  where up.user_id = ur.user_id
+					                    and up.permission_id = rp.permission_id
+					                    and up.type = 'DISABLED')) 
+		          union 
+		          (select up.user_id, up.permission_id as permission_id, 1 as status
+		           from perm_user_permission up
+		          where up.type = 'ENABLED'
+		          and (trunc(up.create_time) + up.enable_days - 1) &gt;= trunc(sysdate)
+		          <isNotEmpty property="permissionId">
+		          	and up.permission_id = #permissionId#
+		          </isNotEmpty>
+		          )
+		        </isEqual>
+		        <!-- 无效 -->
+		        <isEqual property="status" compareValue="0">
+		        	(
+		        	  select up.user_id as user_id,up.permission_id as permission_id, 0 as status
+			           from perm_user_permission up
+			          where 
+			          	(up.type = 'DISABLED' or (up.type='ENABLED' and ((trunc(up.create_time) + up.enable_days - 1) &lt; trunc(sysdate))))
+			          <isNotEmpty property="permissionId">
+			          	and up.permission_id = #permissionId#
+			          </isNotEmpty>
+			         )
+		        </isEqual>
+	        </isNotEmpty>
+	  		<isEmpty property="status">
+	  			<!-- 有效 -->
+	  			(select ur.user_id as user_id,rp.permission_id as permission_id, 1 as status
+		           from perm_user_role ur, perm_role_permission rp
+		          where ur.role_id = rp.role_id
+			          <isNotEmpty property="permissionId">
+			          	and rp.permission_id = #permissionId#
+			          </isNotEmpty>
+		            and not exists (select up.user_id
+					                   from perm_user_permission up
+					                  where up.user_id = ur.user_id
+					                    and up.permission_id = rp.permission_id
+					                    and up.type = 'DISABLED')) 
+		          union 
+			          (select up.user_id,up.permission_id as permission_id, 1 as status
+			           from perm_user_permission up
+			          where up.type = 'ENABLED'
+		              and (trunc(up.create_time) + up.enable_days - 1) &gt;= trunc(sysdate)
+			          	<isNotEmpty property="permissionId">
+				          	and up.permission_id = #permissionId#
+				        </isNotEmpty>
+			           )
+			      <!-- 无效 -->
+		          union
+		           (
+			           select up.user_id as user_id,up.permission_id as permission_id, 0 as status
+				           from perm_user_permission up
+				          where (up.type = 'DISABLED' or (up.type='ENABLED' and ((trunc(up.create_time) + up.enable_days - 1) &lt; trunc(sysdate))))
+				          	<isNotEmpty property="permissionId">
+					          	and up.permission_id = #permissionId#
+					        </isNotEmpty>
+		           )
+		          
+	  		</isEmpty>
+	  		)
+	       ) T,
+	       perm_permission pp,
+	       perm_organization org
+	 where u.user_id = T.user_id and u.department_id = org.org_id
+	 	   and T.permission_id = pp.permission_id
+	 	   and pp.valid = 'Y'
+	</sql>
+	<select id="getPermUserPermissionByPermCount" parameterClass="map" resultClass="long">
+		select count(*) from(<include refid="getPermUserPermissionByPermSql"/>)
+	</select>
+	<select id="getPermUserPermissionByPerm" parameterClass="map" resultMap="permUserMap">
+		select * from (
+			select S.*, rownum as rn from (<include refid="getPermUserPermissionByPermSql"/>) S 
+		) T
+		where T.rn &gt;= #skipResults# and T.rn &lt;= #maxResults#
+	</select>
+	
+	<sql id="getEnablePermissionByUserSql">
+		select 
+			p3.permission_id,p3.name,p3.url,p3.type,p3.embed,
+			p3.category, p3.perm_level, p3.parent_id,p3.seq,p3.valid,
+			p3.url_pattern,parent.name as parent_name
+		 from perm_permission p3,perm_permission parent 
+		 where 
+		 	p3.parent_id = parent.permission_id(+)
+		 	and p3.permission_id in
+			(
+				(
+				select distinct p.permission_id from perm_user_role ur,perm_role_permission rp, perm_permission p
+				where ur.role_id = rp.role_id
+				and rp.permission_id = p.permission_id
+				and p.valid = 'Y'
+				and not exists 
+					(
+					    select * from perm_user_permission up
+					    where up.user_id = ur.user_id
+					    and up.permission_id = rp.permission_id
+					    and up.type = 'DISABLED'
+					)
+				<isNotEmpty property="userId">
+				and ur.user_id = #userId#
+				</isNotEmpty>
+				)
+				union
+				(
+				    select distinct p2.permission_id from perm_user_permission up2,perm_permission p2
+				    where up2.permission_id = p2.permission_id
+				    and p2.valid = 'Y'
+				    and up2.type = 'ENABLED'
+				    and (trunc(up2.create_time) + up2.enable_days - 1) &gt;= trunc(sysdate)
+					<isNotEmpty property="userId">
+					and up2.user_id = #userId#
+					</isNotEmpty>
+				)
+			)
+			order by p3.seq
+	</sql>
+	
+	<select id="getEnablePermissionByUser" parameterClass="map" resultMap="permPermissionMap">
+		<include refid="getEnablePermissionByUserSql"/>
+	</select>
+	
+	<!-- 根据权限ID串和UserId查询当前用户拥有的所有权限 added by wenzhengtao 20131220 -->
+	<select id="getEnablePermissionByPermissionIdsAndUserId" parameterClass="java.util.Map" resultMap="permPermissionMap">
+		select * from 
+		(
+		<include refid="getEnablePermissionByUserSql"/>
+		)
+		where 1=1
+	   <isNotEmpty property="permissionIds">
+         	and permission_id in 
+			<iterate property="permissionIds" close=")" open="(" conjunction=",">
+				#permissionIds[]#
+			</iterate>
+       </isNotEmpty>
+	</select>
+	
+	<select id="queryEnablePermissionsByUserIdPaging" parameterClass="java.util.Map"
+		resultMap="permPermissionMap">
+		SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select * from (
+		
+				<include refid="getEnablePermissionByUserSql" />
+		
+		)) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;#skipResults#
+	</select>
+	
+	<select id="queryEnablePermissionsByUserIdPagingCount" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+			select count(*) from
+				(<include refid="getEnablePermissionByUserSql"/>)
+	</select>
+	
+</sqlMap>

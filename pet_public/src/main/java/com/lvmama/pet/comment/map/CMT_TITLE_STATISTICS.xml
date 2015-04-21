@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_TITLE_STATISTICS" >
+	<resultMap id="CmtTitleStatisticsMap" class="com.lvmama.comm.vo.comment.CmtTitleStatisticsVO">
+		<result property="placeId" column="PLACE_ID"/>
+		<result property="productId" column="PRODUCT_ID"/>
+		<result property="avgScore" column="AVG_SCORE"/>
+		<result property="commentCount" column="COMMENT_COUNT"/>
+		<result property="zeroScoreCount" column="ZERO_SCORE_COUNT"/>
+		<result property="oneScoreCount" column="ONE_SCORE_COUNT"/>		
+		<result property="twoScoreCount" column="TWO_SCORE_COUNT"/>
+		<result property="threeScoreCount" column="THREE_SCORE_COUNT"/>
+		<result property="fourScoreCount" column="FOUR_SCORE_COUNT"/>
+		<result property="fiveScoreCount" column="FIVE_SCORE_COUNT"/>
+		<result property="stage" column="stage"/>
+		<result property="titleName" column="title_name"/>
+		<result property="productType" column="product_type"/>
+	</resultMap>
+	
+	<sql id="query_cmtSttc_base_sql">
+		SELECT
+			  PCS.PLACE_ID, PCS.PRODUCT_ID, PCS.stage, PCS.title_name, PCS.product_type,
+			  nvl(PCS.AVG_SCORE,0) AVG_SCORE,
+		      nvl(PCS.COMMENT_COUNT,0) COMMENT_COUNT,
+		      nvl(PCS.ZERO_SCORE_COUNT,0) ZERO_SCORE_COUNT,
+		      nvl(PCS.One_Score_Count,0) One_Score_Count,
+		      nvl(PCS.Two_Score_Count,0) Two_Score_Count,
+		      nvl(PCS.Three_Score_Count,0) Three_Score_Count,
+		      nvl(PCS.Four_Score_Count,0) Four_Score_Count,
+      		  nvl(PCS.Five_Score_Count,0) Five_Score_Count
+		FROM
+			CMT_TITLE_STATISTICS PCS
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty prepend=" AND " property="placeId" >PCS.place_id = #placeId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="productId" >PCS.product_id = #productId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="placeIds">
+	            PCS.place_id in
+	            <iterate property="placeIds" open="(" close=")" conjunction="," > 
+	                #placeIds[]#
+	            </iterate> 
+	        </isNotEmpty>
+	        <isNotEmpty prepend=" AND " property="productIds">
+	            PCS.product_id in
+	            <iterate property="productIds" open="(" close=")" conjunction="," > 
+	                #productIds[]#
+	            </iterate> 
+	     	</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="name"> PCS.NAME LIKE '%'||#name#||'%'</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="titleName"> PCS.title_name LIKE '%'||#titleName#||'%'</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="hasNoTitleName"> PCS.title_name is null</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="stage"> PCS.stage = #stage#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="productType"> PCS.product_type = #productType#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="commentCount"> PCS.COMMENT_COUNT = #commentCount#</isNotEmpty>
+			<isNotEmpty prepend=" AND" property="recommendPlace">(PCS.COMMENT_COUNT = 0 OR PCS.COMMENT_COUNT  IS NULL)</isNotEmpty>
+		</dynamic>
+		
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty  property="commentCount123" prepend=",">PCS.COMMENT_COUNT </isNotEmpty>
+			<isNotEmpty  property="commentCount321" prepend=",">PCS.COMMENT_COUNT DESC</isNotEmpty>
+			<isNotEmpty  property="createTime123" prepend=",">PCS.CREATED_DATE </isNotEmpty>
+			<isNotEmpty  property="createTime321" prepend=",">PCS.CREATED_DATE DESC</isNotEmpty>
+		</dynamic>
+		
+	</sql>
+	
+	 <!-- 查询点评  super_comment调用 -->
+	<select id="query" parameterClass="java.util.Map" resultMap="CmtTitleStatisticsMap">
+		select T2.* 
+		from (
+		    select T1.* , rownum as rn 
+		    from (
+			      <include refid="query_cmtSttc_base_sql"/> 
+			      ) T1
+			 <dynamic prepend=" WHERE ">
+			    <isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+			 </dynamic>		 	      
+	   	) T2
+	   	<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow"> RN &gt;= #_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+	 
+	<!-- (景点统计)审核通过的点评取它的总体评价记录：评分分别为0-5的个数 --> 
+	<sql id="statisticsPlaceScoreCount">
+		select  t.PLACE_ID,
+		nvl(t.ZERO_SCORE_COUNT,0) ZERO_SCORE_COUNT,
+        nvl(t.ONE_SCORE_COUNT,0) ONE_SCORE_COUNT,
+        nvl(t.TWO_SCORE_COUNT,0) TWO_SCORE_COUNT,
+        nvl(t.THREE_SCORE_COUNT,0) THREE_SCORE_COUNT,
+        nvl(t.FOUR_SCORE_COUNT,0) FOUR_SCORE_COUNT,
+        nvl(t.FIVE_SCORE_COUNT,0) FIVE_SCORE_COUNT,
+        nvl(t.ZERO_SCORE_COUNT + t.ONE_SCORE_COUNT + t.TWO_SCORE_COUNT + t.THREE_SCORE_COUNT + t.FOUR_SCORE_COUNT + t.FIVE_SCORE_COUNT,0) AS COMMENT_COUNT,
+        nvl((round(t.SUMSCORE /(t.ZERO_SCORE_COUNT + t.ONE_SCORE_COUNT + t.TWO_SCORE_COUNT + t.THREE_SCORE_COUNT + t.FOUR_SCORE_COUNT + t.FIVE_SCORE_COUNT),2)),0) AS AVG_SCORE
+		from ( select PLACE_ID, 
+				      sum(decode(SCORE,0, count,0)) ZERO_SCORE_COUNT,
+				      sum(decode(SCORE,1, count,0)) ONE_SCORE_COUNT,
+				      sum(decode(SCORE,2, count,0)) TWO_SCORE_COUNT,
+				      sum(decode(SCORE,3, count,0)) THREE_SCORE_COUNT,
+				      sum(decode(SCORE,4, count,0)) FOUR_SCORE_COUNT,
+				      sum(decode(SCORE,5, count,0)) FIVE_SCORE_COUNT,
+				      sum(SUMSCORE) AS SUMSCORE
+			   from ( select cc.place_id AS PLACE_ID,
+			    			 cl.SCORE, count(cl.SCORE) AS count, 
+			    		 	 cl.SCORE*count(cl.SCORE) AS SUMSCORE
+				      from  CMT_COMMENT_LATITUDE cl , cmt_comment cc 
+				      where cl.CMT_COMMENT_ID = cc.CMT_COMMENT_ID
+				        and cl.LATITUDE_ID = 'FFFFFFFFFFFFFFFFFFFFFFFFFFFF'
+				        and cc.is_Audit = 'AUDIT_SUCCESS'
+				        and cc.cmt_type='COMMON'
+				      group by cc.place_id, cl.SCORE
+				      order by cc.place_id) 
+			   group by PLACE_ID 
+		 ) t
+	</sql>
+	
+  	<!-- (景点统计)把统计的数据对比表数据，ID相同的记录就做更新，没有就新增 --> 
+	<update id="mergeStatisticsPlaceScore">	
+			MERGE INTO CMT_TITLE_STATISTICS t1 	
+			using ( <include refid="statisticsPlaceScoreCount"/>) t2
+		　　on (t1.PLACE_ID = t2.PLACE_ID)
+		　　when matched then
+		　　		update set
+					t1.COMMENT_COUNT = t2.COMMENT_COUNT,
+					t1.AVG_SCORE = t2.AVG_SCORE,
+					t1.ZERO_SCORE_COUNT = t2.ZERO_SCORE_COUNT,
+					t1.ONE_SCORE_COUNT = t2.ONE_SCORE_COUNT,
+					t1.TWO_SCORE_COUNT = t2.TWO_SCORE_COUNT,
+					t1.THREE_SCORE_COUNT = t2.THREE_SCORE_COUNT,
+					t1.FOUR_SCORE_COUNT = t2.FOUR_SCORE_COUNT,
+					t1.FIVE_SCORE_COUNT = t2.FIVE_SCORE_COUNT
+		　　when not matched then
+		　　		insert (t1.CMT_TITLE_STATISTICS_ID, t1.PLACE_ID, t1.COMMENT_COUNT, t1.AVG_SCORE, t1.ZERO_SCORE_COUNT, t1.ONE_SCORE_COUNT, t1.TWO_SCORE_COUNT, t1.THREE_SCORE_COUNT, t1.FOUR_SCORE_COUNT, t1.FIVE_SCORE_COUNT)
+				values (CMT_TITLE_STATISTICS_SEQ.nextval,t2.PLACE_ID, t2.COMMENT_COUNT, t2.AVG_SCORE, t2.ZERO_SCORE_COUNT, t2.ONE_SCORE_COUNT, t2.TWO_SCORE_COUNT, t2.THREE_SCORE_COUNT, t2.FOUR_SCORE_COUNT, t2.FIVE_SCORE_COUNT)
+	 </update>
+	 
+	<!-- (产品统计)审核通过的点评取它的总体评价记录：评分分别为0-5的个数 --> 
+	<sql id="statisticsProductScoreCount">
+		select  t.PRODUCT_ID,
+	    nvl(t.ZERO_SCORE_COUNT,0) ZERO_SCORE_COUNT,
+        nvl(t.ONE_SCORE_COUNT,0) ONE_SCORE_COUNT,
+        nvl(t.TWO_SCORE_COUNT,0) TWO_SCORE_COUNT,
+        nvl(t.THREE_SCORE_COUNT,0) THREE_SCORE_COUNT,
+        nvl(t.FOUR_SCORE_COUNT,0) FOUR_SCORE_COUNT,
+        nvl(t.FIVE_SCORE_COUNT,0) FIVE_SCORE_COUNT,
+        nvl(t.ZERO_SCORE_COUNT + t.ONE_SCORE_COUNT + t.TWO_SCORE_COUNT + t.THREE_SCORE_COUNT + t.FOUR_SCORE_COUNT + t.FIVE_SCORE_COUNT,0) AS COMMENT_COUNT,
+        nvl((round(t.SUMSCORE /(t.ZERO_SCORE_COUNT + t.ONE_SCORE_COUNT + t.TWO_SCORE_COUNT + t.THREE_SCORE_COUNT + t.FOUR_SCORE_COUNT + t.FIVE_SCORE_COUNT),2)),0) AS AVG_SCORE
+	    from ( select PRODUCT_ID, 
+				      sum(decode(SCORE,0, count,0)) ZERO_SCORE_COUNT,
+				      sum(decode(SCORE,1, count,0)) ONE_SCORE_COUNT,
+				      sum(decode(SCORE,2, count,0)) TWO_SCORE_COUNT,
+				      sum(decode(SCORE,3, count,0)) THREE_SCORE_COUNT,
+				      sum(decode(SCORE,4, count,0)) FOUR_SCORE_COUNT,
+				      sum(decode(SCORE,5, count,0)) FIVE_SCORE_COUNT,
+				      sum(SUMSCORE) AS SUMSCORE
+			   from ( select cc.product_id AS PRODUCT_ID,
+			    			 cl.SCORE, count(cl.SCORE) AS count, 
+			    		 	 cl.SCORE*count(cl.SCORE) AS SUMSCORE
+				      from  CMT_COMMENT_LATITUDE cl , cmt_comment cc 
+				      where cl.CMT_COMMENT_ID = cc.CMT_COMMENT_ID
+				        and cl.LATITUDE_ID = 'FFFFFFFFFFFFFFFFFFFFFFFFFFFF'
+				        and cc.is_Audit = 'AUDIT_SUCCESS'
+				        and cc.product_id is not null
+				      group by cc.product_id, cl.SCORE
+				      order by cc.product_id) 
+			   group by PRODUCT_ID 
+		 ) t 
+	</sql>
+
+  	<!-- (产品统计)把统计的数据对比表数据，ID相同的记录就做更新，没有就新增 --> 
+	<update id="mergeStatisticsProductScore">
+			MERGE INTO CMT_TITLE_STATISTICS t1
+			using ( <include refid="statisticsProductScoreCount"/>) t2
+		　　on (t1.PRODUCT_ID = t2.PRODUCT_ID)
+		　　when matched then
+		　　		update set
+					t1.COMMENT_COUNT = t2.COMMENT_COUNT,
+					t1.AVG_SCORE = t2.AVG_SCORE,
+					t1.ZERO_SCORE_COUNT = t2.ZERO_SCORE_COUNT,
+					t1.ONE_SCORE_COUNT = t2.ONE_SCORE_COUNT,
+					t1.TWO_SCORE_COUNT = t2.TWO_SCORE_COUNT,
+					t1.THREE_SCORE_COUNT = t2.THREE_SCORE_COUNT,
+					t1.FOUR_SCORE_COUNT = t2.FOUR_SCORE_COUNT,
+					t1.FIVE_SCORE_COUNT = t2.FIVE_SCORE_COUNT
+		　　when not matched then
+		　　		insert (t1.CMT_TITLE_STATISTICS_ID, t1.PRODUCT_ID, t1.COMMENT_COUNT, t1.AVG_SCORE, t1.ZERO_SCORE_COUNT, t1.ONE_SCORE_COUNT, t1.TWO_SCORE_COUNT, t1.THREE_SCORE_COUNT, t1.FOUR_SCORE_COUNT, t1.FIVE_SCORE_COUNT)
+				values (CMT_TITLE_STATISTICS_SEQ.nextval, t2.PRODUCT_ID, t2.COMMENT_COUNT, t2.AVG_SCORE, t2.ZERO_SCORE_COUNT, t2.ONE_SCORE_COUNT, t2.TWO_SCORE_COUNT, t2.THREE_SCORE_COUNT, t2.FOUR_SCORE_COUNT, t2.FIVE_SCORE_COUNT)
+	 </update>
+	 
+	<select id="cmtStatisticsCount" parameterClass="java.util.Map" resultClass="Long">
+	    select count(*) 
+	    from (<include refid="query_cmtSttc_base_sql"/>)
+	</select>
+	
+	<select id="recommendQuery" parameterClass="java.util.Map" resultMap = "CmtTitleStatisticsMap">
+		select T2.* 
+			from (
+			    select T1.* , rownum as rn 
+			    from (
+				     SELECT *
+					  FROM CMT_TITLE_STATISTICS
+					 WHERE PRODUCT_ID IS NULL
+					 <dynamic>
+					 	<isNotNull property="stage" prepend=" AND "> STAGE = #stage# </isNotNull>
+					 </dynamic>
+					 ORDER BY COMMENT_COUNT ASC	
+				      ) T1
+				 <dynamic prepend=" WHERE ">
+				    <isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+				 </dynamic>		 	      
+		   	) T2
+		   	<dynamic prepend=" WHERE ">
+				<isNotEmpty property="_startRow"> RN &gt;= #_startRow# </isNotEmpty>
+			</dynamic>
+	</select>
+	
+	
+<sql id="title_base_union_query_sql">
+	    SELECT
+	    	CC.* 
+	    FROM
+	    	CMT_COMMENT CC
+	    <dynamic prepend="WHERE">
+		<isNotEmpty prepend=" AND " property="commentId">CC.CMT_COMMENT_ID = #commentId#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="placeId">CC.PLACE_ID = #placeId#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="productId">CC.PRODUCT_ID = #productId#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="orderId">CC.ORDER_ID = #orderId#</isNotEmpty>
+	    <isNotEmpty prepend="AND" property="stage">
+            CC.PLACE_ID in (SELECT place_id FROM CMT_TITLE_STATISTICS WHERE stage = #stage#)
+        </isNotEmpty>
+		<isNotEmpty prepend=" AND " property="isAudit">CC.IS_AUDIT = #isAudit# </isNotEmpty>
+		<isNotEmpty prepend=" AND " property="endDate">CC.CREATED_TIME &lt;= #endDate# + 1</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="startDate">CC.CREATED_TIME &gt;= #startDate#</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty  property="replyCount321" prepend=",">REPLY_COUNT DESC</isNotEmpty>
+			<isNotEmpty  property="replyCount123" prepend=",">REPLY_COUNT </isNotEmpty>
+			<isNotEmpty  property="usefulCount321" prepend=",">USEFUL_COUNT DESC</isNotEmpty>
+			<isNotEmpty  property="usefulCount123" prepend=",">USEFUL_COUNT</isNotEmpty>
+			<isNotEmpty  property="auditTime321" prepend=",">AUDIT_TIME desc</isNotEmpty>
+			<isNotEmpty  property="createTime123" prepend=",">CREATED_TIME </isNotEmpty>
+			<isNotEmpty  property="createTime321" prepend=",">CREATED_TIME DESC</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<sql id="queryNumOfCmtGroupByPlaceId">
+		 SELECT count(CC.cmt_comment_id) countOfCmts, CC.place_id
+		 FROM (<include refid="title_base_union_query_sql"/>) CC
+		 group by CC.place_id
+		 order by countOfCmts desc
+	</sql>
+	
+	<sql id="queryPageNumOfCmtGroupByPlaceId">
+		select T2.* 
+		from (
+		    select T1.* , rownum as rn 
+		    from (  <include refid="queryNumOfCmtGroupByPlaceId"/> 
+		    ) T1
+			 <dynamic prepend=" WHERE ">
+			    <isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+			 </dynamic>		 	      
+	   	) T2
+	   	<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow"> RN &gt;= #_startRow# </isNotEmpty>
+		</dynamic>
+	</sql>
+	
+     <select id="queryHotCommentStatisticsOfPlace" parameterClass="java.util.Map" resultMap="CmtTitleStatisticsMap">
+		 SELECT  CC.countOfCmts COMMENT_COUNT,
+		 		 p.PLACE_ID, p.PRODUCT_ID, p.AVG_SCORE, p.ZERO_SCORE_COUNT, p.ONE_SCORE_COUNT, p.TWO_SCORE_COUNT, p.THREE_SCORE_COUNT, p.FOUR_SCORE_COUNT
+		 		 , p.FIVE_SCORE_COUNT, p.stage, p.title_name, p.product_type
+		 FROM (<include refid="queryPageNumOfCmtGroupByPlaceId"/>) CC left join CMT_TITLE_STATISTICS p
+		 on CC.place_id = p.place_id
+		 order by COMMENT_COUNT desc
+	</select>
+	
+	<update id="update" parameterClass="com.lvmama.comm.vo.comment.CmtTitleStatisticsVO">
+		UPDATE CMT_TITLE_STATISTICS
+		<dynamic prepend=" SET ">
+				<isNotEmpty prepend="," property="placeId">PLACE_ID = #placeId#</isNotEmpty>
+				<isNotEmpty prepend="," property="productId">PRODUCT_ID = #productId#</isNotEmpty>
+				<isNotEmpty prepend="," property="avgScore">AVG_SCORE = #avgScore#</isNotEmpty>
+				<isNotEmpty prepend="," property="commentCount">COMMENT_COUNT = #commentCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="zeroScoreCount">ZERO_SCORE_COUNT = #zeroScoreCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="oneScoreCount">ONE_SCORE_COUNT = #oneScoreCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="twoScoreCount">TWO_SCORE_COUNT = #twoScoreCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="threeScoreCount">THREE_SCORE_COUNT = #threeScoreCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="fourScoreCount">FOUR_SCORE_COUNT = #fourScoreCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="fiveScoreCount">FIVE_SCORE_COUNT = #fiveScoreCount#</isNotEmpty>
+				<isNotEmpty prepend="," property="stage">stage = #stage#</isNotEmpty>
+				<isNotEmpty prepend="," property="titleName">title_name = #titleName#</isNotEmpty>
+				<isNotEmpty prepend="," property="productType">product_type = #productType#</isNotEmpty>
+		</dynamic>
+		<dynamic prepend=" WHERE ">
+				<isNotEmpty prepend=" AND " property="placeId" >place_id = #placeId#</isNotEmpty>
+				<isNotEmpty prepend=" AND " property="productId" >product_id = #productId#</isNotEmpty>
+		</dynamic>
+	</update>
+	
+</sqlMap>

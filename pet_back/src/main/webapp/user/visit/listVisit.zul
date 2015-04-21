@@ -1,0 +1,153 @@
+<?page contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./listBatchRegisterWin"?>
+<?component name="lvmama_pchannel" macroURI="/mark/channel/channelRelate.zul"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="listBatchRegisterWin" mode="embedded" apply="com.lvmama.pet.web.user.visit.ListVisitUserAction">
+		<grid>
+			<columns>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox><lvmama_pchannel id="channel_box"></lvmama_pchannel></hbox>
+				</row>
+			</rows>
+		</grid>
+		<toolbar align="end">
+			<button id="search" label="查 询" onClick="_paging.activePage=0;saction.search();" width="100px"/>
+			<space/>
+		</toolbar>
+		
+		<listbox id="batchRegisterListBox" multiple="true" model="@{saction.userBatchRegisterList,load-after='search.onClick,_paging.onPaging'}">
+			<listhead>	
+				<listheader label="登记时间" width="80px"/>
+				<listheader label="创建时间" width="80px"/>
+				<listheader label="渠道" width="150px"/>
+				<listheader label="备注" width="150px"/>
+				<listheader label="录入人数" width="100px"/>
+				<listheader label="回复人数" width="100px"/>
+				<listheader label="回访人数" width="100px"/>
+				<listheader label="成功注册人数" width="100px"/>
+				<listheader label="失败注册人数" width="100px"/>
+				<listheader label="操作"/>
+			</listhead>
+			<listitem height="25px" self="@{each='batchRegister'}" value="@{batchRegister}">
+				<listcell label="@{batchRegister.registerDate,converter='com.lvmama.pet.utils.DateZKConverter'}"/>
+				<listcell label="@{batchRegister.createDate,converter='com.lvmama.pet.utils.DateZKConverter'}"/>
+				<listcell label="@{batchRegister.channelName}"/>
+				<listcell label="@{batchRegister.remark }"/>
+				<listcell label="@{batchRegister.registerNumber }"/>
+				<listcell label="@{batchRegister.replyNumber }"/>
+				<listcell label="@{batchRegister.visitNumber }"/>
+				<listcell label="@{batchRegister.successNumber }"/>
+				<listcell label="@{batchRegister.failNumber }"/>
+				<listcell>
+					<a style="color:blue" onClick='saction.refreshVisitUsersList(self.getAttributes());' label="查看详情">
+						<custom-attributes
+							batchRegisterId="@{batchRegister.batchId}" />	
+					</a></listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows >
+					<row >
+						<cell width="60px">
+							共 <label id="_totalRowCountLabel" /> 条
+						</cell>
+						<cell>
+							<paging  id="_paging" pageSize = "10" onPaging='saction.search();'/>
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+		<space/>
+		<button id="refreshVisitUsersListBox" label="刷新用户列表" visible="false"></button>
+		<listbox id="visitUsersListBox" multiple="true" model="@{saction.visitUsers,load-after='refreshVisitUsersListBox.onClick,_sub_paging.onPaging'}">
+			<listhead>	
+				<listheader label="登记时间" />
+				<listheader label="创建时间" />
+				<listheader label="渠道来源" />
+				<listheader label="用户姓名" />
+				<listheader label="性别" />
+				<listheader label="用户手机" />
+				<listheader label="用户邮箱" />
+				<listheader label="备注信息" />
+				<listheader label="短信回复?"/>
+				<listheader label="处理状态"   />
+				<listheader label="回访时间"   />
+				<listheader label="回访结果"   />
+				<listheader label="回访人"  />
+				<listheader label="操作"/>
+			</listhead>
+			<listitem height="25px" self="@{each='user'}" value="@{saction.visitUsers}">
+				<listcell label="@{user.registerDate,converter='com.lvmama.pet.utils.DateZKConverter'}"/>
+				<listcell label="@{user.createDate,converter='com.lvmama.pet.utils.DateZKConverter'}"/>
+				<listcell label="@{user.channelName }"/>
+				<listcell label="@{user.realName }"/>
+				<listcell label="@{user.chGender }"/>
+				<listcell label="@{user.mobileNumber }"/>
+				<listcell label="@{user.email }"/>
+				<listcell label="@{user.remark }"/>
+				<listcell label="@{user.reply }"/>
+				<listcell label="@{user.chRegisterStatus }"/>
+				<listcell label="@{user.visitDate,converter='com.lvmama.pet.utils.DateZKConverter' }"/>
+				<listcell label="@{user.chVisitResult }"/>
+				<listcell label="@{user.operator }"/>
+				<listcell>
+					<a  style="color:blue" onClick='saction.register(self.getAttributes());' label="注册为用户" isShow="@{user.needVisit }">
+						<custom-attributes batchUserId="@{user.batchUserId }"></custom-attributes>	
+					</a>
+					<a  style="color:blue" onClick='saction.hasRegister(self.getAttributes());' label="已经是注册会员" isShow="@{user.needVisit }">
+						<custom-attributes batchUserId="@{user.batchUserId }"></custom-attributes>	
+					</a>
+					<a  style="color:blue" onClick='saction.visitFail(self.getAttributes());' label="回拨失败" isShow="@{user.needVisit }">	
+						<custom-attributes batchUserId="@{user.batchUserId }"></custom-attributes>
+					</a>										
+				</listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows >
+					<row >
+						<cell width="60px">
+							共 <label id="_sub_totalRowCountLabel" /> 条
+						</cell>
+						<cell>
+							<paging  id="_sub_paging" pageSize = "15" onPaging='saction.loadDataList();'/>
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+		<window id="visitUsersWin" sizable="false" border="normal" mode="highlighted" visible="false">
+			<radiogroup>
+			<grid>
+				<columns>
+					<column width="100%"></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>回拨失败原因:</hbox>
+					</row>
+					<row>
+						<hbox><radio label="无人接听" selected="true" value="NONE_RESPONSE" onCheck="saction.changeResult(self.value)"/><radio label="忙音" value="BUSY" onCheck="saction.changeResult(self.value)"/><radio label="关机" value="POWER_OFF" onCheck="saction.changeResult(self.value)"/><radio label="停机" value="STOP" onCheck="saction.changeResult(self.value)"/><radio label="拒绝接听" value="REJECT" onCheck="saction.changeResult(self.value)"/></hbox>
+					</row>
+					<row>	
+						<hbox>或电话数据问题:</hbox>
+					</row>
+					<row>
+						<hbox><radio label="假数据" value="BAD_DATA" onCheck="saction.changeResult(self.value)"/><radio label="信息错误" value="ERROR_DATA" onCheck="saction.changeResult(self.value)"/><radio label="空号" value="EMPTY_NUMBER" onCheck="saction.changeResult(self.value)"/></hbox>						
+					</row>
+				</rows>				
+			</grid>
+			<toolbar align="center">
+			    <button label="保存" width="100px" onClick="saction.submit()"/>
+	        	<button label="取消" width="100px" onClick='visitUsersWin.setVisible(false)'/>
+	        </toolbar>				
+			</radiogroup>	
+		</window>						
+	</window>	
+</zk>

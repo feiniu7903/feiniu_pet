@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.recognizance.mapper.TntAccountMapper">
+
+	<resultMap id="baseResultMap" type="tntAccount">
+		<result property="accountId" column="ACCOUNT_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="type" column="TYPE" />
+		<result property="accountName" column="ACCOUNT_NAME" />
+		<result property="bankName" column="BANK_NAME" />
+		<result property="bankAccount" column="BANK_ACCOUNT" />
+		<result property="telephone" column="TELE_PHONE" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		ACCOUNT_ID,USER_ID,TYPE,ACCOUNT_NAME,TELE_PHONE,BANK_NAME,BANK_ACCOUNT,CREATE_TIME
+	</sql>
+
+	<insert id="insert" parameterType="tntAccount">
+		<selectKey resultType="java.lang.Long" keyProperty="accountId"
+			order="BEFORE">
+			select TNT_ACCOUNT_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_ACCOUNT (
+		ACCOUNT_ID ,
+		USER_ID ,
+		TYPE ,
+		ACCOUNT_NAME,
+		BANK_NAME,
+		BANK_ACCOUNT,
+		TELE_PHONE,
+		CREATE_TIME
+		)
+		VALUES (
+		#{accountId,jdbcType=DECIMAL},
+		#{userId,jdbcType=DECIMAL},
+		#{type,jdbcType=VARCHAR},
+		#{accountName,jdbcType=VARCHAR},
+		#{bankName,jdbcType=VARCHAR},
+		#{bankAccount,jdbcType=VARCHAR},
+		#{telephone,jdbcType=VARCHAR},
+		sysdate
+		)
+	</insert>
+
+	<update id="update" parameterType="tntAccount">
+		UPDATE TNT_ACCOUNT
+		<set>
+			<if test="userId != null">
+				USER_ID =#{userId,jdbcType=DECIMAL},
+			</if>
+			<if test="type != null">
+				TYPE = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="accountName != null">
+				ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankName != null">
+				BANK_NAME = #{bankName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankAccount != null">
+				BANK_ACCOUNT = #{bankAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				TELE_PHONE = #{telephone,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE ACCOUNT_ID = #{accountId,jdbcType=DECIMAL}
+	</update>
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM
+		TNT_ACCOUNT WHERE
+		ACCOUNT_ID = #{id}
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ACCOUNT
+		WHERE
+		ACCOUNT_ID = #{id}
+	</select>
+
+	<select id="getByUserId" resultMap="baseResultMap"
+		parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ACCOUNT
+		WHERE
+		USER_ID = #{id}
+	</select>
+	<select id="getByAccountType" resultMap="baseResultMap" parameterType="String">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ACCOUNT
+		WHERE
+		TYPE = #{type}
+	</select>
+</mapper>
+

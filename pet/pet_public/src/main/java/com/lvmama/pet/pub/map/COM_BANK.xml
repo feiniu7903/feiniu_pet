@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_BANK">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComBank">
+		<result column="ID" property="id" />
+		<result column="BANK_NAME" property="bankName" />
+	</resultMap>
+	<select id="getComBankList" resultMap="BaseResultMap">
+		<![CDATA[
+SELECT ID, BANK_NAME FROM COM_BANK WHERE VALID = 'Y'
+		]]>
+	</select>
+</sqlMap>

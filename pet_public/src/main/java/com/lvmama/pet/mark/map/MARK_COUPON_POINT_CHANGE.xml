@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_COUPON_POINT_CHANGE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mark.MarkCouponPointChange" >
+    <result column="MARK_POINTS_CHANGE_COUPON_ID" property="markCouponPointChangeId" />
+    <result column="POINT" property="point" />
+    <result column="SUB_PRODUCT_TYPE" property="subProductType" />
+    <result column="COUPON_ID" property="couponId" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="COUPON_NAME" property="couponName" />
+  </resultMap>
+    
+  <sql id="reuse_query_sql">
+  	SELECT
+  		mcp.*, M.COUPON_NAME
+  	FROM
+  		MARK_COUPON_POINT_CHANGE mcp ,MARK_COUPON M
+  		where
+  		M.COUPON_ID =  mcp.COUPON_ID
+  	<dynamic>
+    	<isNotEmpty prepend="and" property="markCouponPointChangeId">
+      		mcp.MARK_POINTS_CHANGE_COUPON_ID = #markCouponPointChangeId# 
+     	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="subProductType">
+      		mcp.SUB_PRODUCT_TYPE = #subProductType# 
+     	</isNotEmpty>   
+        <isNotEmpty prepend="and" property="couponId">
+      		mcp.COUPON_ID = #couponId# 
+     	</isNotEmpty> 
+     	<isNotEmpty prepend="and" property="couponName">M.COUPON_NAME like '%'||#couponName#||'%'</isNotEmpty>     	
+  	</dynamic>     		
+  </sql>
+  
+  <select id="selectCountByParam" resultClass="Long" parameterClass="java.util.HashMap">
+  	SELECT count(*) FROM ( <include refid="reuse_query_sql"/> )
+  </select>
+  
+  <select id="selectByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+	  SELECT * FROM (
+	  	SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+	 		<include refid="reuse_query_sql"/> order by mcp.CREATE_TIME desc
+	 	) T 	 	
+	 	<dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_endRow">ROWNUM &lt;= #_endRow#</isNotEmpty>
+	 	</dynamic>
+	  )	
+	  <dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_startRow">ROWNUM1 &gt;=#_startRow#</isNotEmpty>
+	  </dynamic>
+  </select>    
+  
+
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mark.MarkCouponPointChange">
+  	<selectKey keyProperty="markCouponPointChangeId" resultClass="java.lang.Long">
+      SELECT MARK_COUPON_POINT_CHANGE_SEQ.NEXTVAL AS id FROM DUAL
+    </selectKey>
+  	INSERT INTO MARK_COUPON_POINT_CHANGE 
+  		(MARK_POINTS_CHANGE_COUPON_ID, POINT, SUB_PRODUCT_TYPE, COUPON_ID, CREATE_TIME) 
+  	VALUES 
+  		(#markCouponPointChangeId#, #point#, #subProductType#, #couponId#, sysdate)
+  </insert>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="Long">
+  	DELETE FROM MARK_COUPON_POINT_CHANGE WHERE MARK_POINTS_CHANGE_COUPON_ID = #markCouponPointChangeId#
+  </delete>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mark.MarkCouponPointChange" >
+  	UPDATE 
+  		MARK_COUPON_POINT_CHANGE
+    SET 
+    	POINT = #point#,
+      	SUB_PRODUCT_TYPE = #subProductType#,
+      	COUPON_ID = #couponId#
+    WHERE 
+    	MARK_POINTS_CHANGE_COUPON_ID = #markCouponPointChangeId#
+  </update>      
+</sqlMap>

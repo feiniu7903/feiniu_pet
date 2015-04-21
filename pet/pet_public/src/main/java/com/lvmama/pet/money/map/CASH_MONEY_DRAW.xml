@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CASH_MONEY_DRAW">
+	<!-- 别名 -->
+    <typeAlias alias="cashMoneyDraw" type="com.lvmama.comm.pet.po.money.CashMoneyDraw"/>
+	<!-- 查询结果集 -->
+    <resultMap id="cashMoneyDrawResult" class="cashMoneyDraw" >
+        <result property="moneyDrawId" column="MONEY_DRAW_ID"/>
+        <result property="cashAccountId" column="CASH_ACCOUNT_ID"/>
+        <result property="drawAmount" column="DRAW_AMOUNT"/>
+        <result property="bankName" column="BANK_NAME"/>
+        <result property="bankAccount" column="BANK_ACCOUNT"/>
+        <result property="bankAccountName" column="BANK_ACCOUNT_NAME"/>
+        <result property="kaiHuHang" column="KAI_HU_HANG"/>
+        <result property="province" column="PROVINCE"/>
+        <result property="city" column="CITY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="auditStatus" column="AUDIT_STATUS"/>
+        <result property="payStatus" column="PAY_STATUS"/>
+        <result property="drawMoneyChannel" column="DRAW_MONEY_CHANNEL"/>
+        <result property="memo" column="MEMO"/>
+        <result property="isCompensation" column="IS_COMPENSATION"/>
+        <result property="flag" column="FLAG"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	MONEY_DRAW_ID ,
+        	CASH_ACCOUNT_ID ,
+        	DRAW_AMOUNT ,
+        	BANK_NAME ,
+        	BANK_ACCOUNT ,
+        	BANK_ACCOUNT_NAME ,
+        	KAI_HU_HANG ,
+        	PROVINCE ,
+        	CITY ,
+        	CREATE_TIME ,
+        	AUDIT_STATUS ,
+        	PAY_STATUS ,
+        	DRAW_MONEY_CHANNEL ,
+        	MEMO ,
+        	IS_COMPENSATION,
+        	FLAG
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="moneyDrawId">
+	             MONEY_DRAW_ID = #moneyDrawId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="cashAccountId">
+	             CASH_ACCOUNT_ID = #cashAccountId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="drawAmount">
+	             DRAW_AMOUNT = #drawAmount#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="bankName">
+	             BANK_NAME = #bankName#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="bankAccount">
+	             BANK_ACCOUNT = #bankAccount#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="bankAccountName">
+	             BANK_ACCOUNT_NAME = #bankAccountName#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="kaiHuHang">
+	             KAI_HU_HANG = #kaiHuHang#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="province">
+	             PROVINCE = #province#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="city">
+	             CITY = #city#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="auditStatus">
+	             AUDIT_STATUS = #auditStatus#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="payStatus">
+	             PAY_STATUS = #payStatus#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="drawMoneyChannel">
+	             DRAW_MONEY_CHANNEL = #drawMoneyChannel#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="memo">
+	             MEMO = #memo#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="isCompensation">
+	             IS_COMPENSATION = #isCompensation#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="flag">
+	             FLAG = #flag#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="cashMoneyDraw">
+				<selectKey keyProperty="moneyDrawId" resultClass="java.lang.Long">
+					SELECT CASH_MONEY_DRAW_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        CASH_MONEY_DRAW (
+        	MONEY_DRAW_ID ,
+        	CASH_ACCOUNT_ID ,
+        	DRAW_AMOUNT ,
+        	BANK_NAME ,
+        	BANK_ACCOUNT ,
+        	BANK_ACCOUNT_NAME ,
+        	KAI_HU_HANG ,
+        	PROVINCE ,
+        	CITY ,
+        	CREATE_TIME ,
+        	AUDIT_STATUS ,
+        	PAY_STATUS ,
+        	DRAW_MONEY_CHANNEL ,
+        	MEMO ,
+        	IS_COMPENSATION,
+        	FLAG
+        ) VALUES (
+        	#moneyDrawId# ,
+        	#cashAccountId# ,
+        	#drawAmount# ,
+        	#bankName# ,
+        	#bankAccount# ,
+        	#bankAccountName# ,
+        	#kaiHuHang# ,
+        	#province# ,
+        	#city# ,
+        	#createTime# ,
+        	#auditStatus# ,
+        	#payStatus# ,
+        	#drawMoneyChannel# ,
+        	#memo# ,
+        	#isCompensation#,
+        	#flag#
+        )
+    ]]>
+    </insert>
+    
+    <update id="updateByParamMap" parameterClass="java.util.Map" >
+    	update CASH_MONEY_DRAW
+	    <dynamic prepend="set" >
+	      <isNotNull prepend="," property="cashAccountId" >
+	        CASH_ACCOUNT_ID = #cashAccountId#
+	      </isNotNull>
+	      <isNotNull prepend="," property="drawAmount" >
+	        DRAW_AMOUNT = #drawAmount#
+	      </isNotNull>
+	      <isNotNull prepend="," property="bankName" >
+	        BANK_NAME = #bankName#
+	      </isNotNull>
+	      <isNotNull prepend="," property="bankAccount" >
+	        BANK_ACCOUNT = #bankAccount#
+	      </isNotNull>
+	      <isNotNull prepend="," property="bankAccountName" >
+	        BANK_ACCOUNT_NAME = #bankAccountName#
+	      </isNotNull>
+	      <isNotNull prepend="," property="kaiHuHang" >
+	        KAI_HU_HANG = #kaiHuHang#
+	      </isNotNull>
+	      <isNotNull prepend="," property="createTime" >
+	        CREATE_TIME = #createTime#
+	      </isNotNull>
+	      <isNotNull prepend="," property="province" >
+	        PROVINCE = #province#
+	      </isNotNull>
+	      <isNotNull prepend="," property="city" >
+	        CITY = #city#
+	      </isNotNull>
+	      <isNotNull prepend="," property="auditStatus" >
+	        AUDIT_STATUS = #auditStatus#
+	      </isNotNull>
+	      <isNotNull prepend="," property="payStatus" >
+	        PAY_STATUS = #payStatus#
+	      </isNotNull>
+	      <isNotNull prepend="," property="drawMoneyChannel" >
+	        DRAW_MONEY_CHANNEL = #drawMoneyChannel#
+	      </isNotNull>
+	      <isNotNull prepend="," property="memo" >
+	        MEMO = #memo#
+	      </isNotNull>
+	      <isNotNull prepend="," property="isCompensation" >
+	        IS_COMPENSATION = #isCompensation#
+	      </isNotNull>
+	       <isNotNull prepend="," property="flag" >
+	        FLAG = #flag#
+	      </isNotNull>
+	    </dynamic>
+    		where MONEY_DRAW_ID = #moneyDrawId#
+  </update>
+  
+  <update id="updateAuditStatusByMoneyDrawId" parameterClass="java.util.Map" >
+    update CASH_MONEY_DRAW
+    set AUDIT_STATUS = #aduitStatus#, MEMO = #memo#
+    where MONEY_DRAW_ID = #moneyDrawId#
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterClass="cashMoneyDraw" >
+	    update CASH_MONEY_DRAW
+	    set CASH_ACCOUNT_ID = #cashAccountId#,
+	      DRAW_AMOUNT = #drawAmount#,
+	      BANK_NAME = #bankName#,
+	      BANK_ACCOUNT = #bankAccount#,
+	      BANK_ACCOUNT_NAME = #bankAccountName#,
+	      KAI_HU_HANG = #kaiHuHang#,
+	      CREATE_TIME = #createTime#,
+	      PROVINCE = #province#,
+	      CITY = #city#,
+	      AUDIT_STATUS = #auditStatus#,
+	      PAY_STATUS = #payStatus#,
+	      DRAW_MONEY_CHANNEL = #drawMoneyChannel#,
+	      MEMO = #memo#,
+	      IS_COMPENSATION = #isCompensation#,
+	      FLAG = #flag#
+	    where MONEY_DRAW_ID = #moneyDrawId#
+  </update>
+  
+  <select id="selectByPrimaryKey" resultMap="cashMoneyDrawResult" parameterClass="java.lang.Long" >
+    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from CASH_MONEY_DRAW 
+	        where 
+						MONEY_DRAW_ID = #moneyDrawId# 
+	    ]]>
+  </select>
+  
+  <select id="queryFincMoneyDrawTasks"  resultMap="cashMoneyDrawResult"
+		parameterClass="java.util.Map">
+		<![CDATA[
+	SELECT *
+  	FROM (SELECT T.*, ROWNUM AS ROWNUM1
+          FROM (SELECT md.* FROM CASH_MONEY_DRAW md
+                 WHERE md.AUDIT_STATUS = 'VERIFIED'
+                 AND  md.PAY_STATUS ='UnApplyPayCash'
+                 AND  md.draw_money_channel<>'CASH_ACCOUNT'
+        ]]>
+		<isNotNull prepend="AND" property="cashAccountId">
+                   md.CASH_ACCOUNT_ID =#cashAccountId#
+		</isNotNull>
+		<isNotNull prepend="AND" property="userNo">
+        <![CDATA[
+				CASH_ACCOUNT_ID IN (SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+		]]>
+		</isNotNull>
+		<![CDATA[
+                 ORDER BY md.CREATE_TIME DESC) T
+         	WHERE ROWNUM <= #endIndex#)
+ 		WHERE ROWNUM1 >= #beginIndex#
+		]]>
+	</select>
+	
+	<!-- 查询打款任务 -->
+	<select id="queryFincMoneyDrawTasksCount" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		<![CDATA[
+		SELECT 
+				COUNT(md.MONEY_DRAW_ID)
+		  FROM CASH_MONEY_DRAW md 
+		 WHERE md.AUDIT_STATUS = 'VERIFIED'
+		 	AND md.PAY_STATUS ='UnApplyPayCash'
+		 	AND md.DRAW_MONEY_CHANNEL<>'CASH_ACCOUNT'
+        ]]>
+		<isNotNull prepend="AND" property="cashAccountId">
+        	md.CASH_ACCOUNT_ID = #cashAccountId#
+		</isNotNull>
+		<isNotNull prepend="AND" property="userNo">
+        <![CDATA[
+				CASH_ACCOUNT_ID IN (SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+		]]>
+		</isNotNull>
+	</select>
+	
+	<select id="queryMoneyDrawHistory" resultClass="java.util.HashMap"
+			parameterClass="java.util.Map">
+			<![CDATA[
+	SELECT *
+	  FROM (SELECT T.*, ROWNUM AS ROWNUM1
+	          FROM (SELECT DISTINCT fm.CASH_ACCOUNT_ID AS CASH_ACCOUNT_ID,
+	                                fm.BANK_NAME AS BANK_NAME,
+	                                fm.BANK_ACCOUNT AS BANK_ACCOUNT,
+	                                fm.BANK_ACCOUNT_NAME AS BANK_ACCOUNT_NAME,
+	                                fm.KAI_HU_HANG AS KAI_HU_HANG,
+	                                fm.DRAW_AMOUNT / 100 AS AMOUNT,
+	                                NVL(fm.PAY_STATUS, '') AS PAY_STATUS,
+	                                NVL(fc.CALLBACK_INFO, '') AS FAIL_INFO,
+	                                NVL(fc.CREATE_TIME, '') AS CREATE_TIME,
+	                                fm.CREATE_TIME AS TIME,
+	                                TO_CHAR(fm.MONEY_DRAW_ID) AS MONEY_DRAW_ID,
+	                                fm.CREATE_TIME AS APPLY_DATE,
+	                                fc.ALIPAY2BANK_FILE as ALIPAY_FILE
+	                  FROM CASH_MONEY_DRAW  fm
+	                  LEFT  JOIN CASH_DRAW fc on fc.MONEY_DRAW_ID= fm.MONEY_DRAW_ID
+	                 WHERE fm.AUDIT_STATUS = 'VERIFIED'
+	        ]]>
+			<isNotNull prepend="AND" property="cashAccountId">
+	                   fm.CASH_ACCOUNT_ID = #cashAccountId#
+			</isNotNull>
+			<isNotNull prepend="AND" property="userNo">
+	        <![CDATA[
+					fm.CASH_ACCOUNT_ID IN (SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+			]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="status">
+			<![CDATA[
+					   fm.PAY_STATUS = #status#
+	        ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="createTimeStart">
+			<![CDATA[
+					   fc.CREATE_TIME >= #createTimeStart#
+	        ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="createTimeEnd">
+			<![CDATA[
+					   fc.CREATE_TIME < #createTimeEnd#
+	        ]]>
+			</isNotNull>
+			<![CDATA[
+	                 ORDER BY fm.CREATE_TIME DESC) T
+	         WHERE ROWNUM <= #endIndex#)
+	 WHERE ROWNUM1 >= #beginIndex#
+			]]>
+		</select>
+		
+		<select id="queryMoneyDrawHistoryCount" resultClass="java.lang.Long"
+			parameterClass="java.util.Map">
+			<![CDATA[
+	SELECT COUNT(fm.MONEY_DRAW_ID)
+	  FROM CASH_MONEY_DRAW fm
+	  LEFT OUTER JOIN CASH_DRAW fc
+	    ON fm.MONEY_DRAW_ID = fc.MONEY_DRAW_ID
+	 WHERE fm.AUDIT_STATUS = 'VERIFIED'
+	        ]]>
+			<isNotNull prepend="AND" property="cashAccountId">
+			<![CDATA[
+	        fm.CASH_ACCOUNT_ID = #cashAccountId#
+	        ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="userNo">
+	        <![CDATA[
+					fm.CASH_ACCOUNT_ID IN (SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+			]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="status">
+			<![CDATA[
+			fm.PAY_STATUS = #status#
+	        ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="createTimeStart">
+			<![CDATA[
+			fc.CREATE_TIME >= #createTimeStart#
+	        ]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="createTimeEnd">
+			<![CDATA[
+			fc.CREATE_TIME < #createTimeEnd#
+	        ]]>
+			</isNotNull>
+		</select>	
+		
+	<select id="queryMoneyDraw" resultMap="cashMoneyDrawResult"
+		parameterClass="java.util.Map">
+		<![CDATA[
+			SELECT *
+			  FROM (SELECT T.*, ROWNUM AS ROWNUM1
+			          FROM ( SELECT * FROM CASH_MONEY_DRAW CD WHERE CD.DRAW_MONEY_CHANNEL <> 'CASH_ACCOUNT'
+		]]>
+		<isNotNull prepend="AND" property="cashAccountId">
+        <![CDATA[
+				CD.CASH_ACCOUNT_ID = #cashAccountId#
+		]]>
+		</isNotNull>
+		<isNotNull prepend="AND" property="userNo">
+        <![CDATA[
+				CD.CASH_ACCOUNT_ID IN (SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+		]]>
+		</isNotNull>
+		<isNotNull prepend="AND" property="userMobile">
+        <![CDATA[
+				CD.CASH_ACCOUNT_ID IN (SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.MOBILE_NUMBER=#userMobile#)
+		]]>
+		</isNotNull>
+		<isNotNull prepend="AND" property="bankAccountName">
+        <![CDATA[
+        		CD.BANK_ACCOUNT_NAME=#bankAccountName#
+		]]>
+		</isNotNull>
+		<isNotNull prepend="AND" property="status">
+        <![CDATA[
+				CD.AUDIT_STATUS in ($status$)
+		]]>
+		</isNotNull>
+		<isNotNull prepend="AND" property="createTimeStart">
+		<![CDATA[
+				CD.CREATE_TIME >= #createTimeStart#
+		]]>
+		</isNotNull>
+		<isNotNull prepend="AND" property="createTimeEnd">
+		<![CDATA[
+				CD.CREATE_TIME < #createTimeEnd#
+		]]>
+		</isNotNull>
+		<![CDATA[
+              ORDER BY CD.CREATE_TIME DESC ) T
+         	  WHERE ROWNUM <= #endIndex#)
+ 			  WHERE ROWNUM1 >= #beginIndex#
+		]]>
+	</select>
+
+	<select id="queryMoneyDrawCount" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		<![CDATA[
+		SELECT COUNT(*)
+		  FROM CASH_MONEY_DRAW
+		 WHERE CASH_MONEY_DRAW.DRAW_MONEY_CHANNEL <> 'CASH_ACCOUNT'
+		]]>
+		<isNotNull prepend="AND" property="cashAccountId">
+        <![CDATA[
+				CASH_ACCOUNT_ID = #cashAccountId#
+		]]>
+		</isNotNull>
+		<isNotNull prepend="AND" property="userNo">
+        <![CDATA[
+				CASH_ACCOUNT_ID IN (SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+		]]>
+		</isNotNull>
+		<isNotNull prepend="AND" property="userMobile">
+        <![CDATA[
+				CASH_ACCOUNT_ID IN (SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.MOBILE_NUMBER=#userMobile#)
+		]]>
+		</isNotNull>
+		<isNotNull prepend="AND" property="bankAccountName">
+        <![CDATA[
+        		BANK_ACCOUNT_NAME=#bankAccountName#
+		]]>
+		</isNotNull>
+		<isNotNull prepend="AND" property="status">
+        <![CDATA[
+				AUDIT_STATUS in ($status$)
+		]]>
+		</isNotNull>
+		<isNotNull prepend="AND" property="createTimeStart">
+		<![CDATA[
+				CREATE_TIME >= #createTimeStart#
+		]]>
+		</isNotNull>
+		<isNotNull prepend="AND" property="createTimeEnd">
+		<![CDATA[
+				CREATE_TIME < #createTimeEnd#
+		]]>
+		</isNotNull>
+	</select>
+	
+	<select id="queryMoneyDrowCountByBankAccount" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		<![CDATA[
+		SELECT COUNT(*) FROM CASH_MONEY_DRAW WHERE CASH_MONEY_DRAW.DRAW_MONEY_CHANNEL <> 'CASH_ACCOUNT'
+		]]>
+		<isNotNull prepend="AND" property="bankAccountName">
+        <![CDATA[
+        		BANK_ACCOUNT_NAME=#bankAccountName#
+		]]>
+		</isNotNull>
+	</select>
+	
+	
+	
+</sqlMap>

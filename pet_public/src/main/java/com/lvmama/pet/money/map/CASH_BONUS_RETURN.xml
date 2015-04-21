@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CASH_BONUS_RETURN">
+	
+	<!-- 别名 -->
+    <typeAlias alias="cashBonusReturn" type="com.lvmama.comm.pet.po.money.CashBonusReturn"/>
+	
+	<!-- 查询结果集 -->
+    <resultMap id="cashBonusReturnResult" class="cashBonusReturn">
+        <result property="returnId" column="RETURN_ID"/>
+        <result property="cashAccountId" column="cash_ACCOUNT_ID"/>
+        <result property="comeFrom" column="COME_FROM"/>
+        <result property="businessId" column="BUSINESS_ID"/>
+        <result property="bonus" column="BONUS"/>
+        <result property="createDate" column="CREATE_DATE"/>
+    </resultMap>
+    
+    <!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	RETURN_ID ,
+        	CASH_ACCOUNT_ID ,
+        	COME_FROM ,
+        	BUSINESS_ID ,
+        	BONUS,
+        	CREATE_DATE
+	    ]]>
+	</sql>
+	
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="returnId">
+	             RETURN_ID = #returnId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="cashAccountId">
+	             CASH_ACCOUNT_ID = #cashAccountId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="comeFrom">
+	             COME_FROM = #comeFrom#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="businessId">
+	             BUSINESS_ID = #businessId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="bonus">
+	             BONUS = #bonus#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createDate">
+	             CREATE_DATE = #createDate#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="cashBonusReturn">
+		<selectKey keyProperty="returnId" resultClass="java.lang.Long">
+			SELECT CASH_BONUS_RETURN_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	    <![CDATA[
+	        INSERT INTO
+	        CASH_BONUS_RETURN (
+	        	RETURN_ID ,
+	        	CASH_ACCOUNT_ID ,
+	        	COME_FROM ,
+	        	BUSINESS_ID ,
+	        	BONUS ,
+	        	CREATE_DATE
+	        ) VALUES (
+	        	#returnId# ,
+	        	#cashAccountId# ,
+	        	#comeFrom# ,
+	        	#businessId# ,
+	        	#bonus# ,
+	        	#createDate# 
+	        )
+	    ]]>
+    </insert>
+    <select id="queryBonusReturn" parameterClass="java.util.HashMap" resultMap="cashBonusReturnResult">
+    	<![CDATA[
+    		SELECT * FROM
+    		(SELECT T.*,ROWNUM AS ROWNUM1 FROM 
+			(SELECT CASH.* FROM CASH_BONUS_RETURN CASH where CASH.CASH_ACCOUNT_ID IN
+			(SELECT C.CASH_ACCOUNT_ID FROM CASH_ACCOUNT C WHERE C.USER_ID=#userId#)
+			ORDER BY CASH.CREATE_DATE DESC) T WHERE ROWNUM<=#endIndex#)
+			WHERE ROWNUM1>=#beginIndex# 
+    	]]>
+    </select>
+    <select id="getBonusReturnCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Long" >
+    	<![CDATA[
+    		SELECT COUNT(*) FROM CASH_BONUS_RETURN CASH where CASH.CASH_ACCOUNT_ID=
+			(SELECT C.CASH_ACCOUNT_ID FROM CASH_ACCOUNT C WHERE C.USER_ID=#userId#)
+    	]]>
+    </select>
+</sqlMap>

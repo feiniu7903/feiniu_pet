@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.1.1.xsd
+       http://activemq.apache.org/schema/core
+       http://activemq.apache.org/schema/core/activemq-core-5.5.1.xsd" default-autowire="byName">
+       
+       <!--ActiveMQ connectionFactory  -->
+    <amq:connectionFactory id="jmsConnectionFactory" brokerURL="${jms_server}" />
+    <amq:queue name="EMAIL_TOPIC_V" physicalName="ActiveMQ.SSO.${jms_node}" />
+	<bean id="myJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory">
+			<bean class="org.springframework.jms.connection.SingleConnectionFactory">
+				<property name="targetConnectionFactory" ref="jmsConnectionFactory" />
+			</bean>
+		</property>
+	</bean>
+</beans>

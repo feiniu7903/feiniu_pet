@@ -1,0 +1,25 @@
+<?page title="提现管理" contentType="text/html;charset=UTF-8"?>
+<?component name="listmoneymanage" macroURI="/money/listmoneymanage.zul" ?>
+<?component name="listmoneyhistory" macroURI="/money/listmoneyhistory.zul" ?>
+
+<zk>
+<window border="normal">
+
+<tabbox width="100%" tabscroll="true" height="600px">
+		<tabs>
+			<tab label="提现审核"/>
+			<tab label="提现历史"/>
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+				<listmoneymanage type = "approve" />
+			</tabpanel>
+			<tabpanel >
+				<listmoneyhistory  type = "history"  />
+			</tabpanel>
+			
+		</tabpanels>
+	</tabbox>
+	
+</window>
+</zk>

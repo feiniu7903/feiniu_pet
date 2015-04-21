@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_B_CERTIFICATE" >
+    
+  <typeAlias alias="metaBCertificateDO" type="com.lvmama.comm.pet.po.sup.MetaBCertificate" />
+   
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.sup.MetaBCertificate" >
+    <result column="PRODUCT_CERTIFICATE_ID" property="productCertificateId" />
+    <result column="META_PRODUCT_ID" property="metaProductId" />
+    <result column="TARGET_ID" property="targetId" />
+    <result column="BIZ_TYPE" property="bizType"/>
+  </resultMap>
+   
+  <sql id="doQueryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="productCertificateId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_CERTIFICATE_ID = #productCertificateId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="metaProductId" prepend="AND" >
+        <![CDATA[  
+        META_PRODUCT_ID = #metaProductId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="targetId" prepend="AND" >
+        <![CDATA[  
+        TARGET_ID = #targetId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bizType" prepend="AND" >
+        <![CDATA[  
+        BIZ_TYPE = #bizType#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+  
+  <select id="selectByMetaProductId" resultClass="java.lang.Integer">
+    select count(*) from META_B_CERTIFICATE where META_PRODUCT_ID = #metaProductId# and BIZ_TYPE=#bizType#
+  </select>
+  
+   <select id="findByMetaParams" resultMap="BaseResultMap" parameterClass="metaBCertificateDO">
+    select * from META_B_CERTIFICATE
+    <include refid="doQueryParams" />
+  </select>
+  
+  
+  <delete id="deleteByMetaProductIdAndTargetId" parameterClass="com.lvmama.comm.pet.po.sup.MetaBCertificate" >
+    delete from META_B_CERTIFICATE
+    where META_PRODUCT_ID = #metaProductId# and TARGET_ID = #targetId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.sup.MetaBCertificate" >
+  <selectKey keyProperty="productCertificateId" resultClass="Long">
+  	select META_B_CERTIFICATE_SEQ.nextVal FROM DUAL
+  </selectKey>
+    insert into META_B_CERTIFICATE (PRODUCT_CERTIFICATE_ID, META_PRODUCT_ID, TARGET_ID, BIZ_TYPE)
+    values (#productCertificateId#, #metaProductId#, #targetId#,#bizType#)
+  </insert>
+</sqlMap>

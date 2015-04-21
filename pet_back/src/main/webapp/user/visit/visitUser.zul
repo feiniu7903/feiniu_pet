@@ -1,0 +1,31 @@
+<?page title="回访记录" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./visitUsersWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="visitUsersWin" title="电话回访" closable="true" sizable="false" border="normal" mode="embedded" apply="com.lvmama.pet.web.user.visit.VisitUserAction">
+		<radiogroup>
+		<grid>
+			<columns>
+				<column width="100%"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>回拨失败原因:</hbox>
+				</row>
+				<row>
+					<hbox><radio label="无人接听" selected="true" value="NONE_RESPONSE" onCheck="saction.changeResult(self.value)"/><radio label="忙音" value="BUSY" onCheck="saction.changeResult(self.value)"/><radio label="关机" value="POWER_OFF" onCheck="saction.changeResult(self.value)"/><radio label="停机" value="STOP" onCheck="saction.changeResult(self.value)"/><radio label="拒绝接听" value="REJECT" onCheck="saction.changeResult(self.value)"/></hbox>
+				</row>
+				<row>	
+					<hbox>或电话数据问题:</hbox>
+				</row>
+				<row>
+					<hbox><radio label="假数据" value="BAD_DATA" onCheck="saction.changeResult(self.value)"/><radio label="信息错误" value="ERROR_DATA" onCheck="saction.changeResult(self.value)"/><radio label="空号" value="EMPTY_NUMBER" onCheck="saction.changeResult(self.value)"/></hbox>						
+				</row>
+			</rows>
+		</grid>
+		</radiogroup>
+		<toolbar>
+		    <button label="保存" width="100px" onClick="saction.submit()"/>
+        	<button label="取消" width="100px" onClick='visitUsersWin.detach()'/>
+        </toolbar>		
+	</window>
+</zk>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="USER_ACTION_COLLECTION">
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.user.UserActionCollection">
+		<selectKey keyProperty="id" resultClass="Long">
+			SELECT USER_ACTION_COLLECTION_SEQ.nextval AS id FROM DUAL
+		</selectKey>
+		<!--  
+		INSERT INTO 
+			user_action_collection
+		(
+			ACTION_COLLECTION_ID,
+			USER_ID,
+			IP,
+			ACTION,
+			CREATED_DATE,
+			MEMO,
+			PORT,
+			LOGIN_TYPE,
+			LOGIN_CHANNEL,
+			REFERER
+		) VALUES (
+			#id#,
+			#userId#,
+			#ip#,
+			#action#,
+			sysdate,
+			#memo#,
+			#port#,
+			#loginType#,
+			#loginChannel#,
+			#referer#
+		)
+		-->
+		INSERT INTO user_action_collection
+			<dynamic prepend="(">
+			    ACTION_COLLECTION_ID,
+			    CREATED_DATE,
+				<isNotEmpty property="userId" prepend=",">USER_ID</isNotEmpty>
+				<isNotEmpty property="ip" prepend=",">IP</isNotEmpty>
+				<isNotEmpty property="action" prepend=",">ACTION</isNotEmpty>
+				<isNotEmpty property="memo" prepend=",">MEMO</isNotEmpty>
+				<isNotEmpty property="port" prepend=",">PORT</isNotEmpty>
+				<isNotEmpty property="loginType" prepend=",">LOGIN_TYPE</isNotEmpty>
+				<isNotEmpty property="loginChannel" prepend=",">LOGIN_CHANNEL</isNotEmpty>
+				<isNotEmpty property="referer" prepend=",">REFERER</isNotEmpty>
+				)
+			</dynamic>
+			VALUES
+			<dynamic prepend="(">
+				#id#,
+				sysdate,
+				<isNotEmpty property="userId" prepend=",">#userId#</isNotEmpty>
+				<isNotEmpty property="ip" prepend=",">#ip#</isNotEmpty>
+				<isNotEmpty property="action" prepend=",">#action#</isNotEmpty>
+				<isNotEmpty property="memo" prepend=",">#memo#</isNotEmpty>
+				<isNotEmpty property="port" prepend=",">#port#</isNotEmpty>
+				<isNotEmpty property="loginType" prepend=",">#loginType#</isNotEmpty>
+				<isNotEmpty property="loginChannel" prepend=",">#loginChannel#</isNotEmpty>
+				<isNotEmpty property="referer" prepend=",">#referer#</isNotEmpty>
+			
+				)
+			</dynamic>
+	</insert>
+</sqlMap>

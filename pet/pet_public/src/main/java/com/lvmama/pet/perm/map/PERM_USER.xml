@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PERM_USER">
+
+	<resultMap id="PermUserBaseResult" class="com.lvmama.comm.pet.po.perm.PermUser">
+		<result column="USER_ID" property="userId" />
+		<result column="DEPARTMENT_ID" property="departmentId" />
+		<result column="USER_NAME" property="userName" />
+		<result column="REAL_NAME" property="realName" />
+		<result column="MOBILE" property="mobile" />
+		<result column="EMAIL" property="email" />
+		<result column="DATA_LIMITED" property="dataLimited" />
+		<result column="VALID" property="valid" />
+		<result column="PASSWORD" property="password" />
+		<result column="EMPLOYEE_NUM" property="employeeNum" />
+		<result column="POSITION" property="position" />
+		<result column="EXTENSION_NUMBER" property="extensionNumber" />
+		<result property="isHuaweiCc" column="IS_HUAWEI_CC"/>
+		<result column="work_status" property="workStatus"/>
+	</resultMap> 
+	
+	<resultMap class="com.lvmama.comm.pet.po.perm.PermUser" id="newBaseResult" extends="PermUserBaseResult">
+		<result column="DEPARTMENT_NAME" property="departmentName" />
+	</resultMap>
+	<resultMap class="com.lvmama.comm.pet.po.perm.PermUser" id="permUserResultByCrCount">
+		<result column="CR_COUNT" property="crCount" />
+		<result column="user_id" property="userId" />
+		<result column="user_name" property="userName" />
+		<result column="department_id" property="departmentId" />
+	</resultMap>
+
+	<sql id="selectUserSql">
+		select pu.*,po.DEPARTMENT_NAME as
+		DEPARTMENT_NAME from PERM_USER pu,PERM_ORGANIZATION po where
+		pu.DEPARTMENT_ID=po.ORG_ID
+		<isNotEmpty property="userName" prepend="and">
+			pu.USER_NAME like '%'||#userName#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="realName" prepend="and">
+			pu.REAL_NAME like '%'||#realName#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="departmentId" prepend="and">
+			pu.DEPARTMENT_ID=#departmentId#
+		</isNotEmpty>
+		<isNotEmpty property="valid" prepend="and">
+			pu.VALID=#valid#
+		</isNotEmpty>
+		<isNotEmpty property="parentOrgId" prepend="and">
+			po.parent_org_id=#parentOrgId#
+		</isNotEmpty>
+		<isNotEmpty property="departmentName" prepend="and">
+			po.department_name  like '%'||#departmentName#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="workStatus" prepend="and">
+			pu.work_status=#workStatus#
+		</isNotEmpty>
+	</sql>
+
+	<!-- 通过供应商ID查询产品经理信息 -->
+	
+	<select id="selectListByRealName" resultMap="PermUserBaseResult"
+		parameterClass="String">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		select *
+		from PERM_USER where  VALID='Y'  AND REAL_NAME like '%'||#realName#||'%' order
+		by REAL_NAME DESC ) T WHERE ROWNUM &lt;= 10) WHERE ROWNUM1 &gt;0
+	</select>
+	
+	<select id="selectListByUserNameOrRealName" resultMap="PermUserBaseResult"
+		parameterClass="String">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		select *
+		from PERM_USER where  VALID='Y'  AND (REAL_NAME like '%'||#name#||'%' or USER_NAME like '%'||#name#||'%') order
+		by REAL_NAME DESC ) T WHERE ROWNUM &lt;= 10) WHERE ROWNUM1 &gt;0
+	</select>
+	
+	<select id="selectUsersByParams" parameterClass="java.util.Map"
+		resultMap="newBaseResult">
+		SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select * from (
+
+		<include refid="selectUserSql" />
+
+		)) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;#skipResults#
+	</select>
+
+	<select id="selectUsersCountByParams" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select count(*) from
+		(
+		<include refid="selectUserSql" />
+		)
+	</select>
+
+	<select id="findRoleUserByOrg" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select pu.USER_ID 
+		from PERM_USER pu,PERM_USER_ROLE pr 
+		where pu.user_id=pr.user_id and pu.DEPARTMENT_ID=#orgId# and pr.role_id=#roleId#
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="newBaseResult"
+		parameterClass="java.lang.Long">
+		select pu.*,po.DEPARTMENT_NAME as DEPARTMENT_NAME,
+		pu.DEPARTMENT_ID as departmentId
+		from PERM_USER 
+		pu,PERM_ORGANIZATION po where
+		pu.DEPARTMENT_ID=po.ORG_ID and pu.USER_ID
+		= #userId#
+	</select>
+
+	<select id="getPermUserByParams" parameterClass="java.util.Map"
+		resultMap="PermUserBaseResult">
+		select * from PERM_USER where 1=1
+		<isNotEmpty prepend="and" property="userName">
+			USER_NAME=#userName#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="employeeNum">
+			EMPLOYEE_NUM=#employeeNum#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="managerId">
+			USER_ID=#managerId#
+		</isNotEmpty>
+		and valid='Y'
+	</select>
+	
+	<select id="getPermUserByUserName" parameterClass="string" resultMap="PermUserBaseResult">
+		select * from perm_user where user_name = #value# and valid = 'Y'
+	</select>
+	
+	<select id="getNewPermUserNum" resultClass="java.lang.Long">
+		select perm_user_num_seq.nextval from dual 
+	</select>
+	
+
+	<insert id="addUser" parameterClass="com.lvmama.comm.pet.po.perm.PermUser">
+		<selectKey keyProperty="userId" resultClass="java.lang.Long">
+			select
+			PERM_USER_SEQ.nextval as userId from DUAL
+		</selectKey>
+		insert into
+		PERM_USER(USER_ID,DEPARTMENT_ID,USER_NAME,REAL_NAME,MOBILE,VALID,PASSWORD,EMPLOYEE_NUM,POSITION,EMAIL,EXTENSION_NUMBER,IS_HUAWEI_CC)
+		values(#userId#,#departmentId#,#userName#,#realName#,#mobile#,#valid#,#password#,#employeeNum#,#position#,#email#,#extensionNumber#,#isHuaweiCc#)
+	</insert>
+
+	<update id="updateUser" parameterClass="com.lvmama.comm.pet.po.perm.PermUser">
+		update PERM_USER set
+		DEPARTMENT_ID=#departmentId#,USER_NAME=#userName#,REAL_NAME=#realName#,MOBILE=#mobile#,VALID=#valid#,PASSWORD=#password#,EMPLOYEE_NUM=#employeeNum#,
+		POSITION=#position#,EMAIL=#email#,EXTENSION_NUMBER=#extensionNumber#,IS_HUAWEI_CC=#isHuaweiCc#
+		where USER_ID=#userId#
+	</update>
+	
+	<!-- 初始化密码 -->
+	<update id="initializePassword" parameterClass="com.lvmama.comm.pet.po.perm.PermUser">
+			update PERM_USER set PASSWORD=#password#where USER_ID=#userId#
+	</update>
+	
+
+	<sql id="selectParam">
+		<isNotEmpty property="userNameEQ" prepend="and">
+			pu.USER_NAME =#userNameEQ#
+		</isNotEmpty>
+		<isNotEmpty property="userName" prepend="and">
+			pu.USER_NAME like '%'||#userName#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="realName" prepend="and">
+			pu.REAL_NAME like '%'||#realName#||'%' 
+		</isNotEmpty>
+		<isNotEmpty property="departmentId" prepend="and">
+			pu.DEPARTMENT_ID=#departmentId#
+		</isNotEmpty>
+		<isNotEmpty property="valid" prepend="and">
+			pu.VALID=#valid#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="departmentName">
+			po.department_name like '%'||#departmentName#||'%'   
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="position">
+			pu.position like '%'||#position#||'%'  
+		</isNotEmpty> 
+		<isNotEmpty prepend="AND" property="userIds">
+	            pu.user_id in
+	            <iterate property="userIds" open="(" close=")" conjunction="," > 
+	                #userIds[]#
+	            </iterate> 
+	      </isNotEmpty>
+	    <isNotEmpty prepend="AND" property="treeDepartmentId">
+	    	EXISTS (select 1 from (
+			       select ORG_ID from lvmama_pet.perm_organization poo start with ORG_ID=#treeDepartmentId# connect by PRIOR ORG_ID= PARENT_ORG_ID 
+			) PP where PP.org_id=pu.department_id)
+	    </isNotEmpty>
+	</sql>
+
+	<select id="selectByParam" resultMap="newBaseResult"
+		parameterClass="java.util.Map">
+		SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select * from (
+
+		SELECT pu.*,
+		po.DEPARTMENT_NAME AS
+		DEPARTMENT_NAME
+		FROM PERM_USER pu,
+		PERM_ORGANIZATION po
+		WHERE
+		pu.DEPARTMENT_ID=po.ORG_ID
+		<include refid="selectParam" />
+		order by pu.USER_ID desc
+		)) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE
+		ROWNUM1 &gt;= #skipResults#
+	</select>
+
+	<select id="selectByParamCount" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		SELECT count(*)
+		FROM PERM_USER pu,
+		PERM_ORGANIZATION po
+		WHERE
+		pu.DEPARTMENT_ID=po.ORG_ID
+		<include refid="selectParam" />
+	</select>
+	
+	<update id="updateWorkStatus" parameterClass="map">
+		update perm_user
+		set work_status = #workStatus#
+		where user_name = #userName#
+	</update>
+	<!-- 取得客户联系最多的客服 -->
+	<select id="getOrderProcessUsersByLVCC" resultMap="permUserResultByCrCount" parameterClass="java.util.Map">		
+		select count(1) as  CR_COUNT,pu.user_id,pu.user_name,pu.department_id from perm_user pu,perm_organization po,
+                                        CONN_RECORD     Cr
+                 where pu.department_id = po.org_id
+                 and po.valid='Y'
+                 and pu.valid='Y'
+                 and Cr.operator_user_id = pu.user_name
+		   		   <isNotEmpty property="parentOrgId">
+		           		and po.parent_org_id = #parentOrgId#
+		   		   </isNotEmpty>
+		   		   <isNotEmpty property="mobile">
+		           		and cr.MOBILE = #mobile#
+		   		   </isNotEmpty>		   		   
+		   		   <isNotEmpty property="mobiles">
+				          and cr.MOBILE in
+				          <iterate property="mobiles" conjunction="," open="(" close=")">
+				              #mobiles[]#
+				          </iterate>
+				   </isNotEmpty>
+		   		   <isNotEmpty property="departmentName">
+		           		and po.department_name like '%'||#departmentName#||'%'
+		   		   </isNotEmpty>
+		   		   <isNotEmpty property="startFeedBackTime">
+		   				and TO_CHAR(CR.FEEDBACK_TIME,'yyyyMMdd')&gt;=#startFeedBackTime#
+		   		   </isNotEmpty>
+		   		   <isNotEmpty property="endFeedBackTime">
+		   				and TO_CHAR(CR.FEEDBACK_TIME,'yyyyMMdd')&lt;=#endFeedBackTime#
+		   		   </isNotEmpty>
+                 group by pu.user_id,pu.user_name,pu.department_id 
+                 order by CR_COUNT DESC
+	</select>
+</sqlMap>

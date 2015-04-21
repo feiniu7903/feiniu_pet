@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PRODUCT_PRODUCT_PLACE" >
+ <typeAlias alias="productProductPlace" type="com.lvmama.comm.pet.po.prod.ProductProductPlace" />
+ <resultMap id="BaseResultMap" class="productProductPlace" >
+    <result column="ID" property="id" />
+	<result column="PRODUCT_ID" property="productId" />
+	<result column="PLACE_ID" property="placeId" />
+	<result column="PARENT_PLACE_ID" property="parentPlaceId" />
+	<result column="FROM_PLACE_ID" property="fromPlaceId" />
+	<result column="IS_ORIGINAL" property="isOriginal" />
+	<result column="IS_TO_PLACE" property="isToPlace" />
+  </resultMap>
+	<sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+	</sql>
+	<sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+		 <isNotEmpty property="startRows" prepend="and">
+			rn &gt;= #startRows#
+		 </isNotEmpty>		
+		</dynamic>
+	</sql>
+	<insert id="insert" parameterClass="productProductPlace" >
+		<selectKey keyProperty="id" resultClass="Long">
+	  		select product_product_place_seq.nextval FROM DUAL
+	  	</selectKey> 
+        insert into product_product_place (ID, PRODUCT_ID, PLACE_ID,PARENT_PLACE_ID, FROM_PLACE_ID,IS_ORIGINAL,IS_TO_PLACE)
+        values (#id#, #productId#, #placeId#,#parentPlaceId#, #fromPlaceId#,#isOriginal#,#isToPlace#)
+	</insert>
+	
+	<delete id="productProductPlaceDelete" parameterClass="java.lang.Long" >	
+		DELETE product_product_place WHERE id = #id#
+	</delete>
+	
+	<delete id="productProductPlaceDeleteByProductId" parameterClass="java.lang.Long" >	
+		DELETE product_product_place ppp WHERE ppp.product_id=#productId#
+	</delete>
+	
+	<update id="update" parameterClass="java.util.Map">
+		update product_product_place set IS_TO_PLACE='true' where product_id = #productId# and place_id=#placeId# and IS_TO_PLACE='false'
+	</update>
+	
+	<update id="updateById" parameterClass="java.util.Map">
+		update product_product_place set IS_TO_PLACE=#isToPlace#,IS_ORIGINAL=#isOriginal# where id=#id#
+	</update>	
+	
+	<select id="queryProductProductPlaceListByProductId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select * from product_product_place where product_id = #productId#
+	</select>
+	<select id="getProductProductPlaceByProductIdAndPlaceId" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		select * from product_product_place where product_id = #productId# and place_id=#placeId#
+	</select>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="isPaging">
+		  <include refid="pageHeader"/>
+		</isNotEmpty>
+		SELECT * FROM product_product_place
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="fromPlaceId" prepend=" AND ">FROM_PLACE_ID = #fromPlaceId#</isNotEmpty>
+			<isNotEmpty property="placeId" prepend=" AND ">PLACE_ID = #placeId#</isNotEmpty>
+			<isNotEmpty property="productId" prepend=" AND ">PRODUCT_ID = #productId#</isNotEmpty>
+		</dynamic>
+		<isNotEmpty property="isPaging">
+		   <include refid="pageFooter"/>
+		</isNotEmpty>
+	</select>
+	
+</sqlMap>

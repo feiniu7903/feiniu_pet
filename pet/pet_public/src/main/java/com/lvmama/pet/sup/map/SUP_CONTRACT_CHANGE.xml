@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SUP_CONTRACT_CHANGE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.sup.SupContractChange" >
+    <result column="CONTRACT_CHANGE_ID" property="contractChangeId" />
+    <result column="CONTRACT_ID" property="contractId" />
+    <result column="CHANGE_TYPE" property="changeType" />
+    <result column="CHANGE_MEMO" property="changeMemo" />
+    <result column="FS_ID" property="fsId" />
+    <result column="OPERATOR_NAME" property="operatorName" />
+    <result column="CREATE_TIME" property="createTime" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.sup.SupContractChange" >
+    select *
+    from SUP_CONTRACT_CHANGE
+    where CONTRACT_CHANGE_ID = #contractChangeId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.sup.SupContractChange" >
+    delete from SUP_CONTRACT_CHANGE
+    where CONTRACT_CHANGE_ID = #contractChangeId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.sup.SupContractChange" >
+    <selectKey resultClass="java.lang.Long" keyProperty="contractChangeId" >
+      select SUP_CONTRACT_CHANGE_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into SUP_CONTRACT_CHANGE (CONTRACT_CHANGE_ID, CONTRACT_ID, CHANGE_TYPE, CHANGE_MEMO, FS_ID,OPERATOR_NAME,CREATE_TIME)
+    values (#contractChangeId#, #contractId#, #changeType#,
+      #changeMemo#, #fsId#, #operatorName#,sysdate)
+  </insert>
+   
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.sup.SupContractChange" >
+    update SUP_CONTRACT_CHANGE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="contractId" >
+        CONTRACT_ID = #contractId#
+      </isNotNull>
+      <isNotNull prepend="," property="changeType" >
+        CHANGE_TYPE = #changeType#
+      </isNotNull>
+      <isNotNull prepend="," property="changeMemo" >
+        CHANGE_MEMO = #changeMemo#
+      </isNotNull>
+      <isNotNull prepend="," property="operatorName" >
+        OPERATOR_NAME = #operatorName#
+      </isNotNull>
+    </dynamic>
+    where CONTRACT_CHANGE_ID = #contractChangeId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.sup.SupContractChange" >
+    update SUP_CONTRACT_CHANGE
+    set CONTRACT_ID = #contractId#,
+      CHANGE_TYPE = #changeType#,
+      CHANGE_MEMO = #changeMemo#,
+      OPERATOR_NAME = #operatorName#
+    where CONTRACT_CHANGE_ID = #contractChangeId#
+  </update>
+  <select id="selectByContractId" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select *
+    from SUP_CONTRACT_CHANGE
+    where CONTRACT_ID = #contractId#
+  </select>
+  
+  <update id="updateFsIdByContractChangeId" parameterClass="com.lvmama.comm.pet.po.sup.SupContractChange">
+  	update SUP_CONTRACT_CHANGE set fs_Id=#fsId# where CONTRACT_CHANGE_ID=#contractChangeId#
+  </update>
+</sqlMap>

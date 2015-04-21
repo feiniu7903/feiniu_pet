@@ -1,0 +1,69 @@
+<?page title="修改促销员" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./updateUserChannal"?>
+<zk>
+	<window id="updateUserChannal" title="修改促销员" border="normal" mode="embedded" apply="com.lvmama.pet.web.user.parttime.EditParttimeUserAction">
+		<space />
+		<groupbox style="border: none">
+			<grid>
+				<columns>
+					<column width="100px"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label value="渠道:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>	
+							<label value="@{saction.comParttimeUser.channelName}" />
+						</hbox>
+					</row>
+					<row>
+					<hbox>
+						<label value="所属城市:" />
+						<label value="[*]" style="color:red;" />
+					</hbox>
+					<hbox>
+						<label value="@{saction.comParttimeUser.provinceName}" /> ,<label value="@{saction.comParttimeUser.cityName}" /> 
+					</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="登录名:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox width="200px;" id="userName" maxlength="60" constraint="no empty:登录名不能为空" value="@{saction.comParttimeUser.userName}"></textbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="密码:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox type="password"  width="200px;" id="passWord" maxlength="60" constraint="no empty:密码不能为空" value="@{saction.comParttimeUser.passWord}"></textbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox><label value="自定义确认短信内容"/><label value="[*]" style="color:red;" /></hbox>
+						<hbox><textbox rows="10" maxlength="300" width="480px" id="confirmSMS" value="@{saction.comParttimeUser.confirmSms }"/></hbox>
+					</row>
+					<row>
+						<hbox><label value="自定义短信内容" /><label value="[*]" style="color:red;" /></hbox>
+						<hbox><textbox rows="10" maxlength="300" width="480px" id="smsTemplate" value="@{saction.comParttimeUser.smsTemplate }" /></hbox>
+					</row>
+					<row>
+						<hbox><label value="自定义邮箱内容" /><label value="[*]" style="color:red;" /></hbox>
+						<hbox><textbox rows="10" maxlength="300" width="480px" id="mailTemplate" value="@{saction.comParttimeUser.mailTemplate }" /></hbox>
+					</row>					
+				</rows>
+			</grid>
+		</groupbox>
+		<toolbar align="center" id="toolBar">
+			<button id="addContract" label="更 新" width="100px" onClick="saction.update();"/><space />
+			<button label="取消" onClick="newUserChannel.detach();" width="100px"></button>
+		</toolbar>
+	</window>
+</zk>

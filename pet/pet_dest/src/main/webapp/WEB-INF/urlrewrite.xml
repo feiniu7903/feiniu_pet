@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
+	<!--
+		Configuration file for UrlRewriteFilter http://tuckey.org/urlrewrite/
+	-->
+<urlrewrite>
+    <!-- 新的景点 ticket.lvmama.com/scenic-id） -->
+    <rule match-type="regex">
+        <from>^/scenic-([0-9]+)$</from>
+        <to>/ticket/detail.do?id=$1</to>
+    </rule>
+    <!-- 老的景点、目的地（dest.lvmama.com/placeid） -->
+	<rule match-type="regex">
+		<from>^/place([0-9]+)$</from>
+		<to>/newplace/destUrl.do?id=$1</to>
+	</rule>
+	
+	<!-- 异步加载（目的地）相关信息  -->
+	<rule match-type="regex">
+		<from>^/ajaxDest[/]?$</from>
+		<to>/newplace/place!ajaxDest2Dest.do</to>
+	</rule>
+	
+	<!-- 度假酒店  -->
+	<rule match-type="regex">
+		<from>^/hotel/v([0-9]+)$</from>
+		<to>/newplace/holidayHotel.do?id=$1</to>
+	</rule>
+    <!-- 首页（景点/酒店）  -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)[/]*$</from>
+		<to>/newplace/dest.do?pinyin=$1&amp;currentTab=ticket</to>
+	</rule>
+
+	<!-- 新地图 （目的地）-->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/maps[/]*$</from>
+		<to>/newplace/place.do?pinyin=$2&amp;maps=true</to>
+	</rule>
+
+	<!-- 新天气预报（目的地）-->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/weather[/]*$</from>
+		<to>/newplace/place!weather.do?pinyin=$2</to>
+	</rule>
+	
+	<!-- 首页（目的地）  -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)[/]*$</from>
+		<to>/newplace/place!products.do?pinyin=$2</to>
+	</rule>
+
+    <!-- 新目的地 URL start  -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)_([a-zA-Z0-9]+)/([a-zA-Z0-9]*)_tab$</from>
+		<to>/newplace/place!$3.do?destId=&amp;currentTab=$3&amp;pageSize=10&amp;currentPage=1&amp;pinyin=$2</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)_([a-zA-Z0-9]+)/([a-zA-Z0-9]*)_tab_frm([0-9]*)$</from>
+		<to>/newplace/place!$3.do?destId=&amp;currentTab=$3&amp;pageSize=10&amp;currentPage=1&amp;pinyin=$2&amp;fromDestId=$4</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)_([a-zA-Z0-9]+)/([a-zA-Z0-9]*)_tab_([0-9]+)_([0-9]+)$</from>
+		<!--to>/newplace/tabRedirect.do?destId=&amp;currentTab=$3&amp;pageSize=$4&amp;currentPage=$5&amp;pinyin=$2&amp;pageFlag=Y</to-->
+		<to>/newplace/place!$3.do?destId=&amp;currentTab=$3&amp;pageSize=10&amp;currentPage=1&amp;pinyin=$2</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)_([a-zA-Z0-9]+)/([a-zA-Z0-9]*)_tab_frm([0-9]*)_([0-9]+)_([0-9]+)$</from>
+		<to>/newplace/tabRedirect.do?destId=&amp;pinyin=$2&amp;currentTab=$3&amp;pageSize=$5&amp;currentPage=$6&amp;pageFlag=Y&amp;fromDestId=$4</to>
+	</rule>
+	<!-- 新目的地 URL end  -->
+
+	<!-- 门票、酒店、自由行、跟团游（景点）更多  -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)/([a-zA-Z0-9]*)_([0-9]+)_([0-9]+)_([0-9]+)$</from>
+		<to>/newplace/moreProductList.do?pinyin=$1&amp;mode=$2&amp;page=$5</to>
+	</rule>
+
+	<!-- 门票、酒店、自由行、跟团游（目的地）更多 -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/([a-zA-Z0-9]*)_([0-9]+)_([0-9]+)_([0-9]+)$</from>
+		<to>/newplace/moreProductList.do?pinyin=$2&amp;mode=$3&amp;page=$6</to>
+	</rule>
+
+	<!-- 景区下老的酒店相关  begin-->
+	
+	 <!-- 老景区详情页对应url做301跳转 -->
+    <rule match-type="regex">
+        <from>^/([a-zA-Z0-9]+)/package[/]*$</from>
+        <to>/place/oldscenic301Forword.do?pinyin=$1&amp;currentTab=package</to>
+    </rule>
+    <rule match-type="regex">
+        <from>^/([a-zA-Z0-9]+)/hotels[/]*$</from>
+        <to>/place/oldscenic301Forword.do?pinyin=$1&amp;currentTab=hotels</to>
+    </rule>
+    <rule match-type="regex">
+        <from>^/([a-zA-Z0-9]+)/line[/]*$</from>
+        <to>/place/oldscenic301Forword.do?pinyin=$1&amp;currentTab=line</to>
+    </rule>
+    
+    <rule match-type="regex">
+        <from>^/([a-zA-Z0-9]+)/line/([0-9]+)[/]*$</from>
+        <to>/place/oldscenic301Forword.do?pinyin=$1&amp;fromDestId=$2&amp;currentTab=line</to>
+    </rule>
+    <rule match-type="regex">
+        <from>^/([a-zA-Z0-9]+)/maps[/]*$</from>
+        <to>/place/oldscenic301Forword.do?pinyin=$1&amp;currentTab=products&amp;maps=true</to>
+    </rule>
+     <!-- 老景区详情页对应url做301跳转 end  -->
+	
+    <rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)_tab_([a-zA-Z0-9]+)_frm_([a-zA-Z0-9]+)[/]*$</from>
+		<to>/newplace/scenic/productList.do?pinyin=$1&amp;currentTab=$2&amp;fromPlacePinYin=$3</to>
+	</rule>
+	<!-- 景区/酒店相关  end-->
+	
+	
+	
+	<!--点评临时跳转站，最终目的地 super front -->
+	<!-- 点评（景点） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)/comment[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$1&amp;type=11&amp;opinyin=$1</to>
+	</rule>
+
+	<!-- 点评（目的地） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/comment[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$2&amp;type=11&amp;opinyin=$1_$2</to>
+	</rule>
+
+	<!-- 点评分页（景点） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)/comment_([0-9]+)_([0-9]+)[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$1&amp;type=$2&amp;page=$3&amp;opinyin=$1</to>
+	</rule>
+
+	<!-- 点评分页（目的地） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/comment_([0-9]+)_([0-9]+)[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$2&amp;type=$3&amp;page=$4&amp;opinyin=$1_$2</to>
+	</rule>
+	
+	<!-- 住宿（景点） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)/hotel[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$1&amp;type=11&amp;currentTab=hotel&amp;opinyin=$1</to>
+	</rule>
+	 
+	<!-- 住宿（目的地） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/hotel[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$2&amp;type=11&amp;currentTab=hotel&amp;opinyin=$1_$2</to>
+	</rule>
+
+	<!-- 美食（景点） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)/dish[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$1&amp;type=11&amp;currentTab=dish&amp;opinyin=$1</to>
+	</rule>
+
+	<!-- 美食（目的地） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/dish[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$2&amp;type=11&amp;currentTab=dish&amp;opinyin=$1_$2</to>
+	</rule>
+
+	<!-- 交通（景点） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)/traffic[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$1&amp;type=11&amp;currentTab=traffic&amp;opinyin=$1</to>
+	</rule>
+
+	<!-- 交通（目的地） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/traffic[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$2&amp;type=11&amp;currentTab=traffic&amp;opinyin=$1_$2</to>
+	</rule>
+
+	<!-- 娱乐（景点） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)/entertainment[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$1&amp;type=11&amp;currentTab=entertainment&amp;opinyin=$1</to>
+	</rule>
+
+	<!-- 娱乐（目的地） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/entertainment[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$2&amp;type=11&amp;currentTab=entertainment&amp;opinyin=$1_$2</to>
+	</rule>
+
+	<!-- 购物（景点） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)/shop[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$1&amp;type=11&amp;currentTab=shop&amp;opinyin=$1</to>
+	</rule>
+
+	<!-- 购物（目的地） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/shop[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$2&amp;type=11&amp;currentTab=shop&amp;opinyin=$1_$2</to>
+	</rule>
+	
+	<!-- 行程（景点） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)/weekendtravel[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$1&amp;type=11&amp;currentTab=weekendtravel&amp;opinyin=$1</to>
+	</rule>
+
+	<!-- 行程（目的地） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/weekendtravel[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$2&amp;type=11&amp;currentTab=weekendtravel&amp;opinyin=$1_$2</to>
+	</rule>
+	
+	<!-- 景点（景点） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)/place[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$1&amp;type=11&amp;currentTab=place&amp;opinyin=$1</to>
+	</rule>
+
+	<!-- 景点（目的地） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/scenery_1_([a-zA-Z0-9]*)_([a-zA-Z0-9]*)_([a-zA-Z0-9]*)$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$2&amp;type=11&amp;currentTab=scenery&amp;opinyin=$1_$2</to>
+	</rule>
+	
+	<!-- 摄影（景点） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]+)/photo[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$1&amp;type=11&amp;currentTab=photo&amp;opinyin=$1</to>
+	</rule>
+
+	<!-- 摄影（目的地） -->
+	<rule match-type="regex">
+		<from>^/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/photo[/]*$</from>
+		<to>/commentdispatch/listCmtsOfDestBasic.do?pinyin=$2&amp;type=11&amp;currentTab=photo&amp;opinyin=$1_$2</to>
+	</rule>
+	<!--点评临时跳转站，最终目的地 super front-->
+	
+    	
+	 <!-- 网站地图之总列表 -->
+    <rule match-type="regex">
+            <from>^/public/site_map/*$</from>
+            <to>/sitemap/siteMapListAction!getAllMapList.do</to>
+    </rule>
+
+    <!-- 网站地图之更多景点门票 -->
+    <rule match-type="regex">
+            <from>^/public/site_map/menpiao_([0-9]+)/*$</from>
+            <to>/sitemap/siteMapListAction!getMorePlaceTicket.do?currentPageString=$1</to>
+    </rule>
+
+    <!-- 网站地图之更多国内旅游-->
+    <rule match-type="regex">
+            <from>^/public/site_map/guonei_([0-9]+)/*$</from>
+            <to>/sitemap/siteMapListAction!getMoreGny.do?currentPage=$1</to>
+    </rule>
+
+    <!-- 网站地图之更多出境游-->
+    <rule match-type="regex">
+            <from>^/public/site_map/chujing_([0-9]+)/*$</from>
+            <to>/sitemap/siteMapListAction!getMoreCjy.do?currentPage=$1</to>
+    </rule>
+
+    <!-- 网站地图之更多景点点评-->
+    <rule match-type="regex">
+            <from>^/public/site_map/dianping_([0-9]+)/*$</from>
+            <to>/sitemap/siteMapListAction!getMoreComment.do?currentPage=$1</to>
+    </rule>
+
+    <!-- 网站地图之更多国内攻略-->
+    <rule match-type="regex">
+            <from>^/public/site_map/guoneigonglue_([0-9]+)/*$</from>
+            <to>/sitemap/siteMapListAction!getMoreGnGuide.do?currentPage=$1</to>
+    </rule>
+
+    <!-- 网站地图之更多出境攻略-->
+    <rule match-type="regex">                                                                                 
+            <from>^/public/site_map/chujinggonglue_([0-9]+)/*$</from>                                         
+            <to>/sitemap/siteMapListAction!getMoreCjGuide.do?currentPage=$1</to>                              
+    </rule>                                     
+    <!-- 网站地图之更多自由行-->                                                                              
+    <rule match-type="regex">                                                                                 
+            <from>^/public/site_map/ziyouxing_([0-9]+)/*$</from>                                              
+            <to>/sitemap/siteMapListAction!getMoreFreeTour.do?currentPage=$1</to>                             
+    </rule>                                                                                                   
+                                                                                                              
+    <!-- 网站地图之更多旅游指南 -->                                                                           
+    <rule match-type="regex">                                                                                 
+            <from>^/public/site_map/lvyouzhinan_([0-9]+)/*$</from>                                            
+            <to>/sitemap/siteMapListAction!getMorePlacePlace.do?currentPage=$1</to>                           
+    </rule>                                                                                                   
+                                                                                                              
+    <!-- 网站地图之更多景点指南-->                                                                            
+    <rule match-type="regex">                                                                                 
+            <from>^/public/site_map/jingdianzhinan_([0-9]+)/*$</from>                                         
+            <to>/sitemap/siteMapListAction!getMorePlaceGuide.do?currentPage=$1</to>                           
+    </rule>                                                                                                   
+                                                                                                              
+    <!-- 网站地图之更多特色酒店-->                                                                            
+    <rule match-type="regex">                                                                                 
+            <from>^/public/site_map/jiudian_([0-9]+)/*$</from>                                                
+            <to>/sitemap/siteMapListAction!getMoreHotel.do?currentPage=$1</to>                                
+    </rule>
+</urlrewrite>

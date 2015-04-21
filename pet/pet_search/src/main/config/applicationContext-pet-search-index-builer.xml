@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans default-autowire="byName">
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	      <property name="locations">
+	          <list>
+	            <value>classpath:jdbc.properties</value>
+	          	<value>classpath:jms.properties</value>
+			  </list>
+		  </property>
+	</bean>
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName"><value>${jdbc.driverClassName}</value></property>
+		<property name="url"><value>${jdbc.url}</value></property>
+		<property name="username"><value>${jdbc.username}</value></property>
+		<property name="password"><value>${jdbc.password}</value></property>
+	</bean>
+	<bean id="dataSourcever" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName"><value>${jdbc.driverClassName}</value></property>
+		<property name="url"><value>${jdbc.urlver}</value></property>
+		<property name="username"><value>${jdbc.usernamever}</value></property>
+		<property name="password"><value>${jdbc.passwordver}</value></property>
+	</bean>
+
+	<!-- SqlMap setup for iBATIS Database Layer -->
+    <bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+        <property name="configLocation">
+            <value>classpath:sqlmap-config.xml</value>
+        </property>
+        <property name="mappingLocations"> 
+			<value>classpath*:/com/lvmama/search/lucene/dao/*.xml</value>
+		</property>
+    </bean>
+    
+     <bean id="sqlMapClientver" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+        <property name="configLocation">
+            <value>classpath:sqlmap-config.xml</value>
+        </property>
+        <property name="mappingLocations"> 
+			<value>classpath*:/com/lvmama/search/lucene/dao/*.xml</value>
+		</property>
+    </bean>
+	<bean id="indexDao" class="com.lvmama.search.lucene.dao.IndexDAO">
+<!-- 		 <property name="dataSource" ref="dataSource" />  -->
+    	<property name="sqlMapClient" ref="sqlMapClient"  />
+	</bean>
+	<bean id="indexVerDAO" class="com.lvmama.search.lucene.dao.IndexVerDAO">
+<!-- 		 <property name="dataSource" ref="dataSourcever" />  -->
+    	<property name="sqlMapClient" ref="sqlMapClientver"  />
+	</bean>
+	<bean id="placeIndexService" class="com.lvmama.search.lucene.service.index.PlaceIndexServiceImpl"></bean>
+	<bean id="placeHotelIndexService" class="com.lvmama.search.lucene.service.index.PlaceHotelIndexServiceImpl"></bean>
+	<bean id="productIndexService" class="com.lvmama.search.lucene.service.index.ProductIndexServiceImpl" ></bean>
+	<bean id="productBranchIndexService" class="com.lvmama.search.lucene.service.index.ProductBranchIndexServiceImpl"></bean>
+	<bean id="verHotelIndexService" class="com.lvmama.search.lucene.service.index.VerHotelIndexServiceImpl"></bean>
+	<bean id="verPlaceIndexService" class="com.lvmama.search.lucene.service.index.VerPlaceIndexServiceImpl"></bean>
+	<import resource="classpath*:applicationContext-lvmama-comm-jms.xml" />
+	
+	<bean id="indexManager" class="com.lvmama.search.lucene.index.IndexManager">
+	</bean>
+</beans>

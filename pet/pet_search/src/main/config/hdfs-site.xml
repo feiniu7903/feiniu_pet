@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+        <property>
+		<name>dfs.replication</name>
+		<value>2</value>
+	</property>
+	<property>
+		<name>dfs.data.dir</name>
+		<value>/home/hadoop/data/dfs/dn</value>
+	</property>
+	<property>
+		<name>dfs.name.dir</name>
+		<value>/home/hadoop/data/dfs/nn</value>
+	</property>
+	<property>
+		<name>hadoop.tmp.dir</name>
+		<value>/home/hadoop/data/dfs/tmp</value>
+	</property>
+	<property>
+		<name>dfs.blance.bandwidthPerSec</name>
+		<value>10485760</value>
+	</property>
+	<property>
+		<name>dfs.hosts.exclude</name>
+		<value>/home/hadoop/data/dfs/hdconf/exclued</value>
+	</property>
+
+	<property>
+		<name>dfs.block.access.token.enable</name>
+		<value>true</value>
+	</property>
+
+	<property>
+		<name>dfs.permissions</name>
+		<value>false</value>
+	</property>
+
+	<property>
+	        <name>dfs.support.append</name>
+	        <value>ture</value>                     
+	</property>
+</configuration>

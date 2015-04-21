@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<!--
+
+    Configuration file for UrlRewriteFilter
+    http://www.tuckey.org/urlrewrite/
+
+-->
+<urlrewrite decode-using="header" use-query-string="true">
+    <rule match-type="regex">
+            <from>^/train/(.*)\.html$</from>
+            <to>/train/search.do?params=$1</to>
+    </rule>
+    <rule match-type="regex">
+            <from>^/train/(.*)\.html\?date=(.*?)&amp;line=(.*)$</from>
+            <to>/train/search.do?params=$1_$2_$3</to>
+    </rule>
+    <rule match-type="regex">
+            <from>^/train/(.*)\.html\?date=(.*)$</from>
+            <to>/train/search.do?params=$1_$2</to>
+    </rule>
+    
+    <rule match-type="regex"> 
+		<from>^/((?:(?!\.do).)+)(\?(.*))+$</from> 
+		<to type="redirect">/$1</to> 
+	</rule> 
+    
+	<rule match-type="regex">
+		<from>^/placeSearch/(.*)</from>
+		<to>/placeSearch.do?keyword=$1</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/prod/ziyouxing$</from>
+		<to>/placeSearch!freenessIndex.do?blockId=6704</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/prod/ziyouxing_(\d)_(.*)_(.*)$</from>
+		<to>/productSearch!freenessIndex02.do?isTicket=$1&amp;toDest=$2&amp;tag=$3#$3</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/prod/ziyouxing_(\d)_(.*)$</from>
+		<to>/productSearch!freenessIndex02.do?isTicket=$1&amp;toDest=$2#$2</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/prod/ziyouxing_(\d)_(.*)_(.*)_(.*)$</from>
+		<to>/productSearch!freenessIndex02.do?isTicket=$1&amp;toDest=$2&amp;sellPrice=$3&amp;pageTitle=$4#$4</to>
+	</rule>
+	
+	<!-- 门票搜索 -->
+	<rule match-type="regex">
+		<from>^/ticket-kw-([^-]*)\.html$</from>
+		<to type="redirect">http://www.lvmama.com/search/ticket/%E4%B8%8A%E6%B5%B7-$1\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/ticket-kw-([^-]*)-subject-([^-]*)-([0-9]+)\.html$</from>
+		<to type="redirect">http://www.lvmama.com/search/ticket/%E4%B8%8A%E6%B5%B7-$1-C$2P$3\.html</to>
+		<!-- <to>/ticketSearch!ticketSearch.do?keyword=$1&amp;subject=$2&amp;page=$3</to> -->
+	</rule>
+	<rule match-type="regex">
+		<from>^/ticket-subject-([^-]*)\.html$</from>
+		<!--<to>/ticketSearch!ticketSearch.do?subject=$1</to> -->
+		<to type="redirect">http://www.lvmama.com/search/ticket/%E4%B8%8A%E6%B5%B7-$1-C$1\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/ticket-tag-([%a-zA-Z0-9\u4E00-\u9FA5]*)\.html$</from>
+		<!--<to>/ticketSearch!ticketSearch.do?tag=$1</to> -->
+		<to type="redirect">http://www.lvmama.com/search/ticket/%E4%B8%8A%E6%B5%B7-$1\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/ticket-kw--city-([^-]*)-subject-([^-]*)-tag-([^-]*)-fromPage-([a-z]*)-([0-9]+)\.html$</from>
+		<!--<to>/ticketSearch!ticketSearch.do?keyword=$1&amp;city=$2&amp;subject=$3&amp;tag=$4&amp;fromPage=$5&amp;page=$6</to>-->
+		<to type="redirect">http://www.lvmama.com/search/ticket/%E4%B8%8A%E6%B5%B7-$3-A$1C$2P$5\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/ticket-kw-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-fromPage-([a-z]*)-([0-9]+)\.html$</from>
+		<!--<to>/ticketSearch!ticketSearch.do?keyword=$1&amp;city=$2&amp;subject=$3&amp;tag=$4&amp;fromPage=$5&amp;page=$6</to>-->
+		<to type="redirect">http://www.lvmama.com/search/ticket/%E4%B8%8A%E6%B5%B7-$1-A$2C$3T$4P$6\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/ticket-kw-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-fromPage-([a-z]*)-up-([0-9]+)\.html$</from>
+		<!--<to>/ticketSearch!ticketSearch.do?keyword=$1&amp;city=$2&amp;subject=$3&amp;tag=$4&amp;fromPage=$5&amp;sortPrice=priceUp&amp;page=$6</to>-->
+		<to type="redirect">http://www.lvmama.com/search/ticket/%E4%B8%8A%E6%B5%B7-$1-A$2C$3S3T$4P$6\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/ticket-kw-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-fromPage-([a-z]*)-dn-([0-9]+)\.html$</from>
+		<!--<to>/ticketSearch!ticketSearch.do?keyword=$1&amp;city=$2&amp;subject=$3&amp;tag=$4&amp;fromPage=$5&amp;sortPrice=priceDown&amp;page=$6</to>-->
+		<to type="redirect">http://www.lvmama.com/search/ticket/%E4%B8%8A%E6%B5%B7-$1-A$2C$3S2T$4P$6\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/ticket-kw-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-fromPage-([a-z]*)-avg-([0-9]+)\.html$</from>
+		<!--<to>/ticketSearch!ticketSearch.do?keyword=$1&amp;city=$2&amp;subject=$3&amp;tag=$4&amp;fromPage=$5&amp;avgScore=avgScoreDown&amp;page=$6</to>-->
+		<to type="redirect">http://www.lvmama.com/search/ticket/%E4%B8%8A%E6%B5%B7-$1-A$2C$3S4T$4P$6\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/ticket-kw-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-fromPage-([a-z]*)-cmt-([0-9]+)\.html$</from>
+		<!--<to>/ticketSearch!ticketSearch.do?keyword=$1&amp;city=$2&amp;subject=$3&amp;tag=$4&amp;fromPage=$5&amp;cmtNum=cmtNumDown&amp;page=$6</to>-->
+		<to type="redirect">http://www.lvmama.com/search/ticket/%E4%B8%8A%E6%B5%B7-$1-A$2C$3S6T$4P$6\.html</to>
+	</rule>
+	
+
+	<!-- 自由自在搜索 -->
+	<rule match-type="regex">
+		<from>^/freetour-to-([^-]*)\.html$</from>
+		<!--<to>/freetourSearch!freetourSearch.do?toDest=$1&amp;routeType=freeness</to> -->
+		<to type="redirect">http://www.lvmama.com/search/freetour/%E4%B8%8A%E6%B5%B7-$1\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/freetour-to-([^-]*)-subject-([^-]*)-([0-9]+)\.html$</from>
+		<!--<to>/freetourSearch!freetourSearch.do?toDest=$1&amp;subject=$2&amp;page=$3&amp;routeType=freeness</to>-->
+		<to type="redirect">http://www.lvmama.com/search/freetour/%E4%B8%8A%E6%B5%B7-$1-C$2P$3\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/freetour-tag-([^-]*)\.html$</from>
+		<!--<to>/freetourSearch!freetourSearch.do?tag=$1&amp;routeType=freeness</to>-->
+		<to type="redirect">http://www.lvmama.com/search/freetour/%E4%B8%8A%E6%B5%B7-$1\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/freetour-subject-([^-]*)\.html$</from>
+		<!--<to>/freetourSearch!freetourSearch.do?subject=$1&amp;routeType=freeness</to>-->
+		<to type="redirect">http://www.lvmama.com/search/freetour/%E4%B8%8A%E6%B5%B7-$1\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/freetour-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([0-9]*)-ty-([^-]*)-([^-]*)-([0-9]+)\.html$</from>
+		<!--<to>/freetourSearch!freetourSearch.do?toDest=$1&amp;city=$2&amp;subject=$3&amp;tag=$4&amp;visitDay=$5,$5&amp;productRouteTypeName=$6&amp;sortPrice=$7&amp;page=$8&amp;routeType=freeness</to>-->
+		<to type="redirect">http://www.lvmama.com/search/freetour/%E4%B8%8A%E6%B5%B7-$1-A$2C$3I$5T$4P$8\.html</to>
+	</rule>
+	
+	
+	<rule match-type="regex">
+	<from>^/freetour-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([0-9]+)-ty-([^-]*)-([0-9]+)\.html$</from>
+		<!--<to>/freetourSearch!freetourSearch.do?toDest=$1&amp;city=$2&amp;subject=$3&amp;tag=$4&amp;sortPrice=&amp;visitDay=$5,$5&amp;productRouteTypeName=$6&amp;page=$7&amp;routeType=freeness</to>-->
+		<to type="redirect">http://www.lvmama.com/search/freetour/%E4%B8%8A%E6%B5%B7-$1-A$2C$3I$5T$4P$7\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/freetour-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([0-9]+)-ty-([^-]*)-up-([0-9]+)\.html$</from>
+		<!--<to>/freetourSearch!freetourSearch.do?toDest=$1&amp;city=$2&amp;subject=$3&amp;tag=$4&amp;sortPrice=priceUp&amp;visitDay=$5,$5&amp;productRouteTypeName=$6&amp;page=$7&amp;routeType=freeness</to>-->
+		<to type="redirect">http://www.lvmama.com/search/freetour/%E4%B8%8A%E6%B5%B7-$1-A$2C$3I$5S3T$4P$7\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/freetour-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([0-9]+)-ty-([^-]*)-dn-([0-9]+)\.html$</from>
+		<!--<to>/freetourSearch!freetourSearch.do?toDest=$1&amp;city=$2&amp;subject=$3&amp;tag=$4&amp;sortPrice=priceDown&amp;visitDay=$5,$5&amp;productRouteTypeName=$6&amp;page=$7&amp;routeType=freeness</to>-->
+		<to type="redirect">http://www.lvmama.com/search/freetour/%E4%B8%8A%E6%B5%B7-$1-A$2C$3S2T$4P$7\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/freetour-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day--ty-([^-]*)-([0-9]+)\.html$</from>
+		<!--<to>/freetourSearch!freetourSearch.do?toDest=$1&amp;city=$2&amp;subject=$3&amp;tag=$4&amp;sortPrice=&amp;productRouteTypeName=$5&amp;page=$6&amp;routeType=freeness</to>-->
+		<to type="redirect">http://www.lvmama.com/search/freetour/%E4%B8%8A%E6%B5%B7-$1-A$2C$3T$4P$6\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/freetour-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day--ty-([^-]*)-up-([0-9]+)\.html$</from>
+		<!--<to>/freetourSearch!freetourSearch.do?toDest=$1&amp;city=$2&amp;subject=$3&amp;tag=$4&amp;sortPrice=priceUp&amp;productRouteTypeName=$5&amp;page=$6&amp;routeType=freeness</to>-->
+		<to type="redirect">http://www.lvmama.com/search/freetour/%E4%B8%8A%E6%B5%B7-$1-A$2C$3S3T$4P$6\.html</to>
+	</rule>
+	
+	<!--二次搜索  -->
+	<rule match-type="regex">
+		<from>^/freetour-to-([^-]*)-keyword2-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([0-9]*)-ty-([^-]*)-([^-]*)-([0-9]+)\.html$</from>
+		<!--<to>/freetourSearch!freetourSearch.do?toDest=$1&amp;keyword2=$2&amp;city=$3&amp;subject=$4&amp;tag=$5&amp;visitDay=$6,$6&amp;productRouteTypeName=$7&amp;sortPrice=$8&amp;page2=$9&amp;routeType=freeness</to>-->
+		<to type="redirect">http://www.lvmama.com/search/freetour/%E4%B8%8A%E6%B5%B7-$1-A$3C$4I$6S3T$5P$9Q$2\.html</to>
+	</rule>
+	
+	 <rule match-type="regex">
+		<from>^/freetour-to-([^-]*)-city-([^-]*)-place-([^-]*)-subject-([^-]*)-tag-([^-]*)-m-([^-]*)-hotel-([^-]*)-brand-([^-]*-p-[^-]*-[^-]*)-keywords-([^-]*-[^-]*-[^-]*)\.html$</from>
+		<!--<to>/freetourSearch!freetourSearch.do?toDest=$1&amp;city=$2&amp;scenicPlace=$3&amp;subject=$4&amp;tag=$5&amp;playNum=$6&amp;hotelType=$7&amp;param1=$8&amp;param2=$9&amp;routeType=freeness</to>-->
+		<to type="redirect">http://www.lvmama.com/search/freetour/%E4%B8%8A%E6%B5%B7-$1-A$2C$4D$3J$7M$6T$5\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/abroad-from-([^-]*)-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([0-9]*)-ty-([^-]*)-([a-z]*)-line-([^-]*)-traffic-([^-]*)-feature-([^-]*)-hType-([^-]*)-hLc-([^-]*)-brand-([^-]*)-num-([^-]*)-p-([0-9]*)-([0-9]*)-scenic-([^-]*)-keyword2-([^-]*)-group-([0-9]+)\.html$</from>
+		<!--<to>/abroadSearch!abroadSearch.do?param1=$1&amp;visitDay=$2,$2&amp;productRouteTypeName=$3&amp;sortPrice=$4&amp;param2=$5&amp;scenicPlace=$6&amp;keyword2=$7&amp;routeType=$8&amp;page=$9</to>-->
+		<to type="redirect">http://www.lvmama.com/search/group/$1-$2-A$3C$4HI$6GL$9\.html</to>
+	 </rule>
+     <rule match-type="regex">
+     	<from>^/abroad-from-([^-]*)-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([0-9]*)-ty-([^-]*)-([a-z]*)-line-([^-]*)-traffic-([^-]*)-feature-([^-]*)-hType-([^-]*)-hLc-([^-]*)-brand-([^-]*)-num-([^-]*)-p-([0-9]*)-([0-9]*)-scenic-([^-]*)-keyword2-([^-]*)-([a-z]+)-([0-9]+)\.html$</from>
+		<!--<to>/abroadSearch!abroadSearch.do?param1=$1&amp;visitDay=$2,$2&amp;productRouteTypeName=$3&amp;sortPrice=$4&amp;param2=$5&amp;scenicPlace=$6&amp;keyword2=$7&amp;routeType=$8&amp;page=$9</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/$1-$2-A$3C$4I$6T$5\.html</to>
+	 </rule>
+
+	<rule match-type="regex">
+		<from>^/around-from-([^-]*)-to--city--subject-([^-]*)-tag--day--ty--route-1.html$</from>
+		<!--<to>/aroundSearch!aroundSearch.do?fromDest=$1&amp;toDest=$2&amp;city=$3&amp;scenicPlace=$4&amp;subject=$5&amp;tag=$6&amp;visitDay=$7,$7&amp;param1=$8&amp;param2=$9</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/$1-$2\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/around-from-([^-]*)-to-([^-]*)-city-([^-]*)-place-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([^-]*)-type-([^-]*-num-[^-]*-hotel-[^-]*-brand-[^-]*-p-[^-]*-[^-]*)-keywords-([^-]*-[^-]*-group-[^-]*)\.html$</from>
+		<!--<to>/aroundSearch!aroundSearch.do?fromDest=$1&amp;toDest=$2&amp;city=$3&amp;scenicPlace=$4&amp;subject=$5&amp;tag=$6&amp;visitDay=$7,$7&amp;param1=$8&amp;param2=$9</to>-->
+		<to type="redirect">http://www.lvmama.com/search/group/$1-$2-A$3C$5D$4I$7T$6\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/around-from-([^-]*)-to-([^-]*)-city-([^-]*)-place-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([^-]*)-type-([^-]*-num-[^-]*-hotel-[^-]*-brand-[^-]*-p-[^-]*-[^-]*)-keywords-([^-]*-[^-]*-[^-]*-[^-]*)\.html$</from>
+		<!--<to>/aroundSearch!aroundSearch.do?fromDest=$1&amp;toDest=$2&amp;city=$3&amp;scenicPlace=$4&amp;subject=$5&amp;tag=$6&amp;visitDay=$7,$7&amp;param1=$8&amp;param2=$9</to>-->
+		<to type="redirect">http://www.lvmama.com/search/around/$1-$2-A$3C$5D$4I$7T$6\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/destroute-from-([^-]*)-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([0-9]*)-ty-([^-]*)-([a-z]*)-line-([^-]*-traffic-[^-]*-feature-[^-]*-hType-[^-]*-hLc-[^-]*-brand-[^-]*-num-[^-]*-p-[0-9]*-[0-9]*)-scenic-([^-]*)-keyword2-([^-]*)-([a-z]+)-([0-9]+)\.html$</from>
+		<!--<to>/destrouteSearch!destrouteSearch.do?param1=$1&amp;visitDay=$2,$2&amp;productRouteTypeName=$3&amp;sortPrice=$4&amp;param2=$5&amp;scenicPlace=$6&amp;keyword2=$7&amp;routeType=$8&amp;page=$9</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/$1-$2-A$3C$4I$6T$5\.html</to>
+	</rule>
+		
+	<!-- 周边游-国内游-出境游- 搜索 -->
+	<rule match-type="regex">
+		<from>^/([a-z]+)-from-([^-]*)-to-([^-]*)-([a-z]+)\.html$</from>
+		<!--<to>/$1Search!$1Search.do?fromDest=$2&amp;toDest=$3&amp;routeType=$4</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/$2-$3\.html</to>
+	</rule>
+	<!-- kaishi -->
+	<rule match-type="regex">
+		<from>^/([a-z]+)-tag-([^-]*)-([a-z]+)\.html$</from>
+		<!--<to>/$1Search!$1Search.do?tag=$2&amp;routeType=$3</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/%E4%B8%8A%E6%B5%B7-$2-T$2\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/([a-z]+)-subject-([^-]*)-([a-z]+)\.html$</from>
+		<!--<to>/$1Search!$1Search.do?subject=$2&amp;routeType=$3</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/%E4%B8%8A%E6%B5%B7-$2-C$2\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/([a-z]+)-from-([^-]*)-to-([^-]*)-subject-([^-]*)-([a-z]+)-([0-9]+)\.html$</from>
+		<!--<to>/$1Search!$1Search.do?fromDest=$2&amp;toDest=$3&amp;subject=$4&amp;routeType=$5</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/$2-$3-C$4\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/([a-z]+)-from-([^-]*)-to-([^-]*)-subject-([^-]*)-([a-z]+)-([0-9]+)\.html$</from>
+		<!--<to>/$1Search!$1Search.do?fromDest=$2&amp;toDest=$3&amp;subject=$4&amp;routeType=$5&amp;page=$6</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/$2-$3-C$4P$6\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/([a-z]+)-from-([^-]*)-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([0-9]+)-ty-([^-]*)-([a-z]+)-([0-9]+)\.html$</from>
+		<!--<to>/$1Search!$1Search.do?fromDest=$2&amp;toDest=$3&amp;city=$4&amp;subject=$5&amp;tag=$6&amp;visitDay=$7,$7&amp;productRouteTypeName=$8&amp;routeType=$9&amp;page=$10</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/$2-$3-A$4C$5I$7T$6P$10\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/([a-z]+)-from-([^-]*)-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([0-9]+)-ty-([^-]*)-([a-z]+)-up-([0-9]+)\.html$</from>
+		<!--<to>/$1Search!$1Search.do?fromDest=$2&amp;toDest=$3&amp;city=$4&amp;subject=$5&amp;tag=$6&amp;sortPrice=priceUp&amp;visitDay=$7,$7&amp;productRouteTypeName=$8&amp;routeType=$9&amp;page=$10</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/$2-$3-A$4C$5I$7S3T$6P$10\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/([a-z]+)-from-([^-]*)-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([0-9]+)-ty-([^-]*)-([a-z]+)-dn-([0-9]+)\.html$</from>
+		<!--<to>/$1Search!$1Search.do?fromDest=$2&amp;toDest=$3&amp;city=$4&amp;subject=$5&amp;tag=$6&amp;sortPrice=priceDown&amp;visitDay=$7,$7&amp;productRouteTypeName=$8&amp;routeType=$9&amp;page=$10</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/$2-$3-A$4C$5I$7S2T$6P$10\.html</to>
+	</rule>
+	
+	
+	<rule match-type="regex">
+		<from>^/([a-z]+)-from-([^-]*)-to-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day--ty-([^-]*)-([a-z]+)-([0-9]+)\.html$</from>
+		<!--<to>/$1Search!$1Search.do?fromDest=$2&amp;toDest=$3&amp;city=$4&amp;subject=$5&amp;tag=$6&amp;productRouteTypeName=$7&amp;routeType=$8&amp;page=$9</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/$2-$3-A$4C$5T$6P$9\.html</to>
+	</rule>
+	
+	
+	<!--二次搜索  -->
+	<rule match-type="regex">
+		<from>^/([a-z]+)-from-([^-]*)-to-([^-]*)-keyword2-([^-]*)-city-([^-]*)-subject-([^-]*)-tag-([^-]*)-day-([0-9]*)-ty-([^-]*)-([a-z]+)-([^-]*)-([0-9]+)\.html$</from>
+		<!--<to>/$1Search!$1Search.do?fromDest=$2&amp;toDest=$3&amp;keyword2=$4&amp;city=$5&amp;subject=$6&amp;tag=$7&amp;visitDay=$8,$8&amp;productRouteTypeName=$9&amp;routeType=$10&amp;sortPrice=$11&amp;page2=$12</to>-->
+		<to type="redirect">http://www.lvmama.com/search/route/$2-$3-A$5C$6I$8T$7Q$4\.html</to>
+	</rule>
+
+	<!-- 特色酒店搜索 -->
+	<rule match-type="regex">
+		<from>^/hotel-cityid-([^-]*)-spot-([^-]*)-name-([^-]*)-price-([^-]*)-page-([0-9]+)\.html$</from>
+		<!--<to>/hotelSearch!hotelSearch.do?cityId=$1&amp;spot=$2&amp;name=$3&amp;price=$4&amp;page=$5</to>-->
+		<to type="redirect">http://www.lvmama.com/search/hotel/$1-$3\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/hotel-cityid-([^-]*)-spot-([^-]*)-name-([^-]*)-price-([^-]*)-type-([A-Za-z]*)-star-([0-9]*)-devices-([A-Za-z]*)-sort-([A-Za-z]*-page-[0-9]+)\.html$</from>
+		<!--<to>/hotelSearch!hotelSearch.do?cityId=$1&amp;spot=$2&amp;name=$3&amp;price=$4&amp;type=$5&amp;star=$6&amp;devices=$7&amp;param1=$8</to>-->
+		<to type="redirect">http://www.lvmama.com/search/hotel/$1-$3\.html</to>
+	</rule>
+		<!-- 带酒店详细/简约参数 -->
+	<rule match-type="regex">
+		<from>^/hotel-cityid-([^-]*)-spot-([^-]*)-name-([^-]*)-price-([^-]*)-type-([A-Za-z]*)-star-([0-9]*)-devices-([A-Za-z]*)-sort-([A-Za-z]*-show-[A-Za-z]*-page-[0-9]+)\.html$</from>
+		<!--<to>/hotelSearch!hotelSearch.do?cityId=$1&amp;spot=$2&amp;name=$3&amp;price=$4&amp;type=$5&amp;star=$6&amp;devices=$7&amp;param2=$8</to>-->
+		<to type="redirect">http://www.lvmama.com/search/hotel/$1-$3\.html</to>
+	</rule>
+	
+   <rule match-type="regex">
+		<from>^/hotel-city-([^-]*)\.html$</from>
+		<!--<to>/placeSearch!hotelSearch.do?city=$1&amp;doorStyle=display:block;</to>-->
+		<to type="redirect">http://www.lvmama.com/search/hotel/$1-$1\.html</to>
+	</rule>
+   <rule match-type="regex">
+		<from>^/hotel-city-([^-]*)-place-([^-]*)-kw-([^-]*)-price-([0-9]+)-([0-9]+)-levels-([^-]*)-stage-([0-9]+)-([0-9]*)\.html$</from>
+		<!--<to>/placeSearch!hotelSearch.do?city=$1&amp;roundPlaceName=$2&amp;keyword=$3&amp;priceRange=$4,$5&amp;hotelLevels=$6&amp;stage=$7&amp;page=$8&amp;doorStyle=display:block;</to>-->
+		<to type="redirect">http://www.lvmama.com/search/hotel/$1-$3\.html</to>
+	</rule>
+	
+	 <rule match-type="regex">
+		<from>^/hotel-city-([^-]*)-place-([^-]*)-kw-([^-]*)-price-([0-9]+)-([0-9]+)-levels-([^-]*)-stage-([0-9]+)-p1-([0-9]*)\.html$</from>
+		<!--<to>/placeSearch!hotelSearch.do?city=$1&amp;roundPlaceName=$2&amp;keyword=$3&amp;priceRange=$4,$5&amp;hotelLevels=$6&amp;stage=$7&amp;minAmtSeq=false&amp;page=$8&amp;doorStyle=display:block;</to>-->
+		<to type="redirect">http://www.lvmama.com/search/hotel/$1-$3\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/hotel-city-([^-]*)-place-([^-]*)-kw-([^-]*)-price-([0-9]+)-([0-9]+)-levels-([^-]*)-stage-([0-9]+)-p2-([0-9]*)\.html$</from>
+		<!--<to>/placeSearch!hotelSearch.do?city=$1&amp;roundPlaceName=$2&amp;keyword=$3&amp;priceRange=$4,$5&amp;hotelLevels=$6&amp;stage=$7&amp;minAmtSeq=true&amp;page=$8&amp;doorStyle=display:block;</to>-->
+		<to type="redirect">http://www.lvmama.com/search/hotel/$1-$3\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/hotel-city-([^-]*)-place-([^-]*)-kw-([^-]*)-price-([0-9]+)-([0-9]+)-levels-([^-]*)-stage-([0-9]+)-l1-([0-9]*)\.html$</from>
+		<!--<to>/placeSearch!hotelSearch.do?city=$1&amp;roundPlaceName=$2&amp;keyword=$3&amp;priceRange=$4,$5&amp;hotelLevels=$6&amp;stage=$7&amp;hotelStarSeq=false&amp;page=$8&amp;doorStyle=display:block;</to>-->
+		<to type="redirect">http://www.lvmama.com/search/hotel/$1-$3\.html</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/hotel-city-([^-]*)-place-([^-]*)-kw-([^-]*)-price-([0-9]+)-([0-9]+)-levels-([^-]*)-stage-([0-9]+)-l2-([0-9]*)\.html$</from>
+		<!--<to>/placeSearch!hotelSearch.do?city=$1&amp;roundPlaceName=$2&amp;keyword=$3&amp;priceRange=$4,$5&amp;hotelLevels=$6&amp;stage=$7&amp;hotelStarSeq=true&amp;page=$8&amp;doorStyle=display:block;</to>-->
+		<to type="redirect">http://www.lvmama.com/search/hotel/$1-$3\.html</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/ticket/(.*)\.html$</from>
+		<to>/ticket/search.do?type=ticket&amp;params=${replace:$1:&amp;:%26}</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/hotel/simple/(.*)\.html$</from>
+		<to>/hotel/search.do?display=simple&amp;type=hotel&amp;params=${replace:$1:&amp;:%26}</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/hotel/(.*)\.html$</from>
+		<to>/hotel/search.do?type=hotel&amp;params=${replace:$1:&amp;:%26}</to>
+	</rule>
+	
+	<rule match-type="regex"> 
+	<from>^/vsthotel/(.*)\.html$</from> 
+	<to>/vsthotel/productList.do?type=hotel&amp;params=${replace:$1:&amp;:%26}</to> 
+	</rule>
+	
+	<rule match-type="regex"> 
+	<from>^/vsthotel/(.*)\.html$</from> 
+	<to>/vsthotel/productBranchList.do?type=hotel&amp;params=${replace:$1:&amp;:%26}</to> 
+	</rule>
+	
+	<rule match-type="regex"> 
+	<from>^/vsthotel/(.*)\.html$</from> 
+	<to>/vsthotel/branchGoodsList.do?type=hotel&amp;params=${replace:$1:&amp;:%26}</to> 
+	</rule>
+	
+	<rule match-type="regex"> 
+	<from>^/vsthotel/(.*)\.html$</from> 
+	<to>/vsthotel/minMeanPrice.do?type=hotel&amp;params=${replace:$1:&amp;:%26}</to> 
+	</rule>
+	
+	
+	<rule match-type="regex">
+		<from>^/verhotel/(.*)\.html$</from>
+		<to>/verhotel/search.do?type=verhotel&amp;params=${replace:$1:&amp;:%26}</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/hotel\.html$</from>
+		<to>/hotel/search.do?type=hotel</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/freetour/(.*)\.html$</from>
+		<to>/freetour/search.do?type=freetour&amp;params=${replace:$1:&amp;:%26}</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/freelong/(.*)\.html$</from>
+		<to>/freelong/search.do?type=freelong&amp;params=${replace:$1:&amp;:%26}</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/group/(.*)\.html$</from>
+		<to>/group/search.do?type=group&amp;params=${replace:$1:&amp;:%26}</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/route/(.*)\.html$</from>
+		<to>/route/search.do?type=route&amp;params=${replace:$1:&amp;:%26}</to>
+	</rule>
+	
+	
+	<rule match-type="regex">
+		<from>^/around/(.*)\.html$</from>
+		<to>/around/search.do?type=around&amp;params=${replace:$1:&amp;:%26}</to>
+	</rule>
+	<!-- 新搜索OneSearch 直接搜索 -->	
+	<rule match-type="regex">
+		<from>^/([^-]*)/(.*)\.html$</from>
+		<to>/oneSearch.do?fromDest=$1&amp;keyword=${replace:$2:&amp;:%26}&amp;entry=direct</to>
+	</rule>
+	<!-- 新搜索OneSearch  补全搜索-->
+	<rule match-type="regex">
+		<from>^/([^-]*)-([^-]*)-([^-]*)-([^-]*)-([^-]*)\.html$</from>
+		<to >/oneSearch.do?fromChannel=$1&amp;fromDest=$2&amp;fromDestId=$3&amp;newChannel=$4&amp;keyword=${replace:$5:&amp;:%26}}&amp;entry=complete</to>
+	</rule>
+	<!-- 新搜索OneSearch  沉底搜索-->
+	<rule match-type="regex">
+		<from>^/([^-]*)-([^-]*)-([^-]*)-([^-]*)-([^-]*)-\.html$</from>
+		<to >/oneSearch.do?fromChannel=$1&amp;fromDest=$2&amp;fromDestId=$3&amp;newChannel=$4&amp;keyword=${replace:$5:&amp;:%26}}&amp;entry=bottom</to>
+	</rule>
+	
+	<!-- ver酒店搜索seo,伪地址化-->
+	
+	<!-- <rule match-type="regex">
+		<from>^/verhotel/(.*)\.html$</from>
+		<to>/verhotel/search.do?type=verhotel&amp;params=${replace:$1:&amp;:%26}</to>
+	</rule> -->
+	
+	<rule match-type="regex">
+		<from>^/verhotel/([a-zA-Z0-9]*)/$</from>
+		<to>/verhotel/search.do?src=seo&amp;type=verhotel&amp;params=$1</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/verhotel/([a-zA-Z0-9]*)/place([a-zA-Z0-9]*)/$</from>
+		<to>/verhotel/search.do?src=seo&amp;type=verhotel&amp;params=$1&amp;landMark=$2</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/verhotel/([a-zA-Z0-9]*)/brand([a-zA-Z0-9]*)/$</from>
+		<to>/verhotel/search.do?src=seo&amp;type=verhotel&amp;params=$1&amp;hotelBrand=$2</to>
+	</rule>	
+		<rule match-type="regex">
+		<from>^/verhotel/([a-zA-Z0-9]*)/star([a-zA-Z0-9]*)/$</from>
+		<to>/verhotel/search.do?src=seo&amp;type=verhotel&amp;params=$1&amp;hotel_star=$2</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/verhotel/([a-zA-Z0-9]*)/place([a-zA-Z0-9]*)/star([a-zA-Z0-9]*)/$</from>
+		<to>/verhotel/search.do?src=seo&amp;type=verhotel&amp;params=$1&amp;landMark=$2&amp;hotel_star=$3</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/verhotel/([a-zA-Z0-9]*)/place([a-zA-Z0-9]*)/brand([a-zA-Z0-9]*)/$</from>
+		<to>/verhotel/search.do?src=seo&amp;type=verhotel&amp;params=$1&amp;landMark=$2&amp;hotelBrand=$3</to>
+	</rule>	
+</urlrewrite>

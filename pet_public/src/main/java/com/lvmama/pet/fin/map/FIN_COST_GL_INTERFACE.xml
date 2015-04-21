@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FIN_COST_GL_INTERFACE">
+	<resultMap id="finGroupCostDTO" class="com.lvmama.comm.pet.po.fin.FinGroupCostDTO">
+		<result column="ITEM_ID" property="itemId" />
+		<result column="TRAVEL_GROUP_CODE" property="travelGroupCode" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="NAME" property="name" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="SUBTOTAL_COSTS" property="subTotalCosts" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="IS_FOREGIN" property="isForegin" />
+		<result column="REGION_NAME" property="regionName" />
+		<result column="PHYSICAL" property="physical" />
+	</resultMap>
+	<resultMap id="finOrderCostDTO" class="com.lvmama.comm.pet.po.fin.FinGroupCostDTO">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="GL_STATUS" property="glStatus" />
+		<result column="TRAVEL_GROUP_CODE" property="travelGroupCode" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="IS_FOREGIN" property="isForegin" />
+		<result column="REGION_NAME" property="regionName" />
+		<result column="PHYSICAL" property="physical" />
+		<result column="TOTAL_SETTLEMENT_PRICE" property="amount" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="ORDER_ITEM_META_ID" property="itemId" />
+		<result column="NAME"  property="name"/>
+	</resultMap>
+	<resultMap id="finGroupCode" class="com.lvmama.comm.pet.po.fin.FinGroupCostDTO">
+		<result column="TRAVEL_GROUP_CODE" property="travelGroupCode" />
+	</resultMap>
+	<resultMap id="order" class="com.lvmama.comm.pet.po.fin.FinGLInterfaceDTO" >
+		<result column="ORDER_ID" property="orderId" />
+	</resultMap>
+	<select id="queryGroupCostParam"  parameterClass="java.util.HashMap" resultMap="finGroupCostDTO">
+		SELECT F.ITEM_ID,
+			   G.TRAVEL_GROUP_CODE,
+		       G.VISIT_TIME,
+		       I.NAME,
+		       G.PRODUCT_ID,
+		       G.PRODUCT_NAME,
+		       P.PRODUCT_TYPE,
+		       P.SUB_PRODUCT_TYPE,
+		       F.SUBTOTAL_COSTS,
+		       F.SUPPLIER_ID,
+		       P.FILIALE_NAME,
+		       P.IS_FOREGIN,
+		       P.REGION_NAME,
+		       P.PHYSICAL
+		  FROM OP_TRAVEL_GROUP       G,
+		       OP_GROUP_BUDGET_FIXED F,
+		       OP_COSTS_ITEM         I,
+		       PROD_PRODUCT          P,
+		       PROD_ROUTE            R
+		 WHERE G.TRAVEL_GROUP_CODE = F.TRAVEL_GROUP_CODE
+		   AND F.TYPE = 'COST'
+		   AND F.COSTS_ITEM_ID = I.ID
+		   AND G.PRODUCT_ID = P.PRODUCT_ID
+		   AND P.PRODUCT_ID = R.PRODUCT_ID
+		   AND F.SUBTOTAL_COSTS>0
+		   <dynamic>
+		   		<isNotEmpty prepend=" AND " property="groupType">
+		   			 R.GROUP_TYPE = #groupType#
+		   		</isNotEmpty>
+		   		<isNotEmpty prepend=" AND " property="travelGroupCode">
+		   			 G.TRAVEL_GROUP_CODE = #travelGroupCode#
+		   		</isNotEmpty>
+		   		<isNotEmpty prepend=" AND " property="settlementStatus">
+		   			 G.SETTLEMENT_STATUS = #settlementStatus#
+		   		</isNotEmpty>
+		   </dynamic>
+	</select>
+	<select id="queryGroupCode" resultMap="finGroupCode">
+		SELECT G.TRAVEL_GROUP_CODE
+		  FROM OP_TRAVEL_GROUP G, PROD_PRODUCT P, PROD_ROUTE R
+		 WHERE G.PRODUCT_ID = P.PRODUCT_ID
+		   AND P.PRODUCT_ID = R.PRODUCT_ID
+		   AND G.SETTLEMENT_STATUS = 'CONFIRMED'
+		   AND R.GROUP_TYPE = 'BYONESELF'
+		   AND G.VISIT_TIME >= TRUNC(ADD_MONTHS(LAST_DAY(SYSDATE), -2) + 1)
+		   AND G.VISIT_TIME &lt;= TRUNC(SYSDATE)
+	</select>
+	<select id="queryOrderId" resultMap="order">
+		SELECT O.ORDER_ID
+		  FROM ORD_ORDER O
+		 WHERE O.PAYMENT_STATUS = 'PAYED'
+		   AND O.ORDER_STATUS &lt;&gt; 'CANCEL'
+		   AND O.VISIT_TIME &lt; TRUNC(SYSDATE)
+		   AND ROWNUM &lt;= 1000
+	</select>
+	<select id="queryOrderCostParam" resultMap="finOrderCostDTO" parameterClass="map">
+		SELECT O.ORDER_ID,
+		       O.FILIALE_NAME,
+		       O.GL_STATUS,
+		       O.TRAVEL_GROUP_CODE,
+		       O.VISIT_TIME,
+		       P.PRODUCT_ID,
+		       P.PRODUCT_NAME  || '(' ||
+		       (SELECT B.BRANCH_NAME
+		          FROM PROD_PRODUCT_BRANCH B
+		         WHERE B.PROD_BRANCH_ID = I.PRODUCT_BRANCH_ID) || ')' PRODUCT_NAME,
+		       P.PRODUCT_TYPE,
+		       P.SUB_PRODUCT_TYPE,
+		       P.IS_FOREGIN,
+		       P.REGION_NAME,
+		       P.PHYSICAL,
+		       M.TOTAL_SETTLEMENT_PRICE,
+		       M.SUPPLIER_ID,
+       		   M.ORDER_ITEM_META_ID,
+       		   M.PRODUCT_NAME NAME
+		  FROM ORD_ORDER_ITEM_META M,
+		       ORD_ORDER_ITEM_PROD I,
+		       ORD_ORDER           O,
+		       PROD_PRODUCT        P
+		       <dynamic>
+		       	<isNotEmpty prepend="," property="isGroupCost">
+			       	OP_TRAVEL_GROUP     G, 
+			       	PROD_ROUTE          R
+		       	</isNotEmpty>
+		       </dynamic>
+		 WHERE M.ORDER_ITEM_ID = I.ORDER_ITEM_PROD_ID
+		   AND I.ORDER_ID = O.ORDER_ID
+		   AND I.PRODUCT_ID = P.PRODUCT_ID 
+		   <dynamic>
+		    <isNotEmpty prepend=" AND " property="isGroupCost">
+		   		   O.TRAVEL_GROUP_CODE = G.TRAVEL_GROUP_CODE
+			   AND G.PRODUCT_ID = R.PRODUCT_ID
+			   AND O.TRAVEL_GROUP_CODE IS NOT NULL
+			   AND R.GROUP_TYPE = 'AGENCY'
+		    </isNotEmpty>
+		    <isEmpty prepend=" AND " property="isGroupCost"> O.TRAVEL_GROUP_CODE IS NULL </isEmpty> 
+		   	<isNotEmpty prepend=" AND " property ="orderId" > O.ORDER_ID = #orderId#</isNotEmpty>
+		   	<isEmpty prepend=" AND " property ="orderId" > O.VISIT_TIME >= TRUNC(ADD_MONTHS(LAST_DAY(SYSDATE), -2) + 1)</isEmpty>
+		   </dynamic>  
+		   AND O.VISIT_TIME &lt; TRUNC(SYSDATE) 
+		   AND O.PAYMENT_STATUS = 'PAYED' 
+		   AND (O.ORDER_STATUS &lt;&gt; 'CANCEL' OR
+       		   (O.ORDER_STATUS = 'CANCEL' AND O.REFUNDED_AMOUNT > 0))
+		   AND M.VIRTUAL = 'false'
+		   AND I.SUB_PRODUCT_TYPE != 'INSURANCE'
+		   AND M.GL_STATUS IS NULL
+		   AND M.TOTAL_SETTLEMENT_PRICE &gt;0
+		   AND ROWNUM &lt;=1000	 
+	</select>
+	<select id="selectOrderUnSettleCount" resultClass="java.lang.Long" parameterClass="java.lang.Long">
+		SELECT NVL(SUM(SC),0) UNSETTLE_COUNT
+		  FROM (SELECT COUNT(M.ORDER_ITEM_META_ID) -
+		               NVL((SELECT COUNT(I.GL_INTERFACE_ID)
+		                     FROM FIN_GL_INTERFACE I
+		                    WHERE I.RECON_RESULT_ID = M.ORDER_ITEM_META_ID
+		                      AND I.ACCOUNT_TYPE = 'ORDER_COST'),
+		                   0) SC
+		          FROM ORD_ORDER_ITEM_META M
+		         WHERE M.ORDER_ID = #value#
+		           AND M.SUB_PRODUCT_TYPE != 'INSURANCE'
+		         GROUP BY M.ORDER_ITEM_META_ID) A
+	</select>
+	
+	<select id="queryMainProductItem" resultMap="finOrderCostDTO" parameterClass="java.lang.Long">
+		SELECT O.ORDER_ID,
+		       O.FILIALE_NAME,
+		       O.GL_STATUS,
+		       O.TRAVEL_GROUP_CODE,
+		       O.VISIT_TIME,
+		       P.PRODUCT_ID,
+		       P.PRODUCT_NAME,
+		       P.PRODUCT_TYPE,
+		       P.SUB_PRODUCT_TYPE,
+		       P.IS_FOREGIN,
+		       P.REGION_NAME,
+		       P.PHYSICAL,
+		       NULL                TOTAL_SETTLEMENT_PRICE,
+		       NULL                SUPPLIER_ID,
+		       NULL                ORDER_ITEM_META_ID,
+		       NULL                NAME
+		  FROM (SELECT *
+		          FROM (SELECT *
+		                  FROM (SELECT P.*,
+		                               (CASE
+		                                 WHEN P.IS_DEFAULT = 'true' AND
+		                                      P.PRODUCT_TYPE != 'OTHER' THEN
+		                                  1
+		                                 WHEN P.WRAP_PAGE = 'true' AND
+		                                      P.ADDITIONAL = 'false' THEN
+		                                  2
+		                                 WHEN P.ADDITIONAL = 'false' AND
+		                                      P.PRODUCT_TYPE != 'OTHER' THEN
+		                                  3
+		                                 ELSE
+		                                  4
+		                               END) MAIN_PRODUCT,
+		                               ROWNUM RN
+		                          FROM ORD_ORDER_ITEM_PROD P
+		                         WHERE P.ORDER_ID = #value#) A
+		                 ORDER BY MAIN_PRODUCT) A
+		         WHERE ROWNUM &lt;= 1) I,
+		       ORD_ORDER O,
+		       PROD_PRODUCT P
+		 WHERE I.ORDER_ID = O.ORDER_ID
+		   AND I.PRODUCT_ID = P.PRODUCT_ID
+		   AND I.ORDER_ID = #value#
+	</select>
+	<update id="updateOrdOrderItemMetaGLStatus" parameterClass="java.util.HashMap">
+		UPDATE ORD_ORDER_ITEM_META M 
+		   SET M.GL_STATUS = #glStatus# 
+		 WHERE M.ORDER_ITEM_META_ID = #orderItemMetaId#
+	</update>
+	<update id="updateOrdOrderItemMetaGLStatusNull">
+		UPDATE ORD_ORDER_ITEM_META M 
+		   SET M.GL_STATUS = NULL
+		 WHERE M.GL_STATUS = 'FAILED'
+		   AND M.VISIT_TIME >= TRUNC(ADD_MONTHS(LAST_DAY(SYSDATE), -2) + 1)
+	</update>
+</sqlMap>

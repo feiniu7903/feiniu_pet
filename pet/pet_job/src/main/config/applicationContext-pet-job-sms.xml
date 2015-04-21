@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+
+	<bean id="initiativeRegReceiveLogin" class="com.lvmama.pet.job.sms.InitiativeRegReceiveLogin"/>
+	
+	<bean id="pinAnActivityLogic" class="com.lvmama.pet.job.sms.PinAnActivityLogic"/>
+	
+	<bean id="lVCJActivityLogic" class="com.lvmama.pet.job.sms.LVCJActivityLogic"/>
+
+	<bean id="confirmRegReceiveLogin" class="com.lvmama.pet.job.sms.ConfirmRegReceiveLogin"/>
+	
+	<bean id="activeMemberCardRegReceiveLogic" class="com.lvmama.pet.job.sms.ActiveMemberCardRegReceiveLogic"></bean>
+
+	<bean id="forPaymentReceiverLogic" class="com.lvmama.pet.job.sms.ForPaymentReceiverLogic"/>
+
+	<bean id="receiveLogicList" class="java.util.ArrayList"> 
+		<constructor-arg> 
+			<list> 
+				<ref local="initiativeRegReceiveLogin"/>
+				<ref local="confirmRegReceiveLogin"/>
+				<ref local="activeMemberCardRegReceiveLogic"/>   
+				<ref local="forPaymentReceiverLogic"/> 
+				<ref local="pinAnActivityLogic" /> 
+				<ref local="lVCJActivityLogic" />       
+			</list>
+		</constructor-arg> 
+	</bean>	
+	
+	<bean id="eMaySendJob" class="com.lvmama.pet.job.quartz.sms.EMaySendJob">
+ 		<property name="actualSend"><value>${actualSend}</value></property>
+ 		<property name="actualMonitor"><value>${actualMonitor}</value></property>
+ 		<property name="actualReceive"><value>${actualReceive}</value></property>
+		<property name="client">
+			<bean class="com.lvmama.pet.job.quartz.sms.SDKClient">
+				<constructor-arg index="0" value="9SDK-EMY-0999-JBYRR"/>
+				<constructor-arg index="1" value="061614"/>
+				<constructor-arg index="2" value="sdk999.eucp.b2m.cn"/>
+			</bean>				
+		</property>
+		<property name="minThreshold"><value>10</value></property>
+		<property name="condition">
+		<value>((type is null OR
+	       type not in ('MMS_SUZHOUYEYUAN', 'QUNFA', 'MONTNETS')) and
+	       ((channel is null and exists
+	        (select default_channel
+	             from lvmama_pet.sms_config sc
+	            where sc.default_channel = 'EMAY')) or CHANNEL = 'EMAY'))
+		</value>
+		</property>
+		<!-- 当亿美把发送规则调整后,把下面两个配置打开即可 -->
+		<!-- <property name="additionalCondition"><value><![CDATA[(select count(*) from lvmama_pet.sms_content_log b where b.mobile = a.mobile and b.send_date > sysdate-10/(24*60)) < 3]]></value></property>
+		<property name="tableSource" ><value><![CDATA[(select * from (select inner_tb_s1.*,row_number() over(partition by mobile order by send_date) rn from lvmama_pet.sms_content inner_tb_s1) inner_tb_s2 where inner_tb_s2.rn<=3) a]]></value></property>
+		 -->
+		 <property name="failure" value="1"/>
+		<property name="limit" value="200"/>
+		<property name="autoSplitContent" value="true"/>
+		<property name="supportBatchSend" value="false"/>
+		<property name="retrySend" value="true"/>
+		<property name="smsRemoteService" ref="smsRemoteService"/>
+		<property name="receiveLogicList" ref="receiveLogicList"/>
+	</bean>
+
+	<bean id="eMayQunFaSendJob" class="com.lvmama.pet.job.quartz.sms.EMayQunFaSendJob">
+ 		<property name="actualSend"><value>${actualSend}</value></property>
+ 		<property name="actualMonitor"><value>${actualMonitor}</value></property>
+ 		<property name="actualReceive"><value>${actualReceive}</value></property>
+		<property name="client">
+			<bean class="com.lvmama.pet.job.quartz.sms.SDKClient">
+				<constructor-arg index="0" value="6SDK-EMY-6688-JBUUL"/>
+				<constructor-arg index="1" value="555277"/>
+				<constructor-arg index="2" value="sdk4report.eucp.b2m.cn"/>						
+			</bean>
+		</property>
+		<property name="minThreshold"><value>10</value></property>
+		<property name="condition"><value>type = 'QUNFA'</value></property>
+		<property name="failure" value="1"/>
+		<property name="limit" value="1000"/>
+		<property name="autoSplitContent" value="true"/>
+		<property name="supportBatchSend" value="false"/>
+		<property name="retrySend" value="false"/>
+		<property name="smsRemoteService" ref="smsRemoteService"/>
+		<property name="receiveLogicList" ref="receiveLogicList"/>	
+	</bean>	
+	
+	<bean id="eMayMMSSendJob" class="com.lvmama.pet.job.quartz.sms.EMayMMSSendJob">
+ 		<property name="actualSend"><value>${actualSend}</value></property>
+		<property name="condition"><value>type = 'MMS_SUZHOUYEYUAN'</value></property>
+		<property name="account"><value>SH-lvmm</value></property>
+		<property name="password"><value>s123</value></property>
+		<property name="title"><value>驴妈妈二维码凭证</value></property>
+		<property name="failure" value="1"/>
+		<property name="limit" value="50"/>
+		<property name="autoSplitContent" value="false"/>
+		<property name="supportBatchSend" value="false"/>
+		<property name="smsRemoteService" ref="smsRemoteService"/>
+	</bean>
+
+	<bean id="channel01" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="eMaySendJob"/>
+		<property name="targetMethod" value="run"/>
+		<property name="concurrent" value="false"/>
+	</bean>	
+	
+	<bean id="channel01Monitor" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="eMaySendJob"/>
+		<property name="targetMethod" value="monitor"/>
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<bean id="channel01Receive" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="eMaySendJob"/>
+		<property name="targetMethod" value="receive"/>
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<bean id="channel02" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="eMayMMSSendJob"/>
+		<property name="targetMethod" value="run"/>
+		<property name="concurrent" value="false"/>
+	</bean>
+	
+	<bean id="channel03" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="eMayQunFaSendJob"/>
+		<property name="targetMethod" value="run"/>
+		<property name="concurrent" value="false"/>
+	</bean>
+	
+	<bean id="channel03Monitor" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="eMayQunFaSendJob"/>
+		<property name="targetMethod" value="monitor"/>
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<bean id="channel03Receive" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="eMayQunFaSendJob"/>
+		<property name="targetMethod" value="receive"/>
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<bean id="channel01Trigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="channel01"/>
+		<property name="cronExpression"><value>*/10 * * * * ?</value></property>
+	</bean>
+	
+	<bean id="channel01MonitorTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="channel01Monitor"/>
+		<property name="cronExpression"><value>0 * * * * ? </value></property>
+	</bean>
+	
+	<bean id="channel01ReceiveTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="channel01Receive"/>
+		<property name="cronExpression"><value>0 * * * * ? </value></property>
+	</bean>	
+	
+	<bean id="channel02Trigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="channel02"/>
+		<property name="cronExpression"><value>0/10 * * * * ?</value></property>
+	</bean>		
+	
+	<bean id="channel03Trigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="channel03"/>
+		<property name="cronExpression"><value>0/10 * * * * ?</value></property>
+	</bean>
+	
+	<bean id="channel03MonitorTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="channel03Monitor"/>
+		<property name="cronExpression"><value>0 * * * * ? </value></property>
+	</bean>
+	
+	<bean id="channel03ReceiveTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="channel03Receive"/>
+		<property name="cronExpression"><value>0 * * * * ? </value></property>
+	</bean>
+	
+	
+	<bean id="montnetsSendJob" class="com.lvmama.pet.job.quartz.sms.MontnetsSendJob">
+ 		<property name="actualSend"><value>${actualSend}</value></property>
+ 		<property name="actualMonitor"><value>${actualMonitor}</value></property>
+ 		<property name="actualReceive"><value>${actualReceive}</value></property>
+		<property name="account"><value>F12240</value></property>
+		<property name="password"><value>209910</value></property>
+		<property name="condition"><value>(type = 'MONTNETS')</value></property>
+		<property name="failure" value="1"/>
+		<property name="limit" value="200"/>
+		<property name="autoSplitContent" value="true"/>
+		<property name="supportBatchSend" value="false"/>
+		<property name="receiveLogicList" ref="receiveLogicList"/>
+	</bean>
+	
+	<bean id="montnetsSendJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="montnetsSendJob"/>
+		<property name="targetMethod" value="run"/>
+		<property name="concurrent" value="false"/>
+	</bean>
+	
+	<bean id="montnetsMonitorJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="montnetsSendJob"/>
+		<property name="targetMethod" value="monitor"/>
+		<property name="concurrent" value="false"/>
+	</bean>
+	
+	<bean id="montnetsReceiveJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="montnetsSendJob"/>
+		<property name="targetMethod" value="receive"/>
+		<property name="concurrent" value="false"/>
+	</bean>		
+	
+	<bean id="montnetsSendJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="montnetsSendJobDetail"/>
+		<property name="cronExpression"><value>*/10 * * * * ?</value></property>
+	</bean>	
+	
+	<bean id="montnetsMonitorJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="montnetsMonitorJobDetail"/>
+		<property name="cronExpression"><value>0 * * * * ?</value></property>
+	</bean>	
+	
+	<bean id="montnetsReceiveJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="montnetsReceiveJobDetail"/>
+		<property name="cronExpression"><value>0 * * * * ?</value></property>
+	</bean> 
+	
+	<bean id="dodoCaSendJob" class="com.lvmama.pet.job.quartz.sms.DoDoCaSendJob">
+ 		<property name="actualSend"><value>${actualSend}</value></property>
+		<property name="client">
+			<bean class="com.lvmama.pet.job.quartz.sms.DoDoCaClient">
+				<constructor-arg index="0" value="${DODOCA.usrename}"/>
+				<constructor-arg index="1" value="${DODOCA.password}"/>
+				<constructor-arg index="2" value="${DODOCA.ip}"/>
+				<constructor-arg index="3" value="true"/>
+			</bean>				
+		</property>
+		<property name="condition"><value>((type is null OR
+       type not in ('MMS_SUZHOUYEYUAN', 'QUNFA', 'MONTNETS')) and
+       ((channel is null and exists
+        (select default_channel
+             from lvmama_pet.sms_config sc
+            where sc.default_channel = 'DODOCA')) or CHANNEL = 'DODOCA'))</value></property>
+		<property name="failure" value="1"/>
+		<property name="limit" value="200"/>
+		<property name="smsRemoteService" ref="smsRemoteService"/>
+	</bean>
+	<bean id="dodoCaSendJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="dodoCaSendJob"/>
+		<property name="targetMethod" value="run"/>
+		<property name="concurrent" value="false"/>
+	</bean>
+	<bean id="dodoCaSendJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="dodoCaSendJobDetail"/>
+		<property name="cronExpression"><value>*/10 * * * * ?</value></property>
+	</bean>
+	
+	
+	<bean id="dodoCaStatusReportSendJob" class="com.lvmama.pet.job.quartz.sms.DoDoCaSendJob">
+		<property name="statusReportFtpConf">
+			<bean class="com.lvmama.comm.utils.FTPUtil.FtpConf">
+				<constructor-arg index="0" value="${DODOCA.ftp.ip}"/>
+				<constructor-arg index="1" value="${DODOCA.ftp.port}"/>
+				<constructor-arg index="2" value="${DODOCA.ftp.username}"/>
+				<constructor-arg index="3" value="${DODOCA.ftp.password}"/>
+			</bean>				
+		</property>
+		<property name="statusReportDir" value="${DODOCA.ftp.statusReportDir}" />
+		<property name="statusReportFilePre" value="${DODOCA.ftp.statusReportFilePre}" />
+		<property name="smsRemoteService" ref="smsRemoteService"/>
+	</bean>
+	<bean id="dodoCaStatusReportSendJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="dodoCaStatusReportSendJob"/>
+		<property name="targetMethod" value="disposeStatusReport"/>
+		<property name="concurrent" value="false"/>
+	</bean>
+	<bean id="dodoCaStatusReportSendJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="dodoCaStatusReportSendJobDetail"/>
+		<!-- 每30分钟一次 -->
+		<property name="cronExpression"><value>0 15 * * * ?</value></property>
+	</bean>
+	
+	
+	<!-- 短信重发job start -->
+	<bean id="resendSmsJob" class="com.lvmama.pet.job.quartz.sms.ResendSmsJob">
+    	 <property name="smsConfigService" ref="smsConfigService" />
+    	 <property name="smsRemoteService" ref="smsRemoteService" />
+	</bean>
+	<bean id="resendSmsJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="resendSmsJob"/>
+		<property name="targetMethod" value="run"/>
+		<property name="concurrent" value="false"/>
+	</bean>
+	<bean id="resendSmsJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="resendSmsJobDetail"/>
+		<!-- 每20秒执行一次 -->
+		<property name="cronExpression"><value>*/20 * * * * ?</value></property>
+	</bean>
+	<!-- 短信重发job end -->
+	
+</beans>

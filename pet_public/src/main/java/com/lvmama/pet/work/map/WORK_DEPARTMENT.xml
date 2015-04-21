@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="WORK_DEPARTMENT">
+	<!-- 别名 -->
+    <typeAlias alias="workDepartment" type="com.lvmama.comm.pet.po.work.WorkDepartment"/>
+	<!-- 查询结果集 -->
+    <resultMap id="workDepartmentResult" class="workDepartment">
+        <result property="workDepartmentId" column="WORK_DEPARTMENT_ID"/>
+        <result property="departmentName" column="DEPARTMENT_NAME"/>
+        <result property="memo" column="MEMO"/>
+        <result property="valid" column="VALID"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	WORK_DEPARTMENT_ID ,
+        	DEPARTMENT_NAME ,
+        	MEMO,
+        	VALID
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="workDepartmentId">
+	             WORK_DEPARTMENT_ID = #workDepartmentId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="departmentName">
+	             DEPARTMENT_NAME = #departmentName#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="memo">
+	             MEMO = #memo#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="valid">
+	             VALID = #valid#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 修改记录 -->
+    <update id="update" parameterClass="workDepartment">
+    <![CDATA[
+        UPDATE WORK_DEPARTMENT SET
+	        DEPARTMENT_NAME = #departmentName# ,
+	        MEMO = #memo#, 
+	        VALID=#valid#
+        WHERE 
+	        WORK_DEPARTMENT_ID = #workDepartmentId# 
+    ]]>
+    </update>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="workDepartment">
+				<selectKey keyProperty="workDepartmentId" resultClass="java.lang.Long">
+					SELECT WORK_DEPARTMENT_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        WORK_DEPARTMENT (
+        	WORK_DEPARTMENT_ID ,
+        	DEPARTMENT_NAME ,
+        	MEMO,
+        	VALID
+        ) VALUES (
+        	#workDepartmentId# ,
+        	#departmentName# ,
+        	#memo#,
+        	#valid#
+        )
+    ]]>
+    </insert>
+    <!-- 查询记录，根据主键值 -->
+    <select id="getWorkDepartmentById" resultMap="workDepartmentResult">
+	    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from WORK_DEPARTMENT 
+	        where 
+						WORK_DEPARTMENT_ID = #workDepartmentId# 
+	    ]]>
+    </select>
+    <!-- 查询记录 根据特定条件 -->
+    <select id="queryWorkDepartmentByParam"  resultMap="workDepartmentResult" parameterClass="java.util.Map">
+       select <include refid="commonColumns"/> from WORK_DEPARTMENT 
+		<include refid="dynamicWhere"/>    
+    </select>
+    <!-- 查询所有部门信息 -->
+    <select id="getAllWorkDepartment"  resultMap="workDepartmentResult">
+       select <include refid="commonColumns"/> from WORK_DEPARTMENT
+    </select>
+</sqlMap>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PLACE_HOTEL_RECOMMEND" >
+  <typeAlias alias="placeHotelOtherRecommend" type="com.lvmama.comm.pet.po.place.PlaceHotelOtherRecommend" />
+  <resultMap id="BaseResultMap" class="placeHotelOtherRecommend" >
+    <result column="RECOMMEND_ID" property="recommendId"  />
+    <result column="PLACE_ID" property="placeId"  />
+    <result column="RECOMMEND_NAME" property="recommendName"  />
+    <result column="RECOMMENT_CONTENT" property="recommentContent"  />
+    <result column="RECOMMENT_TYPE" property="recommentType"  />
+    <result column="RECOMMENT_CREATETIME" property="recommentCreatetime"  />
+    <result column="SEQ_NUM" property="seqNum"/>
+  </resultMap>
+   
+  <select id="queryAllPlaceHoteRecommend" resultMap="BaseResultMap" parameterClass="placeHotelOtherRecommend">
+		select * from PLACE_HOTEL_OTHER_RECOMMEND where 1 = 1
+		<isNotEmpty property="placeId" prepend=" AND ">
+			PLACE_ID = #placeId#
+		</isNotEmpty>
+		order by SEQ_NUM,RECOMMENT_CREATETIME desc
+  </select>
+  
+  <select id="queryPlacehotelNoticeByNoticeId" resultMap="BaseResultMap" parameterClass="placeHotelOtherRecommend">
+  		select * from PLACE_HOTEL_OTHER_RECOMMEND where RECOMMEND_ID = #recommendId#
+  </select>
+  
+  <insert id="insert" parameterClass="placeHotelOtherRecommend">
+	    <selectKey resultClass="java.lang.Long" keyProperty="recommendId" >
+	      select place_hotel_otherrecommend_seq.nextval as placePhotoId from DUAL
+	    </selectKey>
+		insert into PLACE_HOTEL_OTHER_RECOMMEND (RECOMMEND_ID,PLACE_ID,RECOMMEND_NAME,RECOMMENT_CONTENT,
+		RECOMMENT_TYPE,RECOMMENT_CREATETIME,SEQ_NUM)
+		values (#recommendId#, #placeId#, #recommendName#,#recommentContent#,#recommentType#,sysdate,#seqNum#)
+  </insert>
+  <update id="update" parameterClass="placeHotelOtherRecommend">
+  		update PLACE_HOTEL_OTHER_RECOMMEND set
+  		RECOMMEND_NAME = #recommendName#,RECOMMENT_CONTENT = #recommentContent#,SEQ_NUM=#seqNum#
+  		where RECOMMEND_ID = #recommendId#
+  </update>
+	<delete id="delete" parameterClass="placeHotelOtherRecommend">
+		delete PLACE_HOTEL_OTHER_RECOMMEND where RECOMMEND_ID = #recommendId#
+	</delete>
+</sqlMap>

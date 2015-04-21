@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CASH_PROTECT">
+	<!-- 别名 -->
+    <typeAlias alias="cashProtect" type="com.lvmama.comm.pet.po.money.CashProtect"/>
+	<!-- 查询结果集 -->
+    <resultMap id="cashProtectResult" class="cashProtect">
+        <result property="businessId" column="BUSINESS_ID"/>
+        <result property="comeFrom" column="COME_FROM"/>
+        <result property="createTime" column="CREATE_TIME"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	BUSINESS_ID ,
+        	COME_FROM ,
+        	CREATE_TIME 
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="businessId">
+	             BUSINESS_ID = #businessId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="comeFrom">
+	             COME_FROM = #comeFrom#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="cashProtect">
+				<selectKey keyProperty="businessId" resultClass="java.lang.String">
+					SELECT CASH_PROTECT_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        CASH_PROTECT (
+        	BUSINESS_ID ,
+        	COME_FROM ,
+        	CREATE_TIME 
+        ) VALUES (
+        	#businessId# ,
+        	#comeFrom# ,
+        	#createTime# 
+        )
+    ]]>
+    </insert>
+</sqlMap>

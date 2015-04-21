@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="USER_POINT_RULE">
+	<resultMap id="UserPointRule" class="com.lvmama.comm.pet.po.user.UserPointRule">          
+		<result property="ruleId" column="RULE_ID"/>
+		<result property="ruleDescription" column="RULE_DESCRIPTION"/>
+		<result property="point" column="POINT"/>
+	</resultMap>
+	
+	<select id="queryByPK" parameterClass="java.lang.String" resultMap="UserPointRule">
+		SELECT * FROM USER_POINT_RULE WHERE VALID = 'Y' AND RULE_ID = #ruleId#
+	</select>
+
+</sqlMap>

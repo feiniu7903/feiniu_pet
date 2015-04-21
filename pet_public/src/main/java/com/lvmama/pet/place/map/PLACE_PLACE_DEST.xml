@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PLACE_PLACE_DEST">
+	<typeAlias alias="PlacePlaceDest" type="com.lvmama.comm.pet.po.place.PlacePlaceDest" />
+	<resultMap class="PlacePlaceDest" id="PlacePlaceDestBaseResultMap">
+		<result column="PLACE_PLACE_DEST_ID" property="placePlaceDestId" />
+		<result column="PLACE_ID" property="placeId" />
+		<result column="PARENT_PLACE_ID" property="parentPlaceId" />
+		<result column="IS_MASTER" property="isMaster" />
+	</resultMap>
+	<resultMap class="PlacePlaceDest" id="placePlaceDestWithParentName" extends="PlacePlaceDestBaseResultMap">
+		<result column="PARENT_PLACE_NAME" property="parentPlaceName" />
+	</resultMap>
+	<resultMap class="PlacePlaceDest" id="placePlaceDestWithParentId" >
+		<result column="PLACE_ID" property="placeId" />
+		<result column="PARENT_PLACE_ID" property="parentPlaceId" />
+	</resultMap>
+	
+	
+	
+	
+	
+	<select id="selectParentPlaceIdList" parameterClass="java.lang.Long" resultClass="java.lang.Long">
+		select ppd.parent_place_id from lvmama_pet.place_place_dest ppd 
+	where is_master='Y' 
+	start with ppd.place_id=#placeId# connect by prior ppd.parent_place_id=ppd.place_id 
+	</select>
+	
+	
+	<select id="selectByPrimaryKey" parameterClass="PlacePlaceDest" resultMap="PlacePlaceDestBaseResultMap">
+		select PLACE_PLACE_DEST_ID, PLACE_ID, PARENT_PLACE_ID, IS_MASTER
+		from PLACE_PLACE_DEST
+		where PLACE_PLACE_DEST_ID =
+		#placePlaceDestId#
+	</select>
+	<select id="calculationPlaceSuperior" parameterClass="java.lang.Long" resultMap="placePlaceDestWithParentName">
+		select ppd.*,p.name as PARENT_PLACE_NAME
+		from place_place_dest ppd, place p
+		where ppd.parent_place_id = p.place_id
+		and
+		p.is_valid = 'Y'
+		connect by prior ppd.parent_place_id = ppd.place_id
+		start with ppd.place_id = #placeId#
+		and ppd.parent_place_id is not null
+	</select>
+	<select id="selectParentPlaceList" parameterClass="java.lang.Long" resultMap="placePlaceDestWithParentName">
+		select ppd.PLACE_PLACE_DEST_ID, ppd.PLACE_ID, ppd.PARENT_PLACE_ID, ppd.IS_MASTER, p.NAME as PARENT_PLACE_NAME
+		from
+		place_place_dest ppd, place p
+		where ppd.parent_place_id = p.place_id
+		and p.is_valid = 'Y'
+		and ppd.place_id = #placeId#
+	</select>
+	<select id="selectHasParentsPlaceCount" parameterClass="PlacePlaceDest">
+		select count(place_id) from place_place_dest where place_id=#placeId# connect by prior place_id = parent_place_id start with
+		parent_place_id=#parentPlaceId#
+	</select>
+	<select id="selectHasSonsPlaceCount" parameterClass="PlacePlaceDest">
+		select count(place_id) from place_place_dest where parent_place_id=#parentPlaceId# connect by prior parent_place_id = place_id start with
+		place_id=#placeId#
+	</select>
+	<select id="getParentPlaceIdListByCurrentPlaceId" parameterClass="java.lang.Long" resultMap="placePlaceDestWithParentId">
+		SELECT distinct pp.place_id,pp.parent_place_id
+		  FROM PLACE_PLACE_DEST PP
+		 where place_id !=#placeId#
+		CONNECT BY PP.PLACE_ID = PRIOR PP.PARENT_PLACE_ID
+		 START WITH PP.place_id = #placeId#
+	</select>
+	<delete id="deleteByPrimaryKey" parameterClass="PlacePlaceDest">
+		 delete from PLACE_PLACE_DEST where PLACE_PLACE_DEST_ID = #placePlaceDestId#
+	</delete>
+	<insert id="insert" parameterClass="PlacePlaceDest">
+		<selectKey resultClass="java.lang.Long" keyProperty="placePlaceDestId">
+			select PLACE_PLACE_DEST_SEQ.nextval as placePlaceDestId from DUAL
+		</selectKey>
+		insert into PLACE_PLACE_DEST (PLACE_PLACE_DEST_ID, PLACE_ID, PARENT_PLACE_ID, IS_MASTER) values (#placePlaceDestId#, #placeId#, #parentPlaceId#, 'N')
+	</insert>
+	<update id="updateMaster" parameterClass="PlacePlaceDest">
+		update PLACE_PLACE_DEST set IS_MASTER = #isMaster#
+	    <dynamic prepend=" where ">
+			<isNotEmpty prepend=" and " property="placePlaceDestId">
+				PLACE_PLACE_DEST_ID = #placePlaceDestId#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and " property="placeId">
+				PLACE_ID = #placeId#
+			</isNotEmpty>
+		</dynamic>
+	</update>
+</sqlMap>

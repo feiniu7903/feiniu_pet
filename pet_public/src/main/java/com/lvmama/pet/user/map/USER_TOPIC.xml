@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="USER_TOPIC">
+	<resultMap id="TOPIC_MAP" class="com.lvmama.comm.pet.po.user.UserTopic">
+		 <result property="id" column="id"/>
+		 <result property="userId" column="user_id"/>
+		 <result property="createTime" column="create_time"/>
+	</resultMap>	
+	
+	<select id="queryUserTopicById" parameterClass="java.lang.Long" resultMap="TOPIC_MAP">
+		select * from user_topic t where t.user_id= #userId#
+	</select>
+    
+</sqlMap>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+	<!-- lvmama_super短信模板远程服务 -->
+    <bean id="superSmsTemplateRemoteService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${superPublic.serviceUrl}/comSmsTemplateService" />
+		<property name="serviceInterface"
+			value="com.lvmama.comm.pet.service.pub.ComSmsTemplateService" />
+		<property name="overloadEnabled" value="true" />
+		<property name="chunkedPost" value="false" />
+	</bean>
+</beans>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SET_SETTLEMENT_CHANGE" >
+	<typeAlias alias="SetSettlementChange" type="com.lvmama.comm.pet.po.fin.SetSettlementChange"/>
+	<insert id="insert" parameterClass="SetSettlementChange">
+		<selectKey keyProperty="settlementChangeId" resultClass="long">
+			SELECT 
+				SET_SETTLEMENT_CHANGE_SEQ.NEXTVAL AS settlementChangeId
+			FROM
+				DUAL
+		</selectKey>
+		INSERT INTO 
+  			SET_SETTLEMENT_CHANGE
+		(
+	  		SETTLEMENT_CHANGE_ID,
+	  		SETTLEMENT_ITEM_ID,
+	  		ORDER_ITEM_META_ID,
+	  		SETTLEMENT_ID,
+	  		CHANGETYPE,
+	  		AMOUNT_BEFORE_CHANGE,
+	  		AMOUNT_AFTER_CHANGE,
+	  		REMARK,
+	  		CREATOR,
+	  		CREATETIME
+	  	)VALUES(
+	  		#settlementChangeId#,
+  			#settlementItemId#,
+  			#orderItemMetaId#,
+  			#settlementId#,
+  			#changetype#,
+  			#amountBeforeChange#,
+  			#amountAfterChange#,
+  			#remark#,
+  			#creator#,
+  			SYSDATE
+	  	)
+  </insert>
+  
+   <!-- 删除订单结算项时生成change记录begin -->
+  <insert id="insertBatchDel" parameterClass="map">
+	INSERT INTO 
+  		SET_SETTLEMENT_CHANGE
+	(
+  		SETTLEMENT_CHANGE_ID,
+  		SETTLEMENT_ITEM_ID,
+  		ORDER_ITEM_META_ID,
+  		CHANGETYPE,
+  		SETTLEMENT_ID,
+  		AMOUNT_BEFORE_CHANGE,
+  		AMOUNT_AFTER_CHANGE,
+  		CREATOR,
+  		CREATETIME
+  	)SELECT 
+  		SET_SETTLEMENT_CHANGE_SEQ.NEXTVAL,
+  		A.SETTLEMENT_ITEM_ID,
+  		A.ORDER_ITEM_META_ID,
+  		#changetype#,
+  		A.SETTLEMENT_ID,
+  		A.TOTAL_SETTLEMENT_PRICE,
+  		0,
+  		#creator#,
+  		SYSDATE
+ 	FROM 
+ 		SET_SETTLEMENT_ITEM A
+	WHERE 
+		A.SETTLEMENT_ITEM_ID IN
+   			(
+   				<iterate property="settlementItemIds" conjunction=","  >
+   					#settlementItemIds[]#
+   				</iterate>
+   			)
+  </insert>
+  <insert id="insertBatchModify" parameterClass="map">
+	INSERT INTO 
+  		SET_SETTLEMENT_CHANGE
+	(
+  		SETTLEMENT_CHANGE_ID,
+  		SETTLEMENT_ITEM_ID,
+  		ORDER_ITEM_META_ID,
+  		CHANGETYPE,
+  		SETTLEMENT_ID,
+  		AMOUNT_BEFORE_CHANGE,
+  		AMOUNT_AFTER_CHANGE,
+  		REMARK,
+  		CREATOR,
+  		CREATETIME
+  	)SELECT 
+	      SET_SETTLEMENT_CHANGE_SEQ.NEXTVAL,
+	      A.SETTLEMENT_ITEM_ID,
+	      A.ORDER_ITEM_META_ID,
+	      #changetype#,
+	      A.SETTLEMENT_ID,
+	      A.TOTAL_SETTLEMENT_PRICE,
+	      #amount#*A.QUANTITY*A.PRODUCT_QUANTITY,
+	      #remark#,
+	      #creator#,
+	      SYSDATE
+	  FROM 
+	     SET_SETTLEMENT_ITEM A
+	  WHERE 
+	    A.META_PRODUCT_ID = #metaProductId#
+	  AND
+		A.SETTLEMENT_ID = #settlementId#
+  </insert>
+  <sql id="searchBySettlementId_sql">
+  	SELECT 
+		A.CREATOR,
+		B.ORDER_ID AS ORDERID,
+		A.CHANGETYPE,
+		B.META_PRODUCT_ID AS METAPRODUCTID,
+		A.AMOUNT_AFTER_CHANGE AS AMOUNTAFTERCHANGE,
+		A.AMOUNT_BEFORE_CHANGE AS AMOUNTBEFORECHANGE,
+		A.CREATETIME,
+		A.REMARK
+	FROM 
+		SET_SETTLEMENT_CHANGE A,
+		SET_SETTLEMENT_ITEM B
+	WHERE 
+		A.SETTLEMENT_ITEM_ID = B.SETTLEMENT_ITEM_ID 
+	AND
+	    A.SETTLEMENT_ID = #settlementId#
+	ORDER BY CREATETIME DESC
+  </sql>
+  <select id="searchBySettlementId" parameterClass="map" resultClass="SetSettlementChange">
+    <include refid="pageSearchHead"/>
+	<include refid="searchBySettlementId_sql"/>
+	<include refid="pageSearchFoot"/>
+  </select>
+  <select id="searchBySettlementIdCount" parameterClass="map" resultClass="long">
+    SELECT COUNT(*) FROM (
+	<include refid="searchBySettlementId_sql"/>
+	) TMP
+  </select>
+</sqlMap>

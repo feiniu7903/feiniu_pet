@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.prod.mapper.TntProductMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.prod.po.TntProduct">
+		<result property="tntProductId" column="TNT_PRODUCT_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="branchId" column="BRANCH_ID" />
+		<result property="channelId" column="CHANNEL_ID" />
+		<result property="valid" column="VALID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="isAperiodic" column="IS_APERIODIC" />
+		<result property="payToLvmama" column="PAY_TO_LVMAMA" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_PRODUCT_ID,PRODUCT_ID,BRANCH_ID,CHANNEL_ID,VALID,PRODUCT_NAME,IS_APERIODIC,PAY_TO_LVMAMA
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		<selectKey resultType="java.lang.Long" keyProperty="tntProductId"
+			order="BEFORE">
+			select TNT_PRODUCT_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_PRODUCT (
+        	TNT_PRODUCT_ID ,
+        	PRODUCT_ID ,
+        	BRANCH_ID ,
+        	CHANNEL_ID ,
+        	VALID ,
+        	PRODUCT_NAME ,
+        	IS_APERIODIC ,
+        	PAY_TO_LVMAMA 
+        ) VALUES (
+        	#{tntProductId,jdbcType=DECIMAL} ,
+			#{productId,jdbcType=DECIMAL} ,
+			#{branchId,jdbcType=DECIMAL} ,
+			#{channelId,jdbcType=DECIMAL},
+			#{valid,jdbcType=VARCHAR},
+        	#{productName,jdbcType=VARCHAR} ,
+        	#{isAperiodic,jdbcType=VARCHAR} ,
+        	#{payToLvmama,jdbcType=VARCHAR} 
+        )
+	</insert>
+
+	<update id="update" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		UPDATE TNT_PRODUCT
+		SET	BRANCH_ID = #{branchId,jdbcType=DECIMAL}
+		<if test="productId != null">
+			 ,PRODUCT_ID = #{productId,jdbcType=DECIMAL} 
+		</if>
+		<if test="channelId != null">
+			 ,CHANNEL_ID = #{channelId,jdbcType=DECIMAL}
+		</if>
+		<if test="valid != null">
+			 ,VALID = #{valid,jdbcType=VARCHAR}
+		</if>
+		<if test="productName != null">
+			 ,PRODUCT_NAME = #{productName,jdbcType=VARCHAR}
+		</if>
+		<if test="isAperiodic != null">
+			 ,IS_APERIODIC = #{isAperiodic,jdbcType=VARCHAR}
+		</if>
+		<if test="payToLvmama != null" >
+			 ,PAY_TO_LVMAMA = #{payToLvmama,jdbcType=VARCHAR}
+		</if>
+		WHERE
+		<if test="branchId != null and branchId !=''">
+			BRANCH_ID = #{branchId}
+		</if>
+		<if test="branchId==null">
+			TNT_PRODUCT_ID = #{tntProductId,jdbcType=DECIMAL}
+		</if>
+	</update>
+
+	<delete id="deleteById" parameterType="Long">
+		DELETE FROM
+		TNT_PRODUCT
+		WHERE
+		TNT_PRODUCT_ID = #{id}
+	</delete>
+
+	<delete id="delete" parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		DELETE FROM TNT_PRODUCT
+		WHERE
+		BRANCH_ID = #{branchId,jdbcType=DECIMAL} AND CHANNEL_ID =
+		#{channelId,jdbcType=DECIMAL}
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		WHERE
+		TNT_PRODUCT_ID = #{id}
+	</select>
+
+	<select id="selectOne" resultMap="baseResultMap"
+		parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		<include refid="where" />
+	</select>
+
+	<select id="getByProductId" resultMap="baseResultMap"
+		parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		WHERE
+		PRODUCT_ID = #{id}
+	</select>
+
+	<select id="getByBranchId" resultMap="baseResultMap"
+		parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		WHERE
+		BRANCH_ID = #{id}
+	</select>
+
+	<sql id="where">
+		<where>
+			<if test="tntProductId != null and tntProductId !=''">
+				AND TNT_PRODUCT_ID = #{tntProductId}
+			</if>
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+			</if>
+			<if test="branchId != null and branchId !=''">
+				AND BRANCH_ID = #{branchId}
+			</if>
+			<if test="channelId != null and channelId !=''">
+				AND CHANNEL_ID = #{channelId}
+			</if>
+			<if test="valid != null and valid !=''">
+				AND VALID = #{valid}
+			</if>
+			<if test="productName != null  and productName !=''">
+				AND PRODUCT_NAME like
+				CONCAT(CONCAT('%',#{productName}),'%')
+			</if>
+			<if test="isAperiodic != null and isAperiodic !=''">
+				AND IS_APERIODIC = #{isAperiodic,jdbcType=VARCHAR}
+			</if>
+			<if test="payToLvmama != null and payToLvmama !=''">
+				AND PAY_TO_LVMAMA = #{payToLvmama,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="pageWhere">
+		<where>
+			<if test="param.tntProductId != null and param.tntProductId !=''">
+				AND TNT_PRODUCT_ID = #{param.tntProductId}
+			</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = #{param.productId}
+			</if>
+			<if test="param.branchId != null and param.branchId !=''">
+				AND BRANCH_ID = #{param.branchId}
+			</if>
+			<if test="param.channelId != null and param.channelId !=''">
+				AND CHANNEL_ID = #{param.channelId}
+			</if>
+			<if test="param.valid != null and param.valid !=''">
+				AND VALID = #{param.valid}
+			</if>
+			<if test="param.productName != null  and param.productName !=''">
+				AND PRODUCT_NAME like
+				CONCAT(CONCAT('%',#{param.productName}),'%')
+			</if>
+			<if test="param.isAperiodic != null and param.isAperiodic !=''">
+				AND IS_APERIODIC = #{param.isAperiodic,jdbcType=VARCHAR}
+			</if>
+			<if test="param.payToLvmama != null and param.payToLvmama !=''">
+				AND PAY_TO_LVMAMA = #{param.payToLvmama,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+
+	<select id="count" resultType="Integer"
+		parameterType="com.lvmama.tnt.prod.po.TntProduct">
+		SELECT count(*) FROM TNT_PRODUCT
+		<include refid="where" />
+	</select>
+
+	<select id="findPage" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_PRODUCT
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+</mapper>
+

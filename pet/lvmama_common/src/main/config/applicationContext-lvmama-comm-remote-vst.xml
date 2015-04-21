@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+  
+	<bean id="vstSuppSupplierService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}/vstSuppSupplierServiceRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.vst.service.VstSuppSupplierService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+	<bean id="vstProdGoodsTimePriceService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}/vstProdGoodsTimePriceServiceRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.vst.service.VstProdGoodsTimePriceService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+	<bean id="vstProdProductService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}/vstProdProductServiceRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.vst.service.VstProdProductService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+	<bean id="vstOrdOrderService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}/vstOrderServiceRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.vst.service.VstOrdOrderService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="vstDistributorService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}/vstOrderServiceRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.vst.service.VstDistributorService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <!-- vst_super中间表数据接口 -->
+    <bean id="ebkSuperClientService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}/ebkSuperClientRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.vst.service.EbkSuperClientService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+	
+</beans>

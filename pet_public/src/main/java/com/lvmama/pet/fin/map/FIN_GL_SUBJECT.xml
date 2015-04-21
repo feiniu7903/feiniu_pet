@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FIN_GL_SUBJECT">
+
+	<typeAlias alias="FinGLSubject" type="com.lvmama.comm.pet.po.fin.FinGLSubject" />
+	
+	<resultMap id="FinGLSubjectMap" class="com.lvmama.comm.pet.po.fin.FinGLSubject">
+		<result column="SUBJECT_ID" property="subjectId" />
+		<result column="SUBJECT_CODE" property="subjectCode" />
+		<result column="SUBJECT_NAME" property="subjectName" />
+		<result column="PARENT_SUBJECT_CODE" property="parentSubjectCode" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="MEMO" property="memo" />
+	</resultMap>
+	
+	<select id="querySubjectsByParentCode" parameterClass="String" resultMap="FinGLSubjectMap">
+		SELECT * FROM FIN_GL_SUBJECT T WHERE 1=1
+		<isNotNull prepend="AND" property="parentSubjectCode" >
+			 T.PARENT_SUBJECT_CODE=#parentSubjectCode#
+		</isNotNull>
+		<isNull prepend="AND" property="parentSubjectCode">
+			T.PARENT_SUBJECT_CODE is null
+		</isNull>
+	</select>
+	
+</sqlMap>

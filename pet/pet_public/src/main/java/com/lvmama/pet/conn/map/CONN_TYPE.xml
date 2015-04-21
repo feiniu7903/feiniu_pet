@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CONN_TYPE">
+
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.conn.ConnType">
+		<result column="CALL_TYPE_ID" property="callTypeId" />
+	    <result column="CALL_TYPE_CODE" property="callTypeCode" />
+	    <result column="CALL_TYPE_NAME" property="callTypeName" />
+	    <result column="VALID" property="valid" />
+	    <result column="CREATE_TIME" property="createTime" />
+	    <result column="LAYER" property="layer" />
+	    <result column="PARENT_ID" property="parentId" />
+	    <result column="SEQ_NUM" property="seq" />
+	    <result column="CALLBACK" property="callback" />
+	</resultMap>
+
+	<select id="queryConnTypeByCallBack" resultMap="BaseResultMap">
+		select * from conn_type where layer='1' and callback=#callBack# and valid='true'
+	</select>
+	
+	 <select id="queryConnTypeByConnType" resultMap="BaseResultMap">
+	 	select * from conn_type where valid='true'
+	 	<dynamic>
+	      <isNotNull prepend="and" property="callTypeCode">
+	        CALL_TYPE_CODE = #callTypeCode#
+	      </isNotNull>
+	      <isNotNull prepend="and" property="callTypeName">
+	        CALL_TYPE_NAME = #callTypeName#
+	      </isNotNull>
+	      <isNotNull prepend="and" property="createTime">
+	        CREATE_TIME = #createTime#
+	      </isNotNull>
+	      <isNotNull prepend="and" property="layer">
+	        LAYER = #layer#
+	      </isNotNull>
+	      <isNotNull prepend="and" property="parentId">
+	        PARENT_ID = #parentId#
+	      </isNotNull>
+	      <isNotNull prepend="and" property="callback">
+	        CALLBACK = #callback#
+	      </isNotNull>
+	     </dynamic>
+	 </select>
+</sqlMap>

@@ -1,0 +1,59 @@
+<?page contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./gradeUpdate"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="gradeUpdate" title="会员升降等级"
+		apply="com.lvmama.pet.web.user.grade.GradeUpdateAction">
+		<grid>
+			<columns>
+				<column width="200px"></column>
+				<column width="400px"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>本年消费累积</hbox>
+					<hbox>
+						<label value="@{saction.amount}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>原级别</hbox>
+					<hbox>
+						<label value="@{saction.users.grade}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>级别过期时间</hbox>
+					<hbox>
+						<label value="@{saction.users.levelValidityDate}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>*新级别：</hbox>
+					<hbox>
+						<listbox rows="1" mold="select" id="grade"
+							onSelect="saction.changGrade(self.selectedItem.value);">
+							<listitem label="普通会员" value="NORMAL" />
+							<listitem label="金牌会员" value="GOLD" />
+							<listitem label="白金会员" value="PLATINUM" />
+							<listitem label="钻石会员" value="DIAMOND" />
+						</listbox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>备注</hbox>
+					<hbox>
+						<textbox value="@{saction.memo}" rows="6"
+							cols="70" />
+					</hbox>
+				</row>
+				<row spans="2,0" align="right">
+					<hbox>
+						<button label="确认" id="send" width="100px"
+							onClick="saction.update()" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

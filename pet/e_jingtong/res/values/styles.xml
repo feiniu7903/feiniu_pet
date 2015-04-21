@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+		<item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="LoginFormContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    
+    <style name="edittext_lable_style">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/gray_333333</item>
+    </style>
+    
+    <style name="btn">
+        <item name="android:layout_width">250dip</item>
+        <item name="android:layout_height">40dip</item>
+        <item name="android:textColor">@color/wihte</item>
+        <item name="android:background">@drawable/bg_login_btn_selector</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="key_board_normal">
+        <item name="android:textSize">36sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">65dp</item>
+    </style>
+    
+    <style name="key_board_no" parent="@style/key_board_normal">
+        <item name="android:background">@drawable/bg_keyboard_number_selector</item>
+        <item name="android:textColor">@color/color_keyboard_no_selector</item>
+    </style>
+    
+    <style name="key_board_delete" parent="@style/key_board_normal">
+        <item name = "android:background">@drawable/bg_keyboard_delete_selector</item>
+        <item name="android:textColor">@color/wihte</item>
+    </style>
+    <style name="key_board_search" parent="@style/key_board_normal">
+        <item name="android:textColor">@color/wihte</item>
+        <item name="android:background">@drawable/bg_keyboard_search_selector</item>
+    </style>
+    
+    <style name="order_detail_tip">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/red_eb1684</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:padding">10dip</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    
+     
+    <style name="dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">#FFF</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    
+</resources>

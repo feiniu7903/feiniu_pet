@@ -1,0 +1,36 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./channelHbox"?>
+<hbox id="channelHbox" apply="com.lvmama.back.web.coupon.channel.ChannelRationAction">
+	<custom-attributes firstId="${saction.firstId}"/>
+	<custom-attributes secondId="${saction.secondId}"/>
+	<custom-attributes threeId="${saction.threeId}"/>
+	<custom-attributes disabled="${saction.disabled}"/>
+	<grid>
+		<columns>
+			<column width="100px"></column>
+			<column width="200px"></column>
+			<column width="100px"></column>
+			<column width="200px"></column>
+			<column width="100px"></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox><label value="一级渠道"/></hbox>
+				<hbox><listbox mold="select" rows="1" id="firstChannelId" model="@{subChannelAction.firstChannelList}" disabled="@{subChannelAction.disabled }" onSelect='subChannelAction.changeChannel(self.selectedItem.value,Integer.parseInt("2"));saction.setChannelId(self.selectedItem.getAttribute("code"),1);'>
+					 <listitem self="@{each='channel'}" label="@{channel.channelName}" value="@{channel.channelId}" selected="@{channel.checked}"><custom-attributes code="@{channel.channelCode}"/></listitem>
+					 </listbox>
+				</hbox>
+				<hbox><label value="二级渠道"/></hbox>
+				<hbox><listbox mold="select" rows="1" id="secondChannelId" model="@{subChannelAction.secondChannelList, load-after=firstChannelId.onSelect}" disabled="@{subChannelAction.disabled }" onSelect='subChannelAction.changeChannel(self.selectedItem.value,Integer.parseInt("3"));saction.setChannelId(self.selectedItem.getAttribute("code"),2);'>
+						<listitem self="@{each='channel'}" label="@{channel.channelName}" value="@{channel.channelId}" selected="@{channel.checked}"><custom-attributes code="@{channel.channelCode}"/></listitem>
+					</listbox>
+				</hbox>
+				<hbox><label value="三级渠道"/></hbox>
+				<hbox><listbox mold="select" rows="1" id="threeChannelId" model="@{subChannelAction.threeChannelList, load-after='firstChannelId.onSelect,secondChannelId.onSelect'}"  disabled="@{subChannelAction.disabled }" onSelect='saction.setChannelId(self.selectedItem.getAttribute("code"),3);'>
+					<listitem self="@{each='channel'}" label="@{channel.channelName}" value="@{channel.channelId}" selected="@{channel.checked}"><custom-attributes code="@{channel.channelCode}"/></listitem>
+				</listbox>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+</hbox>

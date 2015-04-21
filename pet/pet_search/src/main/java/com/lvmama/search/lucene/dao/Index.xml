@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="createIndex">
+	<!-- bean -->
+	<typeAlias alias="placeBean" type="com.lvmama.comm.search.vo.PlaceBean" />
+	<typeAlias alias="placeHotelBean" type="com.lvmama.comm.search.vo.PlaceHotelBean" />
+	<typeAlias alias="productBean" type="com.lvmama.comm.search.vo.ProductBean" />
+	<typeAlias alias="productBranchBean"
+		type="com.lvmama.comm.search.vo.ProductBranchBean" />
+
+	<!-- place index result map -->
+	<resultMap id="PlaceBeanResultMap" class="placeBean">
+		<result property="id" column="ID" nullValue="0" />
+		<result property="name" column="NAME" nullValue="" />
+		<result property="enName" column="EN_NAME" nullValue="" />
+		<result property="productsPrice" column="PRODUCTS_PRICE"
+			nullValue="0" />
+		<result property="maxProductsPrice" column="MAX_PRODUCTS_PRICE"
+			nullValue="0" />
+		<result property="avgScore" column="CMT_AVG_SCORE" nullValue="0" />
+		<result property="cmtNum" column="CMT_NUM" nullValue="0" />
+		<!-- <result property="productsType" column="PRODUCTS_TYPE" nullValue="0" 
+			/> -->
+		<!-- <result property="gonglueNum" column="GONG_LV_NUM" nullValue="0" /> -->
+		<result property="summary" column="SUMMARY" nullValue="" />
+		<!-- <result property="content" column="CONTENT" nullValue="" /> -->
+		<!-- <result property="boost" column="BOOST" nullValue="0" /> -->
+		<!-- <result property="placeId" column="PLACE_ID" nullValue="0" /> -->
+		<!-- <result property="imageUrl" column="IMAGE_URL" nullValue="" /> -->
+		<!-- <result property="payMethod" column="PAY_METHOD" nullValue="" /> -->
+		<!-- <result property="agio" column="AGIO" nullValue="0" /> -->
+		<!-- <result property="topic" column="TOPIC" nullValue="" /> -->
+		<result property="city" column="CITY" nullValue="" />
+		<result property="province" column="PROVINCE" nullValue="" />
+		<!-- <result property="coupon" column="COUPON" nullValue="" /> -->
+		<result property="cityId" column="CITY_ID" nullValue="" />
+		<result property="provinceId" column="PROVINCE_ID" nullValue="" />
+		<result property="smallImage" column="SMALL_IMAGE" nullValue="" />
+		<result property="productNum" column="PRODUCT_NUM" nullValue="0" />
+		<result property="ticketNum" column="TICKET_NUM" nullValue="0" />
+		<result property="hotleNum" column="HOTLE_NUM" nullValue="0" />
+		<result property="freenessNum" column="FREENESS_NUM" nullValue="0" />
+		<result property="routeNum" column="ROUTE_NUM" nullValue="0" />
+		<result property="stage" column="STAGE" nullValue="2" />
+		<!--<result property="hotelSearchContent" column="HOTEL_SEARCH_CONTENT" 
+			nullValue="" /> -->
+		<!--<result property="hotelFacility" column="HOTEL_FACILITY" nullValue="" 
+			/> -->
+		<!--<result property="hotelStar" column="HOTEL_STAR" nullValue="" /> -->
+		<result property="pinYinUrl" column="PIN_YIN_URL" nullValue="" />
+		<result property="provincePinYinUrl" column="PROVINCE_PIN_YIN_URL"
+			nullValue="" />
+		<result property="cityPinYinUrl" column="CITY_PIN_YIN_URL"
+			nullValue="" />
+		<result property="address" column="ADDRESS" nullValue="" />
+		<!-- <result property="price" column="PRICE" nullValue="" /> -->
+		<result property="seq" column="SEQ_NUM" nullValue="" />
+		<result property="hasHotel" column="HAS_HOTEL_AROUND"
+			nullValue="" />
+		<result property="roundPlaceName" column="ROUND_PLACE_NAME"
+			nullValue="" />
+		<result property="pinYin" column="PIN_YIN" nullValue="" />
+		<result property="destSubjects" column="DEST_SUBJECTS"
+			nullValue="" />
+		<result property="destTagsName" column="DEST_TAGS_NAME"
+			nullValue="" />
+		<result property="destTagsDescript" column="DEST_TAGS_DESCRIPT"
+			nullValue="" />
+		<result property="destTagsCss" column="DEST_TAGS_CSS"
+			nullValue="" />
+		<result property="destTagsGroup" column="DEST_TAGS_GROUP"
+			nullValue="" />
+		<result property="shortId" column="SHORT_ID" nullValue="" />
+		<result property="longitude" column="LONGITUDE" nullValue="0" />
+		<result property="latitude" column="LATITUDE" nullValue="0" />
+		<result property="destId" column="PARENT_PLACE_ID" nullValue="" />
+		<result property="isClient" column="IS_CLIENT" nullValue="" />
+		<result property="placeType" column="PLACE_TYPE" nullValue="" />
+		<result property="middleImage" column="MIDDLE_IMAGE" nullValue="" />
+		<result property="marketPrice" column="MARKET_PRICE" nullValue="0" />
+		<result property="hfkw" column="HFKW" nullValue="" />
+		<!-- sellprice为空时，设值888888888做价格排序用 -->
+		<result property="sellPrice" column="PRODUCTS_PRICE" nullValue="888888888" />
+		<result property="placeMainTitel" column="PLACE_FIRST_SUBJECT"
+			nullValue="" />
+		<result property="placeTitel" column="PLACE_SECOND_SUBJECT"
+			nullValue="" />
+		<result property="destPresentStr" column="DEST_PERSENT_STR"
+			nullValue="" />
+		<result property="destNameIds" column="PARENT_PLACE_NAME_IDS"
+			nullValue="" />
+		<result property="weekSales" column="WEEK_SALES" nullValue="0" />
+		<result property="placeActivity" column="PLACE_ACTIVITY"
+			nullValue="" />
+		<result property="placeActivityHave" column="PLACE_ACTIVITY_HAVE"
+			nullValue="" />
+		<result property="todayOrderAbleTime" column="TODAY_ORDER_ABLE_TIME" />
+		<result property="todayOrderLastTime" column="TODAY_ORDER_LAST_TIME" />
+		<result property="cashRefund" column="CASH_REFUND" nullValue="-1" />
+		<result property="subTypeSale" column="subTypeSale" nullValue="0" />
+		<result property="subTypeMaxTagNum" column="subTypeMaxTagNum"
+			nullValue="0" />
+		<result property="realWeekSales" column="REALWEEK_SALE"
+			nullValue="0" />
+		<result property="shareweixin" column="SHAREWEIXIN" nullValue="" />
+
+
+	</resultMap>
+
+	<resultMap class="placeHotelBean" id="PlaceHotelBeanResultMap"
+		extends="PlaceBeanResultMap">
+		<result property="hotelStar" column="HOTEL_STAR" nullValue="" />
+		<result property="hotelTopic" column="HOTEL_TOPIC" nullValue="" />
+		<result property="recommendContent" column="RECOMMENDCONTENT"
+			nullValue="" />
+		<result property="hotelImage" column="HOTEL_IMAGE" nullValue="" />
+		<result property="hotelImageName" column="HOTEL_IMAGE_NAME"
+			nullValue="" />
+		<result property="hotelImageContext" column="HOTEL_IAMGE_CONTEXT"
+			nullValue="" />
+		<result property="picDisplay" column="PIC_DISPLAY" nullValue="" />
+		<result property="prodTopic" column="PROD_TOPIC" nullValue="" />
+		<result property="prodTagsName" column="PROD_TAGS_NAME"
+			nullValue="" />
+		<result property="groupProductNum" column="GROUP_PRODUCT_NUM"
+			nullValue="0" />
+	</resultMap>
+
+	<resultMap id="getProductIndexObjResultMap" class="productBean">
+		<result property="productId" column="PRODUCT_ID" nullValue="0" />
+		<result property="productName" column="PRODUCT_NAME" nullValue="" />
+		<result property="recommendReason" column="RECOMMEND_REASON"
+			nullValue="" />
+		<result property="marketPrice" column="MARKET_PRICE" nullValue="0" />
+		<result property="sellPrice" column="SELL_PRICE" nullValue="0" />
+		<result property="smallImage" column="SMALL_IMAGE" nullValue="" />
+		<result property="fromDest" column="FROM_DEST" nullValue="" />
+		<result property="fromDestContent" column="FROM_DEST_CONTENT"
+			nullValue="" />
+		<result property="createTime" column="CREATE_TIME" nullValue="" />
+		<result property="isValid" column="IS_VALID" nullValue="" />
+		<result property="updateTime" column="UPDATE_TIME" nullValue="" />
+		<result property="isTicket" column="IS_TICKET" nullValue="" />
+		<result property="seq" column="SEQ_NUM" nullValue="0" />
+		<result property="isHid" column="IS_HID" nullValue="" />
+		<result property="agio" column="AGIO" nullValue="0" />
+		<result property="topic" column="TOPIC" nullValue="" />
+		<result property="payMethod" column="PAY_METHOD" nullValue="" />
+		<result property="coupon" column="COUPON" nullValue="0" />
+		<result property="visitDay" column="VISIT_DAY" nullValue="0" />
+		<result property="productUrl" column="PRODUCT_URL" nullValue="0" />
+		<result property="toDest" column="TO_DEST" nullValue="" />
+		<result property="toDestContent" column="TO_DEST_CONTENT"
+			nullValue="" />
+		<result property="cashRefund" column="CASH_REFUND" nullValue="0" />
+		<result property="productChannel" column="CHANNEL" nullValue="" />
+		<result property="isOld" column="IS_OLD" nullValue="" />
+		<result property="productType" column="PRODUCT_TYPE" nullValue="" />
+		<result property="subProductType" column="SUB_PRODUCT_TYPE"
+			nullValue="" />
+		<result property="tagsName" column="TAGS_NAME" nullValue="" />
+		<result property="tagsDescript" column="TAGS_DESCRIPT"
+			nullValue="" />
+		<result property="tagsGroup" column="TAGS_GROUP" nullValue="" />
+		<result property="tagsCss" column="TAGS_CSS" nullValue="" />
+		<result property="productAllToPlace" column="PRODUCT_ALLTO_PLACE"
+			nullValue="" />
+		<result property="productAllToPlaceContent" column="PRODUCT_ALLTO_PLACE_CONTENT"
+			nullValue="" />
+		<result property="productAllToPlaceIds" column="PRODUCT_ALLTO_PLACE_IDS"
+			nullValue="" />
+		<result property="productRouteTypeName" column="PROD_ROUTE_TYPE_NAME"
+			nullValue="" />
+		<result property="productRouteTypeDes" column="PROD_ROUTE_TYPE_DES"
+			nullValue="" />
+		<result property="productRouteTypeImg" column="PROD_ROUTE_TYPE_IMG"
+			nullValue="" />
+		<result property="productAllToPlacePinYin" column="PRODUCT_ALLTO_PLACE_PINYIN"
+			nullValue="" />
+		<result property="departArea" column="DEPART_AREA" nullValue="" />
+		<result property="placeKeywordBind" column="PLACE_KEYWORD_BIND"
+			nullValue="" />
+		<result property="bedType" column="BED_TYPE" nullValue="" />
+		<result property="offlineTime" column="OFFLINE_TIME" />
+		<result property="broadBand" column="BROADBAND" nullValue="" />
+		<result property="selfPack" column="SELF_PACK" nullValue="" />
+		<result property="recommendInfoSecond" column="RECOMMEND_INFO_SECOND"
+			nullValue="" />
+		<result property="todayOrderAbleTime" column="TODAY_ORDER_ABLE_TIME" />
+		<result property="channelFront" column="channel_front"
+			nullValue="" />
+		<result property="channelGroup" column="CHANNEL_GROUP"
+			nullValue="" />
+		<result property="cmtNum" column="CMT_NUM" nullValue="0" />
+		<result property="weekSales" column="WEEK_SALES" nullValue="0" />
+		<!-- 以下是product_property_search_info属性映射 -->
+		<result property="landFeature" column="LAND_FEATURE" nullValue="" />
+		<result property="landTraffic" column="LAND_TRAFFIC" nullValue="" />
+		<result property="playArea" column="PLAY_AREA" nullValue="" />
+		<result property="playLine" column="PLAY_LINE" nullValue="" />
+		<result property="playFeatures" column="PLAY_FEATURES"
+			nullValue="" />
+		<result property="playBrand" column="PLAY_BRAND" nullValue="" />
+		<result property="playNum" column="PLAY_NUM" nullValue="" />
+		<result property="traffic" column="TRAFFIC" nullValue="" />
+		<result property="hotelType" column="HOTEL_TYPE" nullValue="" />
+		<result property="hotelLocation" column="HOTEL_LOCATION"
+			nullValue="" />
+		<result property="routeTopic" column="ROUTE_TOPIC" nullValue="" />
+		<result property="travelTime" column="TRAVEL_TIME" nullValue="" />
+		<result property="scenicPlace" column="SCENIC_PLACE" nullValue="" />
+		<result property="isAperiodic" column="IS_APERIODIC" nullValue="false" />
+		<result property="subTypeSale" column="subTypeSale" nullValue="" />
+		<result property="onLineTime" column="ON_LINE_TIME" nullValue="" />
+		<result property="timediff" column="TIMEDIFF" nullValue="0" />
+		<result property="subTypeMaxBrandNum" column="subTypeMaxBrandNum"
+			nullValue="0" />
+		<result property="subTypeMaxTagNum" column="subTypeMaxTagNum"
+			nullValue="0" />
+		<result property="realWeekSales" column="REALWEEK_SALE"
+			nullValue="0" />
+		<result property="shareweixin" column="SHAREWEIXIN" nullValue="" />
+
+	</resultMap>
+
+	<resultMap id="getProductBranchIndexObjResultMap" class="productBranchBean">
+		<result property="prodBranchId" column="PROD_BRANCH_ID"
+			nullValue="" />
+		<result property="createTime" column="CREATE_TIME" nullValue="" />
+		<result property="updateTime" column="UPDATE_TIME" nullValue="" />
+		<result property="branchName" column="BRANCH_NAME" nullValue="" />
+		<result property="bedType" column="BED_TYPE" nullValue="" />
+		<result property="description" column="DESCRIPTION" nullValue="" />
+		<result property="broadBand" column="BROADBAND" nullValue="" />
+		<result property="cashRefund" column="CASH_REFUND" nullValue="" />
+		<result property="breakfast" column="BREAKFAST" nullValue="" />
+		<result property="marketPrice" column="MARKET_PRICE" nullValue="0" />
+		<result property="sellPrice" column="SELL_PRICE" nullValue="0" />
+		<result property="icon" column="ICON" nullValue="" />
+		<result property="additional" column="ADDITIONAL" nullValue="" />
+		<result property="onLine" column="ON_LINE" nullValue="" />
+		<result property="valid" column="VALID" nullValue="" />
+		<result property="productAllPlaceIds" column="PRODUCT_ALL_PLACE_IDS"
+			nullValue="" />
+		<result property="productAlltoPlaceContent" column="PRODUCT_ALLTO_PLACE_CONTENT"
+			nullValue="" />
+		<result property="productId" column="PRODUCT_ID" nullValue="0" />
+		<result property="visible" column="VISIBLE" nullValue="" />
+		<result property="defaultBranch" column="DEFAULT_BRANCH"
+			nullValue="" />
+		<result property="channel" column="CHANNEL" nullValue="" />
+		<result property="subProudctType" column="SUB_PRODUCT_TYPE"
+			nullValue="" />
+		<result property="validBeginTime" column="VALID_BEGIN_TIME" />
+		<result property="validEndTime" column="VALID_END_TIME" />
+		<result property="invalidDateMemo" column="INVALID_DATE_MEMO"
+			nullValue="" />
+		<result property="shareweixin" column="SHAREWEIXIN" />
+	</resultMap>
+	<sql id="placeIndexDataSql">
+		(select
+		nvl(max(length(dest_tags_name)-length(replace(dest_tags_name,','))+1),0
+		)
+		from lvmama_pet.place_search_info where stage=places.stage and
+		dest_tags_name is not null ) subTypeMaxTagNum,
+		(select sum(REALWEEK_SALE) from lvmama_pet.place_search_info where
+		stage=places.stage ) subTypeSale,
+		places.place_id id,
+		1 typeId,
+		(select wmsys.wm_concat( sp.object_name||'~'||sp.pin_yin ||'~'|| sp.jian_pin)
+		from lvmama_pet.place_search_pinyin sp
+		where places.place_id = sp.object_id
+		and sp.object_type = 'PLACE_NAME') name,
+		places.en_name,
+		places.cmt_avg_score ,
+		places.cmt_num ,
+		places.products_price ,
+		places.max_products_price ,
+		places.summary ,
+		places.city ,
+		places.province ,
+		places.CITY_ID ,
+		places.PROVINCE_ID ,
+		places.small_image ,
+		places.PRODUCT_NUM ,
+		places.TICKET_NUM ,
+		places.HOTLE_NUM ,
+		places.FREENESS_NUM ,
+		Places.Stage,
+		<!--(places.hotel_facility||','||places.hotel_type||','||places.hotel_level||','||places.hotel_type) 
+			HOTEL_SEARCH_CONTENT , -->
+		<!--places.Hotel_Facility, -->
+		<!--places.hotel_star, -->
+		places.pin_yin_url,
+		(select p.pin_yin_url from lvmama_pet.place p where
+		p.place_id=places.province_id ) as province_pin_yin_url,
+		(select
+		p.pin_yin_url from lvmama_pet.place p where p.PLACE_ID=places.CITY_ID
+		) as city_pin_yin_url,
+		places.address,
+		places.SEQ_NUM,
+		places.place_id
+		short_id,
+		(select wmsys.wm_concat( pb.subject_name ||'~'||
+		pb.subject_pinyin)
+		from lvmama_pet.com_subject pb
+		where (places.place_first_subject = pb.subject_name or
+		places.place_second_subject = pb.subject_name )
+		and pb.subject_type = 'PLACE'
+		) DEST_SUBJECTS,
+		places.DEST_TAGS_NAME,
+		places.DEST_TAGS_DESCRIPT,
+		places.DEST_TAGS_CSS,
+		places.DEST_TAGS_GROUP,
+		places.has_hotel_around,
+		places.round_place_name,
+		places.pin_yin,
+		places.ROUTE_NUM,
+		places.longitude,
+		places.latitude,
+		places.PARENT_PLACE_ID,
+		'Y' is_client,
+		places.place_type,
+		places.middle_image,
+		places.market_price,
+		places.products_price,
+		places.place_first_subject,
+		places.place_second_subject ,
+		places.dest_persent_str,
+		places.PARENT_PLACE_NAME_IDS,
+		places.hfkw,
+		places.WEEK_SALES,
+		places.REALWEEK_SALE,
+		places.PLACE_ACTIVITY,
+		decode(places.PLACE_ACTIVITY, null, 0, 1) AS PLACE_ACTIVITY_HAVE,
+		places.TODAY_ORDER_ABLE_TIME,
+		places.TODAY_ORDER_LAST_TIME,
+		places.CASH_REFUND,
+		places.SHAREWEIXIN
+	</sql>
+
+	<select id="getPlaceIndexDate" resultMap="PlaceBeanResultMap"
+		parameterClass="java.util.Map">
+		SELECT
+		<include refid="placeIndexDataSql" />
+		FROM ( SELECT rownum rownum_, psi.*
+		FROM lvmama_pet.place_search_info psi
+		WHERE psi.is_valid='Y'
+		<isNotNull property="placeId" prepend="AND">
+			psi.PLACE_ID in
+			<iterate prepend="" property="placeId" open="(" close=")"
+				conjunction=",">
+				#placeId[]#
+			</iterate>
+		</isNotNull>
+		ORDER BY rownum_
+		) places
+		WHERE
+		places.rownum_ BETWEEN #beginRow# AND #endRow#
+	</select>
+
+	<select id="countPlaceIndex" resultClass="java.lang.Integer">
+		SELECT count(*) FROM lvmama_pet.place_search_info psi
+		WHERE psi.is_valid='Y'
+	</select>
+	<select id="getPlaceHotelIndexData" resultMap="PlaceHotelBeanResultMap"
+		parameterClass="java.util.Map">
+		SELECT
+		<include refid="placeIndexDataSql" />,
+		places.hotel_star_r as hotel_star,
+		places.hotel_topic_r as hotel_topic,
+		places.recommendContent,
+		places.HOTEL_IMAGE,
+		places.HOTEL_IMAGE_NAME,
+		places.HOTEL_IAMGE_CONTEXT,
+		places.PIC_DISPLAY,
+		places.PROD_TOPIC,
+		places.PROD_TAGS_NAME,
+		places.GROUP_PRODUCT_NUM
+		FROM ( SELECT ROWNUM ROWNUM_,
+		PSI.*,
+		PH.HOTEL_STAR AS HOTEL_STAR_R,
+		PH.HOTEL_TOPIC AS HOTEL_TOPIC_R,
+		PH.PIC_DISPLAY,
+		PHNT.NOTICE_CONTENT AS RECOMMENDCONTENT,
+		(SELECT WMSYS.WM_CONCAT(IMAGES_URL)
+		FROM (SELECT PLACE_ID, IMAGES_URL
+		FROM LVMAMA_PET.PLACE_PHOTO PP
+		WHERE PP.TYPE = 'LARGE'
+		AND PP.PLACE_PHOTO_DISPLAY = '1'
+		ORDER BY SEQ_NUM) PPP
+		WHERE PPP.PLACE_ID = PH.PLACE_ID) HOTEL_IMAGE,
+		(SELECT WMSYS.WM_CONCAT(PLACE_PHOTO_NAME)
+		FROM (SELECT PLACE_ID, PLACE_PHOTO_NAME
+		FROM LVMAMA_PET.PLACE_PHOTO PP
+		WHERE PP.TYPE = 'LARGE'
+		AND PP.PLACE_PHOTO_DISPLAY = '1'
+		ORDER BY SEQ_NUM) PPP
+		WHERE PPP.PLACE_ID = PH.PLACE_ID) HOTEL_IMAGE_NAME,
+		(SELECT WMSYS.WM_CONCAT(PLACE_PHOTO_CONTEXT)
+		FROM (SELECT PLACE_ID, PLACE_PHOTO_CONTEXT
+		FROM LVMAMA_PET.PLACE_PHOTO PP
+		WHERE PP.TYPE = 'LARGE'
+		AND PP.PLACE_PHOTO_DISPLAY = '1'
+		ORDER BY SEQ_NUM) PPP
+		WHERE PPP.PLACE_ID = PH.PLACE_ID) HOTEL_IAMGE_CONTEXT,
+		(SELECT WMSYS.WM_CONCAT(PROD_PROPERTY.ROUTE_TOPIC)
+		FROM LVMAMA_PET.PRODUCT_SEARCH_INFO PROD,
+		LVMAMA_PET.PRODUCT_PROPERTY_SEARCH_INFO PROD_PROPERTY,
+		LVMAMA_PET.PRODUCT_PRODUCT_PLACE PROD_PLACE
+		WHERE PROD_PLACE.PRODUCT_ID = PROD.PRODUCT_ID
+		AND PROD.PRODUCT_ID = PROD_PROPERTY.PRODUCT_ID
+		AND PROD_PLACE.PLACE_ID = PH.PLACE_ID
+		AND PROD.IS_VALID = 'Y'
+		AND PROD.ON_LINE = 'true') PROD_TOPIC,
+		(SELECT WMSYS.WM_CONCAT(PROD.TAGS_NAME)
+		FROM LVMAMA_PET.PRODUCT_SEARCH_INFO PROD,
+		LVMAMA_PET.PRODUCT_PRODUCT_PLACE PROD_PLACE
+		WHERE PROD_PLACE.PRODUCT_ID = PROD.PRODUCT_ID
+		AND PROD_PLACE.PLACE_ID = PH.PLACE_ID
+		AND PROD.IS_VALID = 'Y'
+		AND PROD.ON_LINE = 'true') PROD_TAGS_NAME,
+		(SELECT COUNT(*)
+		FROM LVMAMA_PET.PRODUCT_SEARCH_INFO PROD,
+		LVMAMA_PET.PRODUCT_PRODUCT_PLACE PROD_PLACE
+		WHERE PROD_PLACE.PRODUCT_ID = PROD.PRODUCT_ID
+		AND PROD_PLACE.PLACE_ID = PH.PLACE_ID
+		AND PROD.IS_VALID = 'Y'
+		AND PROD.ON_LINE = 'true'
+		AND PROD.CHANNEL_GROUP = 'TUANGOU') GROUP_PRODUCT_NUM
+		FROM LVMAMA_PET.PLACE_SEARCH_INFO PSI,
+		LVMAMA_PET.PLACE_HOTEL PH,
+		(SELECT *
+		FROM (SELECT PHN.NOTICE_CONTENT,
+		PHN.PLACE_ID,
+		ROW_NUMBER() OVER(PARTITION BY PHN.PLACE_ID ORDER BY PHN.NOTICE_CREATETIME DESC)
+		AS NOTICE_NUM
+		FROM LVMAMA_PET.PLACE_HOTEL_NOTICE PHN
+		WHERE NOTICE_STARTTIME &lt;= SYSDATE
+		AND NOTICE_ENDTIME &gt;= SYSDATE
+		AND NOTICE_TYPE = 'RECOMMEND')
+		WHERE NOTICE_NUM = 1) PHNT
+		WHERE PH.PLACE_ID = PSI.PLACE_ID
+		AND PH.PLACE_ID = PHNT.PLACE_ID(+)
+		AND PSI.IS_VALID = 'Y'
+		AND PSI.STAGE = '3'
+		AND ( HOTLE_NUM &gt; 0 OR freeness_num &gt; 0 )
+		<isNotNull property="placeId" prepend="AND">
+			PSI.PLACE_ID IN
+			<iterate prepend="" property="placeId" open="(" close=")"
+				conjunction=",">
+				#placeId[]#
+			</iterate>
+		</isNotNull>
+		ORDER BY rownum_
+		) places
+		WHERE
+		places.rownum_ BETWEEN #beginRow# AND #endRow#
+	</select>
+
+	<select id="countPlaceHotelIndex" resultClass="java.lang.Integer">
+		SELECT count(*) FROM
+		lvmama_pet.place_search_info psi,lvmama_pet.place_hotel
+		WHERE
+		psi.place_id = place_hotel.place_id and psi.is_valid='Y' AND psi.stage = '3'
+	</select>
+	<select id="getProductIndexDate" resultMap="getProductIndexObjResultMap"
+		parameterClass="java.util.Map">
+		SELECT (select nvl(max(length(PLAY_BRAND) - length(replace(PLAY_BRAND, ';')) + 1),
+                   0)
+          FROM lvmama_pet.product_search_info aa
+          left join lvmama_pet.product_property_search_info bb
+            on aa.product_id = bb.product_id
+         where sub_product_type = product.sub_product_type
+           and PLAY_BRAND is not null) subTypeMaxBrandNum,
+       (select nvl(max(length(TAGS_NAME) - length(replace(TAGS_NAME, ',')) + 1),
+                   0)
+          from lvmama_pet.product_search_info
+         where sub_product_type = product.sub_product_type
+           and TAGS_NAME is not null) subTypeMaxTagNum,
+       (trunc(sysdate) - product.on_line_time) TIMEDIFF,
+      case when sub_product_type='FREENESS_LONG'
+               then nvl((select sum(REALWEEK_SALE) from lvmama_pet.product_search_info psi   where sub_product_type in ('FREENESS_LONG','HOTEL_SUIT') ),0) 
+                when sub_product_type='HOTEL_SUIT'
+               then nvl((select sum(REALWEEK_SALE) from lvmama_pet.product_search_info psi   where sub_product_type in ('FREENESS_LONG','HOTEL_SUIT') ),0) 
+                 else nvl((select sum(REALWEEK_SALE) from lvmama_pet.product_search_info psi   where sub_product_type=product.sub_product_type ),0)
+                end subTypeSale,
+       product.*
+  FROM (SELECT rownum rownum_,
+               psi.*,
+               ppsi.LAND_FEATURE,
+               ppsi.LAND_TRAFFIC,
+               ppsi.PLAY_AREA,
+               ppsi.PLAY_LINE,
+               ppsi.PLAY_FEATURES,
+               ppsi.PLAY_BRAND,
+               ppsi.PLAY_NUM,
+               ppsi.TRAFFIC,
+               ppsi.HOTEL_TYPE,
+               ppsi.HOTEL_LOCATION,
+               ppsi.ROUTE_TOPIC
+          FROM lvmama_pet.product_search_info psi
+          left join lvmama_pet.product_property_search_info ppsi
+            on psi.product_id = ppsi.product_id
+         WHERE psi.is_valid = 'Y'
+           AND psi.is_hid = 'Y'
+           and psi.on_line != 'false'
+		<isNotNull property="productId" prepend="AND">
+			psi.PRODUCT_ID in
+			<iterate prepend="" property="productId" open="(" close=")"
+				conjunction=",">
+				#productId[]#
+			</iterate>
+		</isNotNull>
+		ORDER BY rownum_) product
+		WHERE product.rownum_ BETWEEN #beginRow# AND #endRow#
+	</select>
+
+	<select id="countProductIndex" resultClass="java.lang.Integer">
+		SELECT count(*)
+		FROM LVMAMA_PET.PRODUCT_SEARCH_INFO psi
+		left join lvmama_pet.product_property_search_info ppsi
+		on psi.product_id = ppsi.product_id
+		WHERE is_valid = 'Y'
+		AND is_hid = 'Y'
+		and on_line != 'false'
+	</select>
+
+	<select id="getProductBranchIndexDate" resultMap="getProductBranchIndexObjResultMap"
+		parameterClass="java.util.Map">
+		SELECT * FROM ( SELECT rownum rownum_, psi.*
+		FROM lvmama_pet.PROD_BRANCH_SEARCH_INFO psi
+		WHERE psi.valid ='Y'
+		AND psi.visible ='true'
+		and psi.on_line! ='false'
+		and psi.sub_product_type !='TRAIN'
+		<isNotNull property="prodBranchId" prepend="AND">
+			psi.PROD_BRANCH_ID in
+			<iterate prepend="" property="prodBranchId" open="(" close=")"
+				conjunction=",">
+				#prodBranchId[]#
+			</iterate>
+		</isNotNull>
+		ORDER BY rownum_ ) product
+		WHERE product.rownum_ BETWEEN #beginRow# AND #endRow#
+	</select>
+
+	<select id="countProductBranchIndex" resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM LVMAMA_PET.PROD_BRANCH_SEARCH_INFO
+		WHERE valid ='Y'
+		AND visible ='true'
+		and sub_product_type !='TRAIN'
+		and on_line! ='false'
+	</select>
+	
+	
+
+	<select id="getProductMidType" resultClass="com.lvmama.comm.search.vo.ProductBean"
+		parameterClass="java.util.Map">
+		select ceil(count(*)/2) productId,psi.sub_product_type subProductType
+		from lvmama_pet.product_search_info psi
+		where is_valid = 'Y'
+		AND is_hid = 'Y'
+		and on_line != 'false'
+		and psi.realweek_sale>0
+		group by sub_product_type
+	</select>
+	<select id="getAllProductType" resultClass="com.lvmama.comm.search.vo.ProductBean"
+		parameterClass="java.util.Map">
+		select psi.sub_product_type subProductType
+		from lvmama_pet.product_search_info psi
+		where is_valid = 'Y'
+		AND is_hid = 'Y'
+		and on_line != 'false'
+		group by sub_product_type
+	</select>
+	<select id="getMidproductBean" resultClass="com.lvmama.comm.search.vo.ProductBean"
+		parameterClass="com.lvmama.comm.search.vo.ProductBean">
+		select sub_product_type subProductType,
+       nvl(REALWEEK_SALE / subtypesale, 0) midSalePer
+  from (select rownum rownum_, t.*
+          from (select 
+           case when sub_product_type='FREENESS_LONG'
+               then nvl((select sum(REALWEEK_SALE) from lvmama_pet.product_search_info product   where sub_product_type in ('FREENESS_LONG','HOTEL_SUIT') ),0) 
+                when sub_product_type='HOTEL_SUIT'
+               then nvl((select sum(REALWEEK_SALE) from lvmama_pet.product_search_info product   where sub_product_type in ('FREENESS_LONG','HOTEL_SUIT') ),0) 
+                 else nvl((select sum(REALWEEK_SALE) from lvmama_pet.product_search_info product   where sub_product_type=product.sub_product_type ),0)
+                end subTypeSale,
+                       psi.*
+                  from lvmama_pet.product_search_info psi
+                 where psi.sub_product_type = #subProductType#
+                   and psi.realweek_sale > 0
+                 order by psi.REALWEEK_SALE) t)
+ where rownum_ = #productId#
+
+	</select>
+	<select id="getPlaceMidType" resultClass="com.lvmama.comm.search.vo.PlaceBean"
+		parameterClass="java.util.Map">
+		select ceil(count(*)/2) placeId,psi.stage stage
+		from lvmama_pet.place_search_info psi
+		where stage != 0
+		and psi.is_valid='Y'
+		and psi.realweek_sale>0
+		group by stage
+	</select>
+	<select id="getMidPlaceBean" resultClass="com.lvmama.comm.search.vo.PlaceBean"
+		parameterClass="com.lvmama.comm.search.vo.PlaceBean">
+		select stage, nvl(REALWEEK_SALE / subtypesale,0) midSalePer
+		from (
+		select rownum rownum_,t.* from(
+		select
+		(select sum(REALWEEK_SALE)
+		from lvmama_pet.place_search_info place
+		where stage = psi.stage) subtypesale,
+		psi.*
+		from lvmama_pet.place_search_info psi
+		where psi.stage = #stage#
+		and psi.realweek_sale > 0
+		order by psi.REALWEEK_SALE
+		)t )
+		where rownum_ = #placeId#
+
+	</select>
+	
+		<select id="getNoSaleProductType" resultClass="com.lvmama.comm.search.vo.ProductBean"
+		parameterClass="java.util.Map">
+		select psi.sub_product_type subProductType
+		  from lvmama_pet.product_search_info psi
+		 where is_valid = 'Y'
+		   AND is_hid = 'Y'
+		   and on_line != 'false'
+		   and psi.sub_product_type not in
+		       (select psi.sub_product_type subProductType
+		          from lvmama_pet.product_search_info psi
+		         where is_valid = 'Y'
+		           AND is_hid = 'Y'
+		           and on_line != 'false'
+		           and psi.realweek_sale > 0
+		         group by sub_product_type)
+		 group by sub_product_type
+
+	</select>
+	<select id="getVerHotelIndex" resultClass="com.lvmama.comm.search.vo.VerHotelBean" parameterClass="java.util.Map">
+		       
+   select *
+     from (select rownum rownum_,
+                  t.hotel_id,
+                  t.hotel_name,
+                  t.hotel_adress,
+                  t.hoteltopic,
+                  t.addressenglish,
+                  t.HOTELSTAR,
+                  t.hotelbrand,
+                  t.hotelimage,
+                  t.enname,
+                  t.minproductsprice,
+                  t.maxproductsprice,
+                  t.city,
+                  t.provinceid,
+                  t.cityid,
+                  t.province,
+                  t.district,
+                  t.railwaystation,
+                  t.subwaystation,
+                  t.minroomtime,
+                  t.maxroomtime,
+                  t.roommun,
+                  t.sale_status,
+                  t.districtid,
+                  t.longitude,
+                  t.latitude,
+                  t.baidu_geo,
+                  t.product_time,
+                  t.hotelbrandid,
+                  t.returnmoney,
+                  t.issale,
+                  t.surrondings,
+                  t.district_type,
+                  t.hassalecommodity,
+                  t.RECOMMEDLEVEL,
+                  t.FACILITIES,
+                  t.ROOM_TYPE,
+                  t.FACILITIES_NAME,
+                  t.effect_times,
+                  t.HOTEL_PIC,
+                  t.min_stay_day,
+                  t.max_stay_day,
+                  t.photo_content
+             from ver_hotel_search_basic t
+            where t.sale_status = 'Y'
+            ) hotel
+    WHERE hotel.rownum_ BETWEEN #beginRow# AND #endRow#
+		    
+	</select>
+	
+	<select id="countVerHotelIndex" resultClass="java.lang.Integer">
+		    select count(*)
+            from ver_hotel_search_basic t
+            where t.sale_status ='Y'
+	</select>
+
+	<select id="getVerPlaceIndex" resultClass="com.lvmama.comm.search.vo.VerPlaceBean" parameterClass="java.util.Map">
+		       
+<!--   		select * -->
+<!-- 		  from (select rownum rownum_, aa.* -->
+<!-- 		          from (select h.*, -->
+<!-- 					       (select count(*) -->
+<!-- 					          from lvmama_ver.ver_hotel_search_basic b -->
+<!-- 					         where b.districtid = to_char(h.parentId) -->
+<!-- 					           and GetDistance(h.longitude, h.latitude, b.longitude, b.latitude) &lt; 5) aroundNum -->
+<!-- 					  from (select t.sign_id placeId, -->
+<!-- 					               t.sign_type placeType, -->
+<!-- 					               t.sign_name placeName, -->
+<!-- 					               '' placePinyin, -->
+<!-- 					               to_char(t.longitude) longitude, -->
+<!-- 					               to_char(t.latitude) latitude, -->
+<!-- 					               '2' stage, -->
+<!-- 					               t.district_id parentId -->
+<!-- 					          from biz_district_sign t -->
+<!-- 					         where t.cancel_flag = 'Y' -->
+<!-- 					           and t.longitude > 0 -->
+<!-- 					           and t.latitude > 0) h -->
+<!-- 		                union all -->
+<!-- 		                select d.district_id placeId, -->
+<!-- 		                       d.district_type placeType, -->
+<!-- 		                       d.district_name placeName, -->
+<!-- 		                       d.pinyin placePinyin, -->
+<!-- 		                       '' longitude, -->
+<!-- 		                       '' latitude, -->
+<!-- 		                       '1' stage, -->
+<!-- 		                        d.parent_id parentId, -->
+<!-- 		                        0 aroundNum -->
+<!-- 		                  from biz_district d -->
+<!-- 		                 where d.cancel_flag = 'Y' -->
+		                
+<!-- 		                 order by 7) aa) verplace -->
+<!-- 		 WHERE verplace.rownum_ BETWEEN #beginRow# AND #endRow# -->
+
+select *
+		  from (select rownum rownum_, aa.*
+		          from (select h.*,
+					       (0) aroundNum
+					  from (select t.sign_id placeId,
+					               t.sign_type placeType,
+					               t.sign_name placeName,
+					               t.pinyin as placesignpinyin,
+                                   t.short_pinyin as placesignshortpinyin,
+					               '' placePinyin,
+					               '' placeUrlPinyin,
+					               to_char(t.longitude) longitude,
+					               to_char(t.latitude) latitude,
+					               '2' stage,
+					               t.district_id parentId
+					          from biz_district_sign t
+					         where t.cancel_flag = 'Y'
+					           and t.longitude > 0
+					           and t.latitude > 0) h
+		                union all
+		                select d.district_id placeId,
+		                       d.district_type placeType,
+		                       d.district_name placeName,
+		                       d.pinyin placePinyin,
+		                       d.url_pin_yin placeUrlPinyin,
+		                       '' as placesignpinyin,
+                               '' as placesignshortpinyin,
+		                       '' longitude,
+		                       '' latitude,
+		                       '1' stage,
+		                        d.parent_id parentId,
+		                        0 aroundNum
+		                  from biz_district d
+		                 where d.cancel_flag = 'Y'
+		                
+		                 order by 7) aa) verplace
+		 WHERE verplace.rownum_ BETWEEN #beginRow# AND #endRow#
+	</select>
+<select id="countVerPlaceIndex" resultClass="java.lang.Integer">
+<!-- 		    select count(*) -->
+<!--             from ( -->
+<!-- 	           select h.*, -->
+<!-- 					       (select count(*) -->
+<!-- 					          from lvmama_ver.ver_hotel_search_basic b -->
+<!-- 					         where b.districtid = to_char(h.parentId) -->
+<!-- 					           and GetDistance(h.longitude, h.latitude, b.longitude, b.latitude) &lt; 5) aroundNum -->
+<!-- 					  from (select t.sign_id placeId, -->
+<!-- 					               t.sign_type placeType, -->
+<!-- 					               t.sign_name placeName, -->
+<!-- 					               '' placePinyin, -->
+<!-- 					               to_char(t.longitude) longitude, -->
+<!-- 					               to_char(t.latitude) latitude, -->
+<!-- 					               '2' stage, -->
+<!-- 					               t.district_id parentId -->
+<!-- 					          from biz_district_sign t -->
+<!-- 					         where t.cancel_flag = 'Y' -->
+<!-- 					           and t.longitude > 0 -->
+<!-- 					           and t.latitude > 0) h -->
+<!-- 		                union all -->
+<!-- 		                select d.district_id placeId, -->
+<!-- 		                       d.district_type placeType, -->
+<!-- 		                       d.district_name placeName, -->
+<!-- 		                       d.pinyin placePinyin, -->
+<!-- 		                       '' longitude, -->
+<!-- 		                       '' latitude, -->
+<!-- 		                       '1' stage, -->
+<!-- 		                        d.parent_id parentId, -->
+<!-- 		                        0 aroundNum -->
+<!-- 		                  from biz_district d -->
+<!-- 		                 where d.cancel_flag = 'Y' -->
+		                
+<!-- 		                 order by 7 -->
+<!--             ) -->
+
+  	select count(*)
+            from (
+	           select h.*,
+					       (0) aroundNum
+					  from (select t.sign_id placeId,
+					               t.sign_type placeType,
+					               t.sign_name placeName,
+					               '' placePinyin,
+					               to_char(t.longitude) longitude,
+					               to_char(t.latitude) latitude,
+					               '2' stage,
+					               t.district_id parentId
+					          from biz_district_sign t
+					         where t.cancel_flag = 'Y'
+					           and t.longitude > 0
+					           and t.latitude > 0) h
+		                union all
+		                select d.district_id placeId,
+		                       d.district_type placeType,
+		                       d.district_name placeName,
+		                       d.pinyin placePinyin,
+		                       '' longitude,
+		                       '' latitude,
+		                       '1' stage,
+		                        d.parent_id parentId,
+		                        0 aroundNum
+		                  from biz_district d
+		                 where d.cancel_flag = 'Y'
+		                
+		                 order by 7
+            )
+	</select>
+	<select id="getPlaceCatageory" resultClass="com.lvmama.comm.search.vo.VerPlaceTypeVO"
+		parameterClass="java.util.HashMap">
+		select bd.dict_id dictId,
+		       bd.dict_def_id dictDefId,
+		       bd.dict_name dictName,
+		       bd.cancel_flag cancelFlag,
+		       bd.add_flag addFlag
+		
+		  from BIZ_DICT bd
+		
+		 where bd.DICT_DEF_ID = 300
+		      
+		   and bd.CANCEL_FLAG = 'Y'
+		
+	</select>
+	<select id="getVerPlace" resultClass="com.lvmama.comm.search.vo.VerPlaceBean"
+		parameterClass="java.util.HashMap">
+		select bds.district_id parentId,
+	       bds.longitude longitude,
+	       bds.latitude latitude,
+	       bds.sign_name placeName
+		from Biz_District_Sign bds
+		where bds.sign_id = #placeId#
+	</select>
+</sqlMap>

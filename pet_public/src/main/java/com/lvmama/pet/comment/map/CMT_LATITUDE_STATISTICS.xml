@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_LATITUDE_STATISTICS" >
+	<resultMap id="cmtLatitudeStatisticsMap" class="com.lvmama.comm.pet.po.comment.CmtLatitudeStatistics">
+		<result property="placeId" column="PLACE_ID"/>
+		<result property="productId" column="PRODUCT_ID"/>
+		<result property="avgScore" column="AVG_SCORE"/>
+		<result property="latitudeId" column="LATITUDE_ID"/>
+		<result property="latitudeName" column="LATITUDE_NAME"/>
+		<result property="commentCount" column="COMMENT_COUNT"/>
+	</resultMap>
+
+	<sql id="query_cmtLatSttc_base_sql">
+		SELECT
+			CLS.LATITUDE_ID, CLS.AVG_SCORE, PCS.PLACE_ID, PCS.PRODUCT_ID, PCS.COMMENT_COUNT,
+			NVL2(CLS.LATITUDE_ID, (select dcl.latitude_name  from dic_comment_latitude dcl where latitude_id = CLS.LATITUDE_ID),'') LATITUDE_NAME
+		FROM
+			CMT_LATITUDE_STATISTICS CLS, CMT_TITLE_STATISTICS PCS
+		where CLS.Cmt_Title_Statistics_Id = PCS.CMT_TITLE_STATISTICS_ID
+			<isNotEmpty prepend=" AND " property="placeId" >PCS.PLACE_ID = #placeId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="productId" >PCS.PRODUCT_ID = #productId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="latitudeId"> CLS.LATITUDE_ID = #latitudeId#</isNotEmpty>
+			order by CLS.LATITUDE_ID
+	</sql>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="cmtLatitudeStatisticsMap">
+		select T2.* 
+		from (
+		    select T1.* , rownum as rn 
+		    from (
+			      <include refid="query_cmtLatSttc_base_sql"/> 
+			      ) T1			      
+			 <dynamic prepend=" WHERE ">
+			    <isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+			 </dynamic>		 	      
+	   	) T2
+	   	<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow"> RN &gt;= #_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 计算每个景区各个维度的平均分 --> 
+	<sql id="statisticsPlaceLatitudeScoreCount">
+		select  pcs.CMT_TITLE_STATISTICS_ID, pcs.PLACE_ID, t.AVG_SCORE, t.LATITUDE_ID
+		  from CMT_TITLE_STATISTICS pcs,
+		       (select cc.PLACE_ID, cl.LATITUDE_ID , ROUND(AVG(cl.SCORE), 2) AVG_SCORE
+		          from CMT_COMMENT cc, CMT_COMMENT_latitude cl
+		         where cc.CMT_COMMENT_ID = cl.CMT_COMMENT_ID
+		           and cc.is_Audit = 'AUDIT_SUCCESS'
+		           and cc.PLACE_ID is not null
+		           and cc.PRODUCT_ID is null
+		         group by cc.PLACE_ID, cl.LATITUDE_ID) t
+		 where pcs.PLACE_ID = t.PLACE_ID
+		 order by t.LATITUDE_ID
+	</sql>
+	
+  	<!-- 把统计的数据对比表数据，ID相同的记录就做更新，没有就新增 --> 
+	<update id="mergeStatisticsPlaceLatitudeScore">
+			MERGE INTO CMT_LATITUDE_STATISTICS t1 	
+			using ( <include refid="statisticsPlaceLatitudeScoreCount"/>) t2
+		　　on (t1.CMT_TITLE_STATISTICS_ID = t2.CMT_TITLE_STATISTICS_ID and t1.LATITUDE_ID = t2.LATITUDE_ID) 		
+		　　when matched then
+		　　		update set
+					t1.AVG_SCORE = t2.AVG_SCORE
+		　　when not matched then
+		　　		insert (t1.CMT_LATITUDE_STATISTICS_ID, t1.LATITUDE_ID, t1.CMT_TITLE_STATISTICS_ID, t1.AVG_SCORE)
+				values (CMT_LATITUDE_STATISTICS_SEQ.nextval, t2.LATITUDE_ID, t2.CMT_TITLE_STATISTICS_ID, t2.AVG_SCORE)
+	 </update>
+	 
+	<!-- 计算每个产品各个维度的平均分 --> 
+	<sql id="statisticsProductLatitudeScoreCount">
+		select  pcs.CMT_TITLE_STATISTICS_ID, pcs.PRODUCT_ID, t.AVG_SCORE, t.LATITUDE_ID
+		from CMT_TITLE_STATISTICS pcs,
+		       (select cc.PRODUCT_ID, cl.LATITUDE_ID, ROUND(AVG(cl.SCORE), 2) AVG_SCORE
+		          from CMT_COMMENT cc, CMT_COMMENT_latitude cl
+		         where cc.CMT_COMMENT_ID = cl.CMT_COMMENT_ID
+		           and cc.is_Audit = 'AUDIT_SUCCESS' 
+		           and cc.PRODUCT_ID is not null
+		         group by cc.PRODUCT_ID, cl.LATITUDE_ID) t
+		 where pcs.PRODUCT_ID = t.PRODUCT_ID
+		  order by t.LATITUDE_ID
+	</sql>
+	
+  	<!-- 把统计的数据对比表数据，ID相同的记录就做更新，没有就新增 --> 
+	<update id="mergeStatisticsProductLatitudeScore">
+			MERGE INTO CMT_LATITUDE_STATISTICS t1
+			using ( <include refid="statisticsProductLatitudeScoreCount"/>) t2
+		　　on (t1.CMT_TITLE_STATISTICS_ID = t2.CMT_TITLE_STATISTICS_ID  and t1.LATITUDE_ID = t2.LATITUDE_ID) 		
+		　　when matched then
+		　　		update set
+					t1.AVG_SCORE = t2.AVG_SCORE
+		　　when not matched then 		
+		　　		insert (t1.CMT_LATITUDE_STATISTICS_ID, t1.LATITUDE_ID, t1.CMT_TITLE_STATISTICS_ID, t1.AVG_SCORE)
+				values (CMT_LATITUDE_STATISTICS_SEQ.nextval, t2.LATITUDE_ID, t2.CMT_TITLE_STATISTICS_ID, t2.AVG_SCORE)
+	 </update>
+	 
+	 <update id="updateLatitudeForChangedCmtTitle">
+	 	UPDATE cmt_latitude_statistics SET latitude_id = #newLatitudeId# where latitude_id = #oldLatitudeId# 
+	 	and cmt_title_statistics_id in 
+	 		 (select cmt_title_statistics_id
+	            FROM cmt_title_statistics
+	           where place_id = #placeId#
+	             or  product_id in
+	                (select distinct(product_id) 
+			           from cmt_comment 
+			          where place_id = #placeId# 
+			           and  product_id is not null))
+	 </update>
+	  
+	  <select id="queryLatitudesByParam" parameterClass="java.util.Map" resultMap="cmtLatitudeStatisticsMap">
+		  	select  cmtT.Product_Id, cmtT.place_Id, cmt.latitude_id , cmt.AVG_SCORE, 0 COMMENT_COUNT, '' LATITUDE_NAME
+			from cmt_latitude_statistics cmt , Cmt_Title_Statistics cmtT 
+			where  cmt.cmt_title_statistics_id = cmtT.Cmt_Title_Statistics_Id 
+			and cmt.latitude_id &lt;&gt; 'FFFFFFFFFFFFFFFFFFFFFFFFFFFF' 
+			<isNotEmpty prepend=" AND " property="productId" >cmtT.PRODUCT_ID = #productId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="placeId" >cmtT.place_id = #placeId#</isNotEmpty>
+			order by cmt.latitude_id
+	  </select>
+	 
+	 
+	<delete id="deleteLatitudeStatisticsByParam"  parameterClass="java.util.Map">
+		delete from cmt_latitude_statistics cls
+		where cls.cmt_title_statistics_id in 
+			      ( select cmt_title_statistics_id 
+			          from CMT_TITLE_STATISTICS cts
+			          <dynamic prepend=" WHERE ">
+			         		<isNotEmpty prepend=" AND " property="productId" >cts.PRODUCT_ID = #productId#</isNotEmpty>
+							<isNotEmpty prepend=" AND " property="placeId" >cts.place_id = #placeId#</isNotEmpty>
+					  </dynamic>		
+			       )
+	</delete>
+	
+
+</sqlMap>

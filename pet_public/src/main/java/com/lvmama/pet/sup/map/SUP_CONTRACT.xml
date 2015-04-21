@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SUP_CONTRACT">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.pet.po.sup.SupContract">
+		<result column="CONTRACT_ID" property="contractId" />
+		<result column="CONTRACT_NAME" property="contractName" />
+		<result column="CONTRACT_NO" property="contractNo" />
+		<result column="SIGN_DATE" property="signDate" />
+		<result column="SUMMARY" property="summary" />
+		<result column="BEGIN_DATE" property="beginDate" />
+		<result column="END_DATE" property="endDate" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="CONTRACT_STATUS" property="contractStatus" />
+		<result column="CONTRACT_TYPE" property="contractType" />
+		<result column="ARRANGER" property="arranger" />
+		<result column="PARTY_A" property="partyA" />
+		<result column="MANAGER_ID" property="managerId" />
+		<result column="OPERATE_NAME" property="operateName"/>
+		<result column="BIND_SUPPLIER_TYPE" property="bindSupplierType"/>
+		<result column="CONTRACT_AUDIT" property="contractAudit"/>
+ 	</resultMap>
+ 	
+ 	<resultMap class="com.lvmama.comm.pet.po.sup.SupContract" id="contractExpiredResultMap" extends="BaseResultMap">
+ 		<result column="SUPPLIER_NAME" property="supplierName" />
+ 	</resultMap>
+ 	<resultMap class="com.lvmama.comm.pet.po.sup.SupContract" id="listResultMap" extends="BaseResultMap">
+ 		<result column="SUPPLIER_NAME" property="supplierName" />
+ 		<result column="FIN_ACCOUNTING_ENTITY_NAME" property="finAccountingEntityName" />
+ 		<result property="fsCId" column="FS_CID" />
+ 	</resultMap>
+
+	<sql id="selectContractSql">
+		SELECT con.*,sup.SUPPLIER_NAME,fin.NAME as FIN_ACCOUNTING_ENTITY_NAME 
+		FROM SUP_CONTRACT con,SUP_SUPPLIER sup,FIN_ACCOUNTING_ENTITY fin 
+			where con.SUPPLIER_ID=sup.SUPPLIER_ID
+			and con.party_A=fin.ACCOUNTING_ENTITY_ID 
+			and con.VALID='Y'
+				<isNotEmpty prepend="and" property="contractName">
+					con.CONTRACT_NAME like '%$contractName$%'
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="supplierName">
+					sup.SUPPLIER_NAME like '%$supplierName$%'
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="supplierId">
+					con.SUPPLIER_ID=#supplierId#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="contractNo">
+					con.CONTRACT_NO=#contractNo#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="arranger">
+					con.ARRANGER = #arranger#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="partyA">
+					con.PARTY_A = #partyA#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="managerId">
+					con.MANAGER_ID = #managerId#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="operateName">
+					con.OPERATE_NAME = #operateName#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="contractStatus">
+					con.CONTRACT_STATUS=#contractStatus#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="contractAudit">
+				    ( con.CONTRACT_AUDIT = #contractAudit#
+				    <isEqual property="contractAudit" compareValue="UNVERIFIED">
+				      or con.CONTRACT_AUDIT is null
+				    </isEqual>
+				    )
+				 </isNotEmpty>
+				<isNotNull prepend="and" property="beginDate">
+					con.CREATE_TIME<![CDATA[>=]]>TO_DATE(#beginDate#,'YYYY-MM-DD HH24:MI:SS')
+				</isNotNull>
+				<isNotNull prepend="and" property="endDate">
+					con.CREATE_TIME<![CDATA[<]]>(TO_DATE(#endDate#,'YYYY-MM-DD HH24:MI:SS')+1)
+				</isNotNull>
+	</sql>
+	
+	<select id="selectContractExpiredList" resultMap="contractExpiredResultMap"
+		parameterClass="java.util.HashMap">
+		select distinct
+		       sc.*,
+		       ss.supplier_name
+		  from Sup_Contract sc, sup_supplier ss
+		 where sc.supplier_id = ss.supplier_id
+		 and ss.valid='Y'
+		 and sc.valid='Y'
+		 and sc.contract_audit = 'PASS'
+		<![CDATA[
+		 and to_char(sc.end_date,'yyyyMMdd') >=  to_char(sysdate+#startDays#,'yyyyMMdd')
+		 and to_char(sc.end_date,'yyyyMMdd') <=  to_char(sysdate+#endDays#,'yyyyMMdd')
+		 ]]>
+		 <isNotEmpty prepend="and" property="managerId">
+			 con.MANAGER_ID = #managerId#
+		 </isNotEmpty>
+		 order by sc.manager_id,sc.end_date,sc.contract_no
+	</select> 
+	<select id="selectRowCount" resultClass="java.lang.Integer">
+		select count(*) from (
+			<include refid="selectContractSql"/>
+		)
+	</select>
+	<select id="selectContract" resultMap="listResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+		select * from (
+		select res.*, scf.contract_id as FS_CID
+		  from (<include refid="selectContractSql"/>) res
+		  left outer join (select distinct (contract_id) from SUP_CONTRACT_FS) scf
+    	on res.contract_id = scf.contract_id
+		 )order by 
+		 <isNotEmpty property="orderby">
+		 	END_DATE-sysdate
+		 	<isEqual property="orderby" compareValue="desc">
+		 		desc
+		 	</isEqual>
+		 </isNotEmpty>
+		 <isEmpty property="orderby">
+		 CREATE_TIME desc
+		 </isEmpty>
+		) T WHERE ROWNUM &lt;= #_endRow#
+		)
+		WHERE ROWNUM1 &gt;=#_startRow#
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.pet.po.sup.SupContract">
+		select * from SUP_CONTRACT where
+		CONTRACT_ID = #contractId# and VALID='Y'
+	</select>
+ 
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.pet.po.sup.SupContract">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="contractId">
+			select SUP_CONTRACT_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into SUP_CONTRACT (CONTRACT_ID, CONTRACT_NAME,
+		CONTRACT_NO, SIGN_DATE, SUMMARY, BEGIN_DATE, END_DATE,
+		SUPPLIER_ID, CONTRACT_STATUS, CONTRACT_TYPE, ARRANGER,CREATE_TIME,VALID,ORG_ID,PARTY_A,MANAGER_ID,OPERATE_NAME,BIND_SUPPLIER_TYPE,CONTRACT_AUDIT)
+		values (#contractId#, #contractName#, #contractNo#, #signDate#,
+		#summary#, #beginDate#, #endDate#, #supplierId#,
+		#contractStatus#, #contractType#, #arranger#,sysdate,'Y',#orgId#,#partyA#,#managerId#,#operateName#,#bindSupplierType#,#contractAudit#)
+	</insert>
+	<update id="updateByPrimaryKey"
+		parameterClass="com.lvmama.comm.pet.po.sup.SupContract">
+		update SUP_CONTRACT set CONTRACT_NAME = #contractName#,
+		CONTRACT_NO = #contractNo#, SIGN_DATE = #signDate#, SUMMARY =
+		#summary#, BEGIN_DATE = #beginDate#, END_DATE = #endDate#,
+		SUPPLIER_ID = #supplierId#, CONTRACT_STATUS = #contractStatus#,
+		CONTRACT_TYPE = #contractType#, ARRANGER = #arranger#,PARTY_A=#partyA#,MANAGER_ID=#managerId#,BIND_SUPPLIER_TYPE=#bindSupplierType#,
+		CONTRACT_AUDIT=#contractAudit# where
+		CONTRACT_ID = #contractId#
+	</update>
+	<update id="markIsValid" parameterClass="java.util.Map">
+		update SUP_CONTRACT set VALID='N' where CONTRACT_ID=#contractId#
+	</update>
+	
+</sqlMap>

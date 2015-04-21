@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_INSUANCE" >
+	<resultMap id="prodInsuranceMap" class="com.lvmama.comm.pet.po.prod.ProdInsurance" >
+		<result column="INSURANCE_ID" property="insuranceId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="MARKET_PRICE" property="marketPrice" />
+		<result column="SELL_PRICE" property="sellPrice" />
+		<result column="SETTLEMENT_PRICE" property="settlementPrice" />
+		<result column="DAYS" property="days" />
+		<result column="PRODUCT_ID_SUPPLIER" property="productIdSupplier" />
+		<result column="PRODUCT_TYPE_SUPPLIER" property="productTypeSupplier" />
+		<result column="VALID" property="valid" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="MANAGER_ID" property="managerId" />
+		<result column="FILIALE_NAME" property="filialeName" />
+	</resultMap>
+
+	<sql id="reuse_query_sql">
+		FROM (
+			SELECT * FROM prod_insurance
+			<dynamic prepend=" WHERE ">
+				<isNotEmpty property="productId" prepend=" AND "> PRODUCT_ID = #productId#</isNotEmpty>
+				<isNotEmpty property="productName" prepend=" AND "> PRODUCT_NAME LIKE '%$productName$'</isNotEmpty>
+				<isNotEmpty property="supplierId" prepend=" AND "> SUPPLIER_ID = #supplierId#</isNotEmpty>
+				<isNotEmpty property="managerId" prepend=" AND "> MANAGER_ID = #managerId#</isNotEmpty>
+				<isNotEmpty property="filialeName" prepend=" AND "> FILIALE_NAME = #filialeName#</isNotEmpty>
+			</dynamic>
+			ORDER BY INSURANCE_ID DESC) PI		
+	</sql>
+  
+    <select id = "queryByPrimayKey" parameterClass="Long" resultMap="prodInsuranceMap">
+    	SELECT * FROM prod_insurance WHERE PRODUCT_ID = #productId#
+    </select>
+    
+	<select id="query" parameterClass="java.util.Map"  resultMap="prodInsuranceMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT 
+			rownum r,
+			PI.*
+		<include refid="reuse_query_sql"/>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;= #_startRow# </isNotEmpty>
+		</dynamic>	 
+	</select>
+
+	<select id="count" parameterClass="java.util.Map"  resultClass="Long">
+		SELECT COUNT(PRODUCT_ID) <include refid="reuse_query_sql"/>  
+	</select>
+	
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.prod.ProdInsurance">
+		UPDATE prod_insurance SET
+			PRODUCT_NAME = #productName#,
+			MARKET_PRICE = #marketPrice#,
+			SELL_PRICE = #sellPrice#,
+			SETTLEMENT_PRICE = #settlementPrice#,
+			DAYS = 	#days#,
+			PRODUCT_ID_SUPPLIER = #productIdSupplier#,
+			PRODUCT_TYPE_SUPPLIER = #productTypeSupplier#,
+			VALID = #valid#,
+			SUPPLIER_ID = #supplierId#,
+			DESCRIPTION = #description#,
+			MANAGER_ID = #managerId#,
+			FILIALE_NAME = #filialeName#
+		WHERE
+			PRODUCT_ID = #productId#		
+	</update>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.prod.ProdInsurance">
+		<selectKey resultClass="java.lang.Long" keyProperty="insuranceId" >
+	      select prod_insurance_seq.nextval as id from DUAL
+	    </selectKey>
+	    INSERT INTO prod_insurance 
+	    	(INSURANCE_ID, PRODUCT_ID, SELL_PRICE, SETTLEMENT_PRICE,DAYS, PRODUCT_ID_SUPPLIER, PRODUCT_TYPE_SUPPLIER, PRODUCT_NAME, VALID, SUPPLIER_ID, DESCRIPTION, MANAGER_ID, FILIALE_NAME, MARKET_PRICE)
+	    VALUES
+	    	(#insuranceId#, #productId#, #sellPrice#, #settlementPrice#, #days#, #productIdSupplier#, #productTypeSupplier#, #productName#, #valid#, #supplierId#, #description#, #managerId#, #filialeName#, #marketPrice#)
+	</insert>
+</sqlMap>

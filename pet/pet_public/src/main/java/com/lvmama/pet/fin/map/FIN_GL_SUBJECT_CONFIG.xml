@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FIN_GL_SUBJECT_CONFIG">
+
+	<typeAlias alias="finGLSubjectConfig"
+		type="com.lvmama.comm.pet.po.fin.FinGLSubjectConfig" />
+
+	<resultMap id="FinGLSubjectConfigMap" class="com.lvmama.comm.pet.po.fin.FinGLSubjectConfig">
+		<result column="SUBJECT_CONFIG_ID" property="subjectConfigId" />
+		<result column="CONFIG1" property="config1" />
+		<result column="CONFIG2" property="config2" />
+		<result column="CONFIG3" property="config3" />
+		<result column="CONFIG4" property="config4" />
+		<result column="CONFIG5" property="config5" />
+		<result column="CONFIG6" property="config6" />
+		<result column="CONFIG7" property="config7" />
+		<result column="SUBJECT_CODE" property="subjectCode" />
+		<result column="SUBJECT_TYPE" property="subjectType" />
+	</resultMap>
+
+	<sql id="selectfinGLSubjectConfigConditions">
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property="subjectConfigId">
+				SUBJECT_CONFIG_ID = #subjectConfigId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="config1">
+				CONFIG1 = #config1#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="config2">
+				CONFIG2 = #config2#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="config3">
+				CONFIG3 = #config3#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="config4">
+				CONFIG4 = #config4#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="config5">
+				CONFIG5 = #config5#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="config6">
+				CONFIG6 = #config6#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="config7">
+				CONFIG7 = #config7#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="subjectCode">
+				SUBJECT_CODE =#subjectCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="subjectType">
+				SUBJECT_TYPE =#subjectType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="_endRow">
+				rownum &lt;=#_endRow#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.fin.FinGLSubjectConfig">
+		<selectKey keyProperty="subjectConfigId" resultClass="java.lang.Long">
+			SELECT FIN_GL_SUBJECT_CONFIG_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		insert into FIN_GL_SUBJECT_CONFIG 
+		(
+			SUBJECT_CONFIG_ID, 
+			CONFIG1, 
+			CONFIG2,
+			CONFIG3, 
+			CONFIG4,
+			CONFIG5, 
+			CONFIG6, 
+			CONFIG7, 
+			SUBJECT_CODE, 
+			SUBJECT_TYPE
+		)
+		values 
+		(
+			#subjectConfigId#, 
+			#config1#, 
+			#config2#, 
+			#config3#,
+			#config4#,
+			#config5#, 
+			#config6#, 
+			#config7#, 
+			#subjectCode#, 
+			#subjectType#
+		)
+	</insert>
+
+	<select id="selectFinGLSubjectConfigByParamMap" resultMap="FinGLSubjectConfigMap"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM (SELECT C.*, ROWNUM RN FROM FIN_GL_SUBJECT_CONFIG C
+		<include refid="selectfinGLSubjectConfigConditions" />
+		) T
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty prepend=" and " property="_startRow">
+				RN &gt;=#_startRow#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.fin.FinGLSubjectConfig">
+		UPDATE FIN_GL_SUBJECT_CONFIG
+		   SET CONFIG1 = #config1#, 
+			CONFIG2=#config2#,
+			CONFIG3=#config3#, 
+			CONFIG4=#config4#,
+			CONFIG5=#config5#, 
+			CONFIG6=#config6#, 
+			CONFIG7=#config7#, 
+			SUBJECT_CODE=#subjectCode#, 
+			SUBJECT_TYPE=#subjectType#
+		WHERE SUBJECT_CONFIG_ID =#subjectConfigId#
+	</update>
+	<delete id="delete" parameterClass="java.lang.Long">
+		DELETE FROM FIN_GL_SUBJECT_CONFIG WHERE SUBJECT_CONFIG_ID =#value#
+	</delete>
+	
+	<select id="selectRowCount" parameterClass="java.util.HashMap" resultClass="java.lang.Long">
+		SELECT COUNT(*) FROM FIN_GL_SUBJECT_CONFIG
+		<include refid="selectfinGLSubjectConfigConditions" />
+	</select>
+</sqlMap>

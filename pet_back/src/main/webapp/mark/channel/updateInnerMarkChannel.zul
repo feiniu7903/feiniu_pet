@@ -1,0 +1,90 @@
+<?page title="渠道管理" contentType="text/html;charset=UTF-8"?>
+<zk>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./updateChannelWin"?>
+<window id="updateChannelWin" title="修改渠道" border="normal" apply="com.lvmama.pet.web.mark.channel.ChannelAction">
+<groupbox style="border: none">
+			<grid>
+				<columns>
+					<column width="80px" align="right"></column>
+					<column></column>
+					<column width="80px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+				<row>
+				<hbox>一级渠道：</hbox>
+					<hbox><listbox mold="select" rows="1" id="firstChannelId"  model="@{saction.firstChannelList}"   onSelect='saction.putChannelId(self.selectedItem.value,Integer.parseInt("1"));'>
+									<listitem self="@{each='com1'}" label="@{com1.channelName}" value="@{com1.channelId}" selected='@{com1.checked}'>
+									<custom-attributes code="@{com1.channelCode}"/>
+									</listitem>
+								</listbox>	<checkbox id="firstChannel_checkbox" onCheck="first_name.disabled = !self.checked;first_code.disabled =!self.checked;saction.setSaveSign(1,self.checked);" label="修改"/>
+					</hbox>
+				</row>
+				<row>
+				<hbox>渠道名称：</hbox>
+				<hbox><textbox id="first_name" value="@{saction.firstChannel.channelName,load-after='firstChannelId.onSelect'}" disabled="true"></textbox></hbox>
+				<hbox>渠道代码：</hbox>
+				<hbox><textbox id="first_code" value="@{saction.firstChannel.channelCode,load-after='firstChannelId.onSelect'}" disabled="true"></textbox>
+				<longbox visible="false" value="@{saction.firstChannel.channelId,load-after='firstChannelId.onSelect'}"></longbox>
+				</hbox>
+				</row>
+				<row>
+				<hbox>二级渠道：</hbox>
+					<hbox><listbox mold="select" rows="1" id="secondChannelId"  model="@{saction.secondChannelList,load-after='firstChannelId.onSelect'}"   onSelect='saction.changeChannel(self.selectedItem.value,Integer.parseInt("3"));saction.putChannelId(self.selectedItem.value,Integer.parseInt("2"));'>
+									<listitem self="@{each='com2'}" label="@{com2.channelName}" value="@{com2.channelId}"  selected='@{com2.checked}'>
+									<custom-attributes code="@{com2.channelCode}"/>
+									</listitem>	
+								</listbox>
+					<checkbox id="secondChannel_checkbox" onCheck="second_name.disabled = !self.checked;second_code.disabled =!self.checked;saction.setSaveSign(2,self.checked);" label="修改"/>
+					</hbox>
+				</row>
+				<row>
+				<hbox>渠道名称：</hbox>
+				<hbox><textbox id="second_name" value="@{saction.secondChannel.channelName,load-after='secondChannelId.onSelect,firstChannelId.onSelect'}" disabled="true"></textbox></hbox>
+				<hbox>渠道代码：</hbox>
+				<hbox><textbox id="second_code" value="@{saction.secondChannel.channelCode,load-after='secondChannelId.onSelect,firstChannelId.onSelect'}" disabled="true"></textbox>
+				<longbox visible="false" value="@{saction.secondChannel.channelId,load-after='secondChannelId.onSelect'}"></longbox>
+				</hbox>
+				</row>
+				<row>
+				<hbox>三级渠道：</hbox>
+					<hbox><listbox mold="select" rows="1" id="threeChannelId"  model="@{saction.threeChannelList,load-after='firstChannelId.onSelect,secondChannelId.onSelect'}"   onSelect='saction.changeChannel(self.selectedItem.value,Integer.parseInt("4"));saction.putChannelId(self.selectedItem.value,Integer.parseInt("3"));'>
+									<listitem self="@{each='com3'}" label="@{com3.channelName}" value="@{com3.channelId}" selected='@{com3.checked}'>
+									<custom-attributes code="@{com3.channelCode}"/>
+									</listitem>	
+								</listbox>
+						 <checkbox id="threeChannel_checkbox" onCheck="channel_comment.disabled=!self.checked;three_name.disabled = !self.checked;three_code.disabled = !self.checked;saction.setSaveSign(3,self.checked);threeChannel_usedByProfitSharing.disabled = !self.checked" label="修改"/>
+					</hbox>
+					<hbox>应用于：</hbox>
+					<hbox>
+						<label id="label" value="LOSC 站内">
+							<custom-attributes attr1="losc"/>
+							<custom-attributes attr2="OUTTER"/>
+						</label>
+						<checkbox id="threeChannel_usedByProfitSharing" value="true" disabled="true" label="是否分成" />
+					</hbox>
+				</row>
+				<row>
+				<hbox>渠道名称：</hbox>
+				<hbox><textbox id="three_name" value="@{saction.threeChannel.channelName,load-after='threeChannelId.onSelect,firstChannelId.onSelect,secondChannelId.onSelect'}" disabled="true"></textbox></hbox>
+				<hbox>渠道代码：</hbox>
+				<hbox><textbox id="three_code" value="@{saction.threeChannel.channelCode,load-after='threeChannelId.onSelect,firstChannelId.onSelect,secondChannelId.onSelect'}" disabled="true"></textbox>
+				<longbox visible="false" value="@{saction.threeChannel.channelId,load-after='threeChannelId.onSelect'}"></longbox>
+				</hbox>
+				</row>
+				<row spans="1,3">
+					<hbox>三级渠道描述：</hbox>
+					<hbox><textbox id="channel_comment" rows="6" width="500px" value="@{saction.threeChannel.channelComment,load-after='threeChannelId.onSelect,threeChannel_checkbox.onCheck'}" disabled="true"/></hbox>
+				</row>
+				<row spans="1,3">
+				<hbox></hbox>
+				<hbox>
+				   <button label="提 交" id="update"     onClick="saction.update();"/>
+				   <button label="取 消" id="cancel"  onClick="saction.closeWindow();"/>   
+				</hbox>
+				</row>
+				</rows>
+				</grid>
+				</groupbox>
+</window>
+</zk>

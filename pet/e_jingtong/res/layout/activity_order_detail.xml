@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/wihte"
+    android:paddingBottom="5dip">
+    
+    <com.ejingtong.view.HeadView
+        android:id="@+id/order_detail_head_view"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        />
+    
+    <TextView android:id="@+id/order_detail_tip"
+        style="@style/order_detail_tip"
+        android:layout_below="@id/order_detail_head_view"/>
+    
+    <View android:id="@+id/order_detail_tip_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:background="@drawable/line_tips"
+        android:layout_below="@id/order_detail_tip"/>
+    
+    <Button android:id="@+id/order_pass"
+        style="@style/btn"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dip"
+        android:layout_centerHorizontal="true"
+        android:text="@string/order_pass"/>
+    
+    <ScrollView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/order_detail_tip_line"
+        android:layout_above="@id/order_pass">
+        
+        <LinearLayout android:id="@+id/container_view"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:background="@color/gray_e5e5e5"
+        	android:orientation="vertical">
+        
+    	</LinearLayout>
+    </ScrollView>
+    
+    
+</RelativeLayout>

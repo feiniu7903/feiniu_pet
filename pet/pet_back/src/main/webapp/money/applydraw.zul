@@ -1,0 +1,94 @@
+<?page title="现金账户列表" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_applydraw"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_applydraw" mode="embedded" apply="com.lvmama.pet.web.money.ApplyDrawAction" title="申请提现">
+<grid>
+		<columns>
+			<column width="80px"></column>
+			<column></column>
+			<column width="80px"></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>用户卡号：</hbox>
+				<hbox><label value="@{saction.userInfo.user.memberShipCard }" /></hbox>
+				<hbox>用户姓名：</hbox>
+				<hbox><label value="@{saction.userInfo.user.realName }" /></hbox>
+
+			</row>
+			<row>
+				<hbox>用户名：</hbox>
+				<hbox><label value="@{saction.userInfo.user.userName }" /></hbox>
+				<hbox>手机号:</hbox>
+				<hbox>
+					<label value="@{saction.userInfo.user.mobileNumber }" />
+				</hbox>
+			</row>
+			<row>
+				<hbox>提现金额：</hbox>
+				<hbox><textbox id="drawMoney" value="${saction.userInfo.moneyAccount.maxDrawMoneyYuan }"/></hbox>
+				<hbox>申请时间:</hbox>
+				<hbox>
+
+				</hbox>
+			</row>
+			<row>
+				<hbox>提现至：</hbox>
+				<hbox>
+					<listbox id="drawto" model="@{saction.bankList}" selectedItem="@{saction.drawBank }" mold="select" onSelect='if(self.selectedItem.label.equals("支付宝")){accountLabel.value="支付宝帐号";accountNameLabel.value="支付宝姓名";bank.visible=false;area.visible=false;flagLable.visible=false;flag.visible=false;}else{accountLabel.value="银行账号";accountNameLabel.value="账户姓名";bank.visible=true;area.visible=true;flagLable.visible=true;flag.visible=true;}'>
+						<listitem self="@{each='bank'}" value="@{bank.id }" label="@{bank.bankName}"/>
+					</listbox>
+				</hbox>
+				<hbox id="flagLable">对公对私:</hbox>
+				<hbox>
+					<radiogroup id="flag" onCheck='if(self.selectedItem.value.equals("1")){bankInfo.visible=true;bankInfo2.visible=true;}else{bankInfo.visible=false;bankInfo2.visible=false;}'>
+			            <radio label="对私" value="2" selected="true" />
+			            <radio label="对公" value="1"/>
+			        </radiogroup>
+				</hbox>
+			</row>
+			
+			<row id="bankInfo" visible="false">
+				<hbox ><label id="provinceLabel" value="收款银行所在省份" />：</hbox>
+				<hbox>
+					<listbox id="province" model="@{saction.provinceList}" mold="select" onSelect='saction.loadCitys(self.selectedItem.value)'>
+						<listitem self="@{each='province'}" value="@{province.provinceId }" label="@{province.provinceName}"/>
+					</listbox>
+				</hbox>
+				<hbox ><label id="cityLabel" value="收款银行所在市" />：</hbox>
+				<hbox>
+					<listbox id="city"  mold="select" model="@{saction.cityList,load-after='province.onSelect'}" >
+						<listitem self="@{each='city'}" value="@{city.cityName }" label="@{city.cityName}"/>
+					</listbox>
+				</hbox>
+			</row>
+			<row id="bankInfo2" visible="false">
+				<hbox ><label id="kaiHuHangLabel" value="收款支行名称" />：</hbox>
+				<hbox>
+					<textbox id="kaiHuHang"/>
+				</hbox>
+				<hbox ></hbox>
+				<hbox></hbox>
+			</row>
+			<row id="alipay">
+				<hbox ><label id="accountLabel" value="帐号" />：</hbox>
+				<hbox>
+					<textbox id="account"/>
+				</hbox>
+				<hbox ><label id="accountNameLabel" value="姓名" />：</hbox>
+				<hbox>
+					<textbox id="accountName"/>
+				</hbox>
+				<textbox id="isSuperback" value="true" style="border: none"/>
+			</row>
+			<row spans="1,3">
+				<hbox ></hbox>
+				<hbox>
+					<button label="提交" onClick="saction.applyDraw()"/>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+</window>
+</zk>

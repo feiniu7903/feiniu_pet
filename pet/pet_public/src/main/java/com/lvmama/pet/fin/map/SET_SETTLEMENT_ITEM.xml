@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SET_SETTLEMENT_ITEM" >
+
+	<typeAlias alias="SetSettlementItem" type="com.lvmama.comm.pet.po.fin.SetSettlementItem"/>
+	<resultMap id="SetSIMap" class="com.lvmama.comm.pet.po.fin.SetSettlementItem" >
+		<result column="SETTLEMENT_ITEM_ID" property="settlementItemId" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="ORDER_STATUS" property="orderStatus" />
+		<result column="ORDER_PAYMENT_TIME" property="orderPaymentTime" />
+		<result column="ORDER_CREATE_TIME" property="orderCreateTime" />
+		<result column="ORDER_PAYMENT_STATUS" property="orderPaymentStatus" />
+		<result column="ORDER_CONTACT_PERSON" property="orderContactPerson" />
+		<result column="ORDER_COUPON_AMOUNT" property="orderCouponAmount"  nullValue="0"/>
+		<result column="PASS_CODE" property="passCode" />
+		<result column="PASS_SERIALNO" property="passSerialno" />
+		<result column="PASS_EXTID" property="passExtid" />
+		<result column="ORDER_REFUND" property="orderRefund" />
+		<result column="REFUND_MEMO" property="refundMemo" />
+		<result column="ORDER_ITEM_PROD_ID" property="orderItemProdId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="PRODUCT_BRANCH_ID" property="productBranchId" />
+		<result column="PRODUCT_BRANCH_NAME" property="productBranchName" />
+		<result column="PRODUCT_PRICE" property="productPrice" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+		<result column="ORDER_ITEM_META_PAYED_AMOUNT" property="orderItemMetaPayedAmount"/>
+		<result column="META_PRODUCT_ID" property="metaProductId" />
+		<result column="META_PRODUCT_NAME" property="metaProductName" />
+		<result column="META_BRANCH_ID" property="metaBranchId" />
+		<result column="META_BRANCH_NAME" property="metaBranchName" />
+		<result column="META_PRODUCT_MANAGER" property="metaProductManager"/>
+		<result column="SETTLEMENT_PRICE" property="settlementPrice"/>
+		<result column="ACTUAL_SETTLEMENT_PRICE" property="actualSettlementPrice" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="TARGET_ID" property="targetId" />
+		<result column="PRODUCT_QUANTITY" property="productQuantity" />
+		<result column="QUANTITY" property="quantity" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="SETTLEMENT_STATUS" property="settlementStatus" />
+		<result column="SETTLEMENT_ID" property="settlementId" />
+		<result column="JOIN_SETTLEMENT_TIME" property="joinSettlementTime" />
+		<result column="TOTAL_SETTLEMENT_PRICE" property="totalSettlementPrice" />
+		<result column="STATUS" property="status" />
+		<result column="SETTLEMENT_TYPE" property="settlementType" />
+		<result column="PRODUCT_SUB_PRODUCT_TYPE" property="productSubProductType" />
+		<result column="BUSINESS_NAME" property="businessName"/>
+		<result column="META_FILIALE_NAME" property="metaFilialeName"/>
+	</resultMap>
+	<resultMap id="SetSIMapAdvance" extends="SetSIMap" class="com.lvmama.comm.pet.po.fin.SetSettlementItem"  >
+		<result column="SUPPLIER_NAME" property="supplierName" />
+		<result column="TARGET_NAME" property="targetName" />
+		<result column="COMPANY_ID" property="companyId" />
+		<result column="SETTLEMENT_PERIOD" property="settlementPeriod" />
+		<result column="SUGGESTION_PAY_TIME" property="suggestionPayTime" />
+		<result column="PERFORM_STATUS" property="performStatus"/>
+	</resultMap>
+	<resultMap id="SetSIMapExcel" extends="SetSIMapAdvance" class="com.lvmama.comm.pet.po.fin.SetSettlementItemExcel"  >
+		<result column="SETTLEMENT_PAYMENT_TIME" property="settlementPaymentTime" />
+		<result column="BANK_ACCOUNT_NAME" property="bankAccountName" />
+		<result column="BANK_NAME" property="bankName" />
+		<result column="BANK_ACCOUNT" property="bankAccount" />
+		<result column="PASS_CODE" property="passCode" nullValue=""/>
+		<result column="PASS_SERIALNO" property="passSerialno" nullValue=""/>
+		<result column="PASS_EXTID" property="passExtid" nullValue=""/>
+		<result column="REFUND_MEMO" property="refundMemo" nullValue=""/>
+		<result column="ADJUSTMENT_AMOUNT" property="adjustmentAmount" nullValue="0"/>
+		<result column="REFUNDED_AMOUNT" property="refundedAmount"  nullValue="0"/>
+		<result column="OUGHT_PAY" property="oughtPay" nullValue="0" />
+		<result column="COUNT_SETTLE_AMOUNT" property="countSettleAmount"/>
+		<result column="ADJUSTMENT_REMARK" property="adjustmentRemark" nullValue=""/>
+		<result column="UPDATE_REMARK" property="updateRemark" nullValue=""/>
+		<result column="PERFORM_STATUS" property="performStatus"/>
+	</resultMap>
+	
+	<sql id="searchSql">
+		SELECT 
+			A.*,
+			B.NAME AS TARGET_NAME,
+			C.SUPPLIER_NAME,
+			C.COMPANY_ID,
+			B.SETTLEMENT_PERIOD,
+			(A.VISIT_TIME - DECODE(B.ADVANCED_DAYS, null, 0, B.ADVANCED_DAYS ) ) AS SUGGESTION_PAY_TIME,
+			(SELECT ooim.perform_status FROM ORD_ORDER_ITEM_META OOIM WHERE OOIM.ORDER_ITEM_META_ID = A.ORDER_ITEM_META_ID) AS PERFORM_STATUS
+		FROM 
+			SET_SETTLEMENT_ITEM A,
+			SUP_SETTLEMENT_TARGET B,
+			SUP_SUPPLIER C
+		WHERE
+			A.TARGET_ID = B.TARGET_ID 
+		AND
+			A.SUPPLIER_ID = C.SUPPLIER_ID 
+		AND
+			SETTLEMENT_ID IS NULL
+			<isNotEmpty property="settlementType" prepend=" AND ">
+				SETTLEMENT_TYPE = #settlementType#
+			</isNotEmpty>
+			<isNotEmpty property="orderId" prepend="AND">
+    			ORDER_ID = #orderId#
+    		</isNotEmpty>
+    		<!-- 结算队列项的结算状态 -->
+    		<isNotEmpty property="status" prepend="AND">
+    			STATUS IN 
+    			(
+    			<iterate property="status" conjunction=","  >
+   					#status[]#
+   				</iterate>
+   				)
+    		</isNotEmpty>
+			<!-- 结算对象 -->
+			<isNotEmpty property="targetId" prepend="AND">
+	    		A.TARGET_ID = #targetId#
+	    	</isNotEmpty>
+	    	 <!--结算对象名称是否包含"驴妈妈"-->
+			<isEqual property="notContainLvmama" compareValue="1" prepend="AND">	<!-- 不包含 -->
+				INSTR(B.NAME, '驴妈妈', 1) = 0	
+			</isEqual>
+			<!-- 结算周期 -->
+		    <isNotEmpty property="settlementPeriod" prepend="AND">
+		    	B.SETTLEMENT_PERIOD = #settlementPeriod#  
+		    </isNotEmpty>
+	    	<!-- 游玩时间 -->
+	    	<isNotNull prepend="AND" property="visitDateStart"> 
+	    		VISIT_TIME &gt;= TRUNC(TO_DATE(#visitDateStart#,'YYYY-MM-DD')) 
+	    	</isNotNull>
+	    	<isNotNull prepend="AND" property="visitDateEnd"> 
+	    		VISIT_TIME &lt; TRUNC(TO_DATE(#visitDateEnd#,'YYYY-MM-DD') + 1) 
+	    	</isNotNull>
+	    	<!--采购产品-->
+			<isNotEmpty property="metaProductId" prepend="AND">
+				META_PRODUCT_ID = #metaProductId#
+				<!-- 采购产品分支类型 -->
+				<isNotEmpty property="metaBranchType" prepend="AND">
+					META_BRANCH_ID = #metaBranchType#
+				</isNotEmpty>
+			</isNotEmpty> 
+			<!--支付时间-->
+	      	<isNotNull property="payTimeStart" prepend="AND">
+	      		ORDER_PAYMENT_TIME &gt;= TRUNC(TO_DATE(#payTimeStart#,'YYYY-MM-DD'))
+	      		<isNotNull property="payTimeEnd" prepend="AND">
+	    				ORDER_PAYMENT_TIME &lt; TRUNC(TO_DATE(#payTimeEnd#,'YYYY-MM-DD') + 1)
+    			</isNotNull>
+	    	</isNotNull>
+	    	 <!--我方结算主体-->
+	       <isNotEmpty property="settlementCompany" prepend="AND">
+	       		C.COMPANY_ID = #settlementCompany#
+	       </isNotEmpty>
+	       <!--有退款-->
+	       <isEqual property="hasRefunded" compareValue="1" prepend="AND">
+	       		ORDER_REFUND =  1 
+	       </isEqual>
+	         <!--建议打款时间-->
+	       <isNotEmpty property="suggestionPayDateStart" prepend="AND">
+					B.SETTLEMENT_PERIOD = 'PERORDER'	<!-- 按单结算 -->
+				AND
+					( A.VISIT_TIME - DECODE(B.ADVANCED_DAYS, null, 0, B.ADVANCED_DAYS ) ) &gt;= TO_DATE(#suggestionPayDateStart#,'YYYY-MM-DD')
+				<isNotEmpty property="suggestionPayDateEnd" prepend="AND">
+					( A.VISIT_TIME - DECODE(B.ADVANCED_DAYS, null, 0, B.ADVANCED_DAYS ) ) &lt; TO_DATE(#suggestionPayDateEnd#,'YYYY-MM-DD') + 1
+				</isNotEmpty>
+	       </isNotEmpty>
+	        <isEmpty property="suggestionPayDateStart" >
+	       		<isNotEmpty property="suggestionPayDateEnd" prepend="AND">
+		       		B.SETTLEMENT_PERIOD = 'PERORDER'	<!-- 按单结算 -->
+    			AND 
+		       		A.VISIT_TIME - DECODE(B.ADVANCED_DAYS, null, 0, B.ADVANCED_DAYS ) &lt; TO_DATE(#suggestionPayDateEnd#,'YYYY-MM-DD') + 1
+      			</isNotEmpty>
+	       </isEmpty>
+	       <!--供应商、供应商银行账号名称-->
+	       <isNotEmpty property="supplierId" prepend="AND">
+	       		A.SUPPLIER_ID  = #supplierId#
+	     	</isNotEmpty>
+	     	<isNotEmpty property="bankAccount" prepend="AND">
+     			B.BANK_ACCOUNT LIKE CONCAT(CONCAT('%', #bankAccount#), '%') 
+   			</isNotEmpty> 
+	     	 <!-- 用户名 -->
+		     <isNotEmpty property="username" prepend="AND">
+		     	EXISTS
+		     	(
+		     		SELECT
+		     			1
+		     		FROM
+		     			FIN_SUPPLIER_ALLOT FSA
+		     		WHERE
+		     			FSA.SUPPLIER_ID = A.SUPPLIER_ID
+		     		AND FSA.USER_NAME = #username#
+		     	)
+		     </isNotEmpty>
+		     <!-- 下单时间 -->
+	    	<isNotNull property="createOrderTimeBegin" prepend="AND"> 
+	    		A.ORDER_CREATE_TIME &gt;= TRUNC(TO_DATE(#createOrderTimeBegin#,'YYYY-MM-DD'))
+	    	</isNotNull>
+	    	<isNotNull property="createOrderTimeEnd" prepend="AND"> 
+	    		A.ORDER_CREATE_TIME &lt; TRUNC(TO_DATE(#createOrderTimeEnd#,'YYYY-MM-DD') + 1)
+	    	</isNotNull>
+	    	<isNotNull property="filialeName" prepend="AND"> 
+	    		A.FILIALE_NAME = #filialeName#
+	    	</isNotNull>
+	    	<isNotNull property="metaFilialeName" prepend="AND"> 
+	    		A.META_FILIALE_NAME = #metaFilialeName#
+	    	</isNotNull>
+	    	<isNotNull property="routeType" prepend="AND"> 
+	    		(
+	    			A.PRODUCT_SUB_PRODUCT_TYPE IN (
+			    		<iterate property="routeType" conjunction=","  >
+		   					#routeType[]#
+		   				</iterate>
+		    		)
+		    		<isNotNull property="productType" prepend=" OR "> 
+		    			  A.PRODUCT_TYPE  IN 
+		    			 <iterate property="productType" conjunction=","  open="(" close=")">
+		   					#productType[]#
+		   				 </iterate>
+		    		</isNotNull>
+	    		)
+	    	</isNotNull>
+	    	<isNull property="routeType" prepend="AND"> 
+	    		<isNotNull property="productType"> 
+	    			 A.PRODUCT_TYPE  IN 
+		    			 <iterate property="productType" conjunction="," open="(" close=")">
+		    			 	#productType[]#
+		    			 </iterate>
+	    		</isNotNull>
+	    	</isNull>
+	    	<isNull property="businessName" prepend="AND"> BUSINESS_NAME IS NULL</isNull>
+	    	<isNotNull property="businessName" prepend="AND">BUSINESS_NAME=#businessName#</isNotNull>
+	    	<isNotEmpty property="performStatus" prepend="AND">
+		     	EXISTS (
+		     		SELECT 1 FROM ORD_ORDER_ITEM_META OOIM 
+		     		WHERE OOIM.ORDER_ITEM_META_ID = A.ORDER_ITEM_META_ID 
+		     		AND OOIM.PERFORM_STATUS = #performStatus#
+		     	)
+		    </isNotEmpty>
+	</sql>
+	<select id="searchListByOrderId" parameterClass="map" resultMap="SetSIMapAdvance">
+	  	<include refid="searchSql"/>
+	</select>
+	<!-- 查询订单结算项 -->
+	<select id="searchList" parameterClass="map" resultMap="SetSIMapAdvance">
+		<include refid="pageSearchHead"/>
+	  	<include refid="searchSql"/>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchListCount" parameterClass="map" resultClass="long">
+		SELECT COUNT(*) FROM (
+			<include refid="searchSql"/>
+		) TMP
+	</select>
+	
+	<sql id="searchItemDetailList_sql">
+		SELECT 
+			A.*,
+			B.NAME AS TARGET_NAME,
+			C.SUPPLIER_NAME,
+			C.COMPANY_ID,
+			B.SETTLEMENT_PERIOD,
+			(A.VISIT_TIME - DECODE(B.ADVANCED_DAYS, null, 0, B.ADVANCED_DAYS ) ) AS SUGGESTION_PAY_TIME,
+			(SELECT ooim.perform_status FROM ORD_ORDER_ITEM_META OOIM WHERE OOIM.ORDER_ITEM_META_ID = A.ORDER_ITEM_META_ID) AS PERFORM_STATUS
+		FROM 
+			SET_SETTLEMENT_ITEM A,
+			SUP_SETTLEMENT_TARGET B,
+			SUP_SUPPLIER C
+		WHERE
+			A.TARGET_ID = B.TARGET_ID 
+		AND
+			A.SUPPLIER_ID = C.SUPPLIER_ID 
+		AND
+			A.SETTLEMENT_ID = #settlementId#
+		<isNotEmpty property="orderId" prepend="AND">
+   			ORDER_ID = #orderId#
+   		</isNotEmpty>
+   		<isNotEmpty property="visitTimeBegin" prepend="AND">
+			A.VISIT_TIME &gt;= TRUNC(TO_DATE(#visitTimeBegin#,'YYYY-MM-DD'))
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd" prepend="AND">
+			A.VISIT_TIME &lt; TRUNC(TO_DATE(#visitTimeEnd#,'YYYY-MM-DD') + 1)
+		</isNotEmpty>
+		<isNull property="businessName" prepend=" AND "> A.BUSINESS_NAME IS NULL</isNull>
+	    <isNotNull property="businessName" prepend=" AND ">A.BUSINESS_NAME=#businessName#</isNotNull>
+	    <isNotNull property="metaFilialeName" prepend=" AND ">
+	        A.META_FILIALE_NAME=#metaFilialeName#
+	    </isNotNull>
+	</sql>
+	<select id="searchItemDetailList" resultMap="SetSIMapAdvance">
+		<include refid="pageSearchHead"/>
+	  	<include refid="searchItemDetailList_sql"/>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchItemDetailListCount" parameterClass="map" resultClass="long">
+		SELECT COUNT(*) FROM (
+			<include refid="searchItemDetailList_sql"/>
+		) TMP
+	</select>
+	
+	<select id="searchSumprice" parameterClass="map" resultClass="java.lang.Long">
+		SELECT SUM(TOTAL_SETTLEMENT_PRICE) FROM (
+		<include refid="searchItemDetailList_sql"/>
+		) TMP
+	</select>
+	<select id="searchItem" parameterClass="map" resultMap="SetSIMapAdvance">
+		<include refid="searchSql"/>
+	</select>
+	
+	<sql id="searchItemExcelData_sql">
+		SELECT 
+			A.*,
+			B.NAME AS TARGET_NAME,
+			C.SUPPLIER_NAME,
+			C.COMPANY_ID,
+			B.SETTLEMENT_PERIOD,
+			(A.VISIT_TIME - DECODE(B.ADVANCED_DAYS, null, 0, B.ADVANCED_DAYS ) ) AS SUGGESTION_PAY_TIME,
+			(SELECT MAX(D.OPERATETIME) FROM SET_SETTLEMENT_PAYMENT D WHERE D.SETTLEMENT_ID = A.SETTLEMENT_ID) AS SETTLEMENT_PAYMENT_TIME,
+			(SELECT ooim.perform_status FROM ORD_ORDER_ITEM_META OOIM WHERE OOIM.ORDER_ITEM_META_ID = A.ORDER_ITEM_META_ID) AS PERFORM_STATUS,
+			B.BANK_ACCOUNT_NAME,
+			B.BANK_NAME,
+			B.BANK_ACCOUNT
+		FROM 
+			SET_SETTLEMENT_ITEM A,
+			SUP_SETTLEMENT_TARGET B,
+			SUP_SUPPLIER C
+		WHERE
+			A.TARGET_ID = B.TARGET_ID 
+		AND
+			A.SUPPLIER_ID = C.SUPPLIER_ID 
+	</sql>
+	<select id="searchItemExcelData1" parameterClass="map" resultMap="SetSIMapExcel">
+		<include refid="searchItemExcelData_sql"/>
+		AND
+			SETTLEMENT_ID IN
+   			(
+   				<iterate property="settlementIds" conjunction=","  >
+   					#settlementIds[]#
+   				</iterate>
+   			)
+	</select>
+	<select id="searchItemExcelData2" parameterClass="map" resultMap="SetSIMapExcel">
+		<include refid="searchItemExcelData_sql"/>
+		AND
+			SETTLEMENT_ID = #settlementId#
+		<isNotEmpty property="orderId" prepend="AND">
+   			ORDER_ID = #orderId#
+   		</isNotEmpty>
+   		<isNotEmpty property="visitTimeBegin" prepend="AND">
+			VISIT_TIME &gt;= TRUNC(TO_DATE(#visitTimeBegin#,'YYYY-MM-DD'))
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd" prepend="AND">
+			VISIT_TIME &lt; TRUNC(TO_DATE(#visitTimeEnd#,'YYYY-MM-DD') + 1)
+		</isNotEmpty>
+		<isNull property="businessName" prepend=" AND "> A.BUSINESS_NAME IS NULL</isNull>
+	    <isNotNull property="businessName" prepend=" AND ">A.BUSINESS_NAME=#businessName#</isNotNull>
+	</select>
+	<select id="searchSettlementItemByOrderId" parameterClass="long" resultClass="SetSettlementItem">
+		SELECT 
+	   		B.SUPPLIER_NAME     AS SUPPLIERNAME,
+       		A.META_PRODUCT_NAME AS METAPRODUCTNAME,
+			C.SETTLEMENT_PERIOD AS SETTLEMENTPERIOD,
+			A.SETTLEMENT_ID AS SETTLEMENTID,
+			D.SETTLEMENT_TIME AS SETTLEMENTTIME,
+			A.SETTLEMENT_STATUS AS SETTLEMENTSTATUS
+		FROM 
+			SET_SETTLEMENT_ITEM A, 
+			SUP_SUPPLIER B,
+			SUP_SETTLEMENT_TARGET C ,
+			SET_SETTLEMENT D
+ 		WHERE 
+ 			A.SUPPLIER_ID = B.SUPPLIER_ID 
+		AND 
+			C.TARGET_ID = A.TARGET_ID 
+		AND 
+			A.SETTLEMENT_ID = D.SETTLEMENT_ID(+) 
+		AND  ORDER_ID = #orderId#
+   </select>
+   <select id="searchItemsByItemIds" parameterClass="map" resultMap="SetSIMap">
+		SELECT 
+			*
+		FROM
+			SET_SETTLEMENT_ITEM
+		WHERE
+			SETTLEMENT_ITEM_ID 
+   		IN
+   			(
+   				<iterate property="ids" conjunction=","  >
+   					#ids[]#
+   				</iterate>
+   			)
+   </select>
+   <select id="searchOrderItemMetaIdsBySettlementItemId" parameterClass="map" resultClass="long">
+		SELECT 
+			ORDER_ITEM_META_ID
+		FROM
+			SET_SETTLEMENT_ITEM
+		WHERE
+			SETTLEMENT_ITEM_ID 
+   		IN
+   			(
+   				<iterate property="settlementItemIds" conjunction=","  >
+   					#settlementItemIds[]#
+   				</iterate>
+   			)
+   </select>
+   <select id="searchItemByOrderItemMetaId" parameterClass="long" resultMap="SetSIMap">
+   		SELECT 
+			*
+		FROM
+			SET_SETTLEMENT_ITEM
+		WHERE
+			ORDER_ITEM_META_ID = #orderItemMataId#
+   </select>
+   <select id="searchItemBySettlementItemId" parameterClass="long" resultMap="SetSIMap">
+   		SELECT 
+			*
+		FROM
+			SET_SETTLEMENT_ITEM
+		WHERE
+			SETTLEMENT_ITEM_ID = #settlementItemId#
+   </select>
+   <select id="searchOrderItemMetaIdsBySettlementId" parameterClass="long" resultClass="long">
+   	SELECT 
+   		ORDER_ITEM_META_ID 
+	FROM 
+		SET_SETTLEMENT_ITEM 
+	WHERE 
+		SETTLEMENT_ID = #settlement_id#
+   </select>
+   
+   <!-- 更新订单结算项 -->
+   <update id="updateSettlementItems" parameterClass="java.util.HashMap">
+   		UPDATE
+   			SET_SETTLEMENT_ITEM T
+   		SET 
+   			T.SETTLEMENT_ITEM_ID = T.SETTLEMENT_ITEM_ID,
+   			T.UPDATE_TIME = sysdate
+   		<isNotNull property="status" prepend=",">
+   			T.STATUS = #status#
+   		</isNotNull>
+   		<isNotNull property="settlementStatus" prepend=",">
+   			T.SETTLEMENT_STATUS = #settlementStatus#
+   		</isNotNull>
+		<isNotNull property="settlementId" prepend=",">
+   			T.SETTLEMENT_ID = #settlementId#
+   		</isNotNull>
+   		<isNotNull property="joinSettlementTime" prepend=",">
+   			T.JOIN_SETTLEMENT_TIME = #joinSettlementTime#
+   		</isNotNull>
+   		<isNotNull property="totalSettlementPrice" prepend=",">
+   			T.TOTAL_SETTLEMENT_PRICE = #totalSettlementPrice#
+   		</isNotNull>
+   		<isNotNull property="actualSettlementPrice" prepend=",">
+   			T.ACTUAL_SETTLEMENT_PRICE = #actualSettlementPrice#
+   		</isNotNull>
+   		<isNotNull property="adjustmentAmount" prepend=",">
+   		 	ADJUSTMENT_AMOUNT=#adjustmentAmount#
+   		</isNotNull>
+   		<isNotNull property="refundedAmount" prepend=",">
+   		 	REFUNDED_AMOUNT=#refundedAmount#
+   		</isNotNull>
+   		<isNotNull property="oughtPay" prepend=",">
+   		 	OUGHT_PAY=#oughtPay#
+   		</isNotNull>
+   		<isNotNull property="countSettleAmount" prepend=",">
+   		 	COUNT_SETTLE_AMOUNT=#countSettleAmount#
+   		</isNotNull>
+   		<isNotNull property="adjustmentRemark" prepend=",">
+   		 	ADJUSTMENT_REMARK=#adjustmentRemark#
+   		</isNotNull>
+   		<isNotNull property="updateRemark" prepend=",">
+   		 	UPDATE_REMARK=#updateRemark#
+   		</isNotNull>
+   		<isNotNull property="metaFilialeName" prepend=",">
+   		 	META_FILIALE_NAME=#metaFilialeName#
+   		</isNotNull>
+   		WHERE 
+   			T.SETTLEMENT_ITEM_ID  
+   		IN
+   			(
+   				<iterate property="ids" conjunction=","  >
+   					#ids[]#
+   				</iterate>
+   			)
+   </update>
+    <update id="removeSettlementItem" parameterClass="java.util.HashMap">
+   		UPDATE
+   			SET_SETTLEMENT_ITEM T
+   		SET 
+   			T.SETTLEMENT_STATUS = #settlementStatus#,
+   			T.SETTLEMENT_ID = null,
+   			T.JOIN_SETTLEMENT_TIME = null,
+   			T.UPDATE_TIME = sysdate
+   		WHERE 
+   			T.SETTLEMENT_ITEM_ID  
+   		IN
+   			(
+   				<iterate property="ids" conjunction=","  >
+   					#ids[]#
+   				</iterate>
+   			)
+   </update>
+   <update id="updateItemSettlementStatusBySettlementId" parameterClass="java.util.HashMap">
+   		UPDATE
+   			SET_SETTLEMENT_ITEM T
+   		SET 
+   			T.SETTLEMENT_STATUS = #status#,
+   			T.UPDATE_TIME = sysdate
+   		WHERE 
+   			T.SETTLEMENT_ID = #settlementId#
+   </update>
+   
+   <insert id="insertSettlementItem" parameterClass="SetSettlementItem">
+		<selectKey keyProperty="settlementItemId" resultClass="long">
+  			SELECT 
+  				SET_SETTLEMENT_ITEM_SEQ.NEXTVAL AS settlementItemId
+  			FROM
+  				DUAL
+  		</selectKey>
+  		INSERT INTO SET_SETTLEMENT_ITEM(
+			SETTLEMENT_ITEM_ID,
+			ORDER_ID,
+			ORDER_STATUS,
+			ORDER_PAYMENT_TIME,
+			ORDER_CREATE_TIME,
+			ORDER_PAYMENT_STATUS,
+			ORDER_CONTACT_PERSON,
+			ORDER_COUPON_AMOUNT,
+			PASS_CODE,
+			PASS_SERIALNO,
+			PASS_EXTID,
+			ORDER_REFUND,
+			REFUND_MEMO,
+			ORDER_ITEM_PROD_ID,
+			PRODUCT_ID,
+			PRODUCT_NAME,
+			PRODUCT_TYPE,
+			PRODUCT_BRANCH_ID,
+			PRODUCT_BRANCH_NAME,
+			PRODUCT_PRICE,
+			PRODUCT_SUB_PRODUCT_TYPE,
+			FILIALE_NAME,         
+			ORDER_ITEM_META_ID,
+			ORDER_ITEM_META_PAYED_AMOUNT,
+			META_PRODUCT_ID,
+			META_PRODUCT_NAME,
+			META_BRANCH_ID,
+			META_BRANCH_NAME,
+			META_PRODUCT_MANAGER,
+			SETTLEMENT_PRICE,
+			ACTUAL_SETTLEMENT_PRICE,
+			SUPPLIER_ID,
+			TARGET_ID,
+			PRODUCT_QUANTITY,
+			QUANTITY,
+			VISIT_TIME,
+			SUB_PRODUCT_TYPE,
+			SETTLEMENT_STATUS,
+			SETTLEMENT_ID,
+			TOTAL_SETTLEMENT_PRICE,
+			STATUS,
+			SETTLEMENT_TYPE,
+			UPDATE_TIME,
+			ADJUSTMENT_AMOUNT,
+			REFUNDED_AMOUNT,
+			OUGHT_PAY,
+			COUNT_SETTLE_AMOUNT,
+			ADJUSTMENT_REMARK,
+			UPDATE_REMARK,
+			BUSINESS_NAME,
+			META_FILIALE_NAME
+  		)VALUES(
+  			#settlementItemId#,
+  			#orderId#,
+  			#orderStatus#,
+  			#orderPaymentTime#,
+  			#orderCreateTime#,
+  			#orderPaymentStatus#,
+  			#orderContactPerson#,
+  			#orderCouponAmount#,
+  			#passCode#,
+  			#passSerialno#,
+  			#passExtid#,
+  			#orderRefund#,
+  			#refundMemo#,
+  			#orderItemProdId#,
+  			#productId#,
+  			#productName#,
+  			#productType#,
+  			#productBranchId#,
+  			#productBranchName#,
+  			#productPrice#,
+  			#productSubProductType#,
+  			#filialeName#,
+  			#orderItemMetaId#,
+  			#orderItemMetaPayedAmount#,
+  			#metaProductId#,
+  			#metaProductName#,
+  			#metaBranchId#,
+  			#metaBranchName#,
+  			#metaProductManager#,
+  			#settlementPrice#,
+  			#actualSettlementPrice#,
+  			#supplierId#,
+  			#targetId#,
+  			#productQuantity#,
+  			#quantity#,
+  			#visitTime#,
+  			#subProductType#,
+  			#settlementStatus#,
+  			#settlementId#,
+  			#totalSettlementPrice#,
+  			#status#,
+  			#settlementType#,
+  			SYSDATE,
+  			#adjustmentAmount#,
+  			#refundedAmount#,
+  			#oughtPay#,
+  			#countSettleAmount#,
+  			#adjustmentRemark#,
+  			#updateRemark#,
+  			#businessName#,
+  			#metaFilialeName#
+  		)
+   </insert>
+   <update id="updateSettlementItem" parameterClass="SetSettlementItem">
+   	UPDATE
+   		SET_SETTLEMENT_ITEM
+   	SET
+   		UPDATE_TIME = SYSDATE
+   		<isNotNull property="orderStatus" prepend=",">
+   			ORDER_STATUS = #orderStatus#
+   		</isNotNull>
+   		<isNotNull property="orderPaymentTime" prepend=",">
+   			ORDER_PAYMENT_TIME=#orderPaymentTime#
+   		</isNotNull>
+   		<isNotNull property="orderPaymentStatus" prepend=",">
+   			ORDER_PAYMENT_STATUS=#orderPaymentStatus#
+   		</isNotNull>
+   		<isNotNull property="passCode" prepend=",">
+   			PASS_CODE=#passCode#
+   		</isNotNull>
+   		<isNotNull property="passSerialno" prepend=",">
+   			PASS_SERIALNO=#passSerialno#
+   		</isNotNull>
+   		<isNotNull property="passExtid" prepend=",">
+   			PASS_EXTID=#passExtid#
+   		</isNotNull>
+   		<isNotNull property="orderRefund" prepend=",">
+   			ORDER_REFUND=#orderRefund#
+   		</isNotNull>
+   		<isNotNull property="refundMemo" prepend=",">
+   			REFUND_MEMO=#refundMemo#
+   		</isNotNull>
+   		<isNotNull property="actualSettlementPrice" prepend=",">
+   			ACTUAL_SETTLEMENT_PRICE=#actualSettlementPrice#
+   		</isNotNull>
+   		<isNotNull property="totalSettlementPrice" prepend=",">
+   		 	TOTAL_SETTLEMENT_PRICE=#totalSettlementPrice#
+   		</isNotNull>
+   		<isNotNull property="status" prepend=",">
+   		 	STATUS=#status#
+   		</isNotNull>
+   		<isNotNull property="orderItemMetaPayedAmount" prepend=",">
+   		 	ORDER_ITEM_META_PAYED_AMOUNT=#orderItemMetaPayedAmount#
+   		</isNotNull>
+   		<isNotNull property="adjustmentAmount" prepend=",">
+   		 	ADJUSTMENT_AMOUNT=#adjustmentAmount#
+   		</isNotNull>
+   		<isNotNull property="refundedAmount" prepend=",">
+   		 	REFUNDED_AMOUNT=#refundedAmount#
+   		</isNotNull>
+   		<isNotNull property="oughtPay" prepend=",">
+   		 	OUGHT_PAY=#oughtPay#
+   		</isNotNull>
+   		<isNotNull property="countSettleAmount" prepend=",">
+   		 	COUNT_SETTLE_AMOUNT=#countSettleAmount#
+   		</isNotNull>
+   		<isNotNull property="adjustmentRemark" prepend=",">
+   		 	ADJUSTMENT_REMARK=#adjustmentRemark#
+   		</isNotNull>
+   		<isNotNull property="updateRemark" prepend=",">
+   		 	UPDATE_REMARK=#updateRemark#
+   		</isNotNull>
+   		<isNotNull property="businessName" prepend=",">
+   			BUSINESS_NAME=#businessName#
+   		</isNotNull>
+   		<isNotNull property="metaFilialeName" prepend=",">
+   			META_FILIALE_NAME = #metaFilialeName#
+   		</isNotNull>
+	<dynamic prepend=" WHERE ">
+		<isNotNull property="settlementItemId" prepend=" AND ">
+   		 	SETTLEMENT_ITEM_ID=#settlementItemId#
+   		</isNotNull>
+   		<isNotNull property="orderId" prepend=" AND ">
+   		 	ORDER_ID=#orderId#
+   		</isNotNull>
+   		
+	</dynamic>		
+   </update>
+   <update id="updateSettlementPriceByMetaProductId" parameterClass="map">
+   		UPDATE
+   			SET_SETTLEMENT_ITEM
+   		SET
+   		    ACTUAL_SETTLEMENT_PRICE = #settlementPrice#,
+   		    TOTAL_SETTLEMENT_PRICE = #settlementPrice# * QUANTITY * PRODUCT_QUANTITY,
+   		    UPDATE_TIME = SYSDATE
+   		WHERE
+   			SETTLEMENT_ID=#settlementId#
+   		AND
+   			META_PRODUCT_ID = #metaProductId#
+   </update>
+   
+   <!-- 老系统使用 -->
+   <select id="searchSettlementPayByOrderItemMetaId" parameterClass="long" resultClass="long">
+	SELECT 
+		B.PAYED_AMOUNT
+  	FROM 
+  		SET_SETTLEMENT_ITEM A, SET_SETTLEMENT B
+ 	WHERE 
+ 		A.SETTLEMENT_ID = B.SETTLEMENT_ID
+   	AND 
+   		A.ORDER_ITEM_META_ID = #orderItemMetaId# and A.BUSINESS_NAME IS NULL
+   </select>
+   
+   <!-- 新系统使用 -->
+   <select id="getSettlementPayAmount" resultClass="long" parameterClass="map" >
+	SELECT 
+		B.PAYED_AMOUNT
+  	FROM 
+  		SET_SETTLEMENT_ITEM A, SET_SETTLEMENT B
+ 	WHERE 
+ 		A.SETTLEMENT_ID = B.SETTLEMENT_ID
+   	AND 
+   		A.ORDER_ITEM_META_ID = #orderItemMetaId# and A.BUSINESS_NAME=#businessName#
+   </select>
+   
+   
+</sqlMap>

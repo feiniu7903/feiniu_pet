@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="AddTimePriceJobService" class="org.codehaus.xfire.spring.ServiceBean">
+		<property name="name" value="AddTimePriceJobServiceWs"></property>
+		<property name="serviceClass" value="com.lvmama.pet.service.AddTimePriceJobService"></property>
+		<property name="implementationClass" value="com.lvmama.pet.serviceImpl.AddTimePriceTableJobServiceImpl"></property>
+	</bean>
+	<bean id="MinusTimePriceJobService" class="org.codehaus.xfire.spring.ServiceBean">
+		<property name="name" value="MinusTimePriceJobServiceWs"></property>
+		<property name="serviceClass" value="com.lvmama.pet.service.MinusTimePriceJobService"></property>
+		<property name="implementationClass" value="com.lvmama.pet.serviceImpl.MinusTimePriceTableJobServiceImpl"></property>
+	</bean>
+	<bean id="ProductNumberJobService" class="org.codehaus.xfire.spring.ServiceBean">
+		<property name="name" value="ProductNumberJobServiceWs"></property>
+		<property name="serviceClass" value="com.lvmama.pet.service.ProductNumberJobService"></property>
+		<property name="implementationClass" value="com.lvmama.pet.serviceImpl.ProductNumberJobServiceImpl"></property>
+	</bean>
+	<bean id="SeckillRuleJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="SeckillRuleJobServiceWs"/>
+        <property name="serviceClass" value="com.lvmama.pet.service.SeckillRuleJobService"/>
+		<property name="implementationClass" value="com.lvmama.pet.serviceImpl.SeckillRuleJobServiceImpl"/>
+	</bean>
+	<bean id="WaitPeopleJobService" class="org.codehaus.xfire.spring.ServiceBean">
+		<property name="name" value="WaitPeopleJobServiceWs"></property>
+		<property name="serviceClass" value="com.lvmama.pet.service.WaitPeopleJobService"></property>
+		<property name="implementationClass" value="com.lvmama.pet.serviceImpl.WaitPeopleJobServiceImpl"></property>
+	</bean>
+	<bean id="CreateValidateCodeService" class="org.codehaus.xfire.spring.ServiceBean">
+		<property name="name" value="CreateValidateCodeServiceWs"></property>
+		<property name="serviceClass" value="com.lvmama.pet.service.CreateValidateCodeService"></property>
+		<property name="implementationClass" value="com.lvmama.pet.serviceImpl.CreateValidateCodeServiceImpl"></property>
+	</bean>
+</beans>

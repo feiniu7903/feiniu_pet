@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="WORK_ORDER">
+	<!-- 别名 -->
+    <typeAlias alias="workOrder" type="com.lvmama.comm.pet.po.work.WorkOrder"/>
+	<!-- 查询结果集 -->
+    <resultMap id="workOrderResult" class="workOrder">
+        <result property="workOrderId" column="WORK_ORDER_ID"/>
+        <result property="workOrderTypeId" column="WORK_ORDER_TYPE_ID"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="limitTime" column="LIMIT_TIME"/>
+        <result property="content" column="CONTENT"/>
+        <result property="status" column="STATUS"/>
+        <result property="createUserName" column="CREATE_USER_NAME"/>
+        <result property="url" column="URL"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="completeTime" column="COMPLETE_TIME"/>
+        <result property="mobileNumber" column="MOBILE_NUMBER"/>
+        <result property="processLevel" column="PROCESS_LEVEL"/>
+        <result property="agentUserName" column="AGENT_USER_NAME"/>
+        <result property="orderItemMetaId" column="ORDER_ITEM_META_ID"/>
+    </resultMap>
+    <resultMap id="workOrderResultByReceiver" class="workOrder" extends="workOrderResult">
+        <result property="receiverWorkGroupId" column="receiver_work_group_id"/>
+        <result property="receiverUserName" column="receiver_user_name"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	WORK_ORDER_ID ,
+        	WORK_ORDER_TYPE_ID ,
+        	ORDER_ID ,
+        	PRODUCT_ID ,
+        	USER_NAME ,
+        	LIMIT_TIME ,
+        	CONTENT ,
+        	STATUS ,
+        	CREATE_USER_NAME ,
+        	URL ,
+        	CREATE_TIME ,
+        	COMPLETE_TIME,
+        	MOBILE_NUMBER,
+        	PROCESS_LEVEL,
+        	AGENT_USER_NAME,
+        	ORDER_ITEM_META_ID
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="workOrderId">
+	             WORK_ORDER_ID = #workOrderId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="workOrderTypeId">
+	             WORK_ORDER_TYPE_ID = #workOrderTypeId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="orderId">
+	             ORDER_ID = #orderId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="productId">
+	             PRODUCT_ID = #productId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="userName">
+	             USER_NAME = #userName#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="limitTime">
+	             LIMIT_TIME = #limitTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="content">
+	             CONTENT = #content#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="status">
+	             STATUS = #status#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createUserName">
+	             CREATE_USER_NAME = #createUserName#
+	       </isNotEmpty>
+	       <!-- used4 lvtu client  -->
+	       <isNotEmpty prepend="AND" property="createUserName4Client">
+	             CREATE_USER_NAME like '%$createUserName4Client$%'
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="url">
+	             URL = #url#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="completeTime">
+	             COMPLETE_TIME = #completeTime#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 修改记录 -->
+    <update id="update" parameterClass="workOrder">
+    <![CDATA[
+        UPDATE WORK_ORDER SET
+	        WORK_ORDER_TYPE_ID = #workOrderTypeId# ,
+	        ORDER_ID = #orderId# ,
+	        PRODUCT_ID = #productId# ,
+	        USER_NAME = #userName# ,
+	        LIMIT_TIME = #limitTime# ,
+	        CONTENT = #content# ,
+	        STATUS = #status# ,
+	        CREATE_USER_NAME = #createUserName# ,
+	        URL = #url# ,
+	        CREATE_TIME = #createTime# ,
+	        COMPLETE_TIME = #completeTime#,
+	        MOBILE_NUMBER = #mobileNumber# ,
+	        PROCESS_LEVEL = #processLevel# ,
+	        AGENT_USER_NAME = #agentUserName#,
+	        ORDER_ITEM_META_ID = #orderItemMetaId#
+        WHERE 
+	        WORK_ORDER_ID = #workOrderId# 
+    ]]>
+    </update>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="workOrder">
+				<selectKey keyProperty="workOrderId" resultClass="java.lang.Long">
+					SELECT WORK_ORDER_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        WORK_ORDER (
+        	WORK_ORDER_ID ,
+        	WORK_ORDER_TYPE_ID ,
+        	ORDER_ID ,
+        	PRODUCT_ID ,
+        	USER_NAME ,
+        	LIMIT_TIME ,
+        	CONTENT ,
+        	STATUS ,
+        	CREATE_USER_NAME ,
+        	URL ,
+        	CREATE_TIME ,
+        	COMPLETE_TIME,
+        	MOBILE_NUMBER ,
+	        PROCESS_LEVEL ,
+	        AGENT_USER_NAME,
+	        ORDER_ITEM_META_ID
+        ) VALUES (
+        	#workOrderId# ,
+        	#workOrderTypeId# ,
+        	#orderId# ,
+        	#productId# ,
+        	#userName# ,
+        	#limitTime# ,
+        	#content# ,
+        	#status# ,
+        	#createUserName# ,
+        	#url# ,
+        	#createTime# ,
+        	#completeTime#,
+        	#mobileNumber# ,
+        	#processLevel# ,
+        	#agentUserName#,
+        	#orderItemMetaId#
+        )
+    ]]>
+    </insert>
+    <!-- 查询记录，根据主键值 -->
+    <select id="getWorkOrderById" resultMap="workOrderResult">
+	    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from WORK_ORDER 
+	        where 
+						WORK_ORDER_ID = #workOrderId# 
+	    ]]>
+    </select>
+    <select id="getWorkOrderByOrderId" resultMap="workOrderResult">
+	    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from WORK_ORDER 
+	        where ORDER_ID = #orderId# 
+	    ]]>
+    </select>
+    <!-- 查询记录 根据特定条件 -->
+    <select id="queryWorkOrderByParam"  resultMap="workOrderResult" parameterClass="java.util.Map">
+       select <include refid="commonColumns"/> from WORK_ORDER 
+		<include refid="dynamicWhere"/>    
+    </select>
+
+    <!-- 查询记录 根据特定条件 -->
+  	<select id="queryWorkOrderByCondition" resultMap="workOrderResult" parameterClass="java.util.Map">
+  		select wo.* from work_order wo,work_order_type wt
+       		where wo.work_order_type_id=wt.work_order_type_id
+       			<isNotEmpty property="orderId">
+       			    and wo.order_id=#orderId# 
+       			</isNotEmpty>
+       			<isNotEmpty property="productId">
+       				and wo.product_id=#productId#
+       			</isNotEmpty>
+       			<isNotEmpty property="status">
+       				and wo.status=#status#
+       			</isNotEmpty>
+       			<isNotEmpty property="typeCode">
+       			 	and wt.type_code=#typeCode#
+       			</isNotEmpty>
+  	</select>
+  	 <!-- 根据工单类型和订单号查询接收人 -->
+  	<select id="queryReceiverByTypeCode" resultMap="workOrderResultByReceiver" parameterClass="java.util.Map">
+		select user_tmp.work_group_id as receiver_work_group_id,user_tmp.user_name as receiver_user_name,wo.* from work_order wo,work_task wt,
+		(select distinct wgu.work_group_id,wgu.work_group_user_id,pu.user_name 
+			from work_group_user wgu,perm_user pu
+			where wgu.perm_user_id = pu.user_id
+		) user_tmp where wo.work_order_id = wt.work_order_id 
+		and wt.receiver = user_tmp.work_group_user_id
+		and order_id=#orderId# and work_order_type_id=
+		(select wot.work_order_type_id from work_order_type wot where wot.type_code=#typeCode#)
+  	</select>
+</sqlMap>

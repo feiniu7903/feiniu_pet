@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
+
+	Configuration file for UrlRewriteFilter
+	http://tuckey.org/urlrewrite/
+-->
+<urlrewrite>
+	<rule match-type="regex">
+        <from>^/account/checkcode\.htm*$</from>
+        <to>/WEB-INF/pages/img.jsp</to>
+    </rule>
+    
+    <!-- 新订单详情页   -->
+	<rule match-type="regex">
+		<from>^/pay/ticket-([0-9]+)-([0-9]+)$</from>
+		<to>/view/viewNew.do?id=$1&amp;orderId=$2</to>
+	</rule>
+    
+ </urlrewrite>

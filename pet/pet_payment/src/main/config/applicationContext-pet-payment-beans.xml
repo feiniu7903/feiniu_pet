@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+ 
+<beans default-autowire="byName">
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+			<value>classpath:const.properties</value>
+			<value>classpath:payment.properties</value>
+			<value>classpath:jms.properties</value>
+			</list>
+        </property>
+    </bean>  
+    
+	<!-- 引用Service接口-->
+	<import resource="applicationContext-pet-payment-service.xml" />
+	<import resource="applicationContext-pet-payment-quartz.xml" />
+	<import resource="applicationContext-pet-payment-trigger.xml" />
+	<import resource="applicationContext-pet-payment-remote.xml" />
+	<import resource="applicationContext-lvmama-comm-beans.xml" />
+	<import resource="applicationContext-pet-payment-xfire.xml" />
+    
+</beans>

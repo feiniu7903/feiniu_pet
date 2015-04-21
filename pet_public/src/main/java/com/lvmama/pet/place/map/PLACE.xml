@@ -1,0 +1,774 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PLACE">
+  <typeAlias alias="Place" type="com.lvmama.comm.pet.po.place.Place" />
+  <resultMap class="Place" id="PlaceBaseResultMap">
+    <result column="PLACE_ID" property="placeId" />
+    <result column="NAME" property="name" />
+    <result property="province" column="province" />
+ 	<result property="city" column="city" />
+    <result column="PIN_YIN" property="pinYin" />
+    <result column="PIN_YIN_URL" property="pinYinUrl" />
+    <result column="SEO_NAME" property="seoName" />
+    <result column="SEO_TITLE" property="seoTitle" />
+    <result column="SEO_CONTENT" property="seoContent"/>
+    <result column="SEO_KEYWORD" property="seoKeyword" />
+    <result column="SEO_DESCRIPTION" property="seoDescription" />
+    <result column="TEMPLATE" property="template" />
+    <result column="IS_EXIT" property="isExit" />
+    <result column="HFKW" property="hfkw" />
+    <result column="PLACE_TYPE" property="placeType" />
+    <result column="REMARKES" property="remarkes" />
+    <result column="PARENT_PLACE_ID" property="parentPlaceId" />
+    <result column="SEQ" property="seq" nullValue="0"/>
+    <result column="SEQ_ACTIVITY" property="seqActivity" />
+    <result column="IS_BOTTOM" property="isBottom" />
+    <result column="PROD_ENABLE" property="prodEnable" />
+    <result column="STAGE" property="stage" />
+    <result column="IS_VALID" property="isValid" />
+    <result column="ADDRESS" property="address" />
+    <result column="SCENIC_OPEN_TIME" property="scenicOpenTime" />
+    <result column="SCENIC_RECOMMEND_TIME" property="scenicRecommendTime" />
+    <result column="SCENIC_GRADE" property="scenicGrade" />
+    <result column="SCENIC_SECOND_TOPIC" property="scenicSecondTopic" />
+    <result column="FIRST_TOPIC" property="firstTopic" />
+    <result column="FEATURE" property="feature" />
+    <result column="ORDER_NOTICE" property="orderNotice" />
+    <result column="IMPORTANT_TIPS" property="importantTips" />
+    <result column="CREATE_TIME"  property="createTime" />
+    <result column="UPDATE_TIME"  property="updateTime" />
+    <result column="DEFAULT_URL" property="defaultUrl" />
+    <result column="IS_HAS_ACTIVITY" property="isHasActivity" />
+    <result column="CMT_TITLE" property="cmtTitle" />
+    <result column="EN_NAME" property="enName" />
+   	<result column="AIRPORT_CODE" property="airportCode" />
+   	<result column="kuai_su_ru_yuan" property="kuaiSuRuYuan" />
+    <result column="gui_jiu_pei" property="guiJiuPei" />
+  	<result column="sui_shi_tui" property="suiShiTui" />
+ 	<result column="ru_yuan_bao_zhang" property="ruYuanBaoZhang" />
+ 	<result column="HAS_SENSITIVE_WORD" property="hasSensitiveWord"/>
+  </resultMap>
+  <resultMap class="Place" id="PlaceBaseResultMap_WithClob" extends="PlaceBaseResultMap">
+  	<result column="DESCRIPTION" property="description" jdbcType="CLOB" javaType="java.lang.String" typeHandler="com.lvmama.comm.ClobTypeHandlerCallback"/>
+  	<result column="TRAFFIC_INFO" property="trafficInfo" jdbcType="CLOB" javaType="java.lang.String" typeHandler="com.lvmama.comm.ClobTypeHandlerCallback" />
+ 	<result column="destination_Explore" property="destinationExplore" jdbcType="CLOB" javaType="java.lang.String" typeHandler="com.lvmama.comm.ClobTypeHandlerCallback" />
+  </resultMap>
+   <resultMap class="Place" id="AutoComplatePlaceResultMap">
+    <result column="PLACE_ID" property="placeId" />
+    <result column="NAME" property="name" />
+   </resultMap>
+   
+   <resultMap class="Place" id="PlaceAllMapResultMap">
+    <result column="PLACE_ID" property="placeId" />
+    <result column="PIN_YIN_URL" property="pinYinUrl" />
+   </resultMap>
+  
+  <resultMap id="placeBaseInfoMap" extends="PlaceBaseResultMap" class="com.lvmama.comm.pet.po.place.Place">
+ 		<result property="productsPrice" column="PRODUCTS_PRICE" />
+ 		<result property="ticketNum" column="TICKET_NUM" />
+ 		<result property="hotelNum" column="HOTLE_NUM" />
+		<result property="commentCount" column="COMMENT_COUNT"  />
+		<result property="avgScore" column="AVG_SCORE"/>
+  </resultMap>
+  
+  <resultMap id="placePriceInfoMap" extends="PlaceBaseResultMap" class="com.lvmama.comm.pet.po.place.Place">
+ 		<result property="sellPrice" column="sell_price" />
+ 		<result property="marketPrice" column="market_price" />
+ 		<result property="smallImage" column="small_image" />
+ 		<result property="placeProvince" column="placeProvince" />
+ 		<result property="placeCity" column="placeCity" />
+  </resultMap>
+  
+   <resultMap id="placeAirInfoMap" extends="PlaceBaseResultMap" class="com.lvmama.comm.pet.po.place.Place">
+ 		  
+   </resultMap>
+   <!-- 景区详情页使用 为了seo 获取汉字搜索转码 -->
+   <resultMap class="Place" id="PlaceAndComSearchTranscode" extends="PlaceBaseResultMap">
+    <result column="CODE_ID" property="codeId" />
+   </resultMap>
+   <!--  描述+交通 -->
+   <resultMap class="Place" id="DescripAndTrafficResultMap">
+	     <result column="PLACE_ID" property="placeId" />
+	     <result column="STAGE" property="stage" />
+	    <result column="DESCRIPTION" property="description" jdbcType="CLOB" javaType="java.lang.String" typeHandler="com.lvmama.comm.ClobTypeHandlerCallback"/>
+	    <result column="TRAFFIC_INFO" property="trafficInfo" jdbcType="CLOB" javaType="java.lang.String" typeHandler="com.lvmama.comm.ClobTypeHandlerCallback" />
+   		<result column="destination_Explore" property="destinationExplore" jdbcType="CLOB" javaType="java.lang.String" typeHandler="com.lvmama.comm.ClobTypeHandlerCallback" />
+   </resultMap>
+   <sql id="placeIdAll">
+	   SELECT distinct PP.PLACE_ID
+		  FROM lvmama_pet.PLACE_PLACE_DEST PP
+		CONNECT BY PP.Parent_Place_Id = PRIOR PP.PLACE_ID
+		 START WITH PP.PLACE_ID = #parentPlaceId#
+		minus
+		select PP.PLACE_ID
+		  FROM lvmama_pet.PLACE_PLACE_DEST PP
+		 where PP.PLACE_ID = #parentPlaceId#
+	</sql>
+   
+   <select id="selectAutoComplatePlaceList" resultMap="AutoComplatePlaceResultMap" parameterClass="java.util.Map">
+   		select place_id,name from place where is_valid = 'Y' and name like '%$name$%'
+   		<isNotEmpty prepend="and" property="stage">
+   		  stage in ($stage$)
+   		</isNotEmpty>
+   </select>
+   
+  <select id="findByPlaceId" parameterClass="java.lang.Long" resultMap="PlaceBaseResultMap_WithClob">
+    select *
+    from PLACE
+    where PLACE_ID = #placeId#
+  </select>
+  <!-- 查询place 加上搜索关键字转码 -->
+   <select id="queryPlaceAndComSearchTranscodeByPlaceId" resultMap="PlaceAndComSearchTranscode" parameterClass="java.lang.Long">
+     select cc.CODE_ID, p.*
+	    from PLACE p 
+	    left join com_search_transcode cc on cc.keyword=p.name
+        where  PLACE_ID = #placeId#
+   </select>
+  <select id="getPlaceByName" resultMap="PlaceBaseResultMap" parameterClass="java.util.Map">
+  	select * from place where name=#name# and IS_VALID = #valid#
+  </select>
+ <sql id="placeListWhere">
+ 	<dynamic prepend="where">
+ 		<isNotEmpty property="placeId" prepend="and">
+    		place_id=#placeId#
+    	</isNotEmpty>
+    	<isNotEmpty property="isValid" prepend="and">
+    		is_valid=#isValid#
+    	</isNotEmpty>
+    	<isNotEmpty property="pinYin" prepend="and">
+    		pin_yin=#pinYin#
+    	</isNotEmpty>
+    	<isNotEmpty property="parentPlaceId" prepend="and">
+    		PARENT_PLACE_ID in (select p.place_id
+          from place_place_dest ppd, place p
+         where ppd.place_id = p.place_id
+           and p.is_valid = 'Y'
+           and p.place_type in ('ZXS', 'ZZQ', 'TBXZQ', 'CITY', 'PROVINCE','OTHER','FOREIGN','COUNTRY')
+         start with ppd.place_id = #parentPlaceId#
+        connect by prior ppd.place_id = ppd.parent_place_id)
+    	</isNotEmpty>
+    	<isNotEmpty property="parentPlaceName" prepend="and">
+    		 PLACE_ID  in (     
+     						   select ppd.place_id
+       						   from   place_place_dest ppd 
+          					   start  with ppd.parent_place_id = (select pl.place_id from (select p.place_id from place p where p.name =#parentPlaceName# ) pl where  rownum=1)
+
+         					   connect by prior  ppd.place_id =   ppd.parent_place_id  )  
+    	</isNotEmpty>
+    	<isNotEmpty property="headPlaceId" prepend="and">
+    	    PARENT_PLACE_ID = #headPlaceId#
+    	</isNotEmpty>
+    	<isNotEmpty property="placeType" prepend="and">
+    		place_type=#placeType#
+    	</isNotEmpty>
+    	<isNotEmpty property="name" prepend="and">
+    		name like '%$name$%'
+    	</isNotEmpty>
+    	<isNotEmpty property="placeName" prepend="and">
+    		name = #placeName#
+    	</isNotEmpty>
+    	<isNotEmpty property="template" prepend="and">
+    		template=#template#
+    	</isNotEmpty>
+    	<isNotEmpty property="isExit" prepend="and">
+    		is_Exit=#isExit#
+    	</isNotEmpty>
+    	<isEqual property="seoIsEdit" compareValue="Y" prepend="and">
+    		seo_title is not null
+    	</isEqual>
+    	<isEqual property="seoIsEdit" compareValue="N" prepend="and">
+    		seo_title is null
+    	</isEqual>
+    	<isNotEmpty property="isHasActivity" prepend="and">
+    		IS_HAS_ACTIVITY=#isHasActivity#
+    	</isNotEmpty>
+    	<isNotEmpty property="stage" prepend="and">
+    		stage=#stage#
+    	</isNotEmpty>
+    	<isNotEmpty property="stages" prepend="and">
+    		stage  in   
+    		<iterate conjunction="," open="(" close=")" property="stages">
+  			#stages[]#
+ 		    </iterate>
+    	</isNotEmpty>
+    	<isNotEmpty property="firstTopic" prepend="and">
+    		(FIRST_TOPIC=#firstTopic# or SCENIC_SECOND_TOPIC=#firstTopic#)
+    	</isNotEmpty>
+    	<isNotEmpty property="startDate" prepend="and">
+    		create_time&gt;#startDate#
+    	</isNotEmpty>
+    	<isNotEmpty property="endDate" prepend="and">
+    		create_time&lt;#endDate#
+    	</isNotEmpty>
+    	
+    	<isNotEmpty property="startUpdateDate" prepend="and">
+    		update_time&gt;#startUpdateDate#
+    	</isNotEmpty>
+    	<isNotEmpty property="endUpdateDate" prepend="and">
+    		update_time&lt;#endUpdateDate#
+    	</isNotEmpty>
+    	
+    	<isNotEmpty property="enName" prepend="and">
+    		EN_NAME=#enName#
+    	</isNotEmpty>
+    	<isNotEmpty property="airportCode" prepend="and">
+    		AIRPORT_CODE=#airportCode#
+    	</isNotEmpty>
+    </dynamic>
+ </sql>
+  <sql id="selectPlaceListSql">
+	select PLACE_ID, NAME, PIN_YIN, PIN_YIN_URL, SEO_NAME, SEO_TITLE, SEO_KEYWORD, SEO_DESCRIPTION,
+      TEMPLATE, HFKW, PLACE_TYPE, REMARKES, PARENT_PLACE_ID, SEQ, SEQ_ACTIVITY, IS_BOTTOM,
+      PROD_ENABLE, STAGE, IS_VALID, ADDRESS, SCENIC_OPEN_TIME, SCENIC_RECOMMEND_TIME, SCENIC_GRADE,
+      SCENIC_SECOND_TOPIC, FIRST_TOPIC, FEATURE, ORDER_NOTICE, IMPORTANT_TIPS, CREATE_TIME, UPDATE_TIME, DEFAULT_URL, IS_HAS_ACTIVITY,
+      CMT_TITLE, PROVINCE, CITY, SEO_CONTENT,EN_NAME,AIRPORT_CODE,IS_EXIT,kuai_su_ru_yuan,gui_jiu_pei,sui_shi_tui,ru_yuan_bao_zhang,HAS_SENSITIVE_WORD 
+     from PLACE
+    <include refid="placeListWhere"/>
+    <include refid="orderBySeqAsc"/>
+ </sql>
+ <sql id="orderBySeqAsc">
+ 	order by seq asc,place_id desc
+ </sql>
+  <select id="queryPlaceList" resultMap="PlaceBaseResultMap" parameterClass="java.util.Map">
+  	SELECT *
+	  FROM (SELECT A.*, ROWNUM RN
+	          FROM (<include refid="selectPlaceListSql"/>) A
+	        <dynamic prepend="where">
+				<isNotEmpty property="endRows" prepend="and">
+					ROWNUM &lt;= #endRows#
+				</isNotEmpty>
+			</dynamic>
+	       )
+	       <dynamic prepend="where">
+				<isNotEmpty property="startRows" prepend="and">
+					rn &gt;= #startRows#
+				</isNotEmpty>		
+		  </dynamic>
+  </select>
+  <select id="countPlaceList" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		SELECT COUNT(*) FROM place
+		<include refid="placeListWhere"/>
+  </select>
+ 
+ <select id="getNextPlaceId" resultClass="java.lang.Long">
+ 	SELECT PLACE_SEQ.NEXTVAL FROM DUAL
+ </select>
+  <insert id="insert" parameterClass="Place">
+    insert into PLACE (PLACE_ID, NAME, PIN_YIN, PIN_YIN_URL, SEO_NAME, SEO_TITLE, SEO_CONTENT,
+      SEO_KEYWORD, SEO_DESCRIPTION, TEMPLATE, HFKW, PLACE_TYPE, REMARKES, PARENT_PLACE_ID, SEQ,
+      SEQ_ACTIVITY, IS_BOTTOM, PROD_ENABLE, STAGE, IS_VALID, ADDRESS, SCENIC_OPEN_TIME,
+      SCENIC_RECOMMEND_TIME, SCENIC_GRADE, SCENIC_SECOND_TOPIC, FIRST_TOPIC, FEATURE, ORDER_NOTICE,
+      IMPORTANT_TIPS, DESCRIPTION,  CREATE_TIME,
+      UPDATE_TIME, DEFAULT_URL,IS_HAS_ACTIVITY,CMT_TITLE,EN_NAME,AIRPORT_CODE,TRAFFIC_INFO,HAS_SENSITIVE_WORD)
+    values (#placeId#,#name#, #pinYin#, #pinYinUrl#,
+      #seoName#, #seoTitle#, #seoContent#, #seoKeyword#,
+      #seoDescription#, #template#, #hfkw#, #placeType#,
+      #remarkes#, #parentPlaceId#, 0, #seqActivity#,
+      #isBottom#, #prodEnable#, #stage#, #isValid#,
+      #address#, #scenicOpenTime#, #scenicRecommendTime#,
+      #scenicGrade#, #scenicSecondTopic#, #firstTopic#, #feature#,
+      #orderNotice#, #importantTips#, #description#, sysdate, sysdate,
+      #defaultUrl#,#isHasActivity#,#cmtTitle#,#enName#,#airportCode#,#trafficInfo#,#hasSensitiveWord#)
+  </insert>
+  
+  <update id="update" parameterClass="Place">
+    update PLACE
+    set NAME = #name#,
+      PIN_YIN = #pinYin#,
+      PIN_YIN_URL = #pinYinUrl#,
+      SEO_NAME = #seoName#,
+      SEO_TITLE = #seoTitle#,
+      SEO_CONTENT = #seoContent#,
+      SEO_KEYWORD = #seoKeyword#,
+      SEO_DESCRIPTION = #seoDescription#,
+      TEMPLATE = #template#,
+      HFKW = #hfkw#,
+      PLACE_TYPE = #placeType#,
+      REMARKES = #remarkes#,
+      PARENT_PLACE_ID = #parentPlaceId#,
+      SEQ = #seq#,
+      SEQ_ACTIVITY = #seqActivity#,
+      IS_BOTTOM = #isBottom#,
+      PROD_ENABLE = #prodEnable#,
+      STAGE = #stage#,
+      IS_VALID = #isValid#,
+      ADDRESS = #address#,
+      SCENIC_OPEN_TIME = #scenicOpenTime#,
+      SCENIC_RECOMMEND_TIME = #scenicRecommendTime#,
+      SCENIC_GRADE = #scenicGrade#,
+      SCENIC_SECOND_TOPIC = #scenicSecondTopic#,
+      FIRST_TOPIC = #firstTopic#,
+      FEATURE = #feature#,
+      ORDER_NOTICE = #orderNotice#,
+      IMPORTANT_TIPS = #importantTips#,
+      DESCRIPTION = #description#,
+      CREATE_TIME = #createTime#,
+      UPDATE_TIME = #updateTime#,
+      DEFAULT_URL = #defaultUrl#,
+      IS_HAS_ACTIVITY = #isHasActivity#,
+      CMT_TITLE = #cmtTitle#
+    where PLACE_ID = #placeId#
+  </update>
+   <update id="updateByPrimaryKeySelective" parameterClass="Place">
+    update PLACE
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="name">
+        NAME = #name#
+      </isNotNull>
+      <isNotNull prepend="," property="province">
+        province = #province#
+      </isNotNull>
+      <isNotNull prepend="," property="city">
+        city = #city#
+      </isNotNull>
+      <isNotNull prepend="," property="pinYin">
+        PIN_YIN = #pinYin#
+      </isNotNull>
+      <isNotNull prepend="," property="pinYinUrl">
+        PIN_YIN_URL = #pinYinUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="seoName">
+        SEO_NAME = #seoName#
+      </isNotNull>
+      <isNotNull prepend="," property="seoTitle">
+        SEO_TITLE = #seoTitle#
+      </isNotNull>
+      <isNotNull prepend="," property="seoContent">
+        SEO_CONTENT = #seoContent#
+      </isNotNull>
+      <isNotNull prepend="," property="seoKeyword">
+        SEO_KEYWORD = #seoKeyword#
+      </isNotNull>
+      <isNotNull prepend="," property="seoDescription">
+        SEO_DESCRIPTION = #seoDescription#
+      </isNotNull>
+      <isNotNull prepend="," property="template">
+        TEMPLATE = #template#
+      </isNotNull>
+      <isNotNull prepend="," property="isExit">
+        IS_EXIT = #isExit#
+      </isNotNull>
+      <isNotNull prepend="," property="hfkw">
+        HFKW = #hfkw#
+      </isNotNull>
+      <isNotNull prepend="," property="placeType">
+        PLACE_TYPE = #placeType#
+      </isNotNull>
+      <isNotNull prepend="," property="remarkes">
+        REMARKES = #remarkes#
+      </isNotNull>
+      <isNotNull prepend="," property="parentPlaceId">
+        PARENT_PLACE_ID = #parentPlaceId#
+      </isNotNull>
+      <isNotNull prepend="," property="seq">
+        SEQ = #seq#
+      </isNotNull>
+      <isNotNull prepend="," property="seqActivity">
+        SEQ_ACTIVITY = #seqActivity#
+      </isNotNull>
+      <isNotNull prepend="," property="isBottom">
+        IS_BOTTOM = #isBottom#
+      </isNotNull>
+      <isNotNull prepend="," property="prodEnable">
+        PROD_ENABLE = #prodEnable#
+      </isNotNull>
+      <isNotNull prepend="," property="stage">
+        STAGE = #stage#
+      </isNotNull>
+      <isNotNull prepend="," property="isValid">
+        IS_VALID = #isValid#
+      </isNotNull>
+      <isNotNull prepend="," property="address">
+        ADDRESS = #address#
+      </isNotNull>
+      <isNotNull prepend="," property="scenicOpenTime">
+        SCENIC_OPEN_TIME = #scenicOpenTime#
+      </isNotNull>
+      <isNotNull prepend="," property="scenicRecommendTime">
+        SCENIC_RECOMMEND_TIME = #scenicRecommendTime#
+      </isNotNull>
+      <isNotNull prepend="," property="scenicGrade">
+        SCENIC_GRADE = #scenicGrade#
+      </isNotNull>
+      <isNotNull prepend="," property="scenicSecondTopic">
+        SCENIC_SECOND_TOPIC = #scenicSecondTopic#
+      </isNotNull>
+      <isNotNull prepend="," property="firstTopic">
+        FIRST_TOPIC = #firstTopic#
+      </isNotNull>
+      <isNotNull prepend="," property="feature">
+        FEATURE = #feature#
+      </isNotNull>
+      <isNotNull prepend="," property="orderNotice">
+        ORDER_NOTICE = #orderNotice#
+      </isNotNull>
+      <isNotNull prepend="," property="importantTips">
+        IMPORTANT_TIPS = #importantTips#
+      </isNotNull>
+      <isNotNull prepend="," property="description">
+        DESCRIPTION = #description#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        UPDATE_TIME = sysdate
+      </isNotNull>
+      <isNotNull prepend="," property="defaultUrl">
+        DEFAULT_URL = #defaultUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="isHasActivity">
+         IS_HAS_ACTIVITY=#isHasActivity#
+      </isNotNull>
+      <isNotNull prepend="," property="cmtTitle">
+         CMT_TITLE=#cmtTitle#
+      </isNotNull>
+       <isNotNull prepend="," property="enName">
+         EN_NAME=#enName#
+      </isNotNull>
+       <isNotNull prepend="," property="airportCode">
+         AIRPORT_CODE=#airportCode#
+      </isNotNull>
+      <isNotNull prepend="," property="trafficInfo">
+         TRAFFIC_INFO=#trafficInfo#
+      </isNotNull>
+      <isNotNull prepend="," property="destinationExplore">
+      	destination_explore=#destinationExplore#
+      </isNotNull>
+      <isNotNull prepend="," property="kuaiSuRuYuan">
+      	kuai_su_ru_yuan=#kuaiSuRuYuan#
+      </isNotNull>
+      <isNotNull prepend="," property="guiJiuPei">
+      	gui_jiu_pei=#guiJiuPei#
+      </isNotNull>
+      <isNotNull prepend="," property="suiShiTui">
+      	sui_shi_tui=#suiShiTui#
+      </isNotNull>
+       <isNotNull prepend="," property="ruYuanBaoZhang">
+      	ru_Yuan_Bao_zhang=#ruYuanBaoZhang#
+      </isNotNull>
+    </dynamic>
+    where PLACE_ID = #placeId#
+  </update>
+  <update id="updatePlaceSeq" parameterClass="java.util.Map">
+  	update place set seq=#seq# where place_id=#placeId#
+  </update>
+  
+  <select id="getPlaceByParentPlaceId" resultMap="PlaceBaseResultMap">
+		select * from ( SELECT * FROM PLACE WHERE IS_VALID='Y' and place_ID IN
+		(
+		<include refid="placeIdAll" />
+		)
+		<isNotEmpty property="stage" prepend="and">
+			stage=#stage#
+		</isNotEmpty>
+		order by seq ) where
+		<![CDATA[ rownum <= #rownum# ]]>
+	</select>
+  
+ <select id="getSonPlaceByPlaceIdAndStage" resultMap="placeBaseInfoMap" parameterClass="Place">
+	SELECT row_.* FROM( SELECT rownum rowunm_,pi.* from ( 
+	select p.*,placesi.products_price,placesi.TICKET_NUM,placesi.HOTLE_NUM, pcs.comment_count, pcs.avg_score
+      FROM PLACE p, cmt_title_STATISTICS pcs, place_search_info placesi
+     WHERE p.IS_VALID = 'Y'
+       and pcs.place_id = p.place_id
+       and placesi.place_id = p.place_id
+       
+	<isNotEmpty prepend="and" property="stage">
+		p.stage=#stage# 
+		<isEqual prepend="and" property="stage" compareValue="2">
+			placesi.TICKET_NUM is not NUll
+       		and placesi.TICKET_NUM > 0
+		</isEqual>
+	</isNotEmpty> 
+	and p.place_id IN (
+	<include refid="placeIdAll" />
+	) order by p.seq) pi ) row_ where
+	<![CDATA[row_.rowunm_  between #startRows# and #endRows#]]>
+ </select>
+
+<!-- 根据父亲PlaceId查询儿子的place的数量 -->
+ <select id="selectSonPlaceCount" resultClass="java.lang.Long">
+	SELECT  count(distinct PP.PLACE_ID)
+      FROM PLACE_PLACE_DEST PP, place p
+     where pp.place_id = p.place_id
+       and p.is_valid = 'Y'
+	<isNotEmpty property="stage" prepend="and">
+       p.stage=#stage#
+	</isNotEmpty>
+    CONNECT BY PP.Parent_Place_Id = PRIOR PP.PLACE_ID
+     START WITH PP.Parent_Place_Id = #parentPlaceId#
+ </select>
+ 
+ <!-- 取同级place  -->
+ <select id="getPlaceBySameParentPlaceId"  resultMap="PlaceBaseResultMap"  parameterClass="java.util.Map">
+    select p.* from (
+     select rownum as row_num,p.*  from place p where p.parent_place_id=#parentPlaceId# and p.stage=#stage# and p.is_valid='Y'  order by p.seq
+     ) p 
+     <dynamic prepend=" where ">
+       <isNotNull property="size" prepend="and">
+        p.row_num &lt;=#size#
+       </isNotNull>
+     </dynamic>
+ </select>
+ 
+ <!-- 取同级place及其所关联产品价格信息  -->
+ <select id="getPlaceInfoBySameParentPlaceId"  resultMap="placePriceInfoMap"  parameterClass="java.util.Map">
+    select p.*,rownum from (
+     select p.*,placesi.products_price as sell_price,placesi.market_price,placesi.small_image,placesi.PROVINCE as placeProvince,placesi.city placeCity
+      FROM PLACE p, place_search_info placesi
+     WHERE p.IS_VALID = 'Y'
+       and placesi.place_id = p.place_id
+       and p.parent_place_id=#parentPlaceId# and p.stage=#stage# and p.is_valid='Y' 
+    <isNotNull prepend=" AND " property="isTrain">
+		placesi.products_price &gt; 0
+	</isNotNull> 
+    <isNotNull property="placeId"  prepend=" AND ">
+      	p.place_id != #placeId# 
+        order by p.place_id * dbms_random.value()
+    </isNotNull>
+    <isNull property="placeId"  prepend=" ">
+        order by p.seq
+    </isNull>
+     ) p 
+     <dynamic prepend=" where ">
+       <isNotNull property="size" prepend="and">
+        rownum &lt;=#size#
+       </isNotNull>
+     </dynamic>
+ </select>
+ 
+ <!-- 查询有效产品的出发地（如果指定目的地，则只查询标地为当前目的地的所有产品的出发地列表） -->
+  <select id="getFromPlace" parameterClass="java.util.Map" resultMap="PlaceBaseResultMap">
+  	SELECT * FROM PLACE
+    WHERE place_id IN
+       (SELECT DISTINCT	prodp.from_place_id
+          FROM PRODUCT_SEARCH_INFO psi, product_product_place prodp
+          WHERE psi.product_id = prodp.product_id and psi.CHANNEL like '%FRONTEND%'
+          <isNotNull prepend=" AND " property="isValid">
+          	psi.is_valid = #isValid#
+          </isNotNull>
+          <isNotNull prepend=" AND " property="productType">
+          	psi.PRODUCT_TYPE = #productType#
+          </isNotNull>
+          <isNotNull prepend="and" property="subProductType">
+          	psi.SUB_PRODUCT_TYPE in ($subProductType$)	
+          </isNotNull>
+          <isNotNull  property="subProductTypes">
+	          <isNotEmpty prepend="and" property="subProductTypes">
+	          	psi.SUB_PRODUCT_TYPE in
+	          	<iterate conjunction="," open="(" close=")" property="subProductTypes">
+	  				#subProductTypes[]#
+	 			</iterate>
+			  </isNotEmpty>  
+		  </isNotNull>
+          <isNotNull prepend=" AND " property="placeId">
+          	prodp.place_id = #placeId#
+          </isNotNull>
+          <isNotNull prepend=" AND " property="fromPlaceId">
+          	prodp.from_place_id = #fromPlaceId#
+          </isNotNull>
+        )
+    <isNotNull prepend=" AND " property="stage">
+    	stage = #stage#
+    </isNotNull> 
+ 	<isNotNull prepend=" AND " property="isValid">
+        is_valid = #isValid#
+    </isNotNull>
+ 	order by seq  
+  </select>
+	
+ <select id="getPlaceByPinYin"  resultMap="PlaceBaseResultMap_WithClob"  parameterClass="java.lang.String">
+     select *  from place where pin_yin=#pinYin# and rownum&lt;=1
+ </select>
+ <!--  返回结果不加上CLOB大字段 -->
+  <select id="getPlaceByPinYinWithOutCLOB"  resultMap="PlaceBaseResultMap"  parameterClass="java.lang.String">
+     select  *  from place where pin_yin=#pinYin# and rownum&lt;=1
+ </select>
+   <select id="queryPlaceByPlaceIdWithOutCLOB"  resultMap="PlaceBaseResultMap_WithClob"  parameterClass="java.lang.Long">
+    select *  from PLACE  where PLACE_ID = #placeId#
+ </select>
+ 
+	<select id="getCountryByDestId" resultMap="PlaceBaseResultMap" parameterClass="hashmap"> 
+	select * from ( 
+		select row_.*, rownum rownum_ from ( 
+			select * FROM PLACE p WHERE p.IS_VALID='Y' and p.stage=1 and parent_place_id=#parentPlaceId# 
+		) row_ where rownum &lt;=#endRow# 
+	) where rownum_ &gt;=#startRow# 
+   </select>
+   
+   <select id="getPlaceByProductId" resultMap="PlaceAllMapResultMap" parameterClass="java.lang.Long"> 
+   select distinct p.place_id,p.pin_yin_url
+	  from product_search_info psi, product_product_place ppp, place p
+	 where psi.product_id = ppp.product_id
+	   and ppp.place_id=p.place_id
+	   and psi.is_valid = 'Y'
+	   and psi.on_line = 'true'
+	   and psi.is_hid = 'Y'
+	   and p.IS_VALID='Y'
+	   and psi.product_id=#productId#
+   </select>
+   
+   	<select id="selectSuggestPlace" resultMap="PlaceBaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from (select * from place where IS_VALID='Y' and (NAME
+		like
+		'%$name$%'
+		<isNotEmpty property="placeId">
+			OR place_id=#placeId#
+		</isNotEmpty>
+		) order by name
+		) where rownum<![CDATA[<=20]]>
+	</select>
+   	<select id="selectSuggestPlaceEBK" resultMap="PlaceBaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from (select * from place where IS_VALID='Y' and (NAME
+		like
+		'%$name$%'
+		<isNotEmpty property="placeId">
+			OR place_id=#placeId#
+		</isNotEmpty>
+		) order by name
+		) where rownum<![CDATA[<=20]]>
+	</select>
+   <select id="selectRootDest" resultMap="PlaceBaseResultMap">
+		select * from place
+		where PARENT_PLACE_ID is null and stage=1
+	</select>
+	<select id="selectDestByRootId" resultMap="PlaceBaseResultMap">
+		select * from
+		place where PARENT_PLACE_ID=#id# and stage=1
+	</select>
+	<select id="getToDestByProductId" resultMap="PlaceBaseResultMap" parameterClass="java.lang.Long">
+		SELECT CP.*
+		  FROM PLACE CP, PRODUCT_PRODUCT_PLACE PPP
+		 WHERE CP.PLACE_ID = PPP.PLACE_ID
+		   AND PPP.IS_TO_PLACE = 'true'
+		   AND PPP.PRODUCT_ID = #productId#
+	</select>
+	
+	
+	<sql id="pageHeadSelect">
+		<![CDATA[ SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM (  ]]>
+	</sql>
+	<sql id="pageFootSelect">
+		<![CDATA[ ) P_T ) WHERE RN BETWEEN #startRows# AND #endRows# ]]>
+	</sql>
+	
+	<select id="getAllPlaceGNYItems" resultMap="PlaceBaseResultMap">
+		<include refid="pageHeadSelect"/>
+			select *
+			  from lvmama_pet.place p where p.place_id != 3548
+			   and p.stage = 1
+			   and p.pin_yin_url is not null
+			   and p.is_valid = 'Y'
+			connect by prior p.place_id = p.parent_place_id
+			 start with p.parent_place_id = 3548
+		<include refid="pageFootSelect"/>
+	</select>
+	<select id="getAllPlaceGNYCount" resultClass="java.lang.Integer">
+		select count(*)
+		  from lvmama_pet.place p where p.place_id != 3548
+		   and p.stage = 1
+		   and p.pin_yin_url is not null
+		   and p.is_valid = 'Y'
+		connect by prior p.place_id = p.parent_place_id
+		 start with p.parent_place_id = 3548
+	</select>
+	<!-- 网站地图及相关数据通用 -->
+	<select id="getPlaceToWebSiteItems" parameterClass="java.util.Map" resultMap="PlaceBaseResultMap">
+		<include refid="pageHeadSelect"/>
+			select * from Place where is_valid='Y' and pin_Yin_Url is not null
+			<isNotEmpty prepend="and" property="stage">
+				stage=#stage#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="hotelBooking">
+				stage!='2'
+			</isNotEmpty>
+		<include refid="pageFootSelect"/>
+	</select>
+	<select id="getPlaceToWebSiteCount" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+		select count(*) from Place where is_valid='Y' and pin_Yin_Url is not null
+		<isNotEmpty prepend="and" property="stage">
+			stage=#stage#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="hotelBooking">
+			stage!='2'
+		</isNotEmpty>
+	</select>
+	
+	<select id="getAllPlaceCJYItems" resultMap="PlaceBaseResultMap">
+		<include refid="pageHeadSelect"/>
+			select *
+			   from lvmama_pet.place pp
+			  where pp.place_id not in
+			        (select p.place_id
+			           from lvmama_pet.place p
+			         connect by prior p.place_id = p.parent_place_id
+			          start with p.parent_place_id = 3548)
+			    and pp.place_id != 3548
+			    and pp.stage = 1
+			    and pp.pin_yin_url is not null
+			    and pp.is_valid = 'Y'
+		<include refid="pageFootSelect"/>
+	</select>
+	<select id="getAllPlaceCJYCount" resultClass="java.lang.Integer">
+		select count(*)
+		   from lvmama_pet.place pp
+		  where pp.place_id not in
+		        (select p.place_id
+		           from lvmama_pet.place p
+		         connect by prior p.place_id = p.parent_place_id
+		          start with p.parent_place_id = 3548)
+		    and pp.place_id != 3548
+		    and pp.stage = 1
+		    and pp.pin_yin_url is not null
+		    and pp.is_valid = 'Y'
+	</select>
+	<select id="getPlaceByProductIdAndStage" parameterClass="map" resultMap="PlaceBaseResultMap">
+		select *
+    	from product_product_place ppp, place p
+	   	where  ppp.place_id=p.place_id
+	     and p.stage = #stage#
+	     and p.IS_VALID='Y'
+	     and ppp.product_id= #productId#
+	</select>
+	
+	<select id="getCountryRecord" resultMap="PlaceBaseResultMap">
+	<![CDATA[
+		SELECT *
+	    FROM lvmama_pet.place p
+	    WHERE p.parent_place_id IN (SELECT place_id
+	                                FROM lvmama_pet.place
+	                                WHERE parent_place_id IS NULL
+	                                AND template = 'template_abroad'
+	                                AND is_valid = 'Y')
+	     AND p.is_valid = 'Y'
+	     AND p.place_id <> 3548
+	     AND (p.place_type is null or p.place_type!='OTHER')
+	     ]]>
+	</select>
+	
+	<select id="getPlaceByParentIds" parameterClass="map" resultMap="PlaceBaseResultMap">
+		select *
+    	from lvmama_pet.place where PARENT_PLACE_ID in
+	   	<iterate conjunction="," open="(" close=")" property="parentPlaceIds">
+  			#parentPlaceIds[]#
+ 		 </iterate>
+ 		 and IS_VALID = 'Y'
+	</select>
+	
+	<select id="getDescripAndTrafficByPlaceId" resultMap="DescripAndTrafficResultMap" parameterClass="java.lang.Long">
+	    select p.place_id,p.stage ,p.description, p.traffic_info ,p.destination_Explore from  place p 
+	    where PLACE_ID = #placeId#
+	</select>
+	
+	
+	<select id="getListPlaceByParentIds" resultMap="PlaceBaseResultMap">
+		 select * from (select * from lvmama_pet.place order by dbms_random.value) where rownum <![CDATA[<=6]]>
+		 AND  PARENT_PLACE_ID = #headPlaceId#
+		 and IS_VALID = 'Y'
+		 AND stage=2
+	</select>
+	
+	<update id="updateHasSensitiveWordByPlaceId" parameterClass="java.util.Map">
+		update lvmama_pet.place set has_sensitive_word=#hasSensitiveWord# where place_id=#placeId# 
+	</update>
+</sqlMap>

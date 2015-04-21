@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FINANCE_SUPPLIER_MONEY" >
+	<typeAlias alias="FinSupplierMoney" type="com.lvmama.comm.pet.po.fin.FinSupplierMoney"/>
+	<resultMap id="FinSupplierMoneyMap" class="com.lvmama.comm.pet.po.fin.FinSupplierMoney" >
+		<result column="SUPPLIER_ID" property="supplierId"/>
+		<result column="DEPOSIT_AMOUNT" property="depositAmount"/>
+		<result column="DEPOSIT_CURRENCY" property="depositCurrency"/>
+		<result column="DEPOSIT_ALERT" property="depositAlert"/>
+		<result column="ADVANCE_DEPOSIT_AMOUNT" property="advanceDepositAmount"/>
+		<result column="ADVANCE_DEPOSIT_CURRENCY" property="advanceDepositCurrency"/>
+		<result column="ADVANCE_DEPOSIT_ALERT" property="advanceDepositAlert"/>
+		<result column="GUARANTEE_LIMIT" property="guaranteeLimit"/>
+		<result column="DEDUCTION_AMOUNT" property="deductionAmount"/>
+		<result column="DEDUCTION_CURRENCY" property="deductionCurrency"/>
+	</resultMap>
+	<resultMap id="FinSupplierMoneyMapWithSupplierName" extends="FinSupplierMoneyMap" class="com.lvmama.comm.pet.po.fin.FinSupplierMoney" >
+		<result column="SUPPLIER_NAME" property="supplierName"/>
+	</resultMap>
+	<select id="searchBySupplierId" parameterClass="long" resultMap="FinSupplierMoneyMap">
+		SELECT * FROM FIN_SUPPLIER_MONEY WHERE SUPPLIER_ID = #supplierId# AND BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+	</select>
+	<update id="addDeduction" parameterClass="map">
+		UPDATE
+			FIN_SUPPLIER_MONEY
+		SET
+			DEDUCTION_AMOUNT = NVL(DEDUCTION_AMOUNT, 0) + #amount#
+			<dynamic>
+				<isNotEmpty prepend=",">DEDUCTION_CURRENCY = #deductionCurrency#</isNotEmpty>
+			</dynamic>
+			
+		WHERE
+			SUPPLIER_ID = #supplierId# AND BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+	</update>
+	<sql id="searchSupplierMoney_sql">
+		SELECT 
+			A.*,NULL SUPPLIER_NAME
+  		FROM 
+  			FIN_SUPPLIER_MONEY A
+  		WHERE BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+ 		<isEqual property="flag" compareValue="deduction" prepend="AND">
+			A.DEDUCTION_AMOUNT IS NOT NULL
+		</isEqual>
+		<isEqual property="flag" compareValue="deposit" prepend="AND">
+			A.DEPOSIT_AMOUNT IS NOT NULL
+		</isEqual>
+		<isEqual property="flag" compareValue="guarantee" prepend="AND">
+			A.GUARANTEE_LIMIT IS NOT NULL
+		</isEqual>
+		<isNotNull property="supplier" prepend="AND">
+			A.SUPPLIER_ID = #supplier#
+		</isNotNull>
+	</sql>
+	<select id="searchSupplierMoney" resultMap="FinSupplierMoneyMapWithSupplierName" parameterClass="map">
+		<include refid="pageSearchHead"/>
+		<include refid="searchSupplierMoney_sql"/>
+		<include refid="pageSearchFoot"/>
+	</select>
+	
+	<select id="searchSupplierMoneyCount" resultClass="long" parameterClass="map">
+		SELECT COUNT(*) FROM(
+			<include refid="searchSupplierMoney_sql"/>
+		)TMP
+	</select>
+	
+	<!-- 查询预存款分页信息  -->
+	<select id="searchAdvanceDeposit" parameterClass="map" resultClass="FinSupplierMoney" >
+		<include refid="pageSearchHead"/>
+		SELECT 
+			E.SUPPLIER_ID AS supplierId,
+			NULL AS supplierName,
+			E.ADVANCE_DEPOSIT_AMOUNT AS advanceDepositAmount,
+            E.ADVANCE_DEPOSIT_CURRENCY AS advanceDepositCurrency,
+            E.DEPOSIT_CURRENCY AS depositCurrency,
+            E.DEPOSIT_AMOUNT AS depositAmount,
+            NULL AS advanceDepositPay,
+  			(SELECT 
+  				NVL(SUM(AMOUNT),0)
+  			FROM 
+  				FIN_ADVANCE_DEPOSIT F
+  			WHERE 
+  				F.SUPPLIER_ID = E.SUPPLIER_ID AND F.BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+  			AND 
+  				TYPE IN ( 'DEPOSIT','SHIFTIN')) AS advanceDepositAll
+		FROM 
+			FIN_SUPPLIER_MONEY E
+		WHERE 
+			E.ADVANCE_DEPOSIT_AMOUNT IS NOT NULL
+			AND E.BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+		<isNotNull property="supplier" prepend="AND">
+			E.SUPPLIER_ID = #supplier# 
+		</isNotNull>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchAdvanceDepositCount"  resultClass="Long" parameterClass="map">
+		SELECT  
+			COUNT(*) 
+		FROM 	FIN_SUPPLIER_MONEY E
+		WHERE 
+			E.ADVANCE_DEPOSIT_AMOUNT IS NOT NULL AND E.BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+		<isNotNull property="supplier" prepend="AND">
+			E.SUPPLIER_ID = #supplier#
+		</isNotNull>
+	</select>
+	
+	
+	<update id="minusSupplierMoney" parameterClass="map">
+		UPDATE
+			FIN_SUPPLIER_MONEY
+		SET
+			SUPPLIER_ID = #supplierId#
+		<isNotNull property="depositAmount" prepend=",">
+			DEPOSIT_AMOUNT = DEPOSIT_AMOUNT - #depositAmount#
+		</isNotNull>
+		<isNotNull property="deductionAmount" prepend=",">
+			DEDUCTION_AMOUNT =DEDUCTION_AMOUNT - #deductionAmount#
+		</isNotNull>
+		<isNotNull property="advanceDepositAmount" prepend=",">
+			ADVANCE_DEPOSIT_AMOUNT = ADVANCE_DEPOSIT_AMOUNT - #advanceDepositAmount#
+		</isNotNull>
+		WHERE
+			SUPPLIER_ID = #supplierId# AND BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+	</update>
+	<update id="updateSupplierMoney" parameterClass="FinSupplierMoney">
+		UPDATE
+			FIN_SUPPLIER_MONEY
+		SET
+			SUPPLIER_ID = #supplierId#
+		<isNotNull property="depositAmount" prepend=",">
+			DEPOSIT_AMOUNT =#depositAmount#
+		</isNotNull>
+		<isNotNull property="depositCurrency" prepend=",">
+			DEPOSIT_CURRENCY =#depositCurrency#
+		</isNotNull>
+		<isNotNull property="depositAlert" prepend=",">
+			DEPOSIT_ALERT = #depositAlert#
+		</isNotNull>
+		<isNotNull property="advanceDepositAmount" prepend=",">
+			ADVANCE_DEPOSIT_AMOUNT = #advanceDepositAmount#
+		</isNotNull>
+		<isNotNull property="advanceDepositCurrency" prepend=",">
+			ADVANCE_DEPOSIT_CURRENCY = #advanceDepositCurrency#
+		</isNotNull>
+		<isNotNull property="advanceDepositAlert" prepend=",">
+			ADVANCE_DEPOSIT_ALERT = #advanceDepositAlert#
+		</isNotNull>
+		<isNotNull property="guaranteeLimit" prepend=",">
+			GUARANTEE_LIMIT = #guaranteeLimit#
+		</isNotNull>
+		<isNotNull property="deductionAmount" prepend=",">
+			DEDUCTION_AMOUNT = #deductionAmount#
+		</isNotNull>
+		<isNotNull property="deductionCurrency" prepend=",">
+			DEDUCTION_CURRENCY = #deductionCurrency#
+		</isNotNull>
+		WHERE
+			SUPPLIER_ID = #supplierId# AND BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+	</update>
+	<insert id="insertSupplierMoney" parameterClass="FinSupplierMoney">
+		INSERT INTO FIN_SUPPLIER_MONEY(
+			SUPPLIER_ID,
+			DEPOSIT_AMOUNT,
+			DEPOSIT_CURRENCY,
+			DEPOSIT_ALERT,
+			ADVANCE_DEPOSIT_AMOUNT,
+			ADVANCE_DEPOSIT_CURRENCY,
+			ADVANCE_DEPOSIT_ALERT,
+			GUARANTEE_LIMIT,
+			DEDUCTION_AMOUNT,
+			DEDUCTION_CURRENCY,
+			BUSINESS_NAME
+		) VALUES(
+			#supplierId#,
+			#depositAmount#,
+			#depositCurrency#,
+			#depositAlert#,
+			#advanceDepositAmount#,
+			#advanceDepositCurrency#,
+			#advanceDepositAlert#,
+			#guaranteeLimit#,
+			#deductionAmount#,
+			#deductionCurrency#,
+			#businessName#
+		)
+	</insert>
+	
+</sqlMap>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="WORK_ORDER_TYPE">
+	<!-- 别名 -->
+    <typeAlias alias="workOrderType" type="com.lvmama.comm.pet.po.work.WorkOrderType"/>
+	<!-- 查询结果集 -->
+    <resultMap id="workOrderTypeResult" class="workOrderType">
+        <result property="workOrderTypeId" column="WORK_ORDER_TYPE_ID"/>
+        <result property="typeCode" column="TYPE_CODE"/>
+        <result property="typeName" column="TYPE_NAME"/>
+        <result property="creatorDepartmentId" column="CREATOR_DEPARTMENT_ID"/>
+        <result property="creatorComplete" column="CREATOR_COMPLETE"/>
+        <result property="limitCompleteTime" column="LIMIT_COMPLETE_TIME"/>
+        <result property="limitTime" column="LIMIT_TIME"/>
+        <result property="limitReceiver" column="LIMIT_RECEIVER"/>
+        <result property="content" column="CONTENT"/>
+        <result property="system" column="SYSTEM"/>
+        <result property="urlTemplate" column="URL_TEMPLATE"/>
+        <result property="receiverEditable" column="RECEIVER_EDITABLE"/>
+        <result property="receiverGroupId" column="RECEIVER_GROUP_ID"/>
+        <result property="paramOrderId" column="PARAM_ORDER_ID"/>
+        <result property="paramProductId" column="PARAM_PRODUCT_ID"/>
+        <result property="paramUserName" column="PARAM_USER_NAME"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="sendGroupId" column="SEND_GROUP_ID"/>
+        <result property="useAgent" column="USE_AGENT"/>
+        <result property="sysDistribute" column="SYS_DISTRIBUTE"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	WORK_ORDER_TYPE_ID ,
+        	TYPE_CODE ,
+        	TYPE_NAME ,
+        	CREATOR_DEPARTMENT_ID ,
+        	CREATOR_COMPLETE ,
+        	LIMIT_COMPLETE_TIME ,
+        	LIMIT_TIME ,
+        	LIMIT_RECEIVER ,
+        	CONTENT ,
+        	SYSTEM ,
+        	URL_TEMPLATE ,
+        	RECEIVER_EDITABLE ,
+        	RECEIVER_GROUP_ID ,
+        	PARAM_ORDER_ID ,
+        	PARAM_PRODUCT_ID ,
+        	PARAM_USER_NAME ,
+        	CREATE_TIME,
+        	SEND_GROUP_ID,
+        	USE_AGENT,
+        	SYS_DISTRIBUTE
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="workOrderTypeId">
+	             WORK_ORDER_TYPE_ID = #workOrderTypeId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="typeCode">
+	             TYPE_CODE = #typeCode#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="typeName">
+	       		 TYPE_NAME like '%' || #typeName# || '%'
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="typeNameCheck">
+	             TYPE_NAME = #typeNameCheck#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="creatorDepartmentId">
+	             CREATOR_DEPARTMENT_ID = #creatorDepartmentId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="creatorComplete">
+	             CREATOR_COMPLETE = #creatorComplete#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="limitCompleteTime">
+	             LIMIT_COMPLETE_TIME = #limitCompleteTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="limitTime">
+	             LIMIT_TIME = #limitTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="limitReceiver">
+	             LIMIT_RECEIVER = #limitReceiver#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="content">
+	             CONTENT = #content#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="system">
+	             SYSTEM = #system#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="urlTemplate">
+	             URL_TEMPLATE = #urlTemplate#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="receiverEditable">
+	             RECEIVER_EDITABLE = #receiverEditable#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="receiverGroupId">
+	             RECEIVER_GROUP_ID = #receiverGroupId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="paramOrderId">
+	             PARAM_ORDER_ID = #paramOrderId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="paramProductId">
+	             PARAM_PRODUCT_ID = #paramProductId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="paramUserName">
+	             PARAM_USER_NAME = #paramUserName#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="useAgent">
+	             USE_AGENT = #useAgent#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 修改记录 -->
+    <update id="update" parameterClass="workOrderType">
+        UPDATE WORK_ORDER_TYPE
+           set   TYPE_CODE = #typeCode#,
+                 TYPE_NAME = #typeName#,
+                 CREATOR_DEPARTMENT_ID = #creatorDepartmentId#,
+                 CREATOR_COMPLETE = #creatorComplete#,
+	             LIMIT_COMPLETE_TIME = #limitCompleteTime#,
+                 LIMIT_TIME = #limitTime#,
+                 LIMIT_RECEIVER = #limitReceiver#,
+                 CONTENT = #content#,
+                 SYSTEM = #system#,
+                 URL_TEMPLATE = #urlTemplate#,
+                 RECEIVER_EDITABLE = #receiverEditable#,
+                 RECEIVER_GROUP_ID = #receiverGroupId#,
+                 PARAM_ORDER_ID = #paramOrderId#,
+                 PARAM_PRODUCT_ID = #paramProductId#,
+                 PARAM_USER_NAME = #paramUserName#,
+                 CREATE_TIME = #createTime# ,
+                 SEND_GROUP_ID = #sendGroupId#,
+                 USE_AGENT=#useAgent#,
+                 SYS_DISTRIBUTE=#sysDistribute#
+        WHERE 
+	        WORK_ORDER_TYPE_ID = #workOrderTypeId# 
+    </update>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="workOrderType">
+				<selectKey keyProperty="workOrderTypeId" resultClass="java.lang.Long">
+					SELECT WORK_ORDER_TYPE_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        WORK_ORDER_TYPE (
+        	WORK_ORDER_TYPE_ID ,
+        	TYPE_CODE ,
+        	TYPE_NAME ,
+        	CREATOR_DEPARTMENT_ID ,
+        	CREATOR_COMPLETE ,
+        	LIMIT_COMPLETE_TIME ,
+        	LIMIT_TIME ,
+        	LIMIT_RECEIVER ,
+        	CONTENT ,
+        	SYSTEM ,
+        	URL_TEMPLATE ,
+        	RECEIVER_EDITABLE ,
+        	RECEIVER_GROUP_ID ,
+        	PARAM_ORDER_ID ,
+        	PARAM_PRODUCT_ID ,
+        	PARAM_USER_NAME ,
+        	CREATE_TIME ,
+        	SEND_GROUP_ID,
+        	USE_AGENT,
+        	SYS_DISTRIBUTE
+        ) VALUES (
+        	#workOrderTypeId# ,
+        	#typeCode# ,
+        	#typeName# ,
+        	#creatorDepartmentId# ,
+        	#creatorComplete# ,
+        	#limitCompleteTime# ,
+        	#limitTime# ,
+        	#limitReceiver# ,
+        	#content# ,
+        	#system# ,
+        	#urlTemplate# ,
+        	#receiverEditable# ,
+        	#receiverGroupId# ,
+        	#paramOrderId# ,
+        	#paramProductId# ,
+        	#paramUserName# ,
+        	#createTime# ,
+        	#sendGroupId#,
+        	#useAgent#,
+        	#sysDistribute#
+        )
+    ]]>
+    </insert>
+    <!-- 查询记录，根据主键值 -->
+    <select id="getWorkOrderTypeById" resultMap="workOrderTypeResult">
+	    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from WORK_ORDER_TYPE 
+	        where 
+						WORK_ORDER_TYPE_ID = #workOrderTypeId# 
+	    ]]>
+    </select>
+    <sql id="getWorkOrderTypeByParam">
+         select <include refid="commonColumns"/> from WORK_ORDER_TYPE 
+		<include refid="dynamicWhere"/> 
+    </sql>
+    <!-- 查询记录 根据特定条件 -->
+    <select id="queryWorkOrderTypeByParam"  resultMap="workOrderTypeResult" parameterClass="java.util.Map">
+       select <include refid="commonColumns"/> from WORK_ORDER_TYPE 
+		<include refid="dynamicWhere"/>    
+    </select>
+    
+    <select id="queryWorkOrderTypePage" parameterClass="map" resultMap="workOrderTypeResult">
+    	<include refid="pageSearchHead"/>
+    		select <include refid="commonColumns"/> from WORK_ORDER_TYPE 
+   			<dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="typeName">
+		             type_name like '%' || #typeName# || '%'
+		       </isNotEmpty>
+       		</dynamic>
+    	<include refid="pageSearchFoot"/>
+    </select>
+    <select id="getWorkOrderTypeCount" parameterClass="map" resultClass="long">
+    	select count(*) from (
+    		<include refid="getWorkOrderTypeByParam"/>
+    	)
+    </select>
+    <select id="getWorkOrderTypePage" parameterClass="map" resultMap="workOrderTypeResult">
+    	<include refid="pageSearchHead"/>
+    	<include refid="getWorkOrderTypeByParam"/>
+    	<include refid="pageSearchFoot"/>
+    </select>
+    
+     <!-- 查询记录 根据用户id条件 -->
+    <select id="queryWorkOrderTypeByPermUserId"  resultMap="workOrderTypeResult" parameterClass="java.lang.Long">
+        select distinct t.* from     
+  		(select ot.* from work_order_type ot,work_group_user gu where gu.valid='true' and 
+		      ot.send_group_id=gu.work_group_id and gu.perm_user_id= #value#  and 
+          	  exists(select wg.work_group_id from work_group wg where wg.work_group_id=ot.send_group_id and wg.valid='true')
+		 union
+		 select ot.* from work_order_type ot,work_group_user gu where 
+		      ot.creator_department_id=gu.work_department_id and gu.perm_user_id= #value# and gu.valid='true') t
+    </select>
+</sqlMap>

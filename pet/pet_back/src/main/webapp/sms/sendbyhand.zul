@@ -1,0 +1,62 @@
+<?page title="短信系统查询" contentType="text/html;charset=UTF-8"?>                                               
+ <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./smsSend"?>                                                   
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>  
+<zk>  
+<window id="smsSend" title="短信发送"   border="normal"  apply="com.lvmama.pet.web.sms.SmsAction">
+<grid>
+	<columns>
+		<column width="20%" align="left"></column>
+		<column width="80%" align="left"></column>
+	</columns>
+	<rows>
+		<row>
+			<hbox>带变量的文件(仅限线上使用)：<image width="15px" height="15px" src="/img/qm.gif" tooltip="filename_remark"/></hbox>
+			<hbox>
+				<textbox id="furl" maxlength="100" value="${saction.furl}" readonly="true" width="420px" visible = "false"/>
+				<textbox id="filename" maxlength="100" width="420px" readonly="true"/>
+				<button id="upBtn" label="上传文件" upload="true" apply="com.lvmama.pet.web.upload.UploadCtrl" onUpload='upBtn$composer.onUploadLocalTxt(event, furl, filename);Events.postEvent("onChange",furl,null);mobile.disabled=true;'></button>
+			</hbox>
+		</row>	
+		<row>
+			<hbox>输入手机号码：</hbox>
+			<textbox id="mobile" 
+				value="@{saction.mobile }" 
+				onBlur='alert("请检查手机号是否合法且多个手机号是否使用半角逗号或者回车分隔,否则会导致发送失败");'
+      				rows="20" cols="100" maxlength="100000">
+      		</textbox>
+		</row>
+		<row>
+			<hbox>短信内容：<image width="15px" height="15px" src="/img/qm.gif" tooltip="content_remark"/></hbox>
+			<hbox>
+				<textbox id="content" value="@{saction.content}"
+	      					constraint="no empty" rows="10" cols="100" maxlength="300">
+	      		</textbox>
+			</hbox>
+		</row>
+		<row>
+			<hbox><checkbox label="定时发送" onCheck="sendDate.disabled = !self.checked"/></hbox>
+			<hbox><datebox id="sendDate" value="@{saction.sendDate}" format="yyyy-MM-dd HH:mm:ss" disabled="true"/></hbox>
+		</row>
+		<row>
+			<hbox>选择供应商</hbox>
+			<hbox><radiogroup><radio label="亿美软通" value="EMAR" onCheck="saction.changeSendChannel(self.value)" selected="true"/><radio label="梦网科技" value="Montnets" onCheck="saction.changeSendChannel(self.value)"/></radiogroup></hbox>
+		</row>
+		<row>
+			<hbox>发送策略</hbox>
+			<hbox><radiogroup><radio label="无需状态报告的快速发送" value="quick_send" onCheck="saction.changePolicy(self.value)" disabled="true"/><radio label="需要状态报告的慢速发送" value="slow_send" onCheck="saction.changePolicy(self.value)" selected="true"/></radiogroup></hbox>
+		</row>		
+		<row>
+		<hbox>
+			<button label="提交" id="sendByhand" onClick="saction.sendByhand();"></button>
+		</hbox>
+		</row>
+	</rows>
+</grid>    
+</window>
+	<popup id="filename_remark" width="300px"> 
+		<div>如果上传变量文件,格式为mobile##A##B##,且第一行为变量名，mobile(手机)变量名为必须,如变量为空，请用空格</div>
+	</popup>	
+	<popup id="content_remark" width="300px"> 
+		<div>如果有变量，请用$ { 变量名称  }，变量名称与上传文件中保持一致</div>
+	</popup>
+</zk>

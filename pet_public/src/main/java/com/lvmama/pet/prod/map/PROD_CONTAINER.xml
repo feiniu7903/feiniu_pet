@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_CONTAINER">
+	<typeAlias alias="prodContainer" type="com.lvmama.comm.pet.po.prod.ProdContainer" />
+
+	<resultMap id="prodContainerResultMap" class="prodContainer">
+		<result column="CONTAINER_ID" property="id" />
+		<result column="CONTAINER_NAME" property="containerName" />
+		<result column="CONTAINER_CODE" property="containerCode" />
+		<result column="FROM_PLACE_ID" property="fromPlaceId" />
+		<result column="TO_PLACE_ID" property="toPlaceId" />
+		<result column="FROM_PLACE_NAME" property="fromPlaceName" />
+		<result column="TO_PLACE_NAME" property="toPlaceName" />
+		<result column="DEST_ID" property="destId" />
+		<result column="TO_PLACE_SEQ" property="toPlaceSeq" />
+		<result column="IP_LOCATION_ID" property="ipLocationId" />
+		<result column="IS_TO_PLACE_HIDDEN" property="isToPlaceHidden" />
+		<result column="IS_SHOWN_IN_MORE" property="isShownInMore" />
+		<result column="ZONE_NAME" property="zoneName" />
+		<result column="ZONE_SEQ" property="zoneSeq" />
+		<result column="DISPLAYED_TO_PLACE_NAME" property="displayedToPlaceName" />
+		<result column="REFERRED_FROM_PLACE_ID" property="referredFromPlaceId" />
+	</resultMap>
+	
+	<resultMap id="containerResultMap" class="prodContainer">
+		<result column="CONTAINER_NAME" property="containerName" />
+		<result column="CONTAINER_CODE" property="containerCode" />
+	</resultMap>
+	
+	<resultMap id="fromPlaceResultMap" class="prodContainer">
+		<result column="from_place_id" property="fromPlaceId" />
+		<result column="from_place_name" property="fromPlaceName" />
+	</resultMap>
+	
+	<resultMap id="toPlaceResultMap" class="prodContainer">
+		<result column="to_place_id" property="toPlaceId" />
+		<result column="to_place_name" property="toPlaceName" />
+	</resultMap>
+
+	<select id="getContainersByContainerCode" parameterClass="java.lang.String" resultMap="prodContainerResultMap">
+		select * from prod_container where container_code = #containerCode# order by id desc
+	</select>
+
+	<select id="getContainerNameCodePairs" resultMap="containerResultMap">
+		select container_name, container_code from prod_container group by container_name, container_code
+	</select>
+
+	<select id="getFromPlacesByContainerCode" parameterClass="java.lang.String" resultMap="fromPlaceResultMap">
+		select from_place_id, from_place_name from prod_container where container_code = #containerCode# group by from_place_id, from_place_name
+	</select>
+
+	<select id="getToPlacesByContainerCodeAndFromPlaceId" parameterClass="java.util.Map" resultMap="toPlaceResultMap">
+		select to_place_id, to_place_name from prod_container where container_code = #containerCode# and from_place_id = #fromPlaceId#
+	</select>
+
+	<select id="isFromPlaceEmpty" parameterClass="java.lang.String" resultClass="java.lang.Long">
+		select count(*) from prod_container where container_code = #containerCode# and from_place_id is not null and from_place_name is not null
+	</select>
+	<select id="getToPlacesByContainerCodeAndDestId" parameterClass="java.util.Map" resultMap="toPlaceResultMap">
+		select to_place_id, to_place_name from prod_container where container_code = #containerCode# and dest_id = #destId#
+	</select>
+	
+	<select id="getFromPlacesCountByContainerCode" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+		select count(from_place_id) from prod_container where container_code = #containerCode#
+	</select>
+	
+	<select id="selectToPlaceIdsByPlaceId" parameterClass="java.lang.Long" resultClass="java.lang.Long">
+		select place_id from com_place_place_dest start with place_id = #placeId# and dest_id is not null connect by place_id = prior dest_id
+	</select>
+	
+	<select id="selectContainerIdListProductBelongsTo" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select container_id from prod_container 
+		<dynamic prepend="where">
+			<isNotEmpty property="containerCode" prepend="and">	
+				container_code = #containerCode#
+			</isNotEmpty>
+			<isNotEmpty property="toPlaceIdStr" prepend="and">
+				to_place_id in ($toPlaceIdStr$)
+			</isNotEmpty>
+			<isNotEmpty property="fromPlaceId" prepend="and">
+				from_place_id = #fromPlaceId#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="selectByParams" parameterClass="java.util.Map" resultMap="prodContainerResultMap">
+		select pc.* from prod_container pc
+		<dynamic prepend="where">
+			<isNotEmpty property="id" prepend="and">
+				pc.container_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="containerName" prepend="and">
+				pc.container_name = #containerName#
+			</isNotEmpty>
+			<isNotEmpty property="containerCode" prepend="and">
+				pc.container_code = #containerCode#
+			</isNotEmpty>
+			<isNotEmpty property="fromPlaceId" prepend="and">
+				pc.from_place_id = #fromPlaceId#
+			</isNotEmpty>
+			<isNotEmpty property="toPlaceId" prepend="and">
+				pc.to_place_id = #toPlaceId#
+			</isNotEmpty>
+			<isNotEmpty property="fromPlaceName" prepend="and">
+				pc.from_place_name = #fromPlaceName#
+			</isNotEmpty>
+			<isNotEmpty property="toPlaceName" prepend="and">
+				pc.to_place_name = #toPlaceName#
+			</isNotEmpty>
+			<isNotEmpty property="destId" prepend="and">
+				pc.dest_id = #destId#
+			</isNotEmpty>
+			<isNotEmpty property="toPlaceSeq" prepend="and">
+				pc.to_place_seq = #toPlaceSeq#
+			</isNotEmpty>
+			<isNotEmpty property="ipLocationId" prepend="and">
+				pc.ip_location_id = #ipLocationId#
+			</isNotEmpty>
+			<isNotEmpty property="isToPlaceHidden" prepend="and">
+				nvl(pc.is_to_place_hidden, 'N') = #isToPlaceHidden#
+			</isNotEmpty>
+			<isNotEmpty property="isShownInMore" prepend="and">
+				nvl(pc.is_shown_in_more, 'N') = #isShownInMore#
+			</isNotEmpty>
+			<isNotEmpty property="zoneName" prepend="and">
+				pc.zone_name = #zoneName#
+			</isNotEmpty>
+			<isNotEmpty property="zoneSeq" prepend="and">
+				pc.zone_seq = #zoneSeq#
+			</isNotEmpty>
+			<isNotEmpty property="diplayedToPlaceName" prepend="and">
+				pc.displayed_to_place_name = #diplayedToPlaceName#
+			</isNotEmpty>
+			<isNotEmpty property="referredFromPlaceId" prepend="and">
+                pc.referred_from_place_id = #referredFromPlaceId#
+            </isNotEmpty>
+		</dynamic>
+		order by pc.container_code, pc.dest_id, pc.from_place_id, pc.zone_seq asc, pc.to_place_seq asc
+		
+	</select>
+	
+	<select id="selectZoneNames" parameterClass="java.util.Map" resultClass="java.lang.String">
+		select zone_name from prod_container
+		where container_code = #containerCode#
+		<isNotEmpty property="fromPlaceId" prepend="and">
+			from_place_id = #fromPlaceId#
+		</isNotEmpty>
+		and is_shown_in_more = 'Y'
+		and nvl(is_to_place_hidden, 'N') = 'N'
+		and zone_name is not null
+		group by zone_name, zone_seq
+		order by zone_seq asc
+	</select>
+	
+	<insert id="insertContainer" parameterClass="prodContainer">
+		<selectKey resultClass="java.lang.Long" keyProperty="containerId">
+			select prod_container_seq.nextval as container_id from DUAL
+		</selectKey>
+		insert into prod_container (
+		 container_id, container_name, container_code, from_place_id, to_place_id,
+		 from_place_name, to_place_name, dest_id, to_place_seq, ip_location_id,
+		 is_to_place_hidden, is_shown_in_more, zone_name, zone_seq, displayed_to_place_name,
+		 referred_from_place_id
+		) values (
+		 #containerId#, #containerName#, #containerCode#, #fromPlaceId#, #toPlaceId#,
+		 #fromPlaceName#, #toPlaceName#, #destId#, #toPlaceSeq#, #ipLocationId#,
+		 #isToPlaceHidden#, #isShownInMore#, #zoneName#, #zoneSeq#, #displayedToPlaceName#,
+		 #referredFromPlaceId#
+		)
+	</insert>
+	
+	<update id="updateContainer" parameterClass="prodContainer">
+		update prod_container pc
+		set pc.container_name = #containerName#,
+		pc.container_code = #containerCode#,
+		pc.from_place_id = #fromPlaceId#,
+		pc.to_place_id = #toPlaceId#,
+		pc.from_place_name = #fromPlaceName#,
+		pc.to_place_name = #toPlaceName#,
+		pc.dest_id = #destId#,
+		pc.to_place_seq = #toPlaceSeq#,
+		pc.ip_location_id = #ipLocationId#,
+		pc.is_to_place_hidden = #isToPlaceHidden#,
+		pc.is_shown_in_more = #isShownInMore#,
+		pc.zone_name = #zoneName#,
+		pc.zone_seq = #zoneSeq#,
+		pc.displayed_to_place_name = #displayedToPlaceName#,
+		pc.referred_from_place_id = #referredFromPlaceId#
+		where pc.container_id = #id#
+	</update>
+	
+	<delete id="deleteContainer" parameterClass="java.lang.Long">
+		delete from prod_container where container_id=#id#
+	</delete>
+</sqlMap>

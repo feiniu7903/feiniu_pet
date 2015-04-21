@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="FIN_BIZ_ITEM" >
+  <typeAlias alias="finBizItemDO" type="com.lvmama.comm.pet.po.fin.FinBizItem" />
+  <resultMap id="finBizItemDOResultMap" class="finBizItemDO" >
+    <result property="bizItemId" column="BIZ_ITEM_ID" />
+    <result property="amount" column="AMOUNT" />
+    <result property="bankAmount" column="BANK_AMOUNT" />
+    <result property="callbackTime" column="CALLBACK_TIME" />
+    <result property="transactionTime" column="TRANSACTION_TIME" />
+    <result property="transactionType" column="TRANSACTION_TYPE" />
+    <result property="gateway" column="GATEWAY" />
+    <result property="bankReconTime" column="BANK_RECON_TIME" />
+    <result property="createTime" column="CREATE_TIME" />
+    <result property="memo" column="MEMO" />
+    <result property="orderId" column="ORDER_ID" />
+    <result property="glStatus" column="GL_STATUS" />
+    <result property="glTime" column="GL_TIME" />
+    <result property="feeType" column="FEE_TYPE" />
+    <result property="bizStatus" column="BIZ_STATUS" />
+    <result property="cancelStatus" column="CANCEL_STATUS" />
+    <result property="cancelUser" column="CANCEL_USER" />
+    <result property="cancelTime" column="CANCEL_TIME" />
+    <result property="createUser" column="CREATE_USER" />
+    <result property="bizNo" column="BIZ_NO" />
+    <result property="reconResultId" column="RECON_RESULT_ID" />
+  </resultMap>
+
+  <sql id="finBizItem_columns" >
+    a1.BIZ_ITEM_ID, a1.AMOUNT, a1.BANK_AMOUNT, a1.CALLBACK_TIME, a1.TRANSACTION_TIME, 
+      a1.TRANSACTION_TYPE, a1.GATEWAY, a1.BANK_RECON_TIME, a1.CREATE_TIME, a1.MEMO, a1.ORDER_ID, 
+      a1.GL_STATUS, a1.GL_TIME, a1.FEE_TYPE, a1.BIZ_STATUS, a1.CANCEL_STATUS, 
+      a1.CANCEL_USER, a1.CANCEL_TIME, a1.CREATE_USER, a1.BIZ_NO,a1.RECON_RESULT_ID
+  </sql>
+
+  <sql id="finBizItem_do_columns" >
+    a1.BIZ_ITEM_ID, a1.AMOUNT, a1.BANK_AMOUNT, a1.CALLBACK_TIME, a1.TRANSACTION_TIME, 
+      a1.TRANSACTION_TYPE, a1.GATEWAY, a1.BANK_RECON_TIME, a1.CREATE_TIME, a1.MEMO, a1.ORDER_ID, 
+      a1.GL_STATUS, a1.GL_TIME, a1.FEE_TYPE, a1.BIZ_STATUS, a1.CANCEL_STATUS, 
+      a1.CANCEL_USER, a1.CANCEL_TIME, a1.CREATE_USER, a1.BIZ_NO,a1.RECON_RESULT_ID
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="bizItemId" prepend="AND" >
+        <![CDATA[  
+        BIZ_ITEM_ID = #bizItemId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="amount" prepend="AND" >
+        <![CDATA[  
+        AMOUNT = #amount#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bankAmount" prepend="AND" >
+        <![CDATA[  
+        BANK_AMOUNT = #bankAmount#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="callbackTime" prepend="AND" >
+        <![CDATA[  
+        CALLBACK_TIME = #callbackTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="transactionTime" prepend="AND" >
+        <![CDATA[  
+        TRANSACTION_TIME = #transactionTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="transactionType" prepend="AND" >
+        <![CDATA[  
+        TRANSACTION_TYPE = #transactionType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="gateway" prepend="AND" >
+        <![CDATA[  
+        GATEWAY = #gateway#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bankReconTime" prepend="AND" >
+        <![CDATA[  
+        BANK_RECON_TIME = #bankReconTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createTime" prepend="AND" >
+        <![CDATA[  
+        CREATE_TIME = #createTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="memo" prepend="AND" >
+        <![CDATA[  
+        MEMO = #memo#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="orderId" prepend="AND" >
+        <![CDATA[  
+        ORDER_ID = #orderId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="glStatus" prepend="AND" >
+        <![CDATA[  
+        GL_STATUS = #glStatus#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="glTime" prepend="AND" >
+        <![CDATA[  
+        GL_TIME = #glTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="feeType" prepend="AND" >
+        <![CDATA[  
+        FEE_TYPE = #feeType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bizStatus" prepend="AND" >
+        <![CDATA[  
+        BIZ_STATUS = #bizStatus#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="cancelStatus" prepend="AND" >
+        <![CDATA[  
+        CANCEL_STATUS = #cancelStatus#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="cancelUser" prepend="AND" >
+        <![CDATA[  
+        CANCEL_USER = #cancelUser#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="cancelTime" prepend="AND" >
+        <![CDATA[  
+        CANCEL_TIME = #cancelTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createUser" prepend="AND" >
+        <![CDATA[  
+        CREATE_USER = #createUser#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bizNo" prepend="AND" >
+        <![CDATA[  
+        BIZ_NO = #bizNo#  
+        ]]>  
+      </isNotNull>
+       <isNotNull property="reconResultId" prepend="AND" >
+        <![CDATA[  
+        RECON_RESULT_ID = #reconResultId#  
+        ]]>  
+      </isNotNull>
+        <isNotEmpty prepend=" and " property="glStatusesNull">
+		(GL_STATUS IS NULL OR GL_STATUS IN ($glStatusesNull$))
+	</isNotEmpty>
+    </dynamic>
+  </sql>
+
+  <sql id="doQueryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="bizItemId" prepend="AND" >
+        <![CDATA[  
+        BIZ_ITEM_ID = #bizItemId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="amount" prepend="AND" >
+        <![CDATA[  
+        AMOUNT = #amount#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bankAmount" prepend="AND" >
+        <![CDATA[  
+        BANK_AMOUNT = #bankAmount#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="callbackTime" prepend="AND" >
+        <![CDATA[  
+        CALLBACK_TIME = #callbackTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="transactionTime" prepend="AND" >
+        <![CDATA[  
+        TRANSACTION_TIME = #transactionTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="transactionType" prepend="AND" >
+        <![CDATA[  
+        TRANSACTION_TYPE = #transactionType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="gateway" prepend="AND" >
+        <![CDATA[  
+        GATEWAY = #gateway#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bankReconTime" prepend="AND" >
+        <![CDATA[  
+        BANK_RECON_TIME = #bankReconTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createTime" prepend="AND" >
+        <![CDATA[  
+        CREATE_TIME = #createTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="memo" prepend="AND" >
+        <![CDATA[  
+        MEMO = #memo#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="orderId" prepend="AND" >
+        <![CDATA[  
+        ORDER_ID = #orderId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="glStatus" prepend="AND" >
+        <![CDATA[  
+        GL_STATUS = #glStatus#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="glTime" prepend="AND" >
+        <![CDATA[  
+        GL_TIME = #glTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="feeType" prepend="AND" >
+        <![CDATA[  
+        FEE_TYPE = #feeType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bizStatus" prepend="AND" >
+        <![CDATA[  
+        BIZ_STATUS = #bizStatus#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="cancelStatus" prepend="AND" >
+        <![CDATA[  
+        CANCEL_STATUS = #cancelStatus#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="cancelUser" prepend="AND" >
+        <![CDATA[  
+        CANCEL_USER = #cancelUser#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="cancelTime" prepend="AND" >
+        <![CDATA[  
+        CANCEL_TIME = #cancelTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createUser" prepend="AND" >
+        <![CDATA[  
+        CREATE_USER = #createUser#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bizNo" prepend="AND" >
+        <![CDATA[  
+        BIZ_NO = #bizNo#  
+        ]]>  
+      </isNotNull>
+       <isNotNull property="reconResultId" prepend="AND" >
+        <![CDATA[  
+        RECON_RESULT_ID = #reconResultId#  
+        ]]>  
+      </isNotNull>
+        <isNotEmpty prepend=" and " property="glStatusesNull">
+		(GL_STATUS IS NULL OR GL_STATUS IN ($glStatusesNull$))
+	</isNotEmpty>
+    </dynamic>
+  </sql>
+
+  <insert id="insert" parameterClass="finBizItemDO" >
+    <selectKey keyProperty="bizItemId" resultClass="java.lang.Long" >
+       SELECT FIN_BIZ_ITEM_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO FIN_BIZ_ITEM( BIZ_ITEM_ID, AMOUNT, BANK_AMOUNT, CALLBACK_TIME, TRANSACTION_TIME, 
+      TRANSACTION_TYPE, GATEWAY, BANK_RECON_TIME, CREATE_TIME, MEMO, ORDER_ID, 
+       GL_STATUS, GL_TIME, FEE_TYPE, BIZ_STATUS, CANCEL_STATUS, 
+      CANCEL_USER, CANCEL_TIME, CREATE_USER, BIZ_NO,RECON_RESULT_ID)
+     VALUES ( #bizItemId#, #amount#, #bankAmount#, #callbackTime#, #transactionTime#, 
+      #transactionType#, #gateway#, #bankReconTime#, #createTime#, #memo#, #orderId#, 
+      #glStatus#, #glTime#, #feeType#, #bizStatus#, #cancelStatus#, 
+      #cancelUser#, #cancelTime#, #createUser#, #bizNo#,#reconResultId#)
+  </insert>
+
+  <update id="update" parameterClass="finBizItemDO" >
+    UPDATE FIN_BIZ_ITEM   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="bizItemId" prepend="," >
+        <![CDATA[  
+        BIZ_ITEM_ID = #bizItemId#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="amount" prepend="," >
+        <![CDATA[  
+        AMOUNT = #amount#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bankAmount" prepend="," >
+        <![CDATA[  
+        BANK_AMOUNT = #bankAmount#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="callbackTime" prepend="," >
+        <![CDATA[  
+        CALLBACK_TIME = #callbackTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="transactionTime" prepend="," >
+        <![CDATA[  
+        TRANSACTION_TIME = #transactionTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="transactionType" prepend="," >
+        <![CDATA[  
+        TRANSACTION_TYPE = #transactionType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="gateway" prepend="," >
+        <![CDATA[  
+        GATEWAY = #gateway#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bankReconTime" prepend="," >
+        <![CDATA[  
+        BANK_RECON_TIME = #bankReconTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createTime" prepend="," >
+        <![CDATA[  
+        CREATE_TIME = #createTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="memo" prepend="," >
+        <![CDATA[  
+        MEMO = #memo#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="orderId" prepend="," >
+        <![CDATA[  
+        ORDER_ID = #orderId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="glStatus" prepend="," >
+        <![CDATA[  
+        GL_STATUS = #glStatus#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="glTime" prepend="," >
+        <![CDATA[  
+        GL_TIME = #glTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="feeType" prepend="," >
+        <![CDATA[  
+        FEE_TYPE = #feeType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bizStatus" prepend="," >
+        <![CDATA[  
+        BIZ_STATUS = #bizStatus#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="cancelStatus" prepend="," >
+        <![CDATA[  
+        CANCEL_STATUS = #cancelStatus#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="cancelUser" prepend="," >
+        <![CDATA[  
+        CANCEL_USER = #cancelUser#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="cancelTime" prepend="," >
+        <![CDATA[  
+        CANCEL_TIME = #cancelTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createUser" prepend="," >
+        <![CDATA[  
+        CREATE_USER = #createUser#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bizNo" prepend="," >
+        <![CDATA[  
+        BIZ_NO = #bizNo#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="reconResultId" prepend="," >
+        <![CDATA[  
+          RECON_RESULT_ID = #reconResultId#
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE BIZ_ITEM_ID = #bizItemId#  
+  </update>
+  
+  <!-- 批量更新财务流水状态 -->
+  <update id="batchUpdateBizStatus" parameterClass="java.util.Map" >
+     update FIN_BIZ_ITEM item set item.biz_status=#bizStatus# where item.recon_result_id in 
+  	  <iterate open="(" close=")" conjunction="," property="reconResultIds">  
+           #reconResultIds[]#  
+      </iterate>  
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="finBizItemDOResultMap" >
+     SELECT 
+    <include refid="finBizItem_do_columns" />
+    <![CDATA[  
+     FROM FIN_BIZ_ITEM a1 WHERE BIZ_ITEM_ID = #bizItemId#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM FIN_BIZ_ITEM WHERE BIZ_ITEM_ID = #bizItemId#
+    ]]>  
+  </delete>
+
+  <select id="countByDOTerm" parameterClass="finBizItemDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(BIZ_ITEM_ID) AS num FROM FIN_BIZ_ITEM 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="finBizItemDOResultMap" parameterClass="finBizItemDO" >
+     SELECT 
+    <include refid="finBizItem_do_columns" />
+     FROM FIN_BIZ_ITEM a1 
+    <include refid="doQueryParams" />
+  </select>
+  
+  
+   <select id="query" resultMap="finBizItemDOResultMap" parameterClass="map" >
+     <include refid="pageSearchHead"/>
+     SELECT 
+    <include refid="finBizItem_do_columns" />
+     FROM FIN_BIZ_ITEM a1 
+    <include refid="doQueryParams" />
+    <include refid="pageSearchFoot"/>
+  </select>
+  
+  <select id="queryCount" parameterClass="map" resultClass="java.lang.Long" >
+    SELECT COUNT(1) AS num FROM FIN_BIZ_ITEM 
+    <include refid="doQueryParams" />
+  </select> 
+  
+  <sql id="pageHead" >
+	<isNotEmpty property="start">
+		SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM (
+	</isNotEmpty> 
+  </sql>
+  <sql id="pageFoot" >
+	<isNotEmpty property="orderby">
+		ORDER BY $orderby$
+		<isNotEmpty property="order">
+			$order$
+		</isNotEmpty>
+	</isNotEmpty>
+	<isNotEmpty property="start">
+		) P_T ) WHERE RN BETWEEN #start#
+		<isNotEmpty property="end">
+			AND #end#
+		</isNotEmpty>
+	</isNotEmpty>
+  </sql>
+  
+  <sql id="selectFinBizItemListConditions">
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property="bizItemId">
+				BIZ_ITEM_ID = #bizItemId#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="and" property="gateway">
+				GATEWAY = #gateway#
+		    </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId">
+				ORDER_ID = #orderId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="and" property="gatewayIN">
+				GATEWAY IN ($gatewayIN$)
+		    </isNotEmpty>
+		    <isNotEmpty prepend="and" property="bizStatus">
+				BIZ_STATUS = #bizStatus#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="and" property="bankReconTimeStart">
+				BANK_RECON_TIME &gt;= TO_DATE(#bankReconTimeStart#,'yyyy-MM-dd')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="bankReconTimeEnd">
+				BANK_RECON_TIME &lt;= TO_DATE(#bankReconTimeEnd#,'yyyy-MM-dd')
+			</isNotEmpty>
+		    <isNotEmpty prepend="and" property="transactionType">
+				TRANSACTION_TYPE = #transactionType#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="and" property="amountStart">
+				AMOUNT/100 &gt;= #amountStart#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="amountEnd">
+				AMOUNT/100 &lt;= #amountEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="bankAmountStart">
+				BANK_AMOUNT/100 &gt;= #bankAmountStart#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="bankAmountEnd">
+				BANK_AMOUNT/100 &lt;= #bankAmountEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="glStatus">
+				GL_STATUS = #glStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and " property="glStatusesNull">
+				(GL_STATUS IS NULL OR GL_STATUS IN ($glStatusesNull$))
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="reconResultId">
+				RECON_RESULT_ID = #reconResultId#
+			</isNotEmpty>
+		    <!-- 
+		    <isNotEmpty prepend="and" property="bankPaymentTradeNo">
+				BANK_PAYMENT_TRADE_NO = #bankPaymentTradeNo#
+		    </isNotEmpty>
+			<isNotEmpty prepend="and" property="gatewayTradeNo">
+				GATEWAY_TRADE_NO = #gatewayTradeNo#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="and" property="bankGatewayTradeNo">
+				BANK_GATEWAY_TRADE_NO = #bankGatewayTradeNo#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="and" property="transactionSource">
+				TRANSACTION_SOURCE = #transactionSource#
+		    </isNotEmpty>
+			<isNotEmpty prepend="and" property="notInReconResultIds">
+				RECON_RESULT_ID NOT IN ($notInReconResultIds$)
+		      </isNotEmpty>
+			
+			<isNotEmpty prepend="and" property="reconStatus">
+				RECON_STATUS = #reconStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="paymentId">
+				PAYMENT_ID = #paymentId#
+			</isNotEmpty>
+			-->			
+		</dynamic>
+  </sql>
+  
+  <select id="selectBizItemListForBatch" resultMap="finBizItemDOResultMap" parameterClass="java.util.HashMap">
+	SELECT * FROM (
+		SELECT *
+		  FROM LVMAMA_PET.FIN_BIZ_ITEM R
+		 WHERE R.BIZ_STATUS = 'MATCH'
+		   AND (R.GL_STATUS = 'INIT' OR R.GL_STATUS IS NULL)
+		 ORDER BY R.ORDER_ID ASC,
+		          (CASE
+		            WHEN R.TRANSACTION_TYPE = 'CANCEL_TO_CREATE_NEW' THEN 0
+		            WHEN R.TRANSACTION_TYPE = 'PAYMENT' THEN 1
+		            WHEN R.TRANSACTION_TYPE = 'REFUNDMENT' THEN 2
+		            WHEN R.TRANSACTION_TYPE = 'PAYMENT_FEE' THEN 3
+		            WHEN R.TRANSACTION_TYPE = 'REFUNDMENT_FEE' THEN 4
+		            WHEN R.TRANSACTION_TYPE = 'CASH_MONEY_DRAW' THEN 5
+		            WHEN R.TRANSACTION_TYPE = 'CASH_MONEY_DRAW_ALIPAY' THEN 6
+		            WHEN R.TRANSACTION_TYPE = 'NORMAL_DRAWCASH' THEN 7
+		            WHEN R.TRANSACTION_TYPE = 'FOREIGN_PAYMENT' THEN 8 
+		            WHEN R.TRANSACTION_TYPE = 'CASH_RECHARGE' THEN 9 
+		            ELSE
+		             10
+		          END) ASC,
+		          R.BIZ_ITEM_ID ASC
+		          ) A WHERE ROWNUM &lt;=1000
+	</select>
+	
+	<select id="selectFinBizItemListByParasCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM(
+			SELECT * FROM FIN_BIZ_ITEM
+			<include refid="selectFinBizItemListConditions" />
+		) TT1
+	</select>
+	<select id="selectFinBizItemListByParas" resultMap="finBizItemDOResultMap" parameterClass="java.util.HashMap">
+		<include refid="pageHead"/>
+			SELECT * FROM FIN_BIZ_ITEM
+			<include refid="selectFinBizItemListConditions"/>
+		<include refid="pageFoot"/>
+	</select>
+	
+	<select id="selectTransactionAmountByParamMap" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT 
+			SUM(AMOUNT)TRANSACTIONAMOUNTSUM,
+		    SUM(BANK_AMOUNT)TRANSACTIONBANKAMOUNTSUM
+		FROM FIN_BIZ_ITEM
+		<include refid="selectFinBizItemListConditions"/>
+	</select>
+	
+	<update id="updateFailedFinBizItemGLStatus" >
+		update FIN_BIZ_ITEM set GL_STATUS ='INIT',MEMO=NULL where GL_STATUS='FAILED'
+	</update>
+  
+</sqlMap>

@@ -1,0 +1,20 @@
+<?page title="备注" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./editRemarkWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"  xmlns:zk="http://www.zkoss.org/2005/zk">
+    <window id="editRemarkWin" border="normal" title="备注" apply="com.lvmama.pet.web.shop.shopOrder.EditShopOrderAction" width="300px">
+    <grid>
+        <columns>
+            <column></column>
+        </columns>
+        <rows>  
+            <row>
+                <hbox><textbox value="@{saction.shopOrder.remark}" rows="8" cols="150" /></hbox>
+            </row>                    
+        </rows>     
+    </grid>
+    <toolbar align="center">
+        <button label="保存" onClick="saction.update();" width="80px"/>
+        <button label="取消" onClick="editRemarkWin.detach();" width="80px"/>
+    </toolbar>
+    </window>
+</zk>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>电子合同已签约告知邮件</title>
+<style>
+*{ margin:0; padding:0; border:0;}
+.email_all{ width:628px; margin:8px auto 0; border-top:#d50080 solid 3px; padding:8px 7px; background:#f2f2f2;} 
+.email_all dl{ border:#d8d8d8 solid 1px; padding:20px 42px; background:#FFF;}
+.email_all dl{ font-family:"宋体"; color:#555; font-size:14px; line-height:24px;}
+.email_red{ color:#ba005e;}
+.f700{ font-weight:700;}
+.dd_p1 a{ color:#0066cc; text-decoration:none;}
+.dd_p1 a:hover{ color:#0066cc; text-decoration: underline;}
+.dd_p2{ padding-top:15px; color:#888;}
+
+</style>
+
+</head>
+
+<body>
+<div class="email_all">
+	<dl>
+    	<dt>亲爱的<span class="email_red f700">${userName}</span>，您好！</dt>
+        <dd>
+            <p class="dd_p1">
+            感谢您在驴妈妈订购<${productName}>，为了保障您的合法权益，请您仔细阅读邮箱附件里的旅游合同，<span class="email_red">合同编号为：${econtractNo}，此合同在得到资源确认并在您付款完成时正式生效。</span>请查阅！<br>
+            温馨提示：如您未安装PDF阅读器软件，请点击下面链接下载软件并完成安装，以便您能顺畅阅读旅游合同。<br>
+            [下载软件]<a target="_blank" href="http://pic.lvmama.com/files/FoxitReader431_chs_Setup.exe">http://pic.lvmama.com/files/FoxitReader431_chs_Setup.exe</a>
+            </p>
+            <p class="dd_p2">
+            联系电话：1010-6060。<br>
+            ${date}
+            </p>
+        </dd>
+    </p>
+</div>
+
+</body>
+</html>

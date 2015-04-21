@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PLACE_AIRLINE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.place.PlaceAirline" >
+    <result column="PLACE_AIRLINE_ID" property="placeAirlineId" />
+    <result column="AIRLINE_NAME" property="airlineName" />
+    <result column="AIRLINE_ICON" property="airlineIcon" />
+    <result column="AIRLINE_CODE" property="airlineCode" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.place.PlaceAirline" >
+    select PLACE_AIRLINE_ID, AIRLINE_NAME, AIRLINE_ICON, AIRLINE_CODE
+    from PLACE_AIRLINE
+    where PLACE_AIRLINE_ID = #placeAirlineId:DECIMAL#
+  </select>
+  	<sql id="placeAirlineWhere">
+		<dynamic prepend="where">
+			<isNotEmpty property="airlineCode" prepend="and">
+				airline_code=#airlineCode#
+			</isNotEmpty>
+			<isNotEmpty property="airlineName" prepend="and">
+				airline_name=#airlineName#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	<sql id="selectPlaceAirlineList">
+		SELECT * FROM place_airline 
+		<include refid="placeAirlineWhere" /> 
+		ORDER BY place_airline_id DESC
+	</sql>
+	<select id="queryPlaceAirlineList" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		SELECT *
+		FROM (SELECT A.*, ROWNUM RN
+		FROM (
+		<include refid="selectPlaceAirlineList" />
+		) A
+		<dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="countPlaceAirlineList" parameterClass="java.util.Map" resultClass="Long">
+		SELECT COUNT(*) FROM place_airline
+		<include refid="placeAirlineWhere" />
+	</select>
+	
+	<select id="checkAirlineByairlineCode" parameterClass="java.util.Map" resultClass="Long">
+		SELECT COUNT(*) FROM place_airline WHERE airline_code=#airlineCode#
+	</select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.place.PlaceAirline" >
+    delete from PLACE_AIRLINE
+    where PLACE_AIRLINE_ID = #placeAirlineId:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.place.PlaceAirline" >
+    <selectKey resultClass="java.lang.Long" keyProperty="placeAirlineId" >
+      select PLACE_AIRLINE_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PLACE_AIRLINE (PLACE_AIRLINE_ID, AIRLINE_NAME, AIRLINE_ICON, AIRLINE_CODE)
+    values (#placeAirlineId:DECIMAL#, #airlineName:VARCHAR#, #airlineIcon:VARCHAR#,
+      #airlineCode:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.place.PlaceAirline" >
+    <selectKey resultClass="java.lang.Long" keyProperty="placeAirlineId" >
+      select PLACE_AIRLINE_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PLACE_AIRLINE
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="placeAirlineId" >
+        PLACE_AIRLINE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="airlineName" >
+        AIRLINE_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="airlineIcon" >
+        AIRLINE_ICON
+      </isNotNull>
+      <isNotNull prepend="," property="airlineCode" >
+        AIRLINE_CODE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="placeAirlineId" >
+        #placeAirlineId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="airlineName" >
+        #airlineName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="airlineIcon" >
+        #airlineIcon:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="airlineCode" >
+        #airlineCode:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.place.PlaceAirline" >
+    update PLACE_AIRLINE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="airlineName" >
+        AIRLINE_NAME = #airlineName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="airlineIcon" >
+        AIRLINE_ICON = #airlineIcon:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="airlineCode" >
+        AIRLINE_CODE = #airlineCode:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where PLACE_AIRLINE_ID = #placeAirlineId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.place.PlaceAirline" >
+    update PLACE_AIRLINE
+    set AIRLINE_NAME = #airlineName:VARCHAR#,
+      AIRLINE_ICON = #airlineIcon:VARCHAR#,
+      AIRLINE_CODE = #airlineCode:VARCHAR#
+    where PLACE_AIRLINE_ID = #placeAirlineId:DECIMAL#
+  </update>
+</sqlMap>

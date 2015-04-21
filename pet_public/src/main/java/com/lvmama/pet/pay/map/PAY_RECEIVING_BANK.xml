@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PAY_RECEIVING_BANK">
+	<resultMap id="PayReceivingBankResult" class="com.lvmama.comm.pet.po.pay.PayReceivingBank">
+		<result column="RECEIVING_BANK_ID" property="receivingBankId" />
+		<result column="RECEIVING_ACCOUNT" property="receivingAccount" />
+		<result column="BANK_NAME" property="bankName" />
+		<result column="RECEIVING_ACCOUNT_TYPE" property="receivingAccountType" />
+		<result column="BANK_CARD_NO" property="bankCardNo" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="STATUS" property="status" />
+	</resultMap>
+	
+	<select id="selectReceivingBankByPK" resultMap="PayReceivingBankResult" parameterClass="java.lang.Long">
+		SELECT * FROM PAY_RECEIVING_BANK WHERE STATUS='ENABLE' AND RECEIVING_BANK_ID = #receivingBankId# 
+	</select>
+	<select id="selectReceivingBankByBankCardNo" resultMap="PayReceivingBankResult" parameterClass="java.lang.String">
+		SELECT * FROM PAY_RECEIVING_BANK WHERE STATUS='ENABLE' AND BANK_CARD_NO = #bankCardNo#
+	</select>
+	<sql id="pageHead" >
+		<isNotEmpty property="start">
+			SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM (
+		</isNotEmpty> 
+	</sql>
+	<sql id="pageFoot" >
+		<isNotEmpty property="orderby">
+			ORDER BY $orderby$
+			<isNotEmpty property="order">
+				$order$
+			</isNotEmpty>
+		</isNotEmpty>
+		
+		<isNotEmpty property="start">
+			) P_T ) WHERE RN BETWEEN #start#
+			<isNotEmpty property="end">
+				AND #end#
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	<sql id="selectPayReceivingBankConditions">
+		SELECT * FROM PAY_RECEIVING_BANK
+		<dynamic prepend="WHERE">
+			 <isNotEmpty prepend="and" property="receivingBankId" >
+		        RECEIVING_BANK_ID = #receivingBankId#
+		     </isNotEmpty>
+			 <isNotEmpty prepend="and" property="receivingAccount" >
+		        RECEIVING_ACCOUNT = #receivingAccount#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="bankName" >
+		        BANK_NAME = #bankName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="receivingAccountType" >
+		        RECEIVING_ACCOUNT_TYPE = #receivingAccountType#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="bankCardNo" >
+		        BANK_CARD_NO = #bankCardNo#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="createTime" >
+		        CREATE_TIME = #createTime#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="status" >
+		        STATUS = #status#
+		     </isNotEmpty>
+		     <isEmpty prepend="and" property="status" >
+		        STATUS = 'ENABLE'
+		     </isEmpty>
+	     </dynamic>
+	</sql>	
+	<select id="selectPayReceivingBankByParamMapCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM(
+			<include refid="selectPayReceivingBankConditions" />
+		) TT1
+	</select>
+	<select id="selectPayReceivingBankByParamMap" resultMap="PayReceivingBankResult" parameterClass="java.util.Map">
+		<include refid="pageHead"/>
+			<include refid="selectPayReceivingBankConditions"/>
+		<include refid="pageFoot"/>
+	</select>
+	<select id="selectEnableReceivingAccount" resultClass="java.lang.String">
+		SELECT DISTINCT(PCB.RECEIVING_ACCOUNT) FROM PAY_RECEIVING_BANK PCB WHERE PCB.STATUS='ENABLE'
+	</select>
+	<select id="selectBankName" resultClass="java.lang.String" parameterClass="java.lang.String">
+		SELECT PCB.BANK_NAME FROM PAY_RECEIVING_BANK PCB WHERE PCB.STATUS='ENABLE' AND PCB.RECEIVING_ACCOUNT=#receivingAccount# ORDER BY PCB.RECEIVING_BANK_ID DESC
+	</select>
+</sqlMap>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="PAY_POS" > 
+  
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pay.PayPos" >
+    <result column="POS_ID" property="posId" />
+    <result column="TERMINAL_NO" property="terminalNo" />
+    <result column="MEMO" property="memo" />
+    <result column="STATUS" property="status" />
+    <result column="COMMERCIAL_ID" property="commercialId" />
+  </resultMap>
+  
+  
+  <resultMap class="com.lvmama.comm.vo.PayPosVO" id="payPosVO">
+    <result column="POS_ID" property="posId" />
+    <result column="TERMINAL_NO" property="terminalNo" />
+    <result column="MEMO" property="memo" />
+    <result column="STATUS" property="status" />
+    <result column="SUPPLIER" property="supplier" />
+    <result column="COMMERCIAL_ID" property="commercialId" />
+    <result column="COMMERCIAL_NAME" property="commercialName" />
+    <result column="COMMERCIAL_NO" property="commercialNo" />
+    <result column="COMMERCIAL_STATUS" property="commercialStatus" /> 
+  </resultMap>
+  
+<insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.PayPos">
+<selectKey keyProperty="posId" resultClass="java.lang.Long">
+			SELECT PAY_POS_SEQ.nextval from dual
+</selectKey>
+   INSERT INTO PAY_POS
+	  (POS_ID,
+	   TERMINAL_NO,
+	   MEMO,
+	   STATUS,
+	   COMMERCIAL_ID
+   ) VALUES (
+        #posId#,
+	    #terminalNo#,
+	    #memo#,
+	    #status#,
+	    #commercialId#)
+</insert>
+
+<update id="update" parameterClass="com.lvmama.comm.pet.po.pay.PayPos">
+  UPDATE
+    PAY_POS
+<dynamic prepend=" SET ">
+<isNotEmpty prepend="," property="terminalNo">TERMINAL_NO = #terminalNo#</isNotEmpty>
+<isNotEmpty prepend="," property="memo">MEMO = #memo#</isNotEmpty>
+<isNotEmpty prepend="," property="status">STATUS = #status#</isNotEmpty>
+<isNotEmpty prepend="," property="commercialId">COMMERCIAL_ID = #commercialId#</isNotEmpty>
+</dynamic> 
+WHERE
+  	POS_ID = #posId#
+</update> 
+
+<update id="updateStatus" parameterClass="com.lvmama.comm.pet.po.pay.PayPos">
+  UPDATE
+    PAY_POS
+<dynamic prepend=" SET ">
+<isNotEmpty prepend="," property="status">STATUS = #status#</isNotEmpty>
+</dynamic> 
+WHERE
+  	POS_ID = #posId#
+</update> 
+
+<sql id="selectSQL">
+	   SELECT * FROM PAY_POS
+	   <dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="commercialId">
+				COMMERCIAL_ID = #commercialId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="terminalNo">
+				TERMINAL_NO = #terminalNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="memo">
+				MEMO = #memo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				STATUS = #status#
+			</isNotEmpty>
+	    </dynamic>
+</sql>
+<select id="selectLikeTerminalNoOrMemo" resultMap="BaseResultMap" parameterClass="java.lang.String">
+	SELECT * FROM PAY_POS WHERE TERMINAL_NO LIKE '%'||#search#||'%' OR MEMO LIKE '%'||#search#||'%' 
+</select>
+
+<select id="selectByParamCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+	SELECT COUNT(*) FROM ( 
+		<include refid="selectSQL"/>
+	)
+</select>
+	
+
+<select id="queryByParam"  resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+	SELECT * FROM (SELECT A.*,ROWNUM rn FROM( 
+			<include refid="selectSQL"/>
+			ORDER BY POS_ID DESC
+			) A
+			<dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+			</dynamic>
+			)<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>		
+			</dynamic>
+</select>
+
+<select id="selectById"  resultMap="BaseResultMap" parameterClass="java.lang.Long">
+	SELECT * FROM PAY_POS
+		WHERE
+			POS_ID = #posId#
+	  
+</select>
+
+<select id="selectQueryList" resultMap="payPosVO" parameterClass="java.util.HashMap" >
+	SELECT * FROM (
+		SELECT T.*,ROWNUM rn 
+	FROM(
+	SELECT 
+		A.COMMERCIAL_ID,
+		A.POS_ID,
+		A.TERMINAL_NO,
+		A.MEMO,
+		A.STATUS,
+		B.COMMERCIAL_NO,
+		B.COMMERCIAL_NAME,
+		B.SUPPLIER,
+		B.STATUS COMMERCIAL_STATUS
+		FROM 
+			PAY_POS_COMMERCIAL B,
+			(<include refid="selectSQL"/>) A
+	WHERE A.COMMERCIAL_ID=B.COMMERCIAL_ID
+	ORDER BY 
+			A.POS_ID DESC
+	)T
+	<dynamic prepend="where">
+	<isNotEmpty property="endRows" prepend="and">
+		ROWNUM &lt;= #endRows#
+	</isNotEmpty>
+	</dynamic>
+	)<dynamic prepend="where">
+	<isNotEmpty property="startRows" prepend="and">
+		rn &gt;= #startRows#
+	</isNotEmpty>		
+	</dynamic>
+</select>
+
+<select id="selectTerminalNo"  resultClass="java.lang.String">
+	SELECT TERMINAL_NO FROM PAY_POS
+</select>
+
+
+<select id="selectByTerNOAndStatus"  resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+	SELECT * FROM PAY_POS PP,PAY_POS_COMMERCIAL PC
+	<dynamic prepend="WHERE">
+	   		<isNotEmpty prepend="AND" property="terminalNo">
+				PP.TERMINAL_NO = #terminalNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="commercialNo">
+			    PP.COMMERCIAL_ID = PC.COMMERCIAL_ID AND PC.COMMERCIAL_NO = #commercialNo# 
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				PP.STATUS = #status#
+			</isNotEmpty>
+	    </dynamic>
+</select>
+
+</sqlMap>

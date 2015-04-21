@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PLACE_FLIGHT" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.place.PlaceFlight" >
+    <result column="PLACE_FLIGHT_ID" property="placeFlightId" />
+    <result column="START_AIRPORT_ID" property="startAirportId" />
+    <result column="ARRIVE_AIRPORT_ID" property="arriveAirportId" />
+    <result column="AIRPLANE_ID" property="airplaneId" />
+    <result column="AIRLINE_ID" property="airlineId" />
+    <result column="FLIGHT_NO" property="flightNo" />
+    <result column="START_TIME" property="startTime" />
+    <result column="ARRIVE_TIME" property="arriveTime" />
+    <result column="FLIGHT_TIME" property="flightTime" />
+    <result column="START_PLACE_ID" property="startPlaceId" />
+    <result column="ARRIVE_PLACE_ID" property="arrivePlaceId" />
+    <result column="BERTH_INFO" property="berthInfo" />
+    <result column="START_TERMINAL" property="startTerminal" />
+    <result column="ARRIVE_TERMINAL" property="arriveTerminal" />
+    <result column="STOP_TIME" property="stopTime" />
+  </resultMap>
+  <resultMap id="AirResultMap" class="com.lvmama.comm.pet.po.place.PlaceAirline">
+    <result column="PLACE_AIRLINE_ID" property="placeAirlineId" />
+    <result column="AIRLINE_NAME" property="airlineName" />
+  </resultMap>
+  <resultMap id="ModelResultMap" class="com.lvmama.comm.pet.po.place.PlacePlaneModel">
+    <result column="PLANE_MODEL_ID" property="placeModelId" />
+    <result column="PLANE_NAME" property="planeName" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.place.PlaceFlight" >
+    select *
+    from PLACE_FLIGHT
+    where PLACE_FLIGHT_ID = #placeFlightId:DECIMAL#
+  </select>
+   <select id="selectByFlightNo" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.place.PlaceFlight" >
+    select *
+    from PLACE_FLIGHT
+    where FLIGHT_NO = #flightNo:VARCHAR#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.place.PlaceFlight" >
+    delete from PLACE_FLIGHT
+    where PLACE_FLIGHT_ID = #placeFlightId:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.place.PlaceFlight" >
+    <selectKey resultClass="java.lang.Long" keyProperty="placeFlightId" >
+      select PLACE_FLIGHT_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PLACE_FLIGHT (PLACE_FLIGHT_ID, START_AIRPORT_ID, ARRIVE_AIRPORT_ID, AIRPLANE_ID,
+      AIRLINE_ID, FLIGHT_NO, START_TIME, ARRIVE_TIME, FLIGHT_TIME, START_PLACE_ID,
+      ARRIVE_PLACE_ID, BERTH_INFO, START_TERMINAL, ARRIVE_TERMINAL, STOP_TIME)
+    values (#placeFlightId:DECIMAL#, #startAirportId:DECIMAL#, #arriveAirportId:DECIMAL#,
+      #airplaneId:DECIMAL#, #airlineId:DECIMAL#, #flightNo:VARCHAR#,
+      #startTime:VARCHAR#, #arriveTime:VARCHAR#, #flightTime:DECIMAL#, #startPlaceId:DECIMAL#,
+      #arrivePlaceId:DECIMAL#, #berthInfo:VARCHAR#, #startTerminal:VARCHAR#,
+      #arriveTerminal:VARCHAR#, #stopTime:DECIMAL#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.place.PlaceFlight" >
+    <selectKey resultClass="java.lang.Long" keyProperty="placeFlightId" >
+      select PLACE_FLIGHT_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PLACE_FLIGHT
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="placeFlightId" >
+        PLACE_FLIGHT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="startAirportId" >
+        START_AIRPORT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="arriveAirportId" >
+        ARRIVE_AIRPORT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="airplaneId" >
+        AIRPLANE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="airlineId" >
+        AIRLINE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="flightNo" >
+        FLIGHT_NO
+      </isNotNull>
+      <isNotNull prepend="," property="startTime" >
+        START_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="arriveTime" >
+        ARRIVE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="flightTime" >
+        FLIGHT_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="startPlaceId" >
+        START_PLACE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="arrivePlaceId" >
+        ARRIVE_PLACE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="berthInfo" >
+        BERTH_INFO
+      </isNotNull>
+      <isNotNull prepend="," property="startTerminal" >
+        START_TERMINAL
+      </isNotNull>
+      <isNotNull prepend="," property="arriveTerminal" >
+        ARRIVE_TERMINAL
+      </isNotNull>
+      <isNotNull prepend="," property="stopTime" >
+        STOP_TIME
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="placeFlightId" >
+        #placeFlightId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="startAirportId" >
+        #startAirportId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="arriveAirportId" >
+        #arriveAirportId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="airplaneId" >
+        #airplaneId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="airlineId" >
+        #airlineId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="flightNo" >
+        #flightNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="startTime" >
+        #startTime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="arriveTime" >
+        #arriveTime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="flightTime" >
+        #flightTime:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="startPlaceId" >
+        #startPlaceId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="arrivePlaceId" >
+        #arrivePlaceId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="berthInfo" >
+        #berthInfo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="startTerminal" >
+        #startTerminal:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="arriveTerminal" >
+        #arriveTerminal:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="stopTime" >
+        #stopTime:DECIMAL#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.place.PlaceFlight" >
+    update PLACE_FLIGHT
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="startAirportId" >
+        START_AIRPORT_ID = #startAirportId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="arriveAirportId" >
+        ARRIVE_AIRPORT_ID = #arriveAirportId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="airplaneId" >
+        AIRPLANE_ID = #airplaneId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="airlineId" >
+        AIRLINE_ID = #airlineId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="flightNo" >
+        FLIGHT_NO = #flightNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="startTime" >
+        START_TIME = #startTime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="arriveTime" >
+        ARRIVE_TIME = #arriveTime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="flightTime" >
+        FLIGHT_TIME = #flightTime:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="startPlaceId" >
+        START_PLACE_ID = #startPlaceId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="arrivePlaceId" >
+        ARRIVE_PLACE_ID = #arrivePlaceId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="berthInfo" >
+        BERTH_INFO = #berthInfo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="startTerminal" >
+        START_TERMINAL = #startTerminal:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="arriveTerminal" >
+        ARRIVE_TERMINAL = #arriveTerminal:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="stopTime" >
+        STOP_TIME = #stopTime:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    where PLACE_FLIGHT_ID = #placeFlightId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.place.PlaceFlight" >
+    update PLACE_FLIGHT
+    set START_AIRPORT_ID = #startAirportId:DECIMAL#,
+      ARRIVE_AIRPORT_ID = #arriveAirportId:DECIMAL#,
+      AIRPLANE_ID = #airplaneId:DECIMAL#,
+      AIRLINE_ID = #airlineId:DECIMAL#,
+      FLIGHT_NO = #flightNo:VARCHAR#,
+      START_TIME = #startTime:VARCHAR#,
+      ARRIVE_TIME = #arriveTime:VARCHAR#,
+      FLIGHT_TIME = #flightTime:DECIMAL#,
+      START_PLACE_ID = #startPlaceId:DECIMAL#,
+      ARRIVE_PLACE_ID = #arrivePlaceId:DECIMAL#,
+      BERTH_INFO = #berthInfo:VARCHAR#,
+      START_TERMINAL = #startTerminal:VARCHAR#,
+      ARRIVE_TERMINAL = #arriveTerminal:VARCHAR#,
+      STOP_TIME = #stopTime:DECIMAL#
+    where PLACE_FLIGHT_ID = #placeFlightId:DECIMAL#
+  </update>
+  	<sql id="placeFlightWhere">
+		<dynamic prepend="where">
+			<isNotEmpty property="flightNo" prepend="and">
+				flight_no LIKE '%'||#flightNo#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="airlineId" prepend="and">
+			   airline_id=#airlineId#
+			</isNotEmpty>
+			<isNotEmpty property="startPlaceId" prepend="and">
+				start_place_id=#startPlaceId#
+			</isNotEmpty>
+			<isNotEmpty property="arrivePlaceId" prepend="and">
+				arrive_place_id=#arrivePlaceId#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	<sql id="selectPlaceFlightList">
+    select *
+	  from place_flight 
+	     <include refid="placeFlightWhere" />
+	     order by place_flight_id DESC
+	</sql>
+	<select id="queryPlaceFlightList" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		SELECT *
+		FROM (SELECT A.*, ROWNUM RN
+		FROM (
+		<include refid="selectPlaceFlightList" />
+		) A
+		<dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="countPlaceFlightList" parameterClass="java.util.Map" resultClass="Long">
+		SELECT COUNT(*) FROM place_flight
+		<include refid="placeFlightWhere" />
+	</select>
+	
+	<select id="countPlaceFlightByFlightNo" parameterClass="java.util.Map" resultClass="Long">
+		SELECT COUNT(*) FROM place_flight WHERE flight_no=#flightNo#
+	</select>
+
+	<select id="selectPlaceAirlineList" resultMap="AirResultMap" parameterClass="com.lvmama.comm.pet.po.place.PlaceAirline" >
+		SELECT  place_airline_id, airline_name FROM place_airline
+	</select>
+	<select id="selectPlacePlanceModelList" resultMap="ModelResultMap" parameterClass="com.lvmama.comm.pet.po.place.PlacePlaneModel" >
+	   SELECT plane_model_id, plane_name from place_plane_model
+	</select>
+  
+</sqlMap>

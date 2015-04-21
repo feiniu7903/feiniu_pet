@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_LOG" >
+  
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComLog" >
+    <result column="LOG_ID" property="logId" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="CONTENT" property="content" />
+    <result column="LOG_TYPE" property="logType" />
+    <result column="LOG_NAME" property="logName" />
+    <result column="OPERATOR_NAME" property="operatorName" />
+    <result column="OBJECT_TYPE" property="objectType" />
+    <result column="OBJECT_ID" property="objectId" />
+    <result column="PARENT_ID" property="parentId" />
+    <result column="PARENT_TYPE" property="parentType" />
+    <result column="CONTENT_TYPE" property="contentType" />
+  </resultMap>
+  
+  <!-- 查询参数拼接 -->
+  <sql id="sql_select">
+    (OBJECT_ID = #objectId# and OBJECT_TYPE = #objectType#
+    <isNotEmpty prepend="AND" property="logType">
+  		LOG_TYPE = #logType#
+  	</isNotEmpty>
+    )
+  </sql>
+  
+   <sql id="sql_selectByParentId">
+  	(OBJECT_ID = #objectId# and OBJECT_TYPE = #objectType#) or (PARENT_ID = #objectId# and PARENT_TYPE = #objectType#)
+  </sql>
+  
+   <sql id="sql_selectByParentIdAndObjectType">
+  	 PARENT_ID = #parentId# and PARENT_TYPE = #parentType# and OBJECT_TYPE = #objectType#
+  </sql>
+  
+  
+   <!-- 通过指定参数查询,不分页 -->
+  <select id="select" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComLog" >
+ 	select cl.*
+    from COM_LOG cl
+    where 
+   	 <include refid="sql_select"/>
+    order by log_id desc
+  </select>
+  
+ <select id="selectByParentId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComLog" >
+    select cl.*
+    from COM_LOG cl
+    where 
+   	 <include refid="sql_selectByParentId"/>
+    order by log_id desc
+  </select>
+  
+  <select id="selectByParentIdAndObjectType" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComLog" >
+    select cl.*
+    from COM_LOG cl
+    where 
+   		 <include refid="sql_selectByParentIdAndObjectType"/>
+    order by log_id desc
+  </select>
+  
+  
+  
+  <!-- 通过指定参数查询结果集，并进行分页 -->
+ <select id="selectMap" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+ 	SELECT * FROM (SELECT T.*, ROWNUM AS ROWNUM1 FROM (		
+ 	select cl.*
+    from COM_LOG cl
+    where 
+     <include refid="sql_select"/>
+    order by log_id desc
+    
+    )T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;#skipResults#
+  </select>
+  
+ <select id="selectByParentIdMap" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+ SELECT * FROM (SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select * from (
+		
+    select cl.*
+    from COM_LOG cl
+    where 
+  	  <include refid="sql_selectByParentId"/>
+    order by cl.log_id desc
+    
+    )) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;#skipResults#
+  </select>
+  
+  <select id="selectByParentIdAndObjectTypeMap" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+  SELECT * FROM (SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select * from (
+		
+    select cl.*
+    from COM_LOG cl
+    where 
+   	 <include refid="sql_selectByParentIdAndObjectType"/>
+    order by log_id desc
+    
+    )) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;#skipResults#
+  </select>
+  
+  
+  <!-- 指定参数查询分页,同上,计数COUNT(*) -->
+  <select id="selectMapCount" resultClass="java.lang.Long"  parameterClass="java.util.HashMap" >
+ 	select count(*)
+    from COM_LOG cl
+    where 
+     <include refid="sql_select"/>
+  </select>
+  
+ <select id="selectByParentIdMapCount" resultClass="java.lang.Long"  parameterClass="java.util.HashMap" >
+    select count(*)
+    from COM_LOG cl
+    where 
+   	 <include refid="sql_selectByParentId"/>
+    order by cl.log_id desc
+  </select>
+  
+  <select id="selectByParentIdAndObjectTypeMapCount" resultClass="java.lang.Long"  parameterClass="java.util.HashMap" >
+    select count(*)
+    from COM_LOG cl
+    where 
+     <include refid="sql_selectByParentIdAndObjectType"/>
+    order by log_id desc
+  </select>
+  
+   
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComLog">
+    <selectKey resultClass="java.lang.Long" keyProperty="logId" >
+      select LVMAMA_SUPER.com_log_id_seq.nextval as id from DUAL
+    </selectKey>
+    insert into COM_LOG (LOG_ID, CREATE_TIME, CONTENT, LOG_TYPE, LOG_NAME, OPERATOR_NAME, OBJECT_TYPE, OBJECT_ID, PARENT_ID, PARENT_TYPE, CONTENT_TYPE)
+    values (#logId#, sysdate, #content#, #logType#, #logName#, #operatorName# , #objectType# , #objectId#, #parentId#, #parentType#, #contentType#)
+  </insert>
+
+	<select id="queryComLog" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+SELECT *
+  FROM COM_LOG WHERE 0=0
+	  	<isNotEmpty prepend="AND" property="objectId">
+	  		COM_LOG.OBJECT_ID = #objectId#
+	  	</isNotEmpty>
+	  	<isNotEmpty prepend="AND" property="objectType">
+	  		COM_LOG.OBJECT_TYPE = #objectType#
+	  	</isNotEmpty>
+	  	<isNotEmpty prepend="AND" property="logType">
+	  		COM_LOG.LOG_TYPE = #logType#
+	  	</isNotEmpty>
+  ORDER BY COM_LOG.CREATE_TIME DESC
+	</select>
+	
+	<select id="queryObjectTypes" resultClass="java.lang.String">
+		select Distinct OBJECT_TYPE FROM COM_LOG
+	</select>
+	
+	<sql id="sql_select_2">
+	select cl.*
+	    from COM_LOG cl
+	    <dynamic prepend="where">	    
+	  	<isNotEmpty prepend="AND" property="objectId">
+	  		OBJECT_ID=#objectId#
+	  	</isNotEmpty>
+	  	<isNotEmpty prepend="AND" property="objectType">
+	  		OBJECT_TYPE=#objectType#
+	  	</isNotEmpty>
+	  	<isNotEmpty prepend="AND" property="logType">
+	  		LOG_TYPE =#logType#
+	  	</isNotEmpty>
+	  	<isNotEmpty prepend="AND" property="beginTime">
+	  		CREATE_TIME &gt;=#beginTime#
+	  	</isNotEmpty>
+	  	<isNotEmpty prepend="AND" property="endTime">
+	  		CREATE_TIME &lt;=#endTime#
+	  	</isNotEmpty>
+	  	<isNotEmpty prepend="AND" property="operatorName">
+	  		OPERATOR_NAME = #operatorName#
+	  	</isNotEmpty>
+	  	<isNotEmpty prepend="and" property="logId">
+	  		LOG_ID = #logId#
+	  	</isNotEmpty>
+	  	<isNotEmpty prepend="AND" property="content">
+	  		CONTENT = #content#
+	  	</isNotEmpty>
+	  	<isNotEmpty prepend="AND" property="beginIndexTime">
+	  		CREATE_TIME &gt;#beginIndexTime#
+	  	</isNotEmpty>
+	  	</dynamic>
+	  </sql>
+  	  
+  	    <!-- 通过指定参数查询结果集，并进行分页 -->
+	 <select id="queryByMap" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+	 	SELECT * FROM (SELECT T.*, ROWNUM AS ROWNUM1 FROM (			 	
+	     <include refid="sql_select_2"/>
+	    order by log_id desc
+	    )T WHERE ROWNUM &lt;= #maxResults#)
+			WHERE ROWNUM1 &gt;#skipResults#
+	  </select>
+	  <select id="queryByMapCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+	 	select count(*) FROM(			 	
+	     <include refid="sql_select_2"/>	    
+	    )
+	  </select>
+	  <select id="queryByMapMaxCreateTime" resultClass="java.util.Date" parameterClass="java.util.HashMap" >
+	 	select max(create_time) FROM(			 	
+	     <include refid="sql_select_2"/>	    
+	    )
+	  </select>
+	  
+	  
+	   <select id="selectAll" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+	 	select * from COM_LOG cl where 0=0
+		
+			<isNotEmpty prepend="AND" property="objectType">
+		  		OBJECT_TYPE=#objectType#
+	  		</isNotEmpty>
+	  
+		<isParameterPresent>
+		 <isPropertyAvailable property="keyList">
+			<isNotEmpty property="keyList" prepend="and">
+				<iterate property="keyList" prepend=" OBJECT_ID IN " open="(" close=")" conjunction=",">
+					#keyList[]#
+				</iterate>
+			</isNotEmpty>
+		 </isPropertyAvailable>
+		</isParameterPresent>
+		 ORDER BY cl.CREATE_TIME DESC
+	  </select>
+</sqlMap>

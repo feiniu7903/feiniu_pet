@@ -1,0 +1,116 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,select,textarea,p,blockquote,th,td,hr,button,figure,menu
+{margin:0;padding:0; font:12px/1.5 Arial,"\5b8b\4f53";}
+h1,h2,h3,h4,h5,h6{font-size:100%;}
+table{border-collapse:collapse;border-spacing:0;}
+ol,ul{list-style:none outside;}
+a img{border:none;}
+input{ font-family:Tahoma,Verdana,Geneva,sans-serif}
+a{ text-decoration:none; color:#0077cc;}a:hover{ color:#EE0088; text-decoration: underline;}
+.orange{ color:#ff6600;}
+.red{ color:#d70302;}
+.red_ff4444{ color:#ff4444;}
+.c_gray{ color:#999;}
+.gray5{ color:#555;}
+.green{ color:#009900;}
+.bold{ font-weight:bold;}
+.f14{ font:12px/1.5 "\5b8b\4f53";}
+
+/*登陆*/
+.login_top{ width:100%; padding-top:100px; height:63px; border-bottom:#eb559e solid 3px; background:#fff;}
+.login_logo{ width:800px; margin:0 auto;}
+.login_logo_a{ display:block; width:333px; height:53px; background:url(http://pic.lvmama.com/img/ebooking/global.gif) no-repeat -300px -47px;}
+.time_all{ width:100%; background:#f1f1f1; height:30px;}
+.time{ width:790px; padding-left:10px; height:30px; line-height:30px; color:#888; margin:0 auto;}
+
+.login_main{ width:780px; height:215px; margin:0 auto; padding:5px 0 0 20px; position:relative;}
+.login_left{ float:left; width:390px;}
+.login_left h3,.login h2{ border-bottom:#ddd solid 1px; line-height:34px; font-family:"微软雅黑"; font-size:16px;}
+.login_left ul{ border-top:#fff solid 1px; padding-top:10px;}
+.login_left ul li{ line-height:25px; color:#555; width:380px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#0077cc;}
+.login_left ul li span{ color:#555;}
+.login_left li a{ color:#0077cc;}
+.login_left li a:hover{ color:#ee0088;}
+.login_left_gd{ text-align:right; padding-top:10px;}
+
+.login{ float:right; width:260px; position: absolute; top:-95px; right:8px; padding:5px 19px 50px; border:#ddd solid 1px; background:#f6f6f6; -moz-border-radius:2px 2px 5px 2px; -webkit-border-radius:2px 2px 5px 2px; box-shadow:0 0 5px 2px #eee;}
+.login_list{ border-top:#fff solid 1px;}
+.login_list li{ margin-bottom:10px;}
+.login_list li.login_list_li_f{ height:28px;}
+.login_list li.login_list_li_f .zhfs_state{margin:10px 0 0 0px}
+.login_list li.login_list_li_l{ padding-top:10px;}
+.login_list_label{ display:inline-block; width:62px; color:#333; text-align:right;}
+.login_list_input{ border:#ddd solid 1px; height:26px; color:#555; line-height:26px; font-size:14px; background:#FFF;}
+.width163{ width:163px;}
+.width63{ width:63px;}
+.error_ts{ float:left; margin-top:6px; line-height:normal;}
+.login_list li input.error_input{ border:#fd4949 solid 1px;}
+.error{ color:#ff0000;}
+.no_cipher{ color:#ddd;}
+.error_ts i{ display:inline-block; width:12px; height:12px; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat -40px -320px; position:relative; top:-2px; *top:0; vertical-align:middle;}
+.login_list li .zhfs_v_success{ width:12px;}
+.eorrect{ display:inline-block; width:12px; height:12px; margin-left:10px; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat -60px -320px; position:relative; top:-2px; *top:0; vertical-align:middle;}
+.yanzhengma{ width:60px; height:20px; vertical-align:middle; position:relative; top:-3px; *top:-4px; margin:0 5px;}
+.login_ing{ display:inline-block; width:76px; height:28px; margin:0 10px 0 62px; line-height:28px; text-align:center; font-size:14px; color:#FFF; font-weight:bold; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat -80px -312px;}
+.login_ing:hover{ text-decoration:none; color:#FFF;}
+body .width800{ width:800px;}
+
+/*页头*/
+.header_top{ width:100%; height:5px; background:#e8469d;}
+.header{ margin:20px auto 20px; width:960px; height:50px; position:relative; z-index:100;}
+.logo{ float:left;}
+.logo a{ display:block; float:left; width:274px; height:50px; background:url(http://pic.lvmama.com/img/ebooking/global.gif) no-repeat 0 -50px;}
+.logo span{ float:left; padding-left:10px; line-height:50px; font-family:"微软雅黑"; line-height:48px; font-size:18px;}
+.header_r{ float:right; padding-top:10px; position:relative;}
+.header_r li{ float:left; height:12px; font-size:12px; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat -195px -273px; padding:8px 8px 3px;}
+.header_r li a{ color:#0077cc;}
+.header_r li a:hover{ color:#EE0088;}
+.header_r .r_name{ width:41px; text-align:center; position:relative; background: url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat 44px -270px; padding:8px 20px 3px 6px;}
+.header_r .r_name_h{ border:#bfbfbf solid 1px; width:39px; border-bottom:none; padding-top:7px; background: url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat 43px -271px;}
+.header_r .r_name .name{ color:#000;}
+.header_r .r_name a{ color:#0077cc;}
+.name_bot{ display:none; position:absolute; top:22px; left:-1px; width:65px; padding-top:5px; border:#bfbfbf solid 1px; background:#FFF; border-top:none;}
+.name_bot a{ display:block; padding:5px 0; color:#0077cc;}
+
+/*导航条*/
+.nav_all{ margin:0 auto; width:960px; height:40px; background:url(http://pic.lvmama.com/img/ebooking/global.gif) no-repeat; position: relative; z-index:99;}
+.nav_left{ padding-left:10px;}
+.nav_left li{ float:left; height:40px;  font-size:14px; padding-left:10px; line-height:38px; font-weight:bold;}
+.nav_left li a{ color:#FFF; float:left; line-height:40px; padding-right:10px;outline:none; hide-focus:expression(this.hideFocus=true);}
+.nav_left li a:hover{ color:#FFF; text-decoration:none;}
+.nav_left .nav_left_li,.nav_left .nav_index_li{ background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat left 0 #FFF;}
+.nav_left .nav_left_li a,.nav_left .nav_index_li a{ color:#000; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat right 0 #FFF;}
+.nav_left .nav_left_li .nav_dd_r span,.nav_left .nav_index_li .nav_dd_r span{ background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat right -93px #fff;}
+.nav_left .nav_left_li a:hover{color:#000; text-decoration:none;}
+.nav_left .nav_left_li .zhex{ width:10px; height:2px; background:#fff; position:absolute; left:0; top:-1px; z-index:199;}
+
+.nav_dd b{ float:left; cursor:pointer;}
+.nav_left .nav_left_li{ position:relative;}
+.nav_left .nav_left_li .nav_dd_b{ z-index:105; }
+.nav_left .nav_left_li a{ z-index:106; position:relative;}
+.nav_left .nav_left_li .zhex{z-index:199;}
+
+
+.nav_dd_r{ float: left; margin:9px 0 0 5px; height:20px; padding-left:4px; line-height:20px; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat 0 -93px;}
+.nav_dd_r span{ float: left; padding-right:4px; line-height:20px; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat right -93px #ea549d; color:#cc3300;}
+.nav_dd_b{ display: inline-block; position:absolute; top:39px; left:-1px; width:146px; padding:2px; border:#fb9bce solid 1px; background:#fff; display:none;}
+.nav_left .nav_dd_b a{ display:block; width:138px; padding:0 0 0 8px; font-size:12px; background:none; border-top:#f0d5e3 solid 1px; line-height:29px; color:#0077cc; font-weight:normal;}
+.nav_left .nav_dd_b .nav_dd_b_a{ border-top:none;}
+.nav_left .nav_dd_b a:hover{ color:#0077cc; background:#fffafd; font-weight:bold;}
+.nav_dd_b span{ padding:0 1px 0 3px;}
+
+/*面包屑导航*/
+.breadcrumb{ width:960px; margin:0 auto; height:30px;}
+.breadcrumb_nav{ float:left; padding-left:10px;}
+.breadcrumb_nav li{float:left; height:30px; line-height:30px; padding-left:20px; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat -186px -304px; font-size:12px; color:#333;}
+.breadcrumb_nav li a{ color:#333;}
+.breadcrumb_nav li a:hover{ color:#EE0088;}
+.breadcrumb_nav .home{ background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat -186px -337px;}
+/*以上是公用部分样式*/
+
+.orderfooter{ text-align:center; width:960px; margin:0 auto; color:#666; line-height:20px; padding:25px 0 25px 0;}
+.orderfooter p{ text-align:center; border-top:#efefef solid 1px; padding-top:5px;}
+.orderfooter b{ line-height:28px; font-size:14px; font-weight:bold;}
+

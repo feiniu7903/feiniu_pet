@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PAY_PAYMENT_DETAIL">
+	<resultMap id="PayPaymentDetailResult" class="com.lvmama.comm.pet.po.pay.PayPaymentDetail">
+		<result column="PAYMENT_DETAIL_ID" property="paymentDetailId" />
+		<result column="PAYMENT_ID" property="paymentId" />
+		<result column="RECEIVING_COMPANY_ID" property="receivingCompanyId" />
+		<result column="RECEIVING_BANK_ID" property="receivingBankId" />
+		<result column="RECEIVING_PERSON" property="receivingPerson" />
+		<result column="PAYMENT_ACCOUNT" property="paymentAccount" />
+		<result column="PAYMENT_BANK_NAME" property="paymentBankName" />
+		<result column="PAYMENT_BANK_CARD_NO" property="paymentBankCardNo" />
+		<result column="CASH_LIBERATE_MONEY_PERSON" property="cashLiberateMoneyPerson" />
+		<result column="CASH_LIBERATE_MONEY_DATE" property="cashLiberateMoneyDate" />
+		<result column="CASH_AUDIT_STATUS" property="cashAuditStatus" />
+		<result column="AUDIT_PERSON" property="auditPerson" />
+		<result column="OTHER_AUDIT_STATUS" property="otherAuditStatus" />
+		<result column="POS_TERMINAL_NO" property="posTerminalNo" />
+		<result column="BELONG_CENTER" property="belongCenter" />
+		<result column="BELONG_DEPARTMENT" property="belongDepartment" />
+		<result column="DETAIL_NAME" property="detailName" />
+		<result column="SUMMARY" property="summary" />
+	</resultMap>
+	
+    <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.PayPaymentDetail" >
+	    <selectKey resultClass="java.lang.Long" keyProperty="paymentDetailId">
+				select pay_payment_detail_seq.nextval as id from DUAL
+		</selectKey>
+	    INSERT INTO PAY_PAYMENT_DETAIL(PAYMENT_DETAIL_ID,PAYMENT_ID,RECEIVING_COMPANY_ID,RECEIVING_BANK_ID,RECEIVING_PERSON,PAYMENT_ACCOUNT,PAYMENT_BANK_NAME,PAYMENT_BANK_CARD_NO,CASH_LIBERATE_MONEY_PERSON,CASH_LIBERATE_MONEY_DATE,CASH_AUDIT_STATUS,AUDIT_PERSON,OTHER_AUDIT_STATUS,POS_TERMINAL_NO,BELONG_CENTER,BELONG_DEPARTMENT,DETAIL_NAME,SUMMARY)
+	    VALUES (#paymentDetailId#,#paymentId#,#receivingCompanyId#,#receivingBankId#,#receivingPerson#,#paymentAccount#,#paymentBankName#,#paymentBankCardNo#,#cashLiberateMoneyPerson#,#cashLiberateMoneyDate#,#cashAuditStatus#,#auditPerson#,#otherAuditStatus#,#posTerminalNo#,#belongCenter#,#belongDepartment#,#detailName#,#summary#)
+   </insert>
+   <update id="update" parameterClass="com.lvmama.comm.pet.po.pay.PayPaymentDetail">
+		update PAY_PAYMENT_DETAIL
+		SET
+		CASH_LIBERATE_MONEY_PERSON = #cashLiberateMoneyPerson#,
+		CASH_LIBERATE_MONEY_DATE = #cashLiberateMoneyDate#,
+		RECEIVING_PERSON = #receivingPerson#,
+		CASH_AUDIT_STATUS = #cashAuditStatus#,
+		AUDIT_PERSON = #auditPerson#,
+		RECEIVING_BANK_ID = #receivingBankId#,
+		OTHER_AUDIT_STATUS = #otherAuditStatus#
+		WHERE PAYMENT_DETAIL_ID = #paymentDetailId#
+	</update>
+	
+	
+	<select id="selectPaymentDetailByPK" resultMap="PayPaymentDetailResult" parameterClass="java.lang.Long">
+		SELECT * FROM PAY_PAYMENT_DETAIL WHERE PAYMENT_DETAIL_ID = #paymentDetailId#
+	</select>
+	<select id="selectPaymentDetailByPaymentId" resultMap="PayPaymentDetailResult" parameterClass="java.lang.String">
+		SELECT * FROM PAY_PAYMENT_DETAIL WHERE PAYMENT_ID = #paymentId#
+	</select>
+	
+	<sql id="pageHead" >
+		<isNotEmpty property="start">
+			SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM (
+		</isNotEmpty> 
+	</sql>
+	<sql id="pageFoot" >
+		<isNotEmpty property="orderby">
+			ORDER BY $orderby$
+			<isNotEmpty property="order">
+				$order$
+			</isNotEmpty>
+		</isNotEmpty>
+		
+		<isNotEmpty property="start">
+			) P_T ) WHERE RN BETWEEN #start#
+			<isNotEmpty property="end">
+				AND #end#
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	<sql id="selectPayPaymentDetailConditions">
+		SELECT * FROM PAY_PAYMENT_DETAIL
+		<dynamic prepend="WHERE">
+			 <isNotEmpty prepend="and" property="paymentDetailId" >
+		        PAYMENT_DETAIL_ID = #paymentDetailId#
+		     </isNotEmpty>
+			 <isNotEmpty prepend="and" property="paymentId" >
+		        PAYMENT_ID = #paymentId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="receivingCompanyId" >
+		        RECEIVING_COMPANY_ID = #receivingCompanyId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="receivingBankId" >
+		        RECEIVING_BANK_ID = #receivingBankId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="receivingPerson" >
+		        RECEIVING_PERSON = #receivingPerson#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="paymentAccount" >
+		        PAYMENT_ACCOUNT = #paymentAccount#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="paymentBankName" >
+		        PAYMENT_BANK_NAME = #paymentBankName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="paymentBankCardNo" >
+		        PAYMENT_BANK_CARD_NO = #paymentBankCardNo#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="cashLiberateMoneyPerson" >
+		        CASH_LIBERATE_MONEY_PERSON = #cashLiberateMoneyPerson#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="cashLiberateMoneyDate" >
+		        CASH_LIBERATE_MONEY_DATE = #cashLiberateMoneyDate#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="cashAuditStatus" >
+		        CASH_AUDIT_STATUS = #cashAuditStatus#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="auditPerson" >
+		        AUDIT_PERSON = #auditPerson#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="otherAuditStatus" >
+		        OTHER_AUDIT_STATUS = #otherAuditStatus#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="posTerminalNo" >
+		        POS_TERMINAL_NO = #posTerminalNo#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="belongCenter" >
+		        BELONG_CENTER = #belongCenter#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="belongDepartment" >
+		        BELONG_DEPARTMENT = #belongDepartment#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="detailName" >
+		        DETAIL_NAME = #detailName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="summary" >
+		        SUMMARY = #summary#
+		     </isNotEmpty>
+	     </dynamic>
+	</sql>
+
+	
+	<select id="selectPayPaymentDetailByParamMapCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM(
+			<include refid="selectPayPaymentDetailConditions" />
+		) TT1
+	</select>
+	<select id="selectPayPaymentDetailByParamMap" resultMap="PayPaymentDetailResult" parameterClass="java.util.Map">
+		<include refid="pageHead"/>
+			<include refid="selectPayPaymentDetailConditions"/>
+		<include refid="pageFoot"/>
+	</select>
+</sqlMap>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SEO_SITE_MAP_HTML" >
+  <typeAlias alias="seoSiteMapHtml" type="com.lvmama.comm.pet.po.seo.SeoSiteMapHtml" />
+  <resultMap id="BaseResultMap" class="seoSiteMapHtml" >
+    <result column="SEO_SITE_MAP_HTML_ID" property="seoSiteMapHtmlId" />
+    <result column="HTML_MENU_NAME" property="htmlMenuName" />
+    <result column="HTML_MENU_URL" property="htmlMenuUrl" />
+    <result column="SEQ_NUM" property="seq" />
+    <result column="PARENT_ID" property="parentId" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="UPDATE_TIME" property="updateTime" />
+  </resultMap>
+  
+  <select id="querySeoSiteMapHtmlByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+    select SEO_SITE_MAP_HTML_ID, HTML_MENU_NAME, HTML_MENU_URL, SEQ_NUM, PARENT_ID, CREATE_TIME, UPDATE_TIME
+    from SEO_SITE_MAP_HTML
+    <dynamic prepend="where">
+		<isNotEmpty property="parentId" prepend="and">
+			PARENT_ID = #parentId# 
+		</isNotEmpty>
+		<isNotEmpty property="seoSiteMapHtmlId" prepend="and">
+			 SEO_SITE_MAP_HTML_ID = #seoSiteMapHtmlId#
+		</isNotEmpty>
+	</dynamic>
+    order by SEQ_NUM
+  </select>
+  
+  <select id="queryMainSeoSiteMapHtmlNameAll" resultMap="BaseResultMap" >
+    select SEO_SITE_MAP_HTML_ID, HTML_MENU_NAME, HTML_MENU_URL, SEQ_NUM, PARENT_ID, CREATE_TIME, UPDATE_TIME
+    from SEO_SITE_MAP_HTML
+    where PARENT_ID is null and HTML_MENU_NAME in(select hmn.HTML_MENU_NAME from SEO_SITE_MAP_HTML hmn  group by hmn.HTML_MENU_NAME)
+  </select>
+  
+  <select id="queryMainSeoSiteMapHtmlAll" resultMap="BaseResultMap" >
+    select SEO_SITE_MAP_HTML_ID, HTML_MENU_NAME, HTML_MENU_URL, SEQ_NUM, PARENT_ID, CREATE_TIME, UPDATE_TIME
+    from SEO_SITE_MAP_HTML
+    where PARENT_ID is null order by SEQ_NUM
+  </select>
+  
+  <delete id="deleteSeoSiteMapHtmlByParam" parameterClass="java.util.HashMap">
+    delete from SEO_SITE_MAP_HTML
+    <dynamic prepend="where">
+		<isNotEmpty property="parentId" prepend="and">
+			PARENT_ID = #parentId# 
+		</isNotEmpty>
+		<isNotEmpty property="seoSiteMapHtmlId" prepend="and">
+			 SEO_SITE_MAP_HTML_ID = #seoSiteMapHtmlId#
+		</isNotEmpty>
+	</dynamic>
+  </delete>
+  
+  <insert id="insertSeoSiteMapHtml" parameterClass="seoSiteMapHtml" >
+    <selectKey keyProperty="seoSiteMapHtmlId" resultClass="java.lang.Long">
+		select SEO_SITE_MAP_HTML_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into SEO_SITE_MAP_HTML
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="seoSiteMapHtmlId" >
+        SEO_SITE_MAP_HTML_ID
+      </isNotNull>
+      <isNotNull prepend="," property="htmlMenuName" >
+        HTML_MENU_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="htmlMenuUrl" >
+        HTML_MENU_URL
+      </isNotNull>
+      <isNotNull prepend="," property="seq" >
+        SEQ_NUM
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        PARENT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime" >
+        UPDATE_TIME
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="seoSiteMapHtmlId" >
+        #seoSiteMapHtmlId#
+      </isNotNull>
+      <isNotNull prepend="," property="htmlMenuName" >
+        #htmlMenuName#
+      </isNotNull>
+      <isNotNull prepend="," property="htmlMenuUrl" >
+        #htmlMenuUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="seq" >
+        #seq#
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        #parentId#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime" >
+        #updateTime#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateSeoSiteMapHtml" parameterClass="seoSiteMapHtml" >
+    update SEO_SITE_MAP_HTML
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="htmlMenuName" >
+        HTML_MENU_NAME = #htmlMenuName#
+      </isNotNull>
+      <isNotNull prepend="," property="htmlMenuUrl" >
+        HTML_MENU_URL = #htmlMenuUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="seq" >
+        SEQ_NUM = #seq#
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        PARENT_ID = #parentId#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime" >
+        UPDATE_TIME = #updateTime#
+      </isNotNull>
+    </dynamic>
+    where SEO_SITE_MAP_HTML_ID = #seoSiteMapHtmlId#
+  </update>
+</sqlMap>

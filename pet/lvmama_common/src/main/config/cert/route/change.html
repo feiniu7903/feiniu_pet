@@ -1,0 +1,60 @@
+<#import "/base/func.html" as func/>
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>线路产品变更单</title>
+<style style="text/css">
+<#include "/chuanzhen.css"/>
+</style>
+</head>
+<body>
+<div class="wrap">
+	<div id="header" class="clearfix">
+	    <#include "/base/head.html"/>
+		<h1>${certificate.entity.zhEbkCertificateType}</h1>
+	</div>
+	<div class="main">
+		<#include "/base/to_target.html"/>
+		<h3 class="_mt">订单号：  ${certificate.baseInfo.orderId} <#if certificate.baseInfo.orderId_old??> <small>（原订单号：${certificate.baseInfo.orderId_old}）</small></#if></h3>
+		
+		<h4>备注栏：（游客特殊需求、调价等）</h4>
+		<div class="box border pb20">
+		    <p><@func.addMemoSpace changeInfo 40/></p>
+		</div>
+		
+		<table class="table-border table-full">
+			<tr>
+				<td class="number" colspan="5"><b>产品名称：</b><@func.showChangeContent certificate.baseInfo "metaProductName" 40/> </td>
+			</tr>
+			<tr>
+				<td class="number" colspan="5"><b>出游日期：</b><@func.showChangeContent certificate.baseInfo "visitTime"/></td>
+			</tr>
+			<tr>
+			    <td class="number">类别</td>
+				<td class="number">份数</td>
+				<td class="number">人数</td>
+				<td class="number"><@func.showPriceLabel certificate/></td>
+				<td class="number"><@func.showTotalAmountLabel certificate/></td>
+			</tr>
+			<#list items as item>
+			<tr>
+				<td class="number"><@func.showChangeContent item.baseInfo "metaBranchName" 15/></td>
+				<td class="number"><@func.showChangeContent item.baseInfo "quantity"/></td>
+				<td class="number">成人：<@func.showChangeContent item.baseInfo "adultQuantity"/> 儿童：<@func.showChangeContent item.baseInfo "childQuantity"/></td>
+				<td class="number"><@func.showChangePriceContent certificate item.baseInfo "settlementPrice"/></td>
+				<#if item_index==0>
+				<td class="number" rowspan="${items?size}"><@func.showChangePriceContent certificate certificate.baseInfo "totalSettlementPrice"/></td>
+				</#if>
+			</tr>
+			</#list>			
+		</table>
+		
+		<h4>出游人信息：</h4>
+		<#include "/base/change_traveller.html"/>
+		
+		<#include "/base/foot.html"/>
+	</div>
+</div>
+</body>
+</html>

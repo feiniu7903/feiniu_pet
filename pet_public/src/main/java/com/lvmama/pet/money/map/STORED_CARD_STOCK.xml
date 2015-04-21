@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="STORED_CARD_STOCK" >
+	<typeAlias type="com.lvmama.comm.pet.po.money.StoredCardStock" alias="StoredCardStock"/>
+	<resultMap class="com.lvmama.comm.pet.po.money.StoredCardStock" id="BaseCardStockGroup">
+		<result property="stockId" column="CARD_STOCK_ID"/>
+		<result property="stockType" column="STOCK_TYPE"/>
+		<result property="customer" column="CUSTOMER"/>
+		<result property="accepter" column="ACCEPTER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="memo" column="MEMO"/>
+		<result property="operator" column="STOCK_OPERATOR" />
+		<result property="status" column="STATUS" />
+		<result property="paymentType" column="PAYMENT_TYPE"/>
+		<result property="paymentUnit" column="PAYMENT_UNIT"/>
+		<result property="actualReceived" column="ACTUAL_RECEIVED"/>
+		<result property="paymentTime" column="PAYMENT_TIME"/>
+	</resultMap>
+	
+	<insert id="insert" parameterClass="StoredCardStock">
+		<selectKey keyProperty="stockId" resultClass="java.lang.Long">
+			SELECT STORED_CARD_STOCK_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO STORED_CARD_STOCK
+			(CARD_STOCK_ID,STOCK_TYPE,CUSTOMER,ACCEPTER,CREATE_TIME,MEMO,STOCK_OPERATOR,STATUS,PAYMENT_TYPE,PAYMENT_UNIT,ACTUAL_RECEIVED,PAYMENT_TIME)
+		VALUES(#stockId#,#stockType#,#customer#,#accepter#,#createTime#,#memo#,#operator#,#status#,#paymentType#,#paymentUnit#,#actualReceived#,#paymentTime#)		
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterClass="StoredCardStock">
+		UPDATE STORED_CARD_STOCK SET
+			STOCK_TYPE = #stockType#,
+			CUSTOMER = #customer#,
+			ACCEPTER = #accepter#,
+			CREATE_TIME = #createTime#,
+			MEMO = #memo#,
+			STOCK_OPERATOR = #operator#,
+			STATUS = #status#,
+			PAYMENT_TYPE = #paymentType#,
+			PAYMENT_UNIT = #paymentUnit#,
+			ACTUAL_RECEIVED = #actualReceived#,
+			PAYMENT_TIME = #paymentTime#
+		WHERE CARD_STOCK_ID=#stockId#
+	</update>
+	
+	<sql id="selectCardStockByParameters_SQL">
+		SELECT P.* FROM STORED_CARD_STOCK P
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="stockType">
+				P.STOCK_TYPE = #stockType#
+			</isNotEmpty>
+			<isNotEmpty property="stockId">
+				AND P.CARD_STOCK_ID = #stockId#
+			</isNotEmpty>
+			<isNotEmpty property="beginTime">
+				AND P.CREATE_TIME &gt;= #beginTime#
+			</isNotEmpty>  
+			<isNotEmpty property="endTime">
+				AND P.CREATE_TIME &lt;= #endTime#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	<select id="selectCardStockCountByParameters" parameterClass="java.util.HashMap" resultClass="java.lang.Long">
+		SELECT COUNT(*) FROM (
+			<include refid="selectCardStockByParameters_SQL"/>
+		)
+	</select>
+	<select id="selectCardStockByParameters" parameterClass="java.util.HashMap" resultMap="BaseCardStockGroup">
+		SELECT * FROM 
+		(
+			SELECT A.*,ROWNUM rn FROM
+			( 
+				<include refid="selectCardStockByParameters_SQL"/>
+				ORDER BY P.CREATE_TIME DESC
+			) A
+			<dynamic prepend="where">
+				<isNotEmpty property="endRows">
+					ROWNUM &lt;= #endRows#
+				</isNotEmpty>
+			</dynamic>
+		)
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows">
+				rn &gt;=#startRows#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="selectCardStockByStockId" parameterClass="java.lang.Long" resultMap="BaseCardStockGroup">
+		SELECT P.* FROM STORED_CARD_STOCK P
+		WHERE CARD_STOCK_ID = #stockId#
+	</select>
+</sqlMap>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="VISA_APPROVAL_DETAILS">
+	<resultMap id="VisaApprovalDetailsMap" class="com.lvmama.comm.pet.po.visa.VisaApprovalDetails">
+		<result column="DETAILS_ID" property="detailsId" />
+		<result column="VISA_APPROVAL_ID" property="visaApprovalId" />
+		<result column="TITLE" property="title" />
+		<result column="CONTENT" property="content" />
+		<result column="APPROVAL_STATUS" property="approvalStatus" />
+		<result column="MEMO" property="memo" />
+	</resultMap>
+	
+	<resultMap id="VisaVerticalApprovalDetailsMap" class="com.lvmama.comm.vo.visa.VisaApprovalDetailsVO">
+		<result column="VISA_APPROVAL_ID" property="visaApprovalId"/>
+		<result column="NAME" property="name" />
+		<result column="OCCUPATION" property="occupation" />
+		<result column="order_id" property="orderId" />
+		<result column="TITLETOSTATUS" property="titleToStatus" javaType="java.lang.String"/>
+ 	</resultMap>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.visa.VisaApprovalDetails">
+		<selectKey keyProperty="detailsId" resultClass="java.lang.Long">
+			SELECT VISA_APPROVAL_DETAILS_SEQ.NEXTVAL FROM  DUAL
+		</selectKey>
+		INSERT INTO  VISA_APPROVAL_DETAILS VALUES (#detailsId#,#visaApprovalId#,#title#,#content#,#approvalStatus#,#memo#)
+	</insert>
+
+	<delete id="delete" parameterClass="java.util.Map">
+		DELETE FROM VISA_APPROVAL_DETAILS
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="detailsId" prepend=" AND "> DETAILS_ID = #detailsId# </isNotEmpty>
+			<isNotEmpty property="visaApprovalId" prepend=" AND "> VISA_APPROVAL_ID = #visaApprovalId# </isNotEmpty>
+		</dynamic>
+	</delete>
+
+	<update id="updateApprovalStatus" parameterClass="java.util.Map">
+		UPDATE VISA_APPROVAL_DETAILS SET APPROVAL_STATUS = #approvalStatus# WHERE DETAILS_ID = #detailsId#
+	</update>
+
+	<update id="addMemo" parameterClass="java.util.Map">
+		UPDATE VISA_APPROVAL_DETAILS SET MEMO = #memo# || MEMO WHERE DETAILS_ID = #detailsId#
+	</update>
+
+	<select id="queryByPk" parameterClass="java.lang.Long" resultMap="VisaApprovalDetailsMap">
+		SELECT * FROM VISA_APPROVAL_DETAILS WHERE DETAILS_ID = #detailsId#
+	</select>
+
+	<select id="query" parameterClass="java.util.Map" resultMap="VisaApprovalDetailsMap">
+		SELECT * FROM VISA_APPROVAL_DETAILS
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="detailsId" prepend=" AND "> DETAILS_ID = #detailsId# </isNotEmpty>
+			<isNotEmpty property="visaApprovalId" prepend=" AND "> VISA_APPROVAL_ID = #visaApprovalId# </isNotEmpty>
+		</dynamic>
+		ORDER BY DETAILS_ID
+	</select>
+	<select id="queryVerticalDetailsByApprovalId" parameterClass="java.util.Map" resultMap="VisaVerticalApprovalDetailsMap">
+			 SELECT distinct t.visa_approval_id,
+                 t.NAME,
+                 t.occupation,
+                 t.order_id,
+                 WMSYS.WM_CONCAT(t.title || '~' || t.approval_status) OVER(PARTITION BY t.visa_approval_id, t.NAME, t.occupation,t.order_id)
+                 as titleToStatus
+			  from (select          s.visa_approval_id,
+			                        v.NAME,
+			                        v.occupation,
+			                        v.order_id,
+			                        s.title,
+			                        s.approval_status
+			          from lvmama_pet.VISA_APPROVAL v
+			          left join lvmama_pet.VISA_APPROVAL_DETAILS s on s.visa_approval_id =
+			                                                          v.visa_approval_id
+			     	  <dynamic prepend=" WHERE ">
+							<isNotEmpty property="visaApprovalId" prepend=" AND "> s.VISA_APPROVAL_ID = #visaApprovalId# </isNotEmpty>
+					 </dynamic>
+			         order by s.visa_approval_id, v.NAME, v.occupation) t
+	</select>
+	
+</sqlMap>

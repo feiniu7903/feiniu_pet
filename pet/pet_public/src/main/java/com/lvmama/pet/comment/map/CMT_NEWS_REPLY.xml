@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_NEWS_REPLY">
+	<resultMap class="com.lvmama.comm.vo.comment.NewsReplyVO" id="cmtNewsReplyMap">
+		<result property="cmtNewsId" column="CMT_NEWS_ID" />
+		<result property="id" column="CMT_NEWS_REPLY_ID" />
+		<result property="userName" column="USER_NAME" />
+		<result property="userId" column="USER_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="isAudit" column="IS_AUDIT" />
+	</resultMap>
+	
+	<sql id="querysql">
+		SELECT * FROM CMT_NEWS_REPLY
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="isAudits" prepend=" AND ">
+				<iterate property="isAudits" open="(" close=")" conjunction=" OR ">
+	        		IS_AUDIT = #isAudits[]# 
+	    		</iterate>
+			</isNotEmpty>
+			<isNotEmpty property="id" prepend="AND ">CMT_NEWS_REPLY_ID = #id#</isNotEmpty>
+			<isNotEmpty property="cmtNewsId" prepend="AND ">CMT_NEWS_ID = #cmtNewsId#</isNotEmpty>
+			<isNotEmpty property="startDate" prepend=" AND ">CREATE_TIME &gt;= #startDate#</isNotEmpty>
+			<isNotEmpty property="endDate" prepend=" AND ">CREATE_TIME &lt;#endDate# + 1</isNotEmpty>
+		</dynamic>
+		order by CREATE_TIME desc
+	</sql>
+	
+	<select id="queryReply" resultMap="cmtNewsReplyMap" resultClass="java.lang.Long">
+		SELECT * FROM CMT_NEWS_REPLY WHERE CMT_NEWS_ID = #cmtNewsId#
+	</select>
+
+	<select id="count" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select count(CMT_NEWS_REPLY_ID) from (<include refid="querysql" />)
+	</select>
+
+	<select id="query" resultMap="cmtNewsReplyMap" resultClass="java.util.Map">
+		select t2.*
+		from (
+			select t1.*, rownum as rn
+			from (
+			<include refid="querysql" />
+			) t1
+			<dynamic prepend=" WHERE ">
+				<isNotEmpty property="_endRow">rownum &lt;= #_endRow#
+				</isNotEmpty>
+			</dynamic>
+		) t2
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow"> rn &gt;= #_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="queryByKey" resultMap="cmtNewsReplyMap">
+		SELECT * FROM CMT_NEWS_REPLY
+		WHERE CMT_NEWS_REPLY_ID = #id#
+	</select>
+
+	<update id="update" parameterClass="com.lvmama.comm.vo.comment.NewsReplyVO">
+		UPDATE CMT_NEWS_REPLY
+		<dynamic prepend=" SET ">
+			<isNotEmpty property="isAudit" prepend=" , ">IS_AUDIT = #isAudit#</isNotEmpty>
+		</dynamic>
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty prepend=" AND " property="id">CMT_NEWS_REPLY_ID = #id#</isNotEmpty>
+		</dynamic>
+	</update>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.vo.comment.NewsReplyVO">
+		<selectKey resultClass="java.lang.Long" keyProperty="id">
+			select CMT_NEWS_REPLY_SEQ.nextval as id from DUAL
+		</selectKey>
+		INSERT INTO CMT_NEWS_REPLY
+		(CMT_NEWS_ID, CMT_NEWS_REPLY_ID, USER_NAME, CONTENT, CREATE_TIME, IS_AUDIT,USER_ID)
+		VALUES
+		(#cmtNewsId#,#id#, #userName#, #content#, sysdate, 'AUDIT_GOING',#userId#)
+	</insert>
+
+</sqlMap>

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MOBILE_HOTEL_ROOM">
+  <resultMap class="com.lvmama.comm.pet.po.mobile.MobileHotelRoom" id="BaseResultMap">
+    <result column="MOBILE_ROOM_ID" property="mobileRoomId" />
+    <result column="ROOM_ID" property="roomId" />
+    <result column="HOTEL_ID" property="hotelId" />
+    <result column="NAME" property="name" />
+    <result column="AREA" property="area" />
+    <result column="FLOOR" property="floor" />
+    <result column="BROADNETACCESS" property="broadnetaccess" />
+    <result column="BROADNETFEE" property="broadnetfee" />
+    <result column="BEDTYPE" property="bedtype" />
+    <result column="COMMENTS" property="comments" />
+    <result column="DESCRIPTION" property="description" />
+    <result column="ROOM_NODE_VERSION" property="roomNodeVersion" />
+  </resultMap>
+  <select id="selectByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoom" resultMap="BaseResultMap">
+    select MOBILE_ROOM_ID, ROOM_ID, HOTEL_ID, NAME, AREA, FLOOR, BROADNETACCESS, BROADNETFEE,
+      BEDTYPE, COMMENTS, DESCRIPTION, ROOM_NODE_VERSION
+    from MOBILE_HOTEL_ROOM
+    where MOBILE_ROOM_ID = #mobileRoomId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoom">
+    delete from MOBILE_HOTEL_ROOM
+    where MOBILE_ROOM_ID = #mobileRoomId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoom">
+    <selectKey keyProperty="mobileRoomId" resultClass="java.lang.Long">
+		SELECT mobile_hotel_room_seq.nextval FROM DUAL
+    </selectKey>
+    insert into MOBILE_HOTEL_ROOM (MOBILE_ROOM_ID, ROOM_ID, HOTEL_ID, NAME, AREA, FLOOR,
+      BROADNETACCESS, BROADNETFEE, BEDTYPE, COMMENTS, DESCRIPTION, ROOM_NODE_VERSION)
+    values (#mobileRoomId#, #roomId#, #hotelId#, #name#,
+      #area#, #floor#, #broadnetaccess#, #broadnetfee#,
+      #bedtype#, #comments#, #description#, #roomNodeVersion#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoom">
+    insert into MOBILE_HOTEL_ROOM
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="mobileRoomId">
+        MOBILE_ROOM_ID
+      </isNotNull>
+      <isNotNull prepend="," property="roomId">
+        ROOM_ID
+      </isNotNull>
+      <isNotNull prepend="," property="hotelId">
+        HOTEL_ID
+      </isNotNull>
+      <isNotNull prepend="," property="name">
+        NAME
+      </isNotNull>
+      <isNotNull prepend="," property="area">
+        AREA
+      </isNotNull>
+      <isNotNull prepend="," property="floor">
+        FLOOR
+      </isNotNull>
+      <isNotNull prepend="," property="broadnetaccess">
+        BROADNETACCESS
+      </isNotNull>
+      <isNotNull prepend="," property="broadnetfee">
+        BROADNETFEE
+      </isNotNull>
+      <isNotNull prepend="," property="bedtype">
+        BEDTYPE
+      </isNotNull>
+      <isNotNull prepend="," property="comments">
+        COMMENTS
+      </isNotNull>
+      <isNotNull prepend="," property="description">
+        DESCRIPTION
+      </isNotNull>
+      <isNotNull prepend="," property="roomNodeVersion">
+        ROOM_NODE_VERSION
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="mobileRoomId">
+        #mobileRoomId#
+      </isNotNull>
+      <isNotNull prepend="," property="roomId">
+        #roomId#
+      </isNotNull>
+      <isNotNull prepend="," property="hotelId">
+        #hotelId#
+      </isNotNull>
+      <isNotNull prepend="," property="name">
+        #name#
+      </isNotNull>
+      <isNotNull prepend="," property="area">
+        #area#
+      </isNotNull>
+      <isNotNull prepend="," property="floor">
+        #floor#
+      </isNotNull>
+      <isNotNull prepend="," property="broadnetaccess">
+        #broadnetaccess#
+      </isNotNull>
+      <isNotNull prepend="," property="broadnetfee">
+        #broadnetfee#
+      </isNotNull>
+      <isNotNull prepend="," property="bedtype">
+        #bedtype#
+      </isNotNull>
+      <isNotNull prepend="," property="comments">
+        #comments#
+      </isNotNull>
+      <isNotNull prepend="," property="description">
+        #description#
+      </isNotNull>
+      <isNotNull prepend="," property="roomNodeVersion">
+        #roomNodeVersion#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoom">
+    update MOBILE_HOTEL_ROOM
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="roomId">
+        ROOM_ID = #roomId#
+      </isNotNull>
+      <isNotNull prepend="," property="hotelId">
+        HOTEL_ID = #hotelId#
+      </isNotNull>
+      <isNotNull prepend="," property="name">
+        NAME = #name#
+      </isNotNull>
+      <isNotNull prepend="," property="area">
+        AREA = #area#
+      </isNotNull>
+      <isNotNull prepend="," property="floor">
+        FLOOR = #floor#
+      </isNotNull>
+      <isNotNull prepend="," property="broadnetaccess">
+        BROADNETACCESS = #broadnetaccess#
+      </isNotNull>
+      <isNotNull prepend="," property="broadnetfee">
+        BROADNETFEE = #broadnetfee#
+      </isNotNull>
+      <isNotNull prepend="," property="bedtype">
+        BEDTYPE = #bedtype#
+      </isNotNull>
+      <isNotNull prepend="," property="comments">
+        COMMENTS = #comments#
+      </isNotNull>
+      <isNotNull prepend="," property="description">
+        DESCRIPTION = #description#
+      </isNotNull>
+      <isNotNull prepend="," property="roomNodeVersion">
+        ROOM_NODE_VERSION = #roomNodeVersion#
+      </isNotNull>
+    </dynamic>
+    where MOBILE_ROOM_ID = #mobileRoomId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoom">
+    update MOBILE_HOTEL_ROOM
+    set ROOM_ID = #roomId#,
+      HOTEL_ID = #hotelId#,
+      NAME = #name#,
+      AREA = #area#,
+      FLOOR = #floor#,
+      BROADNETACCESS = #broadnetaccess#,
+      BROADNETFEE = #broadnetfee#,
+      BEDTYPE = #bedtype#,
+      COMMENTS = #comments#,
+      DESCRIPTION = #description#,
+      ROOM_NODE_VERSION = #roomNodeVersion#
+    where MOBILE_ROOM_ID = #mobileRoomId#
+  </update>
+  
+   <!-- 分页查询 头部 -->
+  <sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+  </sql>
+  
+  <!-- 分页查询 尾部 -->
+  <sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>		
+		</dynamic>
+  </sql>
+  
+   <!-- 查询条件 -->
+  <sql id="queryListWhere">
+      <dynamic prepend=" WHERE ">
+          <isEmpty property="hotelId" prepend=" AND "> 1 = 1 </isEmpty>
+		  <isNotEmpty prepend=" AND " property="hotelId" >
+	        HOTEL_ID = #hotelId#
+	      </isNotEmpty>
+	       <isNotEmpty prepend=" AND " property="mobileRoomId" >
+	        MOBILE_ROOM_ID = #mobileRoomId#
+	      </isNotEmpty>
+	       <isNotEmpty prepend=" AND " property="roomId" >
+	        ROOM_ID = #"roomId"#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="name" >
+	        NAME = #name#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="area" >
+	        AREA = #area#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="floor" >
+	        FLOOR = #floor#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="broadnetaccess" >
+	        BROADNETACCESS = #broadnetaccess#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="broadnetfee" >
+	        BROADNETFEE = #broadnetfee#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="bedtype" >
+	        BEDTYPE = #bedtype#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="comments" >
+	        COMMENTS = #comments#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="description" >
+	        DESCRIPTION = #description#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="roomNodeVersion" >
+	        ROOM_NODE_VERSION = #roomNodeVersion#
+	      </isNotEmpty>
+		</dynamic>
+		  order by HOTEL_ID desc
+  </sql>
+  
+  <!-- 查询列表  -->
+  <select id="queryMobileHotelRoomList" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="isPaging">
+		  <include refid="pageHeader"/>
+		</isNotEmpty>
+		SELECT * FROM MOBILE_HOTEL_ROOM
+		<include refid="queryListWhere"/>
+		<isNotEmpty property="isPaging">
+		   <include refid="pageFooter"/>
+		</isNotEmpty>
+   </select>
+
+  
+    <!-- 总数  -->
+	<select id="countMobileHotelRoomList" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		SELECT COUNT(*) FROM MOBILE_HOTEL_ROOM
+		<include refid="queryListWhere"/>
+	</select>
+</sqlMap>

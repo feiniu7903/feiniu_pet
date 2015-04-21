@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MOBILE_HOTEL_ORDER_VISITOR" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.MobileHotelOrderVisitor" >
+    <result column="MOBILE_HOTEL_ORDER_VISITOR_ID" property="mobileHotelOrderVisitorId" />
+    <result column="LV_HOTEL_ORDER_ID" property="lvHotelOrderId" />
+    <result column="NAME" property="name" />
+    <result column="MOBILE" property="mobile" />
+    <result column="CREATED_TIME" property="createdTime" />
+    <result column="USER_ID" property="userId" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrderVisitor" >
+    select MOBILE_HOTEL_ORDER_VISITOR_ID, LV_HOTEL_ORDER_ID, NAME, MOBILE, CREATED_TIME, USER_ID
+    from MOBILE_HOTEL_ORDER_VISITOR
+    where MOBILE_HOTEL_ORDER_VISITOR_ID = #mobileHotelOrderVisitorId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrderVisitor" >
+    delete from MOBILE_HOTEL_ORDER_VISITOR
+    where MOBILE_HOTEL_ORDER_VISITOR_ID = #mobileHotelOrderVisitorId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrderVisitor" >
+  	<selectKey keyProperty="mobileHotelOrderVisitorId" resultClass="java.lang.Long">
+		SELECT MOBILE_HOTEL_ORDER_VISITOR_SEQ.nextval FROM DUAL
+	</selectKey>
+    insert into MOBILE_HOTEL_ORDER_VISITOR (MOBILE_HOTEL_ORDER_VISITOR_ID, LV_HOTEL_ORDER_ID, NAME,
+      MOBILE, CREATED_TIME, USER_ID)
+    values (#mobileHotelOrderVisitorId#, #lvHotelOrderId#, #name#,
+      #mobile#, #createdTime#, #userId#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrderVisitor" >
+    <selectKey keyProperty="mobileHotelOrderVisitorId" resultClass="java.lang.Long">
+		SELECT MOBILE_HOTEL_ORDER_VISITOR_SEQ.nextval FROM DUAL
+	</selectKey>
+    insert into MOBILE_HOTEL_ORDER_VISITOR
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="mobileHotelOrderVisitorId" >
+        MOBILE_HOTEL_ORDER_VISITOR_ID
+      </isNotNull>
+      <isNotNull prepend="," property="lvHotelOrderId" >
+        LV_HOTEL_ORDER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        NAME
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        MOBILE
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        CREATED_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        USER_ID
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="mobileHotelOrderVisitorId" >
+        #mobileHotelOrderVisitorId#
+      </isNotNull>
+      <isNotNull prepend="," property="lvHotelOrderId" >
+        #lvHotelOrderId#
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        #name#
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        #mobile#
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        #createdTime#
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        #userId#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrderVisitor" >
+    update MOBILE_HOTEL_ORDER_VISITOR
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="lvHotelOrderId" >
+        LV_HOTEL_ORDER_ID = #lvHotelOrderId#
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        NAME = #name#
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        MOBILE = #mobile#
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        CREATED_TIME = #createdTime#
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        USER_ID = #userId#
+      </isNotNull>
+    </dynamic>
+    where MOBILE_HOTEL_ORDER_VISITOR_ID = #mobileHotelOrderVisitorId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrderVisitor" >
+    update MOBILE_HOTEL_ORDER_VISITOR
+    set LV_HOTEL_ORDER_ID = #lvHotelOrderId#,
+      NAME = #name#,
+      MOBILE = #mobile#,
+      CREATED_TIME = #createdTime#,
+      USER_ID = #userId#
+    where MOBILE_HOTEL_ORDER_VISITOR_ID = #mobileHotelOrderVisitorId#
+  </update>
+  
+  <!-- 根据用户ID,订单ID获取入住人信息  -->
+  <select id="selectByParams"  resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrderVisitor" >
+    select MOBILE_HOTEL_ORDER_VISITOR_ID, LV_HOTEL_ORDER_ID, NAME, MOBILE, CREATED_TIME, USER_ID
+    from MOBILE_HOTEL_ORDER_VISITOR
+    where USER_ID=#userId# and LV_HOTEL_ORDER_ID=#lvHotelOrderId# order by CREATED_TIME desc
+  </select>
+  
+</sqlMap>

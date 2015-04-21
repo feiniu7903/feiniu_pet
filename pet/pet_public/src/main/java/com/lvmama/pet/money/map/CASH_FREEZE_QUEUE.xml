@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CASH_FREEZE_QUEUE">
+	<!-- 别名 -->
+    <typeAlias alias="cashFreezeQueue" type="com.lvmama.comm.pet.po.money.CashFreezeQueue"/>
+	<!-- 查询结果集 -->
+    <resultMap id="cashFreezeQueueResult" class="cashFreezeQueue">
+        <result property="freezeQueueId" column="FREEZE_QUEUE_ID"/>
+        <result property="cashAccountId" column="CASH_ACCOUNT_ID"/>
+        <result property="cashDrawId" column="CASH_DRAW_ID"/>
+        <result property="freezeAmount" column="FREEZE_AMOUNT"/>
+        <result property="createTime" column="CREATE_TIME"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	FREEZE_QUEUE_ID ,
+        	CASH_ACCOUNT_ID ,
+        	CASH_DRAW_ID ,
+        	FREEZE_AMOUNT ,
+        	CREATE_TIME 
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="freezeQueueId">
+	             FREEZE_QUEUE_ID = #freezeQueueId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="cashAccountId">
+	             CASH_ACCOUNT_ID = #cashAccountId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="cashDrawId">
+	             CASH_DRAW_ID = #cashDrawId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="freezeAmount">
+	             FREEZE_AMOUNT = #freezeAmount#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="cashFreezeQueue">
+				<selectKey keyProperty="freezeQueueId" resultClass="java.lang.Long">
+					SELECT CASH_FREEZE_QUEUE_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        CASH_FREEZE_QUEUE (
+        	FREEZE_QUEUE_ID ,
+        	CASH_ACCOUNT_ID ,
+        	CASH_DRAW_ID ,
+        	FREEZE_AMOUNT ,
+        	CREATE_TIME 
+        ) VALUES (
+        	#freezeQueueId# ,
+        	#cashAccountId# ,
+        	#cashDrawId# ,
+        	#freezeAmount# ,
+        	#createTime# 
+        )
+    ]]>
+    </insert>
+    
+    <insert id="freezeDrawAmount" parameterClass="java.util.Map">
+		<![CDATA[
+			INSERT INTO CASH_FREEZE_QUEUE
+			  (FREEZE_QUEUE_ID, CASH_ACCOUNT_ID, CASH_DRAW_ID, FREEZE_AMOUNT, CREATE_TIME)
+			VALUES
+			  (CASH_FREEZE_QUEUE_SEQ.NEXTVAL,
+			   #cashAccountId#,
+			   #cashDrawId#,
+			   #drawAmount#,
+			   SYSDATE)
+		]]>
+	</insert>
+	<delete id="unfreezeDrawAmount" parameterClass="java.lang.Long">
+		<![CDATA[
+			DELETE FROM CASH_FREEZE_QUEUE
+ 				WHERE CASH_DRAW_ID = #cashDrawId#
+		]]>
+	</delete>
+</sqlMap>

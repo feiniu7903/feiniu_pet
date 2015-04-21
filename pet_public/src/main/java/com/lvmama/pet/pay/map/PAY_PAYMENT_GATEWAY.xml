@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PAY_PAYMENT_GATEWAY">
+	<resultMap id="PayPaymentGatewayResult" class="com.lvmama.comm.pet.po.pay.PayPaymentGateway">
+		<result column="PAYMENT_GATEWAY_ID" property="paymentGatewayId" />
+		<result column="GATEWAY" property="gateway" />
+		<result column="GATEWAY_NAME" property="gatewayName" />
+		<result column="IS_ALLOW_REFUND" property="isAllowRefund" />
+		<result column="REFUND_GATEWAY" property="refundGateway" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="GATEWAY_STATUS" property="gatewayStatus" />
+		<result column="GATEWAY_TYPE" property="gatewayType" />
+		<result column="REFUND_ORDER" property="refundOrder" />
+	</resultMap>
+	
+    <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.PayPaymentGateway" >
+	    <selectKey resultClass="java.lang.Long" keyProperty="paymentGatewayId">
+				select PAY_PAYMENT_GATEWAY_SEQ.nextval as id from DUAL
+		</selectKey>
+	    insert into PAY_PAYMENT_GATEWAY (PAYMENT_GATEWAY_ID, GATEWAY, GATEWAY_NAME, IS_ALLOW_REFUND, REFUND_GATEWAY, CREATE_TIME, GATEWAY_STATUS, GATEWAY_TYPE, REFUND_ORDER)
+		values (#paymentGatewayId#, #gateway#, #gatewayName#, #isAllowRefund#, #refundGateway#, #createTime#, #gatewayStatus#, #gatewayType#, #refundOrder#)
+   </insert>
+   <update id="update" parameterClass="com.lvmama.comm.pet.po.pay.PayPaymentGateway">
+		update PAY_PAYMENT_GATEWAY
+		SET
+		GATEWAY_NAME = #gatewayName#,
+		IS_ALLOW_REFUND = #isAllowRefund#,
+		REFUND_GATEWAY = #refundGateway#,
+		GATEWAY_STATUS = #gatewayStatus#,
+		GATEWAY_TYPE = #gatewayType#,
+		REFUND_ORDER = #refundOrder#
+		wHERE PAYMENT_GATEWAY_ID = #paymentGatewayId#
+	</update>
+	
+	
+	<select id="selectPaymentGatewayByPK" resultMap="PayPaymentGatewayResult" parameterClass="java.lang.Long">
+		SELECT * FROM PAY_PAYMENT_GATEWAY WHERE PAYMENT_GATEWAY_ID = #paymentGatewayId#
+	</select>
+	<select id="selectPaymentGatewayByGateway" resultMap="PayPaymentGatewayResult" parameterClass="java.lang.String">
+		SELECT * FROM PAY_PAYMENT_GATEWAY WHERE GATEWAY = #gateway#
+	</select>
+	
+	<sql id="pageHead" >
+		<isNotEmpty property="start">
+			SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM (
+		</isNotEmpty> 
+	</sql>
+	<sql id="pageFoot" >
+		<isNotEmpty property="orderby">
+			ORDER BY $orderby$
+			<isNotEmpty property="order">
+				$order$
+			</isNotEmpty>
+		</isNotEmpty>
+		
+		<isNotEmpty property="start">
+			) P_T ) WHERE RN BETWEEN #start#
+			<isNotEmpty property="end">
+				AND #end#
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	<sql id="selectPayPaymentGatewayConditions">
+		SELECT * FROM PAY_PAYMENT_GATEWAY
+		<dynamic prepend="WHERE">
+			 <isNotEmpty prepend="and" property="paymentGatewayId" >
+		        PAYMENT_GATEWAY_ID = #paymentGatewayId#
+		     </isNotEmpty>
+			 <isNotEmpty prepend="and" property="gateway" >
+		        GATEWAY = #gateway#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="gatewayName" >
+		        GATEWAY_NAME = #gatewayName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="isAllowRefund" >
+		        IS_ALLOW_REFUND = #isAllowRefund#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="refundGateway" >
+		        REFUND_GATEWAY = #refundGateway#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="gatewayStatus" >
+		        GATEWAY_STATUS = #gatewayStatus#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="gatewayType" >
+		        GATEWAY_TYPE = #gatewayType#
+		     </isNotEmpty>
+		     
+		     <isNotEmpty prepend="and" property="gatewayLike" >
+		     	GATEWAY LIKE '%'||#gatewayLike#||'%'
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="gatewayNameLike" >
+		        GATEWAY_NAME LIKE '%'||#gatewayNameLike#||'%'
+		     </isNotEmpty>
+		     <isNotEmpty prepend="and" property="refundGatewayLike" >
+		        REFUND_GATEWAY LIKE '%'||#refundGatewayLike#||'%'
+		     </isNotEmpty>
+	     </dynamic>
+	</sql>
+
+	
+	<select id="selectPayPaymentGatewayByParamMapCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM(
+			<include refid="selectPayPaymentGatewayConditions" />
+		) TT1
+	</select>
+	<select id="selectPayPaymentGatewayByParamMap" resultMap="PayPaymentGatewayResult" parameterClass="java.util.Map">
+		<include refid="pageHead"/>
+			<include refid="selectPayPaymentGatewayConditions"/>
+		<include refid="pageFoot"/>
+	</select>
+</sqlMap>

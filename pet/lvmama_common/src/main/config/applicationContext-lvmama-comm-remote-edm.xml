@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+     <!-- EDM服务 -->
+    <bean id="edmSubscribeService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${operate.serviceUrl}/edmSubscribeService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.edm.EdmSubscribeService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="edmSubscribeInfoService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${operate.serviceUrl}/edmSubscribeInfoService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.edm.EdmSubscribeInfoService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="hqEMailSenderService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${operate.serviceUrl}/hqEMailSenderService" />
+        <property name="serviceInterface" value="com.lvmama.comm.edm.IHqEMailSenderService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <!-- EDM服务 -->
+</beans>

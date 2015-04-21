@@ -1,0 +1,38 @@
+<?page title="修改现金账户支付手机号" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./modifyCashPayMNwin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window title="修改现金账户支付手机号" border="normal"
+		apply="com.lvmama.pet.web.user.manager.ModifyCashPayMobileNumberAction" id="modifyCashPayMNwin" width="100px">
+		<grid id="conditions">
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+			     <hbox>用户名：</hbox>
+			     <hbox>
+			      <label value="@{saction.userName}"/>
+			     </hbox>
+			    </row>
+			    <row>
+			     <hbox>旧支付手机号：</hbox>
+			     <hbox>
+			      <label value="@{saction.oldMobile}"/>
+			     </hbox>
+			    </row>
+			    <row>
+			     <hbox>新支付手机号：</hbox>
+			     <hbox>
+			      <textbox id="newMobile" value="@{saction.newMobile}"/>
+			     </hbox>
+			    </row>
+				<row spans="2,0" align="right">
+					<hbox>
+						<button label="确认" id="confirm" width="80px" onClick='saction.doSubmit();' />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+
+</zk>

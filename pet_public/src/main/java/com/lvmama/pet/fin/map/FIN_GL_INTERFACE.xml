@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FIN_GL_INTERFACE">
+	<typeAlias alias="FinGLInterface" type="com.lvmama.comm.pet.po.fin.FinGLInterface" />
+	<resultMap id="FinGLInterfaceMap" class="com.lvmama.comm.pet.po.fin.FinGLInterface">
+		<result column="GL_INTERFACE_ID" property="glInterfaceId" />
+		<result column="TICKED_NO" property="tickedNo" />
+		<result column="BATCH_NO" property="batchNo" />
+		<result column="MAKE_BILL_TIME" property="makeBillTime" />
+		<result column="SUMMARY" property="summary" />
+		<result column="BORROWER_SUBJECT_CODE" property="borrowerSubjectCode" />
+		<result column="BORROWER_SUBJECT_NAME" property="borrowerSubjectName" />
+		<result column="BORROWER_AMOUNT" property="borrowerAmount" />
+		<result column="LENDER_SUBJECT_CODE" property="lenderSubjectCode" />
+		<result column="LENDER_SUBJECT_NAME" property="lenderSubjectName" />
+		<result column="LENDER_AMOUNT" property="lenderAmount" />
+		<result column="ORGANIZE_CODE" property="organizeCode" />
+		<result column="PERSON_CODE" property="personCode" />
+		<result column="PRODUCT_CODE" property="productCode" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="CUSTOM_CODE" property="customCode" />
+		<result column="CUSTOM_NAME" property="customName" />
+		<result column="SUPPLIER_CODE" property="supplierCode" />
+		<result column="SUPPLIER_NAME" property="supplierName" />
+		<result column="EXT1" property="ext1" />
+		<result column="EXT2" property="ext2" />
+		<result column="EXT3" property="ext3" />
+		<result column="EXT4" property="ext4" />
+		<result column="EXT5" property="ext5" />
+		<result column="EXT6" property="ext6" />
+		<result column="EXT7" property="ext7" />
+		<result column="EXT8" property="ext8" />
+		<result column="EXT9" property="ext9" />
+		<result column="EXT10" property="ext10" />
+		<result column="EXT11" property="ext11" />
+		<result column="MEMO" property="memo" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="PROOF_TYPE" property="proofType" />
+		<result column="ACCOUNT_BOOK_ID" property="accountBookId" />
+		<result column="RECEIVABLES_STATUS" property="receivablesStatus" />
+		<result column="RECEIVABLES_RESULT" property="receivablesResult" />
+		<result column="ACCOUNT_TYPE" property="accountType"/>
+		<result column="IS_STD" property="isStd"/>
+		<result column="IS_TRANSFER" property="isTransfer"/>
+		<result column="INO_ID" property="inoId"/>
+		<result column="RECON_RESULT_ID" property="reconResultId"/>
+	</resultMap>
+	<resultMap id="finGLInterfaceDTOParamResult" class="com.lvmama.comm.pet.po.fin.FinGLInterfaceDTO">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="GL_STATUS" property="glStatus" />
+		<result column="REFUNDED_AMOUNT" property="refundedAmount" />
+		<result column="PAID_AMOUNT" property="paidAmount" />
+		<result column="IS_FOREGIN"  property="isForegin"/>
+		<result column="REGION_NAME"  property="regionName"/>
+		<result column="PHYSICAL"  property="physical"/>
+		<result column="TRAVEL_GROUP_CODE" property="travelGroupCode"/>
+	</resultMap>
+	<resultMap id="finGLInterfaceDTORefundedParamResult" class="com.lvmama.comm.pet.po.fin.FinGLInterfaceDTO">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="GL_STATUS" property="glStatus" />
+		<result column="REFUNDED_AMOUNT" property="refundedAmount" />
+		<result column="PAID_AMOUNT" property="paidAmount" />
+		<result column="IS_FOREGIN"  property="isForegin"/>
+		<result column="REGION_NAME"  property="regionName"/>
+		<result column="PHYSICAL"  property="physical"/>
+		<result column="REFUNDMENT_ID"  property="refundmentId"/>
+		<result column="PENALTY_AMOUNT"  property="penaltyAmount"/>
+		<result column="AMOUNT"  property="amount"/>
+		<result column="REFUND_TIME"  property="refundTime"/>
+		<result column="ORD_ITEM_PROD_ID"  property="ordItemProdId"/>
+		<result column="BRANCH_NAME"  property="branchName"/>
+		<result column="RECON_GL_STATUS" property="reconGlStatus"/>
+		<result column="RECON_RESULT_ID" property="reconResultId"/>
+		<result column="TRAVEL_GROUP_CODE" property="travelGroupCode"/>
+	</resultMap>
+	<resultMap id="refundedmentDTOParamResult" class="com.lvmama.comm.pet.po.fin.FinGLInterfaceDTO">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="GL_STATUS" property="glStatus" />
+		<result column="PAID_AMOUNT" property="paidAmount" />
+		<result column="IS_FOREGIN"  property="isForegin"/>
+		<result column="REGION_NAME"  property="regionName"/>
+		<result column="PHYSICAL"  property="physical"/>
+		<result column="CANCEL_TIME"  property="cancelTime"/>
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="ORI_ORDER_ID"  property="oriOrderId"/>
+	</resultMap>
+	<resultMap id="finGLInterfaceDTOPayment" class="com.lvmama.comm.pet.po.fin.FinGLInterfaceDTO">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="PAYMENT_STATUS" property="paymentStatus" />
+		<result column="ACTUAL_PAY" property="actualPay" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="GL_STATUS" property="glStatus" />
+		<result column="PAYMENT_FINISH_TIME" property="paymentFinishTime"/>
+	</resultMap>
+	<resultMap id="transOrderDTO" class="com.lvmama.comm.pet.po.fin.FinGLInterfaceDTO">
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="CANCEL_TIME"  property="cancelTime"/>
+	</resultMap>
+	<sql id="selectByBatchSql">
+		SELECT I.*,
+		       DENSE_RANK() OVER(ORDER BY TRUNC(I.MAKE_BILL_TIME) ASC, I.BATCH_NO ASC) FARE_RANK
+		  FROM FIN_GL_INTERFACE I
+		 WHERE I.RECEIVABLES_STATUS IS NULL
+		   AND I.ACCOUNT_TYPE != 'GROUP_COST'
+		   AND I.ACCOUNT_TYPE != 'ORDER_COST'
+		 ORDER BY TRUNC(I.MAKE_BILL_TIME) ASC, I.BATCH_NO ASC
+	</sql>
+	<select id="selectByBatchCount" resultClass="long">
+		SELECT MAX(A.FARE_RANK) FROM (<include refid="selectByBatchSql"/>) A
+	</select>
+	<select id="selectByBatch" resultMap="FinGLInterfaceMap"  parameterClass="java.util.HashMap">
+		SELECT A.*, '' IS_TRANSFER
+		  FROM (<include refid="selectByBatchSql"/>) A
+		 <dynamic prepend=" WHERE "> 
+		 	<isNotEmpty  prepend=" AND " property ="start" > FARE_RANK &gt;= #start# </isNotEmpty>
+		 	<isNotEmpty  prepend=" AND " property ="end" > FARE_RANK &lt;= #end#  </isNotEmpty>
+		 </dynamic>
+		 ORDER BY FARE_RANK
+	</select>
+
+	<update id="updateStatus" parameterClass="java.util.HashMap">
+		UPDATE
+		fin_gl_interface i
+		SET
+		i.receivables_status = #receivablesStatus#,
+		i.receivables_result = #receivablesResult#,
+		i.ino_id = #inoId#
+		<dynamic>
+			where 1=1
+			<isNotEmpty property="batchNo" prepend="AND">
+				i.batch_no = #batchNo#
+			</isNotEmpty>
+			<isNotEmpty property="id" prepend="AND">
+				i.GL_INTERFACE_ID = #id#
+			</isNotEmpty>
+			<isNotEmpty property="errorFlag" prepend="AND">
+				i.receivables_status is null
+			</isNotEmpty>
+		</dynamic>
+	</update>
+
+	<update id="updateStatusNull" parameterClass="java.util.HashMap">
+		UPDATE
+		fin_gl_interface i
+		SET i.receivables_status = null,
+		i.receivables_result= null
+		WHERE i.receivables_status =#receivablesStatus#
+	</update>
+	<sql id="paramsSql">
+		<dynamic>
+			<isNotEmpty prepend="and" property="finStatus">
+				i.RECEIVABLES_STATUS =#finStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="isNullFlag">
+				i.RECEIVABLES_STATUS IS NULL
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="beginTime">
+				to_char(i.MAKE_BILL_TIME,'yyyy-MM-dd')<![CDATA[>=]]>to_char(#beginTime#,'yyyy-MM-dd')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="endTime">
+				to_char(i.MAKE_BILL_TIME,'yyyy-MM-dd')<![CDATA[<=]]>to_char(#endTime#,'yyyy-MM-dd')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="glInterfaceId">
+				i.GL_INTERFACE_ID = #glInterfaceId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="accountType">
+				i.ACCOUNT_TYPE =#accountType#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and " property="accountTypes">
+				i.ACCOUNT_TYPE in
+				<iterate open="(" close=")" conjunction=","	property="accountTypes">
+					#accountTypes[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="tickedNo">
+				i.TICKED_NO =#tickedNo#
+			</isNotEmpty>
+		</dynamic>	
+	</sql>
+	<select id="selectRowCount" resultClass="java.lang.Long">
+		select count(*) from fin_gl_interface i
+		where 1=1 <include refid="paramsSql"/>
+	</select>
+
+	<select id="selectByCondition" resultMap="FinGLInterfaceMap"
+		parameterClass="java.util.HashMap">
+		SELECT A.*,
+	       (CASE
+	         WHEN ACCOUNT_TYPE NOT IN ('NORMAL_DRAWCASH',
+	                                   'REFUND_FEE',
+	                                   'FEE',
+	                                   'CASH_ACCOUNT_RECHARGE',
+	                                   'GUEST_DRAWCASH',
+	                                   'GROUP_COST') AND
+	              (SELECT COUNT(1)
+	                 FROM ORD_ORDER O
+	                WHERE (O.ORDER_ID = TO_NUMBER(A.TICKED_NO) AND
+	                      O.ORI_ORDER_ID IS NOT NULL)
+	                   OR O.ORI_ORDER_ID = TO_NUMBER(A.TICKED_NO)) > 0 THEN
+	          'Y'
+	         ELSE
+	          'N'
+	       END) IS_TRANSFER FROM
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM
+		(
+		select i.* from
+		fin_gl_interface i
+		where 1=1 <include refid="paramsSql"/> 
+		order by i.GL_INTERFACE_ID desc
+		) T WHERE ROWNUM &lt;= #_endRow#
+		) A
+		WHERE
+		ROWNUM1 &gt;=#_startRow#
+	</select>
+
+	<insert id="insert" parameterClass="FinGLInterface">
+		INSERT INTO
+		FIN_GL_INTERFACE(
+			GL_INTERFACE_ID,TICKED_NO,BATCH_NO,MAKE_BILL_TIME,SUMMARY,BORROWER_SUBJECT_CODE,BORROWER_SUBJECT_NAME,
+			BORROWER_AMOUNT,LENDER_SUBJECT_CODE,LENDER_SUBJECT_NAME,LENDER_AMOUNT,ORGANIZE_CODE,PERSON_CODE,PRODUCT_CODE,
+			PRODUCT_NAME,CUSTOM_CODE,CUSTOM_NAME,SUPPLIER_CODE,SUPPLIER_NAME,EXT1,EXT2,EXT3,EXT4,EXT5,EXT6,EXT7,
+			EXT8,EXT9,EXT10,EXT11,MEMO,CREATE_TIME,PROOF_TYPE,ACCOUNT_BOOK_ID,RECEIVABLES_STATUS,RECEIVABLES_RESULT,ACCOUNT_TYPE,IS_STD,RECON_RESULT_ID
+		)
+		VALUES(
+			FIN_GL_INTERFACE_SEQ.NEXTVAL,#tickedNo#,#batchNo#,TRUNC(#makeBillTime#),#summary#,#borrowerSubjectCode#,
+			#borrowerSubjectName#,#borrowerAmount#,#lenderSubjectCode#,#lenderSubjectName#,#lenderAmount#,
+			#organizeCode#,#personCode#,#productCode#,#productName#,#customCode#,#customName#,#supplierCode#,
+			#supplierName#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#,#ext6#,#ext7#,#ext8#,#ext9#,#ext10#,#ext11#,
+			#memo#,sysdate,#proofType#,#accountBookId#,#receivablesStatus#,#receivablesResult#,#accountType#,#isStd#,#reconResultId#)
+	</insert>
+	
+	<update id="update" parameterClass="FinGLInterface">
+		UPDATE
+			FIN_GL_INTERFACE i
+		SET
+			i.BORROWER_SUBJECT_CODE = #borrowerSubjectCode#,
+			i.LENDER_SUBJECT_CODE = #lenderSubjectCode#,
+			i.PROOF_TYPE = #proofType#,
+			i.ACCOUNT_BOOK_ID = #accountBookId#
+		<dynamic>
+			where 1=1
+			<isNotEmpty prepend="and" property="glInterfaceId">
+				i.GL_INTERFACE_ID = #glInterfaceId#
+			</isNotEmpty>
+		</dynamic>
+	</update>
+	
+	
+	<select id="selectOrderInfo" parameterClass="java.lang.Long" resultClass="java.util.HashMap">
+		SELECT n.ORI_ORDER_ID AS ORI_ORDER_ID, o.GL_STATUS AS GL_STATUS,TO_CHAR(O.VISIT_TIME,'YYYY-MM-DD') VISIT_TIME
+		  FROM ORD_ORDER n, ORD_ORDER O
+		 WHERE n.order_id = #orderId#
+		   and n.ori_order_id = o.order_id
+	</select>
+	
+	<select id="selectPaidNoForCancePrePay" parameterClass="java.lang.Long" resultClass="java.lang.Long">
+		select count(1)
+		  from lvmama_pet.pay_payment p, lvmama_pet.pay_pre_payment pp
+		 where p.payment_id = pp.payment_id
+		   and pp.status = 'PRE_SUCC'
+		   and p.object_id = #orderId#
+   </select>
+	
+	<select id="selectCancelToCreateNewOrderInfo" parameterClass="java.lang.Long" resultMap="refundedmentDTOParamResult">
+		SELECT 
+		ORD.ORDER_ID AS ORDER_ID,
+		ORD.ORI_ORDER_ID AS ORI_ORDER_ID,
+		ORD.GL_STATUS AS GL_STATUS,
+		ORD.FILIALE_NAME AS FILIALE_NAME,
+		ORDPD.PRODUCT_ID AS PRODUCT_ID,
+		ORDPD.PRODUCT_NAME AS PRODUCT_NAME,
+		ORDPD.PRODUCT_TYPE AS PRODUCT_TYPE,
+		ORDPD.SUB_PRODUCT_TYPE AS SUB_PRODUCT_TYPE,
+		ORDPD.VISIT_TIME AS VISIT_TIME,
+		ORDPD.PAID_AMOUNT AS PAID_AMOUNT,
+		ORD.CANCEL_TIME AS CANCEL_TIME,
+		PROD.IS_FOREGIN AS IS_FOREGIN,
+		PROD.REGION_NAME AS REGION_NAME,
+		PROD.PHYSICAL AS PHYSICAL
+		FROM ORD_ORDER ORD,ORD_ORDER_ITEM_PROD ORDPD,PROD_PRODUCT PROD
+		WHERE ORD.ORDER_ID=ORDPD.ORDER_ID and ORDPD.PRODUCT_ID=PROD.PRODUCT_ID
+		AND ORDPD.PAID_AMOUNT > 0
+		AND ORD.ORDER_ID=#orderId#
+	</select>
+	
+	<select id="selectOrdOrderItemProdByOrderId" resultClass="java.util.HashMap" parameterClass="java.lang.Long">
+		SELECT O.ORDER_ID,
+		       O.ORDER_STATUS,
+		       O.OUGHT_PAY,
+		       O.ACTUAL_PAY,
+		       O.REFUNDED_AMOUNT,
+		       I.PRODUCT_ID,
+		       I.PRODUCT_BRANCH_ID,
+		       I.PRODUCT_NAME,
+		       I.PRODUCT_TYPE,
+		       I.SUB_PRODUCT_TYPE,
+		       I.PRICE,
+		       I.QUANTITY,
+		       B.BRANCH_NAME
+		  FROM ORD_ORDER O, ORD_ORDER_ITEM_PROD I, PROD_PRODUCT_BRANCH B
+		 WHERE O.ORDER_ID = I.ORDER_ID
+		   AND I.PRODUCT_BRANCH_ID = B.PROD_BRANCH_ID
+		   AND O.ORDER_ID=#value#
+	</select>
+	<select id="selectRefundedPordByAccountId" resultMap="finGLInterfaceDTORefundedParamResult" parameterClass="java.lang.Long">
+	SELECT DISTINCT O.ORDER_ID,
+	       O.VISIT_TIME,
+	       I.PAID_AMOUNT,
+	       R.REFUNDMENT_ID,
+	       R.PENALTY_AMOUNT,
+	       R.AMOUNT,
+	       R.REFUND_TIME,
+	       P.ORD_ITEM_PROD_ID,
+	       P.REFUNDED_AMOUNT,
+	       I.PRODUCT_ID,
+	       PP.PRODUCT_NAME,
+	       I.PRODUCT_TYPE,
+	       I.SUB_PRODUCT_TYPE,
+	       B.BRANCH_NAME,
+	       O.FILIALE_NAME,
+	       PP.IS_FOREGIN,
+	       PP.REGION_NAME,
+	       PP.PHYSICAL,
+	       O.GL_STATUS,
+	       RR.GL_STATUS RECON_GL_STATUS,
+	       RR.RECON_RESULT_ID,
+	       O.TRAVEL_GROUP_CODE
+	  FROM LVMAMA_PET.ORD_REFUNDMENT_ITEM_PROD P,
+	       LVMAMA_PET.ORD_REFUNDMENT           R,
+	       LVMAMA_PET.ORD_ORDER_ITEM_PROD      I,
+	       LVMAMA_PET.PROD_PRODUCT_BRANCH      B,
+	       PROD_PRODUCT             PP,
+	       LVMAMA_PET.ORD_ORDER                O,
+	       LVMAMA_PET.FIN_RECON_RESULT         RR,
+	       LVMAMA_PET.PAY_PAYMENT_REFUNDMENT   T
+	 WHERE P.REFUNDMENT_ID = R.REFUNDMENT_ID
+	   AND P.ORD_ITEM_PROD_ID = I.ORDER_ITEM_PROD_ID
+	   AND I.PRODUCT_BRANCH_ID = B.PROD_BRANCH_ID
+	   AND B.PRODUCT_ID = PP.PRODUCT_ID
+	   AND I.ORDER_ID = O.ORDER_ID
+	   AND (T.SERIAL = RR.PAYMENT_TRADE_NO OR
+       (RR.PAYMENT_TRADE_NO IS NULL AND T.PAYMENT_REFUNDMENT_ID = RR.PAYMENT_ID AND RR.GATEWAY IN ('STORED_CARD','CASH_ACCOUNT','CHINAPNR')))
+	   AND T.OBJECT_ID = R.REFUNDMENT_ID
+	   AND P.REFUNDED_AMOUNT > 0
+	   AND R.REFUND_TYPE='ORDER_REFUNDED'
+	   AND EXISTS (SELECT 1
+	          FROM LVMAMA_PET.PAY_PAYMENT_REFUNDMENT T2,
+	               LVMAMA_PET.FIN_RECON_RESULT       R2
+	         WHERE (T2.SERIAL = R2.PAYMENT_TRADE_NO OR
+               (R2.PAYMENT_TRADE_NO IS NULL AND T2.PAYMENT_REFUNDMENT_ID = R2.PAYMENT_ID AND
+               R2.GATEWAY IN ('STORED_CARD','CASH_ACCOUNT','CHINAPNR','UPOMP')))
+	           AND R2.TRANSACTION_TYPE = 'REFUNDMENT'
+	           AND R2.RECON_RESULT_ID=#value# 
+	           AND R2.RECON_STATUS = 'SUCCESS'
+	           AND T2.OBJECT_ID = R.REFUNDMENT_ID)
+	   ORDER BY RR.RECON_RESULT_ID
+	  </select>
+	  <select id="selectRefundedCompensationByAccountId" resultMap="finGLInterfaceDTORefundedParamResult" parameterClass="java.lang.Long"> 
+	  SELECT DISTINCT O.ORDER_ID,
+		                O.VISIT_TIME,
+		                O.FILIALE_NAME,
+		                O.GL_STATUS,
+		                O.TRAVEL_GROUP_CODE,
+		                R.REFUNDMENT_ID,
+		                R.PENALTY_AMOUNT,
+		                R.AMOUNT,
+		                R.REFUND_TIME,
+		                RR.GL_STATUS        RECON_GL_STATUS,
+		                RR.RECON_RESULT_ID,
+		                NULL                ORD_ITEM_PROD_ID,
+		                NULL                REFUNDED_AMOUNT,
+		                NULL                PRODUCT_ID,
+		                NULL                PRODUCT_NAME,
+		                NULL                PRODUCT_TYPE,
+		                NULL                SUB_PRODUCT_TYPE,
+		                NULL                BRANCH_NAME,
+		                NULL                IS_FOREGIN,
+		                NULL                REGION_NAME,
+		                NULL                PHYSICAL,
+		                NULL                PAID_AMOUNT
+		  FROM LVMAMA_PET.ORD_REFUNDMENT         R,
+		       LVMAMA_PET.ORD_ORDER              O,
+		       LVMAMA_PET.FIN_RECON_RESULT       RR,
+		       LVMAMA_PET.PAY_PAYMENT_REFUNDMENT T
+		 WHERE R.ORDER_ID = O.ORDER_ID
+		   AND T.OBJECT_ID = R.REFUNDMENT_ID
+		   AND (T.SERIAL = RR.PAYMENT_TRADE_NO OR
+       (RR.PAYMENT_TRADE_NO IS NULL AND T.PAYMENT_REFUNDMENT_ID = RR.PAYMENT_ID AND RR.GATEWAY IN ('STORED_CARD','CASH_ACCOUNT','CHINAPNR','CASH_BONUS')))
+		   AND R.REFUND_TYPE = 'COMPENSATION'
+		   AND EXISTS (SELECT 1
+		          FROM LVMAMA_PET.PAY_PAYMENT_REFUNDMENT T2,
+		               LVMAMA_PET.FIN_RECON_RESULT       R2
+		         WHERE (T2.SERIAL = R2.PAYMENT_TRADE_NO OR
+               (R2.PAYMENT_TRADE_NO IS NULL AND T2.PAYMENT_REFUNDMENT_ID = R2.PAYMENT_ID AND
+               R2.GATEWAY IN ('STORED_CARD','CASH_ACCOUNT','CHINAPNR','UPOMP','CASH_BONUS')))
+		           AND R2.TRANSACTION_TYPE = 'REFUNDMENT'
+		           AND R2.RECON_RESULT_ID = #value#
+		           AND R2.RECON_STATUS = 'SUCCESS'
+		           AND T2.OBJECT_ID = R.REFUNDMENT_ID)
+		 ORDER BY RR.RECON_RESULT_ID
+	  
+	  </select> 
+	<update id="updateOrdOrder"  parameterClass="map">
+		UPDATE ORD_ORDER SET	gl_status  = #glStatus#	where ORDER_ID=#orderId#
+	</update>
+	<select id="selectPerPaymentParam"  parameterClass="java.lang.Long" resultMap="finGLInterfaceDTOParamResult">
+		SELECT 
+			   OD.ORDER_ID,
+			   OIP.PRODUCT_ID,
+		       OIP.PRODUCT_NAME,
+		       OIP.PRODUCT_TYPE,
+		       OIP.SUB_PRODUCT_TYPE,
+		       OIP.VISIT_TIME,
+		       OD.FILIALE_NAME,
+		       OD.GL_STATUS,
+		       OIP.REFUNDED_AMOUNT,
+		       OIP.PAID_AMOUNT,
+	           PP.IS_FOREGIN,
+	           PP.REGION_NAME,
+	           PP.PHYSICAL,
+	           OD.TRAVEL_GROUP_CODE
+	      FROM ORD_ORDER_ITEM_PROD OIP, ORD_ORDER OD,PROD_PRODUCT PP
+	     WHERE OD.ORDER_ID = OIP.ORDER_ID
+	         AND OIP.PRODUCT_ID=PP.PRODUCT_ID
+	         AND (OD.PAYMENT_STATUS='PAYED' OR OD.PAYMENT_STATUS='TRANSFERRED')
+	         AND OIP.PAID_AMOUNT>0 
+	         AND (OD.GL_STATUS is null OR OD.GL_STATUS='DEPOSIT_RECEIVED_PART')
+	   		AND OD.ORDER_ID=#orderId#
+	</select>
+	<select id="selectParamByGlStatus"  parameterClass="java.lang.String" resultMap="finGLInterfaceDTOParamResult">
+		SELECT 
+			   OD.ORDER_ID,
+			   OIP.PRODUCT_ID,
+		       OIP.PRODUCT_NAME,
+		       OIP.PRODUCT_TYPE,
+		       OIP.SUB_PRODUCT_TYPE,
+		       OIP.VISIT_TIME,
+		       OD.FILIALE_NAME,
+		       OD.GL_STATUS,
+		       OIP.REFUNDED_AMOUNT,
+		       OIP.PAID_AMOUNT,
+	           PP.IS_FOREGIN,
+	           PP.REGION_NAME,
+	           PP.PHYSICAL,
+	           OD.TRAVEL_GROUP_CODE
+	      FROM ORD_ORDER_ITEM_PROD OIP, ORD_ORDER OD,PROD_PRODUCT PP
+	     WHERE OD.ORDER_ID = OIP.ORDER_ID
+	         AND OIP.PRODUCT_ID=PP.PRODUCT_ID
+             AND OD.ORDER_STATUS!='CANCEL'
+             AND PP.SUB_PRODUCT_TYPE!='INSURANCE'
+             AND (OIP.PAID_AMOUNT-OIP.REFUNDED_AMOUNT)>0
+		   	AND OIP.VISIT_TIME <![CDATA[<=]]> TRUNC(SYSDATE)
+	   		AND OD.GL_STATUS=#glStatus#
+	   		AND ROWNUM<![CDATA[<=]]>1000
+	</select>
+
+	<select id="selectFilialeName"  parameterClass="java.lang.Long" resultClass="java.lang.String">
+		SELECT OD.FILIALE_NAME FROM ORD_ORDER OD WHERE OD.ORDER_ID = #orderId#
+	</select>
+	
+	<select id="selectOrderPayment" parameterClass="java.lang.Long" resultMap="finGLInterfaceDTOPayment">
+		SELECT OD.ORDER_ID,
+		       OD.PAYMENT_STATUS,
+		       OD.ACTUAL_PAY,
+		       OD.FILIALE_NAME,
+		       OD.GL_STATUS,
+		       (CASE
+		         WHEN OD.PAYMENT_FINISH_TIME IS NOT NULL THEN
+		          CASE
+		            WHEN TRUNC(OD.PAYMENT_FINISH_TIME) &lt; TRUNC(OD.CREATE_TIME) THEN
+		             TRUNC(OD.CREATE_TIME)
+		            ELSE
+		             TRUNC(OD.PAYMENT_FINISH_TIME)
+		          END
+		         ELSE
+		          NULL
+		       END) PAYMENT_FINISH_TIME
+		  FROM ORD_ORDER OD 
+  	    WHERE OD.ORDER_ID = #orderId#
+	</select>
+	<select id="selectCancelOrderDate" parameterClass="java.lang.Long" resultMap="transOrderDTO">
+		SELECT OD.CANCEL_TIME,OD.FILIALE_NAME FROM ORD_ORDER OD WHERE OD.ORDER_ID = #orderId#
+	</select>
+	<select id="selectTransferOrderId" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT A.ORDER_ID
+		  FROM ORD_ORDER A,
+		       (SELECT O.ORDER_ID, O.ORI_ORDER_ID
+		          FROM ORD_ORDER O
+		         WHERE O.ORI_ORDER_ID IS NOT NULL) B
+		 WHERE A.ORDER_ID = B.ORDER_ID
+		    OR A.ORDER_ID = B.ORI_ORDER_ID
+	</select>
+	
+	<select id="queryDayCountMisOrder" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	WITH CANCEL_DATA AS
+	 (SELECT DISTINCT REGEXP_SUBSTR(I.SUMMARY, '[0-9]+', 1, 1) OLD_ORDER_ID,
+	                  REGEXP_SUBSTR(I.SUMMARY, '[0-9]+', 1, 2) NEW_ORDER_ID
+	    FROM LVMAMA_PET.FIN_GL_INTERFACE I
+	   WHERE I.SUMMARY LIKE '废单重下%'
+	     AND ACCOUNT_TYPE = 'CANCEL_INCOME_HEDGE'
+	     <include refid="paramsSql"/>),
+	DATA_TEMP AS
+	 (SELECT I.TICKED_NO,
+	         DECODE(ACCOUNT_TYPE,'INSTEAD_INCOME_POS',0,'INSTEAD_INCOME',0,1) ACCOUNT_TYPE,
+	         SUM(I.LENDER_AMOUNT) LENDER_AMOUNT
+	    FROM LVMAMA_PET.FIN_GL_INTERFACE I
+	   WHERE (I.ACCOUNT_TYPE IN ('BOOKING_INCOME',
+                              'BOOKING_INCOME_PARTPAY',
+                              'BOOKING_INCOME_PARTPAY_HEDGE',
+                              'CANCEL_INCOME_HEDGE') OR (I.ACCOUNT_TYPE IN ('INSTEAD_INCOME','INSTEAD_INCOME_POS') AND I.ACCOUNT_BOOK_ID='701'))
+	   <include refid="paramsSql"/>
+	   GROUP BY I.TICKED_NO, DECODE(ACCOUNT_TYPE,'INSTEAD_INCOME_POS',0,'INSTEAD_INCOME',0,1))
+	SELECT *
+	  FROM (SELECT TICKED_NO,
+	               TO_CHAR(LENDER_AMOUNT) MINUS_AMOUNT,
+	               NULL RELATE_ID
+	          FROM (SELECT TICKED_NO, SUM(LENDER_AMOUNT) LENDER_AMOUNT
+	                  FROM (SELECT TICKED_NO,
+	                               ACCOUNT_TYPE,
+	                               (CASE
+	                                 WHEN ACCOUNT_TYPE = 1 THEN
+	                                  -LENDER_AMOUNT
+	                                 ELSE
+	                                  LENDER_AMOUNT
+	                               END) LENDER_AMOUNT
+	                          FROM DATA_TEMP I
+	                         WHERE NOT EXISTS
+	                         (SELECT 1
+	                                  FROM CANCEL_DATA C
+	                                 WHERE C.OLD_ORDER_ID = I.TICKED_NO
+	                                    OR C.NEW_ORDER_ID = I.TICKED_NO)) A
+	                 GROUP BY TICKED_NO
+	                HAVING SUM(LENDER_AMOUNT) != 0)
+	        UNION ALL
+	        SELECT TICKED_NO,
+	               TO_CHAR(LENDER_AMOUNT) MINUS_AMOUNT,
+	               (SELECT WMSYS.WM_CONCAT(O.ORDER_ID)
+	                  FROM LVMAMA_SUPER.ORD_ORDER O
+	                 START WITH O.ORDER_ID = TO_NUMBER(F.TICKED_NO)
+	                CONNECT BY PRIOR O.ORI_ORDER_ID = O.ORDER_ID) || ',' ||
+	               (SELECT WMSYS.WM_CONCAT(O.ORDER_ID)
+	                  FROM LVMAMA_SUPER.ORD_ORDER O
+	                 START WITH O.ORDER_ID = TO_NUMBER(F.TICKED_NO)
+	                CONNECT BY O.ORI_ORDER_ID = PRIOR O.ORDER_ID) RELATE_ID
+	          FROM (SELECT TICKED_NO, SUM(LENDER_AMOUNT) LENDER_AMOUNT
+	                  FROM (SELECT DECODE(TICKED_NO,
+	                                      C.OLD_ORDER_ID,
+	                                      C.NEW_ORDER_ID,
+	                                      TICKED_NO) TICKED_NO,
+	                               ACCOUNT_TYPE,
+	                               (CASE
+	                                 WHEN ACCOUNT_TYPE = 1 THEN
+	                                  -LENDER_AMOUNT
+	                                 ELSE
+	                                  LENDER_AMOUNT
+	                               END) LENDER_AMOUNT
+	                          FROM DATA_TEMP I, CANCEL_DATA C
+	                         WHERE C.OLD_ORDER_ID = I.TICKED_NO
+	                            OR C.NEW_ORDER_ID = I.TICKED_NO) A
+	                 GROUP BY TICKED_NO
+	                HAVING SUM(LENDER_AMOUNT) != 0) F) A
+	</select>
+	<sql id="queryOrderAccountCount_sql">
+		SELECT I.TICKED_NO,
+		       TO_CHAR(SUM(DECODE(I.ACCOUNT_TYPE, 'BOOKING_INCOME', I.LENDER_AMOUNT, NULL))) BOOKING_INCOME,
+		       TO_CHAR(SUM(DECODE(I.ACCOUNT_TYPE,'REFUNDMENT_ADVANCE',I.LENDER_AMOUNT,NULL))) REFUNDMENT_ADVANCE,
+		       TO_CHAR(SUM(DECODE(I.ACCOUNT_TYPE, 'CANCEL_INCOME_HEDGE',I.LENDER_AMOUNT, NULL))) CANCEL_INCOME_HEDGE,
+		       TO_CHAR(SUM(DECODE(I.ACCOUNT_TYPE, 'DETERMINE_INCOME', I.LENDER_AMOUNT, NULL))) DETERMINE_INCOME,
+		       TO_CHAR(SUM(DECODE(I.ACCOUNT_TYPE, 'REFUNDMENT_INCOME', I.LENDER_AMOUNT, NULL))) REFUNDMENT_INCOME,
+		       TO_CHAR(SUM(DECODE(I.ACCOUNT_TYPE, 'ORDER_COST', I.LENDER_AMOUNT, NULL))) ORDER_COST
+		  FROM LVMAMA_PET.FIN_GL_INTERFACE I
+		 <dynamic>
+		 WHERE I.ACCOUNT_TYPE IN ('BOOKING_INCOME',
+		                          'REFUNDMENT_ADVANCE',
+		                          'CANCEL_INCOME_HEDGE',
+		                          'DETERMINE_INCOME',
+		                          'REFUNDMENT_INCOME',
+		                          'ORDER_COST')
+		       <include refid="paramsSql"/>                   
+		 </dynamic>      
+		 GROUP BY I.TICKED_NO
+	</sql>
+	<select id="queryOrderAccount" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * FROM (SELECT A.*,ROWNUM RN FROM (<include refid="queryOrderAccountCount_sql"/>) A WHERE ROWNUM&lt;=#end#) B WHERE B.RN&gt;=#start#
+	</select>
+	<select id="queryOrderAccountCount" parameterClass="java.util.HashMap" resultClass="java.lang.Long">
+		SELECT COUNT(*) FROM (<include refid="queryOrderAccountCount_sql"/>) A 
+	</select>
+	<select id="queryDayCount" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT TO_CHAR(I.MAKE_BILL_TIME,'yyyy-mm-dd') MAKE_BILL_TIME,
+	       I.ACCOUNT_TYPE,
+	       TO_CHAR(SUM(I.LENDER_AMOUNT)) LENDER_AMOUNT,
+	       TO_CHAR(SUM(I.BORROWER_AMOUNT)) BORROWER_AMOUNT
+	  FROM FIN_GL_INTERFACE I
+	  <dynamic>
+	   WHERE 1=1 <include refid="paramsSql"/>
+	  </dynamic>
+	 GROUP BY CUBE(TO_CHAR(I.MAKE_BILL_TIME,'yyyy-mm-dd'), I.ACCOUNT_TYPE)
+	</select>
+	<sql id="selectFinanceOrderMonitorSql">
+	SELECT TO_CHAR(ORDER_ID) ORDER_ID,
+		   TO_CHAR(ACTUAL_PAY) ACTUAL_PAY,
+		   TO_CHAR(RECON_AMOUNT) RECON_AMOUNT,
+		   TO_CHAR(FIN_AMOUNT) FIN_AMOUNT,
+		   TO_CHAR(REFUND_AMOUNT) REFUND_AMOUNT,
+		   TO_CHAR(REFUND_RECON_AMOUNT) REFUND_RECON_AMOUNT,
+		   TO_CHAR(REFUND_FIN_AMOUNT) REFUND_FIN_AMOUNT,
+		   TO_CHAR(ORI_ORDER_ID) ORI_ORDER_ID,
+		   ROWNUM RN
+		  FROM (SELECT O.ORDER_ID,
+		               O.ACTUAL_PAY,
+		               NVL((SELECT SUM(R.BANK_AMOUNT)
+		                     FROM FIN_RECON_RESULT R
+		                    WHERE R.ORDER_ID = O.ORDER_ID
+		                      AND R.TRANSACTION_TYPE = 'PAYMENT'
+		                      AND R.RECON_STATUS = 'SUCCESS'),
+		                   0) RECON_AMOUNT,
+		               NVL((SELECT SUM(I.BORROWER_AMOUNT)
+		                     FROM FIN_GL_INTERFACE I
+		                    WHERE I.TICKED_NO = TO_CHAR(O.ORDER_ID)
+		                       AND I.ACCOUNT_TYPE IN ('INSTEAD_INCOME', 'INSTEAD_INCOME_POS')
+				               AND I.ACCOUNT_BOOK_ID = '701'),
+		                   0) FIN_AMOUNT,
+		               NVL((SELECT SUM(T.AMOUNT)
+		                     FROM ORD_REFUNDMENT T
+		                    WHERE T.ORDER_ID = O.ORDER_ID
+		                      AND T.STATUS = 'REFUNDED'),
+		                   0) REFUND_AMOUNT,
+		               NVL((SELECT SUM(R.BANK_AMOUNT)
+		                     FROM FIN_RECON_RESULT R
+		                    WHERE R.ORDER_ID = O.ORDER_ID
+		                      AND R.TRANSACTION_TYPE = 'REFUNDMENT'
+		                      AND R.RECON_STATUS = 'SUCCESS'),
+		                   0) REFUND_RECON_AMOUNT,
+		               NVL((SELECT SUM(I.BORROWER_AMOUNT)
+		                     FROM FIN_GL_INTERFACE I
+		                    WHERE I.TICKED_NO = TO_CHAR(O.ORDER_ID)
+		                      AND I.ACCOUNT_TYPE = 'REFUNDMENT'),
+		                   0) REFUND_FIN_AMOUNT,
+		                   (SELECT COUNT(*)
+					          FROM PAY_PAYMENT P
+					         WHERE P.BIZ_TYPE = 'SUPER_ORDER'
+					           AND P.OBJECT_ID = O.ORDER_ID
+					           AND P.OBJECT_TYPE = 'ORD_ORDER'
+					           AND P.STATUS = 'SUCCESS'
+					           AND P.PAYMENT_GATEWAY IN ($paymentGateWay$)) PAYMENT_GATEWAY_COUNT,
+			               O.ORI_ORDER_ID
+		          FROM ORD_ORDER O
+		         WHERE O.ACTUAL_PAY > 0 
+		          <dynamic>
+		          	<isNotEmpty prepend=" AND " property="beginTime">O.CREATE_TIME>=TRUNC(#beginTime#)</isNotEmpty>
+		          	<isNotEmpty prepend=" AND " property="endTime">O.CREATE_TIME&lt;=TRUNC(#endTime#)</isNotEmpty>
+		          	<isNotEmpty prepend=" AND " property="orderId">O.ORDER_ID =#orderId#</isNotEmpty>
+		          </dynamic>
+		          ) A
+		 WHERE A.PAYMENT_GATEWAY_COUNT &gt;0  
+		    AND (A.ACTUAL_PAY &lt;&gt; RECON_AMOUNT
+		    OR A.ACTUAL_PAY &lt;&gt; FIN_AMOUNT
+		    OR REFUND_AMOUNT &lt;&gt; REFUND_RECON_AMOUNT
+		    OR REFUND_AMOUNT &lt;&gt; REFUND_FIN_AMOUNT)
+	</sql>
+	<select id="selectFinanceOrderMonitor" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT *  FROM (<include refid="selectFinanceOrderMonitorSql"/>) A WHERE RN&lt;=#end#  AND RN&gt;=#start#
+	</select>
+	<select id="selectFinanceOrderMonitorCount" parameterClass="java.util.HashMap" resultClass="java.lang.Long">
+		SELECT COUNT(*) FROM (<include refid="selectFinanceOrderMonitorSql"/>) A 
+	</select>
+	<delete id="deleteByParam" parameterClass="java.util.HashMap">
+		DELETE FROM FIN_GL_INTERFACE I WHERE 
+		<dynamic prepend=" ">
+			<isNotEmpty prepend=" AND " property="reconResultId">
+				I.RECON_RESULT_ID = #reconResultId#
+			</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="glInterfaceId">
+				I.GL_INTERFACE_ID = #glInterfaceId#
+			</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="travelGroupCode">
+				I.TICKED_NO = #travelGroupCode# AND I.ACCOUNT_TYPE ='GROUP_COST'
+			</isNotEmpty>
+		</dynamic>
+	</delete>
+</sqlMap>

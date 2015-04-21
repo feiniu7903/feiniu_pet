@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.lvmama.ebk.push</groupId>
+    <artifactId>pet_ebk_push</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+    <name>公共通用</name>
+
+	<!--包依赖关系-->
+    <dependencies>	
+		<dependency>
+		  <groupId>com.lvmama.comm</groupId>
+		  <artifactId>lvmama_comm</artifactId>
+		  <version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>core-renderer</artifactId>
+			<version>R8</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>javax.servlet.jsp</groupId>
+		    <artifactId>jsp-api</artifactId>
+		    <version>2.1</version>
+		   <scope>provided</scope>
+		  </dependency>
+		  
+		  <dependency>
+			<groupId>org.apache.mina</groupId>
+			<artifactId>mina-core</artifactId>
+			<version>2.0.7</version>
+		</dependency>
+          
+		 <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.6</version>
+        </dependency>
+		<dependency>
+		    <groupId>org.apache.mina</groupId>
+		    <artifactId>mina-integration-beans</artifactId>
+			<version>2.0.7</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>xpp3</groupId>
+			<artifactId>xpp3_min</artifactId>
+			<version>1.1.4c</version>
+		</dependency>
+		<dependency>
+			<groupId>org.gnu.inet</groupId>
+			<artifactId>libidn</artifactId>
+			<version>1.15</version>
+		</dependency>
+		<dependency>
+			<groupId>org.igniterealtime</groupId>
+			<artifactId>tinder</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+			<version>1.6</version>
+		</dependency>
+		
+		
+		<!-- mqtt 支持 android 和ios 推送可能会有用
+		
+		 <dependency>
+		  <groupId>com.ibm.wmqtt</groupId>
+		  <artifactId>wmqtt</artifactId>
+		  <version>1.4.6</version> 
+		</dependency>
+		
+		
+		<dependency>
+            <groupId>org.dna.mqtt</groupId>
+            <artifactId>moquette-broker</artifactId>
+            <version>0.1</version>
+        </dependency>
+	    
+		
+		 <dependency>
+            <groupId>org.dna.mqtt</groupId>
+            <artifactId>moquette-parser</artifactId>
+            <version>0.1</version>
+        </dependency>
+        
+		 
+		 <dependency>
+  			<groupId>org.fusesource.mqtt-client</groupId>
+  			<artifactId>mqtt-client</artifactId>
+  			<version>1.4</version>
+		</dependency>
+		
+		
+		
+		 -->
+		
+		
+
+		 
+		
+		 
+    </dependencies>
+	<build>  
+		<finalName>pet_ebk_push</finalName>  
+		<plugins>
+		  <plugin>
+			 <artifactId>maven-compiler-plugin</artifactId>
+			 <version>2.5.1</version>
+			  <configuration>
+				<source>1.6</source>
+				<target>1.6</target>
+				<encoding>UTF8</encoding>
+				<verbose>true</verbose>
+				<fork>true</fork>
+			  </configuration>
+			</plugin>
+			
+			<plugin>
+			   <groupId>org.apache.maven.plugins</groupId>   
+			   <artifactId>maven-war-plugin</artifactId>   
+			   <version>2.2</version>   
+			   <configuration>
+					<archiveClasses>true</archiveClasses>
+				</configuration>   
+			 </plugin>
+			 
+   	 		<plugin>  
+       	 		<groupId>org.apache.felix</groupId>  
+       			 <artifactId>maven-bundle-plugin</artifactId>  
+        		<extensions>true</extensions>  
+    		</plugin>  
+			
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/config</directory>
+				<excludes>
+				  <exclude>*.properties</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<excludes>
+				  <exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources> 
+	</build>
+</project>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="RECOMMEND_BLOCK" >
+  <typeAlias alias="recommendBlock" type="com.lvmama.comm.pet.po.seo.RecommendBlock" />
+  <resultMap id="BaseResultMap" class="recommendBlock" >
+    <result column="RECOMMEND_BLOCK_ID" property="recommendBlockId" />
+    <result column="MODE_TYPE" property="modeType" />
+    <result column="NAME" property="name" />
+    <result column="PARENT_RECOMMEND_BLOCK_ID" property="parentRecommendBlockId" />
+    <result column="ITEM_NUMBER_LIMIT" property="itemNumberLimit" />
+    <result column="LEVELS" property="levels" />
+    <result column="PAGE_CHANNEL" property="pageChannel" />
+    <result column="DATA_CODE" property="dataCode" />
+  </resultMap>
+  
+  <sql id="queryRecommendBlockByParamWhere">
+   <dynamic prepend="where" >
+      <isNotEmpty prepend="and" property="recommendBlockId" >
+        RECOMMEND_BLOCK_ID = #recommendBlockId#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="modeType" >
+        MODE_TYPE = #modeType#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="name" >
+        NAME = #name#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="parentRecommendBlockId" >
+        PARENT_RECOMMEND_BLOCK_ID = #parentRecommendBlockId#
+      </isNotEmpty>
+      <isEqual property="parent" compareValue="true" prepend="and">
+    		PARENT_RECOMMEND_BLOCK_ID is null
+      </isEqual>
+      <isNotEmpty prepend="and" property="itemNumberLimit" >
+        ITEM_NUMBER_LIMIT = #itemNumberLimit#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="levels" >
+        LEVELS = #levels#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="pageChannel" >
+        PAGE_CHANNEL = #pageChannel#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="dataCode" >
+        DATA_CODE = #dataCode#
+      </isNotEmpty>
+    </dynamic>
+  </sql>
+  
+  <select id="queryRecommendBlockByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+    select RECOMMEND_BLOCK_ID, MODE_TYPE, NAME, PARENT_RECOMMEND_BLOCK_ID, ITEM_NUMBER_LIMIT,LEVELS, PAGE_CHANNEL, DATA_CODE
+    from RECOMMEND_BLOCK
+    <include refid="queryRecommendBlockByParamWhere"/>
+    order by RECOMMEND_BLOCK_ID desc
+  </select>
+  
+  <select id="countRecommendBlockByParam" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+    select count(*) from RECOMMEND_BLOCK
+    <include refid="queryRecommendBlockByParamWhere"/>
+  </select>
+  
+  <delete id="deleteRecommendBlockByParam" parameterClass="recommendBlock" >
+    delete from RECOMMEND_BLOCK 
+    <dynamic prepend="where">
+	 <isNotEmpty property="recommendBlockId" prepend="and">
+		RECOMMEND_BLOCK_ID = #recommendBlockId#
+	 </isNotEmpty>		
+	 <isNotEmpty property="parentRecommendBlockId" prepend="and">
+		PARENT_RECOMMEND_BLOCK_ID = #parentRecommendBlockId#
+	 </isNotEmpty>		
+	</dynamic>
+  </delete>
+  
+  <insert id="insertRecommendBlock" parameterClass="recommendBlock" >
+    <selectKey keyProperty="recommendBlockId" resultClass="java.lang.Long">
+		select RECOMMEND_BLOCK_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into RECOMMEND_BLOCK
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="recommendBlockId" >
+        RECOMMEND_BLOCK_ID
+      </isNotNull>
+      <isNotNull prepend="," property="modeType" >
+        MODE_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        NAME
+      </isNotNull>
+      <isNotNull prepend="," property="parentRecommendBlockId" >
+        PARENT_RECOMMEND_BLOCK_ID
+      </isNotNull>
+      <isNotNull prepend="," property="itemNumberLimit" >
+        ITEM_NUMBER_LIMIT
+      </isNotNull>
+      <isNotNull prepend="," property="levels" >
+        LEVELS
+      </isNotNull>
+      <isNotNull prepend="," property="pageChannel" >
+        PAGE_CHANNEL
+      </isNotNull>
+      <isNotNull prepend="," property="dataCode" >
+        DATA_CODE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="recommendBlockId" >
+        #recommendBlockId#
+      </isNotNull>
+      <isNotNull prepend="," property="modeType" >
+        #modeType#
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        #name#
+      </isNotNull>
+      <isNotNull prepend="," property="parentRecommendBlockId" >
+        #parentRecommendBlockId#
+      </isNotNull>
+      <isNotNull prepend="," property="itemNumberLimit" >
+        #itemNumberLimit#
+      </isNotNull>
+      <isNotNull prepend="," property="levels" >
+        #levels#
+      </isNotNull>
+      <isNotNull prepend="," property="pageChannel" >
+        #pageChannel#
+      </isNotNull>
+      <isNotNull prepend="," property="dataCode" >
+        #dataCode#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="updateRecommendBlock" parameterClass="recommendBlock" >
+    update RECOMMEND_BLOCK
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="modeType" >
+        MODE_TYPE = #modeType#
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        NAME = #name#
+      </isNotNull>
+      <isNotNull prepend="," property="parentRecommendBlockId" >
+        PARENT_RECOMMEND_BLOCK_ID = #parentRecommendBlockId#
+      </isNotNull>
+      <isNotNull prepend="," property="itemNumberLimit" >
+        ITEM_NUMBER_LIMIT = #itemNumberLimit#
+      </isNotNull>
+      <isNotNull prepend="," property="levels" >
+        LEVELS = #levels#
+      </isNotNull>
+      <isNotNull prepend="," property="pageChannel" >
+        PAGE_CHANNEL = #pageChannel#
+      </isNotNull>
+      <isNotNull prepend="," property="dataCode" >
+        DATA_CODE = #dataCode#
+      </isNotNull>
+    </dynamic>
+    where RECOMMEND_BLOCK_ID = #recommendBlockId#
+  </update>
+
+</sqlMap>

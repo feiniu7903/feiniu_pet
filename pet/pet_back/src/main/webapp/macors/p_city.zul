@@ -1,0 +1,12 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./cityHbox"?>
+<hbox id="cityHbox" apply="com.lvmama.pet.web.pub.MacorsCity">
+	<custom-attributes cityId="${saction.cityId}"/>
+	<listbox mold="select" rows="1" id="marcosSelectProvice" model="@{pcityAction.provinceList}" onSelect="pcityAction.changeProvince(self.selectedItem.value); saction.changeCity(null);">
+		<listitem self="@{each='com'}" label="@{com.provinceName }" value="@{com.provinceId}" selected="@{com.checked}"/>
+	</listbox>
+	<label value="省" />
+	<listbox mold="select" rows="1" id="marcosSelectCity" model="@{pcityAction.cityList, load-after=marcosSelectProvice.onSelect}" onSelect="saction.changeCity(self.selectedItem.value);">
+		<listitem self="@{each='city'}" label="@{city.cityName }" value="@{city.cityId}" selected="@{city.checked}"/>
+	</listbox>
+	<label value="市" />
+</hbox>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+
+<sqlMap namespace="PAY_POS_COMMERCIAL" >
+
+ <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pay.PayPosCommercial" >
+    <result column="COMMERCIAL_ID" property="commercialId" />
+    <result column="COMMERCIAL_NO" property="commercialNo" />
+    <result column="COMMERCIAL_NAME" property="commercialName" />
+    <result column="REMARK" property="remark" />
+    <result column="STATUS" property="status" />
+    <result column="SUPPLIER" property="supplier" />
+ </resultMap>
+  
+ <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.PayPosCommercial">
+<selectKey keyProperty="commercialId" resultClass="java.lang.Long">
+			SELECT PAY_POS_COMMERCIAL_SEQ.nextval from dual
+</selectKey>
+   INSERT INTO PAY_POS_COMMERCIAL
+	  (COMMERCIAL_ID, 
+	   COMMERCIAL_NO,
+	   COMMERCIAL_NAME,
+	   REMARK,
+	   STATUS,SUPPLIER
+   ) VALUES (
+        #commercialId#,
+	    #commercialNo#,
+	    #commercialName#,
+	    #remark#,
+	    #status#,#supplier#)
+</insert> 
+  
+<update id="update" parameterClass="com.lvmama.comm.pet.po.pay.PayPosCommercial">
+  UPDATE PAY_POS_COMMERCIAL
+<dynamic prepend=" SET ">
+<isNotEmpty prepend="," property="commercialNo">COMMERCIAL_NO = #commercialNo#</isNotEmpty>
+<isNotEmpty prepend="," property="remark">REMARK = #remark#</isNotEmpty>
+<isNotEmpty prepend="," property="commercialName"> COMMERCIAL_NAME = #commercialName#</isNotEmpty>
+<isNotEmpty prepend="," property="status"> STATUS = #status#</isNotEmpty>
+</dynamic> 
+WHERE
+  	COMMERCIAL_ID = #commercialId#
+</update>  
+
+
+<update id="updateStatusById" parameterClass="com.lvmama.comm.pet.po.pay.PayPosCommercial">
+	UPDATE
+		PAY_POS_COMMERCIAL
+	SET 
+		STATUS = #status#
+	WHERE
+		COMMERCIAL_ID = #commercialId#
+</update>
+
+<update id="updateSupplierById" parameterClass="com.lvmama.comm.pet.po.pay.PayPosCommercial">
+	UPDATE
+		PAY_POS_COMMERCIAL
+	SET 
+		SUPPLIER = #supplier#
+	WHERE
+		COMMERCIAL_ID = #commercialId#
+</update>
+
+
+<sql id="selectSQL">
+	   SELECT * FROM PAY_POS_COMMERCIAL
+	   <dynamic prepend="WHERE">
+	   		<isNotEmpty prepend="AND" property="commercialId">
+				COMMERCIAL_ID = #commercialId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="commercialNo">
+				COMMERCIAL_NO = #commercialNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="commercialName">
+				COMMERCIAL_NAME like '%'||#commercialName#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				STATUS = #status#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="supplier">
+				SUPPLIER = #supplier#
+			</isNotEmpty>
+	    </dynamic>
+</sql>
+
+<select id="queryByParam"  resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+	SELECT * FROM (SELECT A.*,ROWNUM rn FROM( 
+			<include refid="selectSQL"/>
+			ORDER BY COMMERCIAL_ID DESC
+			) A
+			<dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+			</dynamic>
+			)<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>		
+			</dynamic>
+</select>
+
+<select id="selectCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+	SELECT COUNT(*) FROM ( 
+		<include refid="selectSQL"/>
+	)
+</select>
+
+<select id="selectById"  resultMap="BaseResultMap" parameterClass="java.lang.Long">
+	SELECT * FROM PAY_POS_COMMERCIAL
+		WHERE
+			COMMERCIAL_ID = #cmmercialId#
+</select>
+
+
+<select id="selectByParam"  resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+	SELECT P.* FROM PAY_POS_COMMERCIAL  P
+	 <dynamic prepend="WHERE">
+	   		<isNotEmpty prepend="AND" property="commercialNo">
+				P.COMMERCIAL_NO = #commercialNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				P.STATUS = #status#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="commercialId">
+				COMMERCIAL_ID = #commercialId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="commercialName">
+				COMMERCIAL_NAME = #commercialName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="supplier">
+				SUPPLIER = #supplier#
+			</isNotEmpty>
+	    </dynamic>
+</select>
+
+
+</sqlMap>

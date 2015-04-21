@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CASH_CHANGE">
+	<!-- 别名 -->
+    <typeAlias alias="cashChange" type="com.lvmama.comm.pet.po.money.CashChange"/>
+	<!-- 查询结果集 -->
+    <resultMap id="cashChangeResult" class="cashChange">
+        <result property="changeId" column="CHANGE_ID"/>
+        <result property="cashAccountId" column="CASH_ACCOUNT_ID"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="rechargeBalanceBeforeChange" column="RECHARGE_BALANCE_BEFORE_CHANGE"/>
+        <result property="refundBalanceBeforeChange" column="REFUND_BALANCE_BEFORE_CHANGE"/>
+        <result property="bonusBalanceBeforeChange" column="BONUS_BALANCE_BEFORE_CHANGE"/>
+        <result property="type" column="TYPE"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="businessId" column="BUSINESS_ID"/>
+    </resultMap>
+    <resultMap id="AllResultMap" class="com.lvmama.comm.vo.CashAccountChangeLogVO">
+		<result column="BUSINESS_ID" property="businessId" />
+		<result column="INCOME" property="income" />
+		<result column="EXPENDITURE" property="expenditure" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="TYPE" property="type" />
+		<result column="TYPE1" property="type1" />
+		<result column="RECHARGE_BALANCE" property="rechargeBalance" />
+		<result column="REFUND_BALANCE" property="refundBalance" />
+		<result column="BONUS_BALANCE" property="bonusBalance" />
+	</resultMap>
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.vo.CashAccountChangeLogVO">
+		<result column="INCOME" property="income" />
+		<result column="EXPENDITURE" property="expenditure" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="TYPE" property="type" />
+		<result column="TYPE1" property="type1" />
+		<result column="BALANCE" property="balance" />
+	</resultMap>
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	CHANGE_ID ,
+        	CASH_ACCOUNT_ID ,
+        	AMOUNT ,
+        	RECHARGE_BALANCE_BEFORE_CHANGE ,
+        	REFUND_BALANCE_BEFORE_CHANGE ,
+        	BONUS_BALANCE_BEFORE_CHANGE,
+        	TYPE ,
+        	CREATE_TIME ,
+        	BUSINESS_ID 
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="changeId">
+	             CHANGE_ID = #changeId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="cashAccountId">
+	             CASH_ACCOUNT_ID = #cashAccountId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="amount">
+	             AMOUNT = #amount#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="rechargeBalanceBeforeChange">
+	             RECHARGE_BALANCE_BEFORE_CHANGE = #rechargeBalanceBeforeChange#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="refundBalanceBeforeChange">
+	             REFUND_BALANCE_BEFORE_CHANGE = #refundBalanceBeforeChange#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="bonusBalanceBeforeChange">
+	             BONUS_BALANCE_BEFORE_CHANGE = #bonusBalanceBeforeChange#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="type">
+	             TYPE = #type#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="businessId">
+	             BUSINESS_ID = #businessId#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="cashChange">
+				<selectKey keyProperty="changeId" resultClass="java.lang.Long">
+					SELECT CASH_CHANGE_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        CASH_CHANGE (
+        	CHANGE_ID ,
+        	CASH_ACCOUNT_ID ,
+        	AMOUNT ,
+        	RECHARGE_BALANCE_BEFORE_CHANGE ,
+        	REFUND_BALANCE_BEFORE_CHANGE ,
+        	BONUS_BALANCE_BEFORE_CHANGE ,
+        	TYPE ,
+        	CREATE_TIME ,
+        	BUSINESS_ID 
+        ) VALUES (
+        	#changeId# ,
+        	#cashAccountId# ,
+        	#amount# ,
+        	#rechargeBalanceBeforeChange# ,
+        	#refundBalanceBeforeChange# ,
+        	#bonusBalanceBeforeChange#,
+        	#type# ,
+        	#createTime# ,
+        	#businessId# 
+        )
+    ]]>
+    </insert>
+    
+    <insert id="balanceChange" parameterClass="java.util.Map">
+		<![CDATA[
+			INSERT INTO CASH_CHANGE
+			  (CHANGE_ID,
+			   CASH_ACCOUNT_ID,
+			   AMOUNT,
+			   RECHARGE_BALANCE_BEFORE_CHANGE,
+			   REFUND_BALANCE_BEFORE_CHANGE,
+			   BONUS_BALANCE_BEFORE_CHANGE,
+			   TYPE,
+			   CREATE_TIME,
+			   BUSINESS_ID)
+			  SELECT CASH_CHANGE_SEQ.NEXTVAL,
+			         CASH_ACCOUNT_ID,
+			         #amount#,
+			         CASH_ACCOUNT.RECHARGE_BALANCE,
+			         CASH_ACCOUNT.REFUND_BALANCE,
+			         (CASH_ACCOUNT.BONUS_BALANCE+NVL(CASH_ACCOUNT.NEW_BONUS_BALANCE,0)) as BONUS_BALANCE,
+			         #comeFrom#,
+			         SYSDATE,
+			         #businessId#
+			    FROM CASH_ACCOUNT
+			   WHERE CASH_ACCOUNT_ID = #cashAccountId#
+		]]>
+	</insert>
+	
+	<select id="queryMoneyAccountChangeLogAll" resultMap="AllResultMap" parameterClass="java.util.Map">
+			<![CDATA[SELECT *
+			  FROM (SELECT T.*, ROWNUM AS ROWNUM1
+			          FROM (
+			          select MUC.BUSINESS_ID,
+			         DECODE(type,
+			                'REFUND',
+			                TO_CHAR(AMOUNT / 100),
+			                'RECHARGE',
+			                TO_CHAR(AMOUNT / 100),
+			                '') AS INCOME,
+			         DECODE(type,
+			                'DRAW',
+			                TO_CHAR(ABS(AMOUNT) / 100),
+			                'REFUND_BALANCE_PAY',
+			                TO_CHAR(ABS(AMOUNT) / 100),
+			                'RECHARGE_BALANCE_PAY',
+			                TO_CHAR(ABS(AMOUNT) / 100),
+			                '') AS EXPENDITURE,
+			         MUC.CREATE_TIME,
+			         '' AS ORDER_ID,
+			         DECODE(TYPE,
+			                'REFUND_BALANCE_PAY',
+			                'PAY',
+			                'RECHARGE_BALANCE_PAY',
+			                'PAY',
+			                TYPE) AS TYPE,
+			                '' AS TYPE1,
+			         MUC.RECHARGE_BALANCE_BEFORE_CHANGE / 100 AS RECHARGE_BALANCE,
+			         MUC.REFUND_BALANCE_BEFORE_CHANGE / 100 AS REFUND_BALANCE,
+			         MUC.BONUS_BALANCE_BEFORE_CHANGE / 100 AS BONUS_BALANCE
+			    from CASH_CHANGE muc]]>
+			<dynamic prepend="WHERE">
+	    		<isNotNull prepend="AND" property="cashAccountId">
+		                   muc.CASH_ACCOUNT_ID = #cashAccountId#
+				</isNotNull>
+				<isNotNull prepend="AND" property="userNo">
+		        <![CDATA[
+						muc.CASH_ACCOUNT_ID IN (SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+				]]>
+				</isNotNull>
+	    	</dynamic>
+			   <![CDATA[order by muc.create_time DESC
+					  ) T
+			         WHERE ROWNUM <= #endIndex#)
+			 WHERE ROWNUM1 >= #beginIndex#]]>
+	</select>
+
+	<select id="queryMoneyAccountChangeLogCountAll" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		  SELECT 
+		 		count(CC.BUSINESS_ID)
+    	FROM CASH_CHANGE CC
+    	<dynamic prepend="WHERE">
+    		<isNotNull prepend="AND" property="cashAccountId">
+	                   CC.CASH_ACCOUNT_ID = #cashAccountId#
+			</isNotNull>
+			<isNotNull prepend="AND" property="userNo">
+	        <![CDATA[
+					CC.CASH_ACCOUNT_ID IN (SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+			]]>
+			</isNotNull>
+    	</dynamic>
+	</select>
+
+
+	<select id="queryMoneyAccountChangeLog" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+					<![CDATA[
+			SELECT *
+			  FROM (SELECT T.*, ROWNUM AS ROWNUM1
+			          FROM (SELECT *
+			                  FROM (
+					]]>
+					<isEqual property="moneyAccountChangeType" compareValue="DRAW">
+					<![CDATA[
+					 SELECT '' AS INCOME,
+					        TO_CHAR(ABS(CASH_MONEY_DRAW.DRAW_AMOUNT) / 100) AS EXPENDITURE,
+					        CASH_MONEY_DRAW.CREATE_TIME,
+					        '' AS ORDER_ID,
+					        'DRAW' AS TYPE,
+					        '' AS TYPE1,
+					        '' AS BALANCE
+					   FROM CASH_MONEY_DRAW
+					  WHERE CASH_MONEY_DRAW.PAY_STATUS = 'PayCashSuccess' AND CASH_MONEY_DRAW.CASH_ACCOUNT_ID IN
+					  	(SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+					]]>
+					</isEqual>
+					<isEqual property="moneyAccountChangeType" compareValue="PAY">
+					<![CDATA[
+					SELECT '' AS INCOME,
+			               TO_CHAR(ABS(CASH_PAY.AMOUNT) / 100) AS EXPENDITURE,
+			               CASH_PAY.CREATE_TIME AS CREATE_TIME,
+			               CASH_PAY.ORDER_ID,
+			               'PAY' AS TYPE,
+			               '' AS TYPE1,
+					        '' AS BALANCE
+			        FROM CASH_PAY 
+			        WHERE PAY_FROM=#payFrom# and CASH_PAY.CASH_ACCOUNT_ID IN
+						(SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+					]]>
+					</isEqual>
+					<isEqual property="moneyAccountChangeType" compareValue="RECHARGE">
+					<![CDATA[
+			        SELECT TO_CHAR(ABS(CASH_RECHARGE.AMOUNT) / 100) AS INCOME,
+			               '' AS EXPENDITURE,
+			               CASH_RECHARGE.CREATE_TIME,
+			               '' AS ORDER_ID,
+			               'RECHARGE' AS TYPE,
+			               '' AS TYPE1,
+					       '' AS BALANCE
+			          FROM CASH_RECHARGE
+			          WHERE CASH_RECHARGE.STATUS='SUCCESS'
+			          	AND CASH_RECHARGE.CASH_ACCOUNT_ID IN 
+			          		(SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+			          ]]>
+					</isEqual>
+					<isEqual property="moneyAccountChangeType" compareValue="REFUND">
+					<![CDATA[
+					SELECT TO_CHAR(ABS(CASH_REFUNDMENT.AMOUNT) / 100) AS INCOME,
+					       '' AS EXPENDITURE,
+					       CASH_REFUNDMENT.CREATE_TIME,
+					       TO_CHAR(CASH_REFUNDMENT.ORDER_ID) AS ORDER_ID,
+					       'REFUND' AS TYPE,
+					       DECODE(CASH_REFUNDMENT.refundment_type, 'COMPENSATION', '(赔偿)', '') AS TYPE1,
+					       '' AS BALANCE
+					  FROM CASH_REFUNDMENT
+					  	WHERE CASH_REFUNDMENT.CASH_ACCOUNT_ID IN 
+					  		(SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+					  ]]>
+					  <isNotEmpty property="bonusRefundment">
+					  	<isEqual property="bonusRefundment" compareValue="Y">
+					  		and BOUNS_REFUNDMENT=#bonusRefundment#
+					  	</isEqual>
+					  	<isEqual property="bonusRefundment" compareValue="N">
+					  		and (BOUNS_REFUNDMENT !='Y' or BOUNS_REFUNDMENT is null)
+					  	</isEqual>
+					  </isNotEmpty>
+					</isEqual>
+					<![CDATA[
+			                        )
+			                 ORDER BY CREATE_TIME DESC) T
+			         WHERE ROWNUM <= #endIndex#)
+			 WHERE ROWNUM1 >= #beginIndex#
+					]]>
+	</select>
+	<select id="queryMoneyAccountChangeLogCount" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+			<isEqual property="moneyAccountChangeType" compareValue="DRAW">
+			<![CDATA[
+			SELECT COUNT(*) AS NUM
+			  FROM CASH_MONEY_DRAW
+			 WHERE CASH_MONEY_DRAW.PAY_STATUS = 'PayCashSuccess' AND CASH_MONEY_DRAW.CASH_ACCOUNT_ID 
+			 	IN (SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+			]]>
+			</isEqual>
+			<isEqual property="moneyAccountChangeType" compareValue="PAY">
+			<![CDATA[
+			SELECT COUNT(*) AS NUM
+			  FROM CASH_PAY
+			 WHERE PAY_FROM=#payFrom# and CASH_PAY.CASH_ACCOUNT_ID IN
+			 (SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+			]]>
+			</isEqual>
+			<isEqual property="moneyAccountChangeType" compareValue="RECHARGE">
+			<![CDATA[
+			SELECT COUNT(*) AS NUM
+			  FROM CASH_RECHARGE
+			 WHERE CASH_RECHARGE.STATUS='SUCCESS' AND CASH_RECHARGE.CASH_ACCOUNT_ID IN 
+			 	(SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+			]]>
+			</isEqual>
+			<isEqual property="moneyAccountChangeType" compareValue="REFUND">
+			<![CDATA[
+			SELECT COUNT(*) AS NUM
+			  FROM CASH_REFUNDMENT
+			  WHERE CASH_REFUNDMENT.CASH_ACCOUNT_ID IN
+			  	(SELECT CA.CASH_ACCOUNT_ID FROM CASH_ACCOUNT CA, USER_USER UU WHERE CA.USER_ID=UU.USER_ID AND UU.USER_NO=#userNo#)
+			]]>
+			<isNotEmpty property="bonusRefundment">
+				<isEqual property="bonusRefundment" compareValue="Y">
+					 and BOUNS_REFUNDMENT=#bonusRefundment#
+				</isEqual>
+				<isEqual property="bonusRefundment" compareValue="N">
+					 and (BOUNS_REFUNDMENT !='Y' or BOUNS_REFUNDMENT is null)
+				</isEqual>
+			</isNotEmpty>
+			</isEqual>
+	</select>
+</sqlMap>

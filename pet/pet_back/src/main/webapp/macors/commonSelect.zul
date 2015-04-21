@@ -1,0 +1,10 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./codeselect" ?>
+<listbox rows="1" mold="select" id="codeselect" 
+	apply="com.lvmama.back.utils.CommonSelectAction" 
+	onSelect="codeselect$composer.doselect(self.selectedItem.value)">
+	<custom-attributes codeset="${arg.codeset }"/>
+	<custom-attributes value="${arg.value }"/>
+	<custom-attributes refTextboxId="${arg.refTextboxId }"/>
+	
+		<listitem self="@{each=item}"  label="@{item.name}" value="@{item.value}" />
+</listbox>

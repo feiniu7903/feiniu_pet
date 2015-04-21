@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SUP_B_CERTIFICATE_TARGET">
+	<!-- =====================yuzhibing begin============================== -->
+
+
+	<typeAlias alias="SupBCertificateTarget"
+		type="com.lvmama.comm.pet.po.sup.SupBCertificateTarget" />
+	<resultMap id="BaseResultMap" class="SupBCertificateTarget">
+		<result column="TARGET_ID" property="targetId" />
+		<result column="NAME" property="name" />
+		<result column="MEMO" property="memo" />
+		<result column="B_CERTIFICATE" property="bcertificate" />
+		<result column="FAX_NO" property="faxNo" />
+		<result column="FAX_TEMPLATE" property="faxTemplate" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="FAX_STRATEGY" property="faxStrategy" />
+		<result column="FAX_FLAG" property="faxFlag" />
+		<result column="DIMENSION_FLAG" property="dimensionFlag" />
+		<result column="SUPPLIER_FLAG" property="supplierFlag" />
+		<result column="SHOW_SETTLE_PRICE_FLAG" property="showSettlePriceFlag" />
+		<result column="MANUAL_FAX_FLAG" property="manualFaxFlag" />
+		<result column="SUPPLIER_FORBID_SALE_FALG" property="supplierForbidSaleFalg" />
+		<result column="PRICE_STOCK_VERIFY_FALG" property="priceStockVerifyFalg" />
+		<result column="EBK_PROD_AUDIT_CFG" property="ebkProdAuditCfg" />
+	</resultMap>
+	<resultMap id="BaseResultMapFull" extends="BaseResultMap"
+		class="SupBCertificateTarget">
+
+		<result column="SUPPLIER_NAME" property="supplier.supplierName" />
+	</resultMap>
+ 
+	<insert id="insert" parameterClass="SupBCertificateTarget">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="targetId">
+			select SUP_B_CERTIFICATE_TARGET_SEQ.nextval from DUAL
+		</selectKey>
+		insert into SUP_B_CERTIFICATE_TARGET (TARGET_ID, NAME, MEMO,
+		B_CERTIFICATE, FAX_NO, FAX_TEMPLATE,SUPPLIER_ID ,FAX_STRATEGY,
+		CREATE_TIME,VALID,ORG_ID，FAX_FLAG,DIMENSION_FLAG,SUPPLIER_FLAG,
+		SHOW_SETTLE_PRICE_FLAG,MANUAL_FAX_FLAG,SUPPLIER_FORBID_SALE_FALG,EBK_PROD_AUDIT_CFG) values (
+		#targetId#, #name#,#memo#,#bcertificate#, #faxNo#, #faxTemplate#,#supplierId# ,
+		#faxStrategy#, sysdate,'Y',#orgId#,#faxFlag#,#dimensionFlag#,#supplierFlag#,
+		#showSettlePriceFlag#,#manualFaxFlag#,#supplierForbidSaleFalg#,#ebkProdAuditCfg#)
+	</insert>
+ 
+	<sql id="findBCertificateTargetWhere">
+		<isNotNull prepend="and" property="targetId">
+			TARGET_ID = #targetId#
+		</isNotNull>
+		<isNotNull prepend="and" property="supplierId">
+			SUPPLIER_ID = #supplierId#
+		</isNotNull>
+		<isNotNull prepend="and" property="faxStrategy">
+			FAX_STRATEGY = #faxStrategy#
+		</isNotNull>
+		<isNotNull prepend="and" property="name">
+			NAME LIKE '%'|| #name#||'%'
+		</isNotNull>
+		<isNotNull prepend="and" property="beginDate">
+			<![CDATA[
+				CREATE_TIME >= to_date(#beginDate#,#dateFormat#)
+				]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			<![CDATA[
+				CREATE_TIME <= to_date(#endDate#,#dateFormat#)
+				]]>
+		</isNotNull>
+	</sql>
+
+	<select id="findBCertificateTarget" resultMap="BaseResultMap">
+		SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+		select * from SUP_B_CERTIFICATE_TARGET where
+		VALID='Y'
+		<include refid="findBCertificateTargetWhere" />
+		order by TARGET_ID desc 
+		) T WHERE ROWNUM &lt;= #_endRow#
+		)
+		WHERE ROWNUM1 &gt;=#_startRow#
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMapFull"
+		parameterClass="SupBCertificateTarget">
+		select SUP_B_CERTIFICATE_TARGET.*,SUP_SUPPLIER.SUPPLIER_NAME
+		from SUP_B_CERTIFICATE_TARGET,SUP_SUPPLIER where
+		SUP_SUPPLIER.SUPPLIER_ID=SUP_B_CERTIFICATE_TARGET.SUPPLIER_ID
+		and TARGET_ID = #targetId# and
+		SUP_B_CERTIFICATE_TARGET.VALID='Y'
+	</select>
+
+	<update id="updateByPrimaryKey"
+		parameterClass="com.lvmama.comm.pet.po.sup.SupBCertificateTarget">
+		update SUP_B_CERTIFICATE_TARGET set NAME = #name#, MEMO =
+		#memo#, B_CERTIFICATE = #bcertificate#, FAX_NO = #faxNo#,
+		FAX_TEMPLATE = #faxTemplate#,
+		FAX_STRATEGY = #faxStrategy#,
+		FAX_FLAG=#faxFlag#,
+		DIMENSION_FLAG=#dimensionFlag#,
+		SUPPLIER_FLAG=#supplierFlag#,
+		SHOW_SETTLE_PRICE_FLAG=#showSettlePriceFlag#,
+		MANUAL_FAX_FLAG=#manualFaxFlag#,
+		SUPPLIER_FORBID_SALE_FALG=#supplierForbidSaleFalg#,
+		PRICE_STOCK_VERIFY_FALG=#priceStockVerifyFalg#,
+		EBK_PROD_AUDIT_CFG=#ebkProdAuditCfg#
+		where
+		TARGET_ID = #targetId#
+	</update>
+	<!-- =========================yuzhibing end================================ -->
+
+	<delete id="deleteByPrimaryKey"
+		parameterClass="com.lvmama.comm.pet.po.sup.SupBCertificateTarget">
+		delete from SUP_B_CERTIFICATE_TARGET where TARGET_ID =
+		#targetId#
+	</delete>
+
+	<update id="markIsValid" parameterClass="java.util.Map">
+		update SUP_B_CERTIFICATE_TARGET set VALID='N' where TARGET_ID =
+		#targetId#
+	</update>
+	
+	<select id="selectRowCount" resultClass="java.lang.Integer">
+		select count(*) from ( select * from SUP_B_CERTIFICATE_TARGET where
+		VALID='Y'
+		<include refid="findBCertificateTargetWhere" />
+		order by TARGET_ID desc ) where rownum
+		<![CDATA[<51]]>
+	</select>
+	
+	<select id="selectMetaBCertificateByMetaProductId"
+		resultMap="BaseResultMap" >
+		select t.*  from META_B_CERTIFICATE c,
+		SUP_B_CERTIFICATE_TARGET t where
+		t.TARGET_ID=c.TARGET_ID 
+		and c.META_PRODUCT_ID=#metaProductId# 
+		and c.biz_type=#bizType#
+		and t.VALID='Y'
+	</select>
+</sqlMap>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="HOTEL_TRAFFIC_INFO" >
+  <typeAlias alias="hotelTrafficInfo" type="com.lvmama.comm.pet.po.place.HotelTrafficInfo" />
+  <resultMap id="BaseResultMap" class="hotelTrafficInfo" >
+    <result column="ID" property="id"  />
+    <result column="place_id" property="placeId"  />
+    <result column="TRAFFIC_STYLE" property="trafficStyle"  />
+    <result column="FROMPOINT" property="from"  />
+    <result column="DISTANCE" property="distance"  />
+    <result column="DESCRIPTION" property="description"  />
+  </resultMap>
+  <insert id="insert" parameterClass="hotelTrafficInfo" >
+    insert into HOTEL_TRAFFIC_INFO (ID, PLACE_ID, TRAFFIC_STYLE, FROMPOINT, DISTANCE, DESCRIPTION) 
+    values (HOTEL_TRAFFIC_INFO_SEQ.nextval, #placeId#, #trafficStyle#,#from#,#distance#,#description#)
+  </insert>
+
+  <select id="queryByPlaceId" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select * from HOTEL_TRAFFIC_INFO where PLACE_ID = #placeId# ORDER BY TRAFFIC_STYLE, ID
+  </select>
+
+  <select id="queryByPK" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select * from HOTEL_TRAFFIC_INFO where ID = #Id#
+  </select>
+  
+  <delete id="delete" parameterClass="java.lang.Long" >
+    delete from HOTEL_TRAFFIC_INFO where id = #id#
+  </delete>
+
+  
+  <update id="update" parameterClass="hotelTrafficInfo" >
+    update HOTEL_TRAFFIC_INFO set TRAFFIC_STYLE = #trafficStyle#, FROMPOINT = #from#,DISTANCE = #distance#,DESCRIPTION = #description# where id = #id#
+  </update>
+</sqlMap>

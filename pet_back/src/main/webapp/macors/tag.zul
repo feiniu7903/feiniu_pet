@@ -1,0 +1,22 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./tag"?>
+<bandbox id="tag" apply="com.lvmama.back.web.view.Tag"
+	onChanging="tag$composer.changeInput(event)"
+	mold="rounded" autodrop="true">
+	<bandpopup>
+		<vbox>
+			<listbox width="300px" id="bandboxListBox"
+				model="@{tag$composer.viewTagList, load-after='tag.onChanging' }"
+				onSelect="tag.value=self.selectedItem.lastChild.label; tagId.value=self.selectedItem.label; tag.close();">
+				<listhead>
+					<listheader width="50px" label="编号" />
+					<listheader label="标签" />
+				</listhead>
+				<listitem self="@{each='item'}" value="@{item.tagId}"
+					height="25px">
+					<listcell label="@{item.tagId}" />
+					<listcell label="@{item.name}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

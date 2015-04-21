@@ -1,0 +1,136 @@
+<?page title="短信系统查询" contentType="text/html;charset=UTF-8"?>                                               
+ <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./smsWin"?>                                                   
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>  
+<zk>  
+<window id="smsWin" title="短信查询"   border="normal"  apply="com.lvmama.pet.web.sms.SmsStatAction">
+<grid>
+      	<columns>
+      		<column width="20%" align="left"></column>
+      		<column width="20%" align="left"></column>
+      		<column width="20%" align="left"></column>
+      		<column width="20%" align="left"></column>
+      		<column width="20%" align="left"></column>
+      	</columns>
+      	<rows>
+      		<row>
+      			<hbox>起始日期:</hbox>
+      			<hbox>
+      				<datebox id="startDate"
+      					value="@{saction.searchConds.startDate}" format="yyyy-MM-dd">
+      				</datebox>
+      			</hbox>
+      			<hbox>结束日期:</hbox>
+      			<hbox>
+      				<datebox id="endDate" value="@{saction.searchConds.endDate}"
+      					format="yyyy-MM-dd">
+      				</datebox>
+      			</hbox>
+      			<hbox><button label="查询" id="search"
+      					onClick="_paging.activePage=0;saction.stat();">
+      				</button>
+      			</hbox>
+      		</row>
+      	</rows>
+      </grid>
+
+      <listbox 
+		model="@{saction.normalChannelList,load-after='search.onClick'}">
+		<listhead>
+			<listheader label="短信长度(字数)" width="30%" align="center"/>
+			<listheader label="发送条数(需要发送的)" width="30%" align="center"/>
+			<listheader label="计算单位" width="10%" align="left"/>
+			<listheader label="合计" width="30%" align="left"/>
+		</listhead>
+		<listitem self="@{each='sms'}"  height="25px">
+			<listcell label="@{sms.charasters}" />
+			<listcell label="@{sms.total}" />
+			<listcell label="@{sms.r}"/>
+			<listcell label="@{sms.totalCount}"/>
+		</listitem>
+		</listbox>
+	  
+	<toolbar align="end">
+		<grid style="border:0">
+		<rows >
+			<row>
+				<cell width="200px">
+					亿美软通业务短信共<label id="_totalNormalTotalCountLabel" value="0" />条
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+	   
+	<space/>
+	
+	<listbox 
+		model="@{saction.qunfaChannelList,load-after='search.onClick'}">
+		<listhead>
+			<listheader label="短信长度(字数)" width="30%" align="center"/>
+			<listheader label="发送条数(需要发送的)" width="30%" align="center"/>
+			<listheader label="计算单位" width="10%" align="left"/>
+			<listheader label="合计" width="30%" align="left"/>
+		</listhead>
+		<listitem self="@{each='sms'}"  height="25px">
+			<listcell label="@{sms.charasters}" />
+			<listcell label="@{sms.total}" />
+			<listcell label="@{sms.r}"/>
+			<listcell label="@{sms.totalCount}"/>
+		</listitem>
+		</listbox>
+	  
+	<toolbar align="end">
+		<grid style="border:0">
+		<rows >
+			<row>
+				<cell width="200px">
+					亿美软通群发短信共<label id="_totalQunFaTotalCountLabel" value="0"/>条
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+	<space/>
+	<toolbar align="end">
+		<grid style="border:0">
+		<rows >
+			<row>
+				<cell width="300px">
+					亿美软通所有短信共<label id="_totalTotalCountLabel" value="0"/>条, 彩信共<label id="_totalTotalMMSCountLabel" value="0"/>条
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+	
+	<space/>
+	
+	<listbox 
+		model="@{saction.montnetsChannelList,load-after='search.onClick'}">
+		<listhead>
+			<listheader label="短信长度(字数)" width="30%" align="center"/>
+			<listheader label="发送条数(需要发送的)" width="30%" align="center"/>
+			<listheader label="计算单位" width="10%" align="left"/>
+			<listheader label="合计" width="30%" align="left"/>
+		</listhead>
+		<listitem self="@{each='sms'}"  height="25px">
+			<listcell label="@{sms.charasters}" />
+			<listcell label="@{sms.total}" />
+			<listcell label="@{sms.r}"/>
+			<listcell label="@{sms.totalCount}"/>
+		</listitem>
+	</listbox>
+	  
+	<toolbar align="end">
+		<grid style="border:0">
+		<rows >
+			<row>
+				<cell width="200px">
+					梦网短信共<label id="_totalMontnetsTotalCountLabel" value="0" />条
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>	  
+</window>
+</zk>

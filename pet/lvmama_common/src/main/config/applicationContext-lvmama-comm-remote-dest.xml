@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+    <bean id="comSubjectService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/comSubjectService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComSubjectService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="placeService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placeService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlaceService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="askService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/askService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.QuestionAnswerService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="placePageService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placePageService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlacePageService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="placePlaceDestService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placePlaceDestService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlacePlaceDestService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="placeSearchPinyinService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placeSearchPinyinService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlaceSearchPinyinService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="placePhotoService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placePhotoService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlacePhotoService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="placeLandMarkService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placeLandMarkService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlaceLandMarkService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="placeActivityService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placeActivityService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlaceActivityService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="specialTopicService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/specialTopicService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.SpecialTopicService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="placeHotelNoticeService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placeHotelNoticeService"></property>
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlaceHotelNoticeService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="placeHotelRoomService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placeHotelRoomService"></property>
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlaceHotelRoomService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="placeHotelRecommendService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placeHotelRecommendService"></property>
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlaceHotelRecommendService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <!-- 百度GOOGLE地图相关 -->
+    <bean id="placeCoordinateBaiduService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placeCoordinateBaiduService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlaceCoordinateBaiduService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="placeCoordinateGoogleService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placeCoordinateGoogleService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.place.PlaceCoordinateGoogleService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+
+    <!-- seo -->
+    <bean id="seoSiteMapHtmlService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/seoSiteMapHtmlService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.seo.SeoSiteMapHtmlService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="seoSiteMapXmlService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/seoSiteMapXmlService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.seo.SeoSiteMapXmlService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="seoIndexPageService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/seoIndexPageService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.seo.SeoIndexPageService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="recommendInfoService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/recommendInfoService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.seo.RecommendInfoService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="recommendBlockService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/recommendBlockService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.seo.RecommendBlockService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <!-- search -->
+    <bean id="productSearchInfoService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/productSearchInfoService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.search.ProductSearchInfoService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="placeSearchInfoService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/placeSearchInfoService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.search.PlaceSearchInfoService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="prodBranchSearchInfoService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/prodBranchSearchInfoService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.search.ProdBranchSearchInfoService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+     <bean id="seoLinksService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/seoLinksService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.seo.SeoLinksService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="keyWordService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/keyWordService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.review.KeyWordService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="reviewSendEmailService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/reviewSendEmailService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.review.ReviewSendEmailService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    
+    <bean id="userTagsTypeService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/userTagsTypeService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.usertags.UserTagsTypeService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    
+<!--  <bean id="userTagsSearchLogsService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${report.serviceUrl}/userTagsSearchLogsService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.usertags.UserTagsSearchLogsService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> -->
+    
+     <bean id="userTagsService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/userTagsService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.usertags.UserTagsService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    
+    <bean id="userTagsRelationshipService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/userTagsRelationshipService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.usertags.UserTagsRelationshipService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+</beans>

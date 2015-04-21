@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="STORED_CARD" >
+	<typeAlias type="com.lvmama.comm.pet.po.money.StoredCard" alias="StoredCard"/>
+	<resultMap class="com.lvmama.comm.pet.po.money.StoredCard" id="BaseCardGroup">
+		<result property="storedCardId" column="STORED_CARD_ID"/>
+		<result property="cardBatchNo" column="CARD_BATCH_NO"/>
+		<result property="cardNo" column="CARD_NO"/>
+		<result property="serialNo" column="SERIAL_NO"/>
+		<result property="amount" column="AMOUNT"  nullValue="0"/>
+		<result property="balance" column="BALANCE" nullValue="0"/>
+		<result property="activeStatus" column="ACTIVE_STATUS"/>
+		<result property="stockStatus" column="STOCK_STATUS" />
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="overTime" column="OVER_TIME"/>
+		<result property="intoStockId" column="INTO_CARD_STOCK_ID"/>
+		<result property="intoTime" column="INTO_TIME"/>
+		<result property="outStockId" column="OUT_CARD_STOCK_ID"/>
+		<result property="outTime" column="OUT_TIME"/>
+		<result property="status" column="STATUS"/>
+		<!-- 天下卡增加 -->
+		<result property="outCode" column="OUT_CODE"/>
+        <result property="type" column="type"/>
+        <result property="password" column="password"/>
+	</resultMap>
+	
+    <insert id="insert" parameterClass="StoredCard">
+		<selectKey keyProperty="storedCardId" resultClass="java.lang.Long">
+			SELECT STORED_CARD_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO STORED_CARD
+			(STORED_CARD_ID,CARD_BATCH_NO,CARD_NO,SERIAL_NO,AMOUNT,BALANCE,ACTIVE_STATUS,STOCK_STATUS,
+				STATUS,CREATE_TIME,OVER_TIME)
+		VALUES(#storedCardId#,#cardBatchNo#,#cardNo#,#serialNo#,#amount#,#balance#,#activeStatus#,#stockStatus#,
+				#status#,#createTime#,#overTime#)		
+	</insert>
+    
+    <update id="updateByPrimaryKey" parameterClass="StoredCard">
+		UPDATE STORED_CARD SET
+			CARD_BATCH_NO = #cardBatchNo#,
+			CARD_NO = #cardNo#,
+			SERIAL_NO = #serialNo#,
+			AMOUNT = #amount#,
+			BALANCE = #balance#,
+			STATUS = #status#,
+			ACTIVE_STATUS = #activeStatus#,
+			STOCK_STATUS = #stockStatus#,
+			CREATE_TIME = #createTime#,
+			OVER_TIME = #overTime#,
+			INTO_CARD_STOCK_ID = #intoStockId#,
+			INTO_TIME = #intoTime#,
+			OUT_CARD_STOCK_ID = #outStockId#,
+			OUT_TIME = #outTime#
+		WHERE STORED_CARD_ID=#storedCardId#
+	</update>
+	
+	
+	<select id="queryStoredCardById" resultMap="BaseCardGroup"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+		SELECT * FROM STORED_CARD WHERE STORED_CARD_ID = #storedCardId#
+		]]>
+	</select>
+	
+	
+	<sql id="selectSQL">
+	   SELECT S.* FROM STORED_CARD S
+	       <dynamic prepend=" where ">
+	        <isNotEmpty prepend="and" property="type">
+	           S.type=#type#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="serialNo">
+				S.SERIAL_NO like #serialNo#||'%' 
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardBatchNo">
+				S.CARD_BATCH_NO = #cardBatchNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardNo">
+				S.CARD_NO like '%'||#cardNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				S.STATUS = #status#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="activeStatus">
+				S.ACTIVE_STATUS = #activeStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="stockStatus">
+				S.STOCK_STATUS = #stockStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="intoStockId">
+				S.INTO_CARD_STOCK_ID = #intoStockId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="outStockId">
+				S.OUT_CARD_STOCK_ID = #outStockId#
+			</isNotEmpty>
+			<isNotNull  prepend="AND" property="beginOutTime">
+		   	    S.OUT_TIME &gt;= #beginOutTime#
+			</isNotNull>
+	        <isNotNull  prepend="AND" property="endOutTime">
+		   	    S.OUT_TIME &lt;= #endOutTime#
+			</isNotNull>
+			<isNotNull  prepend="AND" property="beginOverTime">
+		   	    S.OVER_TIME &gt;= #beginOverTime#
+			</isNotNull>
+	        <isNotNull  prepend="AND" property="endOverTime">
+		   	    S.OVER_TIME &lt;= #endOverTime#
+			</isNotNull>
+			</dynamic>
+     </sql>
+	
+    
+    <select id="lastStoredCard" resultMap="BaseCardGroup" parameterClass="java.util.HashMap">
+		SELECT * FROM STORED_CARD WHERE STORED_CARD_ID IN (
+		  SELECT MAX(O.STORED_CARD_ID)  FROM STORED_CARD  O WHERE O.STORED_CARD_ID IN (
+		    SELECT S.STORED_CARD_ID FROM STORED_CARD S WHERE S.SERIAL_NO like #serialNo#||'%'
+		   )
+		)
+	</select>
+	
+	
+	
+	<select id="queryByParam" resultMap="BaseCardGroup" parameterClass="java.util.HashMap">
+		SELECT * FROM ( 
+			<include refid="selectSQL"/>
+			ORDER BY S.STORED_CARD_ID DESC
+		)
+	</select>
+	
+	<select id="selectByParam" resultMap="BaseCardGroup" parameterClass="java.util.HashMap">
+		SELECT * FROM 
+		(
+			SELECT A.*,ROWNUM rn FROM
+			( 
+				<include refid="selectSQL"/>
+				ORDER BY S.STORED_CARD_ID DESC
+			) A
+			<dynamic prepend="where">
+				<isNotEmpty property="endRows">
+					ROWNUM &lt;= #endRows#
+				</isNotEmpty>
+			</dynamic>
+		)
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows">
+				rn &gt;=#startRows#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="selectByParamCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM ( 
+			<include refid="selectSQL"/>
+		)
+	</select>
+	
+	<select id="selectCardByParamForCreateStock" resultMap="BaseCardGroup" parameterClass="java.util.HashMap">
+		SELECT S.* FROM STORED_CARD S
+		    <dynamic prepend="WHERE">
+			    <isNotEmpty property="beginSerialNo">
+					<isNotEmpty property="endSerialNo">
+						S.SERIAL_NO BETWEEN #beginSerialNo# AND #endSerialNo#
+					</isNotEmpty>
+				</isNotEmpty>
+
+				<isNotNull property="notInAmountList">
+				    AND S.AMOUNT NOT IN
+					<iterate property="notInAmountList" conjunction="," open="(" close=")">
+				      #notInAmountList[]#
+				  	</iterate>
+				</isNotNull>
+				<isNotEmpty property="stockStatus">
+					AND S.STOCK_STATUS = #stockStatus#
+				</isNotEmpty>
+				<isNotEmpty property="status">
+					AND S.STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="amount">
+					AND S.AMOUNT = #amount#
+				</isNotEmpty>
+	    </dynamic>
+	</select>
+</sqlMap>

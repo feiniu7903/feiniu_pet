@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SHOP_COOPERATION_COUPON" >
+	<typeAlias alias="cooperateCoupon" type="com.lvmama.comm.pet.po.shop.ShopCooperationCoupon"/>
+	<resultMap id="resultMap" class="com.lvmama.comm.pet.po.shop.ShopCooperationCoupon">
+		<result property="id" column="ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="couponInfo" column="COUPON_INFO" />
+		<result property="createUser" column="CREATE_USER" />
+		<result property="createDate" column="CREATE_DATE" />
+	</resultMap>
+	<sql id="paramsSql">
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty prepend=" AND " property="id"> C.ID = #id#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="productId"> C.PRODUCT_ID = #productId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="createUser"> C.CREATE_USER = #createUser#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="startDate"> C.CREATE_DATE &gt;= #startDate#</isNotEmpty>
+	        <isNotEmpty prepend=" AND " property="endDate"> C.CREATE_DATE &lt;= #endDate# + 1</isNotEmpty>		
+			<isNotEmpty prepend=" AND " property="idList">
+			C.ID IN 
+			<iterate property="idList" open="(" close=")"
+				conjunction=",">
+				#idList[]#
+			</iterate>
+		</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<sql id="query_sql">
+		SELECT C.ID,
+		       C.PRODUCT_ID,
+		       C.COUPON_INFO,
+		       C.CREATE_USER,
+		       C.CREATE_DATE,
+		       ROWNUM RN
+		  FROM SHOP_COOPERATION_COUPON C
+		<include refid="paramsSql"/>
+	</sql>
+	
+	<select id="count" parameterClass="java.util.Map" resultClass="Long">
+		SELECT COUNT(*) 
+		FROM ( <include refid="query_sql"/> ) T
+	</select>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="resultMap">
+		SELECT T.*
+		FROM ( 
+			<include refid="query_sql"/>
+			<isNotEmpty prepend=" AND " property="_endRow" >ROWNUM &lt;#_endRow# </isNotEmpty>
+			) T
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> RN &gt;=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<insert id="insert" parameterClass="cooperateCoupon">
+	    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+			SELECT SHOP_COOPERATE_ID_SEQ.NEXTVAL AS orderId FROM DUAL
+		</selectKey>
+		INSERT INTO SHOP_COOPERATION_COUPON
+		(ID, PRODUCT_ID, COUPON_INFO, CREATE_USER, CREATE_DATE)
+		VALUES (#id#,#productId#,#couponInfo#,#createUser#,SYSDATE)
+	</insert>
+	
+	<delete id="delete" parameterClass="java.util.Map">
+		DELETE SHOP_COOPERATION_COUPON C 
+		<include refid="paramsSql"/>
+	</delete>
+</sqlMap>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SUP_SETTLEMENT_TARGET">
+	<!-- ======================== yuzhibing  begin=============================== -->
+	<typeAlias alias="SupSettlementTarget"
+		type="com.lvmama.comm.pet.po.sup.SupSettlementTarget" />
+
+	<resultMap id="BaseResultMap" class="SupSettlementTarget">
+		<result column="TARGET_ID" property="targetId" />
+		<result column="NAME" property="name" />
+		<result column="BANK_NAME" property="bankName" />
+		<result column="BANK_ACCOUNT_NAME" property="bankAccountName" />
+		<result column="BANK_ACCOUNT" property="bankAccount" />
+		<result column="ALIPAY_NAME" property="alipayName" />
+		<result column="ALIPAY_ACCOUNT" property="alipayAccount" />
+		<result column="DEPOSIT" property="deposit" />
+		<result column="MEMO" property="memo" />
+		<result column="SETTLEMENT_PERIOD" property="settlementPeriod" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="TYPE" property="type" />
+		<result column="BANK_LINES" property="bankLines" />
+		<result column="ADVANCED_DAYS" property="advancedDays" />
+		<result column="PAYMENT_TYPE" property="paymentType" />
+	</resultMap>
+	
+	<!-- 扩展查询供应商的预存款余额和押金余额字段 -->
+	<resultMap id="BaseResultMapWithSupplierBalance"
+		extends="BaseResultMap"
+		class="com.lvmama.comm.pet.po.sup.SupSettlementTarget">
+		<result column="FOREGIFTS_BAL" property="supplier.advancedepositsBalance" />
+		<result column="ADVANCEDEPOSITS_BAL" property="supplier.foregiftsBalance" />
+	</resultMap>
+	
+	<!-- 新增结算对象 -->
+	<insert id="insert" parameterClass="SupSettlementTarget">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="targetId">
+			select SUP_SETTLEMENT_TARGET_SEQ.nextval from DUAL
+		</selectKey>
+			insert into 
+				SUP_SETTLEMENT_TARGET 
+				(
+					TARGET_ID,
+					NAME, 
+					BANK_NAME,
+					BANK_ACCOUNT_NAME, 
+					BANK_ACCOUNT, 
+					ALIPAY_NAME, 
+					ALIPAY_ACCOUNT,
+					DEPOSIT,MEMO,
+					SETTLEMENT_PERIOD,
+					SUPPLIER_ID, 
+					CREATE_TIME,
+					VALID,
+					ORG_ID,
+					TYPE,
+					BANK_LINES,
+					ADVANCED_DAYS,
+					PAYMENT_TYPE
+				)
+			values 
+				(
+					#targetId#,
+					#name#, 
+					#bankName#, 
+					#bankAccountName#,
+					#bankAccount#, 
+					#alipayName#, 
+					#alipayAccount#,
+					#deposit#,
+					#memo#,
+					#settlementPeriod#,
+					#supplierId#, 
+					sysdate,
+					'Y',
+					#orgId#,
+					#type#,
+					#bankLines#,
+					#advancedDays#,
+					#paymentType#
+				)
+	</insert>
+
+	<sql id="findSupSettlementTargetWhere">
+		<isNotNull prepend="and" property="targetId">
+			TARGET_ID = #targetId#
+		</isNotNull>
+		<isNotNull prepend="and" property="supplierId">
+			SUPPLIER_ID = #supplierId#
+		</isNotNull>
+		<isNotNull prepend="and" property="name">
+			NAME LIKE '%'|| #name#||'%'
+		</isNotNull>
+		<isNotNull prepend="and" property="beginDate">
+			<![CDATA[
+				CREATE_TIME >= to_date(#beginDate#,#dateFormat#)
+				]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			<![CDATA[
+				CREATE_TIME <= to_date(#endDate#,#dateFormat#)
+				]]>
+		</isNotNull>
+	</sql>
+
+	<select id="findSupSettlementTarget" resultMap="BaseResultMap">
+		SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+		select * from ( select * from SUP_SETTLEMENT_TARGET where
+		VALID='Y'
+		<include refid="findSupSettlementTargetWhere" />
+		order by TARGET_ID desc )
+		) T WHERE ROWNUM &lt;= #_endRow#
+		)
+		WHERE ROWNUM1 &gt;=#_startRow#
+	</select>
+	 
+	<!-- 查询结算对象详细信息 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMapWithSupplierBalance"
+		parameterClass="java.lang.Long">
+		select 
+			T1.*,
+			T2.FOREGIFTS_BAL,
+			T2.ADVANCEDEPOSITS_BAL
+		from 
+			SUP_SETTLEMENT_TARGET T1,
+			SUP_SUPPLIER T2
+		where 
+			T1.SUPPLIER_ID = T2.SUPPLIER_ID
+		and
+			T1.TARGET_ID = #targetId#
+		and 
+			T1.VALID='Y'
+	</select>
+ 
+	<!-- 修改结算对象 -->
+	<update id="updateByPrimaryKey"
+		parameterClass="com.lvmama.comm.pet.po.sup.SupSettlementTarget">
+		update 
+			SUP_SETTLEMENT_TARGET 
+		set 
+			NAME = #name#, 
+			BANK_NAME = #bankName#, 
+			BANK_ACCOUNT_NAME = #bankAccountName#, 
+			BANK_ACCOUNT = #bankAccount#, 
+			ALIPAY_NAME = #alipayName#, 
+			ALIPAY_ACCOUNT = #alipayAccount#, 
+			DEPOSIT = #deposit#, 
+			SETTLEMENT_PERIOD = #settlementPeriod#, 
+			MEMO = #memo#,
+			TYPE = #type#,
+			BANK_LINES = #bankLines#,
+			ADVANCED_DAYS = #advancedDays#,
+			PAYMENT_TYPE = #paymentType#
+		where 
+			TARGET_ID = #targetId#
+	</update>
+	
+	<update id="markIsValid" parameterClass="java.util.Map">
+		update SUP_SETTLEMENT_TARGET set VALID='N' where TARGET_ID = #targetId#
+	</update>
+	
+	<update id="updateMemoByPrimaryKey" parameterClass="java.util.Map">
+		update SUP_SETTLEMENT_TARGET set MEMO = #memo# where TARGET_ID = #targetId#
+	</update>
+	
+	<select id="selectRowCount" resultClass="java.lang.Integer">
+		select count(*) from ( select * from SUP_SETTLEMENT_TARGET where
+		VALID='Y'
+		<include refid="findSupSettlementTargetWhere" />
+		order by TARGET_ID desc ) 
+	</select>
+	 
+	<select id="selectMetaSettlementByMetaProductId"
+		resultMap="BaseResultMap" >
+		select t.* from META_SETTLEMENT s,
+		SUP_SETTLEMENT_TARGET t where
+		t.TARGET_ID=s.TARGET_ID 
+		AND s.META_PRODUCT_ID=#metaProductId# 
+		AND s.biz_type=#bizType#
+		and t.VALID='Y'
+	</select>
+	
+	<select id="getSupSettlementTargetBySupplierId" resultMap="BaseResultMap">
+		select * from  SUP_SETTLEMENT_TARGET where supplier_id=#supplierId#
+	</select>
+	<!-- 根据下拉框输入的内容查询结算对象  yanggan-->
+	<select id="selectSupSettlementTargetByName" resultClass="SupSettlementTarget" parameterClass="map">
+		SELECT * FROM (
+		SELECT 
+			TARGET_ID AS TARGETID,
+			NAME ,
+			ROWNUM AS RN
+		FROM 
+			SUP_SETTLEMENT_TARGET
+		WHERE 
+		(
+			NAME LIKE '%'||#search#||'%'
+		OR
+			TARGET_ID LIKE #search#||'%'
+		)
+		AND 
+			VALID = 'Y'
+		) WHERE RN &lt;= #size#
+	</select>
+</sqlMap>

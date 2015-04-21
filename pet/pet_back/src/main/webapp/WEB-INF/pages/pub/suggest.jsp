@@ -1,0 +1,2 @@
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/base/jquery.jsonSuggest-2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/base/jquery.jsonSuggest.css"/>

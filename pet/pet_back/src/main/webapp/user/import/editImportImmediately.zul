@@ -1,0 +1,85 @@
+<?page title="导入数据查询" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./newImportDataWin"?>
+<?component name="lvmama_pchannel" macroURI="/mark/channel/channelRelate.zul"?>
+<?component name="lvmama_pcity" macroURI="/macors/p_city.zul"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="newImportDataWin" title="新增导入" closable="true" sizable="false" border="normal"  mode="embedded" apply="com.lvmama.pet.web.user.imp.ImportUserAction">
+		<grid>
+			<columns>
+				<column width="150px"></column>
+				<column width="500px"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>请选择用户渠道:</hbox>
+					<hbox><lvmama_pchannel id="channel_box"></lvmama_pchannel></hbox>
+				</row>
+				<row>
+					<hbox>请选择注册种类:</hbox>
+					<hbox>
+						<listbox mold="select" rows="1" id="registerType" onSelect="saction.setRegisterType(self.selectedItem.value)">
+							<listitem label="立即注册" value="REGISTER_IMMEDIATELY"/>
+							<!--listitem label="二次注册" value="REGISTER_NEED_CONFIRM"/-->
+						</listbox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>常住地:</hbox>
+					<hbox>
+						<lvmama_pcity id="pcity"></lvmama_pcity>					
+					</hbox>
+				</row>				
+				<row>
+					<hbox>上传文件：</hbox>
+					<hbox>
+						<textbox id="furl" maxlength="100" value="@{saction.searchConds.furl}" readonly="true" width="420px" visible = "false"/>
+						<textbox id="filename" maxlength="100" width="420px" readonly="true"/>
+						<button id="upBtn" label="上传文件" upload="true" apply="com.lvmama.pet.web.upload.UploadCtrl" onUpload='upBtn$composer.onUploadLocalTxt(event, furl, filename);Events.postEvent("onChange",furl,null);'></button>
+					</hbox>
+				</row>
+				<row>
+					<hbox></hbox>
+					<hbox><label value="注：导入文件的字段次序，依次为“手机号，邮箱地址，姓名，性别”四个字段，且以(半角)逗号分隔。如若相关字段没有内容，则空栏。"/></hbox>
+				</row>
+				<row>
+					<hbox><label value="自定义确认短信内容"/></hbox>
+					<hbox><textbox rows="10" maxlength="300" width="480px" id="confirmSMS" value="@{saction.searchConds.confirmSMS }" disabled="true"/></hbox>
+				</row>
+				<row>
+					<hbox><checkbox label="自定义短信内容(新会员)" onCheck="smsTemplate.disabled = !self.checked"/></hbox>
+					<hbox><textbox rows="10" maxlength="300" width="480px" id="smsTemplate" value="@{saction.searchConds.smsTemplate }" disabled="true"/></hbox>
+				</row>
+				<row>
+					<hbox><checkbox label="自定义短信内容(老会员)" onCheck="oldSmsTemplate.disabled = !self.checked"/></hbox>
+					<hbox><textbox rows="10" maxlength="300" width="480px" id="oldSmsTemplate" value="@{saction.searchConds.oldSmsTemplate }" disabled="true"/></hbox>
+				</row>
+				<row>
+					<hbox><checkbox label="自定义邮箱内容" onCheck="mailTemplate.disabled = !self.checked"/></hbox>
+					<hbox><textbox rows="10" maxlength="300" width="480px" id="mailTemplate" value="@{saction.searchConds.mailTemplate }" disabled="true"/></hbox>
+				</row>
+				<row>
+					<hbox><label value="赠送优惠券批次号:(新会员)"/></hbox>
+					<hbox><textbox rows="2" maxlength="100" width="480px" value="@{saction.searchConds.coupon}"/></hbox>
+				</row>
+				<row>
+					<hbox><label value="赠送优惠券批次号:(老会员)"/></hbox>
+					<hbox><textbox rows="2" maxlength="100" width="480px" value="@{saction.searchConds.oldCoupon}"/></hbox>
+				</row>
+				<row>
+					<hbox></hbox>
+					<hbox><label value="注：赠送多批次优惠券请使用(半角)逗号分隔；如同一批次优惠券赠送多张，请重复输入优惠券批次号。"/></hbox>
+				</row>								
+				<row>
+					<hbox><label value="备注"/></hbox>
+					<hbox><textbox rows="10" maxlength="100" width="480px" value="@{saction.searchConds.remark}"/></hbox>
+				</row>				
+				<row spans="2">
+					<toolbar align="center">
+			 			<button label="提交" width="100px" onClick="saction.submit()" />
+			 			<button label="关闭" width="100px" onClick="newImportDataWin.detach()"/>
+					</toolbar>
+				</row>				
+			</rows>							
+		</grid>
+	</window>
+</zk>

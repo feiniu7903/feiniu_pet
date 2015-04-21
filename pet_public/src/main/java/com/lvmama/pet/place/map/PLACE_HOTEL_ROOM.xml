@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PLACE_HOTEL_ROOM" >
+  <typeAlias alias="placeHotelRoom" type="com.lvmama.comm.pet.po.place.PlaceHotelRoom" />
+  <resultMap id="BaseResultMap" class="placeHotelRoom" >
+    <result column="ROOM_ID" property="roomId"  />
+    <result column="PLACE_ID" property="placeId"  />
+    <result column="ROOM_NAME" property="roomName"  />
+    <result column="ROOM_NUM" property="roomNum"  />
+    <result column="ROOM_FLOOR" property="roomFloor"  />
+    <result column="IS_NONSMOKING" property="isNonsmoking"  />
+    <result column="ADD_BED" property="addBed"  />
+    <result column="ADDBED_COST" property="addBedCost"  />
+    <result column="BROADBAND" property="broadband"  />
+    <result column="BROADBAND_COST" property="broadbandCost"  />
+    <result column="ISWINDOW" property="isWindow"  />
+    <result column="MAX_LIVE" property="maxLive"  />
+    <result column="BUILDING_AREA" property="buildingArea"  />
+    <result column="BIG_BEDWIDE" property="bigBedWide"  />
+    <result column="DOUBLE_BEDWIDE" property="doubleBedWide"  />
+    <result column="ROOM_RECOMMEND" property="roomRecommend"  />
+    <result column="ROOM_CREATETIME" property="roomCreateTime"  />
+    <result column="SEQ_NUM" property="seqNum"/>
+  </resultMap>
+   
+  <select id="queryAllPlaceHoteRoom" resultMap="BaseResultMap" parameterClass="placeHotelRoom">
+		select * from place_hotel_room where 1 = 1
+		<isNotEmpty property="placeId" prepend=" AND ">
+			PLACE_ID = #placeId#
+		</isNotEmpty>
+		order by SEQ_NUM,room_createtime desc
+  </select>
+  
+  <select id="queryPlaceHotelRoomByRoomId" resultMap="BaseResultMap" parameterClass="placeHotelRoom">
+  		select * from place_hotel_room where room_id = #roomId#
+  </select>
+  
+  <insert id="insert" parameterClass="placeHotelRoom">
+	    <selectKey resultClass="java.lang.Long" keyProperty="roomId" >
+	      select place_hotel_room_seq.nextval from DUAL
+	    </selectKey>
+		insert into place_hotel_room (ROOM_ID,PLACE_ID,ROOM_NAME,ROOM_NUM,
+		ROOM_FLOOR,IS_NONSMOKING,ADD_BED,ADDBED_COST,BROADBAND,BROADBAND_COST,
+		ISWINDOW,MAX_LIVE,BUILDING_AREA,BIG_BEDWIDE,DOUBLE_BEDWIDE,ROOM_RECOMMEND,ROOM_CREATETIME,SEQ_NUM)
+		values (#roomId#, #placeId#, #roomName#,#roomNum#,#roomFloor#,#isNonsmoking#,#addBed#,
+		#addBedCost#,#broadband#,#broadbandCost#,#isWindow#,#maxLive#,#buildingArea#,#bigBedWide#,#doubleBedWide#,#roomRecommend#,sysdate,#seqNum#)
+  </insert>
+  <update id="update" parameterClass="placeHotelRoom">
+  		update place_hotel_room set 
+  		ROOM_NAME = #roomName#,ROOM_NUM = #roomNum#,ROOM_FLOOR = #roomFloor#,IS_NONSMOKING = #isNonsmoking#,
+  		ADD_BED = #addBed#,ADDBED_COST = #addBedCost#,BROADBAND = #broadband#,BROADBAND_COST = #broadbandCost#,
+  		ISWINDOW = #isWindow#,MAX_LIVE = #maxLive#,BUILDING_AREA = #buildingArea#,BIG_BEDWIDE = #bigBedWide#,
+  		DOUBLE_BEDWIDE = #doubleBedWide#,ROOM_RECOMMEND = #roomRecommend#,SEQ_NUM = #seqNum#
+  		where room_id = #roomId#
+  </update>
+  <delete id="delete" parameterClass="placeHotelRoom">
+		delete place_hotel_room where ROOM_ID = #roomId#
+	</delete>
+</sqlMap>

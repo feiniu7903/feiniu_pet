@@ -1,0 +1,102 @@
+<#import "/base/func.html" as func>
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>门票产品确认单</title>
+<style type="text/css">
+<#include "/chuanzhen.css"/>
+.wrap{width:800px;}
+.send-time{float:right; margin-right:180px; padding-top: 10px;}
+#header h1{padding:8px 0 0 300px;}
+table th,table td{padding:3px 5px 3px 0;}
+.table-border th,.table-border td{padding:5px 0;}
+@page {  size: A4 landscape; }
+</style>
+</head>
+<body>
+<div class="wrap">
+	<img class="zhang" src="http://pic.lvmama.com/img/ebooking/zhang.png" alt="上海驴妈妈兴旅国际旅行社有限公司" />
+	<div id="header" class="clearfix">
+	    <a class="logo" href="#"><img src="http://pic.lvmama.com/img/new_v/ob_login/login_logo.jpg" width="164" /></a>
+	    <p class="send-time"><span>发送日期：</span><span class="bt">${createTime?string("yyyy-MM-dd HH:mm")}</span>
+		<span class="block">请以发送时间判定传真先后顺序。</span>
+		</p>
+		<h1>${certificate.entity.zhEbkCertificateType}</h1>
+	</div>
+	<div class="main">
+	    <table class="table">
+			<tr>
+				<td class="label">To：</td>
+				<td><span class="bt"><@func.addSpace certificate.entity.toName 20/></span></td>
+				<td class="label">Tel：</td>
+				<td><span class="bt">${certificate.entity.toTel}</span></td>
+				<td class="label">Fax：</td>
+				<td><span class="bt">${certificate.entity.toFax}</span></td>
+			</tr>
+			<tr>
+				<td class="label">From：</td>
+				<td>驴妈妈旅游网-客服中心支持部</td>
+				<td class="label">Tel：</td>
+				<td>021-60561631、021-51212007(调控)</td>
+				<td class="label">Fax：</td>
+				<td>021-60561670<br/>021-69108793*0(备用)、021-69108775*0(备用)</td>
+			</tr>
+		</table>
+		
+		<table class="table-border mt5 table-full">
+			<tr>
+				<th width="40">订单号</th>
+				<th width="60">取票人<br/>(证件号)</th>
+				<th width="40">联系电话</th>
+				<th width="110">产品名称</th>
+				<th width="60">票种</th>
+				<th width="70">入园日期</th>
+				<th width="20">数量</th>
+				<th width="30">人数</th>
+				<th width="30"><@func.showPriceLabel certificate/></th>
+				<th width="30"><@func.showTotalAmountLabel certificate/></th>
+				<th width="50">快递地址</th>
+				<th width="80">备注栏</th>
+				<th width="30">支付<br/>方式</th>
+			</tr>
+			<#list items as certItem>
+			<#list certItem.itemVoList as item>
+			<tr>
+			<#if item_index==0>
+				<td class="tc" rowspan="${certItem.size}">${item.baseInfo.orderId}</td>
+				<td rowspan="${certItem.size}">
+				<#list item.travellerList as person>
+				${person.name}(${person.zhCertType!""})<br/>${person.certNo!""}<br/>
+				</#list>
+				</td>
+				<td rowspan="${certItem.size}"><@func.addSpace item.firstTraveller.mobile 5/></td>
+			</#if>
+				<td><@func.addSpace item.baseInfo.metaProductName 10/></td>
+				<td><@func.addSpace item.baseInfo.metaBranchName 8/></td>
+				<td class="tc">${item.baseInfo.visitTime}</td>
+				<td class="tc">${item.baseInfo.quantity}</td>
+				<td class="tc">成人:${item.baseInfo.adultQuantity}<br/>
+					儿童:${item.baseInfo.childQuantity}
+				</td>
+				<td class="tc"><@func.showPriceContent certificate item.baseInfo.settlementPrice/></td>
+				<td class="tc"><@func.showPriceContent certificate item.baseInfo.totalSettlementPrice/></td>
+				<td>
+				<#if item.baseInfo.supentity >
+				<@func.addSpace item.baseInfo.expressAddress 6/>
+				</#if>
+				</td>
+				<td><@func.addMemoSpace item.baseInfo.faxMemo 6/></td>
+			<#if item_index==0>
+				<td rowspan="${certItem.size}"><@func.addSpace item.baseInfo.zhPaymentTarget 2/></td>
+			</#if>
+			</tr>
+			</#list>
+			</#list>
+		</table>
+		
+		<#include "/base/foot.html"/>
+	</div>
+</div>
+</body>
+</html>

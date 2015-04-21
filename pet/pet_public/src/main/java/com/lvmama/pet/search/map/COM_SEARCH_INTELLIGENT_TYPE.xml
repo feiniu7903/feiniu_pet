@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="COM_SEARCH_INTELLIGENT_TYPE">
+  <typeAlias alias="ComSearchIntelligentType" type="com.lvmama.comm.search.vo.ComSearchIntelligentType" />
+  <resultMap class="ComSearchIntelligentType" id="BaseResultMap">
+    <result column="ID" property="id" />
+    <result column="FROM_DEST_ID" property="fromDestId" />
+    <result column="FROM_DEST_NAME" property="fromDestName" />
+    <result column="TO_DEST_ID" property="toDestId" />
+    <result column="TO_DEST_NAME" property="toDestName" />
+    <result column="SEARCH_TYPE" property="searchType" />
+  </resultMap>
+  <select id="searchByNames" parameterClass="map" resultMap="BaseResultMap">
+  	SELECT * FROM 
+  		COM_SEARCH_INTELLIGENT_TYPE 
+  	WHERE
+  		FROM_DEST_NAME= #fromDestName#
+  	AND
+  		TO_DEST_NAME = #toDestName#
+  </select>
+  
+</sqlMap>

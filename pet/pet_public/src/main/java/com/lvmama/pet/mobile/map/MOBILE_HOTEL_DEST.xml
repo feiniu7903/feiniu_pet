@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MOBILE_HOTEL_DEST">
+  <resultMap class="com.lvmama.comm.pet.po.mobile.MobileHotelDest" id="BaseResultMap">
+    <result column="CITY_CODE" property="cityCode" />
+    <result column="PLACE_ID" property="placeId" />
+    <result column="CITY_NAME" property="cityName" />
+    <result column="PROVINCE_ID" property="provinceId" />
+    <result column="HOTELGEO_NODE_VERSION" property="hotelgeoNodeVersion" />
+    <result column="PROVINCE_NAME" property="provinceName" />
+    <result column="PINYIN" property="pinyin" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelDest" resultMap="BaseResultMap">
+    select CITY_CODE, PLACE_ID, CITY_NAME, PROVINCE_ID, HOTELGEO_NODE_VERSION, PROVINCE_NAME, PINYIN
+    from MOBILE_HOTEL_DEST
+    where CITY_CODE = #cityCode#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelDest">
+    delete from MOBILE_HOTEL_DEST
+    where CITY_CODE = #cityCode#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelDest">
+    insert into MOBILE_HOTEL_DEST (CITY_CODE, PLACE_ID, CITY_NAME, PROVINCE_ID,
+      HOTELGEO_NODE_VERSION, PROVINCE_NAME, PINYIN)
+    values (#cityCode#, #placeId#, #cityName#, #provinceId#,
+      #hotelgeoNodeVersion#, #provinceName#, #pinyin#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelDest">
+    insert into MOBILE_HOTEL_DEST
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="cityCode">
+        CITY_CODE
+      </isNotNull>
+      <isNotNull prepend="," property="placeId">
+        PLACE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="cityName">
+        CITY_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="provinceId">
+        PROVINCE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="hotelgeoNodeVersion">
+        HOTELGEO_NODE_VERSION
+      </isNotNull>
+      <isNotNull prepend="," property="provinceName">
+        PROVINCE_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="pinyin">
+        PINYIN
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="cityCode">
+        #cityCode#
+      </isNotNull>
+      <isNotNull prepend="," property="placeId">
+        #placeId#
+      </isNotNull>
+      <isNotNull prepend="," property="cityName">
+        #cityName#
+      </isNotNull>
+      <isNotNull prepend="," property="provinceId">
+        #provinceId#
+      </isNotNull>
+      <isNotNull prepend="," property="hotelgeoNodeVersion">
+        #hotelgeoNodeVersion#
+      </isNotNull>
+      <isNotNull prepend="," property="provinceName">
+        #provinceName#
+      </isNotNull>
+      <isNotNull prepend="," property="pinyin">
+        #pinyin#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelDest">
+    update MOBILE_HOTEL_DEST
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="placeId">
+        PLACE_ID = #placeId#
+      </isNotNull>
+      <isNotNull prepend="," property="cityName">
+        CITY_NAME = #cityName#
+      </isNotNull>
+      <isNotNull prepend="," property="provinceId">
+        PROVINCE_ID = #provinceId#
+      </isNotNull>
+      <isNotNull prepend="," property="hotelgeoNodeVersion">
+        HOTELGEO_NODE_VERSION = #hotelgeoNodeVersion#
+      </isNotNull>
+      <isNotNull prepend="," property="provinceName">
+        PROVINCE_NAME = #provinceName#
+      </isNotNull>
+      <isNotNull prepend="," property="pinyin">
+        PINYIN = #pinyin#
+      </isNotNull>
+    </dynamic>
+    where CITY_CODE = #cityCode#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelDest">
+    update MOBILE_HOTEL_DEST
+    set PLACE_ID = #placeId#,
+      CITY_NAME = #cityName#,
+      PROVINCE_ID = #provinceId#,
+      HOTELGEO_NODE_VERSION = #hotelgeoNodeVersion#,
+      PROVINCE_NAME = #provinceName#,
+      PINYIN = #pinyin#
+    where CITY_CODE = #cityCode#
+  </update>
+  
+   <!-- 分页查询 头部 -->
+  <sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+  </sql>
+  
+  <!-- 分页查询 尾部 -->
+  <sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>		
+		</dynamic>
+  </sql>
+  
+    <!-- 查询条件 -->
+  <sql id="queryListWhere">
+      <dynamic prepend=" WHERE ">
+              <isEmpty property="id" prepend=" AND "> 1 = 1 </isEmpty>
+			  <isNotEmpty prepend=" AND " property="placeId" >
+		        PLACE_ID = #placeId#
+		      </isNotEmpty>
+		      <isNotEmpty prepend=" AND " property="cityName" >
+		        CITY_NAME = #cityName#
+		      </isNotEmpty>
+		      <isNotEmpty prepend=" AND " property="provinceId" >
+		        PROVINCE_ID = #provinceId#
+		      </isNotEmpty>
+		      <isNotEmpty prepend=" AND " property="hotelgeoNodeVersion" >
+		        HOTELGEO_NODE_VERSION = #hotelgeoNodeVersion#
+		      </isNotEmpty>
+		      <isNotEmpty prepend=" AND " property="pinyin">
+		        PINYIN  = #pinyin#
+		      </isNotEmpty>
+			    order by PINYIN asc
+		</dynamic>
+  </sql>
+  
+  <!-- 查询列表  -->
+  <select id="queryMobileHotelDestList" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="isPaging">
+		  <include refid="pageHeader"/>
+		</isNotEmpty>
+		SELECT * FROM MOBILE_HOTEL_DEST
+		<include refid="queryListWhere"/>
+		<isNotEmpty property="isPaging">
+		   <include refid="pageFooter"/>
+		   order by PINYIN desc
+		</isNotEmpty>
+   </select>
+
+  
+    <!-- 总数  -->
+	<select id="countMobileHotelDestList" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		SELECT COUNT(*) FROM MOBILE_HOTEL_DEST
+		<include refid="queryListWhere"/>
+	</select>
+</sqlMap>

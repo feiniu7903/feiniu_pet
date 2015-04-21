@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MOBILE_ACT_BAIDU_ORDER" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.MobileActBaiduOrder" >
+    <result column="ID" property="id" />
+    <result column="PRODUCTID" property="productid" />
+    <result column="ORDERID" property="orderid" />
+    <result column="BAIDU_USERID" property="baiduUserid" />
+    <result column="LV_USERID" property="lvUserid" />
+    <result column="PLACEID" property="placeid" />
+    <result column="CREATE_DATE" property="createDate" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaiduOrder" >
+    select ID, PRODUCTID, BAIDU_USERID, LV_USERID,PLACEID, CREATE_DATE
+    from MOBILE_ACT_BAIDU_ORDER
+    where ID = #id#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaiduOrder" >
+    delete from MOBILE_ACT_BAIDU_ORDER
+    where ID = #id#
+  </delete>
+   <delete id="deleteByUserId" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaiduOrder" >
+    delete from MOBILE_ACT_BAIDU_ORDER
+    where LV_USERID = #lvUserid# AND PRODUCTID = #productid#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaiduOrder" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      select MOBILE_ACT_BAIDU_ORDER_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into MOBILE_ACT_BAIDU_ORDER (ID, PRODUCTID,ORDERID, BAIDU_USERID, LV_USERID,PLACEID, CREATE_DATE)
+    values (#id#, #productid#, #orderid#, #baiduUserid#, #lvUserid#,#placeid#,
+      #createDate#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaiduOrder" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      select MOBILE_ACT_BAIDU_ORDER_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into MOBILE_ACT_BAIDU_ORDER
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="productid" >
+        PRODUCTID
+      </isNotNull>
+      <isNotNull prepend="," property="orderid" >
+        ORDERID
+      </isNotNull>
+      <isNotNull prepend="," property="baiduUserid" >
+        BAIDU_USERID
+      </isNotNull>
+      <isNotNull prepend="," property="lvUserid" >
+        LV_USERID
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+        CREATE_DATE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id#
+      </isNotNull>
+      <isNotNull prepend="," property="productid" >
+        #productid#
+      </isNotNull>
+      <isNotNull prepend="," property="orderid" >
+        #"orderid"#
+      </isNotNull>
+      <isNotNull prepend="," property="baiduUserid" >
+        #baiduUserid#
+      </isNotNull>
+      <isNotNull prepend="," property="lvUserid" >
+        #lvUserid#
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+        #createDate#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaiduOrder" >
+    update MOBILE_ACT_BAIDU_ORDER
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="productid" >
+        PRODUCTID = #productid#
+      </isNotNull>
+      <isNotNull prepend="," property="orderid" >
+        PRODUCTID = #"orderid"#
+      </isNotNull>
+      <isNotNull prepend="," property="baiduUserid" >
+        BAIDU_USERID = #baiduUserid#
+      </isNotNull>
+      <isNotNull prepend="," property="lvUserid" >
+        LV_USERID = #lvUserid#
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+        CREATE_DATE = #createDate#
+      </isNotNull>
+    </dynamic>
+    where ID = #id#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaiduOrder" >
+    update MOBILE_ACT_BAIDU_ORDER
+    set PRODUCTID = #productid#,
+      ORDERID = #orderid#,
+      BAIDU_USERID = #baiduUserid#,
+      LV_USERID = #lvUserid#,
+      PLACEID = #placeid#,
+      CREATE_DATE = #createDate#
+    where ID = #id#
+  </update>
+  
+  
+   <!-- 分页查询 头部 -->
+  <sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+  </sql>
+  
+  <!-- 分页查询 尾部 -->
+  <sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>		
+		</dynamic>
+  </sql>
+  
+  <!-- 查询条件 -->
+  <sql id="queryListWhere">
+      <dynamic prepend=" WHERE ">
+           <isNotEmpty property="doNothing" prepend=" AND "> 1 = 1 </isNotEmpty>
+		   <isNotEmpty prepend=" AND " property="productid" >
+	        PRODUCTID = #productid#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="orderid" >
+	        ORDERID = #"orderid"#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="baiduUserid" >
+	        BAIDU_USERID = #baiduUserid#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="lvUserid" >
+	        LV_USERID = #lvUserid#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="placeid" >
+	        PLACEID = #placeid#
+	      </isNotEmpty>
+		</dynamic>
+  </sql>
+  
+  <!-- 查询列表  -->
+  <select id="queryMobileActBaiduOrderList" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="isPaging">
+		  <include refid="pageHeader"/>
+		</isNotEmpty>
+		SELECT * FROM MOBILE_ACT_BAIDU_ORDER
+		<include refid="queryListWhere"/>
+		<isNotEmpty property="isPaging">
+		   <include refid="pageFooter"/>
+		</isNotEmpty>
+   </select>
+  
+    <!-- 总数  -->
+	<select id="countMobileActBaiduOrderList" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		SELECT COUNT(*) FROM MOBILE_ACT_BAIDU_ORDER
+		<include refid="queryListWhere"/>
+	</select>
+</sqlMap>

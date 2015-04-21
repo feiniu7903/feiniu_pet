@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="DIC_COMMENT_LATITUDE" >
+	<resultMap class="com.lvmama.comm.pet.po.comment.DicCommentLatitude" id="dicCommentLatitudeMap">
+		<result property="latitudeId" column="LATITUDE_ID"/>
+		<result property="subject" column="SUBJECT"/>
+		<result property="name" column="LATITUDE_NAME"/>		
+	</resultMap>
+	
+	<resultMap class="com.lvmama.comm.pet.po.comment.DicCommentLatitude" id="updateDicCommentLatitudeMap">
+		<result property="oldLatitudeId" column="OLD_LATITUDE"/>
+		<result property="newLatitudeId" column="NEW_LATITUDE"/>	
+	</resultMap>	
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="dicCommentLatitudeMap">
+		select LATITUDE_ID,  SUBJECT, LATITUDE_NAME
+		from dic_comment_latitude
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="subject" prepend=" AND ">subject = #subject#</isNotEmpty>
+		</dynamic>		
+		order by LATITUDE_ID
+	</select>
+	
+	<select id="queryByKey" parameterClass="String" resultMap="dicCommentLatitudeMap">
+		select * 
+		from dic_comment_latitude 
+		where latitude_id = #value#
+		order by latitude_id
+	</select>
+	
+	<select id="queryUpdateLatitudeMapping" parameterClass="java.util.Map" resultMap="updateDicCommentLatitudeMap">
+		SELECT OLD_LATITUDE, NEW_LATITUDE FROM
+			(select rownum rn1,latitude_id OLD_LATITUDE from lvmama_pet.dic_comment_latitude where subject = #oldSubject#) a,
+			(select rownum rn2,latitude_id NEW_LATITUDE from lvmama_pet.dic_comment_latitude where subject = #newSubject#) b
+		WHERE a.rn1 = b.rn2
+	</select>
+</sqlMap>

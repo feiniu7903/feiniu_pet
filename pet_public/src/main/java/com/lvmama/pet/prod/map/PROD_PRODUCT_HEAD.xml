@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_HEAD">
+	<resultMap id="ProdProductHead" class="com.lvmama.comm.pet.po.prod.ProdProductHead">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="BIZ_TYPE" property="bizType" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="VALID" property="valid" />
+	</resultMap>
+	
+	<sql id="reuse_query_sql">
+		FROM (
+			SELECT * FROM PROD_PRODUCT_HEAD
+			<dynamic prepend=" WHERE ">
+				<isNotEmpty prepend=" and " property="productId">PRODUCT_ID =#productId#</isNotEmpty>
+				<isNotEmpty prepend=" and " property="productName">PRODUCT_NAME like '%'||#productName#||'%'</isNotEmpty>
+				<isNotEmpty prepend=" and " property="bizType">BIZ_TYPE = #bizType#</isNotEmpty>
+				<isNotEmpty prepend=" and " property="productType">PRODUCT_TYPE = #productType#</isNotEmpty>
+				<isNotEmpty prepend=" and " property="subProductType">SUB_PRODUCT_TYPE = #subProductType#</isNotEmpty>
+				<isNotEmpty prepend=" and " property="valid">VALID = #valid#</isNotEmpty>
+			</dynamic>
+			) PPH		
+	</sql>	
+	
+	<select id="generateProductId" resultClass="Long">
+		select prod_product_head_seq.nextval as id from DUAL
+	</select>
+	
+	<select id="query" parameterClass="java.util.Map"  resultMap="ProdProductHead">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT 
+			rownum r,
+			PPH.*
+		<include refid="reuse_query_sql"/>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;= #_startRow# </isNotEmpty>
+		</dynamic>	 
+	</select>
+
+	
+   <insert id="insert" parameterClass="com.lvmama.comm.pet.po.prod.ProdProductHead" >
+	    insert into PROD_PRODUCT_HEAD 
+	    	(PRODUCT_ID,PRODUCT_NAME,BIZ_TYPE,PRODUCT_TYPE,SUB_PRODUCT_TYPE,CREATE_TIME,VALID)
+	    values (#productId#, #productName#, #bizType#,#productType#, #subProductType#, SYSDATE, #valid#)
+   </insert>
+      	
+	<delete id="deleteProductById" parameterClass="Long">
+		delete PROD_PRODUCT_HEAD where PRODUCT_ID=#productId#
+	</delete>
+	
+	<select id="selectByPrimaryKey" parameterClass="Long" resultMap="ProdProductHead">
+		SELECT * FROM PROD_PRODUCT_HEAD　WHERE PRODUCT_ID=#productId#
+	</select>
+	
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.prod.ProdProductHead">
+		UPDATE PROD_PRODUCT_HEAD SET 
+			PRODUCT_NAME = #productName#,
+			BIZ_TYPE = #bizType#,
+			PRODUCT_TYPE = #productType#,
+			SUB_PRODUCT_TYPE = #subProductType#,
+			VALID = #valid#	
+		WHERE PRODUCT_ID = #productId#
+	</update>
+</sqlMap>

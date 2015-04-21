@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SEO_INDEX_PAGE" >
+  <typeAlias alias="seoIndexPage" type="com.lvmama.comm.pet.po.seo.SeoIndexPage" />
+   <resultMap id="BaseResultMap" class="seoIndexPage" >
+    <result column="SEO_INDEX_PAGE_ID" property="seoIndexPageId" />
+    <result column="PAGE_NAME" property="pageName" />
+    <result column="PAGE_CODE" property="pageCode" />
+    <result column="SEO_TITLE" property="seoTitle" />
+    <result column="SEO_DESCRIPTION" property="seoDescription" />
+    <result column="SEO_KEYWORD" property="seoKeyword" />
+    <result column="UPDATE_TIME" property="updateTime" />
+    <result column="FOOTER_FILE_NAME" property="footerFileName" />
+  </resultMap>
+  
+  <resultMap class="seoIndexPage" id="SeoIndexPageBaseResultMap" extends="BaseResultMap">
+    <result column="SEO_CONTENT" property="seoContent" jdbcType="CLOB" javaType="java.lang.String" typeHandler="com.lvmama.comm.ClobTypeHandlerCallback"/>
+  </resultMap>
+  
+  <select id="getSeoIndexPageByPageCode" resultMap="SeoIndexPageBaseResultMap" parameterClass="java.lang.String" >
+  	select SEO_INDEX_PAGE_ID,PAGE_NAME, PAGE_CODE,SEO_TITLE,SEO_DESCRIPTION,SEO_KEYWORD,UPDATE_TIME,FOOTER_FILE_NAME,SEO_CONTENT
+	  from SEO_INDEX_PAGE
+	 where PAGE_CODE = #PAGE_CODE#
+  </select>
+  
+  	<sql id="querySeoIndexPageBaseSql">
+  		select SEO_INDEX_PAGE_ID, PAGE_NAME, PAGE_CODE, SEO_TITLE, SEO_DESCRIPTION, SEO_KEYWORD, SEO_CONTENT, UPDATE_TIME, FOOTER_FILE_NAME from SEO_INDEX_PAGE
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty prepend=" AND " property="pageName" >
+			   PAGE_NAME LIKE '%'||#pageName#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="seoIndexPageId" >
+			   SEO_INDEX_PAGE_ID = #seoIndexPageId#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+  
+  <select id="querySeoIndexPageByParam" resultMap="SeoIndexPageBaseResultMap" parameterClass="java.util.Map">
+   	select T2.* 
+	from (
+	    select T1.* , rownum as rn 
+	    from (
+	        <include refid="querySeoIndexPageBaseSql"/>
+		      ) T1			      
+		 <dynamic prepend=" WHERE ">
+		    <isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+		 </dynamic>		 	      
+   	) T2
+   	<dynamic prepend=" WHERE ">
+		<isNotEmpty property="_startRow"> RN &gt;= #_startRow# </isNotEmpty>
+	</dynamic>
+  </select>
+  
+  <!--获得seo index page数-->
+  <select id="seoIndexPageCount" parameterClass="java.util.Map" resultClass="Long">
+       select count(distinct(SEO_INDEX_PAGE_ID)) from (<include refid="querySeoIndexPageBaseSql"/>)
+  </select>
+  
+   <update id="updateSeoIndexPage" parameterClass="seoIndexPage" >
+    update SEO_INDEX_PAGE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="pageName" >
+        PAGE_NAME = #pageName#
+      </isNotNull>
+      <isNotNull prepend="," property="pageCode" >
+        PAGE_CODE = #pageCode#
+      </isNotNull>
+      <isNotNull prepend="," property="seoTitle" >
+        SEO_TITLE = #seoTitle#
+      </isNotNull>
+      <isNotNull prepend="," property="seoDescription" >
+        SEO_DESCRIPTION = #seoDescription#
+      </isNotNull>
+      <isNotNull prepend="," property="seoKeyword" >
+        SEO_KEYWORD = #seoKeyword#
+      </isNotNull>
+      <isNotNull prepend="," property="seoContent" >
+        SEO_CONTENT = #seoContent#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime" >
+        UPDATE_TIME = #updateTime#
+      </isNotNull>
+      <isNotNull prepend="," property="footerFileName" >
+        FOOTER_FILE_NAME = #footerFileName#
+      </isNotNull>
+    </dynamic>
+    where SEO_INDEX_PAGE_ID = #seoIndexPageId#
+  </update>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="seoIndexPage" >
+    delete from SEO_INDEX_PAGE
+    where SEO_INDEX_PAGE_ID = #seoIndexPageId#
+  </delete>
+  
+  <insert id="insertSelective" parameterClass="seoIndexPage" >
+    <selectKey keyProperty="seoIndexPageId" resultClass="java.lang.Long">
+		select SEO_INDEX_PAGE_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into SEO_INDEX_PAGE
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="seoIndexPageId" >
+        SEO_INDEX_PAGE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="pageName" >
+        PAGE_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="pageCode" >
+        PAGE_CODE
+      </isNotNull>
+      <isNotNull prepend="," property="seoTitle" >
+        SEO_TITLE
+      </isNotNull>
+      <isNotNull prepend="," property="seoDescription" >
+        SEO_DESCRIPTION
+      </isNotNull>
+      <isNotNull prepend="," property="seoKeyword" >
+        SEO_KEYWORD
+      </isNotNull>
+      <isNotNull prepend="," property="seoContent" >
+        SEO_CONTENT
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime" >
+        UPDATE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="footerFileName" >
+        FOOTER_FILE_NAME
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="seoIndexPageId" >
+        #seoIndexPageId#
+      </isNotNull>
+      <isNotNull prepend="," property="pageName" >
+        #pageName#
+      </isNotNull>
+      <isNotNull prepend="," property="pageCode" >
+        #pageCode#
+      </isNotNull>
+      <isNotNull prepend="," property="seoTitle" >
+        #seoTitle#
+      </isNotNull>
+      <isNotNull prepend="," property="seoDescription" >
+        #seoDescription#
+      </isNotNull>
+      <isNotNull prepend="," property="seoKeyword" >
+        #seoKeyword#
+      </isNotNull>
+      <isNotNull prepend="," property="seoContent" >
+        #seoContent#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime" >
+        #updateTime#
+      </isNotNull>
+      <isNotNull prepend="," property="footerFileName" >
+        #footerFileName#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+ 
+</sqlMap>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="LVCC_CHANNEL">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.conn.LvccChannel">
+		<result column="CHANNEL_ID" property="channelId" />
+		<result column="NAME" property="name" />
+	</resultMap>
+
+	<insert id="insert">
+		<selectKey resultClass="java.lang.Long" keyProperty="channelId">
+			select
+			LVCC_CHANNEL_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into LVCC_CHANNEL
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="channelId">
+				CHANNEL_ID
+			</isNotNull>
+			<isNotNull prepend="," property="name">
+				NAME
+			</isNotNull>
+			)
+		</dynamic>
+		values
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="channelId">
+				#channelId#
+			</isNotNull>
+			<isNotNull prepend="," property="name">
+				#name#
+			</isNotNull>
+			)
+		</dynamic>
+	</insert>
+
+	<delete id="delete" parameterClass="java.lang.Long">
+		delete from LVCC_CHANNEL where CHANNEL_ID=#channelId#
+	</delete>
+	
+	<select id="selectAll" resultMap="BaseResultMap">
+		select * from LVCC_CHANNEL order by CHANNEL_ID desc
+	</select>
+	
+	<select id="selectByIds" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		select * from LVCC_CHANNEL
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="channelIds">
+				<iterate property="channelIds" open="(" close=")"
+					conjunction="or">
+					CHANNEL_ID=#channelIds[]#
+				</iterate>
+		</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="checkNameIsExsited" resultClass="java.lang.Long" parameterClass="com.lvmama.comm.pet.po.conn.LvccChannel">
+		select count(1) from LVCC_CHANNEL where name=#name#
+		<isNotEmpty prepend="and" property="channelId">
+			CHANNEL_ID!=#channelId#
+		</isNotEmpty>
+	</select>
+</sqlMap>

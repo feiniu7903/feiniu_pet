@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MOBILE_HOTEL_ORDER" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.MobileHotelOrder" >
+    <result column="LV_HOTEL_ORDER_ID" property="lvHotelOrderId" />
+    <result column="ORDER_ID" property="orderId" />
+    <result column="USER_ID" property="userId" />
+    <result column="CANCEL_TIME" property="cancelTime" />
+    <result column="GUARANTEE_AMOUNT" property="guaranteeAmount" />
+    <result column="CURRENCY_CODE" property="currencyCode" />
+    <result column="IS_VALID" property="isValid" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="MESSAGE" property="message" />
+    <result column="STATUS" property="status" />
+    <result column="ARRIVALDATE" property="arrivaldate" />
+    <result column="DEPARTUREDATE" property="departuredate" />
+    <result column="TOTAL_PRICE" property="totalPrice" />
+    <result column="QUANTITY" property="quantity" />
+    <result column="ROOM_ID" property="roomId" />
+    <result column="HOTEL_ID" property="hotelId" />
+    <result column="QUERY_RELATED" property="queryRelated" />
+    <result column="IS_GRUARANTEE" property="isGruarantee" />
+    <result column="IS_CHANGED" property="isChanged" />
+    <result column="IS_REFUND" property="isRefund" />
+    <result column="REFUND_AMOUNT" property="refundAmount" />
+    <result column="CHANNEL" property="channel" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrder" >
+    select LV_HOTEL_ORDER_ID, ORDER_ID, USER_ID, CANCEL_TIME, GUARANTEE_AMOUNT, CURRENCY_CODE,
+      IS_VALID, CREATE_TIME, MESSAGE, STATUS, ARRIVALDATE, DEPARTUREDATE, TOTAL_PRICE, QUANTITY,
+      ROOM_ID, HOTEL_ID, QUERY_RELATED, IS_GRUARANTEE, IS_CHANGED, IS_REFUND,
+      REFUND_AMOUNT, CHANNEL
+    from MOBILE_HOTEL_ORDER
+    where LV_HOTEL_ORDER_ID = #lvHotelOrderId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrder" >
+    delete from MOBILE_HOTEL_ORDER
+    where LV_HOTEL_ORDER_ID = #lvHotelOrderId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrder" >
+  	<selectKey keyProperty="lvHotelOrderId" resultClass="java.lang.Long">
+	  SELECT MOBILE_HOTEL_ORDER_SEQ.nextval FROM DUAL
+    </selectKey>
+    insert into MOBILE_HOTEL_ORDER (LV_HOTEL_ORDER_ID, ORDER_ID, USER_ID, CANCEL_TIME,
+      GUARANTEE_AMOUNT, CURRENCY_CODE, IS_VALID, CREATE_TIME, MESSAGE, STATUS, ARRIVALDATE,
+      DEPARTUREDATE, TOTAL_PRICE, QUANTITY, ROOM_ID, HOTEL_ID, QUERY_RELATED, IS_GRUARANTEE,
+      IS_CHANGED, IS_REFUND, REFUND_AMOUNT, CHANNEL)
+    values (#lvHotelOrderId#, #orderId#, #userId#, #cancelTime#,
+      #guaranteeAmount#, #currencyCode#, #isValid#, #createTime#,
+      #message#, #status#, #arrivaldate#, #departuredate#,
+      #totalPrice#, #quantity#, #roomId#, #hotelId#,
+      #queryRelated#, #isGruarantee#, #isChanged#,
+      #isRefund#, #refundAmount#, #channel#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrder" >
+  	<selectKey keyProperty="lvHotelOrderId" resultClass="java.lang.Long">
+	  SELECT MOBILE_HOTEL_ORDER_SEQ.nextval FROM DUAL
+    </selectKey>
+    insert into MOBILE_HOTEL_ORDER
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="lvHotelOrderId" >
+        LV_HOTEL_ORDER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="orderId" >
+        ORDER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        USER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="cancelTime" >
+        CANCEL_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="guaranteeAmount" >
+        GUARANTEE_AMOUNT
+      </isNotNull>
+      <isNotNull prepend="," property="currencyCode" >
+        CURRENCY_CODE
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        IS_VALID
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="message" >
+        MESSAGE
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS
+      </isNotNull>
+      <isNotNull prepend="," property="arrivaldate" >
+        ARRIVALDATE
+      </isNotNull>
+      <isNotNull prepend="," property="departuredate" >
+        DEPARTUREDATE
+      </isNotNull>
+      <isNotNull prepend="," property="totalPrice" >
+        TOTAL_PRICE
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        QUANTITY
+      </isNotNull>
+      <isNotNull prepend="," property="roomId" >
+        ROOM_ID
+      </isNotNull>
+      <isNotNull prepend="," property="hotelId" >
+        HOTEL_ID
+      </isNotNull>
+      <isNotNull prepend="," property="queryRelated" >
+        QUERY_RELATED
+      </isNotNull>
+      <isNotNull prepend="," property="isGruarantee" >
+        IS_GRUARANTEE
+      </isNotNull>
+      <isNotNull prepend="," property="isChanged" >
+        IS_CHANGED
+      </isNotNull>
+      <isNotNull prepend="," property="isRefund" >
+        IS_REFUND
+      </isNotNull>
+      <isNotNull prepend="," property="refundAmount" >
+        REFUND_AMOUNT
+      </isNotNull>
+      <isNotNull prepend="," property="channel" >
+        CHANNEL
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="lvHotelOrderId" >
+        #lvHotelOrderId#
+      </isNotNull>
+      <isNotNull prepend="," property="orderId" >
+        #orderId#
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        #userId#
+      </isNotNull>
+      <isNotNull prepend="," property="cancelTime" >
+        #cancelTime#
+      </isNotNull>
+      <isNotNull prepend="," property="guaranteeAmount" >
+        #guaranteeAmount#
+      </isNotNull>
+      <isNotNull prepend="," property="currencyCode" >
+        #currencyCode#
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        #isValid#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="message" >
+        #message#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        #status#
+      </isNotNull>
+      <isNotNull prepend="," property="arrivaldate" >
+        #arrivaldate#
+      </isNotNull>
+      <isNotNull prepend="," property="departuredate" >
+        #departuredate#
+      </isNotNull>
+      <isNotNull prepend="," property="totalPrice" >
+        #totalPrice#
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        #quantity#
+      </isNotNull>
+      <isNotNull prepend="," property="roomId" >
+        #roomId#
+      </isNotNull>
+      <isNotNull prepend="," property="hotelId" >
+        #hotelId#
+      </isNotNull>
+      <isNotNull prepend="," property="queryRelated" >
+        #queryRelated#
+      </isNotNull>
+      <isNotNull prepend="," property="isGruarantee" >
+        #isGruarantee#
+      </isNotNull>
+      <isNotNull prepend="," property="isChanged" >
+        #isChanged#
+      </isNotNull>
+      <isNotNull prepend="," property="isRefund" >
+        #isRefund#
+      </isNotNull>
+      <isNotNull prepend="," property="refundAmount" >
+        #refundAmount#
+      </isNotNull>
+      <isNotNull prepend="," property="channel" >
+        #channel#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrder" >
+    update MOBILE_HOTEL_ORDER
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="orderId" >
+        ORDER_ID = #orderId#
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        USER_ID = #userId#
+      </isNotNull>
+      <isNotNull prepend="," property="cancelTime" >
+        CANCEL_TIME = #cancelTime#
+      </isNotNull>
+      <isNotNull prepend="," property="guaranteeAmount" >
+        GUARANTEE_AMOUNT = #guaranteeAmount#
+      </isNotNull>
+      <isNotNull prepend="," property="currencyCode" >
+        CURRENCY_CODE = #currencyCode#
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        IS_VALID = #isValid#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="message" >
+        MESSAGE = #message#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS = #status#
+      </isNotNull>
+      <isNotNull prepend="," property="arrivaldate" >
+        ARRIVALDATE = #arrivaldate#
+      </isNotNull>
+      <isNotNull prepend="," property="departuredate" >
+        DEPARTUREDATE = #departuredate#
+      </isNotNull>
+      <isNotNull prepend="," property="totalPrice" >
+        TOTAL_PRICE = #totalPrice#
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        QUANTITY = #quantity#
+      </isNotNull>
+      <isNotNull prepend="," property="roomId" >
+        ROOM_ID = #roomId#
+      </isNotNull>
+      <isNotNull prepend="," property="hotelId" >
+        HOTEL_ID = #hotelId#
+      </isNotNull>
+      <isNotNull prepend="," property="queryRelated" >
+        QUERY_RELATED = #queryRelated#
+      </isNotNull>
+      <isNotNull prepend="," property="isGruarantee" >
+        IS_GRUARANTEE = #isGruarantee#
+      </isNotNull>
+      <isNotNull prepend="," property="isChanged" >
+        IS_CHANGED = #isChanged#
+      </isNotNull>
+      <isNotNull prepend="," property="isRefund" >
+        IS_REFUND = #isRefund#
+      </isNotNull>
+      <isNotNull prepend="," property="refundAmount" >
+        REFUND_AMOUNT = #refundAmount#
+      </isNotNull>
+      <isNotNull prepend="," property="channel" >
+        CHANNEL = #channel#
+      </isNotNull>
+    </dynamic>
+    where LV_HOTEL_ORDER_ID = #lvHotelOrderId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrder" >
+    update MOBILE_HOTEL_ORDER
+    set ORDER_ID = #orderId#,
+      USER_ID = #userId#,
+      CANCEL_TIME = #cancelTime#,
+      GUARANTEE_AMOUNT = #guaranteeAmount#,
+      CURRENCY_CODE = #currencyCode#,
+      IS_VALID = #isValid#,
+      CREATE_TIME = #createTime#,
+      MESSAGE = #message#,
+      STATUS = #status#,
+      ARRIVALDATE = #arrivaldate#,
+      DEPARTUREDATE = #departuredate#,
+      TOTAL_PRICE = #totalPrice#,
+      QUANTITY = #quantity#,
+      ROOM_ID = #roomId#,
+      HOTEL_ID = #hotelId#,
+      QUERY_RELATED = #queryRelated#,
+      IS_GRUARANTEE = #isGruarantee#,
+      IS_CHANGED = #isChanged#,
+      IS_REFUND = #isRefund#,
+      REFUND_AMOUNT = #refundAmount#,
+      CHANNEL = #channel#
+    where LV_HOTEL_ORDER_ID = #lvHotelOrderId#
+  </update>
+  
+  <update id="updateByPrimaryKey4Job" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrder">
+    update MOBILE_HOTEL_ORDER
+    set 
+      STATUS = #status#,
+      IS_REFUND = #isRefund#,
+      REFUND_AMOUNT = #refundAmount#
+    where LV_HOTEL_ORDER_ID = #lvHotelOrderId#
+  </update>
+  
+  <!-- 分页查询 头部 -->
+  <sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+  </sql>
+  
+  <!-- 分页查询 尾部 -->
+  <sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>		
+		</dynamic>
+  </sql>
+  
+   <!-- 查询条件 -->
+  <sql id="queryListWhere">
+      <dynamic prepend=" WHERE ">
+		  <isNotEmpty prepend=" AND " property="orderId" >
+	        ORDER_ID = #orderId#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="userId" >
+	        USER_ID = #userNo#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="cancelTime" >
+	        CANCEL_TIME = #cancelTime#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="guaranteeAmount" >
+	        GUARANTEE_AMOUNT = #guaranteeAmount#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="currencyCode" >
+	        CURRENCY_CODE = #currencyCode#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="userNo" >
+	        ORDER_ID is not null
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="status">
+	        STATUS = #status#
+	      </isNotEmpty>
+	      <!-- 入住时间  arrivaldate-->
+	      <isNotEmpty prepend=" AND " property="arrivaldateStart">
+	        ARRIVALDATE &gt;= #arrivaldateStart# AND ORDER_ID is not null 
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="arrivaldateEnd">
+	        ARRIVALDATE &lt;= #arrivaldateEnd#
+	      </isNotEmpty>
+	      <!-- 过滤订单状态：  已结账，删除，No Show STATUS &lt;&gt; 'B' AND  -->
+	      <isNotEmpty prepend=" AND " property="validStatus">
+	          ( STATUS is null OR ( STATUS &lt;&gt; 'C' AND  STATUS &lt;&gt; 'D' ))
+	      </isNotEmpty>
+	       <!--  查询已结账(C)、删除(D)、删除另换酒店（Z） -->
+	      <isNotEmpty prepend=" AND " property="validStatusIn">
+	        ( STATUS = 'Z' OR  STATUS = 'C' OR  STATUS = 'D' )
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="queryRelated">
+	          QUERY_RELATED = #queryRelated#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="queryRelatedAndNull">
+	         ( QUERY_RELATED is NULL OR QUERY_RELATED = #queryRelated# )
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="departuredate">
+	        DEPARTUREDATE = #departuredate#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="isGruarantee">
+	        IS_GRUARANTEE = #isGruarantee#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="isChanged">
+	        IS_CHANGED = #isChanged#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="refundAmount">
+	        REFUND_AMOUNT = #refundAmount#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="isRefund">
+	        IS_REFUND = #isRefund#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="isRefundAndNull">
+	        ( IS_REFUND is NULL OR IS_REFUND = #isRefund# )
+	      </isNotEmpty>
+		</dynamic>
+		order by CREATE_TIME desc
+  </sql>
+  
+  <!-- 查询列表  -->
+  <select id="queryMobileHotelOrderList" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="isPaging">
+		  <include refid="pageHeader"/>
+		</isNotEmpty>
+		SELECT * FROM MOBILE_HOTEL_ORDER
+		<include refid="queryListWhere"/>
+		<isNotEmpty property="isPaging">
+		   <include refid="pageFooter"/>
+		</isNotEmpty>
+   </select>
+
+  
+    <!-- 总数  -->
+	<select id="countMobileHotelOrderList" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		SELECT COUNT(*) FROM MOBILE_HOTEL_ORDER
+		<include refid="queryListWhere"/>
+	</select>
+	
+	<!-- 查询用户最后一个订单 -->
+	<select id="selectByUserId" resultClass="java.lang.Long" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelOrder" >
+		select s.* from 
+    		(select t.lv_hotel_order_id  from lvmama_pet.mobile_hotel_order t where t.user_id=#userId# order by t.create_time desc)
+    	s where rownum = 1
+  	</select>
+  	
+</sqlMap>

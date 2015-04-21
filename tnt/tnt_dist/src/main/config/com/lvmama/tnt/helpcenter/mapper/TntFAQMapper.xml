@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.lvmama.tnt.helpcenter.mapper.TntFAQMapper">
+	<resultMap id="baseResultMap" type="tntFAQ">
+		<result property="tntFAQId" column="FAQ_ID" />
+		<result property="question" column="QUESTION" />
+		<result property="answer" column="ANSWER" />
+		<result property="publishtime" column="PUBLISH_TIME" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		FAQ_ID,QUESTION,ANSWER,PUBLISH_TIME
+	    ]]>
+	</sql>
+
+	<select id="queryTntFAQList" resultMap="baseResultMap"
+		parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_FAQ
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="baseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="columns" />
+		from TNT_FAQ
+		where FAQ_ID = #{tntFAQId}
+	</select>
+
+	<select id="queryCountTntFAQ" resultType="java.lang.Integer">
+		select
+		count(1)
+		from
+		TNT_FAQ
+	</select>
+
+	<sql id="whereSQL">
+		<where>
+			<if test="tntFAQId!=null and tntFAQId!=''">
+				AND FAQ_ID = #{tntFAQId}
+			</if>
+			<if test="question!=null and question!=''">
+				AND QUESTION like '%'||#{question}||'%'
+			</if>
+			<if test="answer!=null and answer!=''">
+				AND ANSWER = #{answer}
+			</if>
+			<if test="publishtime!=null and publishtime!=''">
+				AND PUBLISH_TIME = #{publishtime}
+			</if>
+			<if test="beginpublishdate!=null and beginpublishdate!=''">
+			 <![CDATA[
+				AND PUBLISH_TIME >= to_date(#{beginpublishdate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if test="endpublishdate!=null and endpublishdate!=''">
+			 <![CDATA[
+				AND PUBLISH_TIME <= to_date(#{endpublishdate},'yyyy-mm-dd')+1
+			]]>
+			</if>
+		</where>
+	</sql>
+
+	<select id="fetchPage" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_FAQ
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="queryCountFAQ" resultType="java.lang.Integer">
+		select
+		count(1)
+		from TNT_FAQ
+	</select>
+
+	<insert id="insertTntFAQ" useGeneratedKeys="true">
+		<selectKey resultType="java.lang.Long" keyProperty="tntFAQId"
+			order="BEFORE">
+			select TNT_FAQ_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_FAQ (
+		FAQ_ID ,
+		QUESTION ,
+		ANSWER,
+		PUBLISH_TIME
+		) VALUES (
+		#{tntFAQId},
+		#{question,jdbcType=VARCHAR},
+		#{answer,jdbcType=VARCHAR},
+		sysdate
+		)
+	</insert>
+
+	<select id="findCount" resultType="Integer"
+		parameterType="com.lvmama.tnt.user.po.TntFAQ">
+		SELECT count(1) FROM TNT_FAQ
+		<include refid="whereSQL" />
+	</select>
+
+	<update id="update">
+		UPDATE TNT_FAQ
+		<set>
+			<if test="question != null">
+				QUESTION = #{question} ,
+			</if>
+			<if test="answer != null">
+				ANSWER = #{answer}
+			</if>
+			<if test="publishtime != null">
+				PUBLISH_TIME = #{publishtime}
+			</if>
+		</set>
+		WHERE FAQ_ID = #{tntFAQId}
+	</update>
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM TNT_FAQ
+		WHERE
+		FAQ_ID =
+		#{tntFAQId}
+	</delete>
+
+	<sql id="pageWhere">
+		<where>
+			<if test="param.tntFAQId!=null and param.tntFAQId!=''">
+				AND FAQ_ID = #{param.tntFAQId}
+			</if>
+			<if test="param.question!=null and param.question!=''">
+				AND QUESTION like '%'||#{param.question}||'%'
+			</if>
+			<if test="param.answer!=null and param.answer!=''">
+				AND ANSWER = #{param.answer}
+			</if>
+			<if test="param.publishtime!=null and param.publishtime!=''">
+				AND PUBLISH_TIME = #{param.publishtime}
+			</if>
+			<if test="param.beginpublishdate!=null and param.beginpublishdate!=''">
+			 <![CDATA[
+				AND PUBLISH_TIME >= to_date(#{param.beginpublishdate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if test="param.endpublishdate!=null and param.endpublishdate!=''">
+			 <![CDATA[
+				AND PUBLISH_TIME <= to_date(#{param.endpublishdate},'yyyy-mm-dd')+1
+			]]>
+			</if>			
+		</where>
+	</sql>
+
+
+</mapper>

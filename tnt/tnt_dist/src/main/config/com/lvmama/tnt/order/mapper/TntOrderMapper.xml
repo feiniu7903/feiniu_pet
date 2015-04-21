@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.order.mapper.TntOrderMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.order.po.TntOrder">
+		<result property="tntOrderId" column="TNT_ORDER_ID" />
+		<result property="orderId" column="ORDER_ID" />
+		<result property="partnerOrderId" column="PARTNER_ORDER_ID" />
+		<result property="channelId" column="CHANNEL_ID" />
+		<result property="distributorId" column="DISTRIBUTOR_ID" />
+		<result property="orderAmount" column="ORDER_AMOUNT" />
+		<result property="isRefund" column="IS_REFUND" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productName" column="PRODUCT_NAME" />
+		<result property="paymentStatus" column="PAYMENT_STATUS" />
+		<result property="paymentTime" column="PAYMENT_TIME" />
+		<result property="approveStatus" column="APPROVE_STATUS" />
+		<result property="performStatus" column="PERFORM_STATUS" />
+		<result property="visitTime" column="VISIT_TIME" />
+		<result property="orderStatus" column="ORDER_STATUS" />
+		<result property="resourceConfirmStatus" column="RESOURCE_CONFIRM_STATUS" />
+		<result property="distributorName" column="DISTRIBUTOR_NAME" />
+		<result property="productType" column="PRODUCT_TYPE" />
+		<result property="contactName" column="CONTACT_NAME" />
+		<result property="contactMoblie" column="CONTACT_MOBLIE" />
+		<result property="resourceLackReason" column="RESOURCE_LACK_REASON" />
+		<result property="settleStatus" column="SETTLE_STATUS" />
+		<result property="quantity" column="QUANTITY" />
+		<result property="paymentTarget" column="PAYMENT_TARGET" />
+		<result property="refundAmount" column="REFUND_AMOUNT" />
+		<result property="refundStatus" column="REFUND_STATUS" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		TNT_ORDER_ID,ORDER_ID,PARTNER_ORDER_ID,CHANNEL_ID,DISTRIBUTOR_ID,ORDER_AMOUNT,IS_REFUND,CREATE_TIME,REFUND_AMOUNT,
+		PRODUCT_ID,PRODUCT_NAME,PAYMENT_STATUS,PAYMENT_TIME,APPROVE_STATUS,PERFORM_STATUS,VISIT_TIME,ORDER_STATUS,QUANTITY,
+		RESOURCE_CONFIRM_STATUS,DISTRIBUTOR_NAME,PRODUCT_TYPE,CONTACT_NAME,CONTACT_MOBLIE,RESOURCE_LACK_REASON,SETTLE_STATUS,PAYMENT_TARGET,REFUND_STATUS
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.order.po.TntOrder">
+		<selectKey resultType="java.lang.Long" keyProperty="tntOrderId"
+			order="BEFORE">
+			select TNT_ORDER_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_ORDER (
+		TNT_ORDER_ID ,
+		ORDER_ID ,
+		PARTNER_ORDER_ID ,
+		CHANNEL_ID ,
+		DISTRIBUTOR_ID ,
+		ORDER_AMOUNT ,
+		IS_REFUND ,
+		CREATE_TIME ,
+		PRODUCT_ID ,
+		PRODUCT_NAME ,
+		PAYMENT_STATUS ,
+		PAYMENT_TIME ,
+		APPROVE_STATUS ,
+		PERFORM_STATUS ,
+		VISIT_TIME ,
+		ORDER_STATUS ,
+		RESOURCE_CONFIRM_STATUS ,
+		DISTRIBUTOR_NAME ,
+		PRODUCT_TYPE,
+		CONTACT_NAME,
+		CONTACT_MOBLIE,
+		RESOURCE_LACK_REASON,
+		QUANTITY,
+		SETTLE_STATUS,
+		PAYMENT_TARGET
+		) VALUES (
+		#{tntOrderId,jdbcType=DECIMAL} ,
+		#{orderId,jdbcType=DECIMAL} ,
+		#{partnerOrderId,jdbcType=DECIMAL} ,
+		#{channelId,jdbcType=DECIMAL} ,
+		#{distributorId,jdbcType=DECIMAL} ,
+		#{orderAmount,jdbcType=DECIMAL} ,
+		#{isRefund,jdbcType=VARCHAR} ,
+		sysdate,
+		#{productId,jdbcType=DECIMAL} ,
+		#{productName,jdbcType=VARCHAR} ,
+		#{paymentStatus,jdbcType=VARCHAR} ,
+		#{paymentTime,jdbcType=TIMESTAMP} ,
+		#{approveStatus,jdbcType=VARCHAR} ,
+		#{performStatus,jdbcType=VARCHAR} ,
+		#{visitTime,jdbcType=TIMESTAMP} ,
+		#{orderStatus,jdbcType=VARCHAR} ,
+		#{resourceConfirmStatus,jdbcType=VARCHAR} ,
+		#{distributorName,jdbcType=VARCHAR} ,
+		#{productType,jdbcType=VARCHAR} ,
+		#{contactName,jdbcType=VARCHAR} ,
+		#{contactMoblie,jdbcType=VARCHAR} ,
+		#{resourceLackReason,jdbcType=VARCHAR} ,
+		#{quantity,jdbcType=VARCHAR} ,
+		#{settleStatus,jdbcType=VARCHAR},
+		#{paymentTarget,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.lvmama.tnt.order.po.TntOrder">
+		UPDATE TNT_ORDER SET
+		ORDER_ID = #{orderId,jdbcType=DECIMAL} ,
+		PARTNER_ORDER_ID = #{partnerOrderId,jdbcType=DECIMAL} ,
+		CHANNEL_ID =
+		#{channelId,jdbcType=DECIMAL} ,
+		DISTRIBUTOR_ID =
+		#{distributorId,jdbcType=DECIMAL} ,
+		ORDER_AMOUNT =
+		#{orderAmount,jdbcType=VARCHAR} ,
+		IS_REFUND =
+		#{isRefund,jdbcType=VARCHAR} ,
+		PRODUCT_ID =
+		#{productId,jdbcType=DECIMAL} ,
+		PRODUCT_NAME =
+		#{productName,jdbcType=VARCHAR} ,
+		PAYMENT_STATUS =
+		#{paymentStatus,jdbcType=VARCHAR} ,
+		PAYMENT_TIME =
+		#{paymentTime,jdbcType=TIMESTAMP} ,
+		VISIT_TIME =
+		#{visitTime,jdbcType=TIMESTAMP} ,
+		APPROVE_STATUS =
+		#{approveStatus,jdbcType=VARCHAR} ,
+		PERFORM_STATUS =
+		#{performStatus,jdbcType=VARCHAR} ,
+		ORDER_STATUS =
+		#{orderStatus,jdbcType=VARCHAR} ,
+		RESOURCE_CONFIRM_STATUS =
+		#{resourceConfirmStatus,jdbcType=VARCHAR} ,
+		DISTRIBUTOR_NAME =
+		#{distributorName,jdbcType=VARCHAR} ,
+		CONTACT_NAME =
+		#{contactName,jdbcType=VARCHAR} ,
+		CONTACT_MOBLIE =
+		#{contactMoblie,jdbcType=VARCHAR} ,
+		RESOURCE_LACK_REASON =
+		#{resourceLackReason,jdbcType=VARCHAR} ,
+		SETTLE_STATUS =
+		#{settleStatus,jdbcType=VARCHAR} ,
+		QUANTITY =
+		#{quantity,jdbcType=VARCHAR} ,
+		PRODUCT_TYPE =
+		#{productType,jdbcType=VARCHAR}
+		,
+		PAYMENT_TARGET =
+		#{paymentTarget,jdbcType=VARCHAR},
+		REFUND_STATUS=
+		#{refundStatus,jdbcType=VARCHAR},
+		REFUND_AMOUNT=
+		#{refundAmount,jdbcType=DECIMAL}
+		WHERE
+		<if test="tntOrderId !=null">
+			TNT_ORDER_ID = #{tntOrderId}
+		</if>
+	</update>
+
+	<update id="updateStatus" parameterType="com.lvmama.tnt.order.po.TntOrder">
+		UPDATE TNT_ORDER
+		<set>
+			<if test="paymentStatus != null">
+				PAYMENT_STATUS = #{paymentStatus,jdbcType=VARCHAR} ,
+			</if>
+			<if test="paymentTime != null">
+				PAYMENT_TIME = #{paymentTime,jdbcType=TIMESTAMP} ,
+			</if>
+			<if test="approveStatus != null">
+				APPROVE_STATUS =
+				#{approveStatus,jdbcType=VARCHAR} ,
+			</if>
+			<if test="performStatus != null">
+				PERFORM_STATUS =
+				#{performStatus,jdbcType=VARCHAR} ,
+			</if>
+			<if test="refundStatus != null">
+				REFUND_STATUS =
+				#{refundStatus,jdbcType=VARCHAR} ,
+			</if>
+			<if test="orderStatus != null">
+				ORDER_STATUS =
+				#{orderStatus,jdbcType=VARCHAR} ,
+			</if>
+		</set>
+		WHERE
+		TNT_ORDER_ID = #{tntOrderId}
+	</update>
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM TNT_ORDER WHERE
+		TNT_ORDER_ID = #{id}
+	</delete>
+
+	<sql id="select">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ORDER
+		<include refid="where" />
+	</sql>
+
+	<select id="selectOne" resultMap="baseResultMap"
+		parameterType="com.lvmama.tnt.order.po.TntOrder">
+		<include refid="select" />
+	</select>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ORDER
+		WHERE
+		TNT_ORDER_ID = #{id}
+	</select>
+
+	<select id="getByOrderId" resultMap="baseResultMap"
+		parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ORDER
+		WHERE
+		ORDER_ID = #{orderId}
+	</select>
+
+	<sql id="where">
+		<where>
+			<if test="tntOrderId != null and tntOrderId !=''">
+				AND TNT_ORDER_ID = #{tntOrderId}
+			</if>
+			<if test="orderId != null and orderId !=''">
+				AND ORDER_ID = #{orderId}
+			</if>
+			<if test="partnerOrderId != null and partnerOrderId !=''">
+				AND PARTNER_ORDER_ID = #{partnerOrderId}
+			</if>
+			<if test="channelId != null and channelId !=''">
+				AND CHANNEL_ID = #{channelId}
+			</if>
+			<if test="distributorId != null and distributorId !=''">
+				AND DISTRIBUTOR_ID = #{distributorId}
+			</if>
+			<if test="orderAmount != null and orderAmount !=''">
+				AND ORDER_AMOUNT = #{orderAmount}
+			</if>
+			<if test="isRefund != null and isRefund !=''">
+				AND IS_REFUND = #{isRefund}
+			</if>
+			<if test="dateCreateTimeBegin != null and dateCreateTimeEnd !=null">
+				<![CDATA[ AND CREATE_TIME > #{dateCreateTimeBegin} and CREATE_TIME< #{dateCreateTimeEnd} ]]>
+			</if>
+			<if test="datePaymentTimeBegin != null and datePaymentTimeEnd !=null">
+				<![CDATA[ AND PAYMENT_TIME > #{datePaymentTimeBegin} and PAYMENT_TIME< #{datePaymentTimeEnd}]]>
+			</if>
+			<if test="dateVisitTimeBegin != null and dateVisitTimeEnd !=null">
+				<![CDATA[ AND VISIT_TIME = #{dateVisitTimeBegin} and VISIT_TIME< #{dateVisitTimeEnd} ]]>
+			</if>
+			<if test="productId != null and productId !=''">
+				AND PRODUCT_ID = #{productId}
+			</if>
+			<if test="productName != null and productName !=''">
+				AND PRODUCT_NAME like
+				CONCAT(CONCAT('%',#{productName}),'%')
+			</if>
+			<if test="paymentStatus != null and paymentStatus !=''">
+				AND PAYMENT_STATUS = #{paymentStatus}
+			</if>
+			<if test="approveStatus != null and approveStatus !=''">
+				AND APPROVE_STATUS = #{approveStatus}
+			</if>
+			<if test="performStatus != null and performStatus !=''">
+				AND PERFORM_STATUS = #{performStatus}
+			</if>
+			<if test="orderStatus != null and orderStatus !=''">
+				AND ORDER_STATUS = #{orderStatus}
+			</if>
+			<if test="resourceConfirmStatus != null and resourceConfirmStatus !=''">
+				AND RESOURCE_CONFIRM_STATUS = #{resourceConfirmStatus}
+			</if>
+			<if test="distributorName != null and distributorName !=''">
+				AND DISTRIBUTOR_NAME = #{distributorName}
+			</if>
+			<if test="contactName != null and contactName !=''">
+				AND CONTACT_NAME like
+				CONCAT(CONCAT('%',#{contactName}),'%')
+			</if>
+			<if test="contactMoblie != null and contactMoblie !=''">
+				AND CONTACT_MOBLIE = #{contactMoblie}
+			</if>
+			<if test="resourceLackReason != null and resourceLackReason !=''">
+				AND RESOURCE_LACK_REASON = #{resourceLackReason}
+			</if>
+			<if test="settleStatus != null and settleStatus !=''">
+				AND SETTLE_STATUS = #{settleStatus}
+			</if>
+			<if test="productType != null and productType !=''">
+				AND PRODUCT_TYPE = #{productType}
+			</if>
+			<if test="paymentTarget != null and paymentTarget !=''">
+				AND PAYMENT_TARGET = #{paymentTarget}
+			</if>
+			<if test="refundStatus != null and refundStatus !=''">
+				AND refund_Status = #{refundStatus}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="pageWhere">
+		<where>
+			<if test="param.tntOrderId != null and param.tntOrderId !=''">
+				AND TNT_ORDER_ID = #{param.tntOrderId}
+			</if>
+			<if test="param.orderId != null and param.orderId !=''">
+				AND ORDER_ID = #{param.orderId}
+			</if>
+			<if test="param.partnerOrderId != null and param.partnerOrderId !=''">
+				AND PARTNER_ORDER_ID = #{param.partnerOrderId}
+			</if>
+			<if test="param.channelId != null and param.channelId !=''">
+				AND CHANNEL_ID = #{param.channelId}
+			</if>
+			<if test="param.distributorId != null and param.distributorId !=''">
+				AND DISTRIBUTOR_ID = #{param.distributorId}
+			</if>
+			<if test="param.orderAmount != null and param.orderAmount !=''">
+				AND ORDER_AMOUNT = #{param.orderAmount}
+			</if>
+			<if test="param.isRefund != null and param.isRefund !=''">
+				AND IS_REFUND = #{param.isRefund}
+			</if>
+			<if test="param.productId != null and param.productId !=''">
+				AND PRODUCT_ID = #{param.productId}
+			</if>
+			<if test="param.productName != null and param.productName !=''">
+				AND PRODUCT_NAME like
+				CONCAT(CONCAT('%',#{param.productName}),'%')
+			</if>
+			<if test="param.paymentStatus != null and param.paymentStatus !=''">
+				AND PAYMENT_STATUS = #{param.paymentStatus}
+			</if>
+			<if test="param.approveStatus != null and param.approveStatus !=''">
+				AND APPROVE_STATUS = #{param.approveStatus}
+			</if>
+			<if test="param.performStatus != null and param.performStatus !=''">
+				AND PERFORM_STATUS = #{param.performStatus}
+			</if>
+			<if test="param.orderStatus != null and param.orderStatus !=''">
+				AND ORDER_STATUS = #{param.orderStatus}
+			</if>
+			<if
+				test="param.resourceConfirmStatus != null and param.resourceConfirmStatus !=''">
+				AND RESOURCE_CONFIRM_STATUS = #{param.resourceConfirmStatus}
+			</if>
+			<if test="param.distributorName != null and param.distributorName !=''">
+				AND DISTRIBUTOR_NAME = #{param.distributorName}
+			</if>
+			<if test="param.productType != null and param.productType !=''">
+				AND PRODUCT_TYPE = #{param.productType}
+			</if>
+			<if
+				test="param.dateCreateTimeBegin != null and param.dateCreateTimeEnd !=null">
+				<![CDATA[ AND CREATE_TIME > #{param.dateCreateTimeBegin} and CREATE_TIME< #{param.dateCreateTimeEnd} ]]>
+			</if>
+			<if
+				test="param.datePaymentTimeBegin != null and param.datePaymentTimeEnd !=null">
+				<![CDATA[ AND PAYMENT_TIME > #{param.datePaymentTimeBegin} and PAYMENT_TIME< #{param.datePaymentTimeEnd} ]]>
+			</if>
+			<if
+				test="param.dateVisitTimeBegin != null and param.dateVisitTimeEnd !=null">
+				<![CDATA[ AND VISIT_TIME = #{param.dateVisitTimeBegin} and VISIT_TIME< #{param.dateVisitTimeEnd} ]]>
+			</if>
+			<if test="param.contactName != null and param.contactName !=''">
+				AND CONTACT_NAME like
+				CONCAT(CONCAT('%',#{param.contactName}),'%')
+			</if>
+			<if test="param.contactMoblie != null and param.contactMoblie !=''">
+				AND CONTACT_MOBLIE = #{param.contactMoblie}
+			</if>
+			<if
+				test="param.resourceLackReason != null and param.resourceLackReason !=''">
+				AND RESOURCE_LACK_REASON = #{param.resourceLackReason}
+			</if>
+			<if test="param.settleStatus != null and param.settleStatus !=''">
+				AND SETTLE_STATUS = #{param.settleStatus}
+			</if>
+			<if test="param.paymentTarget != null and param.paymentTarget !=''">
+				AND PAYMENT_TARGET = #{param.paymentTarget}
+			</if>
+			<if test="param.refundStatus != null and param.refundStatus !=''">
+				AND REFUND_STATUS = #{param.refundStatus}
+			</if>
+		</where>
+	</sql>
+
+	<select id="count" resultType="Integer" parameterType="com.lvmama.tnt.order.po.TntOrder">
+		SELECT count(*) FROM TNT_ORDER
+		<include refid="where" />
+	</select>
+
+	<select id="findPage" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_ORDER
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+</mapper>
+

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="STORED_CARD_OUT" >
+   <typeAlias alias="storedCardOut" type="com.lvmama.comm.pet.po.lvmamacard.StoredCardOut"/>
+   <resultMap id="baseMap" class="storedCardOut" >
+    <result column="OUT_ID" property="outId" />
+    <result column="OUT_CODE" property="outCode" />
+    <result column="OUT_STATUS" property="outStatus"/>
+    <result column="SALE_PERSON" property="salePerson" />
+    <result column="REMARKS" property="remarks" />
+    <result column="SALE_DISCOUNT_AMOUNT" property="saleDiscountAmount" />
+    <result column="SALE_REBATE" property="saleRebate" />
+    <result column="SALE_BONUS" property="saleBonus" />
+    <result column="SALE_DIS_MONEY" property="saleDisMoney" />
+    <result column="SALE_REBATE_MONEY" property="saleRebateMoney" />
+    <result column="SALE_BONUS_MONEY" property="saleBonusMoney" />
+    <result column="SALE_SUM" property="saleSum" />
+    <result column="OUT_DATE" property="outDate"/>
+    <result column="SALE_TO_COMPANY" property="saleToCompany"/>
+    <result column="SALE_FLAG" property="saleFlag"/>
+    <result column="SALE_PERSON_INFOR1" property="salePersonInfor1"/>
+    <result column="SALE_PERSON_INFOR2" property="salePersonInfor2"/>
+    <result column="SALE_PERSON_INFOR3" property="salePersonInfor3"/>
+    <result column="SALE_PERSON_INFOR4" property="salePersonInfor4"/>
+    <result column="CONTRACT_ID" property="contractId"/>
+  </resultMap>
+  
+  <resultMap id="baseMap2" class="storedCardOut" >
+    <result column="COUNT_SUM" property="countSum" />
+    <result column="MONEY_SUM" property="moneySum" />
+  </resultMap>
+  
+  <resultMap id="baseMap3" class="storedCardOut" >
+    <result column="OUT_CODE" property="outCode" />
+    <result column="OUT_STATUS" property="outStatus"/>
+    <result column="SALE_PERSON" property="salePerson" />
+    <result column="OUT_DATE" property="outDate"/>
+    <result column="SALE_TO_COMPANY" property="saleToCompany"/>
+    <result column="SALE_REBATE" property="saleRebate" />
+    <result column="CARD_NO" property="cardNo"/>
+    <result column="AMOUNT" property="amount"/>
+    <result column="BALANCE" property="balance"/>
+  </resultMap>
+  
+  <sql id="pageHeader">
+         SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+    </sql>
+    <sql id="pageFooter">
+         ) A
+        <dynamic prepend="where">
+            <isNotEmpty property="endRows" prepend="and">
+                ROWNUM &lt;= #endRows#
+            </isNotEmpty>
+        </dynamic>
+          )
+        <dynamic prepend="where">
+         <isNotEmpty property="startRows" prepend="and">
+            rn &gt;= #startRows#
+         </isNotEmpty>      
+        </dynamic>
+    </sql>
+  <sql id="whereByParam">
+        <dynamic prepend="where">
+          <isNotEmpty property="outCode" prepend="and"> 
+               a.OUT_CODE=#outCode#
+          </isNotEmpty>
+          <isNotEmpty property="salePerson" prepend="and"> 
+               a.SALE_PERSON like '%$salePerson$%'
+          </isNotEmpty>
+          <isNotEmpty property="cardNo" prepend="and"> 
+               b.card_No=#cardNo#
+          </isNotEmpty>
+          <isNotEmpty property="outDate" prepend="and"> 
+               to_char(a.OUT_DATE,'yyyy-MM-DD')=to_char(#outDate#,'yyyy-MM-DD')
+          </isNotEmpty>
+          <isNotEmpty property="outStatus" prepend="and"> 
+               a.OUT_STATUS = #outStatus#
+          </isNotEmpty>
+      </dynamic>
+  </sql>
+  
+   <select id="countByParamForOutStorege" resultClass="java.lang.Long" parameterClass="java.util.Map">
+      select count(*) from stored_card_out a 
+        <isNotEmpty property="cardNo" prepend=" "> 
+               left join stored_card b on a.out_code=b.out_code
+     </isNotEmpty>
+      <include refid="whereByParam"/>
+   </select>
+   
+   <select id="queryByParamForOutStorege"  resultMap="baseMap" parameterClass="java.util.Map" >
+        <include refid="pageHeader"/>
+       select a.out_id,a.out_code, a.out_status,a.sale_person,a.remarks,a.sale_discount_amount,a.sale_rebate,a.sale_Bonus,a.sale_Dis_Money,a.sale_Rebate_Money,a.sale_Bonus_Money,a.sale_sum,a.out_date,a.sale_to_company,a.SALE_PERSON_INFOR1,a.SALE_PERSON_INFOR2,a.SALE_PERSON_INFOR3,a.SALE_PERSON_INFOR4,a.SALE_FLAG,a.CONTRACT_ID       
+  	 from stored_card_out a 
+  	 <isNotEmpty property="cardNo" prepend=" "> 
+               left join stored_card b on a.out_code=b.out_code
+     </isNotEmpty>
+         <include refid="whereByParam"/>
+        order by a.out_id desc 
+        <include refid="pageFooter"/> 
+   </select>
+   <select id="getOutcodeForOutStorege" resultClass="java.lang.String" >
+        select max(OUT_CODE) from stored_card_out  
+        order by OUT_CODE desc
+   </select>
+   <insert id="insert" parameterClass="storedCardOut">
+    <selectKey resultClass="java.lang.Integer" keyProperty="outId" >
+      select lvmama_pet.STORED_CARD_OUT_SEQ.nextval as id from DUAL
+    </selectKey>
+ INSERT INTO 
+  STORED_CARD_OUT (OUT_ID,OUT_CODE, OUT_STATUS,SALE_PERSON,REMARKS,SALE_DISCOUNT_AMOUNT,
+  SALE_REBATE,SALE_BONUS,SALE_DIS_MONEY,SALE_REBATE_MONEY,SALE_BONUS_MONEY,SALE_SUM,SALE_TO_COMPANY,SALE_PERSON_INFOR1,SALE_PERSON_INFOR2,SALE_PERSON_INFOR3,SALE_PERSON_INFOR4,SALE_FLAG,CONTRACT_ID)
+  values(#outId# ,#outCode#,0,#salePerson#,#remarks#,#saleDiscountAmount#,
+  #saleRebate#,#saleBonus#,#saleDisMoney#,#saleRebateMoney#,#saleBonusMoney#,#saleSum#,#saleToCompany#,#salePersonInfor1#,#salePersonInfor2#,#salePersonInfor3#,#salePersonInfor4#,#saleFlag#,#contractId#)
+   </insert>
+   
+   <update id="update"  parameterClass="storedCardOut" >
+  UPDATE  STORED_CARD_OUT a 
+    <dynamic prepend="SET">
+      <isNotNull prepend="," property="salePerson">
+        a.sale_Person = #salePerson#
+      </isNotNull>
+      <isNotNull prepend="," property="outStatus">
+        a.OUT_STATUS = #outStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="saleToCompany">
+        a.SALE_TO_COMPANY = #saleToCompany#
+      </isNotNull>
+	 <isNotNull prepend="," property="saleBonus">
+        a.SALE_BONUS = #saleBonus#
+      </isNotNull>
+      <isNotNull prepend="," property="saleDisMoney">
+        a.SALE_DIS_MONEY = #saleDisMoney#
+      </isNotNull>
+      <isNotNull prepend="," property="saleRebateMoney">
+        a.SALE_REBATE_MONEY = #saleRebateMoney#
+      </isNotNull>
+      <isNotNull prepend="," property="saleBonusMoney">
+        a.SALE_BONUS_MONEY = #saleBonusMoney#
+      </isNotNull>
+      <isNotNull prepend="," property="saleSum">
+        a.SALE_SUM = #saleSum#
+      </isNotNull>
+      <isNotNull prepend="," property="saleDiscountAmount">
+        a.SALE_DISCOUNT_AMOUNT = #saleDiscountAmount#
+      </isNotNull>
+      <isNotNull prepend="," property="saleRebate">
+        a.SALE_REBATE = #saleRebate#
+      </isNotNull>
+      <isNotNull prepend="," property="remarks">
+        a.REMARKS = #remarks#
+      </isNotNull>
+      <isNotNull prepend="," property="salePersonInfor1">
+        a.SALE_PERSON_INFOR1 = #salePersonInfor1#
+      </isNotNull>
+      <isNotNull prepend="," property="salePersonInfor2">
+        a.SALE_PERSON_INFOR2 = #salePersonInfor2#
+      </isNotNull>
+      <isNotNull prepend="," property="salePersonInfor3">
+        a.SALE_PERSON_INFOR3 = #salePersonInfor3#
+      </isNotNull>
+      <isNotNull prepend="," property="salePersonInfor4">
+        a.SALE_PERSON_INFOR4 = #salePersonInfor4#
+      </isNotNull>
+      <isNotNull prepend="," property="outDate">
+        a.OUT_DATE = sysdate
+      </isNotNull>
+      <isNotNull prepend="," property="saleFlag">
+        a.SALE_FLAG = #saleFlag#
+      </isNotNull>
+      <isNotNull prepend="," property="contractId">
+         a.CONTRACT_ID = #contractId# 
+      </isNotNull>
+    </dynamic>
+     where out_Code = #outCode#
+  </update>
+  
+  <delete id="delete" parameterClass="storedCardOut">
+        DELETE FROM STORED_CARD_OUT a
+         where out_code = #outCode#
+  </delete>
+  
+  <select id="queryOutStoregeSum" resultMap="baseMap2"  parameterClass="java.util.Map">
+    select sum(t.out_details_count) COUNT_SUM ,sum(t.detailsSum) MONEY_SUM 
+       from (
+       select c.out_details_count, (c.out_details_amount * c.out_details_count) as detailsSum   
+         from  STORED_CARD_OUT a 
+          <isNotEmpty property="cardNo" prepend=" "> 
+         	  left join STORED_CARD b on a.out_code = b.out_code        
+          </isNotEmpty>
+         	inner join STORED_CARD_OUT_DETAILS c on a.out_code= c.out_code
+          <include refid="whereByParam"/> 
+           ) t
+   </select>
+   
+   <select id="queryOutStoregeExcel" resultMap="baseMap3"  parameterClass="java.util.Map">
+    select a.out_code,b.card_no as card_no,b.amount/1000 as amount,b.balance/1000 as balance,a.out_date,a.out_status,a.sale_to_company,a.sale_person,a.sale_rebate 
+        from LVMAMA_PET.STORED_CARD_OUT a 
+        left join LVMAMA_PET.STORED_CARD b 
+        on a.out_code = b.out_code  
+      	<include refid="whereByParam"/>
+         order by out_code desc,card_no
+   </select>
+</sqlMap>

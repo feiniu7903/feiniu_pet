@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="STORED_CARD_OUT_DETAILS" >
+   <typeAlias alias="storedCardOutDetails" type="com.lvmama.comm.pet.po.lvmamacard.StoredCardOutDetails"/>
+   <resultMap id="baseMap" class="storedCardOutDetails" >
+    <result column="OUT_DETAILS_ID" property="outDetailsId" />
+    <result column="OUT_DETAILS_AMOUNT" property="outDetailsAmount" />
+    <result column="OUT_DETAILS_COUNT" property="outDetailsCount"/>
+    <result column="CARDNO_BEGIN" property="cardNoBegin" />
+    <result column="CARDNO_END" property="cardNoEnd" />
+    <result column="OUT_CODE" property="outCode" />
+  </resultMap>
+  
+  <sql id="whereByParam">
+        <dynamic prepend="where">
+          <isNotEmpty property="outDetailsId" prepend="and"> 
+               OUT_DETAILS_ID=#outDetailsId#
+          </isNotEmpty>
+          <isNotEmpty property="outCode" prepend="and"> 
+               OUT_CODE=#outCode#
+          </isNotEmpty>
+      </dynamic>
+  </sql>
+   
+   <select id="queryByParamForOutStoregeDetails"  resultMap="baseMap" parameterClass="java.util.Map" >
+       select OUT_DETAILS_ID,OUT_DETAILS_AMOUNT,OUT_DETAILS_COUNT,CARDNO_BEGIN,CARDNO_END,OUT_CODE  
+ from LVMAMA_PET.STORED_CARD_OUT_DETAILS
+         <include refid="whereByParam"/>
+   </select>
+   
+   <insert id="insert" parameterClass="storedCardOutDetails">
+    <selectKey resultClass="java.lang.Integer" keyProperty="outDetailsId" >
+      select lvmama_pet.STORED_CARD_OUT_DETAILS_SEQ.nextval as id from DUAL
+    </selectKey>
+ INSERT INTO 
+  STORED_CARD_OUT_DETAILS(OUT_DETAILS_ID,OUT_DETAILS_AMOUNT, OUT_DETAILS_COUNT,OUT_CODE)
+  values(#outDetailsId# ,#outDetailsAmount#,#outDetailsCount#,#outCode#)
+   </insert>
+   
+   <update id="update"  parameterClass="storedCardOutDetails" >
+  UPDATE  STORED_CARD_OUT_DETAILS a 
+    <dynamic prepend="SET">
+      <isNotNull prepend="," property="cardNoBegin">
+        CARDNO_BEGIN = #cardNoBegin#
+      </isNotNull>
+      <isNotNull prepend="," property="cardNoEnd">
+        CARDNO_END = #cardNoEnd#
+      </isNotNull>
+    </dynamic>
+    <include refid="whereByParam"/>
+  </update>
+  
+  <delete id="delete" parameterClass="java.util.Map">
+        DELETE FROM STORED_CARD_OUT_DETAILS 
+        <include refid="whereByParam"/>
+  </delete>
+</sqlMap>

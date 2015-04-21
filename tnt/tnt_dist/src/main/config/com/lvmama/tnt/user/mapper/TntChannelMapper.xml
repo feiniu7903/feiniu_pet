@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.user.mapper.TntChannelMapper">
+	<resultMap id="baseResultMap" type="tntChannel">
+		<result property="channelId" column="CHANNEL_ID" />
+		<result property="channelName" column="CHANNEL_NAME" />
+		<result property="channelCode" column="CHANNEL_CODE" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		CHANNEL_ID,CHANNEL_NAME,CHANNEL_CODE
+	    ]]>
+	</sql>
+
+	<sql id="select">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_CHANNEL
+		<include refid="whereSQL" />
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true">
+		<selectKey resultType="java.lang.Long" keyProperty="channelId"
+			order="BEFORE">
+			select TNT_CHANNEL_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_CHANNEL (
+		CHANNEL_ID ,
+		CHANNEL_NAME ,
+		CHANNEL_CODE
+		)
+		VALUES (
+		#{channelId} ,
+		#{channelName,jdbcType=VARCHAR},
+		#{channelCode,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE TNT_CHANNEL
+		<set>
+			<if test="channelName != null">
+				CHANNEL_NAME = #{channelName,jdbcType=VARCHAR} ,
+			</if>
+			<if test="channelCode != null">
+				CHANNEL_CODE = #{channelCode,jdbcType=VARCHAR} ,
+			</if>
+		</set>
+		WHERE CHANNEL_ID = #{channelId}
+	</update>
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM TNT_CHANNEL
+		WHERE
+		CHANNEL_ID =
+		#{id}
+	</delete>
+
+
+	<select id="selectList" resultMap="baseResultMap" parameterType="tntChannel">
+		<include refid="select" />
+	</select>
+
+	<select id="selectOne" resultMap="baseResultMap" parameterType="tntChannel">
+		<include refid="select" />
+	</select>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_CHANNEL
+		WHERE CHANNEL_ID = #{id}
+	</select>
+
+	<sql id="whereSQL">
+		<where>
+			<if test="channelId!=null and channelId!=''">
+				AND CHANNEL_ID = #{channelId}
+			</if>
+			<if test="channelName!=null and channelName!=''">
+				AND CHANNEL_NAME = #{channelName}
+			</if>
+			<if test="channelCode!=null and channelCode!=''">
+				AND CHANNEL_CODE = #{channelCode}
+			</if>
+		</where>
+	</sql>
+
+	<select id="findCount" resultType="Integer" parameterType="tntChannel">
+		SELECT count(1) FROM TNT_CHANNEL
+		<include refid="whereSQL" />
+	</select>
+
+	<select id="fetchPage" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_CHANNEL
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<sql id="pageWhere">
+		<where>
+			<if test="param.channelId!=null">
+				AND CHANNEL_ID = #{param.channelId}
+			</if>
+			<if test="param.channelName!=null">
+				AND CHANNEL_NAME = #{param.channelName}
+			</if>
+			<if test="param.channelCode!=null">
+				AND CHANNEL_CODE = #{param.channelCode}
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectAll" resultMap="baseResultMap" parameterType="tntChannel">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_CHANNEL
+	</select>
+
+	<select id="getChannelById" resultMap="baseResultMap" parameterType="Long">
+		SELECT TC.*
+		    FROM TNT_CHANNEL TC,TNT_COMPANY_TYPE TCT,TNT_USER_DETAIL TUD
+		    WHERE TCT.COMPANY_TYPE_ID=TUD.COMPANY_TYPE_ID
+		    AND TCT.CHANNEL_ID=TC.CHANNEL_ID
+		    AND TUD.USER_ID= #{userId}
+	</select>
+
+</mapper>
+

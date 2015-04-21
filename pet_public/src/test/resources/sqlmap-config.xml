@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings enhancementEnabled="true" maxTransactions="40"
+		maxRequests="32" maxSessions="10" cacheModelsEnabled="false"
+		classInfoCacheEnabled="false" useStatementNamespaces="true" />
+
+	<!--
+		Identify all SQL Map XML files to be loaded by this SQL map. Relative
+		to classpath
+	-->
+	<sqlMap resource="empty-SqlMap.xml" />
+</sqlMapConfig>

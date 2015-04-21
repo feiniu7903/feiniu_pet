@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  - Application context definition for JPetStore's business layer.
+	- Contains bean references to the transaction manager and to the DAOs in
+	- dataAccessContext-local/jta.xml (see web.xml's "contextConfigLocation").
+	-->
+<beans>
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+				<value>classpath:jdbc.properties</value>
+		</property>
+	</bean>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName"><value>${jdbc.driverClassName}</value></property>
+		<property name="url"><value>${jdbc.url}</value></property>
+		<property name="username"><value>${jdbc.username}</value></property>
+		<property name="password"><value>${jdbc.password}</value></property>
+		<property name="maxActive"><value>${jdbc.maxActive}</value></property>
+		<property name="maxWait"><value>${jdbc.maxWait}</value></property>
+		<property name="maxIdle"><value>${jdbc.maxIdle}</value></property>
+		<property name="initialSize"><value>${jdbc.initSize}</value></property>
+		<property name="removeAbandoned"><value>true</value></property>
+		<property name="removeAbandonedTimeout"><value>300</value></property>
+		<property name="testWhileIdle"><value>true</value></property>
+		<property name="testOnReturn"><value>true</value></property>
+		<property name="testOnBorrow"><value>true</value></property>
+		
+	</bean>
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>		
+	</bean>
+	
+	<bean id="eastfaxStatusDao" class="com.lvmama.pet.fax.dao.EastfaxStatusDao">
+		<property name="jdbcTemplate">
+			<ref bean="jdbcTemplate"/>
+		</property>
+	</bean>
+			
+	<bean id="eastfaxSendDaemon" class="com.lvmama.pet.fax.daemon.EastfaxSendDaemon">
+		<property name="eastfaxStatusDao" ref="eastfaxStatusDao"/>
+	</bean>
+	
+	<bean id="eastfaxReceiveDaemon" class="com.lvmama.pet.fax.daemon.EastfaxReceiveDaemon">
+		<property name="eastfaxStatusDao" ref="eastfaxStatusDao"/>
+	</bean>
+	
+	<bean id="trafaxStatusDao" class="com.lvmama.pet.fax.dao.TrafaxStatusDao">
+		<property name="jdbcTemplate">
+			<ref bean="jdbcTemplate"/>
+		</property>
+	</bean>
+	
+	<bean id="trafaxSendDaemon" class="com.lvmama.pet.fax.daemon.TrafaxSendDaemon">
+		<property name="trafaxStatusDao" ref="trafaxStatusDao"/>
+	</bean>
+	
+	<bean id="trafaxReceiveDaemon" class="com.lvmama.pet.fax.daemon.TrafaxReceiveDaemon">
+		<property name="trafaxStatusDao" ref="trafaxStatusDao"/>
+	</bean>
+	
+	<bean id="trafaxErrorDaemon" class="com.lvmama.pet.fax.daemon.TrafaxErrorDaemon">
+		<property name="trafaxStatusDao" ref="trafaxStatusDao"/>
+	</bean>
+	
+</beans>

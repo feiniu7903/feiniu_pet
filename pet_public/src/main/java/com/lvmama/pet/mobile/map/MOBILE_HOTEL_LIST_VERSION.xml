@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MOBILE_HOTEL_LIST_VERSION" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.MobileHotelListVersion" >
+    <result column="HOTEL_ID" property="hotelId" />
+    <result column="UPDATED_TIME" property="updatedTime" />
+    <result column="PRODUCTS" property="products" />
+    <result column="STATUS" property="status" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelListVersion" >
+    select HOTEL_ID, UPDATED_TIME, PRODUCTS, STATUS
+    from MOBILE_HOTEL_LIST_VERSION
+    where HOTEL_ID = #hotelId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelListVersion" >
+    delete from MOBILE_HOTEL_LIST_VERSION
+    where HOTEL_ID = #hotelId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelListVersion" >
+    insert into MOBILE_HOTEL_LIST_VERSION (HOTEL_ID, UPDATED_TIME, PRODUCTS, STATUS)
+    values (#hotelId#, #updatedTime#, #products#, #status#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelListVersion" >
+    insert into MOBILE_HOTEL_LIST_VERSION
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="hotelId" >
+        HOTEL_ID
+      </isNotNull>
+      <isNotNull prepend="," property="updatedTime" >
+        UPDATED_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="products" >
+        PRODUCTS
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="hotelId" >
+        #hotelId#
+      </isNotNull>
+      <isNotNull prepend="," property="updatedTime" >
+        #updatedTime#
+      </isNotNull>
+      <isNotNull prepend="," property="products" >
+        #products#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        #status#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelListVersion" >
+    update MOBILE_HOTEL_LIST_VERSION
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="updatedTime" >
+        UPDATED_TIME = #updatedTime#
+      </isNotNull>
+      <isNotNull prepend="," property="products" >
+        PRODUCTS = #products#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS = #status#
+      </isNotNull>
+    </dynamic>
+    where HOTEL_ID = #hotelId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelListVersion" >
+    update MOBILE_HOTEL_LIST_VERSION
+    set UPDATED_TIME = #updatedTime#,
+      PRODUCTS = #products#,
+      STATUS = #status#
+    where HOTEL_ID = #hotelId#
+  </update>
+  
+   <!-- 分页查询 头部 -->
+  <sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+  </sql>
+  
+  <!-- 分页查询 尾部 -->
+  <sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>		
+		</dynamic>
+  </sql>
+  
+   <!-- 查询条件 -->
+  <sql id="queryListWhere">
+      <dynamic prepend=" WHERE 1=1 ">
+	      <isNotEmpty prepend=" AND " property="updatedTime" >
+	        UPDATED_TIME = #updatedTime#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="products" >
+	        PRODUCTS = #products#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="status" >
+	        STATUS = #status#
+	      </isNotEmpty>
+		  order by UPDATED_TIME desc
+		</dynamic>
+  </sql>
+  
+  <!-- 查询列表  -->
+  <select id="queryMobileHotelListVersionList" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="isPaging">
+		  <include refid="pageHeader"/>
+		</isNotEmpty>
+		SELECT * FROM MOBILE_HOTEL_LIST_VERSION
+		<include refid="queryListWhere"/>
+		<isNotEmpty property="isPaging">
+		   <include refid="pageFooter"/>
+		   order by UPDATED_TIME desc
+		</isNotEmpty>
+   </select>
+
+  
+    <!-- 总数  -->
+	<select id="countMobileHotelListVersionList" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		SELECT COUNT(*) FROM MOBILE_HOTEL_LIST_VERSION
+		<include refid="queryListWhere"/>
+	</select>
+</sqlMap>

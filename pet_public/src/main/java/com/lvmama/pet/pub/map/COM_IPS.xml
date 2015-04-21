@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_IPS">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComIps">
+		<result property="ipStart" column="IP_START" />
+		<result property="ipEnd" column="IP_END" />
+		<result property="capitalId" column="CAPITAL_ID" />
+		<result property="cityId" column="CITY_ID" />
+		<result property="provinceName" column="PROVINCE_NAME" />
+		<result property="cityName" column="CITY_NAME" />
+		<result property="areaLocation" column="AREA_GROUP" />
+		<result property="placeId" column="PLACE_ID" />
+	</resultMap>
+	
+	<select id="selectComIpsByIp"  parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select cip.ip_start,
+       	cip.ip_end,
+       	cip.captial_id as capital_id,
+       	cip.city_id,
+       	cag.area_group,
+        (select cp.province_name from com_province cp where cip.captial_id = cp.province_id) as province_name,
+        (select uc.city_name from com_city uc where cag.city_id = uc.city_id) as city_name,
+        cag.place_id
+  		from com_ips cip,com_city_area_group cag
+		where cip.city_id = cag.city_id
+   		and cip.ip_start &lt;= #ip#
+   		and cip.ip_end &gt;= #ip#
+   		and rownum = 1
+	</select>
+	<select id="selectComIpsByCityProvince"  parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+		select 0 as ip_start,
+	       0 as ip_end,
+	       uc.province_id   as capital_id,
+	       uc.city_id,
+	       cag.area_group,
+	       cp.province_name,
+	       uc.city_name,
+	       cag.place_id
+	  from com_city_area_group cag, com_province cp, com_city uc
+	 where uc.province_id = cp.province_id
+	   	and cag.city_id = uc.city_id
+	   	and  CP.PROVINCE_NAME=#provinceName#
+	   	and uc.CITY_NAME = #cityName#
+		and rownum = 1
+	</select>
+	
+	<select id="selectComIpsAll" resultMap="BaseResultMap">
+		select cip.ip_start,
+	       cip.ip_end,
+	       cip.captial_id as capital_id,
+	       cip.city_id,
+	       cag.area_group,
+	       cp.province_name,
+	       uc.city_name,
+	       cag.place_id
+	  from com_ips cip, com_city_area_group cag, com_province cp, com_city uc
+	 where cip.city_id = cag.city_id
+	   and cip.captial_id = cp.province_id
+	   and cag.city_id = uc.city_id
+	</select>
+	<select id="selectComIpsByProvinceIds" resultMap="BaseResultMap" parameterClass="map">
+		select cip.ip_start,
+	       cip.ip_end,
+	       cip.captial_id as capital_id,
+	       cip.city_id,
+	       cag.area_group,
+	       cp.province_name,
+	       uc.city_name,
+	       cag.place_id
+	  from com_ips cip, com_city_area_group cag, com_province cp, com_city uc
+	 where cip.city_id = cag.city_id
+	   and cip.captial_id = cp.province_id
+	   and cag.city_id = uc.city_id
+	   <iterate prepend="AND" property="provinceIds" open="(" close=")" conjunction="OR"> 
+			cp.province_id=#provinceIds[]# 
+		</iterate> 
+	</select>
+
+
+	<insert id="saveComIps" parameterClass="com.lvmama.comm.pet.po.pub.ComIps" timeout="30">
+		INSERT INTO COM_IPS(IP_START,IP_END,CAPTIAL_ID,CITY_ID)
+		VALUES (#ipStart#,#ipEnd#,#capitalId#,#cityId#)
+	</insert>
+	
+	<delete id="deleteComIps" parameterClass="com.lvmama.comm.pet.po.pub.ComIps">
+	  delete from COM_IPS
+	</delete>
+</sqlMap>

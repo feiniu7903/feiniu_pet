@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.user.mapper.TntCommissionRuleMapper">
+
+	<resultMap id="baseResultMap" type="tntCommissionRule">
+		<result property="commissionRuleId" column="COMMISSION_RULE_ID" />
+		<result property="productType" column="PRODUCT_TYPE" />
+		<result property="subProductType" column="SUB_PRODUCT_TYPE" />
+		<result property="payOnline" column="PAY_ONLINE" />
+		<result property="minSales" column="MIN_SALES" />
+		<result property="maxSales" column="MAX_SALES" />
+		<result property="discountRate" column="DISCOUNT_RATE" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		COMMISSION_RULE_ID,PRODUCT_TYPE,SUB_PRODUCT_TYPE,PAY_ONLINE,MIN_SALES,MAX_SALES,DISCOUNT_RATE
+	    ]]>
+	</sql>
+
+
+	<insert id="insert" parameterType="tntCommissionRule">
+		<selectKey resultType="Long" keyProperty="commissionRuleId"
+			order="BEFORE">
+			select TNT_USER_ID_SEQ.nextval from dual
+		</selectKey>
+    <![CDATA[
+        INSERT INTO TNT_COMMISSION_RULE (
+        	COMMISSION_RULE_ID ,
+        	PRODUCT_TYPE ,
+        	SUB_PRODUCT_TYPE ,
+        	PAY_ONLINE ,
+        	MIN_SALES ,
+        	MAX_SALES ,
+        	DISCOUNT_RATE 
+        ) VALUES (
+        	#{commissionRuleId} ,
+        	#{productType,jdbcType=VARCHAR},
+        	#{subProductType,jdbcType=VARCHAR},
+        	#{payOnline,jdbcType=VARCHAR},
+        	#{minSales,jdbcType=DECIMAL},
+        	#{maxSales,jdbcType=DECIMAL},
+        	#{discountRate,jdbcType=INTEGER}
+        )
+    ]]>
+	</insert>
+
+	<update id="update" parameterType="tntCommissionRule">
+		UPDATE TNT_COMMISSION_RULE
+		<set>
+			MIN_SALES = #{minSales,jdbcType=DECIMAL} ,
+			MAX_SALES =
+			#{maxSales,jdbcType=DECIMAL} ,
+			<if test="productType != null">
+				PRODUCT_TYPE = #{productType} ,
+			</if>
+			<if test="subProductType != null">
+				SUB_PRODUCT_TYPE = #{subProductType} ,
+			</if>
+			<if test="payOnline != null">
+				PAY_ONLINE = #{payOnline} ,
+			</if>
+			<if test="discountRate != null">
+				DISCOUNT_RATE =
+				#{discountRate}
+			</if>
+		</set>
+		WHERE
+		COMMISSION_RULE_ID = #{commissionRuleId}
+	</update>
+
+	<delete id="delete" parameterType="Long">
+    <![CDATA[
+        DELETE FROM TNT_COMMISSION_RULE WHERE
+        COMMISSION_RULE_ID = #{id} 
+    ]]>
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_COMMISSION_RULE
+		WHERE
+		COMMISSION_RULE_ID = #{id}
+	</select>
+
+	<sql id="where">
+		<where>
+			<if test="commissionRuleId!=null">
+				AND COMMISSION_RULE_ID = #{commissionRuleId}
+			</if>
+			<if test="productType!=null and productType!=''">
+				AND PRODUCT_TYPE = #{productType}
+			</if>
+			<if test="subProductType!=null and subProductType!=''">
+				AND SUB_PRODUCT_TYPE = #{subProductType}
+			</if>
+			<if test="payOnline!=null and payOnline!=''">
+				AND PAY_ONLINE = #{payOnline}
+			</if>
+			<if test="minSales!=null">
+				AND MIN_SALES = #{minSales}
+			</if>
+			<if test="maxSales!=null">
+				AND MAX_SALES = #{maxSales}
+			</if>
+			<if test="discountRate!=null">
+				AND DISCOUNT_RATE = #{discountRate}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="pageWhere">
+		<where>
+			<if test="param.commissionRuleId!=null">
+				AND COMMISSION_RULE_ID = #{param.commissionRuleId}
+			</if>
+			<if test="param.productType!=null and param.productType!=''">
+				AND PRODUCT_TYPE = #{param.productType}
+			</if>
+			<if test="param.subProductType!=null and param.subProductType!=''">
+				AND SUB_PRODUCT_TYPE = #{param.subProductType}
+			</if>
+			<if test="param.payOnline!=null and param.payOnline!=''">
+				AND PAY_ONLINE = #{param.payOnline}
+			</if>
+			<if test="param.minSales!=null">
+				AND MIN_SALES = #{param.minSales}
+			</if>
+			<if test="param.maxSales!=null">
+				AND MAX_SALES = #{param.maxSales}
+			</if>
+			<if test="param.discountRate!=null">
+				AND DISCOUNT_RATE = #{param.discountRate}
+			</if>
+		</where>
+	</sql>
+
+	<select id="count" resultType="Integer" parameterType="tntCommissionRule">
+		SELECT count(1) FROM TNT_COMMISSION_RULE
+		<include refid="where" />
+	</select>
+
+	<select id="findPage" resultMap="baseResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		<include refid="columns" />
+		FROM TNT_COMMISSION_RULE
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+</mapper>
+

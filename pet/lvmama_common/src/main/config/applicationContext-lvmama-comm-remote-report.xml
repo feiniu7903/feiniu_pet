@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+       <bean id="userTagsSearchLogsService"    class="org.springframework.remoting.caucho.HessianProxyFactoryBean"> 
+          <property name="serviceUrl" value="${report.serviceUrl}/userTagsSearchLogsService" />
+          <property name="serviceInterface" value="com.lvmama.comm.pet.service.usertags.UserTagsSearchLogsService" /> 
+          <property name="chunkedPost" value="false" /> 
+          <property name="overloadEnabled" value="true" /> 
+        </bean> 
+</beans>

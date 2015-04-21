@@ -1,0 +1,31 @@
+<#import "/base/func.html" as func/>
+<table class="table-border">
+	<tr>
+		<td width="40">姓名</td>
+		<#if certificate.entity.productType=='HOTEL'>
+		<td width="40">拼音</td>
+		</#if>
+		<td width="80">证件类型</td>
+		<td width="100">证件号码</td>
+		<td width="110">手机号码</td>
+	</tr>
+	<#assign  showMobile=true/>
+	<#list certificate.travellerList as person>
+	<tr>
+		<td><@func.showChangeContent person "name"/></td>
+		<#if certificate.entity.productType=='HOTEL'>
+		<td>${person.pinyin}</td>
+		</#if>
+		<td><@func.showChangeContent person "zhCertType"/></td>
+		<td class="number"><@func.showChangeContent person "certNo"/></td>
+		<td class="number">
+		<#if showMobile>
+			<#assign mobile><@func.showChangeContent person "mobile"/></#assign>
+			<#if mobile!0 gt 0><#assign showMobile=false/>${mobile}<#else>/</#if>
+		<#else>
+		/
+		</#if>
+		</td>
+	</tr>
+	</#list>
+</table>

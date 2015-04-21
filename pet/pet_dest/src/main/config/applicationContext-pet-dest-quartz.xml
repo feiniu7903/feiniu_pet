@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+	<!-- 线程执行器配置，用于任务注册 -->
+	<bean id="executor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="10" />
+		<property name="maxPoolSize" value="1000" />
+		<property name="queueCapacity" value="5000" />
+	</bean>
+	<!-- 景区酒店 描述和交通内容创建begin-->
+	<!-- 描述和交通内容创建业务对象 -->
+	<bean id="descriptionTrafficFileCreateJob" class="com.lvmama.pet.web.job.DescriptionTrafficFileCreateJob" />
+	
+	<bean id="descriptionTrafficFileCreateJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="descriptionTrafficFileCreateJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="descriptionTrafficFileCreateJobFactoryTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="descriptionTrafficFileCreateJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 3 * * ? *</value> 
+		</property>
+	</bean> 
+	<!-- end -->		
+	<bean id="startQuertz" lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="descriptionTrafficFileCreateJobFactoryTimes" />
+			</list>
+		</property>
+		 <property name="taskExecutor" ref="executor" />
+	</bean>
+</beans>

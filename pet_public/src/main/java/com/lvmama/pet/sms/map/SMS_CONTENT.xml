@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SMS_CONTENT">
+	<typeAlias alias="smsContent" type="com.lvmama.comm.pet.po.sms.SmsContent"/>
+	<typeAlias alias="smsLogStat" type="com.lvmama.comm.pet.vo.SmsLogStat"/>
+	
+	<resultMap class="com.lvmama.comm.pet.po.sms.SmsContent" id="smsContentResult">        
+		<result column="id" property="id" />        
+		<result column="content" property="content" />        
+		<result column="mobile" property="mobile" /> 
+		<result column="priority" property="priority" />  
+		<result column="type" property="type" />   
+		<result column="send_date" property="sendDate" /> 
+		<result column="failure" property="failure"/>    
+		<result column="data" property="data" jdbcType="BLOB"/>
+		<result column="userId" property="userId" />
+	</resultMap>	
+
+	<insert id="insert" parameterClass="smsContent">
+		INSERT INTO sms_content
+		<dynamic prepend="(">
+		    ID,
+			<isNotEmpty property="content" prepend=",">content</isNotEmpty>
+			<isNotEmpty property="mobile" prepend=",">mobile</isNotEmpty>
+			<isNotEmpty property="priority" prepend=",">priority</isNotEmpty>
+			<isNotEmpty property="type" prepend=",">type</isNotEmpty>
+			<isNotEmpty property="sendDate" prepend=",">send_date</isNotEmpty>
+			<isNotEmpty property="failure" prepend=",">failure</isNotEmpty>
+			<isNotEmpty property="data" prepend=",">data</isNotEmpty>
+			<isNotEmpty property="userId" prepend=",">userId</isNotEmpty>
+			<isNotEmpty property="channel" prepend=",">channel</isNotEmpty>
+			<isNotEmpty property="status" prepend=",">status</isNotEmpty>
+			<isNotEmpty property="resendSmsId" prepend=",">resend_sms_id</isNotEmpty>
+			)
+		</dynamic>
+		VALUES
+		<dynamic prepend="(">
+		    SMS_CONTENT_SEQ.NEXTVAL,
+			<isNotEmpty property="content" prepend=",">#content#</isNotEmpty>
+			<isNotEmpty property="mobile" prepend=",">#mobile#</isNotEmpty>
+			<isNotEmpty property="priority" prepend=",">#priority#</isNotEmpty>
+			<isNotEmpty property="type" prepend=",">#type#</isNotEmpty>
+			<isNotEmpty property="sendDate" prepend=",">#sendDate#</isNotEmpty>
+			<isNotEmpty property="failure" prepend=",">#failure#</isNotEmpty>
+			<isNotEmpty property="data" prepend=",">#data#</isNotEmpty>
+			<isNotEmpty property="userId" prepend=",">#userId#</isNotEmpty>
+			<isNotEmpty property="channel" prepend=",">#channel#</isNotEmpty>
+			<isNotEmpty property="status" prepend=",">#status#</isNotEmpty>
+			<isNotEmpty property="resendSmsId" prepend=",">#resendSmsId#</isNotEmpty>
+			)
+		</dynamic>
+			<selectKey resultClass="java.lang.Long" keyProperty="id">
+				SELECT SMS_CONTENT_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<select id="query" parameterClass="java.util.Map" resultClass="smsContent">
+		<isNotEmpty property="limit">
+			SELECT rownum, content.* FROM (
+		</isNotEmpty>
+		SELECT id, content, mobile, priority, type, send_date sendDate, failure, data, userId,channel,resend_sms_id resendSmsId FROM $tableSource$ WHERE send_date &lt; sysdate
+		<isNotEmpty property="condition" prepend=" AND ">($condition$)</isNotEmpty>
+		<isNotEmpty property="additionalCondition" prepend=" AND ">($additionalCondition$)</isNotEmpty>
+		<isNotEmpty property="failure" prepend=" AND "> failure &lt;= #failure#</isNotEmpty>
+		ORDER BY priority,send_date
+		<isNotEmpty property="limit">
+			) content WHERE rownum &lt;= #limit#
+		</isNotEmpty>
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterClass="long" resultClass="smsContent">
+		SELECT id, content, mobile, priority, type, send_date sendDate, failure,data, userId FROM sms_content WHERE id = #id#	
+	</select>
+	
+	<select id="selectByParam" parameterClass="java.util.Map" resultClass="smsContent">
+		SELECT id, content, mobile, priority, type, send_date sendDate, failure,data, userId FROM sms_content 
+		WHERE ID in (
+		      select sms_id from nc_complaint_relation ncr where ncr.complaint_id=#complaintId# and ncr.sms_id is not null)
+		order by send_date desc
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterClass="long">
+		DELETE FROM sms_content WHERE id = #id#
+	</delete>
+
+	<delete id="delete" parameterClass="java.util.Map">
+		DELETE FROM sms_content
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="condition" prepend=" AND ">($condition$)</isNotEmpty>
+			<isNotEmpty property="failure" prepend=" AND "> failure &gt; #failure#</isNotEmpty>
+		</dynamic>
+	</delete>
+	
+	<update id="updateFailureCount" parameterClass="long">
+		UPDATE sms_content SET failure = failure + 1 WHERE id = #id#
+	</update>
+	
+	<insert id="retrySend" parameterClass="long">
+		INSERT INTO sms_content(id, content, mobile, priority, type, failure,userId) SELECT SMS_CONTENT_SEQ.NEXTVAL, content, mobile, priority, type, failure + 1, userId FROM sms_content_log WHERE serialid = #serialId#
+	</insert>
+	<select id="count" parameterClass="java.util.Map" resultClass="smsLogStat">
+		select count(id) as total,max(send_date) as sendDate FROM sms_content  
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="mobile" prepend=" AND ">mobile = #mobile# </isNotEmpty>
+			<isNotEmpty property="condition" prepend=" AND ">($condition$) </isNotEmpty> 
+		</dynamic>	  
+	</select>
+	
+	<insert id="reSendSmsByMap" parameterClass="java.util.Map">
+		INSERT INTO sms_content(id, content, mobile, priority, type, send_date, failure,data,userId,channel) SELECT SMS_CONTENT_SEQ.NEXTVAL, content, mobile, priority, type, sysdate, 0, data, 
+		<isNotEmpty property="userId">
+		#userId#,
+		</isNotEmpty>
+		<isEmpty property="userId">
+		userId,
+		</isEmpty>
+		'$channel$' FROM $tableName$ WHERE id=#id#
+	</insert>
+	
+	<!-- 更新短信内容信息 -->
+	<update id="update" parameterClass="smsContent">
+		<![CDATA[
+		update sms_content
+		   set content = #content#,
+		       mobile = #mobile#,
+		       priority = #priority#,
+		       type = #type#,
+		       send_date = #sendDate#,
+		       failure = #failure#,
+		       data = #data#,
+		       userid = #userId#,
+		       channel = #channel#,
+		       status = #status#,
+		       resend_sms_id = #resendSmsId#
+		 where id = #id#
+		]]>
+	</update>
+</sqlMap>

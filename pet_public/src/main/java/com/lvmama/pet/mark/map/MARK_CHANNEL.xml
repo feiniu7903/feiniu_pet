@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_CHANNEL" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mark.MarkChannel" >
+    <result column="CHANNEL_ID" property="channelId" />
+    <result column="CHANNEL_NAME" property="channelName" />
+    <result column="CHANNEL_CODE" property="channelCode" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="FATHER_ID"   property="fatherId" />
+    <result column="VALID" 	     property="valid" />
+    <result column="LAYER"       property="layer" />
+    <result column="CHANNEL_COMMENT" property="channelComment"/>
+    <result column="RANGE" property="range" />
+    <result column="PROFIT_SHARING" property="profitSharing" />
+    <result column="APPLICATION_TYPE" property="channelApplicationType" />
+  </resultMap>
+  <resultMap id="channelMap" class="com.lvmama.comm.pet.vo.mark.MarkChannelVO" >
+    <result column="CHANNEL_ID" property="channelId" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="CHANNEL_COMMENT" property="channelComment"/>
+    <result column="FIRST_ID" 		property="firstId" />
+    <result column="FIRST_NAME"  	property="firstName" />
+    <result column="FIRST_CODE"  	property="firstCode" />
+    <result column="SECOND_ID" 		property="secondId" />
+    <result column="SECOND_NAME" 	property="secondName" />
+    <result column="SECOND_CODE" 	property="secondCode" />
+    <result column="THREE_ID" 		property="threeId" />
+    <result column="THREE_NAME" 	property="threeName" />
+    <result column="THREE_CODE" 	property="threeCode" />
+  </resultMap>
+  
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.mark.MarkChannel" >
+    	<selectKey resultClass="java.lang.Long" keyProperty="channelId" >
+      		select MARK_CHANNEL_SEQ.nextval as id from DUAL
+    	</selectKey>
+    	insert into 
+    		MARK_CHANNEL 
+    	values 
+    		(#channelId#, #channelName# 
+    		  <isEqual prepend="," property="layer" compareValue="3"> LPAD(#channelId#, 6, '0') </isEqual>
+		      <isNotEqual property="layer" compareValue="3">
+			      <isNotNull prepend="," property="channelCode" > #channelCode#    </isNotNull>
+		      </isNotEqual>,sysdate, #fatherId#, #valid#, #layer#, #channelComment#, #range#, #profitSharing#,#channelApplicationType#)
+  </insert>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="Long" >
+    delete from MARK_CHANNEL where CHANNEL_ID = #channelId#
+  </delete> 
+  
+  <update id="update" parameterClass="com.lvmama.comm.pet.po.mark.MarkChannel" >
+  	update MARK_CHANNEL
+    	<dynamic prepend=" SET "> 
+     		<isNotNull prepend="," property="channelName" >
+       			CHANNEL_NAME = #channelName#
+     		</isNotNull>
+		    <isNotNull prepend="," property="channelCode" >
+		    	CHANNEL_CODE = #channelCode#
+		    </isNotNull>
+		    <isNotNull prepend="," property="valid" >
+		    	VALID = #valid#
+		    </isNotNull>
+		    <isNotNull prepend="," property="channelComment">
+		    	CHANNEL_COMMENT = #channelComment#
+		    </isNotNull>
+		    <isNotNull prepend="," property="range">
+		    	RANGE = #range#
+		    </isNotNull>
+		    <isNotNull prepend="," property="profitSharing">
+		    	PROFIT_SHARING = #profitSharing#
+		    </isNotNull>
+		    <isNotNull prepend="," property="channelApplicationType">
+		    	APPLICATION_TYPE = #channelApplicationType#
+		    </isNotNull>
+		 </dynamic>
+    	 where CHANNEL_ID = #channelId#
+  </update>   
+ 
+  <select id="queryByPrimaryKey" resultMap="BaseResultMap" parameterClass="Long" >
+    select * from MARK_CHANNEL where CHANNEL_ID = #channelId#
+  </select>  
+  
+  <select id="query" resultMap="BaseResultMap" parameterClass="java.util.Map" >
+    SELECT 
+    	*
+    FROM 
+    	MARK_CHANNEL
+    <dynamic prepend=" WHERE ">
+    	<isNotEmpty property="channelId" prepend=" AND "> CHANNEL_ID = #channelId# </isNotEmpty>
+    	<isNotEmpty property="layer"     prepend=" AND "> LAYER      = #layer#     </isNotEmpty>
+    	<isNotEmpty property="valid"	 prepend=" AND "> VALID		 = #valid#	   </isNotEmpty>
+    	<isNotEmpty property="fatherId"	 prepend=" AND "> FATHER_ID	 = #fatherId#    </isNotEmpty>
+    	<isNotEmpty property="channelName" prepend=" AND ">CHANNEL_NAME = #channelName#</isNotEmpty> 
+    	<isNotEmpty property="channelCode" prepend=" OR ">	CHANNEL_CODE =#channelCode#	</isNotEmpty>  		
+    </dynamic>
+  </select>
+  
+  
+  
+  
+  <sql id="subSearchChannel">
+		SELECT K.*,ROWNUM RN
+	  FROM (SELECT DECODE(C3.THREE_TIME,
+	                      NULL,
+	                      DECODE(A.SECOND_TIME, NULL,  A.FIRST_TIME, SECOND_TIME),
+	                      C3.THREE_TIME) CREATE_TIME,
+	               DECODE(C3.THREE_ID,
+	                      NULL,
+	                      DECODE(A.SECOND_ID, NULL, A.FIRST_ID, SECOND_ID),
+	                      C3.THREE_ID) CHANNEL_ID,
+	               FIRST_ID,
+	               FIRST_NAME,
+	               FIRST_CODE,
+	               SECOND_ID,
+	               SECOND_NAME,
+	               SECOND_CODE,
+	               THREE_ID,
+	               THREE_NAME,
+	               THREE_CODE,
+	               CHANNEL_COMMENT,
+	               RANGE,
+	               APPLICATION_TYPE
+	          FROM (SELECT C1.CHANNEL_ID   FIRST_ID,
+	                       C1.CHANNEL_NAME FIRST_NAME,
+	                       C1.CHANNEL_CODE FIRST_CODE,
+	                       C1.CREATE_TIME  FIRST_TIME,
+	                       C2.CHANNEL_ID   SECOND_ID,
+	                       C2.CHANNEL_NAME SECOND_NAME,
+	                       C2.CHANNEL_CODE SECOND_CODE,
+	                       C2.CREATE_TIME  SECOND_TIME
+	                  FROM (SELECT CHANNEL_ID,
+	                               CHANNEL_NAME,
+	                               CHANNEL_CODE,
+	                               CREATE_TIME,
+	                               RANGE,
+	                               APPLICATION_TYPE
+	                          FROM MARK_CHANNEL
+	                         WHERE LAYER = 1
+	                           AND VALID = 'Y') C1,
+	                       (SELECT CHANNEL_ID,
+	                               CHANNEL_NAME,
+	                               CHANNEL_CODE,
+	                               CREATE_TIME,
+	                               FATHER_ID,
+	                               RANGE,
+	                               APPLICATION_TYPE
+	                          FROM MARK_CHANNEL
+	                         WHERE LAYER = 2
+	                           AND VALID = 'Y') C2
+	                 WHERE C1.CHANNEL_ID = C2.FATHER_ID(+)) A,
+	               (SELECT CHANNEL_ID THREE_ID,
+	                       CHANNEL_NAME THREE_NAME,
+	                       CHANNEL_CODE THREE_CODE,
+	                       CHANNEL_COMMENT, 
+	                       CREATE_TIME THREE_TIME,
+	                       FATHER_ID,
+	                       RANGE,
+	                       APPLICATION_TYPE
+	                  FROM MARK_CHANNEL
+	                 WHERE LAYER = 3
+	                   AND VALID = 'Y'
+			         <isNotEmpty prepend="and" property="range">
+			        	 range=#range#
+			         </isNotEmpty> 
+			         <isNotEmpty prepend="and" property="channelApplicationType">
+			        	 APPLICATION_TYPE=#channelApplicationType#
+			         </isNotEmpty>           
+	                   ) C3
+	         WHERE A.SECOND_ID = C3.FATHER_ID(+)
+         		  <isNotEmpty prepend="and" property="range">
+		        	 C3.range=#range#
+		         </isNotEmpty> 
+		         <isNotEmpty prepend="and" property="channelApplicationType">
+		        	C3.APPLICATION_TYPE=#channelApplicationType#
+		         </isNotEmpty>           
+	       		  ORDER BY CREATE_TIME DESC
+	         ) K 
+	         <dynamic prepend="  WHERE  ">
+				<isNotEmpty  property="channelId"       prepend=" AND ">  K.CHANNEL_ID   =#channelId#			</isNotEmpty>
+				
+
+				<isNotEmpty  property="firstName" > 
+				   <isNotEmpty property="firstCode"     prepend=" AND ">
+				   	   ((K.FIRST_NAME  LIKE '%'||#firstName#||'%'   AND K.FIRST_CODE   LIKE '%'||#firstCode#||'%'))
+				   </isNotEmpty>
+				   <isEmpty property="firstCode"     prepend=" AND ">
+				   		( K.FIRST_NAME   LIKE '%'||#firstName#||'%')
+				   </isEmpty>
+				 </isNotEmpty>
+				<isNotEmpty  property="firstCode">
+				   <isEmpty  property="firstName"     prepend=" AND ">
+				        (K.FIRST_CODE   LIKE '%'||#firstCode#||'%')	
+				   </isEmpty> 
+				</isNotEmpty>
+				
+				
+				<isNotEmpty  property="secondName" > 
+				   <isNotEmpty property="secondCode"     prepend=" AND ">
+				   	   ((K.SECOND_NAME  LIKE '%'||#secondName#||'%'   AND K.SECOND_CODE   LIKE '%'||#secondCode#||'%'))
+				   </isNotEmpty>
+				   <isEmpty property="firstCode"     prepend=" AND ">
+				   		( K.SECOND_NAME   LIKE '%'||#secondName#||'%')
+				   </isEmpty>
+				 </isNotEmpty>
+				<isNotEmpty  property="secondCode">
+				   <isEmpty  property="secondName"     prepend=" AND ">
+				        (K.SECOND_CODE   LIKE '%'||#secondCode#||'%')	
+				   </isEmpty> 
+				</isNotEmpty>
+				
+				
+				
+				<isNotEmpty  property="threeName" > 
+				   <isNotEmpty property="firstCode"     prepend=" AND ">
+				   	   ((K.THREE_NAME  LIKE '%'||#threeName#||'%'   AND K.THREE_CODE   LIKE '%'||#threeCode#||'%'))
+				   </isNotEmpty>
+				   <isEmpty property="threeCode"     prepend=" AND ">
+				   		( K.THREE_NAME   LIKE '%'||#threeName#||'%')
+				   </isEmpty>
+				 </isNotEmpty>
+				<isNotEmpty  property="threeCode">
+				   <isEmpty  property="threeName"     prepend=" AND ">
+				        (K.THREE_CODE   LIKE '%'||#threeCode#||'%')	
+				   </isEmpty> 
+				</isNotEmpty>
+				<isNotEmpty  property="beginCreateTime" prepend=" AND ">  K.CREATE_TIME  &gt;=#beginCreateTime# </isNotEmpty>
+				<isNotEmpty  property="endCreateTime"   prepend=" AND ">  K.CREATE_TIME  &lt;=#endCreateTime#+1   </isNotEmpty>
+			</dynamic>
+  	</sql>  
+  
+  <select id="count" resultClass="java.lang.Long" parameterClass="java.util.Map" >
+  	SELECT COUNT(1) CT FROM (<include refid="subSearchChannel"/>) A
+  </select>
+  
+  <select id="queryComplexVO" resultMap="channelMap" parameterClass="java.util.Map">
+     SELECT *
+       FROM (
+	       	<include refid="subSearchChannel"/>
+       )  A
+       <dynamic prepend=" WHERE "> 
+		    <isNotEmpty property="_endRow"  prepend=" AND " > RN  &lt;=#_endRow#   </isNotEmpty>
+		   	<isNotEmpty property="_startRow" prepend=" AND ">  RN  &gt;#_startRow#   </isNotEmpty>
+	   </dynamic>
+  </select>   
+       
+</sqlMap>

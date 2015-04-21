@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_ACTIVITY">
+	<resultMap class="com.lvmama.comm.pet.po.comment.CmtActivity" id="cmtActityMap">
+		<result property="activityId" column="CMT_ACTIVITY_ID" />
+		<result property="activitySubject" column="ACTIVITY_SUBJECT" />
+		<result property="url" column="URL" />
+		<result property="pic" column="PIC" />
+		<result property="picUrl" column="PIC_URL" />
+		<result property="title" column="TITLE" />
+		<result property="content" column="CONTENT" />
+	</resultMap>
+
+	<select id="query" resultMap="cmtActityMap">
+		select * from cmt_Activity
+	</select>
+	
+	<select id="queryById" resultMap="cmtActityMap">
+		select * from cmt_Activity where CMT_ACTIVITY_ID=#id#
+	</select>
+	
+	<select id="queryByActivitySubject" resultMap="cmtActityMap">
+		select * from cmt_Activity where ACTIVITY_SUBJECT=#activitySubject#
+	</select>
+	
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.comment.CmtActivity">
+		update cmt_activity ac  set ac.url=#url# ,ac.pic=#pic#,ac.pic_url=#picUrl#,ac.title=#title#,
+		ac.content=#content#  where ac.CMT_ACTIVITY_ID=#activityId#
+	</update>
+</sqlMap>

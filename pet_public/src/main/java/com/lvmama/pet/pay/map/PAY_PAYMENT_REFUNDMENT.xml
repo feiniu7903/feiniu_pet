@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PAY_PAYMENT_REFUNDMENT">
+	<resultMap id="PaymentRefundmentBaseResult" class="com.lvmama.comm.pet.po.pay.PayPaymentRefundment">
+		<result column="PAYMENT_REFUNDMENT_ID" property="payRefundmentId" />
+		<result column="PAYMENT_ID" property="paymentId" />
+		<result column="AMOUNT" property="amount" />
+		<result column="STATUS" property="status" />
+		<result column="NOTIFIED" property="notified" />
+		<result column="SERIAL" property="serial" />
+		<result column="USER_ID" property="userId" />
+		<result column="OBJECT_ID" property="objectId" />
+		<result column="OBJECT_TYPE" property="objectType"/>
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="CALLBACK_TIME" property="callbackTime" />
+		<result column="CALLBACK_INFO" property="callbackInfo" />
+		<result column="OPERATOR" property="operator" />
+		<result column="IS_ALLOW_REFUND" property="isAllowRefund" />
+		<result column="REFUND_GATEWAY" property="refundGateway" />
+		<result column="BIZ_TYPE" property="bizType" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="REFUND_TYPE" property="refundType" />
+	</resultMap>
+
+	<resultMap id="PayPaymentAndRefundmentResult" class="com.lvmama.comm.pet.po.pay.PayPaymentAndRefundment">
+		<result column="PAYMENT_REFUNDMENT_ID" property="payRefundmentId" />
+		<result column="PAYMENT_ID" property="paymentId" />
+		<result column="AMOUNT" property="amount" />
+		<result column="STATUS" property="status" />
+		<result column="NOTIFIED" property="notified" />
+		<result column="SERIAL" property="serial" />
+		<result column="USER_ID" property="userId" />
+		<result column="OBJECT_ID" property="objectId" />
+		<result column="OBJECT_TYPE" property="objectType"/>
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="CALLBACK_TIME" property="callbackTime" />
+		<result column="CALLBACK_INFO" property="callbackInfo" />
+		<result column="OPERATOR" property="operator" />
+		<result column="IS_ALLOW_REFUND" property="isAllowRefund" />
+		<result column="REFUND_GATEWAY" property="refundGateway" />
+		<result column="BIZ_TYPE" property="bizType" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="REFUND_TYPE" property="refundType" />
+		
+		
+		<result column="PAY_PAYMENT_ID" property="payPaymentId" />
+		<result column="PAY_SERIAL" property="paySerial" />
+		<result column="PAY_BIZ_TYPE" property="payBizType" />
+		<result column="PAY_OBJECT_ID" property="payObjectId" />
+		<result column="PAY_OBJECT_TYPE" property="payObjectType" />
+		<result column="PAY_PAYMENT_TYPE" property="payPaymentType" />
+		<result column="PAY_PAYMENT_GATEWAY" property="payPaymentGateway" />
+		<result column="PAY_AMOUNT" property="payAmount" />
+		<result column="PAY_STATUS" property="payStatus" />
+		<result column="PAY_CALLBACK_TIME" property="payCallbackTime" />
+		<result column="PAY_CALLBACK_INFO" property="payCallbackInfo" />
+		<result column="PAY_CREATE_TIME" property="payCreateTime" />
+		<result column="PAY_GATEWAY_TRADE_NO" property="payGatewayTradeNo" />
+		<result column="PAY_GATE_ID" property="payGateId" />
+		<result column="PAY_PAYMENT_TRADE_NO" property="payPaymentTradeNo" />
+		<result column="PAY_REFUND_SERIAL" property="payRefundSerial" />
+		<result column="PAY_NOTIFIED" property="payNotified" />
+		<result column="PAY_OPERATOR" property="payOperator" />
+		<result column="PAY_NOTIFY_TIME" property="payNotifyTime" />
+		<result column="PAY_ORI_OBJECT_ID" property="payOriObjectId" />
+		
+		
+		<result column="PRE_PRE_PAYMENT_ID" property="prePrePaymentId" />
+		<result column="PRE_PAYMENT_ID" property="prePaymentId" />
+		<result column="PRE_STATUS" property="preStatus" />
+		<result column="PRE_START_TIME" property="preStartTime" />
+		<result column="PRE_END_TIME" property="preEndTime" />
+		<result column="PRE_COMPLETE_TIME" property="preCompleteTime" />
+		<result column="PRE_CANCEL_TIME" property="preCancelTime" />
+		<result column="PRE_NOTIFY_STATUS" property="preNotifyStatus" />
+		<result column="PRE_NOTIFY_TIME" property="preNotifyTime" />
+		<result column="PRE_OPERATOR" property="preOperator" />
+	</resultMap>
+
+	<resultMap id="PayRefundDetailResult" class="com.lvmama.comm.pet.vo.PayRefundDetail">
+		<result column="PAYMENT_REFUNDMENT_ID" property="payRefundmentId"/>
+		<result column="PAYMENT_ID" property="paymentId"/>
+		<result column="USER_ID" property="userId" />
+		<result column="OBJECT_ID" property="objectId" />
+		<result column="OBJECT_TYPE" property="objectType"/>
+		<result column="AMOUNT" property="amount"/>
+		<result column="REFUND_STATUS" property="refundStatus"/>
+		<result column="CREATE_TIME" property="createTime"/>
+		<result column="CALLBACK_TIME" property="callbackTime"/>
+		<result column="CALLBACK_INFO" property="callbackInfo"/>
+		<result column="OPERATOR" property="operator"/>
+		<result column="PRE_STATUS" property="preStatus"/>
+		<result column="START_TIME" property="startTime"/>
+		<result column="END_TIME" property="endTime"/>
+		<result column="COMPLETE_TIME" property="completeTime"/>
+		<result column="CANCEL_TIME" property="cancelTime"/>
+		<result column="REFUND_GATEWAY" property="refundGateway" />
+		<result column="REFUND_GATEWAY_NAME" property="refundGatewayName" />
+		<result column="PAY_REFUND_GATEWAY" property="payRefundGateway" />
+		<result column="PAYMENT_GATEWAY" property="paymentGateway" />
+		<result column="PAYMENT_GATEWAY_NAME" property="paymentGatewayName" />
+		<result column="IS_ALLOW_REFUND" property="isAllowRefund" />
+		<result column="REFUNDMENT_OBJECT_ID" property="refundmentObjectId" />
+		<result column="REFUNDMENT_OBJECT_TYPE" property="refundmentObjectType" />
+		<result column="PAYMENT_TRADE_NO" property="paymentTradeNo" />
+		<result column="GATEWAY_TRADE_NO" property="gatewayTradeNo" />
+		<result column="REFUND_SERIAL" property="refundSerial" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="REFUND_TYPE" property="refundType" />
+		<result column="SERIAL" property="serial" />
+	</resultMap>
+
+    <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.PayPaymentRefundment" >
+	    <selectKey resultClass="java.lang.Long" keyProperty="payRefundmentId">
+				select
+				PAY_PAYMENT_REFUNDMENT_SEQ.nextval as id from DUAL
+		</selectKey>
+	    insert into PAY_PAYMENT_REFUNDMENT (PAYMENT_REFUNDMENT_ID,PAYMENT_ID,AMOUNT,STATUS,SERIAL,CREATE_TIME,OPERATOR,IS_ALLOW_REFUND,OBJECT_ID,OBJECT_TYPE,USER_ID,REFUND_GATEWAY,BIZ_TYPE,ORDER_ID,REFUND_TYPE)
+	    values (#payRefundmentId#,#paymentId#,#amount#,#status#,#serial#,#createTime#,#operator#,#isAllowRefund#,#objectId#,#objectType#,#userId#,#refundGateway#,#bizType#,#orderId#,#refundType#)
+   </insert>
+   <update id="update" parameterClass="com.lvmama.comm.pet.po.pay.PayPaymentRefundment">
+		update PAY_PAYMENT_REFUNDMENT
+		SET
+		STATUS = #status#,
+		NOTIFIED = #notified#,
+		CALLBACK_TIME = #callbackTime#,
+		CALLBACK_INFO = #callbackInfo#,
+		IS_ALLOW_REFUND = #isAllowRefund#,
+		SERIAL = #serial#,
+		OPERATOR = #operator#
+		WHERE PAYMENT_REFUNDMENT_ID = #payRefundmentId#
+	</update>
+	<update id="updateRefundGateway" parameterClass="com.lvmama.comm.pet.po.pay.PayPaymentRefundment">
+		update PAY_PAYMENT_REFUNDMENT
+		SET
+		REFUND_GATEWAY=#refundGateway#
+		WHERE PAYMENT_REFUNDMENT_ID = #payRefundmentId#
+	</update>
+	
+	<select id="selectValidPayRefundmentListByObjectIdAndObjectType" resultMap="PaymentRefundmentBaseResult" parameterClass="java.util.HashMap">
+		SELECT * FROM PAY_PAYMENT_REFUNDMENT
+		where STATUS = #status#
+			and OBJECT_TYPE = #objectType#
+			and OBJECT_ID = #objectId#
+	</select>
+	
+	<select id="selectRefundListByOrderIdAndBizType" resultMap="PaymentRefundmentBaseResult" parameterClass="java.util.HashMap">
+		SELECT * FROM PAY_PAYMENT_REFUNDMENT
+		where STATUS = #status#
+			and BIZ_TYPE = #bizType#
+			and ORDER_ID = #orderId#
+	</select>
+	
+	<select id="selectValidPayRefundmentListByObjectIdAndBizType" resultMap="PaymentRefundmentBaseResult" parameterClass="java.util.HashMap">
+		SELECT * FROM PAY_PAYMENT_REFUNDMENT
+		where OBJECT_ID = #objectId#
+			and BIZ_TYPE = #bizType#
+			<isNotEmpty prepend="and" property="status" >
+			STATUS = #status#
+			</isNotEmpty>
+	</select>
+	
+	<select id="selectPaymentRefundmentByPK" resultMap="PaymentRefundmentBaseResult" parameterClass="java.lang.Long">
+		SELECT * FROM PAY_PAYMENT_REFUNDMENT WHERE PAYMENT_REFUNDMENT_ID = #payRefundmentId#
+	</select>
+	
+	<select id="selectByParams" resultMap="PaymentRefundmentBaseResult" parameterClass="java.util.Map">
+		SELECT * FROM PAY_PAYMENT_REFUNDMENT
+		<dynamic prepend="WHERE">
+
+			 <isNotNull prepend="and" property="paymentId" >
+		        PAYMENT_ID = #paymentId#
+		     </isNotNull>
+			 <isNotNull prepend="and" property="status" >
+		        STATUS = #status#
+		     </isNotNull>
+		     <isNotNull prepend="and" property="notified" >
+		        NOTIFIED = #notified#
+		     </isNotNull>
+		     <isNotNull prepend="and" property="serial" >
+		        SERIAL = #serial#
+		     </isNotNull>
+		     <isNotNull prepend="and" property="isAllowRefund" >
+		        IS_ALLOW_REFUND = #isAllowRefund#
+		     </isNotNull>
+		     <isNotNull prepend="and" property="bizType" >
+		        BIZ_TYPE = #bizType#
+		     </isNotNull>
+		     <isNotNull prepend="and" property="objectId" >
+		        OBJECT_ID = #objectId#
+		     </isNotNull>
+	     </dynamic>
+	      ORDER BY CALLBACK_TIME DESC
+	</select>
+	
+	<sql id="selectPayRefundDetail">
+		SELECT	PAY.OBJECT_ID, PAY.PAYMENT_ID, PAY.PAYMENT_GATEWAY, PAY.OBJECT_TYPE, 
+			PAY.PAYMENT_TRADE_NO, PAY.GATEWAY_TRADE_NO, PAY.REFUND_SERIAL, 
+			REF.PAYMENT_REFUNDMENT_ID, REF.AMOUNT, REF.CREATE_TIME, REF.CALLBACK_TIME, REF.CALLBACK_INFO, REF.STATUS as REFUND_STATUS, REF.OPERATOR,
+			PRE.START_TIME, PRE.END_TIME, PRE.COMPLETE_TIME, PRE.CANCEL_TIME, PRE.STATUS as PRE_STATUS,
+			REF.OBJECT_ID as REFUNDMENT_OBJECT_ID, REF.OBJECT_TYPE as REFUNDMENT_OBJECT_TYPE,REF.USER_ID as USER_ID, REF.REFUND_GATEWAY as REFUND_GATEWAY, 
+			REF.ORDER_ID, REF.REFUND_TYPE, REF.SERIAL, 
+			PAYPG.GATEWAY_NAME as PAYMENT_GATEWAY_NAME, REF.IS_ALLOW_REFUND, PAYPG.REFUND_GATEWAY as PAY_REFUND_GATEWAY, 
+			REFPG.GATEWAY_NAME as REFUND_GATEWAY_NAME
+		FROM	PAY_PAYMENT PAY, PAY_PAYMENT_REFUNDMENT REF, PAY_PRE_PAYMENT PRE, PAY_PAYMENT_GATEWAY PAYPG, PAY_PAYMENT_GATEWAY REFPG
+		WHERE
+			REF.PAYMENT_ID = PAY.PAYMENT_ID(+) AND
+			PAY.PAYMENT_ID = PRE.PAYMENT_ID(+) AND
+			PAY.PAYMENT_GATEWAY = PAYPG.GATEWAY(+) AND
+			REF.REFUND_GATEWAY = REFPG.GATEWAY(+) AND
+			REF.OBJECT_TYPE != #objectType#
+		<dynamic>
+			<isNotEmpty prepend="and" property="objectId" >
+				PAY.OBJECT_ID = #objectId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="paymentId" >
+				PAY.PAYMENT_ID = #paymentId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="refundmentObjectId" >
+				REF.OBJECT_ID = #refundmentObjectId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="refundEndDate">
+				REF.CALLBACK_TIME &lt; = #refundEndDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="refundBeginDate">
+				REF.CALLBACK_TIME &gt; = #refundBeginDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="tradeNo" >
+				#tradeNo# IN (PAY.PAYMENT_TRADE_NO, PAY.GATEWAY_TRADE_NO, PAY.REFUND_SERIAL)
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="paymentRefundmentId" >
+				REF.PAYMENT_REFUNDMENT_ID = #paymentRefundmentId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="paymentRefundmentId" >
+				REF.PAYMENT_REFUNDMENT_ID = #paymentRefundmentId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId" >
+				REF.ORDER_ID = #orderId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="refundStatus" >
+				REF.STATUS = #refundStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="paymentGateway" >
+				PAY.PAYMENT_GATEWAY = #paymentGateway#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="refundGateway" >
+				REF.REFUND_GATEWAY = #refundGateway#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="isAllowRefund" >
+				PAYPG.IS_ALLOW_REFUND = #isAllowRefund#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="bizType" >
+				REF.BIZ_TYPE = #bizType#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY REF.CALLBACK_TIME DESC
+	</sql>
+
+	<select id="selectPayRefundDetailByParam" resultMap="PayRefundDetailResult" parameterClass="java.util.HashMap" >
+		select * from (
+			select st.*,rownum as rn from (
+	 			<include refid="selectPayRefundDetail"/>
+	 		) st
+	 	)
+	 	<dynamic prepend=" where ">
+	 		<isNotEmpty property="skipResults">
+	 			<isNotEmpty property="maxResults">
+	 				rn &gt; #skipResults# and rn &lt;= #maxResults#
+	 			</isNotEmpty>
+	 		</isNotEmpty>
+	 	</dynamic>
+	</select>
+
+	<select id="selectPayRefundDetailByParamCount"  resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(*)  from ( <include refid="selectPayRefundDetail"/> )
+	</select>
+
+	<select id="selectPayRefundDetailByPaymentRefundmentId" resultMap="PayRefundDetailResult" parameterClass="java.util.HashMap">
+		<include refid="selectPayRefundDetail"/>
+	</select>
+	
+	<select id="getRefunmentAmountByPaymentId" resultClass="java.lang.Long" parameterClass="java.lang.String">
+		select sum(amount) totalAmount from pay_payment_refundment where payment_id=#paymentId#
+	</select>
+	<select id="selectUnRefundedPaymentByGateWay" resultMap="PaymentRefundmentBaseResult" parameterClass="java.util.Map">
+        SELECT PPR.* FROM PAY_PAYMENT_REFUNDMENT PPR,PAY_PAYMENT PP    
+        WHERE
+        PPR.PAYMENT_ID = PP.PAYMENT_ID 
+        AND PP.PAYMENT_GATEWAY = #paymentGateway#
+        AND PPR.STATUS = 'CREATE'
+        AND PPR.IS_ALLOW_REFUND = 'TRUE'
+		<![CDATA[ AND PPR.CREATE_TIME < #today# ]]>
+	</select>
+	
+	
+	
+	
+	<select id="selectPaymentAndRefundByParams" resultMap="PayPaymentAndRefundmentResult" parameterClass="java.util.Map">
+		SELECT PPR.*,
+         PP.PAYMENT_ID PAY_PAYMENT_ID,
+         PP.SERIAL PAY_SERIAL,
+         PP.BIZ_TYPE PAY_BIZ_TYPE,
+         PP.OBJECT_ID PAY_OBJECT_ID,
+         PP.OBJECT_TYPE PAY_OBJECT_TYPE,
+         PP.PAYMENT_TYPE PAY_PAYMENT_TYPE,
+         PP.PAYMENT_GATEWAY PAY_PAYMENT_GATEWAY,
+         PP.AMOUNT PAY_AMOUNT,
+         PP.STATUS PAY_STATUS,
+         PP.CREATE_TIME PAY_CREATE_TIME,
+         PP.CALLBACK_TIME PAY_CALLBACK_TIME,
+         PP.CALLBACK_INFO PAY_CALLBACK_INFO,
+         PP.GATEWAY_TRADE_NO PAY_GATEWAY_TRADE_NO,
+         PP.GATE_ID PAY_GATE_ID,
+         PP.PAYMENT_TRADE_NO PAY_PAYMENT_TRADE_NO,
+         PP.REFUND_SERIAL PAY_REFUND_SERIAL,
+         PP.NOTIFIED PAY_NOTIFIED,
+         PP.OPERATOR PAY_OPERATOR,
+         PP.NOTIFY_TIME PAY_NOTIFY_TIME,
+         PP.ORI_OBJECT_ID PAY_ORI_OBJECT_ID,
+         PPP.PRE_PAYMENT_ID PRE_PRE_PAYMENT_ID,
+         PPP.PAYMENT_ID PRE_PAYMENT_ID,
+         PPP.STATUS PRE_STATUS,
+         PPP.START_TIME PRE_START_TIME,
+         PPP.END_TIME PRE_END_TIME,
+         PPP.COMPLETE_TIME PRE_COMPLETE_TIME,
+         PPP.CANCEL_TIME PRE_CANCEL_TIME,
+         PPP.NOTIFY_STATUS PRE_NOTIFY_STATUS,
+         PPP.NOTIFY_TIME PRE_NOTIFY_TIME,
+         PPP.OPERATOR PRE_OPERATOR
+      FROM LVMAMA_PET.PAY_PAYMENT_REFUNDMENT PPR
+      LEFT JOIN LVMAMA_PET.PAY_PAYMENT PP
+        ON PPR.PAYMENT_ID = PP.PAYMENT_ID
+      LEFT JOIN LVMAMA_PET.PAY_PRE_PAYMENT PPP
+        ON PPR.PAYMENT_ID=PPP.PAYMENT_ID
+		<dynamic prepend="where">
+			<isNotNull prepend="and" property="serial" >
+		        PPR.SERIAL = #serial#
+		     </isNotNull>
+			 <isNotNull prepend="and" property="status" >
+		        PPR.STATUS = #status#
+		     </isNotNull>
+		     <isNotNull prepend="and" property="refundGateway" >
+		         PPR.REFUND_GATEWAY=#refundGateway#
+		     </isNotNull>
+		     <isNotNull prepend="and" property="refundGatewayIN" >
+		         PPR.REFUND_GATEWAY in ($refundGatewayIN$)
+		     </isNotNull>
+		     <isNotNull prepend="and" property="createTimeShort" >
+		         to_char(PPR.CALLBACK_TIME,'yyyy-MM-dd') = to_char(#createTimeShort#,'yyyy-MM-dd')
+		      </isNotNull>
+	     </dynamic>
+	      ORDER BY PPR.payment_refundment_id
+	</select>
+</sqlMap>

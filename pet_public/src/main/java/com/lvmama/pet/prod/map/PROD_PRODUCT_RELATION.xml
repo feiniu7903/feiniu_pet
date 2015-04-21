@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_RELATION" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductRelation" >
+    <result column="RELATION_ID" property="relationId" />
+    <result column="SALE_NUM_TYPE" property="saleNumType"/>
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="PROD_BRANCH_ID" property="prodBranchId" />
+    <result column="RELAT_PRODUCT_ID" property="relatProductId" />    
+  </resultMap>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="Long" >
+    SELECT * FROM PROD_PRODUCT_RELATION WHERE RELATION_ID = #relationId#
+  </select>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductRelation">
+  	<selectKey keyProperty="relationId" resultClass="java.lang.Long">
+  		select PROD_PRODUCT_RELATION_SEQ.nextval from dual
+  	</selectKey>
+    INSERT INTO PROD_PRODUCT_RELATION 
+		(RELATION_ID, SALE_NUM_TYPE, PRODUCT_ID, PROD_BRANCH_ID, RELAT_PRODUCT_ID)
+    VALUES 
+		(#relationId#, #saleNumType#, #productId#, #prodBranchId#, #relatProductId#)
+  </insert>
+
+   <update id="update" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductRelation" >
+    UPDATE PROD_PRODUCT_RELATION SET 
+		SALE_NUM_TYPE = #saleNumType#, PRODUCT_ID = #productId#, PROD_BRANCH_ID = #prodBranchId#, RELAT_PRODUCT_ID = #relatProductId# 
+	WHERE RELATION_ID = #relationId#
+  </update>
+
+  <select id="query" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+	SELECT * FROM PROD_PRODUCT_RELATION 
+	<dynamic prepend=" WHERE ">
+  		<isNotEmpty property="productId" prepend=" and "> PRODUCT_ID = #productId# </isNotEmpty>
+  		<isNotEmpty property="prodBranchId" prepend=" and ">PROD_BRANCH_ID = #prodBranchId# </isNotEmpty>
+  		<isNotEmpty property="relatProductId" prepend=" and ">RELAT_PRODUCT_ID = #relatProductId# </isNotEmpty>
+  	</dynamic>
+  </select>
+
+  <select id="count" parameterClass="java.util.HashMap" resultClass="java.lang.Long">
+	SELECT COUNT(RELATION_ID) FROM PROD_PRODUCT_RELATION 
+	<dynamic prepend=" WHERE ">
+	  	<isNotEmpty property="productId" prepend=" and "> PRODUCT_ID = #productId# </isNotEmpty>
+	  	<isNotEmpty property="prodBranchId" prepend=" and ">PROD_BRANCH_ID = #prodBranchId# </isNotEmpty>
+	  	<isNotEmpty property="relatProductId" prepend=" and ">RELAT_PRODUCT_ID = #relatProductId# </isNotEmpty>
+  	</dynamic>
+  </select>
+</sqlMap>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_MOBILE_AREA">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComMobileArea">
+		<result column="MOBILE_NUMBER" property="mobileNumber" />
+		<result column="CITY_ID" property="cityId" />
+		<result column="CITY_NAME" property="cityName" />
+		<result column="PROVINCE_ID" property="provinceId" />
+		<result column="PROVINCE_NAME" property="provinceName" />
+	</resultMap>
+	<select id="selectMobileArea" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComMobileArea">
+		select 
+			t.MOBILE_NUMBER,
+			c.CITY_ID,
+			c.CITY_NAME,
+			p.PROVINCE_ID,
+			p.PROVINCE_NAME
+		from 
+			COM_MOBILE_AREA t,
+			COM_CITY c,
+			COM_PROVINCE p
+		where t.MOBILE_AREA=c.CITY_ID 
+			and c.PROVINCE_ID = p.PROVINCE_ID
+			and t.MOBILE_NUMBER= #mobileNumber:VARCHAR#
+	</select>
+</sqlMap>

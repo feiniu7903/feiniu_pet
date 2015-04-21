@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE taglib PUBLIC
+    "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+    "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+	<tlib-version>1.0.0</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>lvmama</short-name>
+	<uri>/lvmama-ebk-tags</uri>
+	<display-name>"lvmama Tags"</display-name>
+	
+	<!-- 权限 -->
+	<tag>
+		<name>perm</name>
+		<tag-class>
+			com.lvmama.comm.utils.tag.EbkPermJspTag
+		</tag-class>
+		<body-content>jsp</body-content>
+		<attribute>
+			<name>permissionId</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				<![CDATA[ permission id  ]]>
+			</description>
+		</attribute>
+	</tag>
+</taglib>

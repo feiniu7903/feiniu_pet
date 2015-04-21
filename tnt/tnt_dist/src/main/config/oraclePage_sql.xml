@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="basic">
+	<sql id="pageSearchHead">
+		<if test="startRows != null and endRows != null">
+			SELECT * FROM (SELECT
+			P_T.*,ROWNUM AS RN FROM (
+		</if>
+	</sql>
+	<sql id="pageSearchFoot">
+		<if test="orderList != null and orderList.size>0">
+			<foreach collection="orderList" open="ORDER BY" index="index"
+				item="item" separator=",">
+				${item}
+			</foreach>
+		</if>
+		<if test="startRows != null and endRows != null">
+			) P_T ) WHERE RN BETWEEN
+			#{startRows} AND #{endRows}
+		</if>
+	</sql>
+</mapper>

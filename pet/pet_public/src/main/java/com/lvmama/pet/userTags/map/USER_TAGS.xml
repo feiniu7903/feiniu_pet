@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_TAGS" >
+<typeAlias alias="UserTags" type="com.lvmama.comm.pet.po.usertags.UserTags" />
+    <resultMap class="UserTags" id="BaseResultMap">
+        <result property="tagsId" column="TAGS_ID"/>
+        <result property="tagsName" column="TAGS_NAME"/>
+        <result property="tagsPinYin" column="TAGS_PINYIN"/>
+        <result property="tagsTypeId" column="TAGS_TYPEID"/>
+        <result property="tagsStatus" column="TAGS_STATUS"/>
+        <result property="tagsDate" column="TAGS_DATE"/>
+        <result property="dealStatus" column="DEAL_STATUS"/>
+    </resultMap>
+    
+    <resultMap class="java.util.HashMap" id="BaseResultMap3">
+    	<result property="tagsGroupId" column="tagsGroupId"></result>
+    	<result property="tagsGroupName" column="tagsGroupName"></result>
+    </resultMap>
+   
+     <resultMap class="UserTags" id="BaseResultMap2">
+        <result property="tagsId" column="TAGS_ID"/>
+        <result property="tagsName" column="TAGS_NAME"/>
+        <result property="typeFirstType" column="TYPE_FIRSTTYPE"/>
+        <result property="typeSecondType" column="TYPE_SECONDTYPE"/>
+        <result property="tagsTypeId" column="TAGS_TYPEID"/>
+        <result property="tagsStatus" column="TAGS_STATUS"/>
+    </resultMap>
+   
+    <sql id="pageHeader">
+         SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+    </sql>
+    <sql id="pageFooter">
+         ) A
+        <dynamic prepend="where">
+            <isNotEmpty property="endRows" prepend="and">
+                ROWNUM &lt;= #endRows#
+            </isNotEmpty>
+        </dynamic>
+          )
+        <dynamic prepend="where">
+         <isNotEmpty property="startRows" prepend="and">
+            rn &gt;= #startRows#
+         </isNotEmpty>      
+        </dynamic>
+    </sql>
+    
+    <sql id="queryUserTagsByParamWhere">
+        <dynamic prepend=" where ">
+	       <isNotEmpty prepend=" and " property="tagsName"> TAGS_NAME like '%$tagsName$%'</isNotEmpty>
+	       <isNotEmpty prepend=" and " property="tagsTypeId"> TAGS_TYPEID = #tagsTypeId#</isNotEmpty>
+	       <isNotEmpty prepend=" and " property="tagsStatus"> TAGS_STATUS = #tagsStatus#</isNotEmpty>
+	       <isNotEmpty prepend=" and " property="dealStatus"> DEAL_STATUS = #dealStatus#</isNotEmpty>
+	       <isNotEmpty prepend=" and " property="tagsId2"> TAGS_ID != #tagsId2#</isNotEmpty>
+	       <isNotEmpty prepend=" and " property="tagsId"> TAGS_ID = #tagsId#</isNotEmpty>
+	       <isEqual prepend=" and " property="tagsPinYin" compareValue="search"> TAGS_PINYIN is null</isEqual>
+	    </dynamic>
+    </sql>
+       
+    <select id="queryAllUserTagsByParam" parameterClass="java.util.Map" resultMap="BaseResultMap2" >
+        <include refid="pageHeader"/>        
+            SELECT U.*,T.TYPE_FIRSTTYPE,T.TYPE_SECONDTYPE FROM USER_TAGS U 
+            LEFT join  USERTAGS_TYPE T 
+            on U.TAGS_TYPEID = T.TYPE_ID
+            <include refid="queryUserTagsByParamWhere"/>
+            ORDER BY U.TAGS_ID DESC
+        <include refid="pageFooter"/>
+    </select>
+    
+    <select id="queryAllUserTagsByRes" parameterClass="java.util.Map" resultMap="BaseResultMap" >
+        <include refid="pageHeader"/>        
+            SELECT * FROM USER_TAGS WHERE TAGS_ID NOT IN(
+			SELECT TAGS_ID1 FROM USERTAGS_RELATIONSHIP WHERE TAGS_ID1 IN(SELECT TAGS_ID FROM USER_TAGS) AND TAGS_ID2 = #tagsId2#) 
+			AND TAGS_ID NOT IN(
+			SELECT TAGS_ID2 FROM USERTAGS_RELATIONSHIP WHERE TAGS_ID2 IN(SELECT TAGS_ID FROM USER_TAGS) AND TAGS_ID1 = #tagsId2#) 
+			AND TAGS_STATUS=1 
+		<isNotEmpty prepend=" and " property="tagsName"> TAGS_NAME like '%$tagsName$%'</isNotEmpty>
+		<isNotEmpty prepend=" and " property="tagsId2"> TAGS_ID != #tagsId2#</isNotEmpty>
+		 	ORDER BY TAGS_DATE DESC 
+        <include refid="pageFooter"/>
+    </select>
+    
+    <select id="queryAllUserTagsByResCount" parameterClass="java.util.Map" resultClass="java.lang.Long">
+        <include refid="pageHeader"/>        
+            SELECT COUNT(*) FROM USER_TAGS WHERE TAGS_ID NOT IN(
+			SELECT TAGS_ID1 FROM USERTAGS_RELATIONSHIP WHERE TAGS_ID1 IN(SELECT TAGS_ID FROM USER_TAGS) AND TAGS_ID2 = #tagsId2#) 
+			AND TAGS_ID NOT IN(
+			SELECT TAGS_ID2 FROM USERTAGS_RELATIONSHIP WHERE TAGS_ID2 IN(SELECT TAGS_ID FROM USER_TAGS) AND TAGS_ID1 = #tagsId2#) 
+			AND TAGS_STATUS=1  
+		<isNotEmpty prepend=" and " property="tagsName"> TAGS_NAME like '%$tagsName$%'</isNotEmpty>
+		<isNotEmpty prepend=" and " property="tagsId2"> TAGS_ID != #tagsId2#</isNotEmpty>
+		 	ORDER BY TAGS_DATE DESC 
+        <include refid="pageFooter"/>
+    </select>
+    
+    <select id="queryUserTagsByName" parameterClass="UserTags" resultMap="BaseResultMap" >  
+            SELECT TAGS_ID,TAGS_NAME,TAGS_PINYIN,TAGS_TYPEID,TAGS_STATUS,TAGS_DATE,DEAL_STATUS
+            FROM LVMAMA_PET.USER_TAGS 
+           <dynamic prepend=" where ">
+                <isNotEmpty prepend=" and " property="tagsName"> TAGS_NAME = #tagsName# </isNotEmpty>
+                <isEqual prepend=" and " property="tagsId" compareValue="0" > TAGS_ID != #tagsId# </isEqual>
+                <isNotEqual prepend=" and " property="tagsId" compareValue="0" > TAGS_ID = #tagsId# </isNotEqual> 
+           </dynamic>
+    </select>
+    
+     <insert id="saveUserTags" parameterClass="UserTags" >
+    <selectKey keyProperty="tagsId" resultClass="java.lang.Long">    
+    SELECT USER_TAGS_SEQ.NEXTVAL AS TYPEID FROM DUAL
+    </selectKey>
+    INSERT INTO LVMAMA_PET.USER_TAGS
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="tagsId" >
+        TAGS_ID
+      </isNotNull>
+      <isNotNull prepend="," property="tagsName" >
+        TAGS_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="tagsPinYin" >
+        TAGS_PINYIN
+      </isNotNull>
+      <isNotNull prepend="," property="tagsTypeId" >
+        TAGS_TYPEID
+      </isNotNull>
+       <isNotNull prepend="," property="tagsStatus" >
+        TAGS_STATUS
+      </isNotNull>
+      ,TAGS_DATE
+      )
+    </dynamic>
+    VALUES
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="tagsId" >
+        #tagsId#
+      </isNotNull>
+      <isNotNull prepend="," property="tagsName" >
+        #tagsName#
+      </isNotNull>
+      <isNotNull prepend="," property="tagsPinYin" >
+        #tagsPinYin#
+      </isNotNull>
+      <isNotNull prepend="," property="tagsTypeId" >
+       #tagsTypeId#
+      </isNotNull>
+      <isNotNull prepend="," property="tagsStatus" >
+       #tagsStatus#
+      </isNotNull>
+       ,sysDate
+      )
+    </dynamic>
+  </insert>
+  
+    <select id="countByParam" parameterClass="java.util.Map" resultClass="java.lang.Long">
+       SELECT COUNT(*) FROM LVMAMA_PET.USER_TAGS 
+        <include refid="queryUserTagsByParamWhere"/>
+    </select>
+
+  <update id="updateUserTags"  parameterClass="UserTags" >
+  UPDATE LVMAMA_PET.USER_TAGS 
+    <dynamic prepend="SET">
+      <isNotNull prepend="," property="tagsPinYin">
+        TAGS_PINYIN = #tagsPinYin#
+      </isNotNull>
+      <isNotNull prepend="," property="tagsTypeId">
+        TAGS_TYPEID = #tagsTypeId#
+      </isNotNull>
+      <isNotNull prepend="," property="tagsStatus">
+        TAGS_STATUS = #tagsStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="dealStatus">
+        DEAL_STATUS = #dealStatus#
+      </isNotNull>
+    </dynamic>
+    WHERE TAGS_ID = #tagsId#
+  </update>
+  
+  <update id="updateUserTagsDealStatus"  parameterClass="java.util.Map" >
+  UPDATE LVMAMA_PET.USER_TAGS
+  <dynamic prepend="SET">
+      <isNotNull prepend="," property="dealStatus">
+        DEAL_STATUS = #dealStatus#
+      </isNotNull>
+  </dynamic> 
+  <dynamic prepend=" where ">
+		<isNotEmpty prepend=" and " property="updTagsIds">
+		 TAGS_ID in ($updTagsIds$) 
+		</isNotEmpty>
+	    <isNotEmpty prepend=" and " property="tagsId">
+	     TAGS_ID = #tagsId#
+	    </isNotEmpty>
+  </dynamic>
+  </update>
+</sqlMap>

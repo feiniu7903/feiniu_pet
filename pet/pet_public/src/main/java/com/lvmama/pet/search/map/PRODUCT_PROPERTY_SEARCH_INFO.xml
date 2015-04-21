@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PRODUCT_PROPERTY_SEARCH_INFO">
+  <typeAlias alias="productPropertySearchInfo" type="com.lvmama.comm.pet.po.search.ProductPropertySearchInfo" />
+  <resultMap class="productPropertySearchInfo" id="BaseResultMap">
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="PLAY_AREA" property="playArea" />
+    <result column="PLAY_LINE" property="playLine" />
+    <result column="PLAY_FEATURES" property="playFeatures" />
+    <result column="PLAY_BRAND" property="playBrand" />
+    <result column="PLAY_NUM" property="playNum" />
+    <result column="TRAFFIC" property="traffic" />
+    <result column="HOTEL_TYPE" property="hotelType" />
+    <result column="HOTEL_LOCATION" property="hotelLocation" />
+    <result column="ROUTE_TOPIC" property="routeTopic" />
+  </resultMap>
+  <select id="getProductPropertySearchInfoByProductId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+  	select * from product_property_search_info where product_id=#productId# 
+  </select>
+ 
+</sqlMap>

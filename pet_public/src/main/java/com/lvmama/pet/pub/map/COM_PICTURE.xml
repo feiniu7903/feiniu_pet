@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_PICTURE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComPicture" >
+    <result column="PICTURE_ID" property="pictureId" />
+    <result column="PICTURE_OBJECT_ID" property="pictureObjectId" />
+    <result column="PICTURE_NAME" property="pictureName" />
+    <result column="PICTURE_OBJECT_TYPE" property="pictureObjectType" />
+    <result column="PICTURE_URL" property="pictureUrl" />
+    <result column="SEQ_NUM" property="seq"/>
+  </resultMap>
+  
+  <select id="getComPictureByPageId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  		SELECT * FROM  COM_PICTURE  WHERE PICTURE_OBJECT_ID =#pageId# AND PICTURE_OBJECT_TYPE='VIEW_PAGE' ORDER BY SEQ_NUM ASC,PICTURE_ID ASC
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComPicture" >
+    select PICTURE_ID, PICTURE_OBJECT_ID, PICTURE_NAME, PICTURE_OBJECT_TYPE, PICTURE_URL,SEQ_NUM
+    from COM_PICTURE
+    where PICTURE_ID = #pictureId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.pub.ComPicture" >
+    delete from COM_PICTURE
+    where PICTURE_ID = #pictureId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComPicture" >
+    <selectKey keyProperty="pictureId" resultClass="java.lang.Long">
+      select COM_PICTURE_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into COM_PICTURE (PICTURE_ID, PICTURE_OBJECT_ID, PICTURE_NAME, PICTURE_OBJECT_TYPE, PICTURE_URL,SEQ_NUM)
+    values (#pictureId#, #pictureObjectId#, #pictureName#,
+      #pictureObjectType#, #pictureUrl#,#seq#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.pub.ComPicture" >
+    update COM_PICTURE
+    set PICTURE_OBJECT_ID = #pictureObjectId#,
+      PICTURE_NAME = #pictureName#,
+      PICTURE_OBJECT_TYPE = #pictureObjectType#,
+      PICTURE_URL = #pictureUrl#,
+      SEQ_NUM = #seq#
+    where PICTURE_ID = #pictureId#
+  </update>
+  <!-- 根据图片类型以及图片对象ID查询图片 -->
+  <select id="getComPictureByObjectIdAndType" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  		SELECT * FROM  COM_PICTURE  WHERE PICTURE_OBJECT_ID =#pictureObjectId# AND PICTURE_OBJECT_TYPE=#pictureObjectType# ORDER BY PICTURE_ID DESC
+  </select>
+  <select id="getComPictureByObjectIdAndTypeOrderBySeqNum" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  		SELECT * FROM  COM_PICTURE  WHERE PICTURE_OBJECT_ID =#pictureObjectId# AND PICTURE_OBJECT_TYPE=#pictureObjectType# ORDER BY SEQ_NUM ASC
+  </select>
+  <select id="getComPictureByObjectIdOrderBySeqNum" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  		SELECT * FROM  COM_PICTURE  WHERE PICTURE_OBJECT_ID =#pictureObjectId# ORDER BY SEQ_NUM ASC
+  </select>
+  <select id="getComPictureByObjectIdOrderBySeqNumForEbk" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  		SELECT * FROM  COM_PICTURE  WHERE PICTURE_OBJECT_ID =#pictureObjectId# and PICTURE_OBJECT_TYPE like 'EBK_PROD_PRODUCT_%' ORDER BY SEQ_NUM ASC
+  </select>
+  <select id="selectNextPicture" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+  		select * from COM_PICTURE
+  		where ROWNUM &lt;=1 AND PICTURE_OBJECT_ID=#pictureObjectId# AND PICTURE_OBJECT_TYPE='VIEW_PAGE' and SEQ_NUM   		
+  		<isEqual property="type" compareValue="up">
+  			&lt; #seq# ORDER BY SEQ_NUM DESC
+  		</isEqual>
+  		<isEqual property="type" compareValue="down">
+  			&gt; #seq# ORDER BY SEQ_NUM ASC
+  		</isEqual>
+  </select>
+  
+  <!-- 针对EBK大图小图使用 -->
+   <select id="getNextSeqEBK" parameterClass="com.lvmama.comm.pet.po.pub.ComPicture" resultClass="java.lang.Integer">
+  		select MAX(SEQ_NUM)+1 from COM_PICTURE WHERE PICTURE_OBJECT_ID=#pictureObjectId# and PICTURE_OBJECT_TYPE like 'EBK_PROD_PRODUCT_%'
+  </select>
+   <!-- /针对EBK大图小图使用 -->
+  
+  <select id="getNextSeq" parameterClass="com.lvmama.comm.pet.po.pub.ComPicture" resultClass="java.lang.Integer">
+  		select MAX(SEQ_NUM)+1 from COM_PICTURE WHERE PICTURE_OBJECT_ID=#pictureObjectId# and PICTURE_OBJECT_TYPE=#pictureObjectType#
+  </select>
+</sqlMap>

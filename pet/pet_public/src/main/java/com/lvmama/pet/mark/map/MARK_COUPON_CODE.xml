@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_COUPON_CODE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mark.MarkCouponCode" >
+    <result column="COUPON_CODE_ID" property="couponCodeId" />
+    <result column="COUPON_ID" property="couponId" />
+    <result column="COUPON_CODE" property="couponCode" />
+    <result column="USED" property="used" />
+    <result column="BEGIN_TIME" property="beginTime" />
+    <result column="END_TIME" property="endTime" />
+    <result column="CREATE_TIME" property="createtime" />
+  </resultMap>
+  
+  <!--select id="selectByCouponId" resultMap="BaseResultMap" parameterClass="java.util.Map">
+   SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+  select * from MARK_COUPON_CODE where COUPON_ID=#couponId# order by CREATE_TIME DESC
+  ) T WHERE ROWNUM &lt;= #_endRow#
+		)
+		WHERE ROWNUM1 &gt;=#_startRow#
+  </select>
+  
+  <select id="selectCouponCodeByCouponId" resultMap="BaseResultMap">
+  	select * from MARK_COUPON_CODE where COUPON_ID=#couponId#
+  </select>
+  
+  <select id="selectAllCodesByCouponId" resultMap="BaseResultMap">
+  	select * from MARK_COUPON_CODE where COUPON_ID=#couponId#
+  </select>
+  
+  <select id="selectCountByCouponId" resultClass="java.lang.Long">
+  	select count(*) from MARK_COUPON_CODE where COUPON_ID=#couponId#
+  </select>
+  
+  <insert id="insertCodeTemp">
+  insert into mark_code_temp(code) values(#code#)
+  </insert>
+  
+  <select id="selectCodeTempCount" resultClass="java.lang.Long">
+  	select count(*) from mark_code_temp
+  </select>
+  
+  <delete id="deleteAllCodeTemp">
+  delete  mark_code_temp
+  </delete>
+  
+  <delete id="deleteCodeTempRepeat">
+  	delete mark_code_temp where code in (select code from mark_code_temp group by code having count(code)>=2)
+  </delete>
+  
+  <select id="mergeTempData">
+  	MERGE INTO mark_coupon_code mcc using mark_code_temp mct on (1=0) 
+	WHEN NOT MATCHED THEN insert VALUES(#couponId#,MARK_COUPON_CODE_SEQ.nextval,mct.code,'false')	
+  </select>
+  
+  <select id="countCouponCodeByCodeAndCouponId" parameterClass="java.util.HashMap" resultClass="java.lang.Long">
+   select count(*) from MARK_COUPON_CODE where COUPON_ID=#couponId# and COUPON_CODE=#couponCode#
+  </select>
+
+  
+  
+    <select id="selectCouponCodeByCodeAndCouponId" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+   select * from MARK_COUPON_CODE where COUPON_ID=#couponId# and COUPON_CODE=#couponCode#
+  </select>
+  
+  <select id="selectByCouponCode" resultMap="BaseResultMap">
+ 	 select mcc.* from MARK_COUPON_CODE mcc,mark_coupon mc  where mcc.coupon_code=#couponCode# and mc.valid='true' and mc.coupon_id=mcc.coupon_id
+  </select>
+  
+  <select id="selectCountByCode" resultClass="java.lang.Long">
+  	select count(*) from MARK_COUPON_CODE where COUPON_CODE=#couponCode#
+  </select>
+  
+ <select id="countHasCode" resultClass="java.lang.Long">
+ select count(*) from MARK_COUPON_CODE where COUPON_ID=#couponId#
+ </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mark.MarkCouponCode" >
+    select COUPON_CODE_ID, COUPON_ID, COUPON_CODE, USED, BEGIN_TIME, END_TIME, CREATE_TIME
+    from MARK_COUPON_CODE
+    where COUPON_CODE_ID = #couponCodeId:DECIMAL#
+  </select>
+  
+ 	<select id="selectByRelateUserAmount" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+ 		SELECT MCRU.USER_ID,COUNT(CASE  WHEN MCC.USED = 'false' AND MCC.END_TIME >= TRUNC(SYSDATE) AND C.VALID='true' THEN  1   ELSE  NULL END) USE_COUNT,
+		       COUNT(CASE  WHEN MCC.USED != 'false' THEN  1   ELSE  NULL END)  USED_COUNT,
+		       ABS(SUM(CASE  WHEN MCC.USED = 'false' AND MCC.END_TIME >= TRUNC(SYSDATE) AND C.VALID='true' THEN  C.ARGUMENT_Z   ELSE  0 END))/100 USE_AMOUNT,
+		       ABS(SUM(CASE  WHEN MCC.USED != 'false'  THEN  C.ARGUMENT_Z   ELSE  0 END))/100 USED_AMOUNT
+		  FROM MARK_COUPON_CODE MCC, MARK_COUPON_RELATE_USER MCRU, MARK_COUPON C
+		 WHERE MCC.COUPON_CODE_ID = MCRU.COUPON_CODE_ID
+		   AND MCC.COUPON_ID = C.COUPON_ID
+		   <dynamic>
+		   		<isNotEmpty prepend=" AND " property="userId"> MCRU.USER_ID = #userId#</isNotEmpty>
+		   </dynamic>
+		 GROUP BY MCRU.USER_ID
+ 	</select>
+ 	<select id="selectCouponOrder" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+ 	
+ 	</select>
+    <select id="countByRelateUserId" resultClass="java.lang.Long" parameterClass="java.lang.String">
+	  	select count(*)
+	    from MARK_COUPON_CODE mcc, MARK_COUPON_RELATE_USER mcru 
+	    where mcc.COUPON_CODE_ID = mcru.COUPON_CODE_ID and mcru.USER_ID=#userId#
+ 	</select!-->
+    
+  <sql id="reuse_query_sql">
+  	SELECT
+  		mcc.*
+  	FROM
+  		MARK_COUPON_CODE mcc
+  		<isEqual property="isValid" compareValue="true">,MARK_COUPON M </isEqual>
+  	<dynamic prepend=" WHERE　">
+    	<isNotEmpty prepend="and" property="couponId">
+      		mcc.COUPON_Id = #couponId# 
+     	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="couponCode">
+      		mcc.COUPON_CODE = #couponCode# 
+     	</isNotEmpty>   
+        <isNotEmpty prepend="and" property="used">
+      		mcc.USED = #used# 
+     	</isNotEmpty>
+	  	<isNotEmpty prepend=" AND " property="isValid">
+	   		<isEqual property="isValid" compareValue="true"> AND M.COUPON_ID = MCC.COUPON_ID AND M.VALID = 'true' AND MCC.END_TIME >= TRUNC(SYSDATE)</isEqual>
+	   	</isNotEmpty>      	
+  	</dynamic>     		
+  </sql>
+  
+  <select id="selectCountByParam" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+  	SELECT count(*) FROM ( <include refid="reuse_query_sql"/> )
+  </select>
+  
+  <select id="selectByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+	  SELECT * FROM (
+	  	SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+	 		<include refid="reuse_query_sql"/> order by mcc.CREATE_TIME desc
+	 	) T 	 	
+	 	<dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_endRow">ROWNUM &lt;= #_endRow#</isNotEmpty>
+	 	</dynamic>
+	  )	
+	  <dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_startRow">ROWNUM1 &gt;=#_startRow#</isNotEmpty>
+	  </dynamic>
+  </select>    
+  
+  <select id="selectCouponIdByCouponCode" parameterClass="String" resultClass="Long">
+  	SELECT DISTINCT coupon_id FROM MARK_COUPON_CODE WHERE coupon_code like '%$couponCode$%'
+  </select>
+  
+  <select id="queryByPrimaryKey" parameterClass="long" resultMap="BaseResultMap">
+  	SELECT * FROM MARK_COUPON_CODE WHERE COUPON_CODE_ID = #couponCodeId#
+  </select>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mark.MarkCouponCode">
+  	<selectKey keyProperty="couponCodeId" resultClass="java.lang.Long">
+      SELECT MARK_COUPON_CODE_SEQ.NEXTVAL AS id FROM DUAL
+    </selectKey>
+  	INSERT INTO MARK_COUPON_CODE 
+  		(COUPON_CODE_ID, COUPON_ID, COUPON_CODE, USED, BEGIN_TIME, END_TIME, CREATE_TIME) 
+  	VALUES 
+  		(#couponCodeId#, #couponId#, #couponCode#, #used#, #beginTime#, #endTime#, sysdate)
+  </insert>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="Long">
+  	DELETE FROM MARK_COUPON_CODE WHERE COUPON_CODE_ID = #couponCodeId#
+  </delete>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mark.MarkCouponCode" >
+  	UPDATE 
+  		MARK_COUPON_CODE
+    SET 
+    	COUPON_ID = #couponId#,
+      	COUPON_CODE = #couponCode#,
+      	USED = #used#,
+      	BEGIN_TIME = #beginTime#,
+      	END_TIME = #endTime#
+    WHERE 
+    	COUPON_CODE_ID = #couponCodeId#
+  </update>     
+  
+  <select id="queryByUserAndCoupon" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+  	select * from lvmama_pet.Mark_coupon_code where coupon_code_id in
+ (select coupon_code_id from lvmama_pet.MARK_COUPON_RELATE_USER where user_id = #userId#) and coupon_id = #couponId# 
+  </select> 
+</sqlMap>

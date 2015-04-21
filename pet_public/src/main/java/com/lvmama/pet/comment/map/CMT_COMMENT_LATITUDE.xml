@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_COMMENT_LATITUDE" >
+    <resultMap class="com.lvmama.comm.vo.comment.CmtLatitudeVO" id="cmtLatitudeMap">
+    	<result property="cmtLatitudeId" column="CMT_COMMENT_LATITUDE_ID" />
+    	<result property="latitudeId" column="LATITUDE_ID" />
+    	<result property="score" column="SCORE" />
+    	<result property="commentId" column="CMT_COMMENT_ID" />
+    	<result property="latitudeName" column="LATITUDE_NAME" />
+    </resultMap>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.vo.comment.CmtLatitudeVO">
+		<selectKey resultClass="java.lang.Long" keyProperty="cmtLatitudeId" >
+			select CMT_COMMENT_LATITUDE_SEQ.nextval as cmtLatitudeId from DUAL
+		</selectKey>
+		INSERT INTO CMT_COMMENT_LATITUDE
+			(CMT_COMMENT_LATITUDE_ID, LATITUDE_ID, SCORE, CMT_COMMENT_ID)
+		VALUES
+			(#cmtLatitudeId#, #latitudeId#, #score#, #commentId#)
+	</insert>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="cmtLatitudeMap">
+		select cmt.* , dic.LATITUDE_NAME
+		from DIC_COMMENT_LATITUDE dic ,CMT_COMMENT_LATITUDE cmt
+		where cmt.LATITUDE_ID = dic.latitude_id(+)
+		<isNotEmpty property="latitudeId"  prepend=" AND ">LATITUDE_ID=#latitudeId#</isNotEmpty>
+		<isNotEmpty property="score"  prepend=" AND ">SCORE=#score#</isNotEmpty>
+		<isNotEmpty property="commentId"  prepend=" AND ">CMT_COMMENT_ID=#commentId#</isNotEmpty>
+		order by cmt.LATITUDE_ID
+	</select>
+	
+	<select id="queryByKey"  resultMap="cmtLatitudeMap">
+		SELECT * FROM CMT_COMMENT_LATITUDE WHERE CMT_COMMENT_LATITUDE_ID=#cmtLatitudeId#
+	</select>
+	
+	<update id="updateLatitudeForChangedCmtTitle" parameterClass="java.util.Map">
+		UPDATE cmt_comment_latitude SET LATITUDE_ID = #newLatitudeId# 
+		WHERE LATITUDE_ID = #oldLatitudeId# 
+		  AND cmt_comment_id IN 
+		  	(SELECT cmt_comment_id 
+		  	   FROM cmt_comment 
+		  	  <dynamic prepend=" WHERE ">
+		  	  		<isNotEmpty prepend=" AND " property="placeId" >place_id = #placeId#</isNotEmpty>
+			    	<isNotEmpty prepend=" AND " property="productId" >PRODUCT_ID = #productId#</isNotEmpty>
+			   </dynamic>
+		  	  )
+	</update>
+</sqlMap>

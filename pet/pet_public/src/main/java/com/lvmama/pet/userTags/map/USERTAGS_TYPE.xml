@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USERTAGS_TYPE" >
+<typeAlias alias="UserTagsType" type="com.lvmama.comm.pet.po.usertags.UserTagsType" />
+    <resultMap class="UserTagsType" id="BaseResultMap">
+        <result property="typeId" column="TYPE_ID"/>
+        <result property="typeFirstType" column="TYPE_FIRSTTYPE"/>
+        <result property="typeSecondType" column="TYPE_SECONDTYPE"/>
+        <result property="typeCreateDate" column="TYPE_CREATEDATE"/>
+    </resultMap>
+    
+    <sql id="pageHeader">
+         SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+    </sql>
+    <sql id="pageFooter">
+         ) A
+        <dynamic prepend="where">
+            <isNotEmpty property="endRows" prepend="and">
+                ROWNUM &lt;= #endRows#
+            </isNotEmpty>
+        </dynamic>
+          )
+        <dynamic prepend="where">
+         <isNotEmpty property="startRows" prepend="and">
+            rn &gt;= #startRows#
+         </isNotEmpty>      
+        </dynamic>
+    </sql>
+    
+    <sql id="queryTagsTypeByParamWhere">
+		<dynamic prepend=" where ">
+		   <isNotEmpty prepend=" and " property="typeFirstType"> TYPE_FIRSTTYPE = #typeFirstType#</isNotEmpty>
+		   <isNotEmpty prepend=" and " property="typeSecondType"> TYPE_SECONDTYPE = #typeSecondType# </isNotEmpty>
+		   <isNotEmpty prepend=" and " property="typeId"> TYPE_ID = #typeId# </isNotEmpty>
+		</dynamic>
+    </sql>
+ 
+       
+    <select id="queryTagsTypeByParam" parameterClass="java.util.Map" resultMap="BaseResultMap" >
+        <include refid="pageHeader"/>
+            SELECT TYPE_ID,TYPE_FIRSTTYPE,TYPE_SECONDTYPE,TYPE_CREATEDATE 
+            FROM LVMAMA_PET.USERTAGS_TYPE 
+            <include refid="queryTagsTypeByParamWhere"/>
+            ORDER BY TYPE_ID DESC
+        <include refid="pageFooter"/>
+    </select>
+    
+   <insert id="insertUserTagsType" parameterClass="UserTagsType" >
+    <selectKey keyProperty="typeId" resultClass="java.lang.Long">
+        SELECT USERTAGS_TYPE_SEQ.NEXTVAL AS TYPEID FROM DUAL
+    </selectKey>
+    INSERT INTO LVMAMA_PET.USERTAGS_TYPE
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="typeId" >
+        TYPE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="typeFirstType" >
+        TYPE_FIRSTTYPE
+      </isNotNull>
+      <isNotNull prepend="," property="typeSecondType" >
+        TYPE_SECONDTYPE
+      </isNotNull>
+      <isNotNull prepend="," property="typeCreateDate" >
+        TYPE_CREATEDATE
+      </isNotNull>
+      )
+    </dynamic>
+    VALUES
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="typeId" >
+        #typeId#
+      </isNotNull>
+      <isNotNull prepend="," property="typeFirstType" >
+        #typeFirstType#
+      </isNotNull>
+      <isNotNull prepend="," property="typeSecondType" >
+        #typeSecondType#
+      </isNotNull>
+      <isNotNull prepend="," property="typeCreateDate" >
+       sysDate
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+    
+    <update id="updateUserTagsType" parameterClass="UserTagsType">
+        UPDATE LVMAMA_PET.USERTAGS_TYPE SET TYPE_FIRSTTYPE=#typeFirstType#,
+        TYPE_SECONDTYPE=#typeSecondType#
+        where TYPE_ID = #typeId#
+    </update>
+    
+    <delete id="deleteUserTagsTypeByParam" parameterClass="java.util.Map">
+        DELETE FROM LVMAMA_PET.USERTAGS_TYPE 
+        <include refid="queryTagsTypeByParamWhere"/>
+    </delete>
+
+    <select id="countByParam" parameterClass="java.util.Map" resultClass="java.lang.Long">
+       SELECT COUNT(*) FROM LVMAMA_PET.USERTAGS_TYPE 
+        <include refid="queryTagsTypeByParamWhere"/>
+    </select>
+
+</sqlMap>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="VISA_APPLICATION_DOCUMENT_DETAILS">
+	<resultMap id="VisaApplicationDocumentDetailsMap" class="com.lvmama.comm.pet.po.visa.VisaApplicationDocumentDetails">
+		<result column="DETAILS_ID" property="detailsId" />
+		<result column="DOCUMENT_ID" property="documentId" />
+		<result column="TITLE" property="title" />
+		<result column="CONTENT" property="content" />
+		<result column="SEQ_NUM" property="seq" />
+	</resultMap>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.visa.VisaApplicationDocumentDetails">
+		<selectKey keyProperty="detailsId" resultClass="java.lang.Long">
+			SELECT VISA_APP_DOC_DETAILS_SEQ.NEXTVAL FROM  DUAL
+		</selectKey>
+		INSERT INTO VISA_APP_DOC_DETAILS VALUES (#detailsId#,#documentId#,#title#,#content#,#seq#)
+	</insert>
+	
+	<insert id="copy" parameterClass="java.util.Map">
+		INSERT INTO VISA_APP_DOC_DETAILS SELECT VISA_APP_DOC_DETAILS_SEQ.NEXTVAL, #targetDocumentId#, title, content, SEQ_NUM FROM VISA_APP_DOC_DETAILS WHERE DOCUMENT_ID = #srcDocumentId#
+	</insert>
+
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.visa.VisaApplicationDocumentDetails">
+		UPDATE VISA_APP_DOC_DETAILS SET
+			DOCUMENT_ID = #documentId#, TITLE = #title#, CONTENT = #content#, SEQ_NUM = #seq#  
+		WHERE DETAILS_ID = #detailsId#
+	</update>
+	<delete id="delete" parameterClass="java.lang.Long">
+		DELETE FROM VISA_APP_DOC_DETAILS WHERE DETAILS_ID = #detailsId#
+	</delete>
+	
+	<delete id="deleteByDocumentId" parameterClass="java.lang.Long">
+		DELETE FROM VISA_APP_DOC_DETAILS WHERE DOCUMENT_ID = #documentId#
+	</delete>	
+	
+	<select id="queryByPrimaryKey" resultMap="VisaApplicationDocumentDetailsMap" parameterClass="java.lang.Long">
+		SELECT * FROM VISA_APP_DOC_DETAILS WHERE DETAILS_ID = #detailsId#
+	</select>
+	
+	<sql id="reuse_query_sql">
+		FROM (SELECT
+				*
+			FROM 
+				VISA_APP_DOC_DETAILS
+			<dynamic prepend=" WHERE ">
+				<isNotEmpty property="documentId" prepend=" AND "> DOCUMENT_ID = #documentId#</isNotEmpty>
+			</dynamic>
+			) VADD		
+	</sql>
+
+	<select id="query" parameterClass="java.util.Map"  resultMap="VisaApplicationDocumentDetailsMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT 
+			rownum r,
+			VADD.*
+		<include refid="reuse_query_sql"/>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+		</dynamic>
+		ORDER BY VADD.SEQ_NUM
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;= #_startRow# </isNotEmpty>
+		</dynamic>	 
+	</select>
+</sqlMap>

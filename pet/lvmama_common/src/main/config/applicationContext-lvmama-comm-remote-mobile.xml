@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+     <!-- 驴途v3 推荐-->
+     <bean id="mobileRecommendBlockService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/mobileRecommendBlockService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mobile.MobileRecommendBlockService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <bean id="mobileRecommendInfoService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/mobileRecommendInfoService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mobile.MobileRecommendInfoService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="mobileFavoriteService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/mobileFavoriteService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mobile.MobileFavoriteService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="mobileClientService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/mobileClientService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mobile.MobileClientService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="mobileHotelService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/mobileHotelService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mobile.MobileHotelService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <!-- 秒杀规则 -->
+    <bean id="clientSeckillService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/clientSeckillService" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.mobile.ClientSeckillService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <!-- 驴途v3 推荐 -->
+</beans>

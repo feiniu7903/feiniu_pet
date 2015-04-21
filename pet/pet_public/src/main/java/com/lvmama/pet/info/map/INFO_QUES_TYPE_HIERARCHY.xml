@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="INFO_QUES_TYPE_HIERARCHY" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.info.InfoQuesTypeHierarchy" >
+    <result column="TYPE_ID" property="typeId" />
+    <result column="TYPE_NAME" property="typeName" />
+    <result column="OBJECT_TYPE" property="objectType" />
+    <result column="PARENT_TYPE_ID" property="parentTypeId" />
+  </resultMap>
+  <select id="selectValidTypeByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.info.InfoQuesTypeHierarchy" >
+    select type.TYPE_ID, type.TYPE_NAME, type.OBJECT_TYPE, typeHierarchy.PARENT_TYPE_ID
+    from INFO_QUES_TYPE type, INFO_QUES_TYPE_HIERARCHY typeHierarchy
+    where type.TYPE_ID = #typeId:LONG# and type.TYPE_ID = typeHierarchy.TYPE_ID and type.VALID = 'Y'
+  </select>
+
+  
+  <!--for insert hierarchy function-->
+  <insert id="insertHierarchy" parameterClass="com.lvmama.comm.pet.po.info.InfoQuesTypeHierarchy" >
+    insert into INFO_QUES_TYPE_HIERARCHY (TYPE_ID, PARENT_TYPE_ID)
+    values (#typeId:LONG#, #parentTypeId:LONG#)
+  </insert>
+
+  <select id="selectValidTypeByObjectTypeAndParentId" resultMap="BaseResultMap"  parameterClass="com.lvmama.comm.pet.po.info.InfoQuesTypeHierarchy">
+  select * from INFO_QUES_TYPE type, INFO_QUES_TYPE_HIERARCHY typeHierarchy where type.OBJECT_TYPE = #objectType# and type.VALID = 'Y' and 
+  typeHierarchy.TYPE_ID = type.TYPE_ID and typeHierarchy.PARENT_TYPE_ID = #typeId#
+   order by type.TYPE_ID asc
+  </select>
+</sqlMap>

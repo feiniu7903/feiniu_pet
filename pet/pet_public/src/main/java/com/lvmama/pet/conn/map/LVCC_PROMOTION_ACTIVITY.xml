@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="LVCC_PROMOTION_ACTIVITY">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.pet.po.conn.LvccPromotionActivity">
+		<result column="ACTIVITY_ID" property="activityId" />
+		<result column="NAME" property="name" />
+		<result column="BEGIN_DATE" property="beginDate" />
+		<result column="END_DATE" property="endDate" />
+		<result column="CHANNEL" property="channel" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="VALID" property="valid" />
+	</resultMap>
+
+	<insert id="insert">
+		<selectKey resultClass="java.lang.Long" keyProperty="activityId">
+			select
+			LVCC_PROMOTION_ACTIVITY_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into LVCC_PROMOTION_ACTIVITY
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="activityId">
+				ACTIVITY_ID
+			</isNotNull>
+			<isNotNull prepend="," property="name">
+				NAME
+			</isNotNull>
+			<isNotNull prepend="," property="beginDate">
+				BEGIN_DATE
+			</isNotNull>
+			<isNotNull prepend="," property="endDate">
+				END_DATE
+			</isNotNull>
+			<isNotNull prepend="," property="channel">
+				CHANNEL
+			</isNotNull>
+			,CREATE_TIME,VALID
+			)
+		</dynamic>
+		values
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="activityId">
+				#activityId#
+			</isNotNull>
+			<isNotNull prepend="," property="name">
+				#name#
+			</isNotNull>
+			<isNotNull prepend="," property="beginDate">
+				#beginDate#
+			</isNotNull>
+			<isNotNull prepend="," property="endDate">
+				#endDate#
+			</isNotNull>
+			<isNotNull prepend="," property="channel">
+				#channel#
+			</isNotNull>
+			,sysdate,'N'
+			)
+		</dynamic>
+	</insert>
+
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.conn.LvccPromotionActivity">
+		update
+		LVCC_PROMOTION_ACTIVITY set
+		NAME=#name#,BEGIN_DATE=#beginDate#,END_DATE=#endDate#,CHANNEL=#channel#
+		where ACTIVITY_ID=#activityId#
+	</update>
+
+	<select id="selectByPrimaryKey" parameterClass="java.lang.Long"
+		resultMap="BaseResultMap">
+		select * from LVCC_PROMOTION_ACTIVITY where
+		ACTIVITY_ID=#activityId#
+	</select>
+	
+	<sql id="selectByParamsSql">
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="name">
+				NAME like '%'||#name#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createBeginTime">
+				CREATE_TIME<![CDATA[>=]]>#createBeginTime#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createEndTime">
+				CREATE_TIME<![CDATA[<=]]>#createEndTime#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="valid">
+				VALID=#valid#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+
+	<select id="selectByParamsCount" parameterClass="java.util.Map"
+		resultClass="java.lang.Long">
+		SELECT count(1) ct
+		FROM LVCC_PROMOTION_ACTIVITY
+		<include refid="selectByParamsSql"/>
+	</select>
+
+	<select id="selectByParams" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		select * from
+		LVCC_PROMOTION_ACTIVITY
+		<include refid="selectByParamsSql"/>
+		order by valid desc,create_time desc
+		) T
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow" prepend=""> ROWNUM &lt;=
+				#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=""> ROWNUM1
+				&gt;=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<update id="updateValidToN">
+		update LVCC_PROMOTION_ACTIVITY set valid='N' where valid='Y'
+	</update>
+	
+	<update id="updateValidById" parameterClass="com.lvmama.comm.pet.po.conn.LvccPromotionActivity">
+		update  LVCC_PROMOTION_ACTIVITY set valid=#valid# where ACTIVITY_ID=#activityId#
+	</update>
+	
+	<select id="selectCurrentActivity" resultMap="BaseResultMap">
+		select * from LVCC_PROMOTION_ACTIVITY where begin_date<![CDATA[<=]]>to_date(to_char(sysdate,'yyyy-mm-dd'),'yyyy-mm-dd') and end_date<![CDATA[>=]]>to_date(to_char(sysdate,'yyyy-mm-dd'),'yyyy-mm-dd') and valid='Y'
+	</select>
+	
+	<select id="checkNameIsExsited" resultClass="java.lang.Long" parameterClass="com.lvmama.comm.pet.po.conn.LvccPromotionActivity">
+		select count(1) from LVCC_PROMOTION_ACTIVITY where name=#name#
+		<isNotEmpty prepend="and" property="activityId">
+			ACTIVITY_ID!=#activityId#
+		</isNotEmpty>
+	</select>
+</sqlMap>

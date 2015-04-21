@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PERM_USER_ROLE">
+
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.pet.po.perm.PermUserRole">
+		<result column="UR_ID" property="urId" />
+		<result column="ROLE_ID" property="roleId" />
+		<result column="USER_ID" property="userId" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMapDetail" extends="BaseResultMap" class="com.lvmama.comm.pet.po.perm.PermUserRole">
+		<result column="department_name" property="departmentName" />
+		<result column="USER_NAME" property="userName" />
+		<result column="REAL_NAME" property="realName" />
+		<result column="ROLE_NAME" property="roleName" />
+	</resultMap>
+	
+	<sql id="selectParam">
+		<dynamic>
+				<isNotEmpty prepend=" and" property="roleId">
+					pur.ROLE_ID =#roleId#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="userId">
+					pur.USER_ID=#userId#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="userRoleName">
+					pu.user_name like '%'||#userRoleName#||'%'  
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="realRoleName">
+					pu.real_name like '%'||#realRoleName#||'%'  
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="departmentRoleName">
+					po.department_name like '%'||#departmentRoleName#||'%'   
+				</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<select id="selectByParam" resultMap="BaseResultMapDetail"
+		parameterClass="java.util.Map">
+		SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select * from (
+				SELECT pur.*,
+				  po.department_name as DEPARTMENT_NAME,
+				  pu.user_name as USER_NAME,
+				  pu.real_name as REAL_NAME,
+				  pr.role_name as ROLE_NAME
+				FROM PERM_USER_ROLE pur,
+				  PERM_ORGANIZATION po,
+				  Perm_user pu,
+				  Perm_Role pr
+				WHERE po.org_id=pu.DEPARTMENT_ID
+				AND pu.user_id =pur.user_id
+				and pr.role_id =pur.role_id
+				<include refid="selectParam"/>
+		
+		)) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;= #skipResults#
+	</select>
+	
+	<select id="selectByParamCount" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+				SELECT count(*)
+				FROM PERM_USER_ROLE pur,
+				  PERM_ORGANIZATION po,
+				  Perm_user pu,
+				  Perm_Role pr
+				WHERE po.org_id=pu.DEPARTMENT_ID
+				AND pu.user_id =pur.user_id
+				and pr.role_id =pur.role_id
+				<include refid="selectParam"/>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+	    select *
+	    from PERM_USER_ROLE
+	    where UR_ID = #urId#
+   </select>
+   
+   <insert id="insert" parameterClass="com.lvmama.comm.pet.po.perm.PermUserRole" >
+	    <selectKey resultClass="java.lang.Long" keyProperty="urId" >
+	      select PERM_USER_ROLE_SEQ.nextval as id from DUAL
+	    </selectKey>
+	    insert into PERM_USER_ROLE perm (perm.UR_ID, perm.ROLE_ID, perm.USER_ID)
+	    values (#urId#, #roleId#, #userId#)
+   </insert>
+   
+    <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.perm.PermUserRole">
+		update PERM_USER_ROLE
+		set
+		<isNotNull  property="roleId">
+			ROLE_ID =#roleId#
+  	 	</isNotNull>
+  	 	<isNotNull prepend=" ," property="userId">
+			USER_ID=#userId#
+  	 	</isNotNull>
+		where UR_ID = #urId#
+	</update>
+	
+	<delete id="deleteUserRoleByPK" parameterClass="Long">
+		delete PERM_USER_ROLE where UR_ID=#urId#
+	</delete>
+	
+	<select id="selectByRoleIdUserIdCount" resultClass="java.lang.Long"
+		parameterClass="com.lvmama.comm.pet.po.perm.PermUserRole">
+			select count(*) from  PERM_USER_ROLE where ROLE_ID=#roleId# and USER_ID=#userId#
+	</select>
+	
+</sqlMap>

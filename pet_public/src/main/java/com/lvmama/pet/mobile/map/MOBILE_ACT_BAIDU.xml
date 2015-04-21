@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MOBILE_ACT_BAIDU" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.MobileActBaidu" >
+    <result column="ID" property="id" />
+    <result column="PRODUCTID" property="productid" />
+    <result column="AVAILABLE_DATE" property="availableDate" />
+    <result column="AM_OR_PM" property="amOrPm" />
+    <result column="QUANTITY" property="quantity" />
+    <result column="CAN_SEL_QTY" property="canSelQty" />
+    <result column="VALID" property="valid" />
+    <result column="UPDATE_DATE" property="updateDate" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaidu" >
+    select ID, PRODUCTID, AVAILABLE_DATE, AM_OR_PM, QUANTITY, CAN_SEL_QTY, VALID, UPDATE_DATE
+    from MOBILE_ACT_BAIDU
+    where ID = #id#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaidu" >
+    delete from MOBILE_ACT_BAIDU
+    where ID = #id#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaidu" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      select MOBILE_ACT_BAIDU_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into MOBILE_ACT_BAIDU (ID, PRODUCTID, AVAILABLE_DATE, AM_OR_PM, QUANTITY, CAN_SEL_QTY,
+      VALID, UPDATE_DATE)
+    values (#id#, #productid#, #availableDate#, #amOrPm#,
+      #quantity#, #canSelQty#, #valid#, #updateDate#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaidu" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      select MOBILE_ACT_BAIDU_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into MOBILE_ACT_BAIDU
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="productid" >
+        PRODUCTID
+      </isNotNull>
+      <isNotNull prepend="," property="availableDate" >
+        AVAILABLE_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="amOrPm" >
+        AM_OR_PM
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        QUANTITY
+      </isNotNull>
+      <isNotNull prepend="," property="canSelQty" >
+        CAN_SEL_QTY
+      </isNotNull>
+      <isNotNull prepend="," property="valid" >
+        VALID
+      </isNotNull>
+      <isNotNull prepend="," property="updateDate" >
+        UPDATE_DATE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id#
+      </isNotNull>
+      <isNotNull prepend="," property="productid" >
+        #productid#
+      </isNotNull>
+      <isNotNull prepend="," property="availableDate" >
+        #availableDate#
+      </isNotNull>
+      <isNotNull prepend="," property="amOrPm" >
+        #amOrPm#
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        #quantity#
+      </isNotNull>
+      <isNotNull prepend="," property="canSelQty" >
+        #canSelQty#
+      </isNotNull>
+      <isNotNull prepend="," property="valid" >
+        #valid#
+      </isNotNull>
+      <isNotNull prepend="," property="updateDate" >
+        #updateDate#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaidu" >
+    update MOBILE_ACT_BAIDU
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="productid" >
+        PRODUCTID = #productid#
+      </isNotNull>
+      <isNotNull prepend="," property="availableDate" >
+        AVAILABLE_DATE = #availableDate#
+      </isNotNull>
+      <isNotNull prepend="," property="amOrPm" >
+        AM_OR_PM = #amOrPm#
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        QUANTITY = #quantity#
+      </isNotNull>
+      <isNotNull prepend="," property="canSelQty" >
+        CAN_SEL_QTY = #canSelQty#
+      </isNotNull>
+      <isNotNull prepend="," property="valid" >
+        VALID = #valid#
+      </isNotNull>
+      <isNotNull prepend="," property="updateDate" >
+        UPDATE_DATE = #updateDate#
+      </isNotNull>
+    </dynamic>
+    where ID = #id#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActBaidu" >
+    update MOBILE_ACT_BAIDU
+    set PRODUCTID = #productid#,
+      AVAILABLE_DATE = #availableDate#,
+      AM_OR_PM = #amOrPm#,
+      QUANTITY = #quantity#,
+      CAN_SEL_QTY = #canSelQty#,
+      VALID = #valid#,
+      UPDATE_DATE = #updateDate#
+    where ID = #id#
+  </update>
+  
+   <!-- 数量增加  -->
+  <update id="updateAddQuantityByParams" parameterClass="java.util.Map">
+    update MOBILE_ACT_BAIDU
+    set QUANTITY = QUANTITY+1
+    where PRODUCTID = #productid# 
+    <isNotEmpty prepend=" AND " property="availableDate">
+        AVAILABLE_DATE = #availableDate#
+    </isNotEmpty>
+    <isNotEmpty prepend=" AND " property="availableDateStart">
+        AVAILABLE_DATE &gt; #availableDateStrt#
+    </isNotEmpty>
+    <isNotEmpty prepend=" AND " property="availableDateEnd">
+      AVAILABLE_DATE &lt; #availableDateEnd#
+    </isNotEmpty>
+    <isNotEmpty prepend=" AND " property="amOrPm">
+      AM_OR_PM = #amOrPm#
+    </isNotEmpty>
+  </update>
+  
+   <!-- 数量减少  -->
+  <update id="updateMinusQuantityByParams" parameterClass="java.util.Map">
+     update MOBILE_ACT_BAIDU
+     set QUANTITY = QUANTITY-1
+    where PRODUCTID = #productid# 
+    <isNotEmpty prepend=" AND " property="availableDate">
+        AVAILABLE_DATE = #availableDate#
+    </isNotEmpty>
+    <isNotEmpty prepend=" AND " property="availableDateStart">
+        AVAILABLE_DATE &gt; #availableDateStrt#
+    </isNotEmpty>
+    <isNotEmpty prepend=" AND " property="availableDateEnd">
+      AVAILABLE_DATE &lt; #availableDateEnd#
+    </isNotEmpty>
+    <isNotEmpty prepend=" AND " property="amOrPm">
+      AM_OR_PM = #amOrPm#
+    </isNotEmpty>
+  </update>
+  
+  
+  <!-- 分页查询 头部 -->
+  <sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+  </sql>
+  
+  <!-- 分页查询 尾部 -->
+  <sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>		
+		</dynamic>
+  </sql>
+  
+  <!-- 查询条件 -->
+  <sql id="queryListWhere">
+      <dynamic prepend=" WHERE ">
+           <isNotEmpty property="doNothing" prepend=" AND "> 1 = 1 </isNotEmpty>
+		   <isNotEmpty prepend="," property="productid" >
+	           PRODUCTID = #productid#
+	       </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="availableDate">
+	           AVAILABLE_DATE = #availableDate#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="availableDateStart">
+	           AVAILABLE_DATE &gt; #availableDateStrt#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="availableDateEnd">
+	         AVAILABLE_DATE &lt; #availableDateEnd#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="amOrPm" >
+	         AM_OR_PM = #amOrPm#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="valid" >
+	         VALID = #valid#
+	      </isNotEmpty>
+		</dynamic>
+  </sql>
+  
+  <!-- 查询列表  -->
+  <select id="queryMobileActBaiduList" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="isPaging">
+		  <include refid="pageHeader"/>
+		</isNotEmpty>
+		SELECT * FROM MOBILE_ACT_BAIDU
+		<include refid="queryListWhere"/>
+		<isNotEmpty property="isPaging">
+		   <include refid="pageFooter"/>
+		</isNotEmpty>
+   </select>
+  
+  
+</sqlMap>

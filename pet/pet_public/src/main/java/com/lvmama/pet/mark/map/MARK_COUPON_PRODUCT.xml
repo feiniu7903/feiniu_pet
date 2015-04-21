@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_COUPON_PRODUCT">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mark.MarkCouponProduct">
+		<result column="COUPON_PRODUCT_ID" property="couponProductId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="COUPON_ID" property="couponId" />
+		<result column="AMOUNT" property="amount" />
+		<result column="COUPON_PRODUCT_TYPE" property="couponProductType"/>
+		<result column="SUB_PRODUCT_TYPE" property="subProductType"/>
+		<result column="PRODUCT_NAME" property="productName"/>
+	</resultMap>
+	
+	<resultMap id="ProdProductBaseResult" class="com.lvmama.comm.pet.vo.mark.CouponProduct">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="BIZ_CODE" property="bizcode" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="WRAP_PAGE" property="wrapPage" />
+	</resultMap>
+
+	<resultMap class="com.lvmama.comm.pet.vo.mark.CouponProduct" 
+		id="couponProductMap" extends="ProdProductBaseResult">
+		<result column="COUPON_PRODUCT_ID" property="couponProductId" />
+		<result column="AMOUNT" property="amount" />
+	</resultMap>
+	
+	<delete id="deleteByMap" parameterClass="java.util.HashMap">
+		delete from MARK_COUPON_PRODUCT mcp
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="couponId" prepend=" AND ">mcp.COUPON_ID=#couponId#</isNotEmpty>
+			<isNotEmpty property="productId" prepend=" AND ">mcp.PRODUCT_ID=#productId#</isNotEmpty>
+			<isNotEmpty property="couponProductId" prepend=" AND ">mcp.COUPON_PRODUCT_ID=#couponProductId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="productIds">
+	            mcp.PRODUCT_ID in
+	            <iterate property="productIds" open="(" close=")" conjunction="," > 
+	                #productIds[]#
+	            </iterate> 
+	    	 </isNotEmpty>
+			<isNotEmpty prepend=" AND " property="couponProductIds">
+	            mcp.COUPON_PRODUCT_ID in
+	            <iterate property="couponProductIds" open="(" close=")" conjunction="," > 
+	                #couponProductIds[]#
+	            </iterate> 
+	    	 </isNotEmpty>
+			<isNotEmpty property="subProductType" prepend=" AND ">mcp.SUB_PRODUCT_TYPE=#subProductType#</isNotEmpty>
+			<isNotEmpty property="productName" prepend=" AND ">exists (select * from PRODUCT_SEARCH_INFO PP where pp.PRODUCT_ID = mcp.PRODUCT_ID and  pp.PRODUCT_NAME LIKE '%'||#productName#||'%')</isNotEmpty>
+		</dynamic>
+	</delete>
+	
+	<delete id="delete" parameterClass="com.lvmama.comm.pet.po.mark.MarkCouponProduct">
+		delete from MARK_COUPON_PRODUCT mcp
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="couponId" prepend=" AND ">mcp.COUPON_ID=#couponId#</isNotEmpty>
+			<isNotEmpty property="productId" prepend=" AND ">mcp.PRODUCT_ID=#productId#</isNotEmpty>
+			<isNotEmpty property="couponProductId" prepend=" AND ">mcp.COUPON_PRODUCT_ID=#couponProductId#</isNotEmpty>
+			<isNotEmpty property="subProductType" prepend=" AND ">mcp.SUB_PRODUCT_TYPE=#subProductType#</isNotEmpty>
+			<isNotEmpty property="productName" prepend=" AND ">exists (select * from PRODUCT_SEARCH_INFO PP where pp.PRODUCT_ID = mcp.PRODUCT_ID and  pp.PRODUCT_NAME LIKE '%'||#productName#||'%')</isNotEmpty>
+		</dynamic>
+	</delete>
+	
+    <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mark.MarkCouponProduct">
+		<selectKey resultClass="java.lang.Long" keyProperty="couponProductId">
+			select
+			MARK_COUPON_PRODUCT_SEQ.nextval as id from DUAL
+    </selectKey>
+		insert into MARK_COUPON_PRODUCT
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="couponProductId">
+				COUPON_PRODUCT_ID
+			</isNotNull>
+			<isNotNull prepend="," property="productId">
+				PRODUCT_ID
+      </isNotNull>
+			<isNotNull prepend="," property="couponId">
+				COUPON_ID
+      </isNotNull>
+      	<isNotNull prepend="," property="amount">
+				AMOUNT
+      </isNotNull>
+       	<isNotNull prepend="," property="couponProductType">
+				COUPON_PRODUCT_TYPE
+      </isNotNull>
+           	<isNotNull prepend="," property="subProductType">
+				SUB_PRODUCT_TYPE
+      </isNotNull>
+			)
+		</dynamic>
+		values
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="couponProductId">
+				#couponProductId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="productId">
+				#productId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="couponId">
+				#couponId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="amount">
+				#amount:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="couponProductType">
+				#couponProductType:DECIMAL#
+			</isNotNull>
+				<isNotNull prepend="," property="subProductType">
+				#subProductType:VARCHAR#
+			</isNotNull>
+			
+			)
+		</dynamic>
+	</insert>
+	
+	
+    <update id="update" parameterClass="com.lvmama.comm.pet.po.mark.MarkCouponProduct">
+		update MARK_COUPON_PRODUCT
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="productId">
+				PRODUCT_ID = #productId#
+      </isNotNull>
+         <isNotNull prepend="," property="subProductType">
+				SUB_PRODUCT_TYPE =
+				#subProductType:VARCHAR#
+      </isNotNull>
+			<isNotNull prepend="," property="couponId">
+				COUPON_ID = #couponId#
+      </isNotNull>
+      		<isNotNull prepend="," property="amount">
+				AMOUNT = #amount#
+      </isNotNull> 
+		</dynamic>
+		where COUPON_PRODUCT_ID = #couponProductId:DECIMAL#
+	</update>
+
+
+	<sql id="reuseCouponProduct">
+		select mcp.PRODUCT_ID ,mcp.COUPON_ID, mcp.COUPON_PRODUCT_ID,mcp.AMOUNT,mcp.COUPON_PRODUCT_TYPE, mcp.SUB_PRODUCT_TYPE, pp.PRODUCT_NAME
+		from MARK_COUPON_PRODUCT mcp, PRODUCT_SEARCH_INFO PP where mcp.PRODUCT_ID = PP.PRODUCT_ID(+)
+		<isNotEmpty property="couponId" prepend=" AND ">mcp.COUPON_ID=#couponId#</isNotEmpty>
+		<isNotEmpty property="productId" prepend=" AND ">mcp.PRODUCT_ID = #productId#</isNotEmpty>
+		<isNotEmpty property="productName" prepend=" AND ">pp.PRODUCT_NAME LIKE '%'||#productName#||'%'</isNotEmpty>
+		<isNotEmpty property="productIdLike" prepend=" AND ">mcp.PRODUCT_ID LIKE '%'||#productIdLike#||'%'</isNotEmpty>
+		<isNotEmpty property="couponProductId" prepend=" AND ">mcp.COUPON_PRODUCT_ID = #couponProductId#</isNotEmpty>
+		<isNotEmpty property="subProductType" prepend=" AND ">mcp.SUB_PRODUCT_TYPE = #subProductType#</isNotEmpty>
+		<isNotEmpty property="couponProductType" prepend=" AND ">mcp.COUPON_PRODUCT_TYPE = #couponProductType#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="productIds">
+            mcp.PRODUCT_ID in
+            <iterate property="productIds" open="(" close=")" conjunction="," > 
+                #productIds[]#
+            </iterate> 
+    	 </isNotEmpty>
+    	<isNotEmpty prepend=" AND " property="couponProductIds">
+            mcp.COUPON_PRODUCT_ID in
+            <iterate property="couponProductIds" open="(" close=")" conjunction="," > 
+                #couponProductIds[]#
+            </iterate> 
+	   	</isNotEmpty>
+	</sql>
+
+	<select id="select" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+		<isNotEmpty property="skipResults">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT 
+			rownum r,
+			info.* FROM (
+		<include refid="reuseCouponProduct"/>
+		) info
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="maxResults" >rownum &lt;= #maxResults# </isNotEmpty> 
+		</dynamic>
+		<isNotEmpty property="skipResults">
+			) 
+		</isNotEmpty>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="skipResults" prepend=" AND "> r &gt;= #skipResults# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="selectCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(1) FROM (
+		<include refid="reuseCouponProduct"/>
+		) A
+	</select>
+	
+	<select id="checkByCouponIdAndSubProductType" parameterClass="com.lvmama.comm.pet.po.mark.MarkCouponProduct"
+		resultClass="java.lang.String">
+		SELECT MCP.PRODUCT_ID FROM MARK_COUPON_PRODUCT MCP,PRODUCT_SEARCH_INFO PP WHERE MCP.PRODUCT_ID = PP.PRODUCT_ID AND MCP.COUPON_ID = #couponId# AND PP.SUB_PRODUCT_TYPE = #subProductType#
+	</select>
+	
+	<select id="checkByCouponIdAndProductId" parameterClass="com.lvmama.comm.pet.po.mark.MarkCouponProduct"
+		resultClass="java.lang.String">
+		SELECT MCP.SUB_PRODUCT_TYPE FROM MARK_COUPON_PRODUCT MCP,PRODUCT_SEARCH_INFO PP WHERE MCP.SUB_PRODUCT_TYPE = PP.SUB_PRODUCT_TYPE AND MCP.COUPON_ID = #couponId# AND PP.PRODUCT_ID = #productId#
+	</select>
+
+</sqlMap>

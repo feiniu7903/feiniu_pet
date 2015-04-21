@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="PAY_POS_USER" >
+  <!-- <typeAlias type="com.lvmama.common.pos.po.CommPosUser" alias="CommPosUser"/> --> 
+  
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pay.PayPosUser" >
+    <result column="POS_USER_ID" property="posUserId" />
+    <result column="EMP_NO" property="empNo" />
+    <result column="EMP_PASSWD" property="empPasswd" />
+    <result column="EMP_COMPANY_NO" property="empCompanyNo" />
+    <result column="EMP_COMPANY_NAME" property="empCompanyName" />
+    <result column="EMP_NAME" property="empName" />
+    <result column="EMP_LOCATION" property="empLocation" />
+    <result column="EMP_STATUS" property="empStatus" />
+    <result column="COMM_POS_ID" property="commPosId" />
+    <result column="COMMERCIAL_ID" property="commercialId" />
+  </resultMap>
+  
+   <resultMap class="com.lvmama.comm.vo.PayPosUserVO" id="payPosUserVO">
+    <result column="POS_USER_ID" property="posUserId" />
+    <result column="COMM_POS_ID" property="commPosId" />
+    <result column="COMMERCIAL_ID" property="commercialId" />
+    <result column="EMP_NO" property="empNo" />
+    <result column="EMP_PASSWD" property="empPasswd" />
+    <result column="EMP_COMPANY_NO" property="empCompanyNo" />
+    <result column="EMP_COMPANY_NAME" property="empCompanyName" />
+    <result column="EMP_NAME" property="empName" />
+    <result column="TRUE_NAME" property="trueName" />
+    <result column="EMP_LOCATION" property="empLocation" />
+    <result column="EMP_STATUS" property="empStatus" />
+    <result column="COMMERCIAL_NAME" property="commercialName" />
+    <result column="COMMERCIAL_NO" property="commercialNo" />
+    <result column="COMMERCIAL_STATUS" property="commercialStatus" /> 
+    <result column="TERMINAL_NO" property="terminalNo" />
+    <result column="TERMINAL_STATUS" property="terminalStatus" /> 
+  </resultMap>
+  
+
+<insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.PayPosUser">
+<selectKey keyProperty="posUserId" resultClass="java.lang.Long">
+			SELECT PAY_POS_USER_SEQ.nextval from dual
+</selectKey>
+   INSERT INTO 
+           PAY_POS_USER
+	  (POS_USER_ID, 
+	   EMP_NO,
+	   EMP_PASSWD,
+	   EMP_COMPANY_NO,
+	   EMP_COMPANY_NAME,
+	   EMP_NAME,
+	   EMP_LOCATION,
+	   EMP_STATUS,
+	   COMM_POS_ID,
+	   COMMERCIAL_ID
+   ) VALUES (
+        #posUserId#,
+	    #empNo#,
+	    #empPasswd#,
+	    #empCompanyNo#,
+	    #empCompanyName#,
+	    #empName#,
+	    #empLocation#,
+	    #empStatus#,
+	    #commPosId#,
+	    #commercialId#)
+</insert>
+  
+  
+<update id="update" parameterClass="com.lvmama.comm.pet.po.pay.PayPosUser">
+  UPDATE
+    PAY_POS_USER
+<dynamic prepend=" SET ">
+<isNotEmpty prepend="," property="empNo">EMP_NO = #empNo#</isNotEmpty>
+<isNotEmpty prepend="," property="empPasswd">EMP_PASSWD = #empPasswd#</isNotEmpty>
+<isNotEmpty prepend="," property="empCompanyNo"> EMP_COMPANY_NO = #empCompanyNo#</isNotEmpty>
+<isNotEmpty prepend="," property="empCompanyName"> EMP_COMPANY_NAME = #empCompanyName#</isNotEmpty>
+<isNotEmpty prepend="," property="empName"> EMP_NAME = #empName#</isNotEmpty>
+<isNotEmpty prepend="," property="empLocation"> EMP_LOCATION = #empLocation#</isNotEmpty>
+<isNotEmpty prepend="," property="empStatus"> EMP_STATUS = #empStatus#</isNotEmpty>
+<isNotEmpty prepend="," property="commPosId"> COMM_POS_ID = #commPosId#</isNotEmpty>
+<isNotEmpty prepend="," property="commercialId"> COMMERCIAL_ID = #commercialId#</isNotEmpty>
+</dynamic> 
+WHERE
+  	POS_USER_ID = #posUserId#
+</update>  
+
+<sql id="selectSQL">
+	   SELECT * FROM PAY_POS_USER
+	   <dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="empNo">
+				EMP_NO = #empNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="empName">
+				EMP_NAME like '%'||#empName#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="empStatus">
+				EMP_STATUS = #empStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="commPosId">
+				COMM_POS_ID = #commPosId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="commercialId">
+				COMMERCIAL_ID = #commercialId#
+			</isNotEmpty>
+			
+	    </dynamic>
+</sql>
+
+
+<select id="selectByParamCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+	SELECT COUNT(*) FROM ( 
+		<include refid="selectSQL"/>
+	)
+</select>
+	
+
+<select id="queryByParam"  resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+	SELECT * FROM (SELECT A.*,ROWNUM rn FROM( 
+			<include refid="selectSQL"/>
+			ORDER BY POS_USER_ID DESC
+			) A
+			<dynamic prepend="where">
+			<isNotEmpty property="maxResult" prepend="and">
+				ROWNUM &lt;= #maxResult#
+			</isNotEmpty>
+			</dynamic>
+			)<dynamic prepend="where">
+			<isNotEmpty property="skipResult" prepend="and">
+				rn &gt;= #skipResult#
+			</isNotEmpty>		
+			</dynamic>
+</select>
+
+<select id="selectById"  resultMap="BaseResultMap" parameterClass="java.lang.Long">
+	SELECT * FROM PAY_POS_USER 
+		WHERE
+			POS_USER_ID = #posUserId#
+	  
+</select>
+
+<select id="selectQueryList" resultMap="payPosUserVO" parameterClass="java.util.HashMap" >
+	SELECT * FROM (
+		SELECT T.*,ROWNUM rn 
+	FROM(
+		SELECT 
+			A.POS_USER_ID, 
+			A.EMP_NO,
+		    A.EMP_PASSWD,
+		    A.EMP_COMPANY_NO,
+		    A.EMP_COMPANY_NAME,
+		    A.EMP_NAME,
+		    A.EMP_LOCATION,
+		    A.EMP_STATUS,
+		    A.COMM_POS_ID,
+		    A.COMMERCIAL_ID,
+			B.TERMINAL_NO,
+			B.STATUS TERMINAL_STATUS,
+			C.COMMERCIAL_NO,
+			C.COMMERCIAL_NAME,
+			C.STATUS COMMERCIAL_STATUS,
+			P.REAL_NAME TRUE_NAME 
+		FROM 
+			PAY_POS_COMMERCIAL C, 
+			PAY_POS B,
+			PERM_USER P,
+			(<include refid="selectSQL"/>) A 
+		WHERE
+			A.COMM_POS_ID=B.POS_ID
+			AND A.COMMERCIAL_ID=C.COMMERCIAL_ID
+			AND A.EMP_NAME=P.USER_NAME
+		ORDER BY 
+			A.POS_USER_ID DESC
+		)T
+		<dynamic prepend="where">
+		<isNotEmpty property="endRows" prepend="and">
+			ROWNUM &lt;= #endRows#
+		</isNotEmpty>
+		</dynamic>
+		)<dynamic prepend="where">
+		<isNotEmpty property="startRows" prepend="and">
+			rn &gt;= #startRows#
+		</isNotEmpty>		
+		</dynamic>
+</select>
+
+<select id="selectByLogin"  resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+	SELECT * FROM PAY_POS_USER PU,PAY_POS PP,PAY_POS_COMMERCIAL PC WHERE PU.COMMERCIAL_ID = PC.COMMERCIAL_ID AND  PU.COMM_POS_ID = PP.POS_ID
+	 <dynamic>
+			<isNotEmpty prepend="AND" property="empNo">
+				PU.EMP_NO = #empNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="empPasswd">
+				lower(PU.EMP_PASSWD) = lower(#empPasswd#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="commercialNo">
+			     PC.COMMERCIAL_NO = #commercialNo# 
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="terminalNo">
+			     PP.TERMINAL_NO = #terminalNo# 
+			</isNotEmpty>
+	    </dynamic>
+</select>
+<select id="selectByEmpNo"  resultMap="BaseResultMap" parameterClass="java.lang.String" >
+	SELECT * FROM PAY_POS_USER WHERE EMP_NO = #empNo#	
+</select>
+</sqlMap>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FIN_GL_ACCOUNT_BOOK">
+
+	<typeAlias alias="FinGLAccountBook" type="com.lvmama.comm.pet.po.fin.FinGLAccountBook" />
+	
+	<resultMap id="FinGLAccountBookMap" class="com.lvmama.comm.pet.po.fin.FinGLAccountBook">
+		<result column="ACCOUNT_BOOK_ID" property="accountBookId" />
+		<result column="ACCOUNT_BOOK_CODE" property="accountBookCode" />
+		<result column="ACCOUNT_BOOK_NAME" property="accountBookName" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="MEMO" property="memo" />
+	</resultMap>
+	
+	<select id="queryAllAccountBook" resultMap="FinGLAccountBookMap">
+		SELECT * FROM FIN_GL_ACCOUNT_BOOK T
+	</select>
+	
+</sqlMap>

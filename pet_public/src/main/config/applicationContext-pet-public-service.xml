@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+	<bean id="shopLogService" class="com.lvmama.pet.shop.service.ShopLogServiceImpl" />
+	<bean id="shopOrderService" class="com.lvmama.pet.shop.service.ShopOrderServiceImpl" />
+	<bean id="shopProductZhuantiService" class="com.lvmama.pet.shop.service.ShopProductZhuantiServiceImpl" />
+	<bean id="shopProductService" class="com.lvmama.pet.shop.service.ShopProductServiceImpl" />
+	<bean id="shopUserService" class="com.lvmama.pet.shop.service.ShopUserServiceImpl" />
+	<bean id="shopCooperationCouponService" class="com.lvmama.pet.shop.service.ShopCooperationCouponServiceImpl" />
+	<bean id="infoService" class="com.lvmama.pet.info.service.InfoServiceImpl"/>
+	<bean id="connRecordService" class="com.lvmama.pet.conn.service.ConnRecordServiceImpl"/>
+	<bean id="comPictureService" class="com.lvmama.pet.pub.service.ComPictureServiceImpl" />
+	<bean id="comFSService" class="com.lvmama.pet.pub.service.ComFSServiceImpl" />
+	<bean id="comParttimeUserService" class="com.lvmama.pet.pub.service.ComParttimeUserServiceImpl" />
+	<bean id="comUserFeedbackService" class="com.lvmama.pet.pub.service.ComUserFeedbackServiceImpl"/>
+	<bean id="contactService" class="com.lvmama.pet.pub.service.ContactServiceImpl"/>
+	
+	<bean id="emailService" class="com.lvmama.pet.email.service.EmailServiceImpl" />
+	<bean id="placeCityService" class="com.lvmama.pet.pub.service.PlaceCityServiceImpl"/>
+	<bean id="comMobileAreaService" class="com.lvmama.pet.pub.service.ComMobileAreaServiceImpl"/>
+	<bean id="userUserProxy" class="com.lvmama.pet.user.service.UserUserProxyImpl"/>
+	
+	<bean id="userPersistentSessionService" class="com.lvmama.pet.user.service.UserPersistentSessionServiceImpl"/>
+	
+	<bean id="smsRemoteService" class="com.lvmama.pet.sms.service.SmsServiceImpl" />
+	<bean id="smsInstructionService" class="com.lvmama.pet.sms.service.SmsInstructionServiceImpl"/>
+	<bean id="userUserService" class="com.lvmama.pet.user.service.UserUserServiceImpl"/>
+	
+	<bean id="comSmsTemplateService" class="com.lvmama.pet.pub.service.ComSmsTemplateServiceImpl" />
+	<bean id="comEmailTemplateService" class="com.lvmama.pet.pub.service.ComEmailTemplateServiceImpl" />
+	
+	<bean id="userBatchRegisterService" class="com.lvmama.pet.user.service.UserBatchRegisterServiceImpl" />
+	<bean id="userBatchUserService" class="com.lvmama.pet.user.service.UserBatchUserServiceImpl" />
+	<bean id="userCooperationUserService" class="com.lvmama.pet.user.service.UserCooperationUserServiceImpl" />
+	<bean id="userCooperationCacheService" class="com.lvmama.pet.user.service.UserCooperationCacheServiceImpl" />
+	
+	<bean id="comIpsService" class="com.lvmama.pet.pub.service.ComIpsServiceImpl" />
+	<bean id="comLogService" class="com.lvmama.pet.pub.service.ComLogServiceImpl" />
+	
+	<bean id="favorService" class="com.lvmama.pet.favor.service.FavorServiceImpl" />
+	<bean id="favorStrategyMarkCouponAdapter" class="com.lvmama.pet.favor.service.FavorStrategyMarkCouponAdapter" />
+	<bean id="markChannelService" class="com.lvmama.pet.mark.service.MarkChannelServiceImpl" />
+	<bean id="markMembershipCardCodeService" class="com.lvmama.pet.mark.service.MarkMembershipCardCodeServiceImpl" />
+	<bean id="markMembershipCardDiscountService" class="com.lvmama.pet.mark.service.MarkMembershipCardDiscountServiceImpl" />
+	<bean id="markMembershipCardService" class="com.lvmama.pet.mark.service.MarkMembershipCardServiceImpl" />
+
+	
+
+    <bean id="userActionCollectionService" class="com.lvmama.pet.user.service.UserActionCollectionServiceImpl" />
+    
+    <bean id="supplierService" class="com.lvmama.pet.sup.service.SupplierServiceImpl"/>
+    <bean id="supContractService" class="com.lvmama.pet.sup.service.SupContractServiceImpl"/>
+    <bean id="bCertificateTargetService" class="com.lvmama.pet.sup.service.BCertificateTargetServiceImpl"/>
+    <bean id="settlementTargetService" class="com.lvmama.pet.sup.service.SettlementTargetServiceImpl"/>
+    <bean id="performTargetService" class="com.lvmama.pet.sup.service.PerformTargetServiceImpl"/>
+    <bean id="finAccountingEntityService" class="com.lvmama.pet.sup.service.FinAccountingEntityServiceImpl"/>
+    
+    <!-- 后台权限 用户begin -->
+    <bean id="permUserService" class="com.lvmama.pet.perm.service.PermUserServiceImpl" />
+    <bean id="permissionService" class="com.lvmama.pet.perm.service.PermissionServiceImpl" />
+    <bean id="permOrganizationService" class="com.lvmama.pet.perm.service.PermOrganizationServiceImpl" />
+    <bean id="permRolePermissionService" class="com.lvmama.pet.perm.service.PermRolePermissionServiceImpl" />
+    <bean id="permRoleService" class="com.lvmama.pet.perm.service.PermRoleServiceImpl" />
+    <bean id="permUserRoleService" class="com.lvmama.pet.perm.service.PermUserRoleServiceImpl" />
+    <bean id="userOrgAuditPermService" class="com.lvmama.pet.perm.service.UserOrgAuditPermServiceImpl" />
+    <bean id="permUserPermissionService" class="com.lvmama.pet.perm.service.PermUserPermissionServiceImpl" />
+    <!-- 后台权限 用户end -->
+    
+    <bean id="finReconBankStatementService" class="com.lvmama.pet.pay.service.FinReconBankStatementServiceImpl" />
+    <bean id="finReconResultService" class="com.lvmama.pet.pay.service.FinReconResultServiceImpl" />
+    
+    <bean id="payPaymentService" class="com.lvmama.pet.pay.service.PayPaymentServiceImpl" />
+    <bean id="payPaymentRefundmentService" class="com.lvmama.pet.pay.service.PayPaymentRefundmentServiceImpl" />
+    <bean id="payPaymentGatewayService" class="com.lvmama.pet.pay.service.PayPaymentGatewayServiceImpl" />
+    <bean id="payPaymentGatewayElementService" class="com.lvmama.pet.pay.service.PayPaymentGatewayElementServiceImpl" />
+    <bean id="payPaymentDetailService" class="com.lvmama.pet.pay.service.PayPaymentDetailServiceImpl" />
+    <bean id="payReceivingCompanyService" class="com.lvmama.pet.pay.service.PayReceivingCompanyServiceImpl" />
+    <bean id="payReceivingBankService" class="com.lvmama.pet.pay.service.PayReceivingBankServiceImpl" />
+    <bean id="payPosCommercialService" class="com.lvmama.pet.pay.service.PayPosCommercialServiceImpl" />
+    <bean id="payPosService" class="com.lvmama.pet.pay.service.PayPosServiceImpl"/>
+    <bean id="payPosUserService" class="com.lvmama.pet.pay.service.PayPosUserServiceImpl" />
+
+    <bean id="cashAccountServiceProxy" class="com.lvmama.pet.money.proxy.CashAccountServiceProxy" />
+    <bean id="cashAccountService" class="com.lvmama.pet.money.service.CashAccountServiceImpl" />
+    <bean id="storedCardService" class="com.lvmama.pet.money.service.StoredCardServiceImpl" />
+    
+    <bean id="finBizItemService" class="com.lvmama.pet.fin.service.FinBizItemServiceImpl" />
+    
+
+	<!-- place相关的迁移 -->
+    <bean id="comSubjectService" class="com.lvmama.pet.pub.service.ComSubjectServiceImpl" />
+    <bean id="comPinyinService" class="com.lvmama.pet.pub.service.ComPinyinServiceImpl" />
+	<bean id="placePlaceDestService" class="com.lvmama.pet.place.service.PlacePlaceDestServiceImpl" />
+	<bean id="placeSearchPinyinService" class="com.lvmama.pet.place.service.PlaceSearchPinyinServiceImpl" />
+    <bean id="placeService" class="com.lvmama.pet.place.service.PlaceServiceImpl" />
+    <bean id="askService" class="com.lvmama.pet.place.service.QuestionAnswerServiceImpl" />
+    <bean id="placePhotoService" class="com.lvmama.pet.place.service.PlacePhotoServiceImpl" />
+    <bean id="placeLandMarkService" class="com.lvmama.pet.place.service.PlaceLandMarkServiceImpl" />
+	 <bean id="placeActivityService" class="com.lvmama.pet.place.service.PlaceActivityServiceImpl" />
+     <bean id="placePageService" class="com.lvmama.pet.place.service.PlacePageServiceImpl" />
+    <bean id="specialTopicService" class="com.lvmama.pet.place.service.SpecialTopicServiceImpl" />
+     <!-- 百度,Google坐标 -->
+    <bean id="placeCoordinateBaiduService" class="com.lvmama.pet.place.service.PlaceCoordinateBaiduServiceImpl" />
+    <bean id="placeCoordinateGoogleService" class="com.lvmama.pet.place.service.PlaceCoordinateGoogleServiceImpl" />
+
+    <!-- 搜索Search相关 -->
+    <bean id="placeSearchInfoService" class="com.lvmama.pet.search.service.PlaceSearchInfoServiceImpl" />
+    <bean id="prodBranchSearchInfoService" class="com.lvmama.pet.search.service.ProdBranchSearchInfoServiceImpl" />
+    <bean id="productSearchInfoService" class="com.lvmama.pet.search.service.ProductSearchInfoServiceImpl" />
+    <bean id="comSearchIntelligentTypeService" class="com.lvmama.pet.search.service.ComSearchIntelligentTypeServiceImpl" />
+	<bean id="comSearchTranscodeService" class="com.lvmama.pet.search.service.ComSearchTranscodeServiceImpl" />
+	<bean id="prodTrainCacheService" class="com.lvmama.pet.search.service.ProdTrainCacheServiceImpl"/>
+
+    <bean id="prodProductHeadService" class="com.lvmama.pet.prod.service.ProdProductHeadServiceImpl" />
+    <bean id="prodInsuranceService" class="com.lvmama.pet.prod.service.ProdInsuranceServiceImpl" />
+    <bean id="prodProductRelationService" class="com.lvmama.pet.prod.service.ProdProductRelationServiceImpl" />
+
+    <!-- seo -->
+    <bean id="seoSiteMapHtmlService" class="com.lvmama.pet.seo.service.SeoSiteMapHtmlServiceImpl" />
+    <bean id="seoSiteMapXmlService" class="com.lvmama.pet.seo.service.SeoSiteMapXmlServiceImpl" />
+    <bean id="seoIndexPageService" class="com.lvmama.pet.seo.service.SeoIndexPageServiceImpl" />
+    <bean id="recommendInfoService" class="com.lvmama.pet.seo.service.RecommendInfoServiceImpl" />
+    <bean id="recommendBlockService" class="com.lvmama.pet.seo.service.RecommendBlockServiceImpl" />
+    <!-- 容器相关 -->
+    <bean id="prodContainerProductService" class="com.lvmama.pet.prod.service.ProdContainerProductServiceImpl" />
+    <bean id="productProductPlaceService" class="com.lvmama.pet.prod.service.ProductProductPlaceServiceImpl" />
+    <!-- comment 点评相关 -->
+	<bean id="cmtNewsService" class="com.lvmama.pet.comment.service.CmtNewsServiceImpl" />
+    <bean id="cmtNewsReplyService" class="com.lvmama.pet.comment.service.CmtNewsReplyServiceImpl" />
+    <bean id="cmtTitleStatistisService" class="com.lvmama.pet.comment.service.CmtTitleStatistisServiceImpl" />
+    <bean id="cmtLatitudeStatistisService" class="com.lvmama.pet.comment.service.CmtLatitudeStatistisServiceImpl" />
+    												
+    <bean id="cmtCommentService" class="com.lvmama.pet.comment.service.CmtCommentServiceImpl" />
+    <bean id="cmtReplyService" class="com.lvmama.pet.comment.service.CmtReplyServiceImpl" />
+    <bean id="dicCommentLatitudeService" class="com.lvmama.pet.comment.service.DicCommentLatitudeServiceImpl" />
+    <bean id="cmtSpecialSubjectService" class="com.lvmama.pet.comment.service.CmtSpecialSubjectServiceImpl" />
+	<bean id="cmtRecommendPlaceService" class="com.lvmama.pet.comment.service.CmtRecommendPlaceServiceImpl" />
+    <bean id="cmtActivityService" class="com.lvmama.pet.comment.service.CmtActivityServiceImpl" />
+	<bean id="cmtBusinessUserService" class="com.lvmama.pet.comment.service.CmtBusinessUserServiceImpl" />
+    
+    <bean id="onlineLetterService" class="com.lvmama.pet.onlineLetter.service.OnlineLetterServiceImpl" />
+    
+    <bean id="visaApplicationDocumentService" class="com.lvmama.pet.visa.service.VisaApplicationDocumentServiceImpl" />
+    <bean id="visaApprovalService" class="com.lvmama.pet.visa.service.VisaApprovalServiceImpl" />
+    <bean id="markCouponService" class="com.lvmama.pet.mark.service.MarkCouponServiceImpl" />
+    <bean id="markCouponUserService" class="com.lvmama.pet.mark.service.MarkCouponUserServiceImpl" />
+    <bean id="markCouponProductService" class="com.lvmama.pet.mark.service.MarkCouponProductServiceImpl" />
+    <bean id="markCouponPointChangeService" class="com.lvmama.pet.mark.service.MarkCouponPointChangeServiceImpl" />
+    <bean id="placeFlightService" class="com.lvmama.pet.place.service.PlaceFlightServiceImpl" />
+    <!-- 优惠二期 -->
+    <bean id="businessCouponService" class="com.lvmama.pet.businessCoupon.service.BusinessCouponServiceImpl"/>
+    <!-- 特卖会 -->
+    <bean id="prodSeckillRuleService" class="com.lvmama.pet.businessCoupon.service.ProdSeckillRuleServiceImpl"/>
+    <!-- 黑名单 -->
+    <bean id="prodBlackListService" class="com.lvmama.pet.prod.service.ProdBlackListServiceImpl"></bean>
+     <!-- 工单begin -->
+	<bean id="workDepartmentService" class="com.lvmama.pet.work.service.WorkDepartmentServiceImpl"/>
+	<bean id="workGroupService" class="com.lvmama.pet.work.service.WorkGroupServiceImpl"/>
+	<bean id="workGroupUserService" class="com.lvmama.pet.work.service.WorkGroupUserServiceImpl"/>
+	<bean id="workOrderService" class="com.lvmama.pet.work.service.WorkOrderServiceImpl"/>
+	<bean id="workOrderTypeService" class="com.lvmama.pet.work.service.WorkOrderTypeServiceImpl"/>
+	<bean id="workTaskService" class="com.lvmama.pet.work.service.WorkTaskServiceImpl"/>
+	<bean id="publicWorkOrderService" class="com.lvmama.pet.work.service.PublicWorkOrderServiceImpl"/>
+	<!-- 工单end -->
+	
+	<bean id="comKeyDescService" class="com.lvmama.pet.pub.service.ComKeyDescServiceImpl" />
+	<bean id="comKeJetWordService" class="com.lvmama.pet.pub.service.ComKeJetWordServiceImpl" />
+	<!-- add by zhangwengang 对账 -->
+	<bean id="finGLServiceImpl" class="com.lvmama.pet.fin.service.FinGLServiceImpl" />
+	<bean id="finGLService" class="com.lvmama.pet.fin.service.FinGLProxy" />
+	<bean id="finGLServiceProxy" class="com.lvmama.pet.fin.proxy.FinGLServiceProxy" />
+    <bean id="finGLSubjectConfigService" class="com.lvmama.pet.fin.service.FinGLSubjectConfigServiceImpl" />
+	<bean id="comKeJetAdsService" class="com.lvmama.pet.pub.service.ComKeJetAdsServiceImpl" />
+
+	<!-- 驴途 v3 推荐 -->
+	<bean id="mobileRecommendInfoService" class="com.lvmama.pet.mobile.service.MobileRecommendInfoServiceImpl" />
+	<bean id="mobileRecommendBlockService" class="com.lvmama.pet.mobile.service.MobileRecommendBlockServiceImpl" />
+	<bean id="mobileFavoriteService" class="com.lvmama.pet.mobile.service.MobileFavoriteServiceImpl" />
+	<bean id="mobileClientService" class="com.lvmama.pet.mobile.service.MobileClientServiceImpl" />
+	<bean id="mobileHotelService" class="com.lvmama.pet.mobile.service.MobileHotelServiceImpl" />
+
+	<!-- ebk push -->
+	<bean id="ebkPushService" class="com.lvmama.pet.ebkpush.service.EBkPushServiceImpl"/>
+	
+	<bean id="sensitiveKeysService" class="com.lvmama.pet.conn.service.SensitiveKeysServiceImpl"/>
+
+	<bean id="hotelTrafficInfoService" class="com.lvmama.pet.place.service.HotelTrafficInfoServiceImpl"/>
+	
+	<bean id="placeHotelNoticeService" class="com.lvmama.pet.place.service.PlaceHotelNoticeServiceImpl"></bean>
+	<bean id="placeHotelRoomService" class="com.lvmama.pet.place.service.PlaceHotelRoomServiceImpl"></bean>
+    <bean id="placeHotelRecommendService" class="com.lvmama.pet.place.service.PlaceHotelRecommendServiceImpl"></bean>
+    <!-- seo友情链接 -->
+    <bean id="seoLinksService" class="com.lvmama.pet.seo.service.SeoLinksServiceImpl"></bean>
+    <bean id="keyWordService" class="com.lvmama.pet.review.service.KeyWordServiceImpl" />
+    <bean id="reviewSendEmailService" class="com.lvmama.pet.review.service.ReviewSendEmailServiceImpl" />
+    
+    <!-- 用户标签 -->
+    <bean id="userTagsTypeService" class="com.lvmama.pet.userTags.service.UserTagsTypeServiceImpl"></bean>
+    <bean id="userTagsService" class="com.lvmama.pet.userTags.service.UserTagsServiceImpl"></bean>
+    <bean id="userTagsRelationshipService" class="com.lvmama.pet.userTags.service.UserTagsRelationshipServiceImpl"></bean>
+    <!-- 驴妈妈新作储值卡服务 -->
+    <bean id="lvmamacardService" class="com.lvmama.pet.lvmamacard.service.LvmamacardServiceImpl"></bean>
+    <bean id="departmentService" class="com.lvmama.pet.department.service.DepartmentServiceImpl"></bean>
+    
+    <bean id="ncComplaintRelationService" class="com.lvmama.pet.relation.service.NcComplaintRelationServiceImpl" />
+    <bean id="clientSeckillService" class="com.lvmama.pet.mobile.service.ClientSeckillServiceImpl" />
+    <bean id="sensitiveWordService" class="com.lvmama.pet.sensitiveW.service.SensitiveWordServiceImpl" />
+    <!-- 信用卡 -->
+    <bean id="creditCardService" class="com.lvmama.pet.mobile.service.CreditCardServiceImpl"></bean>
+    
+    <bean id="lvccChannelService" class="com.lvmama.pet.conn.service.LvccChannelServiceImpl"/>
+    <bean id="lvccPromotionActivityService" class="com.lvmama.pet.conn.service.LvccPromotionActivityServiceImpl"/>
+    <bean id="smsConfigService" class="com.lvmama.pet.sms.service.SmsConfigServiceImpl"></bean>
+</beans>
+

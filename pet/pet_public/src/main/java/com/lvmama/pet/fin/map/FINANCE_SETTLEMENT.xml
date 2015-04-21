@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FINANCE_SETTLEMENT" >
+	<typeAlias alias="SetSettlementItem" type="com.lvmama.comm.pet.po.fin.SetSettlementItem"/>
+	<resultMap id="SetSIMap" class="com.lvmama.comm.pet.po.fin.SetSettlementItem" >
+		<result column="SETTLEMENT_ITEM_ID" property="settlementItemId" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="ORDER_STATUS" property="orderStatus" />
+		<result column="ORDER_PAYMENT_TIME" property="orderPaymentTime" />
+		<result column="ORDER_CREATE_TIME" property="orderCreateTime" />
+		<result column="ORDER_PAYMENT_STATUS" property="orderPaymentStatus" />
+		<result column="ORDER_CONTACT_PERSON" property="orderContactPerson" />
+		<result column="ORDER_COUPON_AMOUNT" property="orderCouponAmount"  nullValue="0"/>
+		<result column="PASS_CODE" property="passCode" />
+		<result column="PASS_SERIALNO" property="passSerialno" />
+		<result column="PASS_EXTID" property="passExtid" />
+		<result column="ORDER_REFUND" property="orderRefund" />
+		<result column="REFUND_MEMO" property="refundMemo" />
+		<result column="ORDER_ITEM_PROD_ID" property="orderItemProdId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="PRODUCT_BRANCH_ID" property="productBranchId" />
+		<result column="PRODUCT_BRANCH_NAME" property="productBranchName" />
+		<result column="PRODUCT_PRICE" property="productPrice" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+		<result column="ORDER_ITEM_META_PAYED_AMOUNT" property="orderItemMetaPayedAmount"/>
+		<result column="META_PRODUCT_ID" property="metaProductId" />
+		<result column="META_PRODUCT_NAME" property="metaProductName" />
+		<result column="META_BRANCH_ID" property="metaBranchId" />
+		<result column="META_BRANCH_NAME" property="metaBranchName" />
+		<result column="META_PRODUCT_MANAGER" property="metaProductManager"/>
+		<result column="SETTLEMENT_PRICE" property="settlementPrice"/>
+		<result column="ACTUAL_SETTLEMENT_PRICE" property="actualSettlementPrice" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="TARGET_ID" property="targetId" />
+		<result column="PRODUCT_QUANTITY" property="productQuantity" />
+		<result column="QUANTITY" property="quantity" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="SETTLEMENT_STATUS" property="settlementStatus" />
+		<result column="SETTLEMENT_ID" property="settlementId" />
+		<result column="JOIN_SETTLEMENT_TIME" property="joinSettlementTime" />
+		<result column="TOTAL_SETTLEMENT_PRICE" property="totalSettlementPrice" />
+		<result column="STATUS" property="status" />
+		<result column="SETTLEMENT_TYPE" property="settlementType" />
+		<result column="PRODUCT_SUB_PRODUCT_TYPE" property="productSubProductType" />
+		<result column="BUSINESS_NAME" property="businessName"/>
+	</resultMap>
+	<resultMap id="SetSIMapAdvance" extends="SetSIMap" class="com.lvmama.comm.pet.po.fin.SetSettlementItem"  >
+		<result column="SUPPLIER_NAME" property="supplierName" />
+		<result column="TARGET_NAME" property="targetName" />
+		<result column="COMPANY_ID" property="companyId" />
+		<result column="SETTLEMENT_PERIOD" property="settlementPeriod" />
+		<result column="SUGGESTION_PAY_TIME" property="suggestionPayTime" />
+	</resultMap>
+	<resultMap id="SetSIMapExcel" extends="SetSIMapAdvance" class="com.lvmama.comm.pet.po.fin.SetSettlementItemExcel"  >
+		<result column="SETTLEMENT_PAYMENT_TIME" property="settlementPaymentTime" />
+		<result column="BANK_ACCOUNT_NAME" property="bankAccountName" />
+		<result column="BANK_NAME" property="bankName" />
+		<result column="BANK_ACCOUNT" property="bankAccount" />
+		<result column="PASS_CODE" property="passCode" nullValue=""/>
+		<result column="PASS_SERIALNO" property="passSerialno" nullValue=""/>
+		<result column="PASS_EXTID" property="passExtid" nullValue=""/>
+		<result column="REFUND_MEMO" property="refundMemo" nullValue=""/>
+		
+		<result column="ADJUSTMENT_AMOUNT" property="adjustmentAmount" nullValue="0"/>
+		<result column="REFUNDED_AMOUNT" property="refundedAmount"  nullValue="0"/>
+		<result column="OUGHT_PAY" property="oughtPay" nullValue="0" />
+		<result column="COUNT_SETTLE_AMOUNT" property="countSettleAmount"/>
+		<result column="ADJUSTMENT_REMARK" property="adjustmentRemark" nullValue=""/>
+		<result column="UPDATE_REMARK" property="updateRemark" nullValue=""/>
+		
+	</resultMap>
+	<typeAlias alias="SetSettlement" type="com.lvmama.comm.pet.po.fin.SetSettlement"/>
+	<resultMap id="SetSettlementMap" class="com.lvmama.comm.pet.po.fin.SetSettlement" >
+		<result column="SETTLEMENT_ID" property="settlementId"/>
+		<result column="TARGET_ID" property="targetId"/>
+		<result column="SETTLEMENT_AMOUNT" property="settlementAmount"/>
+		<result column="STATUS" property="status"/>
+		<result column="OPERATOR_NAME" property="operatorName"/>
+		<result column="MEMO" property="memo"/>
+		<result column="CREATE_TIME" property="createTime"/>
+		<result column="PAYED_AMOUNT" property="payedAmount"/>
+		<result column="DEDUCTION_AMOUNT" property="deductionAmount"/>
+		<result column="TARGET_NAME" property="targetName"/>
+		<result column="SETTLEMENT_PERIOD" property="settlementPeriod"/>
+		<result column="ADVANCED_DAYS" property="advancedDays"/>
+		<result column="BANK_ACCOUNT_NAME" property="bankAccountName"/>
+		<result column="BANK_NAME" property="bankName"/>
+		<result column="BANK_ACCOUNT" property="bankAccount"/>
+		<result column="ALIPAY_ACCOUNT" property="alipayAccount"/>
+		<result column="ALIPAY_NAME" property="alipayName"/>
+		<result column="TARGET_TYPE" property="targetType"/>
+		<result column="BANK_LINES" property="bankLines"/>
+		<result column="COMPANY_ID" property="companyId"/>
+		<result column="SETTLEMENT_TYPE" property="settlementType"/>
+		<result column="BUSINESS_NAME" property="businessName"/>
+	</resultMap>	
+	<sql id="searchItemSql">
+		SELECT A.* FROM  SET_SETTLEMENT_ITEM A
+		<dynamic prepend=" WHERE">
+			<isNotEmpty property="settlementItemIds" prepend=" AND ">
+			  SETTLEMENT_ITEM_ID IN (<iterate property="settlementItemIds" conjunction=",">#settlementItemIds[]#</iterate>)
+			</isNotEmpty>
+			<isNotEmpty property="settlementId" prepend=" AND ">	SETTLEMENT_ID = #settlementId#	</isNotEmpty>
+			<isEmpty property="excludeSettlementId">
+				<isEmpty property="settlementId" prepend=" AND "> SETTLEMENT_ID IS NULL </isEmpty>
+			</isEmpty>
+			<isNotEmpty property="orderId" prepend="AND"> 			ORDER_ID = #orderId# </isNotEmpty>
+			<isNotEmpty property="orderItemMetaId" prepend=" AND ">	ORDER_ITEM_META_ID = #orderItemMetaId#	</isNotEmpty>
+	    	<isNotEmpty property="status" prepend="AND">
+	    		STATUS IN 
+	    		(
+	    		<iterate property="status" conjunction=","  >
+	   				#status[]#
+	   			</iterate>
+	   			)
+	    	</isNotEmpty>	
+	    	<isNotEmpty property="setSettlementIds" prepend="AND SETTLEMENT_ITEM_ID IN ">
+	    	<iterate property="setSettlementIds" conjunction="," open="(" close=")">
+   					#setSettlementIds[]#
+   				</iterate>
+   			</isNotEmpty>
+	    	<isNotEmpty property="targetId" prepend="AND">  		A.TARGET_ID = #targetId#  	</isNotEmpty>	
+		    <isNotNull prepend="AND" property="visitDateStart"> 	VISIT_TIME &gt;= TRUNC(TO_DATE(#visitDateStart#,'YYYY-MM-DD')) 	</isNotNull>
+		    <isNotNull prepend="AND" property="visitDateEnd">  		VISIT_TIME &lt; TRUNC(TO_DATE(#visitDateEnd#,'YYYY-MM-DD') + 1) </isNotNull>
+			<isNotEmpty property="metaProductId" prepend="AND">
+				META_PRODUCT_ID = #metaProductId#
+				<isNotEmpty property="metaBranchType" prepend="AND">
+					META_BRANCH_ID = #metaBranchType#
+				</isNotEmpty>
+			</isNotEmpty> 
+		    <isNotNull property="payTimeStart" prepend="AND">
+		      	ORDER_PAYMENT_TIME &gt;= TRUNC(TO_DATE(#payTimeStart#,'YYYY-MM-DD'))
+		      	<isNotNull property="payTimeEnd" prepend="AND">
+		    		ORDER_PAYMENT_TIME &lt; TRUNC(TO_DATE(#payTimeEnd#,'YYYY-MM-DD') + 1)
+	    		</isNotNull>
+		    </isNotNull>
+		    <isNotEmpty property="settlementCompany" prepend="AND">
+		       	C.COMPANY_ID = #settlementCompany#
+		    </isNotEmpty>
+		    <isEqual property="hasRefunded" compareValue="1" prepend="AND"> ORDER_REFUND =  1  </isEqual>
+		    <isNotEmpty property="supplierId" prepend="AND"> A.SUPPLIER_ID  = #supplierId# </isNotEmpty>
+		    <isNotEmpty property="supplierIds" prepend="AND A.SUPPLIER_ID IN">
+		    	<iterate property="supplierIds" conjunction="," open="(" close=")">
+   					#supplierIds[]#
+   				</iterate>
+		    </isNotEmpty>
+		    <isNotEmpty property="targetIds" prepend="AND A.TARGET_ID IN">
+		    	<iterate property="targetIds" conjunction="," open="(" close=")">
+   					#targetIds[]#
+   				</iterate>
+		    </isNotEmpty>
+		    <isNotNull property="createOrderTimeBegin" prepend="AND">  	A.ORDER_CREATE_TIME &gt;= TRUNC(TO_DATE(#createOrderTimeBegin#,'YYYY-MM-DD'))  </isNotNull>
+		    <isNotNull property="createOrderTimeEnd" prepend="AND"> 	A.ORDER_CREATE_TIME &lt; TRUNC(TO_DATE(#createOrderTimeEnd#,'YYYY-MM-DD') + 1) </isNotNull>
+		    <isNotNull property="filialeName" prepend="AND">     		A.FILIALE_NAME = #filialeName#  	</isNotNull>
+		    <isNotNull property="businessName" prepend="AND"> BUSINESS_NAME=#businessName#</isNotNull>
+	    	<isNotNull property="routeType" prepend="AND"> 
+	    		(
+	    			A.PRODUCT_SUB_PRODUCT_TYPE IN (
+			    		<iterate property="routeType" conjunction=","  >
+		   					#routeType[]#
+		   				</iterate>
+		    		)
+		    		<isNotNull property="productType" prepend=" OR "> 
+		    			  A.PRODUCT_TYPE  IN 
+		    			 <iterate property="productType" conjunction=","  open="(" close=")">
+		   					#productType[]#
+		   				 </iterate>
+		    		</isNotNull>
+	    		)
+	    	</isNotNull>
+	    	<isNull property="routeType" prepend="AND"> 
+	    		<isNotNull property="productType"> 
+	    			 A.PRODUCT_TYPE  IN 
+		    			 <iterate property="productType" conjunction="," open="(" close=")">
+		    			 	#productType[]#
+		    			 </iterate>
+	    		</isNotNull>
+	    	</isNull>
+	    </dynamic>
+	</sql>
+	<!-- 查询订单结算项 -->
+	<select id="searchItemList" parameterClass="map" resultMap="SetSIMap">
+		<include refid="pageSearchHead"/>
+	  	<include refid="searchItemSql"/>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchItemListCount" parameterClass="map" resultClass="long">
+		SELECT COUNT(*) FROM (
+			<include refid="searchItemSql"/>
+		) TMP
+	</select>
+	<sql id="searchSettleSql">
+		SELECT * FROM SET_SETTLEMENT A
+		<dynamic prepend=" WHERE ">
+		<isNotNull property="businessName" prepend="AND">		A.BUSINESS_NAME=#businessName#</isNotNull>
+		<isNotNull property="targetId" prepend="AND">			A.TARGET_ID = #targetId#		</isNotNull>
+		<isNotEmpty property="settlementId" prepend="AND">		A.SETTLEMENT_ID in ($settlementId$) </isNotEmpty>
+		<isNotEmpty property="status" prepend="AND">			A.STATUS = #status#		</isNotEmpty>
+		<isNotEmpty property="createTimeBegin" prepend="AND">	A.CREATE_TIME &gt;= TO_DATE(#createTimeBegin#,'yyyy-mm-dd')		</isNotEmpty>
+		<isNotEmpty property="createTimeEnd" prepend="AND">		A.CREATE_TIME  &lt; TRUNC(TO_DATE(#createTimeEnd#,'YYYY-MM-DD') + 1)</isNotEmpty>
+		<isNotEmpty property="userName" prepend="AND">			A.OPERATOR_NAME = #userName#		</isNotEmpty>
+		<isNotEmpty property="filialeName" prepend="AND">		A.FILIALE_NAME = #filialeName#		</isNotEmpty> 
+		<isNotEmpty property="metaProductId" prepend="AND">
+				EXISTS (SELECT 1 FROM SET_SETTLEMENT_ITEM I WHERE I.SETTLEMENT_ID = A.SETTLEMENT_ID AND I.META_PRODUCT_ID = #metaProductId#)
+		</isNotEmpty>
+		<isNotEmpty property="orderId" prepend="AND">
+				EXISTS (SELECT 1 FROM SET_SETTLEMENT_ITEM I WHERE I.SETTLEMENT_ID = A.SETTLEMENT_ID AND I.ORDER_ID = #orderId#)
+		</isNotEmpty> 
+		</dynamic>
+	</sql>
+	<select id="searchSettleList" parameterClass="map" resultMap="SetSettlementMap">
+		<include refid="pageSearchHead"/>
+	  	<include refid="searchSettleSql"/>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchSettleListCount" parameterClass="map" resultClass="long">
+		SELECT COUNT(*) FROM (
+			<include refid="searchSettleSql"/>
+		) TMP
+	</select>
+	
+	<select id="searchSumprice" parameterClass="map" resultClass="java.lang.Long">
+		SELECT SUM(TOTAL_SETTLEMENT_PRICE) FROM (
+		<include refid="searchItemSql"/>
+		) TMP
+	</select>
+</sqlMap>

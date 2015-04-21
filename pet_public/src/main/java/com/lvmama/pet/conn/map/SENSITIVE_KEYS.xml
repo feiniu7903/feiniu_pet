@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SENSITIVE_KEYS">
+
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.conn.SensitiveKeys">
+		<result column="keys" property="keys" />
+	    <result column="create_Time" property="createDate" />
+	</resultMap>
+
+	<select id="queryAll" resultMap="BaseResultMap">
+		select * from sensitive_keys 
+	</select>
+	
+	 <insert id="insert" parameterClass="java.lang.String">
+	 	insert into sensitive_keys values (#keys#, sysdate)
+	 </insert>
+	 
+	 <sql id="query_base_sql">
+		select CC.* 
+		from  sensitive_keys CC
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty prepend=" AND " property="keys"  >CC.keys LIKE '%'||#keys#||'%'</isNotEmpty> 
+			<isNotEmpty prepend=" AND " property="endDate">CC.create_Time &lt;= #endDate# + 1</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="startDate">CC.create_Time &gt;= #startDate#</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		select t2.*
+		from (
+			select t1.*, rownum as rn 
+			from (
+			<include refid="query_base_sql"/>
+			) t1
+			<dynamic prepend=" WHERE ">
+				<isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+			</dynamic>	
+			) t2
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow"> rn &gt;= #_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="count" parameterClass="java.util.Map" resultClass="long">
+		select count(*) from (
+			<include refid="query_base_sql"/>
+		)
+	</select>
+	
+	 
+</sqlMap>

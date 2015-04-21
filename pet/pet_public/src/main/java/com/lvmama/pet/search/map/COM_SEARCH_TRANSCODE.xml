@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="COM_SEARCH_TRANSCODE">
+	<typeAlias alias="ComSearchTranscode" type="com.lvmama.comm.search.vo.ComSearchTranscode"/>
+	<resultMap id="comSearchTranscodeMap" class="ComSearchTranscode">   
+		<result property="codeId" column="CODE_ID"/>   
+		<result property="keyword" column="KEYWORD"/>   
+	</resultMap>   
+  <select id="searchAll" resultMap="comSearchTranscodeMap"> 
+  	SELECT CODE_ID,KEYWORD FROM COM_SEARCH_TRANSCODE   
+  </select>
+   <select id="getSearchByParam" resultMap="comSearchTranscodeMap" parameterClass="java.util.Map"> 
+    SELECT CODE_ID,KEYWORD FROM COM_SEARCH_TRANSCODE   
+    <dynamic prepend="where">
+      <isNotEmpty property="keyword" prepend="and"> KEYWORD=#keyword#</isNotEmpty>
+    </dynamic>
+  </select>
+</sqlMap>

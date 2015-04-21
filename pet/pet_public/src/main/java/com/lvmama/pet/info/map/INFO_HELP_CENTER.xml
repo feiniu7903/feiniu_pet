@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="INFO_HELP_CENTER" >
+
+   <resultMap id="ContentResultMap" class="com.lvmama.comm.pet.po.info.InfoHelpCenter" >
+    <result column="ID" property="id" />
+    <result column="TYPE_ID" property="typeId" />
+    <result column="TITLE" property="title" />
+    <result column="USER_NAME" property="userName" />
+    <result column="CONTENT" property="content" />
+    <result column="CREATE_TIME" property="createTime" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap" extends="ContentResultMap" class="com.lvmama.comm.pet.po.info.InfoHelpCenter" >
+    <result column="TYPE_NAME" property="typeName" />
+  </resultMap>
+
+  <select id="selectByPrimaryKey" resultMap="ContentResultMap" parameterClass="com.lvmama.comm.pet.po.info.InfoHelpCenter" >
+    select * from INFO_HELP_CENTER
+    where ID = #id#
+  </select>
+  
+  <select id="selectByTitleAndType" resultMap="BaseResultMap" >
+  SELECT no.ID, no.TYPE_ID, no.TITLE, no.USER_NAME, no.CONTENT, no.CREATE_TIME,type.TYPE_NAME FROM INFO_HELP_CENTER no,INFO_QUES_TYPE type  
+  WHERE no.TYPE_ID = type.TYPE_ID
+  <dynamic>
+	  <isNotEmpty prepend="and" property="title">
+	   no.TITLE like '%'||#title#||'%' 
+	  </isNotEmpty>
+	  <isNotEmpty prepend="and" property="typeId">
+	  no.TYPE_ID=#typeId#
+	  </isNotEmpty>
+  </dynamic>
+   order by no.ID asc
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.info.InfoHelpCenter" >
+    delete from INFO_HELP_CENTER
+    where ID = #id#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.info.InfoHelpCenter" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      select INFO_HELP_CENTER_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into INFO_HELP_CENTER (ID, TYPE_ID, TITLE, USER_NAME, CONTENT, CREATE_TIME)
+    values (#id#, #typeId#, #title#, #userName#, #content#,
+      sysdate)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.info.InfoHelpCenter" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      select INFO_HELP_CENTER_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into INFO_HELP_CENTER
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="typeId" >
+        TYPE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="title" >
+        TITLE
+      </isNotNull>
+      <isNotNull prepend="," property="userName" >
+        USER_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="content" >
+        CONTENT
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id#
+      </isNotNull>
+      <isNotNull prepend="," property="typeId" >
+        #typeId#
+      </isNotNull>
+      <isNotNull prepend="," property="title" >
+        #title#
+      </isNotNull>
+      <isNotNull prepend="," property="userName" >
+        #userName#
+      </isNotNull>
+      <isNotNull prepend="," property="content" >
+        #content#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        #createTime#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.info.InfoHelpCenter" >
+    update INFO_HELP_CENTER
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="typeId" >
+        TYPE_ID = #typeId#
+      </isNotNull>
+      <isNotNull prepend="," property="title" >
+        TITLE = #title#
+      </isNotNull>
+      <isNotNull prepend="," property="userName" >
+        USER_NAME = #userName#
+      </isNotNull>
+      <isNotNull prepend="," property="content" >
+        CONTENT = #content#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+    </dynamic>
+    where ID = #id#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.info.InfoHelpCenter" >
+    update INFO_HELP_CENTER
+    set TYPE_ID = #typeId#,
+      TITLE = #title#,
+      USER_NAME = #userName#,
+      CONTENT = #content#,
+      CREATE_TIME = #createTime#
+    where ID = #id#
+  </update>
+</sqlMap>

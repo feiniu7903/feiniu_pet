@@ -1,0 +1,22 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./target"?>
+<bandbox id="target" apply="com.lvmama.back.web.finc.MacroChooseSettlementTarget"
+	onChanging="target$composer.changeInput(event)"
+	mold="rounded" autodrop="true">
+	<bandpopup>
+		<vbox>
+			<listbox width="300px" id="bandboxListBox"
+				model="@{target$composer.supSettlementTargetList, load-after='target.onChanging' }"
+				onSelect='target.value=self.selectedItem.lastChild.label; settlementTargetId.value=self.selectedItem.value; Events.sendEvent(new Event("onChange", settlementTargetId));target.close();'>
+				<listhead>
+					<listheader width="50px" label="编号" />
+					<listheader label="名称" />
+				</listhead>
+				<listitem self="@{each='item'}" value="@{item.targetId}"
+					height="25px">
+					<listcell label="@{item.targetId}" />
+					<listcell label="@{item.name}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

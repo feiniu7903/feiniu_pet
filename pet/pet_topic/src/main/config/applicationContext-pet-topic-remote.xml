@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  - Application context definition for JPetStore's business layer.
+	- Contains bean references to the transaction manager and to the DAOs in
+	- dataAccessContext-local/jta.xml (see web.xml's "contextConfigLocation").
+	-->
+<beans default-autowire="byName">	
+	<bean id="recommendInfoClient" class="com.lvmama.comm.pet.client.RecommendInfoClient" />
+</beans>

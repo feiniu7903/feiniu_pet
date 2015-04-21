@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="WORK_GROUP">
+	<!-- 别名 -->
+    <typeAlias alias="workGroup" type="com.lvmama.comm.pet.po.work.WorkGroup"/>
+	<!-- 查询结果集 -->
+    <resultMap id="workGroupResult" class="workGroup">
+        <result property="workGroupId" column="WORK_GROUP_ID"/>
+        <result property="groupName" column="GROUP_NAME"/>
+        <result property="memo" column="MEMO"/>
+        <result property="workDepartmentId" column="WORK_DEPARTMENT_ID"/>
+        <result property="valid" column="VALID"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="valid" column="VALID"/>
+        <result property="groupType" column="GROUP_TYPE"/>
+    </resultMap>
+    <resultMap id="workGroupWithDepartmentResult" class="workGroup" extends="workGroupResult">
+        <result property="departmentName" column="department_name"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	WORK_GROUP_ID ,
+        	GROUP_NAME ,
+        	MEMO ,
+        	WORK_DEPARTMENT_ID ,
+        	VALID,
+        	CREATE_TIME ,
+        	GROUP_TYPE
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="workGroupId">
+	             WORK_GROUP_ID = #workGroupId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="groupName">
+	             GROUP_NAME = #groupName#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="memo">
+	             MEMO = #memo#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="workDepartmentId">
+	             WORK_DEPARTMENT_ID = #workDepartmentId#
+	       </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="valid">
+	             VALID = #valid#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="valid">
+	             VALID = #valid#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 修改记录 -->
+    <update id="update" parameterClass="workGroup">
+        UPDATE WORK_GROUP
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="groupName">
+                GROUP_NAME = #groupName#
+            </isNotNull>
+              <isNotNull prepend="," property="memo">
+               MEMO = #memo#
+            </isNotNull>
+              <isNotNull prepend="," property="workDepartmentId">
+                WORK_DEPARTMENT_ID = #workDepartmentId# 
+            </isNotNull>
+              <isNotNull prepend="," property="valid">
+                 VALID=#valid#
+            </isNotNull>
+              <isNotNull prepend="," property="createTime">
+                CREATE_TIME = #createTime# 
+            </isNotNull>
+            <isNotNull prepend="," property="groupType">
+                GROUP_TYPE = #groupType# 
+            </isNotNull>
+        </dynamic>
+        WHERE 
+	        WORK_GROUP_ID = #workGroupId# 
+    </update>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="workGroup">
+				<selectKey keyProperty="workGroupId" resultClass="java.lang.Long">
+					SELECT WORK_GROUP_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        WORK_GROUP (
+        	WORK_GROUP_ID ,
+        	GROUP_NAME ,
+        	MEMO ,
+        	WORK_DEPARTMENT_ID ,
+        	VALID ,
+        	CREATE_TIME ,
+        	GROUP_TYPE
+        ) VALUES (
+        	#workGroupId# ,
+        	#groupName# ,
+        	#memo# ,
+        	#workDepartmentId# ,
+        	#valid# ,
+        	#createTime# ,
+        	#groupType#
+        )
+    ]]>
+    </insert>
+    <!-- 查询记录，根据主键值 -->
+    <select id="getWorkGroupById" resultMap="workGroupResult">
+	    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from WORK_GROUP 
+	        where 
+						WORK_GROUP_ID = #workGroupId# 
+	    ]]>
+    </select>
+    <!-- 查询记录， 附带部门信息 -->
+    <sql id="getWorkGroupWithDepartmentSql">
+	       select distinct t1.*, t2.department_name
+  			from WORK_GROUP t1, WORK_DEPARTMENT t2
+ 				where t1.work_department_id = t2.work_department_id
+				<isNotEmpty property="workGroupId">
+					and t1.WORK_GROUP_ID = #workGroupId# 
+				</isNotEmpty>
+				<isNotEmpty property="valid">
+					and t1.valid = #valid# 
+				</isNotEmpty>
+				<isNotEmpty property="workDepartmentId">
+				    and t1.WORK_DEPARTMENT_ID=#workDepartmentId#
+				</isNotEmpty>
+				<isNotEmpty property="groupName">
+				    and t1.GROUP_NAME like #groupName# || '%'
+				</isNotEmpty>
+				<isNotEmpty property="permUserName">
+				    and t1.WORK_GROUP_ID in(
+				    	select distinct gu.work_group_id from work_group_user gu, perm_user pu
+						where gu.valid='true' and
+						gu.perm_user_id=pu.user_id and 
+						pu.user_name like #permUserName# || '%'
+				    )
+				</isNotEmpty>
+    </sql>
+    <!-- 查询记录，附带部门信息 -->
+    <select id="getWorkGroupWithDepartment" parameterClass="map" resultMap="workGroupWithDepartmentResult">
+	    select t1.*,t2.department_name
+	        from WORK_GROUP t1,WORK_DEPARTMENT t2
+	        where 
+				t1.work_department_id = t2.work_department_id
+				<isNotEmpty property="workGroupId">
+					and t1.WORK_GROUP_ID = #workGroupId# 
+				</isNotEmpty>
+				<isNotEmpty property="valid">
+					and t1.valid = #valid# 
+				</isNotEmpty>
+				<isNotEmpty property="workDepartmentId">
+				    and t1.WORK_DEPARTMENT_ID=#workDepartmentId#
+				</isNotEmpty>
+				<isNotEmpty property="groupName">
+				    and t1.GROUP_NAME=#groupName#
+				</isNotEmpty>
+				<isNotEmpty property="groupNameByLike">
+				    and t1.GROUP_NAME like '%'||#groupNameByLike#||'%'
+				</isNotEmpty>
+	   		   <isNotEmpty property="departmentName">
+	           		and t2.department_name = #departmentName#
+	   		   </isNotEmpty>
+    </select>
+    <!-- 查询记录 根据特定条件 -->
+    <select id="queryWorkGroupByParam"  resultMap="workGroupResult" parameterClass="java.util.Map">
+       select <include refid="commonColumns"/> from WORK_GROUP 
+		<include refid="dynamicWhere"/>    
+    </select>
+    <!-- 查询记录 根据特定条件 -->
+    <select id="queryWorkGroupName"  resultMap="workGroupResult" >
+       select <include refid="commonColumns"/> from WORK_GROUP 
+		where GROUP_TYPE='jd'  
+    </select>
+       <select id="getWorkGroupPageCount" parameterClass="map" resultClass="long">
+    	select count(*) from (
+    		<include refid="getWorkGroupWithDepartmentSql"/>
+    	)
+    </select>
+    <select id="getWorkGroupPage" parameterClass="map" resultMap="workGroupWithDepartmentResult">
+    	<include refid="pageSearchHead"/>
+    	<include refid="getWorkGroupWithDepartmentSql"/>
+    	<include refid="pageSearchFoot"/>
+    </select>
+</sqlMap>

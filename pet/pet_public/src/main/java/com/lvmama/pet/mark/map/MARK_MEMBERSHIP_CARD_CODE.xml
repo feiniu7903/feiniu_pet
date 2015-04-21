@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_MEMBERSHIP_CARD_CODE" >
+
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mark.MarkMembershipCardCode" >
+    <result column="CARD_CODE" property="cardCode" />
+    <result column="CARD_ID" property="cardId" />
+    <result column="USED" property="used" />
+    <result column="CREATE_TIME" property="createTime" />
+  </resultMap>
+
+  <sql id="reuseSQL">
+		SELECT
+			code.CARD_CODE,
+			code.CARD_ID,
+			code.USED,
+			code.CREATE_TIME,
+			rownum RN
+		FROM
+			MARK_MEMBERSHIP_CARD_CODE code
+	<dynamic prepend=" WHERE ">
+		<isNotEmpty prepend=" AND " property="cardCode">code.CARD_CODE=#cardCode#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="cardId">code.CARD_ID = #cardId#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="used">code.USED = #used#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="beginTime">code.CREATE_DATE &gt;= #beginTime#</isNotEmpty>
+	    <isNotEmpty prepend=" AND " property="endTime">code.CREATE_DATE &lt;= #endTime#</isNotEmpty>		
+	</dynamic>	
+  </sql>
+
+  <!-- 查询 -->
+  <select id="query" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		SELECT *
+		  FROM (
+		  	<include refid="reuseSQL"/>
+		  )  A
+		<dynamic prepend=" WHERE "> 
+		    <isNotEmpty property="maxResults" prepend=" AND " > RN  &lt;=#maxResults#   </isNotEmpty>
+		   	<isNotEmpty property="skipResults" prepend=" AND "> RN  &gt;#skipResults#   </isNotEmpty>
+		</dynamic>
+  </select>
+  
+  <!-- 查询总数 -->
+  <select id="count" resultClass="long" parameterClass="java.util.Map">
+  	    SELECT COUNT(1) CT 
+  	      FROM  (
+  	      	<include refid="reuseSQL"/>
+  	      ) A
+  </select>
+
+  <!-- 插入 -->
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mark.MarkMembershipCardCode">
+	INSERT INTO  MARK_MEMBERSHIP_CARD_CODE
+    <dynamic prepend="(">
+	  <isNotNull prepend="," property="cardCode">CARD_CODE</isNotNull>
+	  <isNotNull prepend="," property="cardId">CARD_ID</isNotNull>
+	  <isNotNull prepend="," property="used">USED</isNotNull>
+	  <isNotNull prepend="," property="createTime">CREATE_TIME</isNotNull>
+	  )
+	 </dynamic>
+	  VALUES
+     <dynamic prepend="(">
+	  <isNotNull prepend="," property="cardCode">#cardCode#</isNotNull>
+	  <isNotNull prepend="," property="cardId">#cardId#</isNotNull>
+	  <isNotNull prepend="," property="used">#used#</isNotNull>
+	  <isNotNull prepend="," property="createTime">#createTime#</isNotNull>
+	  )
+	 </dynamic>
+  </insert>
+
+  <delete id="delete" parameterClass="java.util.Map">
+	DELETE FROM MARK_MEMBERSHIP_CARD_CODE 
+	<dynamic prepend=" WHERE ">
+		<isNotNull prepend=" AND " property="cardCode">CARD_CODE = #cardCode#</isNotNull>
+		<isNotNull prepend=" AND " property="cardId">CARD_ID =  #cardId#</isNotNull>
+	</dynamic>
+  </delete>
+  
+  	<update id="use" parameterClass="java.lang.String">
+		UPDATE MARK_MEMBERSHIP_CARD_CODE SET USED = 'true' WHERE CARD_CODE = #cardCode#
+	</update>
+
+</sqlMap>

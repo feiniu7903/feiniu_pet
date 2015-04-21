@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USERTAGS_RELATIONSHIP" >
+<typeAlias alias="UserTagsRelationship" type="com.lvmama.comm.pet.po.usertags.UserTagsRelationship" />
+    <resultMap class="UserTagsRelationship" id="BaseResultMap">
+        <result property="relationshipId" column="RELATIONSHIP_ID"/>
+        <result property="tagsId1" column="TAGS_ID1"/>
+        <result property="tagsId2" column="TAGS_ID2"/>
+        <result property="relationshipType" column="RELATIONSHIP_TYPE"/>
+        <result property="relationshipDate" column="RELATIONSHIP_DATE"/>
+    </resultMap>
+    
+    <resultMap class="UserTagsRelationship" id="BaseResultMap2">
+        <result property="relationshipId" column="RELATIONSHIP_ID"/>
+        <result property="tagsId1" column="TAGS_ID1"/>
+        <result property="tagsId2" column="TAGS_ID2"/>
+        <result property="tagsName1" column="TAGS_NAME1"/>
+        <result property="tagsName2" column="TAGS_NAME2"/>
+        <result property="relationshipType" column="RELATIONSHIP_TYPE"/>
+        <result property="relationshipDate" column="RELATIONSHIP_DATE"/>
+    </resultMap>
+    
+    <resultMap class="UserTagsRelationship" id="BaseResultMap4">
+        <result property="tagsId1" column="TAGS_ID1"/>
+        <result property="tagsId2" column="TAGS_ID2"/>
+        <result property="tagsName1" column="TAGS_NAME1"/>
+        <result property="tagsName2" column="TAGS_NAME2"/>
+    </resultMap>
+   
+    <sql id="pageHeader">
+         SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+    </sql>
+    <sql id="pageFooter">
+         ) A
+        <dynamic prepend="where">
+            <isNotEmpty property="endRows" prepend="and">
+                ROWNUM &lt;= #endRows#
+            </isNotEmpty>
+        </dynamic>
+          )
+        <dynamic prepend="where">
+         <isNotEmpty property="startRows" prepend="and">
+            rn &gt;= #startRows#
+         </isNotEmpty>      
+        </dynamic>
+    </sql>
+   
+    <select id="queryAllUserTagsRes" parameterClass="java.util.Map" resultMap="BaseResultMap2"> 
+		<include refid="pageHeader"/> 
+			SELECT T1.RELATIONSHIP_ID,T1.TAGS_NAME as TAGS_NAME1,T2.TAGS_NAME as TAGS_NAME2,
+			 T1.TAGS_ID1,T2.TAGS_ID2,T1.RELATIONSHIP_TYPE,T1.RELATIONSHIP_DATE 
+			 FROM 
+			 (SELECT * FROM LVMAMA_PET.USER_TAGS A,LVMAMA_PET.USERTAGS_RELATIONSHIP B  
+			 	WHERE A.TAGS_ID = B.TAGS_ID1 AND A.TAGS_STATUS = 1) T1 ,
+			 (SELECT * FROM LVMAMA_PET.USER_TAGS A,LVMAMA_PET.USERTAGS_RELATIONSHIP B  
+				WHERE A.TAGS_ID = B.TAGS_ID2 AND A.TAGS_STATUS = 1) T2 
+	        WHERE T1. RELATIONSHIP_ID = T2.RELATIONSHIP_ID
+	        <isNotNull prepend=" and " property="relationshipId" >
+        		T1.RELATIONSHIP_ID = #relationshipId#
+      		</isNotNull>
+      		<isNotNull prepend=" and " property="search_tagsName" >
+        		(T1.TAGS_NAME like '%$search_tagsName$%' or T2.TAGS_NAME like '%$search_tagsName$%')
+      		</isNotNull>
+      		<isNotNull prepend=" and " property="relationshipType" >
+        		T1.RELATIONSHIP_TYPE = #relationshipType#
+      		</isNotNull>
+		<include refid="pageFooter"/> 
+	</select> 
+	
+	<select id="queryAllUserTagsResByCount" parameterClass="java.util.Map" resultClass="java.lang.Long"> 
+		SELECT COUNT(*) FROM 
+		 (SELECT * FROM USER_TAGS A,USERTAGS_RELATIONSHIP B  
+		   WHERE A.TAGS_ID = B.TAGS_ID1 AND A.TAGS_STATUS = 1) T1 ,
+		 (SELECT * FROM USER_TAGS A,USERTAGS_RELATIONSHIP B  
+		   WHERE A.TAGS_ID = B.TAGS_ID2 AND A.TAGS_STATUS = 1) T2 
+		 WHERE T1. RELATIONSHIP_ID = T2.RELATIONSHIP_ID 
+		 	<isNotNull prepend=" and " property="relationshipId" >
+        		T1.RELATIONSHIP_ID = #relationshipId#
+      		</isNotNull>
+      		<isNotNull prepend=" and " property="search_tagsName" >
+        		(T1.TAGS_NAME like '%$search_tagsName$%' or T2.TAGS_NAME like '%$search_tagsName$%') 
+      		</isNotNull>
+      		<isNotNull prepend=" and " property="relationshipType" >
+        		T1.RELATIONSHIP_TYPE = #relationshipType# 
+      		</isNotNull>
+	</select>
+    
+	<insert id="saveUserTagsRes" parameterClass="java.util.Map" >
+    <selectKey keyProperty="relationshipId" resultClass="java.lang.Long">    
+    SELECT USERTAGS_RELATIONSHIP_SEQ.NEXTVAL AS TYPEID FROM DUAL
+    </selectKey>
+    INSERT INTO LVMAMA_PET.USERTAGS_RELATIONSHIP
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="relationshipId" >
+        RELATIONSHIP_ID
+      </isNotNull>
+      <isNotNull prepend="," property="tagsId1" >
+        TAGS_ID1
+      </isNotNull>
+      <isNotNull prepend="," property="tagsId2" >
+        TAGS_ID2
+      </isNotNull>
+      <isNotNull prepend="," property="relationshipType" >
+        RELATIONSHIP_TYPE
+      </isNotNull>
+      ,RELATIONSHIP_DATE
+      )
+    </dynamic>
+    VALUES
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="relationshipId" >
+        #relationshipId#
+      </isNotNull>
+      <isNotNull prepend="," property="tagsId1" >
+        #tagsId1#
+      </isNotNull>
+      <isNotNull prepend="," property="tagsId2" >
+        #tagsId2#
+      </isNotNull>
+      <isNotNull prepend="," property="relationshipType" >
+       #relationshipType#
+      </isNotNull>
+       ,sysDate
+      )
+    </dynamic>
+  </insert>
+  
+  <sql id="queryTagsResByParamWhere">
+		<dynamic prepend=" where ">
+		   <isNotEmpty prepend=" and " property="relationshipIds"> RELATIONSHIP_ID in ($relationshipIds$) </isNotEmpty>
+		   <isNotEmpty prepend=" and " property="relationshipId"> RELATIONSHIP_ID = #relationshipId# </isNotEmpty>
+		</dynamic>
+  </sql>
+  
+  <update id="updateUserTagsRes"  parameterClass="java.util.Map" >
+  UPDATE LVMAMA_PET.USERTAGS_RELATIONSHIP 
+    <dynamic prepend="SET">
+      <isNotNull prepend=" " property="relationshipType">
+        RELATIONSHIP_TYPE = #relationshipType#
+      </isNotNull>
+    </dynamic>
+    <include refid="queryTagsResByParamWhere"/>
+  </update>
+  
+  <select id="queryAllUserTagsPinyin" parameterClass="java.util.Map" resultMap="BaseResultMap4"> 
+		<include refid="pageHeader"/>
+		 SELECT t3.tags_id1,t3.tags_id2,t3.tags_name1,t3.tags_name2   
+		 FROM (SELECT T1.TAGS_ID1,T1.TAGS_ID2,T1.TAGS_NAME1,T1.TAGS_NAME2 
+		 FROM (SELECT A.TAGS_ID TAGS_ID1,B.TAGS_ID TAGS_ID2,A.TAGS_NAME TAGS_NAME1,B.TAGS_NAME TAGS_NAME2 FROM USER_TAGS A,USER_TAGS B  
+ 			WHERE A.TAGS_PINYIN = B.TAGS_PINYIN AND A.TAGS_ID !=B.TAGS_ID AND A.TAGS_STATUS = 1 AND B.TAGS_STATUS = 1 )  T1 , 
+			( SELECT A.TAGS_ID TAGS_ID3,B.TAGS_ID TAGS_ID4,A.TAGS_NAME TAGS_NAME1,B.TAGS_NAME TAGS_NAME2 FROM USER_TAGS A,USER_TAGS B  
+ 			WHERE A.TAGS_PINYIN = B.TAGS_PINYIN AND A.TAGS_ID !=B.TAGS_ID AND A.TAGS_STATUS = 1 AND B.TAGS_STATUS = 1 )  T2   
+ 			WHERE T1.TAGS_ID1 = T2.TAGS_ID4 AND T1.TAGS_ID2 = T2.TAGS_ID3 AND T1.TAGS_ID1 &lt; T1.TAGS_ID2) T3 
+	WHERE NOT EXISTS  
+ 	(SELECT * FROM USERTAGS_RELATIONSHIP A 
+ 	WHERE (T3.TAGS_ID2 = A.TAGS_ID2 AND T3.TAGS_ID1 =A.TAGS_ID1) OR (T3.TAGS_ID2=A.TAGS_ID1 AND T3.TAGS_ID1 = T3.TAGS_ID2)) 
+ 	  ORDER BY T3.TAGS_NAME1,TAGS_NAME2
+		<include refid="pageFooter"/> 
+	</select> 
+	
+	<select id="queryAllUserTagsPinyinCount" parameterClass="java.util.Map" resultClass="java.lang.Long"> 
+		SELECT count(*) FROM (
+ SELECT T1.TAGS_ID1,T1.TAGS_ID2,T1.TAGS_NAME1,T1.TAGS_NAME2 FROM (
+ SELECT A.TAGS_ID TAGS_ID1,B.TAGS_ID TAGS_ID2,A.TAGS_NAME TAGS_NAME1,B.TAGS_NAME TAGS_NAME2 FROM USER_TAGS A,USER_TAGS B 
+ WHERE A.TAGS_PINYIN = B.TAGS_PINYIN AND A.TAGS_ID !=B.TAGS_ID AND A.TAGS_STATUS = 1 AND B.TAGS_STATUS = 1 )  T1 ,
+( SELECT A.TAGS_ID TAGS_ID3,B.TAGS_ID TAGS_ID4,A.TAGS_NAME TAGS_NAME1,B.TAGS_NAME TAGS_NAME2 FROM USER_TAGS A,USER_TAGS B 
+ WHERE A.TAGS_PINYIN = B.TAGS_PINYIN AND A.TAGS_ID !=B.TAGS_ID AND A.TAGS_STATUS = 1 AND B.TAGS_STATUS = 1 )  T2 
+ WHERE T1.TAGS_ID1 = T2.TAGS_ID4 AND T1.TAGS_ID2 = T2.TAGS_ID3 AND T1.TAGS_ID1 &lt; T1.TAGS_ID2) T3
+WHERE NOT EXISTS  
+ (SELECT * FROM USERTAGS_RELATIONSHIP A 
+ WHERE (T3.TAGS_ID2 = A.TAGS_ID2 AND T3.TAGS_ID1 =A.TAGS_ID1) OR (T3.TAGS_ID2=A.TAGS_ID1 AND T3.TAGS_ID1 = T3.TAGS_ID2))
+	</select>  
+  
+  <delete id="deleteUserTagsResByParam" parameterClass="java.util.Map">
+        DELETE FROM LVMAMA_PET.USERTAGS_RELATIONSHIP 
+        <include refid="queryTagsResByParamWhere"/>
+  </delete>
+</sqlMap>

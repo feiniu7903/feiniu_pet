@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MOBILE_MARK_ACTIVITY_LOG">
+	<resultMap class="com.lvmama.comm.pet.po.mobile.MobileMarkActivityLog"
+		id="BaseResultMap">
+		<result column="MOBILE_MARK_ACTIVITY_LOG_ID" property="mobileMarkActivityLogId" />
+		<result column="MOBILE_MARK_ACTIVITY_ID" property="mobileMarkActivityId" />
+		<result column="OBJECT_ID" property="objectId" />
+		<result column="PLATFORM" property="platform" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="OBJECT_TYPE" property="objectType" />
+		<result column="USER_ID" property="userId" />
+		<result column="OBJECT_VAVLUE" property="objectVavlue" />
+	</resultMap>
+	<select id="queryTodayTotalMarkCoupon" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		select count(t.mobile_mark_activity_id) from
+		mobile_mark_activity_log t where t.created_time = trunc(sysdate) and
+		t.object_vavlue is not null and t.mobile_mark_activity_id =
+		#mobileMarkActivityId#
+	</select>
+	<select id="queryUniqueMobileMarkActivityLog" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select t.MOBILE_MARK_ACTIVITY_LOG_ID,
+		t.MOBILE_MARK_ACTIVITY_ID,
+		t.OBJECT_ID, t.PLATFORM, t.CREATED_TIME,
+		t.OBJECT_TYPE, t.USER_ID, t.OBJECT_VAVLUE from
+		mobile_mark_activity_log t where
+		t.object_id = #udid# and
+		t.mobile_mark_activity_id =
+		#mobileMarkActivityId# and rownum = 1
+	</select>
+	<select id="getTodayTotalUsedTimesByMMAId" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		select count(t.object_id) from mobile_mark_activity_log
+		t where t.created_time between trunc(sysdate) and trunc(sysdate+1) and
+		t.object_id
+		= #udid# and t.mobile_mark_activity_id =
+		#mobileMarkActivityId#
+	</select>
+	<select id="getUsedTimesByObjectId" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		select count(t.object_id) from mobile_mark_activity_log
+		t where t.object_id
+		= #udid# and t.mobile_mark_activity_id =
+		#mobileMarkActivityId#
+	</select>
+	<select id="getUsedTimesByUserId" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		select count(t.user_id) from mobile_mark_activity_log t
+		where t.user_id=
+		#userId# and t.mobile_mark_activity_id =
+		#mobileMarkActivityId#
+	</select>
+
+	<select id="selectByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileMarkActivityLog"
+		resultMap="BaseResultMap">
+		select MOBILE_MARK_ACTIVITY_LOG_ID, MOBILE_MARK_ACTIVITY_ID,
+		OBJECT_ID,
+		PLATFORM, CREATED_TIME,
+		OBJECT_TYPE, USER_ID, OBJECT_VAVLUE
+		from MOBILE_MARK_ACTIVITY_LOG
+		where MOBILE_MARK_ACTIVITY_LOG_ID =
+		#mobileMarkActivityLogId:DECIMAL#
+	</select>
+	<delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileMarkActivityLog">
+		delete from
+		MOBILE_MARK_ACTIVITY_LOG
+		where MOBILE_MARK_ACTIVITY_LOG_ID =
+		#mobileMarkActivityLogId:DECIMAL#
+	</delete>
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileMarkActivityLog">
+		<selectKey keyProperty="mobileMarkActivityLogId"
+			resultClass="java.lang.Long">
+			SELECT MOBILE_MARK_ACTIVITY_LOG_SEQ.nextval FROM DUAL
+		</selectKey>
+		insert into MOBILE_MARK_ACTIVITY_LOG (MOBILE_MARK_ACTIVITY_LOG_ID,
+		MOBILE_MARK_ACTIVITY_ID, OBJECT_ID, PLATFORM, CREATED_TIME,
+		OBJECT_TYPE, USER_ID, OBJECT_VAVLUE) values
+		(#mobileMarkActivityLogId#, #mobileMarkActivityId:DECIMAL#,
+		#objectId#, #platform:VARCHAR#, #createdTime:DATE#,
+		#objectType:VARCHAR#, #userId:DECIMAL#, #objectVavlue:VARCHAR#)
+	</insert>
+	<insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileMarkActivityLog">
+		insert into MOBILE_MARK_ACTIVITY_LOG
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="mobileMarkActivityLogId">
+				MOBILE_MARK_ACTIVITY_LOG_ID
+			</isNotNull>
+			<isNotNull prepend="," property="mobileMarkActivityId">
+				MOBILE_MARK_ACTIVITY_ID
+			</isNotNull>
+			<isNotNull prepend="," property="objectId">
+				OBJECT_ID
+			</isNotNull>
+			<isNotNull prepend="," property="platform">
+				PLATFORM
+			</isNotNull>
+			<isNotNull prepend="," property="createdTime">
+				CREATED_TIME
+			</isNotNull>
+			<isNotNull prepend="," property="objectType">
+				OBJECT_TYPE
+			</isNotNull>
+			<isNotNull prepend="," property="userId">
+				USER_ID
+			</isNotNull>
+			<isNotNull prepend="," property="objectVavlue">
+				OBJECT_VAVLUE
+			</isNotNull>
+			)
+		</dynamic>
+		values
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="mobileMarkActivityLogId">
+				#mobileMarkActivityLogId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="mobileMarkActivityId">
+				#mobileMarkActivityId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="objectId">
+				#objectId#
+			</isNotNull>
+			<isNotNull prepend="," property="platform">
+				#platform:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="createdTime">
+				#createdTime:DATE#
+			</isNotNull>
+			<isNotNull prepend="," property="objectType">
+				#objectType:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="userId">
+				#userId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="objectVavlue">
+				#objectVavlue:VARCHAR#
+			</isNotNull>
+			)
+		</dynamic>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileMarkActivityLog">
+		update MOBILE_MARK_ACTIVITY_LOG
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="mobileMarkActivityId">
+				MOBILE_MARK_ACTIVITY_ID =
+				#mobileMarkActivityId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="objectId">
+				OBJECT_ID = #objectId#
+			</isNotNull>
+			<isNotNull prepend="," property="platform">
+				PLATFORM =
+				#platform:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="createdTime">
+				CREATED_TIME =
+				#createdTime:DATE#
+			</isNotNull>
+			<isNotNull prepend="," property="objectType">
+				OBJECT_TYPE =
+				#objectType:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="userId">
+				USER_ID = #userId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="objectVavlue">
+				OBJECT_VAVLUE =
+				#objectVavlue:VARCHAR#
+			</isNotNull>
+		</dynamic>
+		where MOBILE_MARK_ACTIVITY_LOG_ID = #mobileMarkActivityLogId:DECIMAL#
+	</update>
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileMarkActivityLog">
+		update
+		MOBILE_MARK_ACTIVITY_LOG
+		set MOBILE_MARK_ACTIVITY_ID =
+		#mobileMarkActivityId:DECIMAL#,
+		OBJECT_ID = #objectId#,
+		PLATFORM =
+		#platform:VARCHAR#,
+		CREATED_TIME = #createdTime:DATE#,
+		OBJECT_TYPE =
+		#objectType:VARCHAR#,
+		USER_ID = #userId:DECIMAL#,
+		OBJECT_VAVLUE =
+		#objectVavlue:VARCHAR#
+		where MOBILE_MARK_ACTIVITY_LOG_ID =
+		#mobileMarkActivityLogId:DECIMAL#
+	</update>
+</sqlMap>

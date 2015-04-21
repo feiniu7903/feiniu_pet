@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SET_SETTLEMENT" >
+
+	<typeAlias alias="SetSettlement" type="com.lvmama.comm.pet.po.fin.SetSettlement"/>
+	<resultMap id="SetSettlementMap" class="com.lvmama.comm.pet.po.fin.SetSettlement" >
+		<result column="SETTLEMENT_ID" property="settlementId"/>
+		<result column="TARGET_ID" property="targetId"/>
+		<result column="SETTLEMENT_AMOUNT" property="settlementAmount"/>
+		<result column="STATUS" property="status"/>
+		<result column="OPERATOR_NAME" property="operatorName"/>
+		<result column="MEMO" property="memo"/>
+		<result column="CREATE_TIME" property="createTime"/>
+		<result column="PAYED_AMOUNT" property="payedAmount"/>
+		<result column="DEDUCTION_AMOUNT" property="deductionAmount"/>
+		<result column="TARGET_NAME" property="targetName"/>
+		<result column="SETTLEMENT_PERIOD" property="settlementPeriod"/>
+		<result column="ADVANCED_DAYS" property="advancedDays"/>
+		<result column="BANK_ACCOUNT_NAME" property="bankAccountName"/>
+		<result column="BANK_NAME" property="bankName"/>
+		<result column="BANK_ACCOUNT" property="bankAccount"/>
+		<result column="ALIPAY_ACCOUNT" property="alipayAccount"/>
+		<result column="ALIPAY_NAME" property="alipayName"/>
+		<result column="TARGET_TYPE" property="targetType"/>
+		<result column="BANK_LINES" property="bankLines"/>
+		<result column="COMPANY_ID" property="companyId"/>
+		<result column="SETTLEMENT_TYPE" property="settlementType"/>
+		<result column="BUSINESS_NAME" property="businessName"/>
+	</resultMap>
+	<resultMap id="SetSettlementWithSupplierMap" class="com.lvmama.comm.pet.po.fin.SetSettlement" extends="SetSettlementMap">
+		<result column="SUPPLIER_ID" property="supplierId"/>
+		<result column="SUPPLIER_NAME" property="supplierName"/>
+	</resultMap>
+	<!-- 查询结算单begin -->
+	<sql id="searchListWhere">
+		FROM  
+			SET_SETTLEMENT A,
+			SUP_SETTLEMENT_TARGET B,
+			SUP_SUPPLIER O
+			<isNotNull property="unionFlag" prepend=",">
+			SET_SETTLEMENT_ITEM D
+			</isNotNull>
+		WHERE
+			A.TARGET_ID = B.TARGET_ID
+		AND
+			B.SUPPLIER_ID =  O.SUPPLIER_ID
+		<isNotNull property="unionFlag" prepend="AND">
+			D.SETTLEMENT_ID = A.SETTLEMENT_ID
+		</isNotNull>
+		<isNotNull property="orderId" prepend="AND">
+			D.ORDER_ID = #orderId#
+		</isNotNull>
+		<isNotNull property="targetId" prepend="AND">
+			A.TARGET_ID = #targetId#
+		</isNotNull>
+		<isNotNull property="metaProductId" prepend="AND">
+			D.META_PRODUCT_ID = #metaProductId#
+		</isNotNull>
+		<isNotEmpty property="settlementId" prepend="AND">
+			A.SETTLEMENT_ID IN ($settlementId$)
+		</isNotEmpty>
+		<isNotEmpty property="status" prepend="AND">
+			A.STATUS = #status#
+		</isNotEmpty>
+		<isNotEmpty property="createTimeBegin" prepend="AND">
+			A.CREATE_TIME &gt;= TO_DATE(#createTimeBegin#,'yyyy-mm-dd')
+		</isNotEmpty>
+		<isNotEmpty property="createTimeEnd" prepend="AND">
+			A.CREATE_TIME  &lt; TRUNC(TO_DATE(#createTimeEnd#,'YYYY-MM-DD') + 1)
+		</isNotEmpty>
+		<isNotEmpty property="userName" prepend="AND">
+			A.OPERATOR_NAME = #userName#
+		</isNotEmpty>
+		<isNotEmpty property="settlementType" prepend="AND">
+			A.SETTLEMENT_TYPE = #settlementType#
+		</isNotEmpty>
+		<isNotEmpty property="filialeName" prepend="AND">
+			A.FILIALE_NAME = #filialeName#
+		</isNotEmpty>
+		<isNull property="businessName" prepend="AND">(A.BUSINESS_NAME IS NULL OR  A.BUSINESS_NAME='SUPER_ORDER_BUSINESS')</isNull>
+		<isNotNull property="businessName" prepend="AND"> A.BUSINESS_NAME=#businessName#</isNotNull>
+	</sql>
+	<select id="searchList" parameterClass="map" resultClass="SetSettlement">
+		<include refid="pageSearchHead"/>
+		SELECT 
+			DISTINCT A.SETTLEMENT_ID AS settlementId,
+			A.CREATE_TIME AS createTime,
+			A.TARGET_ID AS targetId,
+			B.NAME AS targetName,
+			NVL(A.SETTLEMENT_AMOUNT,0) AS settlementAmount,
+			A.STATUS AS status,
+			A.MEMO AS memo,
+			NVL(PAYED_AMOUNT,0) AS payedAmount,
+			O.SUPPLIER_ID AS supplierId,
+			O.SUPPLIER_NAME AS supplierName,
+			A.OPERATOR_NAME AS operatorName,
+			A.DEDUCTION_AMOUNT AS DEDUCTIONAMOUNT
+		<include refid="searchListWhere"/>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchListCount" parameterClass="map" resultClass="long">
+		SELECT COUNT(DISTINCT A.SETTLEMENT_ID)
+		<include refid="searchListWhere"/>
+	</select>
+	<!-- 查询结算单end -->
+	
+	<select id="searchSettlementIds" parameterClass="map" resultClass="long">
+		SELECT A.SETTLEMENT_ID
+		<include refid="searchListWhere"/>
+	</select>
+	
+	<select id="searchSettlementByTargetIdFilialeName" parameterClass="map"  resultMap="SetSettlementMap">
+		SELECT 
+			*
+		FROM
+			SET_SETTLEMENT 
+		WHERE 
+			TARGET_ID = #targetId#
+		AND
+			SETTLEMENT_TYPE = #settlementType#
+		AND
+			STATUS = #status#
+		<isNotNull property="filialeName" prepend="AND">
+			FILIALE_NAME = #filialeName#
+		</isNotNull>
+		<isNull property="businessName" prepend="AND">(BUSINESS_NAME IS NULL OR  BUSINESS_NAME='SUPER_ORDER_BUSINESS')</isNull>
+		<isNotNull property="businessName" prepend="AND"> BUSINESS_NAME=#businessName#</isNotNull>
+	</select>
+	<select id="searchSettlementBySettlementId" resultMap="SetSettlementWithSupplierMap">
+		SELECT DISTINCT 
+			A.*,
+			O.SUPPLIER_ID,
+			O.SUPPLIER_NAME
+		FROM
+			SET_SETTLEMENT A,
+			SUP_SETTLEMENT_TARGET B,
+			SUP_SUPPLIER O
+		WHERE 
+			A.TARGET_ID = B.TARGET_ID
+		AND
+			B.SUPPLIER_ID =  O.SUPPLIER_ID
+		AND
+			SETTLEMENT_ID = #settlementId#
+	</select>
+	<!-- 查询原始结算单信息begin -->
+	<select id="searchInitalSettlementBySettlementId" parameterClass="long" resultClass="SetSettlement">
+		SELECT 
+			A.MEMO memo,
+       		A.BANK_NAME bankName,
+       		A.BANK_ACCOUNT_NAME bankAccountName,
+       		A.BANK_ACCOUNT bankAccount,
+       		A.ALIPAY_NAME alipayName,
+       		A.ALIPAY_ACCOUNT alipayAccount,
+       		A.TARGET_ID targetId,
+       		B.SETTLEMENT_ID settlementId,
+       		A.SETTLEMENT_PERIOD settlementPeriod
+  		FROM 
+  			SUP_SETTLEMENT_TARGET A, 
+  			SET_SETTLEMENT B
+ 		WHERE 
+ 			A.TARGET_ID = B.TARGET_ID
+   		AND 
+   			B.SETTLEMENT_ID = #targetId#
+	</select>
+	
+	<!-- 修改原始结算单信息begin -->
+	<update id="updateInitalInfo" parameterClass="SetSettlement">
+		UPDATE
+			SET_SETTLEMENT
+		SET
+			BANK_NAME = #bankName#,
+			BANK_ACCOUNT_NAME = #bankAccountName#,
+			BANK_ACCOUNT = #bankAccount#,
+			ALIPAY_NAME = #alipayName#,
+			ALIPAY_ACCOUNT = #alipayAccount#
+		WHERE
+			SETTLEMENT_ID = #settlementId#
+	</update>
+	<!-- 修改原始结算单信息end -->
+	
+	<update id="updateSettlement" parameterClass="map">
+		UPDATE
+			SET_SETTLEMENT
+		SET
+			SETTLEMENT_ID =  #settlementId#
+			<isNotNull property="settlementAmount" prepend=",">
+				SETTLEMENT_AMOUNT = #settlementAmount#
+			</isNotNull>
+			<isNotNull property="payedAmount" prepend=",">
+				PAYED_AMOUNT = #payedAmount#
+			</isNotNull>
+			<isNotNull property="status" prepend=",">
+				STATUS = #status#
+			</isNotNull>
+			<isNotNull property="settlementTime" prepend=",">
+				SETTLEMENT_TIME = #settlementTime#
+			</isNotNull>
+			<isNotNull property="memo" prepend=",">
+				MEMO = #memo#
+			</isNotNull>
+			<isNotNull property="deductionAmount" prepend=",">
+				DEDUCTION_AMOUNT = #deductionAmount#
+			</isNotNull>
+			
+		WHERE
+			SETTLEMENT_ID = #settlementId#
+	</update>
+	
+	<insert id="insert" parameterClass="SetSettlement">
+		<selectKey keyProperty="settlementId" resultClass="long">
+  			SELECT 
+  				SET_SETTLEMENT_SEQ.NEXTVAL AS settlementId
+  			FROM
+  				DUAL
+  		</selectKey>
+  		INSERT INTO
+  			SET_SETTLEMENT
+  			(
+  				SETTLEMENT_ID,
+				TARGET_ID,
+				SETTLEMENT_AMOUNT,
+				STATUS,
+				OPERATOR_NAME,
+				MEMO,
+				CREATE_TIME,
+				PAYED_AMOUNT,
+				TARGET_NAME,
+				SETTLEMENT_PERIOD,
+				ADVANCED_DAYS,
+				BANK_ACCOUNT_NAME,
+				BANK_NAME,
+				BANK_ACCOUNT,
+				ALIPAY_ACCOUNT,
+				ALIPAY_NAME,
+				TARGET_TYPE,
+				BANK_LINES,
+				COMPANY_ID,
+				SETTLEMENT_TYPE,
+				FILIALE_NAME,
+				BUSINESS_NAME
+  			)
+  		VALUES
+  			(
+  				#settlementId#,
+  				#targetId#,
+  				#settlementAmount#,
+  				#status#,
+  				#operatorName#,
+  				#memo#,
+  				SYSDATE,
+  				#payedAmount#,
+  				#targetName#,
+  				#settlementPeriod#,
+  				NVL(#advancedDays#,0),
+  				#bankAccountName#,
+  				#bankName#,
+  				#bankAccount#,
+  				#alipayAccount#,
+  				#alipayName#,
+  				#targetType#,
+  				#bankLines#,
+  				#companyId#,
+  				#settlementType#,
+				#filialeName#,
+				#businessName#
+  			)
+	</insert>
+	
+	 <update id="updateSettlementSettlementAmount" parameterClass="long">
+		UPDATE 
+			SET_SETTLEMENT C 
+		SET 
+			C.SETTLEMENT_AMOUNT = (SELECT NVL(SUM(A.TOTAL_SETTLEMENT_PRICE),0)
+		FROM 
+			SET_SETTLEMENT_ITEM A
+		WHERE 
+	      	A.SETTLEMENT_ID = #settlementId#)
+		WHERE 
+			C.SETTLEMENT_ID = #settlementId#
+	</update>
+</sqlMap>

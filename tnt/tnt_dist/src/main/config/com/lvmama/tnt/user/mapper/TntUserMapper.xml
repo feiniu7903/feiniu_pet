@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.lvmama.tnt.user.mapper.TntUserMapper">
+	<resultMap id="baseResultMap" type="tntUser">
+		<result property="userId" column="USER_ID" />
+		<result property="userName" column="USER_NAME" />
+		<result property="realName" column="REAL_NAME" />
+		<result property="loginPassword" column="LOGIN_PASSWORD" />
+		<result property="isOnline" column="IS_ONLINE" />
+		<result property="lastLoginDate" column="LAST_LOGIN_DATE" />
+		<result property="isCompany" column="IS_COMPANY" />
+		<association property="detail" javaType="tntUserDetail">
+			<id property="userId" column="USER_ID" />
+			<id property="userDetailId" column="USER_DETAIL_ID" />
+			<result column="GENDER" property="gender" />
+			<result property="duties" column="DUTIES" />
+			<result property="department" column="DEPARTMENT" />
+			<result property="mobileNumber" column="MOBILE_NUMBER" />
+			<result property="phoneNumber" column="PHONE_NUMBER" />
+			<result property="faxNumber" column="FAX_NUMBER" />
+			<result property="address" column="ADDRESS" />
+			<result property="email" column="EMAIL" />
+			<result property="qqAccount" column="QQ_ACCOUNT" />
+			<result property="imageUrl" column="IMAGE_URL" />
+			<result property="cityId" column="CITY_ID" />
+			<result property="companyName" column="COMPANY_NAME" />
+			<result property="companyTypeId" column="COMPANY_TYPE_ID" />
+			<result property="chargePhone" column="CHARGE_PHONE" />
+			<result property="serviceTel" column="SERVICE_TEL" />
+			<result property="legalRepresentative" column="LEGAL_REPRESENTATIVE" />
+			<result property="companyProfile" column="COMPANY_PROFILE" />
+			<result property="employeeNum" column="EMPLOYEE_NUM" />
+			<result property="isEmailChecked" column="IS_EMAIL_CHECKED" />
+			<result property="isMobileChecked" column="IS_MOBILE_CHECKED" />
+			<result property="createdDate" column="CREATED_DATE" />
+			<result property="updatedDate" column="UPDATED_DATE" />
+			<result property="finalStatus" column="FINAL_STATUS" />
+			<result property="materialStatus" column="MATERIAL_STATUS" />
+			<result property="infoStatus" column="INFO_STATUS" />
+			<result property="failReason" column="FAIL_REASON" />
+			<result property="contractStartDate" column="CONTRACT_START_DATE" />
+			<result property="contractEndDate" column="CONTRACT_END_DATE" />
+			<result property="memo" column="MEMO" />
+			<result property="payType" column="PAY_TYPE" />
+			<result property="zipCode" column="zip_Code" />
+			<result property="netUrl" column="net_Url" />
+			<result property="provinceId" column="province_Id" />
+			<result property="chargeName" column="CHARGE_NAME" />
+		</association>
+		<association property="recognizance" javaType="tntRecognizance">
+			<id property="userId" column="USER_ID" />
+			<result property="limits" column="LIMITS" />
+			<result property="balance" column="BALANCE" />
+		</association>
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		USER_ID,USER_NAME,REAL_NAME,LOGIN_PASSWORD,IS_ONLINE,LAST_LOGIN_DATE,IS_COMPANY
+	    ]]>
+	</sql>
+
+	<!-- 用于select关联detail查询公用抽取的列 -->
+	<sql id="join_detail_columns">
+	    <![CDATA[
+		a.USER_ID,a.USER_NAME,a.REAL_NAME,a.LOGIN_PASSWORD,a.IS_ONLINE,a.LAST_LOGIN_DATE,a.IS_COMPANY,CHARGE_NAME,
+		b.USER_DETAIL_ID,b.GENDER,b.DUTIES,b.DEPARTMENT,b.MOBILE_NUMBER,b.PHONE_NUMBER,b.FAX_NUMBER,b.ADDRESS,b.EMAIL,
+		b.QQ_ACCOUNT,b.IMAGE_URL,b.CITY_ID,b.COMPANY_NAME,b.COMPANY_TYPE_ID,b.CHARGE_PHONE,b.SERVICE_TEL,b.LEGAL_REPRESENTATIVE,
+		b.COMPANY_PROFILE,b.EMPLOYEE_NUM,b.IS_EMAIL_CHECKED,b.IS_MOBILE_CHECKED,b.CREATED_DATE,b.UPDATED_DATE,b.FINAL_STATUS,
+		b.MATERIAL_STATUS,b.INFO_STATUS,b.FAIL_REASON,b.CONTRACT_START_DATE,b.CONTRACT_END_DATE,b.MEMO,b.PAY_TYPE,zip_Code,net_Url,province_Id
+	    ]]>
+	</sql>
+
+	<!-- 用于select关联detail查询条件 -->
+	<sql id="joinDetailWhereSQL">
+		<where>
+			<if test="userId!=null and userId!=''">
+				AND a.USER_ID = #{userId}
+			</if>
+			<if test="userName!=null and userName!=''">
+				AND a.USER_NAME = #{userName}
+			</if>
+			<if test="realName!=null and realName!=''">
+				AND a.REAL_NAME like
+				CONCAT(CONCAT('%',#{realName}),'%')
+			</if>
+			<if test="isCompany!=null and isCompany!=''">
+				AND a.IS_COMPANY = #{isCompany}
+			</if>
+			<if test="detail.mobileNumber!=null and detail.mobileNumber!=''">
+				AND b.mobile_number = #{detail.mobileNumber}
+			</if>
+			<if test="detail.email!=null and detail.email!=''">
+				AND b.email = #{detail.email}
+			</if>
+			<if test="detail.payType!=null and detail.payType!=''">
+				AND b.PAY_TYPE = #{detail.payType}
+			</if>
+			<if test="queryStartDate!=null and queryStartDate!=''">
+			 <![CDATA[
+				AND to_date(to_char(b.CREATED_DATE,'yyyy-MM-dd') ,'yyyy-MM-dd') >= to_date(#{queryStartDate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if test="queryEndDate!=null and queryEndDate!=''">
+			 <![CDATA[
+				AND to_date(to_char(b.CREATED_DATE,'yyyy-MM-dd') ,'yyyy-MM-dd') <= to_date(#{queryEndDate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if
+				test="queryStartContractStartDate!=null and queryStartContractStartDate!=''">
+			 <![CDATA[
+				AND b.CONTRACT_START_DATE >= to_date(#{queryStartContractStartDate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if
+				test="queryEndContractStartDate!=null and queryEndContractStartDate!=''">
+			 <![CDATA[
+				AND b.CONTRACT_START_DATE <= to_date(#{queryEndContractStartDate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if
+				test="queryStartContractEndDate!=null and queryStartContractEndDate!=''">
+			 <![CDATA[
+				AND b.CONTRACT_END_DATE >= to_date(#{queryStartContractEndDate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if test="queryEndContractEndDate!=null and queryEndContractEndDate!=''">
+			 <![CDATA[
+				AND b.CONTRACT_END_DATE <= to_date(#{queryEndContractEndDate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if
+				test="detail!=null and detail.finalStatus!=null and detail.finalStatus!=''">
+				AND b.FINAL_STATUS = #{detail.finalStatus}
+			</if>
+			<if
+				test="detail!=null and detail.companyTypeId!=null and detail.companyTypeId!=''">
+				AND b.COMPANY_TYPE_ID = #{detail.companyTypeId}
+			</if>
+		</where>
+	</sql>
+
+
+
+	<!-- 用于select关联detail查询语句 -->
+	<sql id="selectWithDetail">
+		select
+		<include refid="join_detail_columns" />
+		from TNT_USER a left
+		join
+		TNT_USER_DETAIL b on a.USER_ID =
+		b.USER_ID
+		<include refid="joinDetailWhereSQL" />
+	</sql>
+
+	<!-- 用于和detail的关联查询 -->
+	<select id="selectOneWithDetail" resultMap="baseResultMap"
+		parameterType="tntUser">
+		<include refid="selectWithDetail" />
+	</select>
+
+	<!-- 用于和detail的关联查询 -->
+	<select id="selectListWithDetail" resultMap="baseResultMap"
+		parameterType="tntUser">
+		<include refid="selectWithDetail" />
+	</select>
+
+	<!-- 用于和detail的分页关联查询 -->
+	<select id="fetchPageWithDetail" resultMap="baseResultMap"
+		parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		select
+		<include refid="join_detail_columns" />
+		,c.LIMITS,c.BALANCE
+		from TNT_USER a left
+		join
+		TNT_USER_DETAIL b on
+		a.USER_ID =
+		b.USER_ID
+		left
+		join TNT_RECOGNIZANCE c
+		on a.USER_ID =
+		c.USER_ID
+		<include refid="pageJoinDetailWhereSQL" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<sql id="pageJoinDetailWhereSQL">
+		<where>
+			<if test="param.userId!=null and param.userId!=''">
+				AND a.USER_ID = #{param.userId}
+			</if>
+			<if test="param.userName!=null and param.userName!=''">
+				AND a.USER_NAME = #{param.userName}
+			</if>
+			<if test="param.realName!=null and param.realName!=''">
+				AND a.REAL_NAME like
+				CONCAT(CONCAT('%',#{param.realName}),'%')
+			</if>
+			<if test="param.isCompany!=null and param.isCompany!=''">
+				AND a.IS_COMPANY = #{param.isCompany}
+			</if>
+			<if test="param.detail.payType!=null and param.detail.payType!=''">
+				AND b.PAY_TYPE = #{param.detail.payType}
+			</if>
+			<if test="param.queryStartDate!=null and param.queryStartDate!=''">
+			 <![CDATA[
+				AND to_date(to_char(b.CREATED_DATE,'yyyy-MM-dd') ,'yyyy-MM-dd') >= to_date(#{param.queryStartDate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if test="param.queryEndDate!=null and param.queryEndDate!=''">
+			 <![CDATA[
+				AND to_date(to_char(b.CREATED_DATE,'yyyy-MM-dd') ,'yyyy-MM-dd') <= to_date(#{param.queryEndDate},'yyyy-mm-dd')
+			]]>
+			</if>
+
+			<if
+				test="param.queryStartContractStartDate!=null and param.queryStartContractStartDate!=''">
+			 <![CDATA[
+				AND b.CONTRACT_START_DATE >= to_date(#{param.queryStartContractStartDate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if
+				test="param.queryEndContractStartDate!=null and param.queryEndContractStartDate!=''">
+			 <![CDATA[
+				AND b.CONTRACT_START_DATE <= to_date(#{param.queryEndContractStartDate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if
+				test="param.queryStartContractEndDate!=null and param.queryStartContractEndDate!=''">
+			 <![CDATA[
+				AND b.CONTRACT_END_DATE >= to_date(#{param.queryStartContractEndDate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if
+				test="param.queryEndContractEndDate!=null and param.queryEndContractEndDate!=''">
+			 <![CDATA[
+				AND b.CONTRACT_END_DATE <= to_date(#{param.queryEndContractEndDate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if
+				test="param.detail!=null and param.detail.finalStatus!=null and param.detail.finalStatus!=''">
+				AND b.FINAL_STATUS = #{param.detail.finalStatus}
+			</if>
+			<if
+				test="param.detail!=null and param.detail.companyTypeId!=null and param.detail.companyTypeId!=''">
+				AND b.COMPANY_TYPE_ID = #{param.detail.companyTypeId}
+			</if>
+		</where>
+	</sql>
+
+	<select id="countWithDetail" parameterType="tntUser" resultType="java.lang.Integer">
+		select
+		count(1)
+		from TNT_USER a left
+		join
+		TNT_USER_DETAIL b on
+		a.USER_ID =
+		b.USER_ID
+		<include refid="joinDetailWhereSQL" />
+	</select>
+
+	<insert id="insert" parameterType="tntUser">
+		<selectKey resultType="java.lang.Long" keyProperty="userId"
+			order="BEFORE">
+			select TNT_USER_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_USER (
+		USER_ID ,
+		USER_NAME ,
+		REAL_NAME ,
+		LOGIN_PASSWORD ,
+		IS_ONLINE ,
+		LAST_LOGIN_DATE ,
+		IS_COMPANY
+		) VALUES (
+		#{userId} ,
+		#{userName,jdbcType=VARCHAR} ,
+		#{realName,jdbcType=VARCHAR},
+		#{loginPassword,jdbcType=VARCHAR} ,
+		#{isOnline,jdbcType=VARCHAR} ,
+		#{lastLoginDate,jdbcType=DATE} ,
+		#{isCompany,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="tntUser">
+		UPDATE TNT_USER
+		<set>
+			<if test="userName != null">
+				USER_NAME = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="realName != null">
+				REAL_NAME = #{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="loginPassword != null">
+				LOGIN_PASSWORD = #{loginPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="isOnline != null">
+				IS_ONLINE = #{isOnline,jdbcType=VARCHAR},
+			</if>
+			<if test="lastLoginDate != null">
+				LAST_LOGIN_DATE = #{lastLoginDate,jdbcType=DATE},
+			</if>
+		</set>
+		WHERE USER_ID = #{userId}
+	</update>
+
+	<delete id="delete">
+		DELETE FROM TNT_USER WHERE
+		USER_ID = #{id}
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap">
+		SELECT
+		<include refid="columns" />
+	    <![CDATA[
+		    FROM TNT_USER 
+	        WHERE 
+		        USER_ID = #{id} 
+	    ]]>
+	</select>
+
+	<select id="getUserByUserName" resultMap="baseResultMap">
+		SELECT
+		<include refid="columns" />
+	    <![CDATA[
+		    FROM TNT_USER
+	        WHERE 
+		        USER_NAME = #{userName}
+	    ]]>
+	</select>
+
+	<select id="getByUserId" resultMap="baseResultMap"
+		parameterType="java.lang.Long">
+		SELECT
+		<include refid="columns" />
+	    <![CDATA[
+		    FROM TNT_USER
+	        WHERE 
+		        USER_ID = #{userId}
+	    ]]>
+	</select>
+
+
+	<select id="checkUnique" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(*) FROM TNT_USER T,TNT_USER_DETAIL TD
+		WHERE
+		T.USER_ID=TD.USER_ID
+		<if test="userName!=null and userName!=''">
+			AND T.USER_NAME = #{userName,jdbcType=VARCHAR}
+		</if>
+		<if test="mobile!=null and mobile!=''">
+			AND TD.MOBILE_NUMBER = #{mobile,jdbcType=VARCHAR}
+		</if>
+		<if test="email!=null and email!=''">
+			AND TD.EMAIL = #{email,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="findPage" resultMap="baseResultMap" parameterType="java.util.Map">
+		<include refid="basic.pageSearchHead" />
+		SELECT *
+		FROM TNT_USER
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="queryUserByMobileOrEmail" resultMap="baseResultMap"
+		parameterType="tntUser">
+		SELECT
+		<include refid="join_detail_columns" />
+		FROM TNT_USER a, TNT_USER_DETAIL b
+		WHERE b.USER_ID = a.USER_ID
+		<if test="email!=null">
+			AND b.EMAIL = #{email}
+		</if>
+		<if test="mobileNumber!=null">
+			AND b.MOBILE_NUMBER = #{mobileNumber}
+		</if>
+	</select>
+
+</mapper>

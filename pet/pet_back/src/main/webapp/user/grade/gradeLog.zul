@@ -1,0 +1,28 @@
+<?page title="会员等级日志" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./gradeLog"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="gradeLog" title="会员等级日志"
+		apply="com.lvmama.pet.web.user.grade.GradeLogAction">
+		<label>会员等级日志</label>
+		<listbox id="box" fixedLayout="true"
+			model="@{saction.userGradeLogList}">
+			<listhead>
+				<listheader label="用户Id" />
+				<listheader label="会员级别" width="10%" />
+				<listheader label="升降级时间" />
+				<listheader label="有效期" />
+				<listheader label="操作人" />
+				<listheader label="备注" />
+			</listhead>
+			<listitem self="@{each='log'}" height="25px">
+				<listcell label="@{log.userId}" />
+				<listcell label="@{log.chGrade}" />
+				<listcell label="@{log.createTime}" />
+				<listcell label="@{log.validityDate}" />
+				<listcell label="@{log.operateName}" />
+				<listcell label="@{log.memo}" />
+			</listitem>
+		</listbox>
+	</window>
+</zk>

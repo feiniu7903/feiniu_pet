@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ANN_HONGBAO_HJ">
+	<resultMap id="annResultMap" class="com.lvmama.comm.pet.po.user.AnnHongbaoHj"> 
+	     <result property="id" column="ID"/>
+	     <result property="userId" column="USER_ID"/>
+		 <result property="createTime" column="CREATE_TIME"/>
+		 <result property="hjMoney" column="HJ_MONEY"/>
+		 <result property="flag" column="FLAG"/>
+	</resultMap>
+	
+	 
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.user.AnnHongbaoHj">
+		<selectKey resultClass="java.lang.Long" keyProperty="id" >
+			select ANN_HONGBAO_HJ_SEQ.NEXTVAL as id from DUAL
+		</selectKey>
+		INSERT INTO ANN_HONGBAO_HJ
+			<dynamic prepend="(">
+			    ID,
+ 				<isNotEmpty property="userId" prepend=",">USER_ID</isNotEmpty>
+				<isNotEmpty property="createTime" prepend=",">CREATE_TIME</isNotEmpty>
+				<isNotEmpty property="hjMoney" prepend=",">HJ_MONEY</isNotEmpty>
+				<isNotEmpty property="flag" prepend=",">FLAG</isNotEmpty>
+				)
+			</dynamic>
+			VALUES
+			<dynamic prepend="(">
+				#id#,
+				<isNotEmpty property="userId" prepend=",">#userId#</isNotEmpty>
+				<isNotEmpty property="createTime" prepend=",">sysdate</isNotEmpty>
+				<isNotEmpty property="hjMoney" prepend=",">#hjMoney#</isNotEmpty>
+				<isNotEmpty property="flag" prepend=",">#flag#</isNotEmpty>
+				)
+			</dynamic>
+	</insert>
+
+      <sql id="selectSQL">
+	     SELECT S.* FROM ANN_HONGBAO_HJ S
+	       <dynamic prepend="  where ">
+		         <isNotEmpty property="userId" prepend=" and ">
+		           S.user_id=#userId#
+		         </isNotEmpty>
+		         <isNotEmpty property="createTime" prepend=" and ">
+		           TO_CHAR(S.CREATE_TIME,'YYYY-MM-DD')=TO_CHAR(#createTime#,'YYYY-MM-DD')
+		         </isNotEmpty>
+	       </dynamic>
+     </sql>
+	<select id="selectByParam" resultMap="annResultMap" parameterClass="java.util.HashMap">
+		<include refid="selectSQL"/>
+	</select>
+	
+	<select id="selectSumMoneyByUserId" parameterClass="map" resultClass="java.lang.Long">
+		select nvl(sum(hj_money),0) as sumMoney from LVMAMA_PET.ANN_HONGBAO_HJ where user_id = #userId#
+	</select>
+</sqlMap>

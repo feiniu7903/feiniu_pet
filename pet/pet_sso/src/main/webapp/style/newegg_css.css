@@ -1,0 +1,129 @@
+@charset "utf-8";
+/* reset */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{padding:0;margin:0; font-family:'宋体';}
+body {font:12px/1.5 Tahoma,Helvetica,simsun,sans-serif;color:#666;word-wrap:break-word;word-break:break-all;background-color:#FFFFFF;}
+abbr,article,aside,bb,datagrid,datalist,details,dialog,eventsource,figure,footer,header,mark,menu,meter,nav,output,progress,section,time{margin:0;padding:0;display:block; }
+table{border-collapse:collapse;border-spacing:0;}
+ol,ul{list-style:none outside;}
+em,i,strong,b{font-weight:normal;font-style:normal;}
+caption,th{text-align:left;}
+h1,h2,h3,h4,h5,h6{font-size:100%; font-weight:normal}
+fieldset,img{border:0;}
+a{text-decoration:none;color:#0055ee;}
+a:hover{text-decoration:none;}
+input,textarea{padding:2px;}
+input,select,textarea{font:12px Tahoma,Arial,simsun;}
+
+
+.clearfix:after{content:".";height:0;visibility:hidden;display:block;clear:both;font-size:0;line-height:0}
+.clearfix{*zoom:1;}
+.clear{ clear:both}
+
+.ztfooter {font: 12px/1.5 arial,"simsun";text-align: center;margin:10px auto;}
+.xindan{ background:url(../images/newegg/newegg/xindan_bg.jpg) repeat-x #d5fffe; height:100%; width:100%; overflow:hidden; _height:2500px;}
+.xindan_980{ width:980px; margin:0 auto;}
+.xindan_top{ background:url(../images/newegg/top_bg.jpg) no-repeat left center; width:980px; height:373px; position:relative}
+.xindan_top .top_times{ position:absolute; width:300px; height:21px; right:0px; top:79px; text-align:center; color:#00c1c8; font-size:15px; font-weight:bold; font-family:Arial, Helvetica, sans-serif}
+.xindan_top .top_button{ position:absolute; top:320px; left:384px;}
+.xindan_sport1{ background:url(../images/newegg/top_bg1.jpg) no-repeat left center; width:980px; height:322px; position:relative}
+.xindan_sport1 .sport_join{ position:absolute; top:170px; left:55px;}
+.xindan_main{ background:#feffad; width:980px;}
+.xindan_main .xindan_rule{ background:url(../images/newegg/join.gif) no-repeat center top ; width:976px; height:221px; position:relative; margin:0 auto; margin-left:3px;}
+.xindan_main .xindan_rule .rule_bt{ position:absolute; left:227px; top:87px;}
+.xindan_main .pic_lianjie{ margin:0 auto; text-align:center; height:617px;}
+
+.xindan_main .sp_rule2{ margin:0 auto; text-align:center;}
+.xindan_main .sp_rule_main{ width:948px; border-left:#edede9 solid 1px;border-right:#edede9 solid 1px; background:#FFF; margin-left:16px;}
+.xindan_main .bottom_pic{ margin-left:7px;}
+.xindan_main .sp_rule_main .sp_rule_main_900{ width:900px; margin: 0 auto; overflow:hidden;}
+.rule_mian{ float:left; width:600px;}
+.form_bg{ background:url(../images/newegg/form_bg.gif) no-repeat left center; width:580px; height:133px; padding:14px 10px;}
+.form_bg .area_list{ margin-top:10px;}
+.text_list{ color:#333333; font-size:14px; height:24px; overflow:hidden; }
+.text_title{float:left; width:70px; height:24px; font-size:14px;}
+.text_title em{ color:#f00; margin-right:5px;}
+.text_txt{float:left; width:150px;}
+.text_tips{float:left; color:#336699}
+.form_lista{width:600px; height:24px; overflow:hidden; line-height:24px;}
+.txt_bg{ background:url(../images/newegg/txt_form.gif) no-repeat left top; width:140px; height:24px; border:none;}
+
+.form_bg .button_list span{ float:left; width:150px; color:#336699;}
+.form_bg .button_list span em{ color:#336699; font-size:25px; font-family:Arial, Helvetica, sans-serif}
+.form_bg .area_bg{ background:url(../images/newegg/area.gif) no-repeat top left; width:550px; height:51px; border:0px; padding:9px 10px; overflow:hidden; color:#999999}
+.form_bg .area_bt{ background:url(../images/newegg/form_bt.gif) no-repeat left top; width:90px; height:29px; border:0px; cursor:pointer; float:right; margin-right:50px; margin-top:3px; display:inline}
+
+.rule_mian .ph_list{ overflow:hidden} 
+.rule_mian .ph_list li{ padding:10px; border-bottom:#ebebeb solid 1px;}
+.rule_mian .ph_list li h3{ font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#cc0066; font-weight:bold; margin-left:0px;}
+.rule_mian .ph_list li h3 em{ color:#999}
+.rule_mian .ph_list li p{ color:#333333}
+.rule_mian .ph_list li .ph_time{ color:#999999}
+.ph_page{ margin-top:15px;}
+.ph_page a{ float:right; width:25px; height:22px; border:#dddddd solid 1px; background:#f2f2f2; text-align:center; line-height:22px; vertical-align:middle; margin-right:2px;}
+.ph_page .page_next{ width:54px;}
+.ph_page .shenglie{ border:none; background:none}
+.ph_page .page_hover{border:none; background:none; color:#a706a8; font-weight:bold}
+
+.rule_side{ float:right; width:280px;}
+.rule_side .join_rules{ background:url(../images/newegg/side.gif) no-repeat left top; width:265px; height:156px; padding-top:30px; padding-left:15px;}
+.rule_side .join_rules p{ color:#0055ee; line-height:20px; font-size:13px; font-family:'微软雅黑'}
+.lp_contant{ margin-top:12px;}
+.lp_contant .lp_pic{ width:278px; border-left:#e2e3e3 solid 1px; border-right:#e2e3e3 solid 1px; background:#eef7e5;}
+.lp_contant .lp_pic ul li{ padding:13px 13px 0px 13px;}
+.bottom_pic1{ text-align:center}
+
+
+/*****  弹出层  *****/
+html,body {_height:100%;_width:100%;}
+.bg-tan {background-color:#000;filter:Alpha(opacity=40);-moz-opacity:0.4;opacity:0.4; position:absolute;zoom:1;width:100%; height:2600px;left:0;top:0;z-index:996;display:none;overflow:hidden;  }
+.tan_lvmama{position:absolute;z-index:999; border:#cc0066 solid 3px;left:0px; top:0px;background:#fff; width:576px; height:269px;display:none}
+.tan_lvmama1{position:absolute;z-index:999; border:#cc0066 solid 3px;left:0px; top:0px;background:#fff; width:576px; height:320px; display:none}
+.tan_lvmama2{position:absolute;z-index:999; border:#cc0066 solid 3px;left:0px; top:0px;background:#fff; width:576px; height:320px;display:none}
+.tan_lvmama3{position:absolute;z-index:999; border:#cc0066 solid 3px;left:0px; top:0px;background:#fff; width:576px; height:250px;display:none}
+.tan_lvmama4{position:absolute;z-index:999; border:#cc0066 solid 3px;left:0px; top:0px;background:#fff; width:408px; height:202px;display:none}
+.tan_lvmama5{position:absolute;z-index:999; border:#cc0066 solid 3px;left:0px; top:0px;background:#fff; width:408px; height:160px;display:none}
+.lvmama_login{ width:550px; margin:0 auto;}
+
+.login_title{ height:30px; border-bottom:1px solid #d8dfea}
+.login_title h4{ float:left; font-family:14px; color:#000; height:30px; line-height:30px; vertical-align:middle; font-weight:bold}
+.login_title .closed{ float:right; margin-top:3px;cursor:pointer}
+ h3{ color:#555555; margin-left:15px; font-size:16px; font-weight:bold }
+.login_laber{ float:left; width:300px; margin-top:10px; border-right:#d8dfea solid 1px; height:212px; overflow:hidden}
+.login_laber .zhanghao{ float:left; width:60px; height:28px;  text-align:right; line-height:28px; vertical-align:middle; margin-top:15px;}
+
+.login_txt{ float:left; background:url(../images/newegg/login.gif) no-repeat left top; width:180px; height:28px; border:0px; margin-top:15px; color:#999999;line-height:28px; vertical-align:middle;}
+
+.login_laber a{ float:left; width:200px; margin-left:60px; display:inline-block; overflow:hidden; clear:both; zoom:1}
+.login_laber .bt_lv{ background:url(../images/newegg/bt_lv.gif) no-repeat left top;cursor:pointer; width:108px; height:35px; text-align:center; line-height:35px; vertical-align:middle; border:0px; margin-left:60px; font-size:16px; color:#fff; font-weight:bold; margin-top:10px;}
+
+.login_side{ float:left; margin-top:10px;}
+.login_side .color_list{color:#cc0066}
+.step_list{ margin-top:11px;}
+.zhuci_tips{ line-height:28px; height:28px; vertical-align:middle; color:#999999; margin-top:10px;}
+.zhuci_title{  margin-top:10px;}
+
+.bt_lv1{ background:url(../images/newegg/bt_lv.gif) no-repeat left top; width:108px; height:35px; text-align:center; line-height:35px; vertical-align:middle; border:0px;  font-size:16px; color:#fff; font-weight:bold; margin-top:10px; cursor:pointer}
+.bt_lv2{ background:url(../images/newegg/bt_lv.gif) no-repeat left top; width:108px; height:35px; text-align:center; line-height:35px; vertical-align:middle; border:0px;  font-size:16px; color:#fff; font-weight:bold; margin-top:10px; cursor:pointer; margin-left:49px;}
+.sj_renzhheng{ margin-top:28px; margin-left:13px;}
+.sj_renzhheng p span{ color:#cc0066}
+.jh_mima{ margin:25px 0px 0px 24px;}
+.jh_title{ float:left; width:50px; height:28px; line-height:28px; vertical-align:middle; color:#333333}
+.jh_mima_txt{ background:url(../images/newegg/jh.gif) no-repeat left top; width:108px; height:28px; border:0px;}
+.dianji_jh{ margin-top:20px;}
+.zhuci_succes{ margin-top:30px; margin-left:35px;}
+.succus_pic{ float:left}
+.succus_info{ float:left}
+.succus_txt{ color:#339900; font-size:16px;}
+.succus_txt1{ color:#339900; font-size:12px;}
+
+.choujiang{ width:382px; margin:0 auto }
+.cj_list{ margin-top:23px; margin-left:35px}
+.cj_list p span{ color:#cc0066; font-family:Arial, Helvetica, sans-serif; font-weight:bold}
+.cj_list .tishi{ font-weight:bold}
+.cj_list .tishi em{ color:#cc0066;}
+.succus_bt{ margin-left:100px; margin-top:10px;}
+
+.footer_xindan{font-size:12px; color:#666666; font-weight:bold; text-align:center}
+.footer_xindan span{ color:#cc0066}
+.tanchu01{cursor:pointer}
+.zhuci{cursor:pointer}

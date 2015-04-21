@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+                   
+<sqlMap namespace="USER_COOPERATION_USER">
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.user.UserCooperationUser">
+	    <selectKey resultClass="java.lang.Long" keyProperty="cooperationUserId" >
+			select user_cooperation_user_seq.nextval as cooperationUserId from DUAL
+		</selectKey>
+		INSERT INTO user_cooperation_user
+			<dynamic prepend="(">
+				cooperation_user_id,
+				<isNotEmpty property="cooperation" prepend=",">cooperation</isNotEmpty>
+				<isNotEmpty property="userId" prepend=",">user_id</isNotEmpty>
+				<isNotEmpty property="cooperationUserAccount" prepend=",">cooperation_user_account</isNotEmpty>
+				)
+			</dynamic>
+			VALUES
+			<dynamic prepend="(">
+				#cooperationUserId#,
+				<isNotEmpty property="cooperation" prepend=",">#cooperation#</isNotEmpty>
+				<isNotEmpty property="userId" prepend=",">#userId#</isNotEmpty>
+				<isNotEmpty property="cooperationUserAccount" prepend=",">#cooperationUserAccount#</isNotEmpty>
+				)
+			</dynamic>
+	</insert>
+
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.user.UserCooperationUser">
+		UPDATE user_cooperation_user
+		<dynamic prepend="SET">
+				<isNotEmpty property="cooperation" prepend=",">cooperation = #cooperation#</isNotEmpty>
+				<isNotEmpty property="userId" prepend=",">user_id = #userId#</isNotEmpty>
+				<isNotEmpty property="cooperationUserAccount" prepend=",">cooperation_user_account = #cooperationUserAccount#</isNotEmpty>
+			</dynamic>
+		WHERE cooperation_user_id = #cooperationUserId#
+	</update>
+	
+	<select id="queryByPk"  parameterClass="Long" resultClass="com.lvmama.comm.pet.po.user.UserCooperationUser">
+		SELECT 
+			cooperation_user_id cooperationUserId,
+			cooperation cooperation, 
+			user_id userId, 
+			cooperation_user_account cooperationUserAccount 
+		FROM 
+			user_cooperation_user 
+		WHERE 
+			cooperation_user_id = #cooperationUserId#
+	</select>
+
+	<select id="query"  parameterClass="java.util.Map" resultClass="com.lvmama.comm.pet.po.user.UserCooperationUser">
+		SELECT 
+			cooperation_user_id cooperationUserId,
+			cooperation cooperation, 
+			user_id userId, 
+			cooperation_user_account cooperationUserAccount 
+		FROM 
+			user_cooperation_user
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="id" prepend=" AND ">cooperation_user_id = #cooperationUserId#</isNotEmpty>
+			<isNotEmpty property="cooperation" prepend=" AND ">cooperation = #cooperation#</isNotEmpty>
+			<isNotEmpty property="userId" prepend=" AND ">user_id = #userId#</isNotEmpty>
+			<isNotEmpty property="cooperationUserAccount" prepend=" AND ">cooperation_user_account = #cooperationUserAccount#</isNotEmpty>
+		</dynamic>
+	</select>
+
+</sqlMap>

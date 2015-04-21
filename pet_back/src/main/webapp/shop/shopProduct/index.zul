@@ -1,0 +1,120 @@
+<?page title="产品管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./listProduct"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="listProduct" mode="embedded" apply="com.lvmama.pet.web.shop.shopProduct.ListProductAction" title="产品管理">
+		<grid id="conditions">
+			<columns>
+				<column width="90px"></column>
+				<column></column>
+				<column width="90px"></column>
+				<column></column>
+				<column width="90px"></column>
+				<column></column>
+				<column width="90px"></column>
+				<column></column>
+				<column width="90px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row >
+				    <hbox>产品编号：</hbox>
+				    <hbox><textbox value="@{saction.parameters.productCode}" /></hbox>
+				    <hbox>产品名称：</hbox>
+				    <hbox><textbox value="@{saction.parameters.productName}" /></hbox>
+					<hbox>兑换类型：</hbox>
+					<hbox>
+						<listbox rows="1" mold="select" onSelect="saction.changeChangeType(self.selectedItem.value);">
+							<listitem label="全部" value=""></listitem>
+							<listitem label="积分兑换" value="POINT_CHANGE"></listitem>
+							<listitem label="抽奖" value="RAFFLE"></listitem>
+						</listbox>
+					</hbox>				    
+					<hbox>产品类型：</hbox>
+					<hbox>
+						<listbox rows="1" mold="select" id="channel" onSelect="saction.changeProductType(self.selectedItem.value);">
+							<listitem label="全部" value=""></listitem>
+							<listitem label="实物" value="PRODUCT"></listitem>
+							<listitem label="优惠券" value="COUPON"></listitem>
+							<listitem label="合作网站优惠券" value="COOPERATION_COUPON"></listitem>
+						</listbox>
+					</hbox>
+					<hbox>上线状态：</hbox>
+					<hbox>
+						<listbox rows="1" mold="select" id="isValidStatus" onSelect="saction.changeProductIsValid(self.selectedItem.value);">
+							<listitem label="全部" value=""></listitem>
+							<listitem label="上线" value="Y"></listitem>
+							<listitem label="已下线" value="N"></listitem>
+						</listbox>
+					</hbox>
+				</row>
+				<row spans="10">
+					<hbox>
+						<button label="新建产品" id="new" width="100px" onClick='saction.showWindow("/shop/shopProduct/newProduct.zul",self.getAttributes())' />
+						<space />
+						<button label="查询" id="search" width="100px" onClick="_paging.activePage=0;saction.doQuery()"/>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	
+		<listbox model="@{saction.productList,load-after='search.onClick,_paging.onPaging'}" >
+			<listhead>
+				<listheader label="产品编号" width="100px"/>
+				<listheader label="兑换类型" width="100px"/>
+				<listheader label="产品类型" width="100px"/>
+				<listheader label="产品名称"/>
+				<listheader label="兑换积分" width="70px" align="right"/>
+				<listheader label="库存" width="70px" align="right"/>
+				<listheader label="状态" width="70px" align="middle"/>
+				<listheader label="推荐位置" width="150px"/>
+				<listheader label="操作" width="200px"/>		
+			</listhead>
+			<listitem height="25px" self="@{each='product'}" value="product">
+				<listcell label="@{product.productCode}" />
+				<listcell label="@{product.chChangeType}" />
+				<listcell label="@{product.chProductType}" />
+				<listcell label="@{product.productName}" />
+				<listcell label="@{product.pointChange}" />
+				<listcell label="@{product.stocks}" />
+				<listcell label="@{product.chIsValid}" />
+				<listcell label="@{product.chCommend}" />
+				<listcell>
+					<button label="查看" onClick='saction.showWindow("/shop/shopProduct/shopProductDetail.zul", self.getAttributes());'>
+						<custom-attributes productId="@{product.productId}" />
+					</button>
+					<button label="编辑" onClick='saction.showWindow("/shop/shopProduct/newProduct.zul",self.getAttributes());'>
+						<custom-attributes productId="@{product.productId}" />
+					</button>
+					<button label="复制" onClick='saction.showWindow("/shop/shopProduct/newProduct.zul",self.getAttributes());'>
+						<custom-attributes productId="@{product.productId}" />
+						<custom-attributes isClone="true" />
+					</button>
+					<button label="上线" onClick='saction.changeValid(self.getAttributes());' visible="@{product.showOnline}">
+						<custom-attributes productId="@{product.productId}" />
+						<custom-attributes isValid="Y" />
+					</button>
+					<button label="下线" onClick='saction.changeValid(self.getAttributes());' visible="@{product.showOffline}">
+						<custom-attributes productId="@{product.productId}" />
+						<custom-attributes isValid="N" />
+					</button>
+					<button label="编辑库存" onClick='saction.showWindow("/shop/shopProduct/editStock.zul",self.getAttributes());' visible='@{product.editStock}'>
+						<custom-attributes productId="@{product.productId}" />
+						<custom-attributes productName="@{product.productName}" />
+						<custom-attributes productType="@{product.productType}" />
+					</button>
+				</listcell>
+			</listitem>
+		</listbox>
+					
+		<toolbar>
+			<grid style="border:0">
+				<rows >
+					<row >
+						<cell width="60px">共 <label id="_totalRowCountLabel" /> 条</cell>
+						<cell><paging  id="_paging" pageSize = "15" onPaging='saction.doQuery();'/>	</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	</window>
+</zk>

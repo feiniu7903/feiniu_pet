@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ONLINE_LETTER_TEMPLATE" >
+  <resultMap id="resultObject" class="com.lvmama.comm.pet.onlineLetter.LetterTemplate" >
+    <result column="ID" property="id"/>
+    <result column="TITLE" property="title"/>
+    <result column="CONTENT" property="content" />
+    <result column="TYPE" property="type" />
+    <result column="BEGIN_TIME" property="beginTime" />
+    <result column="END_TIME" property="endTime" />
+    <result column="RECEIVE_COUNT" property="receiveCount"/>
+    <result column="READER_COUNT" property="readerCount" />
+    <result column="USER_GROUP_TYPE" property="userGroupType" />
+    <result column="CREATE_TIME" property="createTime" />
+  </resultMap>
+  <sql id="paremeters">
+  	<dynamic  prepend=" WHERE ">
+  	 	<isNotEmpty prepend=" AND " property="id"> ID = #id#</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="type"> TYPE = #type#</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="beginTime"> BEGIN_TIME &lt;= TRUNC(#beginTime#)</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="endTime"> END_TIME &gt;= TRUNC(#endTime#)</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="userGroupType"> USER_GROUP_TYPE = #userGroupType#</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="keywords"> CONTENT LIKE  '%'||#keywords#||'%'</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="maxResult">	ROWNUM &lt;= #maxResult#</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="beginCreateTime"> TRUNC(CREATE_TIME) &gt;= TRUNC(#beginCreateTime#)</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="endCreateTime"> TRUNC(CREATE_TIME) &lt;= TRUNC(#endCreateTime#)</isNotEmpty>
+  	 </dynamic>
+  </sql>
+  <sql id="subquery">
+  		SELECT T.*,ROWNUM RN FROM (SELECT * FROM ONLINE_LETTER_TEMPLATE T ORDER BY CREATE_TIME DESC) T
+  </sql>
+  <insert id="insertTemplate">
+  	<selectKey resultClass="java.lang.Long" keyProperty="id">
+			SELECT ONLINE_LETTER_TEMPLATE_SEQ.NEXTVAL AS ID FROM DUAL
+	</selectKey>
+	INSERT INTO ONLINE_LETTER_TEMPLATE
+	(ID,TITLE,CONTENT,TYPE,BEGIN_TIME,END_TIME,RECEIVE_COUNT,READER_COUNT,USER_GROUP_TYPE,CREATE_TIME)
+	VALUES
+	(#id#,#title#,#content#,#type#,#beginTime#,#endTime#,#receiveCount#,#readerCount#,#userGroupType#,SYSDATE)
+  </insert>
+  
+  <update id="updateTemplate"  parameterClass="com.lvmama.comm.pet.onlineLetter.LetterTemplate">
+  		UPDATE ONLINE_LETTER_TEMPLATE
+  		   SET 
+  		<dynamic>
+  			<isNull property="content"> READER_COUNT=NVL(READER_COUNT,0)+1 </isNull>
+  			<isNotNull property="content"> CONTENT = #content# </isNotNull>
+  			<isNotNull property="title" prepend=","> TITLE = #title# </isNotNull>
+  		</dynamic>
+  		 WHERE ID = #id#
+  </update>
+  <select id="queryTemplate" resultMap="resultObject"  parameterClass="java.util.Map">
+  	SELECT * FROM (
+  		<include refid="subquery"/>
+  		<include refid="paremeters"/>
+  	) T 
+  	<dynamic prepend=" WHERE ">
+		<isNotEmpty property="skipResult" prepend=" AND ">	RN &gt;= #skipResult#</isNotEmpty>
+	</dynamic>
+  </select>
+  <select id="countTemplate" resultClass="java.lang.Long"   parameterClass="java.util.Map">
+  	SELECT COUNT(*) FROM (SELECT * FROM ONLINE_LETTER_TEMPLATE T <include refid="paremeters"/>) 
+  </select>
+</sqlMap>

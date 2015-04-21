@@ -1,0 +1,91 @@
+<?page contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./viewBatchUserWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="viewBatchUserWin" title="查看客户信息" mode="embedded" border="normal" apply="com.lvmama.pet.web.user.imp.ViewBatchRegisterAction">
+		<grid>
+			<columns>
+				<column width="150px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>渠道：</hbox>
+					<hbox>${saction.batchRegister.channelName }</hbox>
+				</row>
+				<row>
+					<hbox>注册类型：</hbox>
+					<hbox>${saction.batchRegister.chRegisterType }</hbox>
+				</row>
+				<row>
+					<hbox>自定义确认短信内容：</hbox>
+					<hbox>${saction.batchRegister.confirmSMS }</hbox>
+				</row>
+				<row>
+					<hbox>自定义短信内容：</hbox>
+					<hbox>${saction.batchRegister.smsTemplate }</hbox>
+				</row>
+				<row>
+					<hbox>自定义邮件内容：</hbox>
+					<hbox>${saction.batchRegister.mailTemplate }</hbox>
+				</row>
+				<row>
+					<hbox>备注：</hbox>
+					<hbox>${saction.batchRegister.remark }</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator/>
+		<grid>
+			<columns>
+				<column style="width:100px;"></column>
+				<column style="width:200px;"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>请输入手机号：</hbox>
+					<hbox><textbox id="mobileNumber" value="@{saction.searchConds.mobileNumber}"/></hbox>
+					<hbox><button id="dsearch" label="查 询" onClick="_paging.activePage=0;saction.search();" width="100px"/><button id="dexport" label="导 出" onClick="saction.export();" width="100px"/></hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox id="userList" multiple="true" checkmark="true" model="@{saction.userList,load-after='dsearch.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader  width="20px"/>
+				<listheader label="录入时间"   width="120px"/>
+				<listheader label=" 渠道来源"  width="150px"/>
+				<listheader label="用户姓名"   width="120px"/>
+				<listheader label="性别" 	   width="80px"/>
+				<listheader label="用户手机"   width="120px"/>
+				<listheader label="Email"/>
+				<listheader label="短信回复?"/>
+				<listheader label="处理状态"   width="80px"/>
+			</listhead>
+			<listitem height="25px" self="@{each='user'}" value="@{user}">
+				<listcell/>
+				<listcell label="@{user.createDate}"/>
+				<listcell label="@{user.channelName}"/>
+				<listcell label="@{user.realName }"/>
+				<listcell label="@{user.chGender }"/>
+				<listcell label="@{user.mobileNumber }"/>
+				<listcell label="@{user.email }"/>
+				<listcell label="@{user.chReply }"/>
+				<listcell label="@{user.chRegisterStatus }"/>
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows >
+					<row >
+						<cell width="60px">
+							共 <label id="_totalRowCountLabel" /> 条
+						</cell>
+						<cell>
+							<paging  id="_paging" pageSize = "15" onPaging='saction.search();'/>
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>		
+	</window>
+</zk>

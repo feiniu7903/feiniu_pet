@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_BATCH_REGISTER" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.user.UserBatchRegister" >
+    <result column="BATCH_ID" property="batchId" />
+    <result column="CHANNEL_ID" property="channelId" />
+	<result column="REGISTER_TYPE" property="registerType"/>
+	<result column="REMARK" property="remark"/>
+	<result column="CONFIRM_SMS" property="confirmSMS"/>
+	<result column="CUSTOMER_SMS" property="customerSMS"/>
+	<result column="SMS_TEMPLATE" property="smsTemplate"/>
+	<result column="CUSTOMER_MAIL" property="customerMail"/>
+	<result column="MAIL_TEMPLATE" property="mailTemplate"/>
+    <result column="CREATE_DATE" property="createDate" />
+	<result column="REGISTER_DATE" property="registerDate" />
+	<result column="CITY_ID" property="cityId" />
+	<result column="COUPON" property="coupon" />
+	
+	<result column="OLD_CUSTOMER_SMS" property="oldCustomerSMS"/>
+	<result column="OLD_SMS_TEMPLATE" property="oldSmsTemplate"/>
+	<result column="OLD_COUPON" property="oldCoupon" />
+
+	<result column="channelName" property="channelName" />
+	<result column="registerNumber" property="registerNumber" />
+	<result column="successNumber" property="successNumber" />
+	<result column="failNumber" property="failNumber" />
+	<result column="replyNumber" property="replyNumber" />
+	<result column="visitNumber" property="visitNumber"/>
+  </resultMap>
+  <sql id="loadBatchRegister">
+		SELECT
+			a.*,
+			b.registerNumber,
+			c.replyNumber,
+			d.successNumber,
+			e.failNumber,
+			f.visitNumber,
+			k.channel_Name channelName,
+			rownum RN
+		FROM 
+			user_batch_register a, 
+			(SELECT COUNT(batch_user_id) registerNumber, batch_register_id FROM USER_BATCH_USER group by batch_register_id) b,
+			(SELECT COUNT(batch_user_id) replyNumber, batch_register_id FROM USER_BATCH_USER WHERE REPLY = 'Y' group by batch_register_id) c,
+			(SELECT COUNT(batch_user_id) successNumber, batch_register_id FROM USER_BATCH_USER WHERE REGISTER_STATUS = 'REGISTER_SUCCESS' group by batch_register_id) d,
+			(SELECT COUNT(batch_user_id) failNumber, batch_register_id FROM USER_BATCH_USER WHERE REGISTER_STATUS = 'REGISTER_FAILURE' group by batch_register_id) e,
+			(SELECT COUNT(batch_user_id) visitNumber, batch_register_id FROM USER_BATCH_USER WHERE OPERATOR IS NOT NULL GROUP BY batch_register_id) f,
+			MARK_CHANNEL k
+		WHERE
+			a.batch_id = b.batch_register_id(+) AND a.batch_id = c.batch_register_id(+) AND a.batch_id = d.batch_register_id(+) AND a.batch_id = e.batch_register_id(+) AND a.batch_id = f.batch_register_id(+) AND a.channel_id = k.channel_id
+	<dynamic>
+		<isNotEmpty prepend=" AND " property="batchId">a.batch_id = #batchId#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="type">k.TYPE = #type#			 </isNotEmpty>
+		<isNotEmpty prepend=" AND " property="channelId">a.CHANNEL_ID = #channelId# </isNotEmpty>
+		<isNotEmpty prepend=" AND " property="registerType">a.REGISTER_TYPE = #registerType# </isNotEmpty>
+		<isNotEmpty prepend=" AND " property="registerType">a.REGISTER_TYPE = #registerType# </isNotEmpty>
+		<isNotEmpty prepend=" AND " property="beginVisitTime">a.CREATE_DATE &gt;= #beginVisitTime# </isNotEmpty>
+		<isNotEmpty prepend=" AND " property="endVisitTime">a.CREATE_DATE &lt;= #endVisitTime#  + 1</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="beginRegisterTime">a.REGISTER_DATE &gt;= #beginRegisterTime# </isNotEmpty>
+		<isNotEmpty prepend=" AND " property="endRegisterTime">a.REGISTER_DATE &lt;= #endRegisterTime#  + 1</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="remark">a.REMARK LIKE '%$remark$%'</isNotEmpty>		
+	</dynamic>	
+	ORDER BY a.CREATE_DATE DESC
+  </sql>
+
+  <select id="queryByPK" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+		SELECT
+			a.*,
+			b.registerNumber,
+			c.replyNumber,
+			d.successNumber,
+			e.failNumber,
+			k.channel_Name channelName,
+			f.visitNumber,
+			rownum RN
+		FROM 
+			(SELECT * FROM user_batch_register WHERE batch_id = #batchId#) a, 
+			(SELECT COUNT(batch_user_id) registerNumber, batch_register_id FROM USER_BATCH_USER group by batch_register_id) b,
+			(SELECT COUNT(batch_user_id) replyNumber, batch_register_id FROM USER_BATCH_USER WHERE REPLY = 'Y' group by batch_register_id) c,
+			(SELECT COUNT(batch_user_id) successNumber, batch_register_id FROM USER_BATCH_USER WHERE REGISTER_STATUS = 'REGISTER_SUCCESS' group by batch_register_id) d,
+			(SELECT COUNT(batch_user_id) failNumber, batch_register_id FROM USER_BATCH_USER WHERE REGISTER_STATUS = 'REGISTER_FAILURE' group by batch_register_id) e,
+			(SELECT COUNT(batch_user_id) visitNumber, batch_register_id FROM USER_BATCH_USER WHERE OPERATOR IS NOT NULL GROUP BY batch_register_id) f,
+			MARK_CHANNEL k
+		WHERE
+			a.batch_id = b.batch_register_id(+) AND a.batch_id = c.batch_register_id(+) AND a.batch_id = d.batch_register_id(+) AND a.batch_id = e.batch_register_id(+) AND a.batch_id = f.batch_register_id(+) AND a.channel_id = k.channel_id
+  </select>
+
+  <!-- 查询客户批次信息列表 -->
+  <select id="query" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		SELECT *
+		  FROM (
+		  	<include refid="loadBatchRegister"/>
+		  )  A
+		<dynamic prepend=" WHERE "> 
+		    <isNotEmpty property="_endRow" prepend=" AND " > RN  &lt;=#_endRow#   </isNotEmpty>
+		   	<isNotEmpty property="_startRow" prepend=" AND "> RN  &gt;=#_startRow#   </isNotEmpty>
+		</dynamic>
+  </select>
+  <!-- 查询客户批次信息总数 -->
+  <select id="count" resultClass="long" parameterClass="java.util.Map">
+  	    SELECT COUNT(1) CT 
+  	      FROM  (
+  	      	<include refid="loadBatchRegister"/>
+  	      ) A
+  </select>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.user.UserBatchRegister" >
+	<selectKey keyProperty="batchId" resultClass="Long">
+		SELECT USER_BATCH_REGISTER_SEQ.nextVal FROM DUAL
+	</selectKey>
+    INSERT INTO USER_BATCH_REGISTER     
+	<dynamic prepend="(" >
+      <isNotNull prepend="," property="batchId" >
+        BATCH_ID
+      </isNotNull>
+      <isNotNull prepend="," property="channelId" >
+        CHANNEL_ID
+      </isNotNull>
+      <isNotNull prepend="," property="registerType" >
+        REGISTER_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK
+      </isNotNull>
+	  <isNotNull prepend="," property="confirmSMS" >
+        CONFIRM_SMS
+      </isNotNull>
+      <isNotNull prepend="," property="customerSMS" >
+        CUSTOMER_SMS
+      </isNotNull>
+      <isNotNull prepend="," property="smsTemplate" >
+        SMS_TEMPLATE
+      </isNotNull>
+      <isNotNull prepend="," property="customerMail" >
+        CUSTOMER_MAIL
+      </isNotNull>
+      <isNotNull prepend="," property="mailTemplate" >
+        MAIL_TEMPLATE
+      </isNotNull> 
+	  <isNotNull prepend="," property="registerDate" >
+        REGISTER_DATE
+      </isNotNull> 
+	  <isNotNull prepend="," property="cityId" >
+        CITY_ID
+      </isNotNull>
+      <isNotNull prepend="," property="coupon" >
+        COUPON
+      </isNotNull>
+      <isNotNull  prepend="," property="oldCustomerSMS">
+        OLD_CUSTOMER_SMS
+      </isNotNull>
+       <isNotNull prepend="," property="oldSmsTemplate" >
+        OLD_SMS_TEMPLATE
+      </isNotNull>
+       <isNotNull prepend="," property="oldCoupon" >
+        OLD_COUPON
+      </isNotNull>	        
+        ,CREATE_DATE
+      )
+	</dynamic>
+    VALUES
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="batchId" >
+        #batchId#
+      </isNotNull>
+      <isNotNull prepend="," property="channelId" >
+        #channelId#
+      </isNotNull>
+      <isNotNull prepend="," property="registerType" >
+        #registerType#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        #remark#
+      </isNotNull>
+	   <isNotNull prepend="," property="confirmSMS" >
+        #confirmSMS#
+      </isNotNull>
+      <isNotNull prepend="," property="customerSMS" >
+        #customerSMS#
+      </isNotNull>
+      <isNotNull prepend="," property="smsTemplate" >
+        #smsTemplate#
+      </isNotNull>
+      <isNotNull prepend="," property="customerMail" >
+        #customerMail#
+      </isNotNull>
+      <isNotNull prepend="," property="mailTemplate" >
+        #mailTemplate#
+      </isNotNull>
+      <isNotNull prepend="," property="registerDate" >
+        #registerDate#
+      </isNotNull>
+	  <isNotNull prepend="," property="cityId" >
+        #cityId#
+      </isNotNull>
+      <isNotNull prepend="," property="coupon" >
+        #coupon#
+      </isNotNull>
+      <isNotNull  prepend="," property="oldCustomerSMS">
+        #oldCustomerSMS#
+      </isNotNull>
+       <isNotNull prepend="," property="oldSmsTemplate" >
+         #oldSmsTemplate#
+      </isNotNull>
+       <isNotNull prepend="," property="oldCoupon" >
+         #oldCoupon#
+      </isNotNull>
+      ,sysdate
+	  )
+	</dynamic>
+  </insert>
+
+	<update id="update"  parameterClass="com.lvmama.comm.pet.po.user.UserBatchRegister">
+	    update USER_BATCH_REGISTER
+	    <dynamic prepend="set" >
+	      <isNotNull prepend="," property="channelId" >
+	        CHANNEL_ID = #channelId#
+	      </isNotNull>
+	      <isNotNull prepend="," property="registerType" >
+	        REGISTER_TYPE = #registerType#
+	      </isNotNull>
+	      <isNotNull prepend="," property="registerNumber" >
+	        REGISTER_NUMBER = #registerNumber#
+	      </isNotNull>
+	      <isNotNull prepend="," property="remark" >
+	        REMARK = #remark#
+	      </isNotNull>
+	      <isNotNull prepend="," property="confirmSMS" >
+	        CONFIRM_SMS = #confirmSMS#
+	      </isNotNull>
+	      <isNotNull prepend="," property="customerSMS" >
+	        CUSTOMER_SMS = #customerSMS#
+	      </isNotNull>
+	      <isNotNull prepend="," property="smsTemplate" >
+	        SMS_TEMPLATE = #smsTemplate#
+	      </isNotNull>
+	      <isNotNull prepend="," property="customerMail" >
+	        CUSTOMER_MAIL = #customerMail#
+	      </isNotNull>
+	      <isNotNull prepend="," property="mailTemplate" >
+	        MAIL_TEMPLATE = #mailTemplate#
+	      </isNotNull>
+	      <isNotNull prepend="," property="createDate" >
+	        CREATE_DATE = #createDate#
+	      </isNotNull>
+	      <isNotNull prepend="," property="registerDate" >
+	        REGISTER_DATE = #registerDate#
+	      </isNotNull>
+	      <isNotNull prepend="," property="cityId" >
+	        CITY_ID = #cityId#
+	      </isNotNull>
+	      <isNotNull prepend="," property="coupon" >
+	        COUPON = #coupon#
+	      </isNotNull>
+	    </dynamic>
+	    where BATCH_ID=#batchId#
+  </update>
+</sqlMap>

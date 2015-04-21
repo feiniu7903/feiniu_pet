@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>  
+  	<bean id="baseIbatisDao" class="com.lvmama.comm.BaseIbatisDAO" abstract="true">
+		<property name="sqlMapClient">
+	      <ref bean="sqlMapClient"/>
+	    </property>
+		<property name="dataSource">
+	      <ref bean="dataSource"/>
+	    </property>
+	</bean>
+
+	<bean id="ordFaxSendDAO" class="com.lvmama.bee.pub.dao.fax.OrdFaxSendDAO" parent="baseIbatisDao" />
+	<bean id="ordFaxTaskDAO" class="com.lvmama.bee.pub.dao.fax.OrdFaxTaskDAO" parent="baseIbatisDao" />
+</beans>  

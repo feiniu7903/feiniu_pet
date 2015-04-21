@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="WORK_TASK">
+	<!-- 别名 -->
+    <typeAlias alias="workTask" type="com.lvmama.comm.pet.po.work.WorkTask"/>
+	<!-- 查询结果集 -->
+    <resultMap id="workTaskResult" class="workTask">
+        <result property="workTaskId" column="WORK_TASK_ID"/>
+        <result property="creater" column="CREATER"/>
+        <result property="status" column="STATUS"/>
+        <result property="workOrderId" column="WORK_ORDER_ID"/>
+        <result property="content" column="CONTENT"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="receiver" column="receiver"/>
+        <result property="completeTime" column="COMPLETE_TIME"/>
+        <result property="taskSeqNo" column="TASK_SEQ_NO"/>
+        <result property="replyContent" column="REPLY_CONTENT"/>
+    </resultMap>
+    <resultMap id="workTaskResultAllInfo" class="workTask" extends="workTaskResult">
+        <result property="workOrder.orderId" column="WORK_ORDER_ORDER_ID"/>
+        <result property="workOrder.productId" column="WORK_ORDER_PRODUCT_ID"/>
+        <result property="workOrder.userName" column="WORK_ORDER_USER_NAME"/>
+        <result property="workOrder.mobileNumber" column="WORK_ORDER_MOBILE_NUMBER"/>
+        <result property="workOrder.content" column="WORK_ORDER_CONTENT"/>
+        <result property="workOrder.createTime" column="work_order_create_time"/>
+        <result property="workOrder.url" column="work_order_url"/>
+        <result property="workOrder.orderItemMetaId" column="work_order_order_item_meta_id"/>
+        <result property="workOrderType.typeCode" column="WORK_ORDER_TYPE_TYPE_CODE"/>
+        <result property="workOrderType.typeName" column="WORK_ORDER_TYPE_TYPE_NAME"/>
+        <result property="workOrder.limitTime" column="WORK_ORDER_LIMIT_TIME"/>
+        <result property="workOrder.processLevel" column="PROCESS_LEVEL"/>
+        <result property="workOrder.agentUserName" column="agent_user_name"/>
+        <result property="workOrder.createUserName" column="create_user_name"/>
+        <result property="workGroupUser.workGroupName" column="WORK_GROUP_USER_GROUP_NAME"/>
+        <result property="workGroupUser.userName" column="WORK_GROUP_USER_user_name"/>
+        <result property="createWorkGroupUser.userName" column="CREATER_user_name"/>
+    </resultMap>
+	<resultMap id="workTaskResultIncludeGroupId" class="workTask" extends="workTaskResult">
+		<result property="workGroupUser.workGroupId" column="WORK_GROUP_ID"/>
+		<result property="workGroupUser.userName" column="PERM_USER_NAME"/>
+		<result property="workGroupUser.permUserId" column="PERM_USER_ID"/>
+	</resultMap>
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	WORK_TASK_ID ,
+        	receiver ,
+        	CREATER ,
+        	STATUS ,
+        	WORK_ORDER_ID ,
+        	CONTENT ,
+        	CREATE_TIME ,
+        	COMPLETE_TIME,
+        	TASK_SEQ_NO,
+        	REPLY_CONTENT
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="workTaskId">
+	             WORK_TASK_ID = #workTaskId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="receiver">
+	             receiver = #receiver#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="creater">
+	             CREATER = #creater#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="status">
+	             STATUS = #status#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="workOrderId">
+	             WORK_ORDER_ID = #workOrderId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="content">
+	             CONTENT = #content#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="taskSeqNo">
+	             TASK_SEQ_NO = #taskSeqNo#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="completeTime">
+	             COMPLETE_TIME = #completeTime#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 修改记录 -->
+    <update id="update" parameterClass="workTask">
+    <![CDATA[
+        UPDATE WORK_TASK SET
+	        receiver = #receiver# ,
+	        CREATER = #creater# ,
+	        STATUS = #status# ,
+	        WORK_ORDER_ID = #workOrderId# ,
+	        CONTENT = #content# ,
+	        CREATE_TIME = #createTime# ,
+	        COMPLETE_TIME = #completeTime#,
+	        REPLY_CONTENT=#replyContent#
+        WHERE 
+	        WORK_TASK_ID = #workTaskId# 
+    ]]>
+    </update>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="workTask">
+				<selectKey keyProperty="workTaskId" resultClass="java.lang.Long">
+					SELECT WORK_TASK_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        WORK_TASK (
+        	WORK_TASK_ID ,
+        	receiver ,
+        	CREATER ,
+        	STATUS ,
+        	WORK_ORDER_ID ,
+        	CONTENT ,
+        	CREATE_TIME,
+        	COMPLETE_TIME,
+        	TASK_SEQ_NO,
+        	REPLY_CONTENT
+        ) VALUES (
+        	#workTaskId# ,
+        	#receiver# ,
+        	#creater# ,
+        	#status# ,
+        	#workOrderId# ,
+        	#content# ,
+        	#createTime# ,
+        	#completeTime#,
+        	(select count(1)+1 from WORK_TASK wt where wt.work_Order_Id=#workOrderId#),
+        	#replyContent#
+        )
+    ]]>
+    </insert>
+    <!-- 查询记录，根据主键值 -->
+    <select id="getWorkTaskById" resultMap="workTaskResultIncludeGroupId">
+	    SELECT WT.*, GU.WORK_GROUP_ID, GU.PERM_USER_ID,PU.USER_NAME PERM_USER_NAME
+  			from WORK_TASK WT, WORK_GROUP_USER GU,PERM_USER PU
+ 				where WT.RECEIVER=GU.WORK_GROUP_USER_ID(+)
+       				AND GU.PERM_USER_ID=PU.USER_ID(+)
+       				AND WT.WORK_TASK_ID=#VALUE#
+    </select>
+    <!-- 根据工单id查询 -->
+    <select id="getWorkTaskByWorkOrderId" resultMap="workTaskResult">
+	    SELECT * from WORK_TASK WT
+ 				where WT.WORK_ORDER_ID=#workOrderId#
+ 				and wt.status='UNCOMPLETED'
+    </select>
+    <!-- 查询记录 根据特定条件 -->
+    <select id="queryWorkTaskByParam"  resultMap="workTaskResult" parameterClass="java.util.Map">
+       select <include refid="commonColumns"/> from WORK_TASK 
+		<include refid="dynamicWhere"/>  order by WORK_ORDER_ID desc,TASK_SEQ_NO asc
+    </select>
+    
+    <!-- 工单任务列表 -->
+    <sql id="getWorkTaskPageSql">
+    	select * from (select  t1.*,
+    			t2.order_id as work_order_order_id,
+    			t2.PROCESS_LEVEL,
+    			t2.user_name as work_order_user_name,
+    			t2.mobile_number as WORK_ORDER_MOBILE_NUMBER,
+    			t2.content as work_order_content,
+    			t2.create_time as work_order_create_time,
+    			t2.url as work_order_url,
+    			t2.order_item_meta_id as work_order_order_item_meta_id,
+    			t2.product_id as WORK_ORDER_PRODUCT_ID,
+    			t2.agent_user_name,
+    			t2.create_user_name,
+    			t3.type_name as work_order_type_type_name,
+    			t3.type_code as work_order_type_type_code,
+    			t5.group_name as WORK_GROUP_USER_GROUP_NAME,
+    			t6.user_name as WORK_GROUP_USER_user_name,
+    			t2.limit_time as work_order_limit_time,
+    			t9.user_name as CREATER_user_name,
+    			(t2.limit_time - TO_NUMBER(sysdate - t2.create_time) * 24 * 60) remaining_time,
+    			decode(t2.process_level,'REPEAT_PROMPTLY',3,'PROMPTLY',2,'REPEAT',1,0) process_evel_sort
+    	from work_task t1,work_order t2,work_order_type t3,work_group_user t4,
+    		 work_group t5,perm_user t6,work_group_user t8,perm_user t9
+   		where t1.work_order_id = t2.work_order_id(+)
+   		    and t2.work_order_type_id = t3.work_order_type_id(+)
+   			and t1.receiver = t4.work_group_user_id(+)
+   			and t4.work_group_id = t5.work_group_id(+)
+   			and t4.perm_user_id = t6.user_id(+)
+   			and t1.creater = t8.work_group_user_id(+)
+   			and t8.perm_user_id = t9.user_id(+)
+   		<isNotEmpty property="workTaskId">
+   			and t1.work_task_id = #workTaskId#
+   		</isNotEmpty>
+   		<isNotEmpty property="taskSeqNo">
+   			and t1.TASK_SEQ_NO = #taskSeqNo#
+   		</isNotEmpty>
+   		<isNotEmpty property="status">
+   			and t1.status = #status#
+   		</isNotEmpty>
+   		<isNotEmpty property="receiveGroup">
+   			and t5.work_group_id = #receiveGroup#
+   		</isNotEmpty>
+   		<isNotEmpty property="receiverUserName">
+   			and t6.user_name = #receiverUserName#
+   		</isNotEmpty>
+   		<isNotEmpty property="workOrderId">
+   			and t2.work_order_id = #workOrderId#
+   		</isNotEmpty>
+   		<isNotEmpty property="orderId">
+   			and t2.order_id = #orderId#
+   		</isNotEmpty>
+   		<isNotEmpty property="productId">
+   			and t2.product_Id = #productId#
+   		</isNotEmpty>
+   		<isNotEmpty property="workOrderUserName">
+   			and t2.user_name = #workOrderUserName#
+   		</isNotEmpty>
+   		<isNotEmpty property="workOrderMobileNumber">
+   			and t2.mobile_number = #workOrderMobileNumber#
+   		</isNotEmpty>
+   		<isNotEmpty property="createTimeStart"> <!-- 任务监控时间查询 -->
+   			and t1.create_time &gt;= trunc(#createTimeStart#)
+   		</isNotEmpty>
+   		<isNotEmpty property="createTimeEnd">
+   			and t1.create_time &lt;= trunc(#createTimeEnd#)+1
+   		</isNotEmpty>
+   		<isNotEmpty property="limitTimeStart">
+   			and t1.create_time &gt;= trunc(#limitTimeStart#,'mi') <!-- 工单监控时间查询 -->
+   		</isNotEmpty>
+   		<isNotEmpty property="limitTimeEnd">
+   			and t1.create_time &lt;= trunc(#limitTimeEnd#,'mi')
+   		</isNotEmpty>
+   		<isNotEmpty property="workOrderType">
+   			and t2.work_order_type_id = #workOrderType#
+   		</isNotEmpty>
+   		<isEqual property="selectType" compareValue="1"> <!-- 全部 -->
+   			and (
+   					t9.user_name = #userName# or t6.user_name = #userName#
+   					or t4.work_group_id in( select gu.work_group_id from work_group_user gu,perm_user pu 
+                          where gu.leader='true' and gu.valid='true' and gu.perm_user_id=pu.user_id 
+                          and pu.user_name=#userName# )
+                    or t8.work_group_id in( select gu.work_group_id from work_group_user gu,perm_user pu 
+                       where gu.leader='true' and gu.valid='true' and gu.perm_user_id=pu.user_id 
+                       and pu.user_name=#userName# )
+   				)
+   		</isEqual>
+   		<isEqual property="selectType" compareValue="2"> <!-- 发给我的工单 -->
+   			and t6.user_name = #userName#
+   		</isEqual>
+   		<isEqual property="selectType" compareValue="3"> <!-- 我发出的工单 -->
+   			and t9.user_name = #userName#
+   		</isEqual>
+   		<isEqual property="completeTimeOut" compareValue="1"> <!-- 超时处理的工单(已完成取完成时间，否则取系统时间) -->
+   			and ((CASE WHEN t2.status = 'COMPLETED' THEN t2.complete_time ELSE sysdate END) - t2.create_time)*24*60 > t2.limit_time
+   		</isEqual>
+   		<isEqual property="emergency" compareValue="PROMPTLY"> <!-- 紧急 -->
+   			and t2.process_level like '%PROMPTLY%'
+   		</isEqual>
+   		<isEqual property="repeat" compareValue="REPEAT"> <!-- 重复 -->
+   			and t2.process_level like '%REPEAT%'
+   		</isEqual>
+   		<isNotEmpty property="bothEmergencyRepeat">
+   			and (t2.process_level = 'PROMPTLY' or t2.process_level = 'REPEAT' or t2.process_level = 'REPEAT_PROMPTLY')
+   		</isNotEmpty>
+   		<isNotEmpty property="createUserName">
+   			and lower(t2.create_user_name) like '%'||lower(#createUserName#)||'%'
+   		</isNotEmpty>
+   			) t_i
+   		<isEqual property="orderbyType" compareValue="1">	<!-- 未完成工单排序 -->
+   			order by t_i.process_evel_sort desc,t_i.remaining_time asc
+   		</isEqual>
+   		<isEqual property="orderbyType" compareValue="2">		<!-- 按时间降序排列 -->
+   			order by t_i.create_time desc
+   		</isEqual>
+   		<isEqual property="orderbyType" compareValue="3">		<!-- 工单监控排序 -->
+   			order by t_i.status desc,t_i.process_evel_sort desc,t_i.remaining_time asc,t_i.work_order_id desc
+   		</isEqual>
+   		<isEqual property="orderbyType" compareValue="4">		<!-- 工单查看 -->
+   			order by t_i.work_order_id desc,t_i.TASK_SEQ_NO asc
+   		</isEqual>
+   		<isEqual property="orderbyType" compareValue="5">		<!-- 根据剩余时间降序排列 -->
+   			order by t_i.status desc,t_i.process_evel_sort desc,t_i.remaining_time desc,t_i.work_order_id desc
+   		</isEqual>
+   		<isEqual property="orderbyType" compareValue="6">		<!-- 按时间升序排列 -->
+   			order by t_i.create_time asc
+   		</isEqual>
+    </sql>
+    <select id="getWorkTaskPageCount" parameterClass="map" resultClass="long">
+    	select count(*) from (<include refid="getWorkTaskPageSql"/>)
+    </select>
+    <select id="getWorkTaskPage" parameterClass="map" resultMap="workTaskResultAllInfo">
+    	<include refid="pageSearchHead"/>
+    	<include refid="getWorkTaskPageSql"/>
+    	<include refid="pageSearchFoot"/>
+    </select>
+    
+    <select id="getReciverOffLineTask" resultMap="workTaskResultIncludeGroupId">
+    	<![CDATA[ SELECT * FROM (
+    		SELECT WT.*, GU.WORK_GROUP_ID,PU.USER_NAME PERM_USER_NAME,GU.PERM_USER_ID
+    		 FROM WORK_TASK WT, WORK_GROUP_USER GU, PERM_USER PU
+ 				WHERE WT.RECEIVER = GU.WORK_GROUP_USER_ID AND PU.USER_ID = GU.PERM_USER_ID
+   					AND GU.WORK_GROUP_ID IN	(SELECT DISTINCT GU1.WORK_GROUP_ID
+          				FROM WORK_GROUP_USER GU1, PERM_USER PU1
+        					 WHERE GU1.PERM_USER_ID = PU1.USER_ID AND PU1.WORK_STATUS = 'ONLINE' AND GU1.LEADER='false')
+        			AND WT.STATUS='UNCOMPLETED'
+   					AND WT.CREATE_TIME<(SYSDATE-1/24/6)
+   					AND PU.WORK_STATUS = 'OFFLINE' ORDER BY WT.WORK_TASK_ID) WHERE ROWNUM <=#value# 
+   		]]>
+    </select>
+    <!-- 根据组织查询用户不在线且未处理任务 -->
+    <select id="getReciverOffLineTaskByGroup" resultMap="workTaskResultIncludeGroupId" parameterClass="java.util.Map">
+    	SELECT * FROM (
+        SELECT WT.*, GU.WORK_GROUP_ID,PU.USER_NAME PERM_USER_NAME,GU.PERM_USER_ID
+         FROM WORK_TASK WT, WORK_GROUP_USER GU, PERM_USER PU,WORK_ORDER WO
+         WHERE (
+         		WO.CREATE_USER_NAME IS NULL OR 
+         		(PU.USER_NAME != WO.CREATE_USER_NAME and (WO.Agent_User_Name is null or WO.Agent_User_Name not like '%' || PU.USER_NAME || '%'))
+         	)
+         		AND WT.RECEIVER = GU.WORK_GROUP_USER_ID AND PU.USER_ID = GU.PERM_USER_ID 
+         		AND WO.WORK_ORDER_ID=WT.WORK_ORDER_ID
+         	 <isNotEmpty property="createrWorkStatus">
+         	 	AND (WT.CREATER IN (SELECT GR.WORK_GROUP_USER_ID FROM WORK_GROUP_USER GR,
+         	 		PERM_USER PR WHERE GR.PERM_USER_ID=PR.USER_ID AND GR.WORK_GROUP_USER_ID=WT.CREATER
+         	 		 AND PR.WORK_STATUS=#createrWorkStatus#)
+         	 		 <isEqual property="createrWorkStatus" compareValue="OFFLINE">
+         	 		 	  OR WT.CREATER IS NULL
+         	 		 </isEqual>
+         	 		 )
+         	 </isNotEmpty>
+             AND PU.WORK_STATUS = 'OFFLINE'
+             AND GU.WORK_GROUP_ID =#workGroupId#
+             AND WT.CREATE_TIME&lt;(SYSDATE-1/24/6)
+             AND WT.STATUS='UNCOMPLETED'
+             ORDER BY WT.WORK_TASK_ID) WHERE ROWNUM &lt;=#count#
+    </select>
+</sqlMap>

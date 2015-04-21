@@ -1,0 +1,68 @@
+<?page title="上行指令管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./editSpecialSubjectWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="editSpecialSubjectWin" closable="true" sizable="false"
+		border="normal" mode="embedded" title="优惠劵"
+		apply="com.lvmama.pet.web.sms.EditSmsInstructionAction">
+		<zscript><![CDATA[//@DECLARATION
+			public void checkValue(){	
+				if (instructionCode.getValue()==null) {
+				    alert("指令不能为空");
+					return ;
+				}
+				saction.save();	
+			}	]]>
+		</zscript>
+		<grid>
+			<columns>
+				<column width="30%"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						指令(默认必须以LV带头)：
+						<label value="[*]" style="color:red;" />
+					</hbox>
+					<hbox>
+						(LV)<textbox id="instructionCode" value="@{saction.instruction.instructionCode}"
+							maxlength="25" constraint="no empty:指令不能为空" width="500px"  />
+					</hbox>
+				</row>
+				<row>
+					<hbox>
+						附加短信内容(不填则不发送,$ {couponCode}代表动态优惠券代码)：
+					</hbox>
+					<hbox>
+						<textbox id="couponCode" value="@{saction.instruction.couponCode}"
+							maxlength="130" width="500px" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>
+						优惠券标识(如果需要输入多个优惠券标识逗号请使用半角逗号分隔。当输入多个优惠券时，附件短信内容将不能动态显示优惠券代码)：
+					</hbox>
+					<hbox>
+						<textbox id="couponId" value="@{saction.instruction.couponId}"
+							maxlength="100" width="500px" />
+					</hbox>
+				</row>				
+				<row>
+					<hbox>
+						描述：
+						<label value="[*]" style="color:red;" />
+					</hbox>
+					<hbox>
+						<textbox id="description" value="@{saction.instruction.description}"
+							maxlength="100" width="500px" />
+					</hbox>
+				</row>
+				<row spans="2" align="middle">
+					<hbox>
+						<button label="保存" width="100px" id="search" onClick="checkValue();"></button>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

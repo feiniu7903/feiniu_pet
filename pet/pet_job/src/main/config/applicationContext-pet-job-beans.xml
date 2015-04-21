@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:email.properties</value>
+				<value>classpath:jms.properties</value>
+				<value>classpath:const.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<import resource="applicationContext-pet-job-quartz.xml" />
+	<import resource="applicationContext-pet-job-trigger.xml" />
+	<import resource="applicationContext-pet-job-sms.xml" />
+	<import resource="applicationContext-pet-job-xfire.xml" />
+	
+	  <bean id="finGLService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/finGLService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.fin.FinGLService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+    
+     <bean id="finReconResultService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    	<property name="serviceUrl" value="${petPublic.serviceUrl}/finReconResultService"/>
+    	<property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.FinReconResultService"/>
+    	<property name="chunkedPost" value="false"/>
+    	<property name="overloadEnabled" value="true"/>
+    </bean>
+	
+	<import resource="applicationContext-pet-job-fin.xml" />
+	
+	<import resource="classpath*:applicationContext-lvmama-comm-beans.xml" />
+	<import resource="classpath*:applicationContext-lvmama-comm-bee-remote.xml" />
+	<import resource="classpath*:applicationContext-product-head-remote.xml" />
+	<import resource="classpath*:applicationContext-lvmama-comm-remote-ebk.xml" />
+	<import resource="classpath*:applicationContext-lvmama-comm-remote-mobile.xml" />
+	<import resource="classpath*:applicationContext-lvmama-comm-remote.xml " />	
+	
+</beans>

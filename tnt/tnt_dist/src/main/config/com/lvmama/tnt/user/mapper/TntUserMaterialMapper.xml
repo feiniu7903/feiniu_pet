@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.lvmama.tnt.user.mapper.TntUserMaterialMapper">
+
+	<resultMap id="baseResultMap" type="tntUserMaterial">
+		<result property="materialId" column="MATERIAL_ID" />
+		<result property="materialType" column="MATERIAL_TYPE" />
+		<result property="materialName" column="MATERIAL_NAME" />
+		<result property="materialUrll" column="MATERIAL_URLL" />
+		<result property="userId" column="USER_ID" />
+		<result property="materialStatus" column="MATERIAL_STATUS" />
+		<result property="failReason" column="FAIL_REASON" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		MATERIAL_ID,MATERIAL_TYPE,MATERIAL_NAME,MATERIAL_URLL,USER_ID,MATERIAL_STATUS,FAIL_REASON
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="tntUserMaterial">
+		<selectKey resultType="java.lang.Long" keyProperty="materialId"
+			order="BEFORE">
+			select TNT_MATERIAL_ID_SEQ.nextval from dual
+		</selectKey>
+    <![CDATA[
+        INSERT INTO TNT_USER_MATERIAL (
+        	MATERIAL_ID ,
+        	MATERIAL_TYPE ,
+        	MATERIAL_NAME ,
+        	MATERIAL_URLL ,
+        	USER_ID ,
+        	MATERIAL_STATUS,
+        	FAIL_REASON
+        ) VALUES (
+        	#{materialId} ,
+        	#{materialType,jdbcType=VARCHAR} ,
+        	#{materialName,jdbcType=VARCHAR} ,
+        	#{materialUrll,jdbcType=VARCHAR} ,
+        	#{userId} ,
+        	#{materialStatus,jdbcType=VARCHAR},
+        	#{failReason,jdbcType=VARCHAR}
+        )
+    ]]>
+	</insert>
+
+	<update id="update" parameterType="tntUserMaterial">
+    <![CDATA[
+        UPDATE TNT_USER_MATERIAL SET
+	        MATERIAL_TYPE = #{materialType,jdbcType=VARCHAR} ,
+	        MATERIAL_NAME = #{materialName,jdbcType=VARCHAR} ,
+	        MATERIAL_URLL = #{materialUrll,jdbcType=VARCHAR} ,
+	        USER_ID = #{userId} ,
+	        MATERIAL_STATUS = #{materialStatus,jdbcType=VARCHAR}  
+        WHERE 
+	        MATERIAL_ID = #{materialId} 
+    ]]>
+	</update>
+
+	<update id="updateStatus" parameterType="tntUserMaterial">
+		UPDATE TNT_USER_MATERIAL
+		SET MATERIAL_STATUS =
+		#{materialStatus,jdbcType=VARCHAR}
+		<if test="failReason!=null">
+			,FAIL_REASON = #{failReason,jdbcType=VARCHAR}
+		</if>
+		<where>
+			<if test="userId!=null and userId!=''">
+				AND USER_ID = #{userId}
+			</if>
+			<if test="materialId!=null and materialId!=''">
+				AND MATERIAL_ID = #{materialId}
+			</if>
+		</where>
+	</update>
+
+	<delete id="delete" parameterType="Long">
+    <![CDATA[
+        DELETE FROM TNT_USER_MATERIAL WHERE
+        MATERIAL_ID = #{id} 
+    ]]>
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+	    <![CDATA[
+		    FROM TNT_USER_MATERIAL 
+	        WHERE 
+		        MATERIAL_ID = #{id} 
+	    ]]>
+	</select>
+
+	<select id="queryByUserId" resultMap="baseResultMap"
+		parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_USER_MATERIAL
+		WHERE
+		USER_ID = #{id}
+	</select>
+
+	<select id="query" resultMap="baseResultMap" parameterType="java.util.Map">
+		<include refid="basic.pageSearchHead" />
+		SELECT * FROM TNT_USER_MATERIAL t where 1=1
+		<if test="userId!=null and userId!=''">
+			AND T.USER_ID = #{userId}
+		</if>
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+	<select id="countWithDetail" parameterType="tntUser" resultType="java.lang.Integer">
+		SELECT * FROM TNT_USER_MATERIAL t where 1=1
+		<if test="userId!=null and userId!=''">
+			AND T.USER_ID = #{userId}
+		</if>
+	</select>
+</mapper>
+

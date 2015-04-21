@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+	<!-- 文件系统 -->
+	<bean id="fsClient" class="com.lvmama.comm.pet.client.FSClient" />
+	
+	<!-- 邮件系统 -->
+	<bean id="emailClient" class="com.lvmama.comm.pet.client.EmailClient"/>
+	
+	<!-- 用户系统 -->
+	<bean id="userClient" class="com.lvmama.comm.pet.client.UserClient" />
+	
+	<!-- 系统入账 -->
+	<bean id="fileFinInterfaceClient" class="com.lvmama.comm.pet.client.FileFinInterfaceClient"/>
+	
+	<bean id="vstEmailService" class="com.lvmama.comm.pet.service.email.VstEmailServiceImpl" />
+	
+</beans>

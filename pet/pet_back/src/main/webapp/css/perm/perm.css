@@ -1,0 +1,187 @@
+@CHARSET "UTF-8";
+label.error 
+{ 
+	color:Red; 
+	font-size:13px; 
+	margin-left:5px; 
+	padding-left:16px; 
+/* 	background:url("error.png") left no-repeat;  */
+}
+/*
+	弹框窗口
+ */
+.ui-corner-all {
+    border-radius: 0px 0px 0px 0px;
+}
+.ui-dialog .ui-dialog-titlebar {
+    padding: 0.1em;
+    position: relative;
+}
+
+.ui-button-text-only .ui-button-text {
+  padding: 0.2em 0.3em;
+}
+
+.ui-dialog .ui-dialog-buttonpane button {
+  cursor: pointer;
+  margin: 2px 10px;
+}
+.ui-dialog .ui-dialog-buttonpane {
+  background-image: none;
+  border-width: 1px 0 0;
+  margin: 0.5em 0 0;
+  padding: 1px;
+  text-align: left;
+}
+
+label.error {
+  color: Red;
+  font-size: 13px;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+.input_b.error {
+  margin-right: 0;
+}
+
+/******************/
+*{ margin:0; padding:0; font-size:12px;}
+body{font:12px/1 arial,"\5b8b\4f53"; }
+table{border-collapse:collapse;border-spacing:0;}
+ol,ul{list-style:none outside;}
+a{ text-decoration:none; color:#05569d;}
+a:hover{ text-decoration:underline; }
+.red{ color:#F00;}
+
+
+/*用户管理*/
+.gl_top{ padding:0 0 0 10px; border:#e2e2e2 solid 1px; background:#f0f0f0; overflow:hidden; zoom:1;}
+.gl_top li{ float:left; padding:5px 0;}
+.gl_top li a {border:#e2e2e2 solid 1px;    margin: 0 20px;
+    padding: 0 20px;}
+.gl_top input,.gl_top select{ margin-right:20px;}
+.input_b{ height:17px; line-height:17px; width:102px; border:#cecece solid 1px;}
+.gl_top select{ height:19px; line-height:19px; border:#cecece solid 1px;}
+.gl_table{ width:100%; border:#aaccee solid 1px; margin-top:10px;}
+.gl_table th{ line-height:18px; padding:5px; font-weight:bold; color:#004499;}
+.gl_table td{ border:#aaccee solid 1px; line-height:18px; padding:3px 5px;}
+.gl_cz{ color:#ccc;}
+.gl_cz a{ margin:0 2px;}
+
+/*使用中的角色*/
+.sy_box_t{ height:31px; line-height:31px; background:#f1f6fb; padding-left:10px; color:#555; font-size:14px; font-weight:bold; border:#aaccee solid 1px; border-bottom:none;}
+.sy_box_b{ border:#aaccee solid 1px; padding:20px 20px 0;}
+.sy_table{ width:100%; border:#e8e8e8 solid 1px;}
+.sy_table th{ line-height:18px; padding:5px; font-weight:bold; color:#004499; background:#f3f3f3; color:#555;}
+.sy_table td{ border:#e8e8e8 solid 1px; text-align:center; line-height:18px; padding:3px 5px; color:#555;}
+.sy_title{ color:#555; line-height:18px; margin-top:15px; padding:10px 0 5px 0; border-top:#CCC dotted 1px;}
+.sy_bot{ text-align:right; padding:15px 0 10px;}
+.sy_bot input{ margin-left:15px;}
+
+.pop01{width:558px;border:1px solid #ccc;}
+.poptit{height:32px; padding:0px 10px;background:#eee;line-height:32px;font-weight:700;font-size:14px;color:#555;}
+.popmain{padding:20px 20px 30px;}
+.close{float:right; text-decoration:none;color:#000; font-family:Verdana;font-weight:700;}
+.role{background:#f0f0f0;border:1px solid #e2e2e2;padding:0px 10px;height:32px;line-height:32px;color:#555;}
+.roleInput{margin:0px 10px 0px 0px;width:130px;height:17px;border:1px solid #cecece;}
+.pop01 .table01{margin-top:10px;border:1px solid #e8e8e8; color:#555;}
+.pop01 .table01 td{border:1px solid #e8e8e8; text-align:center;height:26px;}
+.pop01 .table01 th{ background:#f3f3f3;height:26px;}
+
+/*用户管理3*/
+.gl_table_3{ width:688px; margin:0 auto; border:#aaccee solid 1px; margin-top:10px;}
+.gl_table_3 .gl_table_3_t_bg{ background:#f6f9ff; line-height:18px; padding:5px; font-weight:bold; color:#004499;}
+.gl_table_3 td{ border:#aaccee solid 1px; text-align:left; line-height:18px; padding:3px 5px;}
+.bumen_list li{ padding:2px 5px;}
+.bumen_list input{ vertical-align:middle; margin-right:3px; _position:relative; _top:-3px;}
+
+.gl3_top{ width:688px; margin:15px auto 0; padding:5px 0 5px 10px; border:#e2e2e2 solid 1px; background:#f0f0f0; overflow:hidden; zoom:1;}
+.gl3_top li{ width:300px; padding:5px 0; float:left; margin-right:20px;}
+.gl3_top li.clear{ clear:both; float:none;}
+.gl3_top li input{ vertical-align:middle; border:#CCC solid 1px; height:19px; line-height:19px;}
+.gl3_top li .input_left{ margin-left:20px;}
+
+.gl3_zs{ width:718px; border:#CCC solid 1px; overflow:hidden; zoom:1; padding-bottom:20px;}
+.gl3_zs h3{ height:32px; line-height:32px; background:#eee; padding:0 10px; font-size:14px; font-weight:bold;}
+.gl3_zs_b{ padding:10px 20px;}
+.gl3_zs_b p{ float:left;}
+.gl3_zs_b input{ margin-left:10px;}
+.gl3_zs_b span{ float:right;}
+
+
+
+
+/*角色设置*/
+.js_sz_table td{ color:#101010;}
+.js_sz_table td.gl_cz{ color:#ccc;}
+
+
+
+
+/*角色设置*/
+.js_zs{ width:718px; padding-bottom:20px; border:#CCC solid 1px; color:#555; overflow:hidden; zoom:1;}
+.js_zs h3{ height:32px; line-height:32px; background:#eee; padding:0 10px; font-size:14px; font-weight:bold;}
+.js_zhanshi_table{ padding:0 20px;}
+.js_zhanshi_table .no_bor_mar,.cg_tab_list .no_bor_mar{ margin-top:0; border:none;}
+.zhanshi_table{ width:678px; margin:10px auto 0; border:#e8e8e8 solid 1px;}
+.zhanshi_table th{ line-height:18px; padding:5px; font-weight:bold; color:#555;}
+.zhanshi_table td{ border:#e8e8e8 solid 1px; text-align:center; line-height:18px; padding:3px 5px; color:#555;}
+.js_zs_sc{ margin:10px 0 0 20px;}
+.js_pages{ width:658px; padding-left:20px; height:24px; line-height:24px; background:#f9f9f9; margin:12px auto 0;}
+.pages{ float:right;}
+.pages a{ margin:0 5px;}
+.pages input{ width:36px; height:19px; margin:0 3px; line-height:19px; border:#ccc solid 1px;}
+
+
+.zz_top{ margin:15px auto 0; padding:5px 0 5px 10px; border:#e2e2e2 solid 1px; background:#f0f0f0; overflow:hidden; zoom:1;}
+.zz_top li{ float:left; margin-right:20px; color:#555;}
+.zz_top li input{ vertical-align:middle;}
+.zz_top li select{ height:19px; line-height:19px;border: 1px solid #CECECE;}
+.zz_top li .input_left{ margin-left:20px;}
+.zz_table{ width:100%; border:#aaccee solid 1px; margin-top:10px;}
+.zz_table .gl_table_3_t_bg{ background:#f6f9ff; line-height:18px; padding:5px; font-weight:bold; color:#004499;}
+.zz_table td{ border:#aaccee solid 1px; text-align:left; line-height:18px; padding:3px 5px;}
+.bumen_list span{ float:right; color:#CCC;}
+.bumen_list span a{ margin:0 2px;}
+
+body .js_cl_all{ width:558px;}
+.js_cl_table{ width:516px; margin:0 auto; border:#CCC solid 1px;}
+.js_cl_table td{ padding:6px 10px; border:#CCC solid 1px;}
+.js_cl li{ float:left; margin-right:20px;}
+.js_cl li select{ height:19px; line-height:19px; border:#cecece solid 1px;}
+.zw_js{ border:#cecece solid 1px; height:17px; line-height:17px;}
+.js_ms_r{ width:420px; height:80px; border:#cecece solid 1px; line-height:18px; padding:5px; vertical-align: middle;}
+.js_cl_bc{ text-align:center; padding:10px 0;}
+
+/*权限设置*/
+.margin_r_85{ margin-right:85px;}
+.margin_r_60{ margin-right:60px;}
+.qx_xz{border: 1px solid #E8E8E8; width:516px;}
+.qx_xz td{ padding:5px;border: 1px solid #E8E8E8;}
+.qx_xz .width_400{ width:400px;}
+.qx_xz_p{ text-align:center; padding:10px 0;}
+.qx_xz_p input{ margin:0 5px;}
+.cz_qx{ margin-right:5px; vertical-align:middle; _position:relative; _top:-2px;}
+.qx_jk_p{ padding:10px; text-align:right;}
+
+/*权限监控*/
+.gl_table th{ background:#eaf1f9;}
+.th_bg th{ background:#f3f3f3;}
+
+/*采购*/
+.gl_top .cg_fxk{ margin-right:0; vertical-align:middle; _position:relative; _top:-2px;}
+.cg_tab_nav{ width:588px; margin:15px auto 0; height:25px; padding-top:2px; background:#f2f2f2; position:relative; z-index:3; }
+.cg_tab_nav li{ float:left; height:24px; padding:0 10px; margin-left:3px; line-height:24px; text-align:center; border:#ddd solid 1px; border-bottom:none; background:#f5f5f5; display:inline; cursor:pointer;}
+body .cg_tcc{ width:618px; height:556px;}
+.cg_tab_nav li.cg_tab_nav_li{ background:#FFF; height:25px; color:#0077cc; position:relative; bottom:0; _bottom:-1px;}
+.cg_tab_list{ width:568px; padding:0 10px; margin:0 auto; border-top:#ddd solid 1px; position:relative; z-index:2; display:none;}
+.cg_xx{ width:100%; border:#ddd solid 1px; color:#101010;}
+.cg_xx td,.tz_ms td{ border:#ddd solid 1px; padding:5px; line-height:18px;}
+.td_r{ text-align:right; color:#555;}
+.width_80{ width:80px;}
+.width_110{ width:110px;}
+.tz_ms{ width:100%; border:#ddd solid 1px;}
+.width_78{ width:78px;}
+.js_zs .width_auot{ width:100%;}
+.zhanshi_table th{ background:#f3f3f3;}

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="COM_SUBJECT">
+  <typeAlias alias="comSubject" type="com.lvmama.comm.pet.po.pub.ComSubject" />
+  <resultMap class="comSubject" id="baseComSubject">
+    <result column="COM_SUBJECT_ID" property="comSubjectId" />
+    <result column="SUBJECT_NAME" property="subjectName" />
+    <result column="SUBJECT_PINYIN" property="subjectPinyin" />
+    <result column="SUBJECT_TYPE" property="subjectType" />
+    <result column="USED_BY_COUNT" property="usedByCount" />
+    <result column="IF_BOLD" property="ifBold" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="UPDATE_TIME" property="updateTime" />
+    <result column="SEQ_NUM" property="seq" />
+    <result column="IS_VALID" property="isValid" />
+  </resultMap>
+  
+  <sql id="baseQueryCloum">
+	COM_SUBJECT_ID, SUBJECT_NAME, SUBJECT_PINYIN, SUBJECT_TYPE,
+	USED_BY_COUNT, IF_BOLD,
+	CREATE_TIME, UPDATE_TIME, SEQ_NUM, IS_VALID
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterClass="comSubject" resultMap="baseComSubject">
+	    select 
+	    	<include refid="baseQueryCloum"/>
+	    from COM_SUBJECT
+	    where COM_SUBJECT_ID = #comSubjectId#
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="comSubject">
+	    delete from COM_SUBJECT
+	    where COM_SUBJECT_ID = #comSubjectId#
+  </delete>
+  
+  <insert id="insert" parameterClass="comSubject">
+    <selectKey resultClass="java.lang.Long" keyProperty="comSubjectId" >
+      select COM_SUBJECT_SEQ.nextval as comSubjectId from DUAL
+    </selectKey>
+	    insert into COM_SUBJECT (COM_SUBJECT_ID, SUBJECT_NAME, SUBJECT_PINYIN, SUBJECT_TYPE,
+	      USED_BY_COUNT, IF_BOLD, CREATE_TIME, UPDATE_TIME, SEQ_NUM, IS_VALID)
+	    values (#comSubjectId#, #subjectName#, #subjectPinyin#,
+	      #subjectType#, #usedByCount#, #ifBold#, sysdate,
+	      sysdate, #seq#, #isValid#)
+  </insert>
+  
+  <update id="update" parameterClass="comSubject">
+  	update COM_SUBJECT set  UPDATE_TIME = sysdate
+  	
+      <isNotEmpty prepend="," property="subjectName">
+        SUBJECT_NAME = #subjectName#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="subjectPinyin">
+        SUBJECT_PINYIN = #subjectPinyin#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="subjectType">
+        SUBJECT_TYPE = #subjectType#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="usedByCount">
+        USED_BY_COUNT = #usedByCount#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="ifBold">
+        IF_BOLD = #ifBold#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="createTime">
+        CREATE_TIME = #createTime#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="seq">
+        SEQ_NUM = #seq#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="isValid">
+        IS_VALID = #isValid#
+      </isNotEmpty>
+    where COM_SUBJECT_ID = #comSubjectId#
+  </update>
+  
+  <update id="updateUsedCount" parameterClass="String" >
+	  update com_subject cs
+	   set cs.used_by_count =
+	       (select count(*)
+	          from place p
+	         where (p.first_topic = #subjectName#
+	            or p.scenic_second_topic = #subjectName#)
+	           and p.is_valid = 'Y')
+	 where cs.subject_name = #subjectName#
+  </update>
+  
+	<select id="queryPcSubjects" resultMap="baseComSubject" parameterClass="comSubject">
+		select
+    	<include refid="baseQueryCloum"/>
+	  from COM_SUBJECT
+		 <dynamic prepend="where">
+			<isNotEmpty property="subjectType" prepend=" AND ">
+				SUBJECT_TYPE=#subjectType# 
+			</isNotEmpty>
+			<isNotEmpty property="ifBold" prepend=" AND ">
+				IF_BOLD=#ifBold# 
+			</isNotEmpty>
+			<isNotEmpty property="subjectName" prepend=" AND ">
+				SUBJECT_NAME like '%'||#subjectName#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=" AND ">
+				IS_VALID=#isValid# 
+			</isNotEmpty>
+		</dynamic>
+		order by SEQ_NUM 
+	</select>
+	
+	<select id="querySubjectListByType" resultMap="baseComSubject" parameterClass="java.util.HashMap">
+		SELECT * FROM (
+			SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+				SELECT <include refid="baseQueryCloum"/> FROM COM_SUBJECT WHERE SUBJECT_TYPE=#subjectType# and used_by_count>0 and IS_VALID='Y' order by SEQ_NUM
+			)T WHERE ROWNUM &lt;= #maxResults#
+		)WHERE ROWNUM1 &gt;=0 
+	</select>
+	
+</sqlMap>

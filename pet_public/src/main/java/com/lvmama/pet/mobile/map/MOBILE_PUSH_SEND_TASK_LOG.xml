@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MOBILE_PUSH_SEND_TASK_LOG">
+  <resultMap class="com.lvmama.comm.pet.po.mobile.MobilePushSendTaskLog" id="BaseResultMap">
+    <result column="MOBILE_PUSH_SEND_TASK_LOG_ID" property="mobilePushSendTaskLogId" />
+    <result column="PUSH_OBJECT_ID" property="pushObjectId" />
+    <result column="PUSH_STATU" property="pushStatu" />
+    <result column="MOBILE_PUSH_SEND_TASK_ID" property="mobilePushSendTaskId" />
+    <result column="MOBILE_PUSH_JOG_TASK_ID" property="mobilePushJogTaskId" />
+  </resultMap>
+  <select id="selectByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushSendTaskLog" resultMap="BaseResultMap">
+    select MOBILE_PUSH_SEND_TASK_LOG_ID, PUSH_OBJECT_ID, PUSH_STATU, MOBILE_PUSH_SEND_TASK_ID,
+      MOBILE_PUSH_JOG_TASK_ID
+    from MOBILE_PUSH_SEND_TASK_LOG
+    where MOBILE_PUSH_SEND_TASK_LOG_ID = #mobilePushSendTaskLogId:DECIMAL#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushSendTaskLog">
+    delete from MOBILE_PUSH_SEND_TASK_LOG
+    where MOBILE_PUSH_SEND_TASK_LOG_ID = #mobilePushSendTaskLogId:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushSendTaskLog">
+  	<selectKey keyProperty="mobilePushSendTaskLogId" resultClass="java.lang.Long">
+		SELECT MOBILE_PUSH_SEND_TASK_LOG_SEQ.nextval FROM DUAL
+	</selectKey>
+    insert into MOBILE_PUSH_SEND_TASK_LOG (MOBILE_PUSH_SEND_TASK_LOG_ID, PUSH_OBJECT_ID, PUSH_STATU,
+      MOBILE_PUSH_SEND_TASK_ID, MOBILE_PUSH_JOG_TASK_ID)
+    values (#mobilePushSendTaskLogId#, #pushObjectId#, #pushStatu#,
+      #mobilePushSendTaskId#, #mobilePushJogTaskId#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushSendTaskLog">
+    insert into MOBILE_PUSH_SEND_TASK_LOG
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="mobilePushSendTaskLogId">
+        MOBILE_PUSH_SEND_TASK_LOG_ID
+      </isNotNull>
+      <isNotNull prepend="," property="pushObjectId">
+        PUSH_OBJECT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="pushStatu">
+        PUSH_STATU
+      </isNotNull>
+      <isNotNull prepend="," property="mobilePushSendTaskId">
+        MOBILE_PUSH_SEND_TASK_ID
+      </isNotNull>
+      <isNotNull prepend="," property="mobilePushJogTaskId">
+        MOBILE_PUSH_JOG_TASK_ID
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="mobilePushSendTaskLogId">
+        #mobilePushSendTaskLogId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="pushObjectId">
+        #pushObjectId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="pushStatu">
+        #pushStatu:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mobilePushSendTaskId">
+        #mobilePushSendTaskId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="mobilePushJogTaskId">
+        #mobilePushJogTaskId:DECIMAL#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushSendTaskLog">
+    update MOBILE_PUSH_SEND_TASK_LOG
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="pushObjectId">
+        PUSH_OBJECT_ID = #pushObjectId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="pushStatu">
+        PUSH_STATU = #pushStatu:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mobilePushSendTaskId">
+        MOBILE_PUSH_SEND_TASK_ID = #mobilePushSendTaskId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="mobilePushJogTaskId">
+        MOBILE_PUSH_JOG_TASK_ID = #mobilePushJogTaskId:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    where MOBILE_PUSH_SEND_TASK_LOG_ID = #mobilePushSendTaskLogId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushSendTaskLog">
+    update MOBILE_PUSH_SEND_TASK_LOG
+    set PUSH_OBJECT_ID = #pushObjectId:VARCHAR#,
+      PUSH_STATU = #pushStatu:VARCHAR#,
+      MOBILE_PUSH_SEND_TASK_ID = #mobilePushSendTaskId:DECIMAL#,
+      MOBILE_PUSH_JOG_TASK_ID = #mobilePushJogTaskId:DECIMAL#
+    where MOBILE_PUSH_SEND_TASK_LOG_ID = #mobilePushSendTaskLogId:DECIMAL#
+  </update>
+</sqlMap>

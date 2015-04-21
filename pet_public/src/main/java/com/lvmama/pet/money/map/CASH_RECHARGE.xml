@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CASH_RECHARGE">
+	<!-- 别名 -->
+    <typeAlias alias="cashRecharge" type="com.lvmama.comm.pet.po.money.CashRecharge"/>
+	<!-- 查询结果集 -->
+    <resultMap id="cashRechargeResult" class="cashRecharge">
+        <result property="cashRechargeId" column="CASH_RECHARGE_ID"/>
+        <result property="cashAccountId" column="CASH_ACCOUNT_ID"/>
+        <result property="serial" column="SERIAL"/>
+        <result property="paymentGateway" column="PAYMENT_GATEWAY"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="status" column="STATUS"/>
+        <result property="callbackTime" column="CALLBACK_TIME"/>
+        <result property="callbackInfo" column="CALLBACK_INFO"/>
+        <result property="createTime" column="CREATE_TIME"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	CASH_RECHARGE_ID ,
+        	CASH_ACCOUNT_ID ,
+        	SERIAL ,
+        	PAYMENT_GATEWAY ,
+        	AMOUNT ,
+        	STATUS ,
+        	CALLBACK_TIME ,
+        	CALLBACK_INFO ,
+        	CREATE_TIME 
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="cashRechargeId">
+	             CASH_RECHARGE_ID = #cashRechargeId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="cashAccountId">
+	             CASH_ACCOUNT_ID = #cashAccountId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="serial">
+	             SERIAL = #serial#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="paymentGateway">
+	             PAYMENT_GATEWAY = #paymentGateway#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="amount">
+	             AMOUNT = #amount#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="status">
+	             STATUS = #status#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="callbackTime">
+	             CALLBACK_TIME = #callbackTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="callbackInfo">
+	             CALLBACK_INFO = #callbackInfo#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="cashRecharge">
+				<selectKey keyProperty="cashRechargeId" resultClass="java.lang.Long">
+					SELECT CASH_RECHARGE_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        CASH_RECHARGE (
+        	CASH_RECHARGE_ID ,
+        	CASH_ACCOUNT_ID ,
+        	SERIAL ,
+        	PAYMENT_GATEWAY ,
+        	AMOUNT ,
+        	STATUS ,
+        	CALLBACK_TIME ,
+        	CALLBACK_INFO ,
+        	CREATE_TIME 
+        ) VALUES (
+        	#cashRechargeId# ,
+        	#cashAccountId# ,
+        	#serial# ,
+        	#paymentGateway# ,
+        	#amount# ,
+        	#status# ,
+        	#callbackTime# ,
+        	#callbackInfo# ,
+        	#createTime# 
+        )
+    ]]>
+    </insert>
+    
+    <select id="findFincRechargeByPrimaryKey" resultMap="cashRechargeResult"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+		SELECT * FROM CASH_RECHARGE WHERE CASH_RECHARGE_ID = #cashRechargeId#
+ 		]]>
+	</select>
+	
+	<update id="updateStatusBySerial" parameterClass="java.util.Map">
+		<![CDATA[
+		UPDATE CASH_RECHARGE
+		SET STATUS = #status#
+		WHERE SERIAL = #serial#
+		]]>
+	</update>
+	
+	<update id="updateCashRechargeByPrimaryKey"
+		parameterClass="cashRecharge">
+		<![CDATA[
+			UPDATE CASH_RECHARGE
+			   SET AMOUNT        = #amount#,
+			       STATUS        = #status#,
+			       CALLBACK_TIME = #callbackTime#,
+			       CALLBACK_INFO = #callbackInfo#
+			 WHERE CASH_RECHARGE_ID = #cashRechargeId#
+		]]>
+	</update>
+	<select id="findCashRechargeBySerial" resultMap="cashRechargeResult"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		SELECT * FROM CASH_RECHARGE WHERE SERIAL = #serial#
+ 		]]>
+	</select>
+</sqlMap>

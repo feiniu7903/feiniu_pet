@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MOBILE_RECOMMEND_BLOCK" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.MobileRecommendBlock" >
+    <result column="ID" property="id" />
+    <result column="BLOCK_NAME" property="blockName" />
+    <result column="BLOCK_DES" property="blockDes" />
+    <result column="BLOCK_KEY" property="blockKey" />
+    <result column="CREATED_TIME" property="createdTime" />
+    <result column="BLOCK_IMAGE_URL" property="blockImageUrl" />
+    <result column="IS_VALID" property="isValid" />
+    <result column="OBJECT_ID" property="objectId" />
+    <result column="OBJECT_TYPE" property="objectType" />
+    <result column="PARENT_ID" property="parentId" />
+    <result column="PAGE_CHANNEL" property="pageChannel" />
+     <result column="BLOCK_TYPE" property="blockType" />
+     <result column="RESERVE1" property="reserve1" />
+     <result column="RESERVE2" property="reserve2" />
+     <result column="RESERVE3" property="reserve3" />
+     <result column="RESERVE4" property="reserve4" />
+     <result column="RESERVE5" property="reserve5" />
+     <result column="SEQ_NUM" property="seqNum" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobileRecommendBlock" >
+    select ID, BLOCK_NAME, BLOCK_DES, BLOCK_KEY, CREATED_TIME, BLOCK_IMAGE_URL, IS_VALID, OBJECT_ID,
+      OBJECT_TYPE,PARENT_ID,PAGE_CHANNEL,BLOCK_TYPE,RESERVE1,RESERVE2,RESERVE3,RESERVE4,RESERVE5,SEQ_NUM
+    from MOBILE_RECOMMEND_BLOCK
+    where ID = #id#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileRecommendBlock" >
+    delete from MOBILE_RECOMMEND_BLOCK
+    where ID = #id#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileRecommendBlock" >
+   <selectKey keyProperty="id" resultClass="java.lang.Long">
+		SELECT MOBILE_RECOMMEND_BLOCK_ID_SEQ.nextval FROM DUAL
+   </selectKey>
+    insert into MOBILE_RECOMMEND_BLOCK (ID, BLOCK_NAME, BLOCK_DES, BLOCK_KEY, CREATED_TIME,
+      BLOCK_IMAGE_URL, IS_VALID, OBJECT_ID, OBJECT_TYPE,PARENT_ID,PAGE_CHANNEL,BLOCK_TYPE,RESERVE1,RESERVE2,RESERVE3,RESERVE4,RESERVE5,SEQ_NUM)
+    values (#id#, #blockName#, #blockDes#, #blockKey#,
+      #createdTime#, #blockImageUrl#, #isValid#, #objectId#,
+      #objectType#,#parentId#,#pageChannel#,#blockType#,#reserve1#,#reserve2#,#reserve3#,#reserve4#,#reserve5#,#seqNum#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileRecommendBlock" >
+    insert into MOBILE_RECOMMEND_BLOCK
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="blockName" >
+        BLOCK_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="blockDes" >
+        BLOCK_DES
+      </isNotNull>
+      <isNotNull prepend="," property="blockKey" >
+        BLOCK_KEY
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        CREATED_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="blockImageUrl" >
+        BLOCK_IMAGE_URL
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        IS_VALID
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        OBJECT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        OBJECT_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        PARENT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="pageChannel" >
+        PAGE_CHANNEL
+      </isNotNull>
+      <isNotNull prepend="," property="blockType" >
+        BLOCK_TYPE
+      </isNotNull>
+       <isNotNull prepend="," property="reserve1" >
+        RESERVE1
+      </isNotNull>
+       <isNotNull prepend="," property="reserve2" >
+        RESERVE2
+      </isNotNull>
+       <isNotNull prepend="," property="reserve3" >
+        RESERVE3
+      </isNotNull>
+       <isNotNull prepend="," property="reserve4" >
+        RESERVE4
+      </isNotNull>
+       <isNotNull prepend="," property="reserve5" >
+        RESERVE5
+      </isNotNull>
+       <isNotNull prepend="," property="seqNum" >
+        SEQ_NUM
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        MOBILE_RECOMMEND_BLOCK_ID_SEQ.nextval
+      </isNotNull>
+      <isNotNull prepend="," property="blockName" >
+        #blockName#
+      </isNotNull>
+      <isNotNull prepend="," property="blockDes" >
+        #blockDes#
+      </isNotNull>
+      <isNotNull prepend="," property="blockKey" >
+        #blockKey#
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        #createdTime#
+      </isNotNull>
+      <isNotNull prepend="," property="blockImageUrl" >
+        #blockImageUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        #isValid#
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        #objectId#
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        #objectType#
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        #parentId#
+      </isNotNull>
+      <isNotNull prepend="," property="pageChannel" >
+        #pageChannel#
+      </isNotNull>
+       <isNotNull prepend="," property="blockType" >
+        #blockType#
+      </isNotNull>
+      <isNotNull prepend="," property="reserve1" >
+        #reserve1#
+      </isNotNull>
+        <isNotNull prepend="," property="reserve2" >
+        #reserve2#
+      </isNotNull>
+        <isNotNull prepend="," property="reserve3" >
+        #reserve3#
+      </isNotNull>
+        <isNotNull prepend="," property="reserve4" >
+        #reserve4#
+      </isNotNull>
+        <isNotNull prepend="," property="reserve5" >
+        #reserve5#
+      </isNotNull>
+        <isNotNull prepend="," property="seqNum" >
+        #seqNum#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileRecommendBlock" >
+    update MOBILE_RECOMMEND_BLOCK
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="blockName" >
+        BLOCK_NAME = #blockName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="blockDes" >
+        BLOCK_DES = #blockDes:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="blockKey" >
+        BLOCK_KEY = #blockKey:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        CREATED_TIME = #createdTime:DATE#
+      </isNotNull>
+      <isNotNull prepend="," property="blockImageUrl" >
+        BLOCK_IMAGE_URL = #blockImageUrl:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        IS_VALID = #isValid:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        OBJECT_ID = #objectId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        OBJECT_TYPE = #objectType:DECIMAL#
+      </isNotNull>
+       <isNotNull prepend="," property="parentId" >
+        PARENT_ID = #parentId#
+      </isNotNull>
+       <isNotNull prepend="," property="pageChannel" >
+        PAGE_CHANNEL = #pageChannel#
+      </isNotNull>
+       <isNotNull prepend="," property="blockType" >
+        BLOCK_TYPE = #blockType#
+      </isNotNull>
+      <isNotNull prepend="," property="reserve1" >
+        RESERVE1 = #reserve1#
+      </isNotNull>
+        <isNotNull prepend="," property="reserve2" >
+         RESERVE2 = #reserve2#
+      </isNotNull>
+        <isNotNull prepend="," property="reserve3" >
+         RESERVE3 = #reserve3#
+      </isNotNull>
+        <isNotNull prepend="," property="reserve4" >
+         RESERVE4 = #reserve4#
+      </isNotNull>
+        <isNotNull prepend="," property="reserve5" >
+         RESERVE5 = #reserve5#
+      </isNotNull>
+        <isNotNull prepend="," property="seqNum" >
+        SEQ_NUM = #seqNum#
+      </isNotNull>
+    </dynamic>
+    where ID = #id#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileRecommendBlock" >
+    update MOBILE_RECOMMEND_BLOCK
+    set BLOCK_NAME = #blockName#,
+      BLOCK_DES = #blockDes#,
+      BLOCK_KEY = #blockKey#,
+      CREATED_TIME = #createdTime#,
+      BLOCK_IMAGE_URL = #blockImageUrl#,
+      IS_VALID = #isValid#,
+      OBJECT_ID = #objectId#,
+      OBJECT_TYPE = #objectType#,
+      PARENT_ID = #parentId#,
+      PAGE_CHANNEL = #pageChannel#,
+      BLOCK_TYPE = #blockType#,
+      RESERVE1 = #reserve1#,
+      RESERVE2 = #reserve2#,
+      RESERVE3 = #reserve3#,
+      RESERVE4 = #reserve4#,
+      RESERVE5 = #reserve5#,
+      SEQ_NUM = #seqNum#
+    where ID = #id#
+  </update>
+  
+  <!-- 综合查询  -->
+   <sql id="queryMobileRecommendBlockByParamWhere">
+   	<dynamic prepend="where" >
+      <isNotEmpty prepend=" and " property="id" >
+        ID = #id#
+      </isNotEmpty>
+      <isNotEmpty prepend=" and " property="blockName" >
+        BLOCK_NAME = #blockName#
+      </isNotEmpty>
+      <isNotEmpty prepend=" and " property="blockNameLike" >
+        BLOCK_NAME like '%'||#blockNameLike#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="blockDes" >
+        BLOCK_DES = #blockDes#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="blockKey" >
+        BLOCK_KEY = #blockKey#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="isValid" >
+        IS_VALID = #isValid#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="objectId" >
+        OBJECT_ID = #objectId#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="objectType" >
+        OBJECT_TYPE = #objectType#
+      </isNotEmpty>
+      <isNotEmpty prepend=" and " property="parentId" >
+        PARENT_ID = #parentId#
+      </isNotEmpty>
+      <isEqual property="parent" compareValue="true" prepend="and"> <!-- 查询根节点 -->
+    	PARENT_ID is null
+      </isEqual>
+      <isNotEmpty prepend="and" property="pageChannel" >
+        PAGE_CHANNEL = #pageChannel#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="blockType" >
+        BLOCK_TYPE = #blockType#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="reserve1" >
+        RESERVE1 like '%'||#reserve1#||'%'
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="reserve2" >
+        RESERVE2 = #reserve2#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="reserve3" >
+        RESERVE3 = #reserve3#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="reserve4" >
+        RESERVE4 = #reserve4#
+      </isNotEmpty>
+       <isNotEmpty prepend="and" property="reserve5" >
+        RESERVE5 = #reserve5#
+      </isNotEmpty>
+    </dynamic>
+  </sql>
+  
+  <select id="queryMobileRecommendBlockByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+    select ID, BLOCK_NAME, BLOCK_DES, BLOCK_KEY, CREATED_TIME, BLOCK_IMAGE_URL, IS_VALID, OBJECT_ID,
+      OBJECT_TYPE,PARENT_ID,PAGE_CHANNEL,BLOCK_TYPE,RESERVE1,RESERVE2,RESERVE3,RESERVE4,RESERVE5,SEQ_NUM
+    from MOBILE_RECOMMEND_BLOCK
+    <include refid="queryMobileRecommendBlockByParamWhere"/>
+    <isNotEmpty prepend=" " property="orderByPin" >
+       order by RESERVE1 asc
+    </isNotEmpty>
+    <isEmpty prepend=" " property="orderByPin" >
+        order by SEQ_NUM desc
+    </isEmpty>
+  </select>
+  
+  <!-- 查询总数 -->
+  <select id="countMobileRecommendBlockByParam" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+    select count(*) from MOBILE_RECOMMEND_BLOCK
+    <include refid="queryMobileRecommendBlockByParamWhere"/>
+  </select>
+  
+  <!-- 删除mobileRecommendBlock -->
+  <delete id="deleteMobileRecommendBlockByParam" parameterClass="java.util.HashMap">
+    delete from MOBILE_RECOMMEND_BLOCK 
+    <dynamic prepend="where">
+	 <isNotEmpty property="id" prepend="and">
+		ID = #id#
+	 </isNotEmpty>		
+	 <isNotEmpty property="parentId" prepend="and">
+		PARENT_ID = #parentId#
+	 </isNotEmpty>		
+	</dynamic>
+  </delete>
+  
+</sqlMap>

@@ -1,0 +1,1895 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.1//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.1.dtd">
+<!-- Configuration file for UrlRewriteFilter http://tuckey.org/urlrewrite/ -->
+<urlrewrite>
+	<!-- 帮助中心 -->
+	<rule match-type="regex">
+		<from>^/public/indexhelp$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=8890&amp;station=help&amp;ztname=FAQ&amp;fname=help</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/([a-zA-Z]+)/([a-zA-Z_]+)-([0-9]+)[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=$3&amp;station=LP&amp;ztname=$1&amp;fname=$2</to>
+	</rule>
+	<!-- 帮助中心 -->
+	<!--
+	<rule match-type="regex">
+		<from>^/zt/lvyou/shiyi/$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=7043&amp;station=LP&amp;ztname=guoqing&amp;fname=jzh</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/shiyi/gd\.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=7043&amp;station=LP&amp;ztname=guoqing&amp;fname=gd</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/shiyi/sc\.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=7043&amp;station=LP&amp;ztname=guoqing&amp;fname=sc</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/shiyi/jjy\.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=7043&amp;station=LP&amp;ztname=guoqing&amp;fname=jjy</to>
+	</rule>
+	 -->
+	<rule match-type="regex">
+	  	<from>^/zt/lvyou/wenquan[/]*$</from>
+	  	<to>/indexPakage/ztStationAction.do?blockId=14382&amp;station=LP&amp;ztname=hotspring&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+	  	<from>^/zt/lvyou/wenquan_sc[/]*$</from>
+	  	<to>/indexPakage/ztStationAction.do?blockId=14382&amp;station=LP&amp;ztname=hotspring&amp;fname=sc</to>
+	</rule>
+	<rule match-type="regex">
+	  	<from>^/zt/lvyou/wenquan_gd[/]*$</from>
+	  	<to>/indexPakage/ztStationAction.do?blockId=14382&amp;station=LP&amp;ztname=hotspring&amp;fname=gd</to>
+	</rule>
+	<rule match-type="regex">
+	  	<from>^/zt/lvyou/wenquan_bj[/]*$</from>
+	  	<to>/indexPakage/ztStationAction.do?blockId=14382&amp;station=LP&amp;ztname=hotspring&amp;fname=bj</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/kailvxing[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=7682&amp;station=LP&amp;ztname=kailvxing&amp;fname=HappyTravel</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/syzyx[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=8793&amp;station=LP&amp;ztname=sanya&amp;fname=sanya</to>
+	</rule>
+	<!-- 马尔代夫旅游节的跳转 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=sh_index</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/lvyou.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=sh_porduct</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/bj[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=bj_index</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/bj/lvyou.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=bj_porduct</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/sh[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=sh_index</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/sh/lvyou.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=sh_porduct</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/cd[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=cd_index</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/cd/lvyou.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=cd_porduct</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/gz[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=gz_index</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/gz/lvyou.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=gz_porduct</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/hk[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=hk_index</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/hk/lvyou.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=hk_porduct</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/nj[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=nj_index</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/nj/lvyou.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=nj_porduct</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/hz[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=hz_index</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/maerdaifu/hz/lvyou.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9118&amp;station=LP&amp;ztname=meldive&amp;fname=hz_porduct</to>
+	</rule>
+	<!-- 马尔代夫旅游节的跳转 结束 -->
+	<!-- 春季踏青专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/cjtq[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9331&amp;station=LP&amp;ztname=taqing&amp;fname=index</to>
+	</rule>
+	<!-- 春季踏青专题 结束 -->
+	<!-- 日本樱花专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/riben[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9312&amp;station=LP&amp;ztname=riben&amp;fname=japan</to>
+	</rule>
+	<!-- 日本樱花专题 结束 -->
+
+	<!-- 2012三亚自由行专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/syly[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9463&amp;station=LP&amp;ztname=syly&amp;fname=shanghai</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/syly/sh.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9463&amp;station=LP&amp;ztname=syly&amp;fname=shanghai</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/syly/hz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9463&amp;station=LP&amp;ztname=syly&amp;fname=hangzhou</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/syly/bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9463&amp;station=LP&amp;ztname=syly&amp;fname=beijing</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/syly/cd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9463&amp;station=LP&amp;ztname=syly&amp;fname=chengdu</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/syly/gz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9463&amp;station=LP&amp;ztname=syly&amp;fname=guangzhou</to>
+	</rule>
+	<!-- 2012三亚自由行专题 结束 -->
+	<!-- 五一境外专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/wuyi[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9359&amp;station=LP&amp;ztname=wuyi&amp;fname=sh</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/wuyi/bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9359&amp;station=LP&amp;ztname=wuyi&amp;fname=bj</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/wuyi/gz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9359&amp;station=LP&amp;ztname=wuyi&amp;fname=gz</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/wuyi/cd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9359&amp;station=LP&amp;ztname=wuyi&amp;fname=cd</to>
+	</rule>
+	<!-- 五一境外专题 结束 -->
+	
+	
+	
+	<!--2014 五一专题  start-->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/wuyi_1/[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=20229&amp;station=LP&amp;ztname=wuyi_1&amp;fname=sh</to>
+	</rule>	
+
+	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/wuyi_1/bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=20229&amp;station=LP&amp;ztname=wuyi_1&amp;fname=bj</to>
+	</rule>
+	
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/wuyi_1/cd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=20229&amp;station=LP&amp;ztname=wuyi_1&amp;fname=cd</to>
+	</rule>
+
+	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/wuyi_1/gz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=20229&amp;station=LP&amp;ztname=wuyi_1&amp;fname=gz</to>
+	</rule>
+	
+	<!--2014 五一专题  end-->
+	
+	<!-- 厦门专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/xiamen[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=19707&amp;station=LP&amp;ztname=xiamen&amp;fname=sh</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/xiamen/bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=19707&amp;station=LP&amp;ztname=xiamen&amp;fname=bj</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/xiamen/gz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=19707&amp;station=LP&amp;ztname=xiamen&amp;fname=gz</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/xiamen/cd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=19707&amp;station=LP&amp;ztname=xiamen&amp;fname=cd</to>
+	</rule>
+	<!--厦门专题 结束 -->
+	<!-- 酒店全年型专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/tsjd[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9532&amp;station=LP&amp;ztname=jiudian&amp;fname=index</to>
+	</rule>
+	<!-- 酒店全年型专题 结束 -->
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/qljd[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9541&amp;station=LP&amp;ztname=lovershotel&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/wyych[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9498&amp;station=LP&amp;ztname=wuyuan&amp;fname=index</to>
+	</rule>
+	<!--自驾游专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/zjy[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9565&amp;station=LP&amp;ztname=selfDriveTour&amp;fname=sh</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/zjy/([a-zA-Z]+).html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9565&amp;station=LP&amp;ztname=selfDriveTour&amp;fname=$1</to>
+	</rule>
+	<!--自驾游专题结束 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/yzly[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9619&amp;station=LP&amp;ztname=yangzhou&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/rmly[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9549&amp;station=LP&amp;ztname=lifeview&amp;fname=index</to>
+	</rule>
+	<!--春季泡温泉专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/cjpwq[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9659&amp;station=LP&amp;ztname=cjpwq&amp;fname=index</to>
+	</rule>
+	<!--春季泡温泉专题结束 -->
+	<!--九华山专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/jiuhuashan[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9736&amp;station=LP&amp;ztname=jiuhuashan&amp;fname=index</to>
+	</rule>
+	<!--九华山专题结束 -->
+	<!-- 2012端午节专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/duanwu[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9759&amp;station=LP&amp;ztname=wuyijie&amp;fname=index</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/duanwu/bj[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9759&amp;station=LP&amp;ztname=wuyijie&amp;fname=bj</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/duanwu/gz[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9759&amp;station=LP&amp;ztname=wuyijie&amp;fname=gz</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/duanwu/cd[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9759&amp;station=LP&amp;ztname=wuyijie&amp;fname=cd</to>
+	</rule>
+	<!-- 2012端午节 结束 -->
+	<!--云南心旅程专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/yunnan[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9886&amp;station=LP&amp;ztname=yunnan&amp;fname=sh</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/yunnan/([a-zA-Z]+).html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9886&amp;station=LP&amp;ztname=yunnan&amp;fname=$1</to>
+	</rule>
+	<!--云南心旅程专题结束 -->
+
+	<!-- 欧洲专题 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/ouzhou[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9957&amp;station=LP&amp;ztname=ouzhoutravel&amp;fname=index</to>
+	</rule>
+	<!-- 欧洲专题 -->
+	<!--古镇酒店专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/kezhan[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10618&amp;station=LP&amp;ztname=kezhan&amp;fname=index</to>
+	</rule>
+	<!--古镇酒店专题结束 -->
+	<!--广东亲水专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gdpl[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10478&amp;station=LP&amp;ztname=qinshui&amp;fname=index</to>
+	</rule>
+	<!-- 广东亲水专题 结束 -->
+	<!--峨眉山专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/emeishan[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10635&amp;station=LP&amp;ztname=emeishan&amp;fname=index</to>
+	</rule>
+	<!--峨眉山专题结束 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/qianzheng[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=14279&amp;station=LP&amp;ztname=qianzheng&amp;fname=index</to>
+	</rule>
+	<!--黄山专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/huangshan[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=9498&amp;station=LP&amp;ztname=huangshan&amp;fname=index</to>
+	</rule>
+	<!-- 黄山专题 结束 -->
+	<!-- 迪士尼专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dishini[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10704&amp;station=LP&amp;ztname=dishini&amp;fname=sh</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dishini/([a-zA-Z]+).html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10704&amp;station=LP&amp;ztname=dishini&amp;fname=$1</to>
+	</rule>
+	<!-- 迪士尼专题结束 -->
+	<!--溪游记专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/piaoliu[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12239&amp;station=LP&amp;ztname=jdpiaoliu&amp;fname=index</to>
+	</rule>
+	<!--溪游记专题结束 -->
+	<!-- 暑假环球行专题 S -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/shuqi[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10725&amp;station=LP&amp;ztname=summerTourist&amp;fname=sh</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/shuqi/bj[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10725&amp;station=LP&amp;ztname=summerTourist&amp;fname=bj</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/shuqi/gz[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10725&amp;station=LP&amp;ztname=summerTourist&amp;fname=gz</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/shuqi/cd[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10725&amp;station=LP&amp;ztname=summerTourist&amp;fname=cd</to>
+	</rule>
+	<!-- 暑假环球行专题 E -->
+	<!-- 尼泊尔专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/niboer[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10757&amp;station=LP&amp;ztname=niboer&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/niboer/hb\.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10757&amp;station=LP&amp;ztname=niboer&amp;fname=hb</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/niboer/qz\.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10757&amp;station=LP&amp;ztname=niboer&amp;fname=qz</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/niboer/wb\.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10757&amp;station=LP&amp;ztname=niboer&amp;fname=wb</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/niboer/xq\.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10757&amp;station=LP&amp;ztname=niboer&amp;fname=xq</to>
+	</rule>
+	<!-- 尼泊尔专题结束 -->
+
+	<!--三亚minset专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=index</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/index.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=index</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/gd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=everyPlace</to>
+	</rule>
+
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/dd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=dangPlace</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/jq.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=jq</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/jd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=hotel</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/zt.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=lvtuan</to>
+	</rule>
+	
+
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/blg.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=blg</to>
+	</rule>
+
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/ns.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=ns</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/tyhj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=tyhj</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/wzz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=wzz</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/lht.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=lht</to>
+	</rule>
+	
+		<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/ynd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=ynd</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/rdtt.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=rdtt</to>
+	</rule>
+
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/ylw.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=ylw</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/nwhd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=nwhd</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/xd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=xd</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/sanyaminset/ntwq.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11796&amp;station=LP&amp;ztname=sanyaminset&amp;fname=ntwq</to>
+	</rule>
+
+	<!--三亚minset专题结束 -->
+	
+	<!-- 中东非专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/zdf[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11797&amp;station=LP&amp;ztname=zdf&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/zdf/dibai\.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11797&amp;station=LP&amp;ztname=zdf&amp;fname=dibai</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/zdf/kenniya\.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11797&amp;station=LP&amp;ztname=zdf&amp;fname=kenniya</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/zdf/tuerqi\.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11797&amp;station=LP&amp;ztname=zdf&amp;fname=tuerqi</to>
+	</rule>
+		<rule match-type="regex">
+		<from>^/zt/lvyou/zdf/ajnf\.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11797&amp;station=LP&amp;ztname=zdf&amp;fname=ajnf</to>
+	</rule>
+	<!-- 中东非专题结束 -->
+
+	<!-- 西藏专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/xizang[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10984&amp;station=LP&amp;ztname=xizang&amp;fname=sh</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/xizang/sh[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10984&amp;station=LP&amp;ztname=xizang&amp;fname=sh</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/xizang/bj[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10984&amp;station=LP&amp;ztname=xizang&amp;fname=bj</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/xizang/cd[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10984&amp;station=LP&amp;ztname=xizang&amp;fname=cd</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/xizang/gz[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10984&amp;station=LP&amp;ztname=xizang&amp;fname=gz</to>
+	</rule>
+	<!-- 西藏专题结束 -->
+	<!--千岛湖专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/qiandaohu[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11620&amp;station=LP&amp;ztname=qiandaohu&amp;fname=index</to>
+	</rule>
+	<!-- 千岛湖专题 结束 -->
+	<!-- 漂流专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/piaoliu/index.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10784&amp;station=LP&amp;ztname=piaoliu&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/piaoliu/sc.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10784&amp;station=LP&amp;ztname=piaoliu&amp;fname=sc</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/piaoliu/bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10784&amp;station=LP&amp;ztname=piaoliu&amp;fname=bj</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gdpiaoliu[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12957&amp;station=LP&amp;ztname=piaoliu&amp;fname=gz</to>
+	</rule>
+	<!-- 漂流专题结束 -->
+	
+	
+		<!-- 2014   玩水 漂流 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/piaoliu/sh$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=22223&amp;station=LP&amp;ztname=piaoliu&amp;fname=sh</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/piaoliu/cq$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=22223&amp;station=LP&amp;ztname=piaoliu&amp;fname=cq</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/piaoliu/bj$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=22223&amp;station=LP&amp;ztname=piaoliu&amp;fname=bj</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/piaoliu/gz$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=22223&amp;station=LP&amp;ztname=piaoliu&amp;fname=gz</to>
+	</rule>
+	<!--end 2014   玩水 漂流  -->
+	
+	
+	
+	<!-- 开发大西部专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/xibu[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12035&amp;station=LP&amp;ztname=xibu&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/xibu/index.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12035&amp;station=LP&amp;ztname=xibu&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/xibu/bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12980&amp;station=LP&amp;ztname=xibu&amp;fname=bj</to>
+	</rule>
+	<!-- 开发大西部专题结束 -->
+	<!-- 海滨海岛专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/haidao[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11720&amp;station=LP&amp;ztname=haidao&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/haidao/index.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11720&amp;station=LP&amp;ztname=haidao&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/haidao/cd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11720&amp;station=LP&amp;ztname=haidao&amp;fname=cd</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/haidao/bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=11720&amp;station=LP&amp;ztname=haidao&amp;fname=bj</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/haidao/gz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13000&amp;station=LP&amp;ztname=haidao&amp;fname=gz</to>
+	</rule>
+	<!-- 海滨海岛专题结束 -->
+	<!--日本最炫风专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/riben_1[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12568&amp;station=LP&amp;ztname=riben_1&amp;fname=japan</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/riben_1/([a-zA-Z]+).html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12568&amp;station=LP&amp;ztname=riben_1&amp;fname=japan-$1</to>
+	</rule>
+	<!--日本最炫风专题结束 -->
+	<!--迪斯尼灰熊谷专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dsn[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12500&amp;station=LP&amp;ztname=dsn&amp;fname=page1</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dsn/fdqb.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12500&amp;station=LP&amp;ztname=dsn&amp;fname=page2</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dsn/lydj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12500&amp;station=LP&amp;ztname=dsn&amp;fname=page3</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dsn/iframe.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12500&amp;station=LP&amp;ztname=dsn&amp;fname=iframe</to>
+	</rule>
+	<!--迪斯尼灰熊谷专题结束 -->
+	<!-- 放鸡岛专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/fjd[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=10790&amp;station=LP&amp;ztname=fjd&amp;fname=index</to>
+	</rule>
+	<!-- 放鸡岛专题结束 -->
+	<!-- 华侨成专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/hqc[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=14257&amp;station=LP&amp;ztname=hqc&amp;fname=index</to>
+	</rule>
+	<!-- 华侨成专题结束 -->
+	<!-- 水上乐园专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/ssly[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12610&amp;station=LP&amp;ztname=ssly&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/ssly/cd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12610&amp;station=LP&amp;ztname=ssly&amp;fname=cd</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/ssly/bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12610&amp;station=LP&amp;ztname=ssly&amp;fname=bj</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/ssly/gz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12987&amp;station=LP&amp;ztname=ssly&amp;fname=gz</to>
+	</rule>
+	<!-- 水上乐园专题结束 -->
+	<!-- 广州大西部专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/daxibu[/]?$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=12690&amp;station=LP&amp;ztname=gzdxb&amp;fname=index
+		</to>
+	</rule>
+	<!-- 广州大西部专题结束 -->
+	<!-- 美国专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/sh_sm.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=sh_sm</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/sh_yh.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=sh_yh</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/sh_dz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=sh_dz</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/cd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=cd</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/cd_sm.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=cd_sm</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/cd_yh.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=cd_yh</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/cd_dz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=cd_dz</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=bj</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/bj_sm.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=bj_sm</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/bj_yh.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=bj_yh</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/bj_dz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=bj_dz</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/gz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=gz</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/gz_sm.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=gz_sm</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/gz_yh.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=gz_yh</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/meiguo/gz_dz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12837&amp;station=LP&amp;ztname=meiguo&amp;fname=gz_dz</to>
+	</rule>
+	<!-- 美国专题结束 -->
+
+
+	<!-- 出境国庆专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqcjy[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13505&amp;station=LP&amp;ztname=gqcjy&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqcjy/index.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13505&amp;station=LP&amp;ztname=gqcjy&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqcjy/cd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13505&amp;station=LP&amp;ztname=gqcjy&amp;fname=cd</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqcjy/bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13505&amp;station=LP&amp;ztname=gqcjy&amp;fname=bj</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqcjy/gz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13505&amp;station=LP&amp;ztname=gqcjy&amp;fname=gz</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqcjy/sz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13505&amp;station=LP&amp;ztname=gqcjy&amp;fname=sz</to>
+	</rule>
+	<!-- 出境国庆专题结束 -->
+
+	<!-- 广东长隆专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gzcl[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13806&amp;station=LP&amp;ztname=gzcl&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gzcl/index.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13806&amp;station=LP&amp;ztname=gzcl&amp;fname=index</to>
+	</rule>
+	<!-- 广东长隆专题结束 -->
+
+	<!-- 广东大巴专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dabayou[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13786&amp;station=LP&amp;ztname=dabayou&amp;fname=guangxi</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dabayou/index.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13786&amp;station=LP&amp;ztname=dabayou&amp;fname=guangxi</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dabayou/guangxi.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13786&amp;station=LP&amp;ztname=dabayou&amp;fname=guangxi</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dabayou/hainan.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13786&amp;station=LP&amp;ztname=dabayou&amp;fname=hainan</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dabayou/fujian.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13786&amp;station=LP&amp;ztname=dabayou&amp;fname=fujian</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dabayou/hunan.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13786&amp;station=LP&amp;ztname=dabayou&amp;fname=hunan</to>
+	</rule>
+	<!-- 广东大巴专题结束 -->
+
+	<!-- 国内国庆专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqly[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13864&amp;station=LP&amp;ztname=gqly&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqly/index.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13864&amp;station=LP&amp;ztname=gqly&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqly/gz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13864&amp;station=LP&amp;ztname=gqly&amp;fname=gz</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqly/cd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13864&amp;station=LP&amp;ztname=gqly&amp;fname=cd</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqly/bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13864&amp;station=LP&amp;ztname=gqly&amp;fname=bj</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqly/sh_ct.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13864&amp;station=LP&amp;ztname=gqly&amp;fname=sh_ct</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqly/gz_ct.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13864&amp;station=LP&amp;ztname=gqly&amp;fname=gz_ct</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqly/cd_ct.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13864&amp;station=LP&amp;ztname=gqly&amp;fname=cd_ct</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gqly/bj_ct.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13864&amp;station=LP&amp;ztname=gqly&amp;fname=bj_ct</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/qianzheng[/]*$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=14279&amp;station=LP&amp;ztname=qianzheng&amp;fname=index</to>
+	</rule>
+	<!--港澳专题开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gangao[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=13863&amp;station=LP&amp;ztname=gangao&amp;fname=index
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gangao/index.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13863&amp;station=LP&amp;ztname=gangao&amp;fname=index</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gangao/hotel.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13863&amp;station=LP&amp;ztname=gangao&amp;fname=hotel</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gangao/ticket.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13863&amp;station=LP&amp;ztname=gangao&amp;fname=ticket</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gangao/gty_bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13863&amp;station=LP&amp;ztname=gangao&amp;fname=gty_bj</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gangao/gty_cd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13863&amp;station=LP&amp;ztname=gangao&amp;fname=gty_cd</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gangao/gty_gz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13863&amp;station=LP&amp;ztname=gangao&amp;fname=gty_gz</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gangao/gty_sh.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13863&amp;station=LP&amp;ztname=gangao&amp;fname=gty_sh</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gangao/zyx_bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13863&amp;station=LP&amp;ztname=gangao&amp;fname=zyx_bj</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gangao/zyx_cd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13863&amp;station=LP&amp;ztname=gangao&amp;fname=zyx_cd</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gangao/zyx_gz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13863&amp;station=LP&amp;ztname=gangao&amp;fname=zyx_gz</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/gangao/zyx_sh.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=13863&amp;station=LP&amp;ztname=gangao&amp;fname=zyx_sh</to>
+	</rule> 	
+	<!-- 国内国庆专题结束 -->		
+	<!--长途自由行专题开始-->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/ctly[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14289&amp;station=LP&amp;ztname=ctly&amp;fname=cty
+		</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/ctly/index.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14289&amp;station=LP&amp;ztname=ctly&amp;fname=cty
+		</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/ctly/cty.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14289&amp;station=LP&amp;ztname=ctly&amp;fname=cty
+		</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/ctly/xm.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14289&amp;station=LP&amp;ztname=ctly&amp;fname=cty_xm
+		</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/ctly/gl.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14289&amp;station=LP&amp;ztname=ctly&amp;fname=cty_gl
+		</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/ctly/lj.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14289&amp;station=LP&amp;ztname=ctly&amp;fname=cty_lj
+		</to>
+	</rule>
+
+	<rule match-type="regex">
+		<from>^/zt/lvyou/ctly/jzg.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14289&amp;station=LP&amp;ztname=ctly&amp;fname=cty_jzg
+		</to>
+	</rule>
+	<!--长途自由行专题结束-->	
+	
+	<!-- 澳洲专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/aozhou[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14598&amp;station=LP&amp;ztname=aozhou&amp;fname=index
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/aozhou/index.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14598&amp;station=LP&amp;ztname=aozhou&amp;fname=index
+		</to>
+	</rule>	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/aozhou/cdgty[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14598&amp;station=LP&amp;ztname=aozhou&amp;fname=cdgty
+		</to>
+	</rule>	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/aozhou/bjgty[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14598&amp;station=LP&amp;ztname=aozhou&amp;fname=bjgty
+		</to>
+	</rule>	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/aozhou/gzgty[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14598&amp;station=LP&amp;ztname=aozhou&amp;fname=gzgty
+		</to>
+	</rule>	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/aozhou/shzyx[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14598&amp;station=LP&amp;ztname=aozhou&amp;fname=shzyx
+		</to>
+	</rule>	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/aozhou/cdzyx[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14598&amp;station=LP&amp;ztname=aozhou&amp;fname=cdzyx
+		</to>
+	</rule>	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/aozhou/bjzyx[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14598&amp;station=LP&amp;ztname=aozhou&amp;fname=bjzyx
+		</to>
+	</rule>	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/aozhou/shzyx[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14598&amp;station=LP&amp;ztname=aozhou&amp;fname=shzyx
+		</to>
+	</rule>	
+	
+	<!-- 澳洲专题 结束 -->
+	<!-- 灰熊山谷10月 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/huixiong[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=14647&amp;station=LP&amp;ztname=huixiong&amp;fname=page1</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/huixiong/fdqb.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=14647&amp;station=LP&amp;ztname=huixiong&amp;fname=page2</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/huixiong/lydj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=14647&amp;station=LP&amp;ztname=huixiong&amp;fname=page3</to>
+	</rule>
+	<!-- 灰熊山谷10月 结束 -->
+	
+	<!-- 甩卖专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chujingyou[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=14692&amp;station=LP&amp;ztname=chujingyou&amp;fname=index</to>
+	</rule>
+	<!-- 甩卖专题 结束 -->
+	
+	<!-- 长线秋冬 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/cxqd[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=14700&amp;station=LP&amp;ztname=cxqd&amp;fname=index</to>
+	</rule>
+	<!-- 长线秋冬 结束 -->
+	
+	<!-- 海岛专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/haidaoyou[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14731&amp;station=LP&amp;ztname=haidaoyou&amp;fname=index
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/haidaoyou/index.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14731&amp;station=LP&amp;ztname=haidaoyou&amp;fname=index
+		</to>
+	</rule>	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/haidaoyou/bj.html[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14731&amp;station=LP&amp;ztname=haidaoyou&amp;fname=bj
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/haidaoyou/cd.html[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14731&amp;station=LP&amp;ztname=haidaoyou&amp;fname=cd
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/haidaoyou/gz.html[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14731&amp;station=LP&amp;ztname=haidaoyou&amp;fname=gz
+		</to>
+	</rule>
+	<!-- 海岛专题 结束 -->
+	
+	<!-- 元旦圣诞专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dan[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14773&amp;station=LP&amp;ztname=dan&amp;fname=index
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dan/index.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14773&amp;station=LP&amp;ztname=dan&amp;fname=index
+		</to>
+	</rule>	
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dan/xinnian.html[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14773&amp;station=LP&amp;ztname=dan&amp;fname=xinnian
+		</to>
+	</rule>		
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dan/yuandan.html[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14773&amp;station=LP&amp;ztname=dan&amp;fname=yuandan
+		</to>
+	</rule>		
+	<!-- 元旦圣诞专题 结束 -->
+	
+	<!-- 春节专题 开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie[/]*$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=index
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/index.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=index
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/bj_zb.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=bj_zb
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/gz_zb.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=gz_zb
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/cd_zb.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=cd_zb
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/sh_cx.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=sh_cx
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/bj_cx.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=bj_cx
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/gz_cx.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=gz_cx
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/cd_cx.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=cd_cx
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/sh_cj.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=sh_cj
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/bj_cj.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=bj_cj
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/gz_cj.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=gz_cj
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/cd_cj.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=cd_cj
+		</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/chunjie/comment.html$</from>
+		<to>
+			/indexPakage/ztStationAction.do?blockId=14811&amp;station=LP&amp;ztname=chunjie&amp;fname=comment
+		</to>
+	</rule>
+	<!-- 春节专题 结束 -->
+	
+	<!-- 红动全球专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/nianhou[/]*$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15049&amp;station=LP&amp;ztname=nianhou&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/nianhou/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15049&amp;station=LP&amp;ztname=nianhou&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/nianhou/tese.html[/]*$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15049&amp;station=LP&amp;ztname=nianhou&amp;fname=tese 
+	</to> 
+	</rule> 
+	<!-- 红动全球专题 结束 --> 
+	
+	<!-- 京郊专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/bjcaomei[/]*$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15244&amp;station=LP&amp;ztname=bjcaomei&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/bjcaomei/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15244&amp;station=LP&amp;ztname=bjcaomei&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 京郊专题  结束 --> 
+	
+	<!-- 自驾游月专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/shzijia[/]*$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15229&amp;station=LP&amp;ztname=shzijia&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/shzijia/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15229&amp;station=LP&amp;ztname=shzijia&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 自驾游月  结束 --> 
+	
+	<!-- 情出于蓝专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/qinzi[/]*$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15380&amp;station=LP&amp;ztname=qinzi&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/qinzi/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15380&amp;station=LP&amp;ztname=qinzi&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/qinzi/tese.html[/]*$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15380&amp;station=LP&amp;ztname=qinzi&amp;fname=tese 
+	</to> 
+	</rule> 
+	<!-- 情出于蓝专题 结束 --> 
+	
+	<!-- 开心驴行专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/lvxing[/]*$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15381&amp;station=LP&amp;ztname=lvxing&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/lvxing/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15381&amp;station=LP&amp;ztname=lvxing&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/lvxing/cx.html[/]*$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15381&amp;station=LP&amp;ztname=lvxing&amp;fname=cx 
+	</to> 
+	</rule> 
+    <rule match-type="regex"> 
+	<from>^/zt/lvyou/lvxing/cxhz.html[/]*$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15381&amp;station=LP&amp;ztname=lvxing&amp;fname=cxhz 
+	</to> 
+	</rule> 
+    <rule match-type="regex"> 
+	<from>^/zt/lvyou/lvxing/cxnj.html[/]*$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15381&amp;station=LP&amp;ztname=lvxing&amp;fname=cxnj 
+	</to> 
+	</rule> 
+	<!-- 开心驴行专题 结束 --> 
+	
+	<!-- 蜜月线路专题 开始 --> 
+
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/miyue/xl.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15382&amp;station=LP&amp;ztname=miyue&amp;fname=xl 
+	</to> 
+	</rule> 
+	<!-- 蜜月线路专题  结束 -->
+	
+	<!-- 节后抄底价  开始 -->
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/jhly[/]*$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=8933&amp;station=LP&amp;ztname=jhly&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/jhly/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=8933&amp;station=LP&amp;ztname=jhly&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/jhly/bj.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=8933&amp;station=LP&amp;ztname=jhly&amp;fname=bj 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/jhly/cd.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=8933&amp;station=LP&amp;ztname=jhly&amp;fname=cd 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/jhly/gz.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=8933&amp;station=LP&amp;ztname=jhly&amp;fname=gz 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/jhly/jb.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=8933&amp;station=LP&amp;ztname=jhly&amp;fname=jb
+	</to> 
+	</rule> 
+	<!-- 节后超低价  结束 -->
+	
+	<!-- 浦发银行专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/spdb[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15933&amp;station=LP&amp;ztname=spdb&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/spdb/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15933&amp;station=LP&amp;ztname=spdb&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 浦发银行专题  结束 -->
+	
+	<!-- 北京亲子专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/bjqinzi[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15889&amp;station=LP&amp;ztname=bjqinzi&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/bjqinzi/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15889&amp;station=LP&amp;ztname=bjqinzi&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/bjqinzi/ts.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15889&amp;station=LP&amp;ztname=bjqinzi&amp;fname=ts
+	</to> 
+	</rule> 
+	<!-- 北京亲子专题  结束 -->
+	
+	<!-- 海南专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/hainan[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15938&amp;station=LP&amp;ztname=hainan&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/hainan/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15938&amp;station=LP&amp;ztname=hainan&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/hainan/nj.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15938&amp;station=LP&amp;ztname=hainan&amp;fname=nj 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/hainan/bj.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15938&amp;station=LP&amp;ztname=hainan&amp;fname=bj 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/hainan/hz.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15938&amp;station=LP&amp;ztname=hainan&amp;fname=hz 
+	</to> 
+	</rule> 
+	<!-- 海南专题  结束 -->
+
+
+	<!-- 逍遥驴行专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/xiaoyao[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15936&amp;station=LP&amp;ztname=xiaoyao&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/xiaoyao/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15936&amp;station=LP&amp;ztname=xiaoyao&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/xiaoyao/hz.html[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15936&amp;station=LP&amp;ztname=xiaoyao&amp;fname=hz 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/xiaoyao/nj.html[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=15936&amp;station=LP&amp;ztname=xiaoyao&amp;fname=nj 
+	</to> 
+	</rule> 
+	<!-- 逍遥驴行专题  结束 -->
+	
+	<!-- 银联专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/unionpay[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16020&amp;station=LP&amp;ztname=unionpay&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/unionpay/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16020&amp;station=LP&amp;ztname=unionpay&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 银联专题  结束 -->
+	
+	<!-- 世博专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/shibo[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16028&amp;station=LP&amp;ztname=shibo&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/shibo/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16028&amp;station=LP&amp;ztname=shibo&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/shibo/st.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16028&amp;station=LP&amp;ztname=shibo&amp;fname=st 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/shibo/zg.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16028&amp;station=LP&amp;ztname=shibo&amp;fname=zg 
+	</to> 
+	</rule> 
+	<!-- 世博专题  结束 -->
+	
+	<!-- 爱四川专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/lovesichuan[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16132&amp;station=LP&amp;ztname=lovesichuan&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/lovesichuan/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16132&amp;station=LP&amp;ztname=lovesichuan&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 爱四川专题  结束 -->
+	
+	<!-- 品牌合作专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/pinpai[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16141&amp;station=LP&amp;ztname=pinpai&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/pinpai/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16141&amp;station=LP&amp;ztname=pinpai&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 品牌合作专题  结束 -->
+	<!-- 三亚自由行专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/sanya[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17029&amp;station=LP&amp;ztname=sanya_1&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/sanya/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17029&amp;station=LP&amp;ztname=sanya_1&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 三亚自由行专题  结束 -->
+	<!-- 迷离山庄专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/disney[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16732&amp;station=LP&amp;ztname=disney&amp;fname=page1 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/disney/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16732&amp;station=LP&amp;ztname=disney&amp;fname=page1 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/disney/hxsg.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16732&amp;station=LP&amp;ztname=disney&amp;fname=page2 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/disney/dby.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16732&amp;station=LP&amp;ztname=disney&amp;fname=page3 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/disney/th.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=16732&amp;station=LP&amp;ztname=disney&amp;fname=iframe 
+	</to> 
+	</rule> 
+	<!-- 迷离山庄专题  结束 -->
+	
+	<!-- 工行分期专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/gonghang[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17266&amp;station=LP&amp;ztname=gonghang&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/gonghang/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17266&amp;station=LP&amp;ztname=gonghang&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 工行分期专题  结束 -->
+	
+	<!-- 出境补贴专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/tejia[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17295&amp;station=LP&amp;ztname=butie&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/tejia/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17295&amp;station=LP&amp;ztname=butie&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 出境补贴专题  结束 -->
+	
+	<!-- 三亚自由行专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/sanya[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17029&amp;station=LP&amp;ztname=sanya_1&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/sanya/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17029&amp;station=LP&amp;ztname=sanya_1&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 三亚自由行专题  结束 -->
+	
+	<!-- 清迈专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/qingmai[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17423&amp;station=LP&amp;ztname=qingmai&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/qingmai/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17423&amp;station=LP&amp;ztname=qingmai&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 清迈专题  结束 -->
+	
+	<!-- 周边跟团专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/sh_zhoubian[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17330&amp;station=LP&amp;ztname=sh_zhoubian&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/sh_zhoubian/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17330&amp;station=LP&amp;ztname=sh_zhoubian&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 周边跟团专题  结束 -->
+	
+	<!-- 中秋国庆专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/zhongqiu[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17442&amp;station=LP&amp;ztname=zhongqiu&amp;fname=index 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/zhongqiu/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17442&amp;station=LP&amp;ztname=zhongqiu&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 中秋专题  结束 -->
+	
+	<!-- 北京中秋国庆专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/bj_shiyi[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17640&amp;station=LP&amp;ztname=zhongqiu&amp;fname=bj 
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/bj_shiyi/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17640&amp;station=LP&amp;ztname=zhongqiu&amp;fname=bj 
+	</to> 
+	</rule> 
+	<!-- 北京中秋专题  结束 -->
+	
+	<!-- 广州中秋国庆专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/gz_shiyi[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17610&amp;station=LP&amp;ztname=zhongqiu&amp;fname=gz
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/gz_shiyi/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17610&amp;station=LP&amp;ztname=zhongqiu&amp;fname=gz 
+	</to> 
+	</rule> 
+	<!-- 广州中秋专题  结束 -->
+	
+	<!-- 成都中秋国庆专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/cd_shiyi[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17696&amp;station=LP&amp;ztname=zhongqiu&amp;fname=cd
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/cd_shiyi/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17696&amp;station=LP&amp;ztname=zhongqiu&amp;fname=cd 
+	</to> 
+	</rule> 
+	<!-- 成都国庆专题  结束 -->
+	
+	<!-- wifi专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/wifi[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17673&amp;station=LP&amp;ztname=wifi&amp;fname=index
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/wifi/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17673&amp;station=LP&amp;ztname=wifi&amp;fname=index
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/wifi/help.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17673&amp;station=LP&amp;ztname=wifi&amp;fname=QA
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/wifi/product.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17673&amp;station=LP&amp;ztname=wifi&amp;fname=products
+	</to> 
+	</rule> 
+	<!-- wifi专题  结束 -->
+	
+	<!-- 崇明专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/chongming[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17672&amp;station=LP&amp;ztname=chongming&amp;fname=index
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/chongming/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17672&amp;station=LP&amp;ztname=chongming&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 崇明专题  结束 -->
+	
+	<!-- 国庆专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/shiyi[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17515&amp;station=LP&amp;ztname=shiyi&amp;fname=index
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/shiyi/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=17515&amp;station=LP&amp;ztname=shiyi&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 国庆专题  结束 -->
+	
+	<!-- 九寨沟专题 开始 --> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/jiuzhaigou[/]$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=18163&amp;station=LP&amp;ztname=jiuzhaigou&amp;fname=index
+	</to> 
+	</rule> 
+	<rule match-type="regex"> 
+	<from>^/zt/lvyou/jiuzhaigou/index.html$</from> 
+	<to> 
+	/indexPakage/ztStationAction.do?blockId=18163&amp;station=LP&amp;ztname=jiuzhaigou&amp;fname=index 
+	</to> 
+	</rule> 
+	<!-- 九寨沟专题  结束 -->
+
+	<!--迪斯尼新开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dsn1[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12500&amp;station=LP&amp;ztname=dsn1&amp;fname=page1</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dsn1/mlsz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12500&amp;station=LP&amp;ztname=dsn1&amp;fname=page2</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dsn1/hxsg.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12500&amp;station=LP&amp;ztname=dsn1&amp;fname=page3</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dsn1/fdqb.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12500&amp;station=LP&amp;ztname=dsn1&amp;fname=page4</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/dsn1/iframe.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=12500&amp;station=LP&amp;ztname=dsn1&amp;fname=iframe</to>
+	</rule>
+	<!--迪斯尼新结束 -->
+		<!--愚人节新开始 -->
+	<rule match-type="regex">
+		<from>^/zt/lvyou/foolsday[/]?$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=19872&amp;station=LP&amp;ztname=foolsday&amp;fname=sh</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/foolsday/cd.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=19872&amp;station=LP&amp;ztname=foolsday&amp;fname=cd</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/foolsday/gz.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=19872&amp;station=LP&amp;ztname=foolsday&amp;fname=gz</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/foolsday/bj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=19872&amp;station=LP&amp;ztname=foolsday&amp;fname=bj</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/foolsday/js.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=19872&amp;station=LP&amp;ztname=foolsday&amp;fname=js</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/lvyou/foolsday/zj.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=19872&amp;station=LP&amp;ztname=foolsday&amp;fname=zj</to>
+	</rule>
+	<!---愚人节新开始 新结束 -->
+	
+	<!--跳转 action -->
+	<rule match-type="regex">
+		<from>^/public/([a-zA-Z_0-9\/]+)$</from>
+		<to>/public/forwardAction.do?result=$1</to>
+	</rule>
+	<!-- 专题 -->
+	<rule match-type="regex">
+		<from>^/lp/([a-zA-Z0-9]+)$</from>
+		<to>/lp/index.do?idcode=$1</to>
+	</rule>	
+	
+	<!--stare 同心同乐 -->
+		<rule match-type="regex"> 
+		<from>^/zt/lvyou/shuqi1$</from> 
+		<to>/indexPakage/ztStationAction.do?blockId=21899&amp;station=LP&amp;ztname=tongxintongle&amp;fname=sh</to> 
+		</rule> 
+		
+		
+		<rule match-type="regex">
+		<from>^/zt/lvyou/shuqi1/guangzhou.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=21899&amp;station=LP&amp;ztname=tongxintongle&amp;fname=gz</to>
+		</rule>
+		
+		
+		<rule match-type="regex">
+		<from>^/zt/lvyou/shuqi1/beijing.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=21899&amp;station=LP&amp;ztname=tongxintongle&amp;fname=bj</to>
+		</rule>
+		
+		<rule match-type="regex">
+		<from>^/zt/lvyou/shuqi1/chengdou.html$</from>
+		<to>/indexPakage/ztStationAction.do?blockId=21899&amp;station=LP&amp;ztname=tongxintongle&amp;fname=cd</to>
+		</rule>
+	<!-- end 同心同乐 -->
+	
+		
+</urlrewrite>

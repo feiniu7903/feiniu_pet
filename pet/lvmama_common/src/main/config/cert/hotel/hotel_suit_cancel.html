@@ -1,0 +1,71 @@
+<#import "/base/func.html" as func/>
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>酒店套餐-支付给驴妈妈-取消单</title>
+<style>
+<#include "/chuanzhen.css"/>
+</style>
+</head>
+<body>
+<div class="wrap">
+	<div id="header" class="clearfix">
+	    <#include "/base/head_hotel.html"/>
+		<h1>取消单</h1>
+	</div>
+	<div class="main">
+		<#include "/base/to_target_hotel.html"/>
+		<h3 class="_mt">订单号： ${certificate.baseInfo.orderId} （此单已取消）</h3>
+		
+		<h4>备注栏：（游客特殊需求、调价等）</h4>
+		<div class="box border pb20">
+		    <p><@func.addMemoSpace changeInfo 20/>此单已取消</p>
+		</div>
+		
+		<table class="table-border table-full">
+			<tr>
+				<td class="number" colspan="8"><b>产品名称：</b><@func.addSpace certificate.baseInfo.metaProductName 40/> </td>
+			</tr>
+			<tr>	
+				<th class="number" >房型</th>
+				<th class="number" style="width:60px">入住日期</th>
+				<th class="number" style="width:60px">离店日期</th>
+				<th class="number" style="width:24px">间数</th>
+				<th class="number" style="width:24px">晚数</th>
+				<th class="number" style="width:48px"><@func.showPriceLabel certificate/></th>
+				<th class="number" style="width:48px"><@func.showTotalAmountLabel certificate/></th>
+				<th class="number" style="width:60px">支付方式</th>
+			</tr>
+			<#list items as item>
+			<tr>
+				<td class="number"><@func.addSpace item.baseInfo.metaBranchName 12/></td>
+				<td class="number">${item.baseInfo.visitTime}</td>
+				<td class="number">${item.baseInfo.leaveTime}</td>
+				<td class="number">${item.baseInfo.quantity}</td>
+				<td class="number">${item.baseInfo.nights}</td>
+				<td class="number"><@func.showPriceContent certificate item.baseInfo.settlementPrice/></td>
+				<#if item_index==0>
+				<td class="number" rowspan="${items?size}"><@func.showPriceContent certificate certificate.baseInfo.totalSettlementPrice/></td>
+				<td class="number" rowspan="${items?size}">${certificate.baseInfo.zhPaymentTarget}</td>
+				</#if>
+			</tr>
+			</#list>	
+		</table>
+		<div>（说明：总价=单价*间数）</div>
+		<h4>入住人信息：</h4>
+		<#include "/base/traveller.html"/>
+		
+		<h4>费用说明：（包含/不包含）</h4>
+		<div class="box border pb20">
+		    <p>
+		    	<@func.addMemoSpace certificate.baseInfo.COSTCONTAIN 40/>
+		    	<@func.addMemoSpace certificate.baseInfo.NOCOSTCONTAIN 40/>
+		    </p>
+		</div>
+		
+		<#include "/base/foot.html"/>
+	</div>
+</div>
+</body>
+</html>

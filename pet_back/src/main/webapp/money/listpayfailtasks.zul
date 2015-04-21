@@ -1,0 +1,72 @@
+<?page title="现金账户列表" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_listpayfailtasks"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_listpayfailtasks" mode="embedded" apply="com.lvmama.pet.web.money.ListPayFailTasks">
+	<grid>
+		<columns>
+			<column width="80px"></column>
+			<column></column>
+			<column width="80px"></column>
+			<column></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row spans="5"  align="right">
+				<hbox>
+					<button label="搜索" id="search" width="100px" onClick="saction.loadDataList();"/>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+	<listbox multiple="false" model="@{saction.cashMoneyDrawList,load-after='search.onClick,_paging.onPaging'}">
+		<listhead>
+			<listheader label="提现流水单号" />
+			<listheader label="现金帐户ID" />
+			<listheader label="用户名"/>
+			<listheader label="姓名"/>
+			<listheader label="手机号"/>
+			<listheader label="提现至"/>
+			<listheader label="收款人"/>
+			<listheader label="金额"/>
+			<listheader label="帐户信息"/>
+			<listheader label="操作"/>
+		</listhead>
+		<listitem height="25px" self="@{each='each'}" >
+			<listcell label="@{each.fincMoneyDraw.moneyDrawId}" />
+			<listcell label="@{each.sid}" />		
+			<listcell label="@{each.user.userName}" />
+			<listcell label="@{each.user.realName}" />
+			<listcell label="@{each.user.mobileNumber}" />
+			<listcell label="@{each.fincMoneyDraw.bankName}" />
+			<listcell label="@{each.fincMoneyDraw.bankAccountName}" />
+			<listcell label="@{each.amount}" />
+			<listcell >
+				<label value="@{each.fincMoneyDraw.bankName }" /><label value="@{each.fincMoneyDraw.kaiHuHang }" /><label value="@{each.fincMoneyDraw.bankAccountName }" />
+			</listcell>
+			<listcell>
+			<!--<a style="color:blue" label="处理" onClick='saction.showWindow("/money/payfailtaskmemo.zul",self.getAttributes())' permCode="1016">-->
+				<a style="color:blue" label="处理" onClick='saction.showWindow("/money/payfailtaskmemo.zul",self.getAttributes())'>
+					<custom-attributes moneyDrawId="@{each.fincMoneyDraw.moneyDrawId}"/>
+				</a>
+			</listcell>
+		</listitem>
+	</listbox>
+	
+	<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="10" onPaging='saction.loadDataList();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+</window>
+</zk>

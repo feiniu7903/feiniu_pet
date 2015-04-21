@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PLACE_SEARCH_INFO">
+  <typeAlias alias="placeSearchInfo" type="com.lvmama.comm.pet.po.search.PlaceSearchInfo" />
+  <resultMap class="placeSearchInfo" id="placeSearchInfoResultMap">
+    <result column="PLACE_ID" property="placeId"/>
+    <result column="NAME" property="name"/>
+    <result column="SUMMARY" property="summary" />
+    <result column="PRODUCTS_PRICE" property="productsPrice" />
+    <result column="CMT_AVG_SCORE" property="cmtAvgScore" />
+    <result column="CMT_NUM" property="cmtNum" />
+    <result column="PROVINCE" property="province" />
+    <result column="CITY" property="city" />
+    <result column="CREATED_DATE" property="createdDate"  />
+    <result column="UPDATED_DATE" property="updatedDate"  />
+    <result column="SEQ_NUM" property="seq" />
+    <result column="CITY_ID" property="cityId" />
+    <result column="PROVINCE_ID" property="provinceId" />
+    <result column="SMALL_IMAGE" property="smallImage" />
+    <result column="PRODUCT_NUM" property="productNum" />
+    <result column="TICKET_NUM" property="ticketNum" />
+    <result column="HOTLE_NUM" property="hotleNum" />
+    <result column="FREENESS_NUM" property="freenessNum" />
+    <result column="ROUTE_NUM" property="routeNum" />
+    <result column="STAGE" property="stage" />
+    <!-- <result column="HOTEL_FACILITY" property="hotelFacility" /> -->
+    <result column="IS_VALID" property="isValid" />
+    <result column="MAX_PRODUCTS_PRICE" property="maxProductsPrice" />
+    <!--<result column="HOTEL_STAR" property="hotelStar" /> -->
+    <result column="PIN_YIN_URL" property="pinYinUrl" />
+    <result column="HFKW" property="hfkw" />
+    <result column="PIN_YIN" property="pinYin" />
+    <result column="ADDRESS" property="address" />
+    <result column="HAS_HOTEL_AROUND" property="hasHotelAround" />
+    <result column="LARGE_IMAGE" property="largeImage" />
+    <result column="ROUND_PLACE_NAME" property="roundPlaceName" />
+    <result column="DEST_SUBJECTS" property="destSubjects" />
+    <result column="DEST_TAGS_NAME" property="destTagsName" nullValue=""/>
+    <result column="DEST_TAGS_DESCRIPT" property="destTagsDescript" nullValue=""/>
+    <result column="DEST_TAGS_GROUP" property="destTagsGroup" nullValue=""/>
+    <result column="DEST_TAGS_CSS" property="destTagsCss" nullValue=""/>
+    <result column="DEST_PERSENT_STR" property="destPersentStr" />
+    <result column="CMT_NICE_RATE" property="cmtNiceRate" />
+    <result column="LONGITUDE" property="longitude" />
+    <result column="LATITUDE" property="latitude" />
+    <result column="PARENT_PLACE_ID" property="parentPlaceId" />
+    <result column="PLACE_TYPE" property="placeType" />
+    <result column="MARKET_PRICE" property="marketPrice" />
+    <result column="PLACE_SECOND_SUBJECT" property="placeSecondSubject" />
+    <result column="PLACE_FIRST_SUBJECT" property="placeFirstSubject" />
+    <result column="MIDDLE_IMAGE" property="middleImage" />
+    <result column="PARENT_PLACE_NAME_IDS" property="parentPlaceNameIds" />
+    <result column="SCENIC_GRADE" property="scenicGrade" />
+    <!--<result column="HOTEL_TYPE" property="hotelType" />-->
+    <!--<result column="HOTEL_LEVEL" property="hotelLevel" />-->
+    <result column="CASH_REFUND" property="cashRefund" />
+    <result column="TODAY_ORDER_ABLE_TIME" property="todayOrderAbleTime" />
+    <result column="WEEK_SALES" property="weekSales"/>
+    <result column="EN_NAME" property="enName"/>
+    <result column="TODAY_ORDER_LAST_TIME" property="todayOrderLastTime"/>
+  </resultMap>
+  
+  <resultMap class="com.lvmama.comm.pet.po.search.PlaceSearchInfo" id="placeSearchInfoWithDistance" extends="placeSearchInfoResultMap">
+	<result column="distance" property="distance"/>
+  </resultMap>
+  
+  <select id="queryPlaceSearchInfoByParam" resultMap="placeSearchInfoResultMap">
+		select T2.*
+  	      from (select T1.*, rownum as rn
+				  from (SELECT * FROM PLACE_SEARCH_INFO
+						<dynamic prepend=" WHERE ">
+							<isNotEmpty prepend=" AND " property="parentPlaceId">
+							place_id in (select place_id from lvmama_pet.place_search_info psi 
+				              where psi.is_valid='Y' 
+				              <isEqual property="hasTicket"  compareValue="true" prepend=" AND ">
+				              	psi.ticket_num>0 and psi.ticket_num is not null
+				              </isEqual>
+				              <isEqual  property="hasTicket"  compareValue="false" prepend=" AND ">
+				              	(psi.ticket_num=0 or psi.ticket_num is null)
+				              </isEqual>
+				               <isEqual property="hasHotel" compareValue="true" prepend=" AND ">
+									HOTLE_NUM is not NUll AND HOTLE_NUM &gt; 0
+								</isEqual>
+								<isEqual property="hasHotel" compareValue="false" prepend=" AND ">
+									(HOTLE_NUM &lt;=0 or HOTLE_NUM is NUll)
+								</isEqual>
+				              start with place_id=#parentPlaceId# 
+				              connect by psi.parent_place_id= PRIOR psi.place_id)
+							</isNotEmpty>
+							<isNotEmpty prepend=" AND " property="stage">STAGE = #stage#</isNotEmpty>
+							<isNotEmpty prepend=" AND " property="hasTicket">
+								<isEqual property="hasTicket"  compareValue="true">
+									TICKET_NUM is not NUll AND TICKET_NUM &gt; 0
+								</isEqual>
+								<isEqual property="hasTicket"  compareValue="false">
+									(TICKET_NUM =0 or TICKET_NUM is NUll)
+								</isEqual>
+							</isNotEmpty>
+							<isNotEmpty prepend=" AND " property="hasHotel">
+								<isEqual property="hasHotel" compareValue="true">
+									HOTLE_NUM is not NUll AND HOTLE_NUM &gt; 0
+								</isEqual>
+								<isEqual property="hasHotel" compareValue="false">
+									(HOTLE_NUM &lt;=0 or HOTLE_NUM is NUll)
+								</isEqual>
+							</isNotEmpty>	
+						</dynamic>
+						<dynamic prepend=" ORDER BY ">
+							<isNotEmpty property="orderBy">$orderBy$</isNotEmpty>
+						</dynamic>
+		                ) T1
+         		<dynamic prepend=" WHERE ">
+		           	<isNotEmpty property="endRows">rownum &lt;= #endRows#</isNotEmpty>
+		        </dynamic>) T2
+ 		 <dynamic prepend=" WHERE ">
+		      <isNotEmpty property="startRows">rn &gt;= #startRows#</isNotEmpty>
+		 </dynamic>
+  </select>
+  
+  <select id="queryPlaceSearchInfoListByCmt" resultMap="placeSearchInfoResultMap">
+	select * from (
+		select * from place_search_info 
+		where stage = #stage# and is_valid = 'Y'
+		and cmt_nice_rate is not null
+		<isNotEmpty property="provinceId" prepend="and">
+			province_id = #provinceId#
+		</isNotEmpty>
+		<isNotEmpty property="cityId" prepend="and">
+			city_id = #cityId#
+		</isNotEmpty>
+		order by to_number(cmt_num) desc, cmt_nice_rate desc
+	) where rownum &lt;= #size#
+	</select>
+	
+	<select id="getPlaceSearchInfoByPlaceId" resultMap="placeSearchInfoResultMap">
+	  select * from lvmama_pet.place_search_info psi where psi.place_id = #placeId#
+	</select>
+
+	<select id="queryPlaceSearchInfoListByPlaceName" resultMap="placeSearchInfoResultMap">
+		select *
+		  from (select *
+		          from (select 1 as place_seq,
+		                       psi.*
+		                  from place_search_info psi
+		                 where psi.name = #placeName#
+		                   and psi.stage = 2
+		                union all
+		                select *
+		                  from (select 2 as place_seq,
+		                               psi.*
+		                          from place_search_info psi
+		                         where psi.name != #placeName#
+		                           and psi.stage = 2
+		                           AND psi.CITY IN
+		                               (SELECT CP.CITY
+		                                  FROM PLACE CP
+		                                 WHERE CP.STAGE IN (1, 2)
+		                                   AND CP.NAME = #placeName#)
+		                         order by psi.SEQ_NUM)
+		                 where rownum &lt;= 8
+		                union all
+		                select *
+		                  from (select 3 as place_seq,
+		                               psi.*
+		                          from place_search_info psi
+		                         where psi.name != #placeName#
+		                           and psi.stage = 2
+		                           AND psi.province IN
+		                               (SELECT CP.Province
+		                                  FROM PLACE CP
+		                                 WHERE CP.STAGE IN (1, 2)
+		                                   AND CP.NAME = #placeName#)
+		                         order by psi.SEQ_NUM)
+		                 where rownum &lt;= 8)
+		         order by place_seq, SEQ_NUM)
+		 where rownum &lt;= 8
+	</select>
+	
+	<select id="queryVicinityPlaceSearchInfoListByPlaceName" resultMap="placeSearchInfoWithDistance">
+		SELECT * FROM (
+			SELECT psi.*,
+       			round(FUNC_DISTANCE(psi.latitude,
+                      psi.longitude,
+                      #latitude#,
+                      #longitude#),
+             	1) distance
+  			FROM place_search_info psi
+ 			WHERE  psi.longitude &gt; 0 AND psi.latitude &gt; 0 
+   				<isNotEmpty property="stage">
+   					<isEqual compareValue="2" property="stage" prepend=" AND ">psi.stage = #stage# AND TICKET_num &gt; 0</isEqual>
+   					<isEqual compareValue="3" property="stage" prepend=" AND ">psi.stage = #stage# AND HOTLE_num &gt; 0</isEqual>
+   				</isNotEmpty>
+   				<isNotEmpty prepend=" AND " property="placeFirstSubject"> PLACE_FIRST_SUBJECT = #placeFirstSubject#</isNotEmpty>
+   				AND psi.is_valid = 'Y'
+   				AND psi.product_num &gt; 0
+   				ORDER BY distance		
+		) WHERE rownum &lt;= #limit# and distance &gt; 0 
+
+		
+	</select>
+	  <!--  <select id="queryVicinityPlaceSearchInfoListByDimension" resultMap="placeSearchInfoWithDistance" parameterClass="com.lvmama.comm.pet.vo.place.DimensionVo">
+        SELECT * FROM (
+            SELECT psi.*,
+                round(FUNC_DISTANCE(psi.latitude,
+                      psi.longitude,
+                      #latitude#,
+                      #longitude#),
+                1) distance
+            FROM (
+            SELECT * FROM place_search_info where 1=1
+                    <isNotNull prepend=" and " property="maxinLongitude">
+                        LONGITUDE &lt; = #maxinLongitude#
+                    </isNotNull>
+                    <isNotNull prepend=" and " property="minLongitude">
+                        LONGITUDE &gt; = #minLongitude#
+                    </isNotNull>
+                    <isNotNull prepend=" and " property="maxLatitude">
+                        LATITUDE &lt; = #maxLatitude#
+                    </isNotNull>
+                    <isNotNull prepend=" and " property="minLatitude">
+                        LATITUDE &gt; = #minLatitude#
+                    </isNotNull>
+	                <isNotEmpty property="stage">
+	                    <isEqual compareValue="2" property="stage" prepend=" AND ">stage = #stage# AND TICKET_num &gt; 0</isEqual>
+	                    <isEqual compareValue="3" property="stage" prepend=" AND ">stage = #stage# AND HOTLE_num &gt; 0</isEqual>
+	                </isNotEmpty>
+	                <isNotEmpty prepend=" AND " property="placeFirstSubject"> PLACE_FIRST_SUBJECT = #placeFirstSubject#</isNotEmpty>
+                    and IS_VALID = 'Y'
+                    AND product_num &gt; 0
+            
+            ) psi
+            WHERE  psi.longitude &gt; 0 AND psi.latitude &gt; 0 
+                  ORDER BY distance       
+        ) WHERE rownum &lt;= #limit# and distance &gt; 0 
+
+        
+    </select> -->
+     <select id="queryVicinityPlaceSearchInfoListByDimension" resultMap="placeSearchInfoResultMap" parameterClass="com.lvmama.comm.pet.vo.place.DimensionVo">
+            SELECT * FROM place_search_info where 1=1
+                    <isNotNull prepend=" and " property="maxinLongitude">
+                        LONGITUDE &lt; = #maxinLongitude#
+                    </isNotNull>
+                    <isNotNull prepend=" and " property="minLongitude">
+                        LONGITUDE &gt; = #minLongitude#
+                    </isNotNull>
+                    <isNotNull prepend=" and " property="maxLatitude">
+                        LATITUDE &lt; = #maxLatitude#
+                    </isNotNull>
+                    <isNotNull prepend=" and " property="minLatitude">
+                        LATITUDE &gt; = #minLatitude#
+                    </isNotNull>
+                    <isNotEmpty property="stage">
+                        <isEqual compareValue="2" property="stage" prepend=" AND ">stage = #stage# AND TICKET_num &gt; 0</isEqual>
+                        <isEqual compareValue="3" property="stage" prepend=" AND ">stage = #stage# AND HOTLE_num &gt; 0</isEqual>
+                    </isNotEmpty>
+                    <isNotEmpty prepend=" AND " property="placeFirstSubject"> PLACE_FIRST_SUBJECT = #placeFirstSubject#</isNotEmpty>
+                    and IS_VALID = 'Y'
+                    AND product_num &gt; 0
+                    and longitude &gt; 0 
+                    AND latitude &gt; 0 
+    </select>
+</sqlMap>

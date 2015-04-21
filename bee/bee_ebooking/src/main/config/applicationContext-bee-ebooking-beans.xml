@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:*.properties</value>
+			</list>
+		</property>
+	</bean>
+	<import resource="applicationContext-lvmama-comm-remote.xml" />
+	<import resource="applicationContext-lvmama-comm-client.xml"/>
+	<import resource="applicationContext-bee-ebooking-security.xml"/>
+	<import resource="applicationContext-product-head-remote.xml"/>
+	<import resource="applicationContext-lvmama-comm-bee-remote.xml" />
+	<import resource="applicationContext-lvmama-comm-remote-ebk.xml"/>
+	
+</beans>

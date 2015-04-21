@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MOBILE_PUSH_LOCATION" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.MobilePushLocation" >
+    <result column="MOBILE_PUSH_LOCATION_ID" property="mobilePushLocationId" />
+    <result column="MOBILE_PUSH_DEVICE_ID" property="mobilePushDeviceId" />
+    <result column="CITY_ID" property="cityId" />
+    <result column="PROVINCE_ID" property="provinceId" />
+    <result column="IP" property="ip" />
+    <result column="LATITUDE" property="latitude" />
+    <result column="LONGITUDE" property="longitude" />
+    <result column="CREATED_TIME" property="createdTime" />
+  </resultMap>
+  <select id="selectByDeviceId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushLocation" >
+    select MOBILE_PUSH_LOCATION_ID, MOBILE_PUSH_DEVICE_ID, CITY_ID, PROVINCE_ID, IP, LATITUDE,
+      LONGITUDE, CREATED_TIME
+    from MOBILE_PUSH_LOCATION
+    where MOBILE_PUSH_DEVICE_ID = #mobilePushDeviceId#
+  </select>
+  <select id="selectByParams"  resultMap="BaseResultMap"  parameterClass="java.util.HashMap">
+       select MOBILE_PUSH_LOCATION_ID, MOBILE_PUSH_DEVICE_ID, CITY_ID, PROVINCE_ID, IP, LATITUDE,
+      LONGITUDE, CREATED_TIME
+    from MOBILE_PUSH_LOCATION
+   <dynamic prepend="where">
+       	<isNotEmpty prepend="and" property="mobilePushDeviceId">
+       	    MOBILE_PUSH_DEVICE_ID = #mobilePushDeviceId#
+       	</isNotEmpty> 
+       	<isNotEmpty prepend="and" property="cityId">
+       	     CITY_ID = #cityId#
+       	</isNotEmpty>
+       		<isNotEmpty prepend="and" property="provinceId">
+       	     PROVINCE_ID = #provinceId#
+       	</isNotEmpty>
+       </dynamic>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushLocation" >
+    select MOBILE_PUSH_LOCATION_ID, MOBILE_PUSH_DEVICE_ID, CITY_ID, PROVINCE_ID, IP, LATITUDE,
+      LONGITUDE, CREATED_TIME
+    from MOBILE_PUSH_LOCATION
+    where MOBILE_PUSH_LOCATION_ID = #mobilePushLocationId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushLocation" >
+    delete from MOBILE_PUSH_LOCATION
+    where MOBILE_PUSH_LOCATION_ID = #mobilePushLocationId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushLocation" >
+  	<selectKey keyProperty="mobilePushLocationId" resultClass="java.lang.Long">
+		SELECT MOBILE_PUSH_LOCATION_SEQ.nextval FROM DUAL
+	</selectKey>
+    insert into MOBILE_PUSH_LOCATION (MOBILE_PUSH_LOCATION_ID, MOBILE_PUSH_DEVICE_ID, CITY_ID,
+      PROVINCE_ID, IP, LATITUDE, LONGITUDE, CREATED_TIME)
+    values (#mobilePushLocationId#, #mobilePushDeviceId#, #cityId#,
+      #provinceId#, #ip#, #latitude#, #longitude#, #createdTime#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushLocation" >
+  	<selectKey keyProperty="mobilePushLocationId" resultClass="java.lang.Long">
+		SELECT MOBILE_PUSH_LOCATION_SEQ.nextval FROM DUAL
+	</selectKey>
+    insert into MOBILE_PUSH_LOCATION
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="mobilePushLocationId" >
+        MOBILE_PUSH_LOCATION_ID
+      </isNotNull>
+      <isNotNull prepend="," property="mobilePushDeviceId" >
+        MOBILE_PUSH_DEVICE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="cityId" >
+        CITY_ID
+      </isNotNull>
+      <isNotNull prepend="," property="provinceId" >
+        PROVINCE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="ip" >
+        IP
+      </isNotNull>
+      <isNotNull prepend="," property="latitude" >
+        LATITUDE
+      </isNotNull>
+      <isNotNull prepend="," property="longitude" >
+        LONGITUDE
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        CREATED_TIME
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="mobilePushLocationId" >
+        #mobilePushLocationId#
+      </isNotNull>
+      <isNotNull prepend="," property="mobilePushDeviceId" >
+        #mobilePushDeviceId#
+      </isNotNull>
+      <isNotNull prepend="," property="cityId" >
+        #cityId#
+      </isNotNull>
+      <isNotNull prepend="," property="provinceId" >
+        #provinceId#
+      </isNotNull>
+      <isNotNull prepend="," property="ip" >
+        #ip#
+      </isNotNull>
+      <isNotNull prepend="," property="latitude" >
+        #latitude#
+      </isNotNull>
+      <isNotNull prepend="," property="longitude" >
+        #longitude#
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        #createdTime#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushLocation" >
+    update MOBILE_PUSH_LOCATION
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="mobilePushDeviceId" >
+        MOBILE_PUSH_DEVICE_ID = #mobilePushDeviceId#
+      </isNotNull>
+      <isNotNull prepend="," property="cityId" >
+        CITY_ID = #cityId#
+      </isNotNull>
+      <isNotNull prepend="," property="provinceId" >
+        PROVINCE_ID = #provinceId#
+      </isNotNull>
+      <isNotNull prepend="," property="ip" >
+        IP = #ip#
+      </isNotNull>
+      <isNotNull prepend="," property="latitude" >
+        LATITUDE = #latitude#
+      </isNotNull>
+      <isNotNull prepend="," property="longitude" >
+        LONGITUDE = #longitude#
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        CREATED_TIME = #createdTime#
+      </isNotNull>
+    </dynamic>
+    where MOBILE_PUSH_LOCATION_ID = #mobilePushLocationId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobilePushLocation" >
+    update MOBILE_PUSH_LOCATION
+    set MOBILE_PUSH_DEVICE_ID = #mobilePushDeviceId#,
+      CITY_ID = #cityId#,
+      PROVINCE_ID = #provinceId#,
+      IP = #ip#,
+      LATITUDE = #latitude#,
+      LONGITUDE = #longitude#,
+      CREATED_TIME = #createdTime#
+    where MOBILE_PUSH_LOCATION_ID = #mobilePushLocationId#
+  </update>
+</sqlMap>

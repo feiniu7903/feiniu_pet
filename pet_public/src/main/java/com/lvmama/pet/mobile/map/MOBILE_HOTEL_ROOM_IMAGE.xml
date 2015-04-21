@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MOBILE_HOTEL_ROOM_IMAGE">
+  <resultMap class="com.lvmama.comm.pet.po.mobile.MobileHotelRoomImage" id="BaseResultMap">
+    <result column="MOBILE_HOTEL_ROOM_IMAGE_ID" property="mobileHotelRoomImageId" />
+    <result column="IMG_SIZE" property="imgSize" />
+    <result column="IMG_URL" property="imgUrl" />
+    <result column="IMG_TYPE" property="imgType" />
+    <result column="WATERMARK" property="watermark" />
+    <result column="IMAGE_VERSION" property="imageVersion" />
+    <result column="HOTEL_ID" property="hotelId" />
+    <result column="ROOM_ID" property="roomId" />
+  </resultMap>
+  <select id="selectByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoomImage" resultMap="BaseResultMap">
+    select MOBILE_HOTEL_ROOM_IMAGE_ID, IMG_SIZE, IMG_URL, IMG_TYPE, WATERMARK,
+      IMAGE_VERSION, HOTEL_ID, ROOM_ID
+    from MOBILE_HOTEL_ROOM_IMAGE
+    where MOBILE_HOTEL_ROOM_IMAGE_ID = #mobileHotelRoomImageId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoomImage">
+    delete from MOBILE_HOTEL_ROOM_IMAGE
+    where MOBILE_HOTEL_ROOM_IMAGE_ID = #mobileHotelRoomImageId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoomImage">
+     <selectKey keyProperty="mobileHotelRoomImageId" resultClass="java.lang.Long">
+		SELECT mobile_hotel_room_image_seq.nextval FROM DUAL
+     </selectKey>
+    insert into MOBILE_HOTEL_ROOM_IMAGE (MOBILE_HOTEL_ROOM_IMAGE_ID, IMG_SIZE,
+      IMG_URL, IMG_TYPE, WATERMARK, IMAGE_VERSION, HOTEL_ID, ROOM_ID)
+    values (#mobileHotelRoomImageId#, #imgSize#,
+      #imgUrl#, #imgType#, #watermark#, #imageVersion#,
+      #hotelId#, #roomId#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoomImage">
+    insert into MOBILE_HOTEL_ROOM_IMAGE
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="mobileHotelRoomImageId">
+        MOBILE_HOTEL_ROOM_IMAGE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="imgSize">
+        IMG_SIZE
+      </isNotNull>
+      <isNotNull prepend="," property="imgUrl">
+        IMG_URL
+      </isNotNull>
+      <isNotNull prepend="," property="imgType">
+        IMG_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="watermark">
+        WATERMARK
+      </isNotNull>
+      <isNotNull prepend="," property="imageVersion">
+        IMAGE_VERSION
+      </isNotNull>
+      <isNotNull prepend="," property="hotelId">
+        HOTEL_ID
+      </isNotNull>
+      <isNotNull prepend="," property="roomId">
+        ROOM_ID
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="mobileHotelRoomImageId">
+        #mobileHotelRoomImageId#
+      </isNotNull>
+     
+      <isNotNull prepend="," property="imgSize">
+        #imgSize#
+      </isNotNull>
+      <isNotNull prepend="," property="imgUrl">
+        #imgUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="imgType">
+        #imgType#
+      </isNotNull>
+      <isNotNull prepend="," property="watermark">
+        #watermark#
+      </isNotNull>
+      <isNotNull prepend="," property="imageVersion">
+        #imageVersion#
+      </isNotNull>
+      <isNotNull prepend="," property="hotelId">
+        #hotelId#
+      </isNotNull>
+      <isNotNull prepend="," property="roomId">
+        #roomId#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoomImage">
+    update MOBILE_HOTEL_ROOM_IMAGE
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="imgSize">
+        IMG_SIZE = #imgSize#
+      </isNotNull>
+      <isNotNull prepend="," property="imgUrl">
+        IMG_URL = #imgUrl#
+      </isNotNull>
+      <isNotNull prepend="," property="imgType">
+        IMG_TYPE = #imgType#
+      </isNotNull>
+      <isNotNull prepend="," property="watermark">
+        WATERMARK = #watermark#
+      </isNotNull>
+      <isNotNull prepend="," property="imageVersion">
+        IMAGE_VERSION = #imageVersion#
+      </isNotNull>
+      <isNotNull prepend="," property="hotelId">
+        HOTEL_ID = #hotelId#
+      </isNotNull>
+      <isNotNull prepend="," property="roomId">
+        ROOM_ID = #roomId#
+      </isNotNull>
+    </dynamic>
+    where MOBILE_HOTEL_ROOM_IMAGE_ID = #mobileHotelRoomImageId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoomImage">
+    update MOBILE_HOTEL_ROOM_IMAGE
+    set IMG_SIZE = #imgSize#,
+      IMG_URL = #imgUrl#,
+      IMG_TYPE = #imgType#,
+      WATERMARK = #watermark#,
+      IMAGE_VERSION = #imageVersion#,
+      HOTEL_ID = #hotelId#,
+      ROOM_ID = #roomId#
+    where MOBILE_HOTEL_ROOM_IMAGE_ID = #mobileHotelRoomImageId#
+  </update>
+  
+   <!-- 分页查询 头部 -->
+  <sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+  </sql>
+  
+  <!-- 分页查询 尾部 -->
+  <sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>		
+		</dynamic>
+  </sql>
+  
+  <!-- 查询条件 -->
+  <sql id="queryListWhere">
+      <dynamic prepend=" WHERE ">
+          <isEmpty prepend=" AND " property="id" >
+	        1=1
+	      </isEmpty>
+		  <isNotEmpty prepend=" AND " property="roomId" >
+	        ROOM_ID = #roomId#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="hotelId" >
+	        HOTEL_ID = #hotelId#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="imgSize" >
+	        IMG_SIZE = #imgSize#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="imgUrl" >
+	        IMG_URL = #imgUrl#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="imgType" >
+	        IMG_TYPE = #imgType#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="watermark" >
+	        WATERMARK = #watermark#
+	      </isNotEmpty>
+	      <isNotEmpty prepend=" AND " property="imageVersion" >
+	        IMAGE_VERSION = #imageVersion#
+	      </isNotEmpty>
+		</dynamic>
+		  order by ROOM_ID asc
+  </sql>
+  
+  <!-- 查询列表  -->
+  <select id="queryMobileHotelRoomImageList" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="isPaging">
+		  <include refid="pageHeader"/>
+		</isNotEmpty>
+		SELECT * FROM MOBILE_HOTEL_ROOM_IMAGE
+		<include refid="queryListWhere"/>
+		<isNotEmpty property="isPaging">
+		   <include refid="pageFooter"/>
+		   order by ROOM_ID desc
+		</isNotEmpty>
+   </select>
+
+  
+    <!-- 总数  -->
+	<select id="countMobileHotelRoomImageList" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		SELECT COUNT(*) FROM MOBILE_HOTEL_ROOM_IMAGE
+		<include refid="queryListWhere"/>
+	</select>
+	
+	<!-- 删除某个房间下的数据   -->
+	<delete id="deleteMobileHotelRoomImageByHotelIdAndRoomId" parameterClass="com.lvmama.comm.pet.po.mobile.MobileHotelRoomImage">
+    delete from MOBILE_HOTEL_ROOM_IMAGE
+    where ROOM_ID = #roomId# and HOTEL_ID =  #hotelId# 
+  </delete>
+  
+	
+  <!-- 查询列表  -->
+  <select id="queryMobileHotelRoomImageListByHotelIdAndRoomId" parameterClass="java.util.Map" resultMap="BaseResultMap">
+      SELECT * FROM MOBILE_HOTEL_ROOM_IMAGE 
+      <include refid="queryListWhere"/>
+  </select>
+</sqlMap>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_EMAIL_TEMPLATE" >
+  <resultMap id="comEmailTemplate" class="com.lvmama.comm.pet.po.pub.ComEmailTemplate" >
+    <result column="EMAIL_TEMPLATE_ID" property="emailTemplateId" />
+    <result column="EMAIL_TEMPLATE_TYPE_ID" property="emailTemplateTypeId" />
+    <result column="TEMPLATE_NAME" property="templateName" />
+    <result column="CONTENT_TEMPLATE_FILE" property="contentTemplateFile" />
+    <result column="SUBJECT_TEMPLATE" property="subjectTemplate" />
+    <result column="STATUS" property="status" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="CREATE_USER" property="createUser" />
+  </resultMap>
+
+  <select id="queryByTemplateName" resultMap="comEmailTemplate" parameterClass="java.lang.String" >
+	SELECT * FROM COM_EMAIL_TEMPLATE WHERE TEMPLATE_NAME = #name#
+  </select>
+  
+  
+</sqlMap>

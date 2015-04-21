@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.cashaccount.mapper.TntCashPayMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.cashaccount.po.TntCashPay">
+		<result property="cashPayId" column="CASH_PAY_ID" />
+		<result property="serial" column="SERIAL" />
+		<result property="cashAccountId" column="CASH_ACCOUNT_ID" />
+		<result property="tntOrderId" column="TNT_ORDER_ID" />
+		<result property="amount" column="AMOUNT" />
+		<result property="status" column="STATUS" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+
+	<resultMap id="searchResultMap" type="com.lvmama.tnt.cashaccount.po.TntCashPay" extends="baseResultMap">
+		<result property="productName" column="product_Name" />
+		<result property="tntOrder.orderId" column="ORDER_ID"/>
+	</resultMap>
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		CASH_PAY_ID,SERIAL,CASH_ACCOUNT_ID,TNT_ORDER_ID,AMOUNT,STATUS,CREATE_TIME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.cashaccount.po.TntCashPay">
+		<selectKey resultType="java.lang.Long" keyProperty="cashPayId"
+			order="BEFORE">
+			select TNT_CASH_PAY_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_CASH_PAY (
+		CASH_PAY_ID ,
+		SERIAL ,
+		CASH_ACCOUNT_ID ,
+		TNT_ORDER_ID ,
+		AMOUNT ,
+		STATUS ,
+		CREATE_TIME
+		) VALUES (
+		#{cashPayId} ,
+		#{serial,jdbcType=VARCHAR} ,
+		#{cashAccountId,jdbcType=DECIMAL} ,
+		#{tntOrderId,jdbcType=DECIMAL} ,
+		#{amount,jdbcType=DECIMAL} ,
+		#{status,jdbcType=VARCHAR} ,
+		sysdate
+		)
+	</insert>
+
+	<update id="update" parameterType="com.lvmama.tnt.cashaccount.po.TntCashPay">
+		UPDATE TNT_CASH_PAY SET
+		SERIAL = #{serial} ,
+		CASH_ACCOUNT_ID =
+		#{cashAccountId} ,
+		TNT_ORDER_ID = #{tntOrderId} ,
+		AMOUNT = #{amount} ,
+		STATUS = #{status}
+		WHERE
+		<if test="cashPayId !=null">
+			CASH_PAY_ID = #{cashPayId}
+		</if>
+	</update>
+
+	<update id="updateStatus" parameterType="com.lvmama.tnt.cashaccount.po.TntCashPay">
+		UPDATE TNT_CASH_PAY SET STATUS = #{status}
+		WHERE
+		<if test="cashPayId !=null">
+			CASH_PAY_ID = #{cashPayId}
+		</if>
+	</update>
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM TNT_CASH_PAY WHERE
+		CASH_PAY_ID = #{id}
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_CASH_PAY
+		WHERE
+		CASH_PAY_ID = #{id}
+	</select>
+
+	<sql id="where">
+		<where>
+			p.tnt_order_id = o.tnt_order_id
+			<if test="cashPayId != null and cashPayId !=''">
+				AND p.CASH_PAY_ID = #{cashPayId}
+			</if>
+			<if test="serial != null and serial !=''">
+				AND p.SERIAL = #{serial}
+			</if>
+			<if test="cashAccountId != null and cashAccountId !=''">
+				AND p.CASH_ACCOUNT_ID = #{cashAccountId}
+			</if>
+			<if test="tntOrderId != null and tntOrderId !=''">
+				AND p.TNT_ORDER_ID = #{tntOrderId}
+			</if>
+			<if test="amount != null and amount !=''">
+				AND p.AMOUNT = #{amount}
+			</if>
+			<if test="status != null and status !=''">
+				AND p.STATUS = #{status}
+			</if>
+			<if test="createTime != null and createTime !=''">
+				AND p.CREATE_TIME = #{createTime}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="pageWhere">
+		<where>
+			p.tnt_order_id = o.tnt_order_id
+			<if test="param.cashPayId != null and param.cashPayId !=''">
+				AND p.CASH_PAY_ID = #{param.cashPayId}
+			</if>
+			<if test="param.serial != null and param.serial !=''">
+				AND p.SERIAL = #{param.serial}
+			</if>
+			<if test="param.cashAccountId != null and param.cashAccountId !=''">
+				AND p.CASH_ACCOUNT_ID = #{param.cashAccountId}
+			</if>
+			<if test="param.tntOrderId != null and param.tntOrderId !=''">
+				AND p.TNT_ORDER_ID = #{param.tntOrderId}
+			</if>
+			<if test="param.amount != null and param.amount !=''">
+				AND p.AMOUNT = #{param.amount}
+			</if>
+			<if test="param.status != null and param.status !=''">
+				AND p.STATUS = #{param.status}
+			</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND p.CREATE_TIME = #{param.createTime}
+			</if>
+		</where>
+	</sql>
+
+	<select id="count" resultType="Integer"
+		parameterType="com.lvmama.tnt.cashaccount.po.TntCashPay">
+		SELECT count(*) FROM TNT_CASH_PAY p, tnt_order o 
+		<include refid="where" />
+	</select>
+
+	<select id="findPage" resultMap="searchResultMap" parameterType="page">
+		<include refid="basic.pageSearchHead" />
+		SELECT
+		p.CASH_PAY_ID,p.SERIAL,p.CASH_ACCOUNT_ID,p.TNT_ORDER_ID,p.AMOUNT,p.STATUS,p.CREATE_TIME,o.product_name,o.ORDER_ID
+		FROM TNT_CASH_PAY p, tnt_order o 
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+
+</mapper>
+

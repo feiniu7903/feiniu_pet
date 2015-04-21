@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap>
+	<sql id="pageSearchHead" >
+		<isNotNull property="start" prepend="">
+			<isNotNull property="end" prepend="">
+		SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM ( 
+			</isNotNull>
+		</isNotNull>
+	</sql>
+	<sql id="pageSearchFoot" >
+		<isNotNull property="orderby" prepend="">
+			<isNotEmpty property="orderby" prepend="ORDER BY">
+				$orderby$ $order$
+			</isNotEmpty>
+  		</isNotNull>
+		<isNotNull property="start" prepend="">
+			<isNotNull property="end" prepend="">
+		) P_T ) WHERE RN BETWEEN #start# AND #end#
+			</isNotNull>
+		</isNotNull>
+	</sql>
+</sqlMap>

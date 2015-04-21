@@ -1,0 +1,95 @@
+<?page title="上行指令管理" contentType="text/html;charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window title="优惠劵管理" border="normal"
+		apply="com.lvmama.pet.web.sms.ListSmsInstructionAction" id="win">
+		<grid>
+			<columns>
+				<column width="130px"></column>
+				<column></column>
+				<column width="100px"></column>
+				<column></column>
+				<column width="100px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>上行指令(默认LV带头):</hbox>
+					<hbox>(LV)
+						<textbox id="instructionCode"
+							value="@{saction.searchConds.instructionCode}">
+						</textbox>
+					</hbox>
+					<hbox>附加短信内容</hbox>
+					<hbox>
+						<textbox id="couponCode"
+							value="@{saction.searchConds.couponCode}">
+						</textbox>
+					</hbox>
+					<hbox>描述</hbox>
+					<hbox>
+						<textbox id="description"
+							value="@{saction.searchConds.description}">
+						</textbox>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		
+		<toolbar align="end">
+			<button label=" 查询数据 "
+				onClick="_paging.activePage=0;saction.search()" id="search" width="100px" />
+			<button label=" 新增 "
+				onClick='saction.showWindow("/sms/editInstructions.zul", self.getAttributes());'
+				id="innert" width="100px" />	
+		</toolbar>
+
+
+		<listbox id="box0" fixedLayout="true"
+			model="@{saction.analysisList,load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader align="center" label="指令" />
+				<listheader label="附加短信内容" align="center" width="50%"></listheader>
+				<listheader align="center" label="优惠券标识" />
+				<listheader align="center" label="描述" />
+				<listheader align="center" label="操作" />
+			</listhead>
+
+			<listitem height="25px" self="@{each='analysisList'}">
+				<listcell>LV<label value="@{analysisList.instructionCode}"/></listcell>
+				<listcell label="@{analysisList.couponCode}"/>
+				<listcell label="@{analysisList.couponId}"/>
+				<listcell label="@{analysisList.description}" />
+				<listcell>
+					<button label="查看" width="100px"
+						onClick='saction.showWindow("/sms/editInstructions.zul", self.getAttributes());'>
+						<custom-attributes
+							instructionCode="@{analysisList.instructionCode}" />
+					</button>
+					<button label="删除" width="100px"
+						onClick='saction.delete(self.getAttribute("instructionCode"));'>
+						<custom-attributes
+							instructionCode="@{analysisList.instructionCode}" />
+					</button>
+				</listcell>
+			</listitem>
+		</listbox>
+		<grid style="border:0">
+			<rows>
+				<row>
+					<cell width="60px">
+						共
+						<label id="_totalRowCountLabel" />
+						条
+					</cell>
+					<cell>
+						<paging id="_paging" pageSize="20"
+							onPaging='saction.search();' />
+					</cell>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_CONTACT">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.pet.po.pub.ComContact">
+		<result column="CONTACT_ID" property="contactId" />
+		<result column="NAME" property="name" />
+		<result column="SEX" property="sex" />
+		<result column="TELEPHONE" property="telephone" />
+		<result column="MOBILEPHONE" property="mobilephone" />
+		<result column="EMAIL" property="email" />
+		<result column="ADDRESS" property="address" />
+		<result column="TITLE" property="title" />
+		<result column="MEMO" property="memo" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="OTHER_CONTACT" property="otherContact"/>
+	</resultMap>
+
+	<resultMap id="contactRelation" extends="BaseResultMap"
+		class="com.lvmama.comm.pet.po.pub.ComContact">
+		<result column="CONTACT_RELATION_ID"
+			property="contactRelationId" />
+	</resultMap>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.pet.po.pub.ComContact">
+		select * from COM_CONTACT where CONTACT_ID = #contactId# and VALID='Y'
+	</select>
+
+	<select id="getContactByContractRelation" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.pet.po.pub.ComContactRelation">
+		select cc.*, ccr.contact_relation_id as CONTACT_RELATION_ID from
+		COM_CONTACT cc,COM_CONTACT_RELATION ccr where
+		cc.contact_id=ccr.contact_id and cc.VALID='Y'
+		<isNotNull prepend="and" property="objectId">
+			OBJECT_ID =#objectId#
+		</isNotNull>
+		<isNotNull prepend="and" property="objectType">
+			OBJECT_TYPE =#objectType#
+		</isNotNull>
+		order by NAME desc
+	</select>
+
+	<delete id="deleteByPrimaryKey"
+		parameterClass="com.lvmama.comm.pet.po.pub.ComContact">
+		delete from COM_CONTACT where CONTACT_ID = #contactId#
+	</delete>
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.pet.po.pub.ComContact">
+		<selectKey keyProperty="contactId" resultClass="Long">
+			select COM_CONTACT_SEQ.nextVal FROM DUAL
+		</selectKey>
+		insert into COM_CONTACT (CONTACT_ID, NAME, SEX,
+		TELEPHONE, MOBILEPHONE, EMAIL, ADDRESS, TITLE, MEMO, CREATE_TIME,VALID,OTHER_CONTACT) values
+		(#contactId:NUMBER#, #name#, #sex#, #telephone#,
+		#mobilephone#, #email#,#address#,
+		#title#, #memo#,sysdate,'Y',#otherContact#)
+	</insert>
+	<update id="updateByPrimaryKey"
+		parameterClass="com.lvmama.comm.pet.po.pub.ComContact">
+		update COM_CONTACT set NAME = #name#, SEX =#sex#, TELEPHONE = #telephone#, MOBILEPHONE = #mobilephone#, 
+		EMAIL = #email#, ADDRESS =#address#, TITLE = #title#, MEMO = #memo#,
+		OTHER_CONTACT = #otherContact#
+		where
+		CONTACT_ID = #contactId#
+	</update>
+
+	<update id="markIsValid" parameterClass="java.util.Map">
+		update COM_CONTACT set VALID='N' where CONTACT_ID = #contactId#
+	</update>
+
+	<select id="serchSupSettlementTragetContactByTargetId" parameterClass="long" resultMap="BaseResultMap">
+		SELECT 
+			D.*
+		FROM 
+			COM_CONTACT D,COM_CONTACT_RELATION E 
+		WHERE 
+			OBJECT_TYPE = 'SUP_SETTLEMENT_TARGET' 
+		AND 
+			D.CONTACT_ID = E.CONTACT_ID 
+		AND 
+			E.OBJECT_ID = #targetId# 
+		AND 
+			ROWNUM = 1
+	</select>
+</sqlMap>

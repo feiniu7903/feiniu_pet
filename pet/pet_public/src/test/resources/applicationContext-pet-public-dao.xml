@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>  
+  	<bean id="baseIbatisDao" class="com.lvmama.comm.BaseIbatisDAO" abstract="true">
+		<property name="sqlMapClient">
+	      <ref bean="sqlMapClient"/>
+	    </property>
+		<property name="dataSource">
+	      <ref bean="dataSource"/>
+	    </property>
+	</bean>
+	
+	<!-- info -->
+	<bean id="infoQuesTypeDAO" class="com.lvmama.pet.info.dao.InfoQuesTypeDAO" parent="baseIbatisDao"/>
+	<bean id="infoQuesTypeHierarchyDAO" class="com.lvmama.pet.info.dao.InfoQuesTypeHierarchyDAO" parent="baseIbatisDao"/>
+	<bean id="infoHelpCenterDAO" class="com.lvmama.pet.info.dao.InfoHelpCenterDAO" parent="baseIbatisDao"/>
+	
+    <bean id="userActionCollectionDAO" class="com.lvmama.pet.user.dao.UserActionCollectionDAO" parent="baseIbatisDao"/>
+	<bean id="userCooperationUserDAO" class="com.lvmama.pet.user.dao.UserCooperationUserDAO"  parent="baseIbatisDao"/>
+	<bean id="userCooperationCacheDAO" class="com.lvmama.pet.user.dao.UserCooperationCacheDAO"  parent="baseIbatisDao"/>
+    <bean id="userCertCodeDAO" class="com.lvmama.pet.user.dao.UserCertCodeDAO"  parent="baseIbatisDao"/>
+    <bean id="userPasswordRecallDAO" class="com.lvmama.pet.user.dao.UserPasswordRecallDAO"  parent="baseIbatisDao"/>
+    <bean id="userPointLogDAO" class="com.lvmama.pet.user.dao.UserPointLogDAO"  parent="baseIbatisDao"/>
+    <bean id="userPointRuleDAO" class="com.lvmama.pet.user.dao.UserPointRuleDAO"  parent="baseIbatisDao"/>
+    <bean id="userUserDAO" class="com.lvmama.pet.user.dao.UserUserDAO"  parent="baseIbatisDao"/>
+    <bean id="userGradeLogDAO" class="com.lvmama.pet.user.dao.UserGradeLogDAO"  parent="baseIbatisDao"/>
+    <bean id="userPersistentSessionDAO" class="com.lvmama.pet.user.dao.UserPersistentSessionDAO"  parent="baseIbatisDao"/>
+    
+    <!-- pub -->
+    <bean id="comContactDAO" class="com.lvmama.pet.pub.dao.ComContactDAO" parent="baseIbatisDao"/>
+    <bean id="comContactRelationDAO" class="com.lvmama.pet.pub.dao.ComContactRelationDAO" parent="baseIbatisDao"/>
+    <bean id="comPictureDAO" class="com.lvmama.pet.pub.dao.ComPictureDAO"  parent="baseIbatisDao"/>
+    <bean id="comProvinceDAO" class="com.lvmama.pet.pub.dao.ComProvinceDAO" parent="baseIbatisDao"/>
+    <bean id="comCityDAO" class="com.lvmama.pet.pub.dao.ComCityDAO" parent="baseIbatisDao"/>
+    <bean id="comMobileAreaDAO" class="com.lvmama.pet.pub.dao.ComMobileAreaDAO" parent="baseIbatisDao"/>
+    <bean id="comParttimeUserDAO" class="com.lvmama.pet.pub.dao.ComParttimeUserDAO" parent="baseIbatisDao"/>
+    <bean id="comUserFeedbackDAO" class="com.lvmama.pet.pub.dao.ComUserFeedbackDAO" parent="baseIbatisDao"/>
+    <bean id="comBankDAO" class="com.lvmama.pet.pub.dao.ComBankDAO" parent="baseIbatisDao"/>
+    
+    
+    <bean id="shopLogDAO" class="com.lvmama.pet.shop.dao.ShopLogDAO"  parent="baseIbatisDao"/>
+    <bean id="shopOrderDAO" class="com.lvmama.pet.shop.dao.ShopOrderDAO"  parent="baseIbatisDao"/>
+    <bean id="shopProductZhuantiDAO" class="com.lvmama.pet.shop.dao.ShopProductZhuantiDAO"  parent="baseIbatisDao"/>
+    <bean id="shopProductDAO" class="com.lvmama.pet.shop.dao.ShopProductDAO"  parent="baseIbatisDao"/>
+    <bean id="shopUserDAO" class="com.lvmama.pet.shop.dao.ShopUserDAO"  parent="baseIbatisDao"/>
+    <bean id="shopCooperationCouponDAO" class="com.lvmama.pet.shop.dao.ShopCooperationCouponDAO"  parent="baseIbatisDao"/>
+    <bean id="connRecordDAO" class="com.lvmama.pet.conn.dao.ConnRecordDAO"  parent="baseIbatisDao"/>
+    <bean id="connTypeDAO" class="com.lvmama.pet.conn.dao.ConnTypeDAO" parent="baseIbatisDao"/>
+    
+    <bean id="emailAttachmentDAO" class="com.lvmama.pet.email.dao.EmailAttachmentDAO"  parent="baseIbatisDao"/>
+    <bean id="emailContentDAO"  class="com.lvmama.pet.email.dao.EmailContentDAO"  parent="baseIbatisDao"/>
+    
+    <bean id="comFSDAO"  class="com.lvmama.pet.pub.dao.ComFSDAO"  parent="baseIbatisDao"/>
+    
+    <bean id="smsContentDAO" class="com.lvmama.pet.sms.dao.SmsContentDAO" parent="baseIbatisDao" >
+    	<property name="rule"><value>${smsSendRule}</value></property>
+    </bean>
+    <bean id="smsContentLogDAO" class="com.lvmama.pet.sms.dao.SmsContentLogDAO" parent="baseIbatisDao" />
+    <bean id="smsReceiveDAO" class="com.lvmama.pet.sms.dao.SmsReceiveDAO" parent="baseIbatisDao" />
+    <bean id="smsInstructionDAO" class="com.lvmama.pet.sms.dao.SmsInstructionDAO" parent="baseIbatisDao" />
+    
+    <bean id="comSmsTemplateDAO" class="com.lvmama.pet.pub.dao.ComSmsTemplateDAO" parent="baseIbatisDao"/>
+    <bean id="ComEmailTemplateDAO" class="com.lvmama.pet.pub.dao.ComEmailTemplateDAO" parent="baseIbatisDao"/>
+    
+    <bean id="userBatchRegisterDAO" class="com.lvmama.pet.user.dao.UserBatchRegisterDAO" parent="baseIbatisDao" />
+    <bean id="userBatchUserDAO" class="com.lvmama.pet.user.dao.UserBatchUserDAO" parent="baseIbatisDao" />
+    <bean id="comIpsDAO" class="com.lvmama.pet.pub.dao.ComIpsDAO" parent="baseIbatisDao" />
+    <!-- bean id="comAmqMessageDAO" class="com.lvmama.pet.pub.dao.ComAmqMessageDAO" parent="baseIbatisDao"/-->
+    
+    <bean id="markChannelDAO" class="com.lvmama.pet.mark.dao.MarkChannelDAO" parent="baseIbatisDao"/>
+	<bean id="markMembershipCardCodeDAO" class="com.lvmama.pet.mark.dao.MarkMembershipCardCodeDAO" parent="baseIbatisDao"/>
+	<bean id="markMembershipCardDAO" class="com.lvmama.pet.mark.dao.MarkMembershipCardDAO" parent="baseIbatisDao"/>
+	<bean id="markMembershipCardDiscountDAO" class="com.lvmama.pet.mark.dao.MarkMembershipCardDiscountDAO" parent="baseIbatisDao"/>
+	<!-- 优惠相关 -->
+	<bean id="markCouponDAO" class="com.lvmama.pet.mark.dao.MarkCouponDAO" parent="baseIbatisDao"/>
+	<bean id="markCouponCodeDAO" class="com.lvmama.pet.mark.dao.MarkCouponCodeDAO" parent="baseIbatisDao"/>
+	<bean id="markCouponRelateUserDAO" class="com.lvmama.pet.mark.dao.MarkCouponRelateUserDAO" parent="baseIbatisDao" />	
+	<bean id="markCouponProductDAO" class="com.lvmama.pet.mark.dao.MarkCouponProductDAO" parent="baseIbatisDao" />
+	<bean id="markCouponPointChangeDAO" class="com.lvmama.pet.mark.dao.MarkCouponPointChangeDAO" parent="baseIbatisDao" />
+	<!-- 优惠二期 -->
+    <bean id="businessCouponDAO" class="com.lvmama.pet.businessCoupon.dao.BusinessCouponDAO" parent="baseIbatisDao"/>
+    <bean id="comLogDAO" class="com.lvmama.pet.pub.dao.ComLogDAO" parent="baseIbatisDao"/>
+
+	
+	
+	<!-- supplier -->
+	<bean id="supSupplierDAO" class="com.lvmama.pet.sup.dao.SupSupplierDAO" parent="baseIbatisDao"/>
+	<bean id="supContractDAO" class="com.lvmama.pet.sup.dao.SupContractDAO" parent="baseIbatisDao"/>
+	<bean id="supContractFsDAO" class="com.lvmama.pet.sup.dao.SupContractFsDAO" parent="baseIbatisDao"/>
+	<bean id="supBCertificateTargetDAO" class="com.lvmama.pet.sup.dao.SupBCertificateTargetDAO" parent="baseIbatisDao"/>
+	<bean id="supPerformTargetDAO" class="com.lvmama.pet.sup.dao.SupPerformTargetDAO" parent="baseIbatisDao"/>
+	<bean id="supSettlementTargetDAO" class="com.lvmama.pet.sup.dao.SupSettlementTargetDAO" parent="baseIbatisDao"/>
+	<bean id="supSupplierAptitudeDAO" class="com.lvmama.pet.sup.dao.SupSupplierAptitudeDAO" parent="baseIbatisDao"/>
+	<bean id="supSupplierAssessDAO" class="com.lvmama.pet.sup.dao.SupSupplierAssessDAO" parent="baseIbatisDao"/>
+	<bean id="supContractChangeDAO" class="com.lvmama.pet.sup.dao.SupContractChangeDAO" parent="baseIbatisDao"/>
+	<bean id="comFaxTemplateDAO" class="com.lvmama.pet.pub.dao.ComFaxTemplateDAO" parent="baseIbatisDao"/>
+	<bean id="metaPerformDAO" class="com.lvmama.pet.sup.dao.MetaPerformDAO" parent="baseIbatisDao"/>
+	<bean id="metaSettlementDAO" class="com.lvmama.pet.sup.dao.MetaSettlementDAO" parent="baseIbatisDao"/>
+	<bean id="metaBCertificateDAO" class="com.lvmama.pet.sup.dao.MetaBCertificateDAO" parent="baseIbatisDao"/>
+	<bean id="finAccountingEntityDAO" class="com.lvmama.pet.sup.dao.FinAccountingEntityDAO" parent="baseIbatisDao"/>
+	<!-- 后台权限 begin -->
+	<bean id="permUserDAO" class="com.lvmama.pet.perm.dao.PermUserDAO" parent="baseIbatisDao"/>
+	<bean id="permUserRoleDAO" class="com.lvmama.pet.perm.dao.PermUserRoleDAO" parent="baseIbatisDao"/>
+	<bean id="permRolePermissionDAO" class="com.lvmama.pet.perm.dao.PermRolePermissionDAO" parent="baseIbatisDao"/>
+	<bean id="permRoleDAO" class="com.lvmama.pet.perm.dao.PermRoleDAO" parent="baseIbatisDao"/>
+	<bean id="permPermissionDAO" class="com.lvmama.pet.perm.dao.PermPermissionDAO" parent="baseIbatisDao"/>
+	<bean id="permOrganizationDAO" class="com.lvmama.pet.perm.dao.PermOrganizationDAO" parent="baseIbatisDao"/>
+	<bean id="permUserPermissionDAO" class="com.lvmama.pet.perm.dao.PermUserPermissionDAO" parent="baseIbatisDao"/>
+	<!-- 后台权限 end -->
+	<bean id="finReconBankStatementDAO" class="com.lvmama.pet.pay.dao.FinReconBankStatementDAO" parent="baseIbatisDao"/>
+	<bean id="finReconResultDAO" class="com.lvmama.pet.pay.dao.FinReconResultDAO" parent="baseIbatisDao"/>
+	
+	<bean id="payTransactionDAO" class="com.lvmama.pet.pay.dao.PayTransactionDAO" parent="baseIbatisDao"/>
+	<bean id="payPaymentDAO" class="com.lvmama.pet.pay.dao.PayPaymentDAO" parent="baseIbatisDao"/>
+	<bean id="payPrePaymentDAO" class="com.lvmama.pet.pay.dao.PayPrePaymentDAO" parent="baseIbatisDao"/>
+	<bean id="payPaymentRefundmentDAO" class="com.lvmama.pet.pay.dao.PayPaymentRefundmentDAO" parent="baseIbatisDao"/>
+	<bean id="payPaymentGatewayDAO" class="com.lvmama.pet.pay.dao.PayPaymentGatewayDAO" parent="baseIbatisDao"/>
+	<bean id="payPaymentGatewayElementDAO" class="com.lvmama.pet.pay.dao.PayPaymentGatewayElementDAO" parent="baseIbatisDao"/>
+	<bean id="payPaymentDetailDAO" class="com.lvmama.pet.pay.dao.PayPaymentDetailDAO" parent="baseIbatisDao"/>
+	<bean id="payReceivingCompanyDAO" class="com.lvmama.pet.pay.dao.PayReceivingCompanyDAO" parent="baseIbatisDao"/>
+	<bean id="payReceivingBankDAO" class="com.lvmama.pet.pay.dao.PayReceivingBankDAO" parent="baseIbatisDao"/>
+	<bean id="payPosCommercialDAO" class="com.lvmama.pet.pay.dao.PayPosCommercialDAO" parent="baseIbatisDao"/>
+	<bean id="payPosDAO" class="com.lvmama.pet.pay.dao.PayPosDAO" parent="baseIbatisDao"/>
+	<bean id="payPosUserDAO" class="com.lvmama.pet.pay.dao.PayPosUserDAO" parent="baseIbatisDao"/>
+ 
+	<bean id="cashAccountDAO" class="com.lvmama.pet.money.dao.CashAccountDAO" parent="baseIbatisDao"/>
+	<bean id="cashChangeDAO" class="com.lvmama.pet.money.dao.CashChangeDAO" parent="baseIbatisDao"/>
+	<bean id="cashDrawDAO" class="com.lvmama.pet.money.dao.CashDrawDAO" parent="baseIbatisDao"/>
+	<bean id="cashFreezeQueueDAO" class="com.lvmama.pet.money.dao.CashFreezeQueueDAO" parent="baseIbatisDao"/>
+	<bean id="cashMoneyDrawDAO" class="com.lvmama.pet.money.dao.CashMoneyDrawDAO" parent="baseIbatisDao"/>
+	<bean id="cashPayDAO" class="com.lvmama.pet.money.dao.CashPayDAO" parent="baseIbatisDao"/>
+	<bean id="cashProtectDAO" class="com.lvmama.pet.money.dao.CashProtectDAO" parent="baseIbatisDao"/>
+	<bean id="cashRechargeDAO" class="com.lvmama.pet.money.dao.CashRechargeDAO" parent="baseIbatisDao"/>
+	<bean id="cashRefundmentDAO" class="com.lvmama.pet.money.dao.CashRefundmentDAO" parent="baseIbatisDao"/>
+	<bean id="cashBonusReturnDAO" class="com.lvmama.pet.money.dao.CashBonusReturnDAO" parent="baseIbatisDao"/>
+	
+	<bean id="storedCardBatchDAO" class="com.lvmama.pet.money.dao.StoredCardBatchDAO" parent="baseIbatisDao"/>
+	<bean id="storedCardDAO" class="com.lvmama.pet.money.dao.StoredCardDAO" parent="baseIbatisDao"/>
+	<bean id="storedCardStockDAO" class="com.lvmama.pet.money.dao.StoredCardStockDAO" parent="baseIbatisDao"/>
+	<bean id="storedCardUsageDAO" class="com.lvmama.pet.money.dao.StoredCardUsageDAO" parent="baseIbatisDao"/>
+	
+	<bean id="comPinyinDAO" class="com.lvmama.pet.pub.dao.ComPinyinDAO" parent="baseIbatisDao"/>
+	<bean id="comSubjectDAO" class="com.lvmama.pet.pub.dao.ComSubjectDAO" parent="baseIbatisDao"/>
+	<bean id="placeDAO" class="com.lvmama.pet.place.dao.PlaceDAO" parent="baseIbatisDao"/>
+	<bean id="askDAO" class="com.lvmama.pet.place.dao.QuestionAnswerDAO" parent="baseIbatisDao"/>
+	<bean id="placeHotelDAO" class="com.lvmama.pet.place.dao.PlaceHotelDAO" parent="baseIbatisDao"/>
+	<bean id="placePlaceDestDAO" class="com.lvmama.pet.place.dao.PlacePlaceDestDAO" parent="baseIbatisDao"/>
+	<bean id="placeSearchPinyinDAO" class="com.lvmama.pet.place.dao.PlaceSearchPinyinDAO" parent="baseIbatisDao"/>
+	<bean id="placePhotoDAO" class="com.lvmama.pet.place.dao.PlacePhotoDAO" parent="baseIbatisDao"/>
+	<bean id="placeLandMarkDAO" class="com.lvmama.pet.place.dao.PlaceLandMarkDAO" parent="baseIbatisDao"/>
+	<bean id="placeActivityDAO" class="com.lvmama.pet.place.dao.PlaceActivityDAO" parent="baseIbatisDao"/>
+	<bean id="specialTopicDAO" class="com.lvmama.pet.place.dao.SpecialTopicDAO" parent="baseIbatisDao"/>
+	
+	<!-- 百度,Google坐标 -->
+	<bean id="placeCoordinateBaiduDao" class="com.lvmama.pet.place.dao.PlaceCoordinateBaiduDao" parent="baseIbatisDao"/>
+	<bean id="placeCoordinateGoogleDao" class="com.lvmama.pet.place.dao.PlaceCoordinateGoogleDao" parent="baseIbatisDao"/>
+	
+	<!-- 搜索Search相关 -->
+	<bean id="placeSearchInfoDAO" class="com.lvmama.pet.search.dao.PlaceSearchInfoDAO" parent="baseIbatisDao"/>
+	<bean id="productSearchInfoDAO" class="com.lvmama.pet.search.dao.ProductSearchInfoDAO" parent="baseIbatisDao"/>
+	<bean id="prodBranchSearchInfoDAO" class="com.lvmama.pet.search.dao.ProdBranchSearchInfoDAO" parent="baseIbatisDao"/>
+	<bean id="productPropertySearchInfoDAO" class="com.lvmama.pet.search.dao.ProductPropertySearchInfoDAO" parent="baseIbatisDao"/>
+	<bean id="comSearchIntelligentTypeDAO" class="com.lvmama.pet.search.dao.ComSearchIntelligentTypeDAO" parent="baseIbatisDao"/>
+	<bean id="comSearchTranscodeDAO" class="com.lvmama.pet.search.dao.ComSearchTranscodeDAO" parent="baseIbatisDao"/>
+	<bean id="prodTrainCacheDAO" class="com.lvmama.pet.search.dao.ProdTrainCacheDAO" parent="baseIbatisDao"/>
+	<!-- seo -->
+	<bean id="seoSiteMapHtmlDAO" class="com.lvmama.pet.seo.dao.SeoSiteMapHtmlDAO" parent="baseIbatisDao"/>
+	<bean id="seoIndexPageDAO" class="com.lvmama.pet.seo.dao.SeoIndexPageDAO" parent="baseIbatisDao"/>
+	<bean id="recommendInfoDAO" class="com.lvmama.pet.seo.dao.RecommendInfoDAO" parent="baseIbatisDao"/>
+	<bean id="recommendBlockDAO" class="com.lvmama.pet.seo.dao.RecommendBlockDAO" parent="baseIbatisDao"/>
+	
+	<!-- 容器相关 -->
+	<bean id="prodContainerDAO" class="com.lvmama.pet.prod.dao.ProdContainerDAO" parent="baseIbatisDao"/>
+	<bean id="prodContainerProductDAO" class="com.lvmama.pet.prod.dao.ProdContainerProductDAO" parent="baseIbatisDao"/>
+	<bean id="prodProductTagDAO" class="com.lvmama.pet.prod.dao.ProdProductTagDAO" parent="baseIbatisDao"/>
+	<bean id="productProductPlaceDAO" class="com.lvmama.pet.prod.dao.ProductProductPlaceDAO" parent="baseIbatisDao"/>
+	<bean id="prodContainerFromPlaceDAO" class="com.lvmama.pet.prod.dao.ProdContainerFromPlaceDAO" parent="baseIbatisDao"/>
+
+	<!-- COMMENT点评相关 -->
+	<bean id="cmtNewsDAO" class="com.lvmama.pet.comment.dao.CmtNewsDAO" parent="baseIbatisDao"/>
+	<bean id="cmtNewsReplyDAO" class="com.lvmama.pet.comment.dao.CmtNewsReplyDAO" parent="baseIbatisDao"/>
+	<bean id="cmtLatitudeStatistisDAO" class="com.lvmama.pet.comment.dao.CmtLatitudeStatistisDAO" parent="baseIbatisDao"/>
+	<bean id="cmtTitleStatictisDAO" class="com.lvmama.pet.comment.dao.CmtTitleStatictisDAO" parent="baseIbatisDao"/>
+	<bean id="cmtCommentDAO" class="com.lvmama.pet.comment.dao.CmtCommentDAO" parent="baseIbatisDao"/>
+	<bean id="cmtLatitudeDAO" class="com.lvmama.pet.comment.dao.CmtLatitudeDAO" parent="baseIbatisDao"/>
+	<bean id="cmtPictureDAO" class="com.lvmama.pet.comment.dao.CmtPictureDAO" parent="baseIbatisDao"/>
+	<bean id="cmtReplyDAO" class="com.lvmama.pet.comment.dao.CmtReplyDAO" parent="baseIbatisDao"/>
+	<bean id="dicCommentLatitudeDAO" class="com.lvmama.pet.comment.dao.DicCommentLatitudeDAO" parent="baseIbatisDao"/>
+	<bean id="cmtRecommendPlaceDAO" class="com.lvmama.pet.comment.dao.CmtRecommendPlaceDAO" parent="baseIbatisDao"/>
+
+	<bean id="cmtSpecialSubjectDAO" class="com.lvmama.pet.comment.dao.CmtSpecialSubjectDAO" parent="baseIbatisDao"/>
+	<bean id="cmtActivityDAO" class="com.lvmama.pet.comment.dao.CmtActivityDAO" parent="baseIbatisDao"/>
+	<bean id="cmtBusinessUserDAO" class="com.lvmama.pet.comment.dao.CmtBusinessUserDAO" parent="baseIbatisDao"/>
+	
+	<bean id="prodProductHeadDAO" class="com.lvmama.pet.prod.dao.ProdProductHeadDAO" parent="baseIbatisDao"/>
+	<bean id="prodInsuranceDAO" class="com.lvmama.pet.prod.dao.ProdInsuranceDAO" parent="baseIbatisDao"/>
+	
+	<bean id="prodProductRelationDAO" class="com.lvmama.pet.prod.dao.ProdProductRelationDAO" parent="baseIbatisDao"/>
+
+	
+	<bean id="letterTemplateDAO" class="com.lvmama.pet.onlineLetter.dao.LetterTemplateDAO" parent="baseIbatisDao"/>
+	<bean id="letterUserMessageDAO" class="com.lvmama.pet.onlineLetter.dao.LetterUserMessageDAO" parent="baseIbatisDao"/>
+	
+	<bean id="visaApplicationDocumentDAO" class="com.lvmama.pet.visa.dao.VisaApplicationDocumentDAO" parent="baseIbatisDao"/>
+	<bean id="visaApplicationDocumentDetailsDAO" class="com.lvmama.pet.visa.dao.VisaApplicationDocumentDetailsDAO" parent="baseIbatisDao"/>
+	<bean id="visaApprovalDAO" class="com.lvmama.pet.visa.dao.VisaApprovalDAO" parent="baseIbatisDao"/>
+	<bean id="visaApprovalDetailsDAO" class="com.lvmama.pet.visa.dao.VisaApprovalDetailsDAO" parent="baseIbatisDao"/>
+	<!-- 航班 -->
+	 <bean id="placeFlightDAO" class="com.lvmama.pet.place.dao.PlaceFlightDAO" parent="baseIbatisDao"></bean>
+	 <bean id="placePlaneModelDAO" class="com.lvmama.pet.place.dao.PlacePlaneModelDAO" parent="baseIbatisDao"></bean>
+     <bean id="placeAirlineDAO" class="com.lvmama.pet.place.dao.PlaceAirlineDAO" parent="baseIbatisDao"></bean>
+     <bean id="placeAirportDAO" class="com.lvmama.pet.place.dao.PlaceAirportDAO" parent="baseIbatisDao" />
+    	
+	<!-- 工单begin -->
+	<bean id="workDepartmentDAO" class="com.lvmama.pet.work.dao.WorkDepartmentDAO" parent="baseIbatisDao"/>
+	<bean id="workGroupDAO" class="com.lvmama.pet.work.dao.WorkGroupDAO" parent="baseIbatisDao"/>
+	<bean id="workGroupUserDAO" class="com.lvmama.pet.work.dao.WorkGroupUserDAO" parent="baseIbatisDao"/>
+	<bean id="workOrderDAO" class="com.lvmama.pet.work.dao.WorkOrderDAO" parent="baseIbatisDao"/>
+	<bean id="workOrderTypeDAO" class="com.lvmama.pet.work.dao.WorkOrderTypeDAO" parent="baseIbatisDao"/>
+	<bean id="workTaskDAO" class="com.lvmama.pet.work.dao.WorkTaskDAO" parent="baseIbatisDao"/>
+	<!-- 工单end -->
+	
+	<bean id="comKeyDescDAO" class="com.lvmama.pet.pub.dao.ComKeyDescDAO" />
+	<bean id="comKeJetWordDAO" class="com.lvmama.pet.pub.dao.ComKeJetWordDAO" />
+	<bean id="comKeJetAdsDAO" class="com.lvmama.pet.pub.dao.ComKeJetAdsDAO" />
+
+	<!-- 驴途 v3 推荐 -->
+
+	<bean id="mobileRecommendBlockDAO" class="com.lvmama.pet.mobile.dao.MobileRecommendBlockDAO"></bean>
+	<bean id="mobileRecommendInfoDAO" class="com.lvmama.pet.mobile.dao.MobileRecommendInfoDAO"></bean>
+  <bean id="mobileFavoriteDAO" class="com.lvmama.pet.mobile.dao.MobileFavoriteDAO"></bean>
+  <bean id="mobileVersionDAO" class="com.lvmama.pet.mobile.dao.MobileVersionDAO"></bean>
+  <bean id="mobileMarkActivityDAO" class="com.lvmama.pet.mobile.dao.MobileMarkActivityDAO"></bean>
+  <bean id="mobileMarkActivityLogDAO" class="com.lvmama.pet.mobile.dao.MobileMarkActivityLogDAO"></bean>
+  <bean id="mobilePushDeviceDAO" class="com.lvmama.pet.mobile.dao.MobilePushDeviceDAO"></bean>
+  <bean id="mobilePersistanceLogDAO" class="com.lvmama.pet.mobile.dao.MobilePersistanceLogDAO"/>
+  <bean id="mobilePushJogTaskDAO" class="com.lvmama.pet.mobile.dao.MobilePushJogTaskDAO"></bean>
+  <bean id="mobilePushSendTaskDAO" class="com.lvmama.pet.mobile.dao.MobilePushSendTaskDAO"></bean>
+  <bean id="mobilePushSendTaskLogDAO" class="com.lvmama.pet.mobile.dao.MobilePushSendTaskLogDAO"></bean>
+
+	<!-- ebk push begin -->
+	<bean id="ebkPushMessageDAO" class="com.lvmama.pet.ebkpush.dao.EbkPushMessageDAO" />
+	<!-- ebk push end -->
+	
+	<bean id="sensitiveKeysDAO" class="com.lvmama.pet.conn.dao.SensitiveKeysDAO" />
+	<bean id="hotelTrafficInfoDAO" class="com.lvmama.pet.place.dao.HotelTrafficInfoDAO" />
+	
+	<bean id="placeHotelNoticeDao" class="com.lvmama.pet.place.dao.PlaceHotelNoticeDao" parent="baseIbatisDao"></bean>
+	<bean id="placeHotelRoomDao" class="com.lvmama.pet.place.dao.PlaceHotelRoomDao" parent="baseIbatisDao"></bean>
+	<bean id="placeHotelRecommendDao" class="com.lvmama.pet.place.dao.PlaceHotelRecommendDao" parent="baseIbatisDao"></bean>
+	<!-- seo友情链接 -->
+	<bean id="seoLinksDao" class="com.lvmama.pet.seo.dao.SeoLinksDao" parent="baseIbatisDao"></bean>
+	<bean id="keyWordDao" class="com.lvmama.pet.review.dao.KeyWordDAO" parent="baseIbatisDao"></bean>
+  <bean id="reviewSendEmailDAO" class="com.lvmama.pet.review.dao.ReviewSendEmailDAO" parent="baseIbatisDao"></bean>
+	
+	<!-- 用户标签 -->
+	<bean id="userTagsTypeDAO" class="com.lvmama.pet.userTags.dao.UserTagsTypeDAO" parent="baseIbatisDao"></bean>
+	<bean id="userTagsDAO" class="com.lvmama.pet.userTags.dao.UserTagsDAO" parent="baseIbatisDao"></bean>
+	<bean id="userTagsRelationshipDao" class="com.lvmama.pet.userTags.dao.UserTagsRelationshipDao" parent="baseIbatisDao"></bean>
+	<!-- 储值卡新作 -->
+	<bean id="inStoregeDAO" class="com.lvmama.pet.lvmamacard.dao.InStoregeDAO"></bean>
+	<bean id="lvmamaStoredCardDao" class="com.lvmama.pet.lvmamacard.dao.LvmamaStoredCardDao"></bean>
+</beans>

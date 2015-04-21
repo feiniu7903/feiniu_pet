@@ -1,0 +1,85 @@
+<?page title="打款任务查看" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_palymoney_view"?>
+<zk>
+<window id="win_palymoney_view" title="打款任务查看" border="normal" apply="com.lvmama.pet.web.money.FincMoneyDrawHisViewAction">
+
+<grid>
+		<columns>
+			<column width="80px"></column>
+			<column></column>
+			<column width="80px"></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>
+					用户名:
+				</hbox>
+				<hbox>
+					${saction.user.userName}
+				</hbox>
+				<hbox>姓名：</hbox>
+				<hbox>
+					${saction.user.realName}
+				</hbox>
+			</row>
+			
+			<row>
+
+				<hbox>
+					手机号:
+				</hbox>
+				<hbox>
+					${saction.user.mobileNumber}
+				</hbox>
+				<hbox>
+					提现至:
+				</hbox>
+				<hbox>
+					${saction.cashMoneyDraw.bankName}
+				</hbox>
+			</row>
+			<row>
+				<hbox>收款人：</hbox>
+				<hbox>
+					${saction.cashMoneyDraw.bankAccountName}
+				</hbox>
+				<hbox>账户信息:</hbox>
+				<hbox>
+					${saction.cashMoneyDraw.bankAccount}
+				</hbox>
+			</row>
+			<row>
+				<hbox>金额：</hbox>
+				<hbox>${saction.cashMoneyDraw.drawAmountYuan}</hbox>
+				<hbox>失败信息:</hbox>
+				<hbox>${saction.cashDraw.callbackInfo}</hbox>
+			</row>
+		</rows>
+	</grid>
+	<space />
+	<groupbox style="border: none;">
+			<caption label="处理过程"></caption>
+			<listbox model="@{saction.logs}">
+				<listhead>
+					<listheader label="序号"></listheader>
+					<listheader label="类型"></listheader>
+					<listheader label="时间"></listheader>
+					<listheader label="操作人"></listheader>
+					<listheader label="备注"></listheader>
+				</listhead>
+				<listitem self="@{each='comLog'}">
+					<listcell label="@{comLog.logId}"></listcell>
+					<listcell label="@{comLog.logName}"></listcell>
+					<listcell label="@{comLog.createTime}"></listcell>
+					<listcell label="@{comLog.operatorName}"></listcell>
+					<listcell label="@{comLog.content}"></listcell>
+				</listitem>
+			</listbox>
+		</groupbox>
+
+	<toolbar align="center">
+		<button label="关闭" onClick="saction.closeWindow();"/>
+	</toolbar>
+</window>
+</zk>

@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PAY_PAYMENT">
+	<resultMap id="PayPaymentBaseResult" class="com.lvmama.comm.pet.po.pay.PayPayment">
+		<result column="PAYMENT_ID" property="paymentId" />
+		<result column="SERIAL" property="serial" />
+		<result column="BIZ_TYPE" property="bizType" />
+		<result column="OBJECT_ID" property="objectId" />
+		<result column="OBJECT_TYPE" property="objectType" />
+		<result column="PAYMENT_TYPE" property="paymentType" />
+		<result column="PAYMENT_GATEWAY" property="paymentGateway" />
+		<result column="AMOUNT" property="amount" />
+		<result column="STATUS" property="status" />
+		<result column="CALLBACK_TIME" property="callbackTime" />
+		<result column="CALLBACK_INFO" property="callbackInfo" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="GATEWAY_TRADE_NO" property="gatewayTradeNo" />
+		<result column="GATE_ID" property="gateId" />
+		<result column="PAYMENT_TRADE_NO" property="paymentTradeNo" />
+		<result column="REFUND_SERIAL" property="refundSerial" />
+		<result column="NOTIFIED" property="notified" />
+		<result column="OPERATOR" property="operator" />
+		<result column="NOTIFY_TIME" property="notifyTime" />
+		<result column="ORI_OBJECT_ID" property="oriObjectId" />
+		<result column="PAY_MOBILE_NUM" property="payMobileNum" />
+	</resultMap>
+	
+	<resultMap id="payAndPrePaymentVO" class="com.lvmama.comm.vo.PayAndPrePaymentVO">
+		<result column="PAYMENT_ID" property="paymentId" />
+		<result column="SERIAL" property="serial" />
+		<result column="BIZ_TYPE" property="bizType" />
+		<result column="OBJECT_ID" property="objectId" />
+		<result column="OBJECT_TYPE" property="objectType" />
+		<result column="PAYMENT_TYPE" property="paymentType" />
+		<result column="PAYMENT_GATEWAY" property="paymentGateway" />
+		<result column="AMOUNT" property="amount" />
+		<result column="STATUS" property="status" />
+		<result column="CALLBACK_TIME" property="callbackTime" />
+		<result column="CALLBACK_INFO" property="callbackInfo" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="GATEWAY_TRADE_NO" property="gatewayTradeNo" />
+		<result column="GATE_ID" property="gateId" />
+		<result column="PAYMENT_TRADE_NO" property="paymentTradeNo" />
+		<result column="REFUND_SERIAL" property="refundSerial" />
+		<result column="NOTIFIED" property="notified" />
+		<result column="OPERATOR" property="operator" />
+		<result column="NOTIFY_TIME" property="notifyTime" />
+		<result column="ORI_OBJECT_ID" property="oriObjectId" />
+		<result column="PRE_STATUS" property="preStatus" />
+	</resultMap>
+	
+	<resultMap id="cashPaymentComboVO" class="com.lvmama.comm.vo.CashPaymentComboVO">
+		<result column="PAYMENT_ID" property="paymentId" />
+		<result column="SERIAL" property="serial" />
+		<result column="BIZ_TYPE" property="bizType" />
+		<result column="OBJECT_ID" property="objectId" />
+		<result column="OBJECT_TYPE" property="objectType" />
+		<result column="PAYMENT_TYPE" property="paymentType" />
+		<result column="PAYMENT_GATEWAY" property="paymentGateway" />
+		<result column="AMOUNT" property="amount" />
+		<result column="STATUS" property="status" />
+		<result column="CALLBACK_TIME" property="callbackTime" />
+		<result column="CALLBACK_INFO" property="callbackInfo" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="GATEWAY_TRADE_NO" property="gatewayTradeNo" />
+		<result column="GATE_ID" property="gateId" />
+		<result column="PAYMENT_TRADE_NO" property="paymentTradeNo" />
+		<result column="REFUND_SERIAL" property="refundSerial" />
+		<result column="NOTIFIED" property="notified" />
+		<result column="OPERATOR" property="operator" />
+		<result column="NOTIFY_TIME" property="notifyTime" />
+		<result column="ORI_OBJECT_ID" property="oriObjectId" />
+		
+		<result column="PAYMENT_DETAIL_ID" property="paymentDetailId" />
+		<result column="RECEIVING_COMPANY_ID" property="receivingCompanyId" />
+		<result column="RECEIVING_BANK_ID" property="receivingBankId" />
+		<result column="RECEIVING_PERSON" property="receivingPerson" />
+		<result column="PAYMENT_ACCOUNT" property="paymentAccount" />
+		<result column="PAYMENT_BANK_CARD_NO" property="paymentBankCardNo" />
+		<result column="CASH_LIBERATE_MONEY_PERSON" property="cashLiberateMoneyPerson" />
+		<result column="CASH_LIBERATE_MONEY_DATE" property="cashLiberateMoneyDate" />
+		<result column="CASH_AUDIT_STATUS" property="cashAuditStatus" />
+		<result column="AUDIT_PERSON" property="auditPerson" />
+		<result column="OTHER_AUDIT_STATUS" property="otherAuditStatus" />
+		<result column="POS_TERMINAL_NO" property="posTerminalNo" />
+		
+		<result column="RECEIVING_COMPANY_NAME" property="receivingCompanyName" />
+		
+		<result column="RECEIVING_ACCOUNT" property="receivingAccount" />
+		<result column="BANK_NAME" property="bankName" />
+		<result column="RECEIVING_ACCOUNT_TYPE" property="receivingAccountType" />
+		<result column="BANK_CARD_NO" property="bankCardNo" />
+	</resultMap>
+	
+	<resultMap id="otherPaymentComboVO" class="com.lvmama.comm.vo.CashPaymentComboVO">
+		<result column="PAYMENT_ID" property="paymentId" />
+		<result column="SERIAL" property="serial" />
+		<result column="BIZ_TYPE" property="bizType" />
+		<result column="OBJECT_ID" property="objectId" />
+		<result column="OBJECT_TYPE" property="objectType" />
+		<result column="PAYMENT_TYPE" property="paymentType" />
+		<result column="PAYMENT_GATEWAY" property="paymentGateway" />
+		<result column="AMOUNT" property="amount" />
+		<result column="STATUS" property="status" />
+		<result column="CALLBACK_TIME" property="callbackTime" />
+		<result column="CALLBACK_INFO" property="callbackInfo" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="GATEWAY_TRADE_NO" property="gatewayTradeNo" />
+		<result column="GATE_ID" property="gateId" />
+		<result column="PAYMENT_TRADE_NO" property="paymentTradeNo" />
+		<result column="REFUND_SERIAL" property="refundSerial" />
+		<result column="NOTIFIED" property="notified" />
+		<result column="OPERATOR" property="operator" />
+		<result column="NOTIFY_TIME" property="notifyTime" />
+		<result column="ORI_OBJECT_ID" property="oriObjectId" />
+		
+		<result column="PAYMENT_DETAIL_ID" property="paymentDetailId" />
+		<result column="RECEIVING_BANK_ID" property="receivingBankId" />
+		<result column="PAYMENT_ACCOUNT" property="paymentAccount" />
+		<result column="PAYMENT_BANK_NAME" property="paymentBankName" />
+		<result column="PAYMENT_BANK_CARD_NO" property="paymentBankCardNo" />
+		<result column="AUDIT_PERSON" property="auditPerson" />
+		<result column="OTHER_AUDIT_STATUS" property="otherAuditStatus" />
+		<result column="BELONG_CENTER" property="belongCenter" />
+		<result column="BELONG_DEPARTMENT" property="belongDepartment" />
+		<result column="DETAIL_NAME" property="detailName" />
+		<result column="SUMMARY" property="summary" />
+		
+		<result column="RECEIVING_ACCOUNT" property="receivingAccount" />
+		<result column="BANK_NAME" property="bankName" />
+		<result column="BANK_CARD_NO" property="bankCardNo" />
+	</resultMap>
+	
+    <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.PayPayment" >
+	    <selectKey resultClass="java.lang.Long" keyProperty="paymentId">
+				select
+				PAY_PAYMENT_SEQ.nextval as id from DUAL
+		</selectKey>
+	    insert into PAY_PAYMENT (PAYMENT_ID, SERIAL, BIZ_TYPE, OBJECT_ID, OBJECT_TYPE, PAYMENT_TYPE, PAYMENT_GATEWAY, AMOUNT,STATUS,CALLBACK_TIME,CALLBACK_INFO,CREATE_TIME,GATEWAY_TRADE_NO,GATE_ID,PAYMENT_TRADE_NO,REFUND_SERIAL,NOTIFIED,OPERATOR,ORI_OBJECT_ID,PAY_MOBILE_NUM)
+	    values (#paymentId#, #serial#, #bizType#, #objectId#, #objectType#, #paymentType#,#paymentGateway#,#amount#,#status#,#callbackTime#,#callbackInfo#, sysdate, #gatewayTradeNo#,#gateId#, #paymentTradeNo#,#refundSerial#, #notified#,#operator#, #oriObjectId#,#payMobileNum#)
+   </insert>
+   <update id="update" parameterClass="com.lvmama.comm.pet.po.pay.PayPayment">
+		UPDATE PAY_PAYMENT
+		SET
+		CALLBACK_TIME = #callbackTime#,
+		CALLBACK_INFO = #callbackInfo#,
+		GATE_ID = #gateId#,
+		REFUND_SERIAL = #refundSerial#,
+		<isNotEmpty property="gatewayTradeNo">
+		GATEWAY_TRADE_NO = #gatewayTradeNo#,
+		</isNotEmpty>
+		<isNotEmpty property="paymentTradeNo">
+		PAYMENT_TRADE_NO = #paymentTradeNo#,
+		</isNotEmpty>
+		<isNotEmpty property="notified">
+		NOTIFIED=#notified#,
+		</isNotEmpty>
+		<isNotEmpty property="notifyTime">
+		NOTIFY_TIME=#notifyTime#,
+		</isNotEmpty>
+		<isNotEmpty property="status">
+		STATUS = #status#,
+		</isNotEmpty>
+		<isNotEmpty property="payMobileNum">
+		PAY_MOBILE_NUM = #payMobileNum#,
+		</isNotEmpty>
+		ORI_OBJECT_ID = #oriObjectId#
+		WHERE payment_id = #paymentId#
+	</update>
+	
+	<select id="selectAndLockByPaymentId" resultMap="PayPaymentBaseResult" parameterClass="java.lang.Long">
+		select * from PAY_PAYMENT where payment_id = #paymentId# for update
+	</select>
+	
+	<select id="selectByPaymentId" resultMap="PayPaymentBaseResult" parameterClass="java.lang.Long">
+		<![CDATA[
+		SELECT * FROM PAY_PAYMENT WHERE PAYMENT_ID = #paymentId#
+		]]>
+	</select>
+	
+	<select id="selectByPaymentTradeNo" resultMap="PayPaymentBaseResult" parameterClass="java.lang.String">
+		<![CDATA[
+		SELECT * FROM PAY_PAYMENT WHERE PAYMENT_TRADE_NO = #paymentTradeNo#
+		]]>
+	</select>
+	<select id="selectByPaymentTradeNoAndObjectId" resultMap="PayPaymentBaseResult" parameterClass="java.util.HashMap">
+		<![CDATA[
+		SELECT * FROM PAY_PAYMENT WHERE PAYMENT_TRADE_NO = #paymentTradeNo# AND OBJECT_ID= #objectId#
+		]]>
+	</select>
+	<select id="selectPaymentCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		select count(*) FROM PAY_PAYMENT P
+		<dynamic prepend="WHERE">
+			<isNotNull property="objectId">
+				P.OBJECT_ID = #objectId#
+			</isNotNull>
+			<isNotNull property="status">
+				AND P.STATUS = #status#
+			</isNotNull>
+			<isNotNull property="createTime">
+				TO_CHAR(P.CREATE_TIME,'yyyy-MM-dd') = TO_CHAR(#createTime#,'yyyy-MM-dd')
+			</isNotNull>
+			<isNotNull property="paymentGateway">
+				AND P.PAYMENT_GATEWAY = #paymentGateway#
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<select id="selectUnNotifiedPaymentList" resultMap="PayPaymentBaseResult" parameterClass="java.util.HashMap">
+		SELECT * FROM PAY_PAYMENT
+		Where SYSDATE - CALLBACK_TIME>0.5/24
+		and STATUS = 'SUCCESS'
+		and (NOTIFIED = 'false' or NOTIFIED is null)
+	    ORDER BY CALLBACK_TIME DESC
+	</select>
+	
+	
+	<select id="selectPaymentListByParasToRecon" resultMap="payAndPrePaymentVO" parameterClass="java.util.HashMap">
+		SELECT PP.*,PRE.STATUS PRE_STATUS FROM PAY_PAYMENT PP LEFT JOIN PAY_PRE_PAYMENT PRE ON PP.PAYMENT_ID = PRE.PAYMENT_ID
+		<dynamic prepend="WHERE">
+		     <isNotNull prepend="and" property="objectId" >
+		        PP.OBJECT_ID = #objectId#
+		      </isNotNull>
+			 <isNotNull prepend="and" property="status" >
+		        PP.STATUS = #status#
+		     </isNotNull>
+		     <isNotNull prepend="and" property="statusIN" >
+		        PP.STATUS in ($statusIN$)
+		      </isNotNull>
+		     <isNotNull prepend="and" property="bizType" >
+		        PP.BIZ_TYPE = #bizType#
+		     </isNotNull>
+		     <isNotNull prepend="and" property="paymentType" >
+		        PP.PAYMENT_TYPE = #paymentType#
+		     </isNotNull>
+		     <isNotNull prepend="and" property="paymentGateway" >
+		         PP.PAYMENT_GATEWAY=#paymentGateway#
+		     </isNotNull>
+		     <isNotNull prepend="and" property="paymentGatewayIN" >
+		         PP.PAYMENT_GATEWAY in ($paymentGatewayIN$)
+		     </isNotNull>
+		     <isNotNull prepend="and" property="paymentTradeNo" >
+		         PP.PAYMENT_TRADE_NO = #paymentTradeNo#
+		     </isNotNull>
+		     <isNotNull prepend="and" property="createTimeShort" >
+		         to_char(PP.CREATE_TIME,'yyyy-MM-dd') = to_char(#createTimeShort#,'yyyy-MM-dd')
+		     </isNotNull>
+	     </dynamic>
+		 ORDER BY pp.payment_id
+	</select>
+	
+	<select id="selectPaymentListByParas" resultMap="PayPaymentBaseResult" parameterClass="java.util.HashMap">
+		SELECT * FROM PAY_PAYMENT
+		<dynamic prepend="WHERE">
+		     <isNotNull prepend="and" property="objectId" >
+		        OBJECT_ID = #objectId#
+		      </isNotNull>
+			 <isNotNull prepend="and" property="status" >
+		        STATUS = #status#
+		      </isNotNull>
+		       <isNotNull prepend="and" property="bizType" >
+		        BIZ_TYPE = #bizType#
+		      </isNotNull>
+		       <isNotNull prepend="and" property="paymentType" >
+		        PAYMENT_TYPE = #paymentType#
+		      </isNotNull>
+		      <isNotNull prepend="and" property="paymentGateway" >
+		         PAYMENT_GATEWAY=#paymentGateway#
+		      </isNotNull>
+		      <isNotNull prepend="and" property="paymentTradeNo" >
+		         PAYMENT_TRADE_NO = #paymentTradeNo#
+		      </isNotNull>
+		      <isNotNull prepend="and" property="paymentGatewayIN" >
+		         PAYMENT_GATEWAY in($paymentGatewayIN$)
+		      </isNotNull>
+		      <isNotNull prepend="and" property="oriObjectIdIsNull" >
+		         ORI_OBJECT_ID $oriObjectIdIsNull$
+		      </isNotNull>
+	     </dynamic>
+	     <isNotEmpty property="orderby">
+			ORDER BY $orderby$
+			<isNotEmpty property="order">
+				$order$
+			</isNotEmpty>
+		</isNotEmpty>
+	</select>
+	
+	<select id="selectNewPrePayData" resultMap="PayPaymentBaseResult" parameterClass="java.util.HashMap">
+		SELECT * FROM PAY_PAYMENT where gateway_trade_no is not null 
+	     <isNotNull prepend="and" property="objectId" >
+	        OBJECT_ID = #objectId#
+	      </isNotNull>
+		 <isNotNull prepend="and" property="status" >
+	        STATUS = #status#
+	      </isNotNull>
+	       <isNotNull prepend="and" property="bizType" >
+	        BIZ_TYPE = #bizType#
+	      </isNotNull>
+	       <isNotNull prepend="and" property="paymentType" >
+	        PAYMENT_TYPE = #paymentType#
+	      </isNotNull>
+	      <isNotNull prepend="and" property="paymentGateway" >
+	         PAYMENT_GATEWAY=#paymentGateway#
+	      </isNotNull>
+	      <isNotNull prepend="and" property="paymentTradeNo" >
+	         PAYMENT_TRADE_NO = #paymentTradeNo#
+	      </isNotNull>
+	      <isNotNull prepend="and" property="paymentGatewayIN" >
+	         PAYMENT_GATEWAY in($paymentGatewayIN$)
+	      </isNotNull>
+	      <isNotNull prepend="and" property="oriObjectIdIsNull" >
+	         ORI_OBJECT_ID $oriObjectIdIsNull$
+	      </isNotNull>
+	     <isNotEmpty property="orderby">
+			ORDER BY $orderby$
+			<isNotEmpty property="order">
+				$order$
+			</isNotEmpty>
+		</isNotEmpty>
+	</select>
+	
+	<select id="selectBySerial" resultMap="PayPaymentBaseResult" parameterClass="java.lang.String">
+		<![CDATA[
+		SELECT * FROM PAY_PAYMENT WHERE SERIAL = #serial#
+		]]>
+	</select>
+	
+	<select id="sumPayedOrdPaymentAmountByObjectId" resultClass="java.lang.Long"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+			SELECT NVL(SUM(AMOUNT),0)
+			  FROM PAY_PAYMENT
+			 WHERE PAY_PAYMENT.OBJECT_ID = #objectId#
+			   AND STATUS = 'SUCCESS'
+		]]>
+	</select>
+	
+	
+	  <select id="selectPreAndPayByObjectIdAndBizType" resultMap="payAndPrePaymentVO" parameterClass="java.util.Map">
+	  	SELECT P.*,PRE.STATUS PRE_STATUS FROM PAY_PAYMENT P LEFT JOIN PAY_PRE_PAYMENT PRE ON P.PAYMENT_ID = PRE.PAYMENT_ID 
+  		 WHERE P.OBJECT_ID = #objectId#
+   		 AND BIZ_TYPE = #bizType# 
+    	 ORDER BY CREATE_TIME 
+	  </select>
+
+	<select id="getOtherMergePayListByPayment" resultMap="payAndPrePaymentVO"
+		parameterClass="java.util.Map">
+		SELECT P.*,PRE.STATUS PRE_STATUS 
+		FROM PAY_PAYMENT P 
+		LEFT JOIN PAY_PRE_PAYMENT PRE 
+		ON P.PAYMENT_ID = PRE.PAYMENT_ID
+		LEFT JOIN PAY_PAYMENT_GATEWAY PPG
+		ON P.PAYMENT_GATEWAY=PPG.GATEWAY
+		WHERE P.GATEWAY_TRADE_NO=#gatewayTradeNo#
+		AND P.PAYMENT_TRADE_NO=#paymentTradeNo#
+		AND P.OBJECT_ID!=#objectId#
+		AND P.PAYMENT_GATEWAY=#paymentGateway#
+		AND PPG.GATEWAY_TYPE=#gatewayType#
+		AND P.ORI_OBJECT_ID IS NULL
+		AND P.PAYMENT_TRADE_NO IS NOT NULL
+		AND P.GATEWAY_TRADE_NO IS NOT NULL
+	</select>
+	
+	  <select id="selectByObjectIdAndBizType" resultMap="PayPaymentBaseResult" parameterClass="java.util.Map">
+	  	select * from PAY_PAYMENT
+		where OBJECT_ID = #objectId#
+		and BIZ_TYPE = #bizType#
+		order by create_time
+	  </select>
+
+	  <select id="selectPaymentSuccessCount" resultClass="java.lang.Long" parameterClass="java.lang.Long">
+	  	select COUNT(*) from PAY_PAYMENT
+		where OBJECT_ID = #objectId#
+		   and status = 'SUCCESS' 
+		order by create_time
+	  </select>
+
+
+		<select id="selectPaymentSumAmount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		  select COALESCE(SUM(AMOUNT), 0) FROM PAY_PAYMENT
+		  WHERE OBJECT_ID= #objectId#
+		   <isNotNull prepend="and" property="status" >
+		         STATUS=#status#
+		       </isNotNull>
+		        <isNotNull prepend="and" property="paymentGateway" >
+		         PAYMENT_GATEWAY=#paymentGateway#
+		       </isNotNull>
+		 </select>
+
+		<select id="selectCardPayedPayPaymentListBy" resultMap="PayPaymentBaseResult" parameterClass="java.util.HashMap">
+		  SELECT * FROM PAY_PAYMENT
+		  WHERE OBJECT_ID= #objectId#
+		   <isNotNull prepend="and" property="status" >
+		         STATUS=#status#
+		       </isNotNull>
+			<isNotNull prepend="and" property="statuss" >
+		         STATUS in ($statuss$)
+		       </isNotNull>
+		        <isNotNull prepend="and" property="paymentGateway" >
+		         PAYMENT_GATEWAY=#paymentGateway#
+		       </isNotNull>
+		       ORDER BY CALLBACK_TIME DESC
+		 </select>
+		 
+		<select id="selectSerialByPaymentTradeNo" resultClass="java.lang.String" parameterClass="java.lang.String">
+		 select SERIAL from PAY_PAYMENT
+		 where PAYMENT_TRADE_NO = #paymentTradeNo#
+		</select>
+		
+		<select id="selectSerialByPaymentOrderNo" resultClass="java.lang.String" parameterClass="java.lang.String">
+		 select SERIAL from PAY_PAYMENT
+		 where PAYMENT_TRADE_NO = #paymentTradeNo#
+		</select>
+		
+		
+	<sql id="pageHead" >
+		<isNotEmpty property="start">
+			SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM (
+		</isNotEmpty> 
+	</sql>
+	<sql id="pageFoot" >
+		<isNotEmpty property="orderby">
+			ORDER BY $orderby$
+			<isNotEmpty property="order">
+				$order$
+			</isNotEmpty>
+		</isNotEmpty>
+		
+		<isNotEmpty property="start">
+			) P_T ) WHERE RN BETWEEN #start#
+			<isNotEmpty property="end">
+				AND #end#
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	<sql id="selectPayPaymentAndDetailConditionsItem">
+		<dynamic>
+		 <isNotEmpty prepend="and" property="objectId" >
+	        PP.OBJECT_ID = #objectId#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="paymentId" >
+	        PP.PAYMENT_ID = #paymentId#
+	     </isNotEmpty>
+		 <isNotEmpty prepend="and" property="paymentGateway" >
+	        PP.PAYMENT_GATEWAY = #paymentGateway#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="gatewayTradeNo" >
+	        PP.GATEWAY_TRADE_NO = #gatewayTradeNo#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="receivingPerson" >
+	        PPD.RECEIVING_PERSON = #receivingPerson#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="cashAuditStatus" >
+	        PPD.CASH_AUDIT_STATUS = #cashAuditStatus#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="cashLiberateMoneyPerson" >
+	        PPD.CASH_LIBERATE_MONEY_PERSON = #cashLiberateMoneyPerson#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="callbackTimeStart" >
+	        PP.CALLBACK_TIME &gt;= TO_DATE(#callbackTimeStart#,'yyyy-MM-dd')
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="callbackTimeEnd" >
+	        PP.CALLBACK_TIME &lt;= TO_DATE(#callbackTimeEnd#,'yyyy-MM-dd')
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="auditPerson" >
+	        PPD.AUDIT_PERSON = #auditPerson#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="receivingCompanyId" >
+	        PPD.RECEIVING_COMPANY_ID = #receivingCompanyId#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="posTerminalNo" >
+	        PPD.POS_TERMINAL_NO = #posTerminalNo#
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="paymentIds" >
+	        PP.PAYMENT_ID in ($paymentIds$)
+	     </isNotEmpty>
+	     <isNotEmpty prepend="and" property="operator" >
+	        PP.OPERATOR  = #operator#
+	     </isNotEmpty>
+	      <isNotEmpty prepend="and" property="otherAuditStatus" >
+	        PPD.OTHER_AUDIT_STATUS = #otherAuditStatus#
+	     </isNotEmpty>
+	      <isNotEmpty prepend="and" property="gatewayType" >
+	        PPG.GATEWAY_TYPE = #gatewayType#
+	     </isNotEmpty>
+	      <isNotEmpty prepend="and" property="gatewayStatus" >
+	        PPG.GATEWAY_STATUS = #gatewayStatus#
+	     </isNotEmpty>
+     </dynamic>
+	</sql>
+	<sql id="selectPayPaymentAndDetailConditions">
+		SELECT PP.*,
+		PPD.PAYMENT_DETAIL_ID, PPD.RECEIVING_COMPANY_ID, PPD.RECEIVING_BANK_ID, PPD.RECEIVING_PERSON, PPD.PAYMENT_ACCOUNT, PPD.PAYMENT_BANK_CARD_NO, PPD.CASH_LIBERATE_MONEY_PERSON, PPD.CASH_LIBERATE_MONEY_DATE, PPD.CASH_AUDIT_STATUS, PPD.AUDIT_PERSON, PPD.OTHER_AUDIT_STATUS, PPD.POS_TERMINAL_NO,
+		PRC.RECEIVING_COMPANY_NAME,
+        PCB.RECEIVING_ACCOUNT,
+        PCB.BANK_NAME,
+        PCB.RECEIVING_ACCOUNT_TYPE,
+        PCB.BANK_CARD_NO
+		FROM PAY_PAYMENT_DETAIL PPD
+		LEFT JOIN PAY_PAYMENT PP
+		ON PP.PAYMENT_ID=PPD.PAYMENT_ID
+		LEFT JOIN PAY_RECEIVING_COMPANY PRC
+		ON PPD.RECEIVING_COMPANY_ID=PRC.RECEIVING_COMPANY_ID
+		LEFT JOIN PAY_RECEIVING_BANK PCB
+    	ON PPD.RECEIVING_BANK_ID=PCB.RECEIVING_BANK_ID
+		WHERE PP.PAYMENT_GATEWAY IN('CASH','COMM_POS_CASH','SAND_POS_CASH')
+		<include refid="selectPayPaymentAndDetailConditionsItem"/>
+	</sql>
+	<select id="selectPayPaymentAndDetailByParamMapCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM(
+			<include refid="selectPayPaymentAndDetailConditions" />
+		) TT1
+	</select>
+	<select id="selectPayPaymentAndDetailByParamMap" resultMap="cashPaymentComboVO" parameterClass="java.util.HashMap">
+		<include refid="pageHead"/>
+			<include refid="selectPayPaymentAndDetailConditions"/>
+		<include refid="pageFoot"/>
+	</select>
+	
+	<select id="selectPayPaymentAuditAmountByParamMap" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT 
+			SUM(PP.AMOUNT)PAYMENTAMOUNTSUM,
+	    SUM(CASE WHEN PPD.CASH_AUDIT_STATUS = 'VERIFIED' THEN PP.AMOUNT END)AUDITPASSAMOUNTSUM,
+	    SUM(CASE WHEN (PPD.CASH_AUDIT_STATUS = 'VERIFIED' OR PPD.CASH_AUDIT_STATUS='LIBERATE') THEN PP.AMOUNT END)LIBERATEAMOUNTSUM
+		FROM PAY_PAYMENT_DETAIL PPD
+		LEFT JOIN PAY_PAYMENT PP
+		ON PP.PAYMENT_ID=PPD.PAYMENT_ID
+		LEFT JOIN PAY_RECEIVING_COMPANY PRC
+		ON PPD.RECEIVING_COMPANY_ID=PRC.RECEIVING_COMPANY_ID
+	    WHERE PP.PAYMENT_GATEWAY IN('CASH','COMM_POS_CASH','SAND_POS_CASH')
+		<include refid="selectPayPaymentAndDetailConditionsItem"/>
+	</select>
+	<sql id="selectOtherPayPaymentAndDetailConditions">
+		SELECT 
+			PP.*,
+			PPD.PAYMENT_DETAIL_ID,
+			PPD.RECEIVING_BANK_ID,
+			PPD.PAYMENT_ACCOUNT,
+			PPD.PAYMENT_BANK_NAME,
+			PPD.PAYMENT_BANK_CARD_NO,
+			PPD.AUDIT_PERSON,
+			PPD.OTHER_AUDIT_STATUS,
+			PPD.BELONG_CENTER,
+			PPD.BELONG_DEPARTMENT,
+			PPD.DETAIL_NAME,
+			PPD.SUMMARY,
+			PRB.RECEIVING_ACCOUNT,
+			PRB.BANK_NAME,
+			PRB.BANK_CARD_NO
+			FROM PAY_PAYMENT PP
+			LEFT JOIN PAY_PAYMENT_DETAIL PPD
+			ON PP.PAYMENT_ID=PPD.PAYMENT_ID
+			LEFT JOIN PAY_RECEIVING_BANK PRB
+			ON PPD.RECEIVING_BANK_ID=PRB.RECEIVING_BANK_ID
+			LEFT JOIN PAY_PAYMENT_GATEWAY PPG
+      		ON PP.PAYMENT_GATEWAY=PPG.GATEWAY
+		WHERE PP.PAYMENT_GATEWAY NOT IN('CASH','COMM_POS_CASH','SAND_POS_CASH')
+		<include refid="selectPayPaymentAndDetailConditionsItem"/>
+	</sql>
+	<select id="selectOtherPayPaymentAndDetailByParamMapCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM(
+			<include refid="selectOtherPayPaymentAndDetailConditions" />
+		) TT1
+	</select>
+	<select id="selectOtherPayPaymentAndDetailByParamMap" resultMap="otherPaymentComboVO" parameterClass="java.util.HashMap">
+		<include refid="pageHead"/>
+			<include refid="selectOtherPayPaymentAndDetailConditions"/>
+		<include refid="pageFoot"/>
+	</select>
+	
+    <select id="selectPayMobileNumByPaymentOrderNoAndPaymentGateway" resultClass="java.lang.String" parameterClass="java.util.Map">
+      SELECT T.PAY_MOBILE_NUM FROM (SELECT * FROM PAY_PAYMENT 
+      WHERE STATUS = 'SUCCESS'
+      AND OBJECT_ID = #objectId#
+      AND PAYMENT_GATEWAY = #paymentGateway#
+      AND AMOUNT = (SELECT MAX(AMOUNT) FROM PAY_PAYMENT WHERE STATUS = 'SUCCESS' AND PAYMENT_GATEWAY = #paymentGateway# AND OBJECT_ID = #objectId# )
+      ORDER BY CREATE_TIME ASC)T
+      WHERE ROWNUM = 1
+	</select>
+	
+</sqlMap>

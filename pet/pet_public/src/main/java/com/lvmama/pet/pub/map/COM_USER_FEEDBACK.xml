@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_USER_FEEDBACK" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComUserFeedback" >
+    <result column="USER_FEEDBACK_ID" property="userFeedbackId" />
+    <result column="USER_NAME" property="userName" />
+    <result column="USER_ID" property="userId" />
+    <result column="IP" property="ip" />
+    <result column="CONTACT" property="contact" />
+    <result column="CONTENT" property="content" />
+    <result column="CREATE_DATE" property="createDate" />
+    <result column="MOBILE" property="mobile" />
+    <result column="INSTANT_MESSAGING" property="instantMessaging" />
+    <result column="EMAIL" property="email" />
+    <result column="URL" property="url" />
+    <result column="TYPE" property="type" />
+    <result column="STATE_ID" property="stateId" />
+  </resultMap>
+  
+  <resultMap id="feedBackTypeMap" class="java.lang.String" >
+  	 <result column="TYPE" property="type" />
+  </resultMap>
+  
+  <resultMap id="feedBackStateIdMap" class="java.lang.String" >
+  	 <result column="STATE_ID" property="stateId" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComUserFeedback" >
+    select USER_FEEDBACK_ID, USER_NAME, USER_ID, IP, CONTACT, CONTENT, CREATE_DATE, MOBILE,
+      INSTANT_MESSAGING, EMAIL, URL, TYPE, STATE_ID
+    from COM_USER_FEEDBACK
+    where USER_FEEDBACK_ID = #userFeedbackId:CHAR#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.pub.ComUserFeedback" >
+    delete from COM_USER_FEEDBACK
+    where USER_FEEDBACK_ID = #userFeedbackId:CHAR#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComUserFeedback" >
+    insert into COM_USER_FEEDBACK (USER_FEEDBACK_ID, USER_NAME, USER_ID, IP, CONTACT, CONTENT,
+      CREATE_DATE, MOBILE, INSTANT_MESSAGING, EMAIL, URL, TYPE, STATE_ID)
+    values (COM_USER_FEEDBACK_SEQ.nextval, #userName:VARCHAR#, #userId#, #ip:VARCHAR#,
+      #contact:VARCHAR#, #content:VARCHAR#, sysdate, #mobile:VARCHAR#,
+      #instantMessaging:VARCHAR#, #email:VARCHAR#, #url:VARCHAR#, #type:VARCHAR#, #stateId:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.pub.ComUserFeedback" >
+    insert into COM_USER_FEEDBACK
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="userFeedbackId" >
+        USER_FEEDBACK_ID
+      </isNotNull>
+      <isNotNull prepend="," property="userName" >
+        USER_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        USER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="ip" >
+        IP
+      </isNotNull>
+      <isNotNull prepend="," property="contact" >
+        CONTACT
+      </isNotNull>
+      <isNotNull prepend="," property="content" >
+        CONTENT
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+        CREATE_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        MOBILE
+      </isNotNull>
+      <isNotNull prepend="," property="instantMessaging" >
+        INSTANT_MESSAGING
+      </isNotNull>
+      <isNotNull prepend="," property="email" >
+        EMAIL
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+        URL
+      </isNotNull>
+      <isNotNull prepend="," property="type" >
+        TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="stateId" >
+        STATE_ID
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="userFeedbackId" >
+        COM_USER_FEEDBACK_SEQ.nextval
+      </isNotNull>
+      <isNotNull prepend="," property="userName" >
+        #userName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        #userId#
+      </isNotNull>
+      <isNotNull prepend="," property="ip" >
+        #ip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="contact" >
+        #contact:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="content" >
+        #content:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+        sysdate
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        #mobile:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="instantMessaging" >
+        #instantMessaging:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="email" >
+        #email:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+        #url:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="type" >
+        #type:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="stateId" >
+        #stateId:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.pub.ComUserFeedback" >
+    update COM_USER_FEEDBACK
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="userName" >
+        USER_NAME = #userName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        USER_ID = #userId#
+      </isNotNull>
+      <isNotNull prepend="," property="ip" >
+        IP = #ip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="contact" >
+        CONTACT = #contact:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="content" >
+        CONTENT = #content:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+        CREATE_DATE = #createDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        MOBILE = #mobile:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="instantMessaging" >
+        INSTANT_MESSAGING = #instantMessaging:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="email" >
+        EMAIL = #email:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+        URL = #url:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="type" >
+        TYPE = #type:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="stateId" >
+        STATE_ID = #stateId:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where USER_FEEDBACK_ID = #userFeedbackId:CHAR#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.pub.ComUserFeedback" >
+    update COM_USER_FEEDBACK
+    set USER_NAME = #userName:VARCHAR#,
+      USER_ID = #userId#,
+      IP = #ip:VARCHAR#,
+      CONTACT = #contact:VARCHAR#,
+      CONTENT = #content:VARCHAR#,
+      CREATE_DATE = #createDate:TIMESTAMP#,
+      MOBILE = #mobile:VARCHAR#,
+      INSTANT_MESSAGING = #instantMessaging:VARCHAR#,
+      EMAIL = #email:VARCHAR#,
+      URL = #url:VARCHAR#,
+      TYPE = #type:VARCHAR#,
+      STATE_ID = #stateId:VARCHAR#
+    where USER_FEEDBACK_ID = #userFeedbackId#
+  </update>
+  
+  <sql id="queryFeedBackByParamsSql">
+  select * from COM_USER_FEEDBACK
+	  	<dynamic prepend="where" >
+		  	<isNotEmpty property="type" prepend="and">
+		  		TYPE=#type:VARCHAR#
+		  	</isNotEmpty>
+		  	<isNotEmpty property="content" prepend="and">
+		  		content like '%'||#content#||'%'
+		  	</isNotEmpty>
+		  	<isNotEmpty property="stateId" prepend="and">
+		  		state_Id=#stateId:VARCHAR#
+		  	</isNotEmpty>
+		 </dynamic>
+		 order by create_date desc
+  </sql>
+  
+  <select id="queryFeedBackByParams" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+  		SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+	  	<include refid="queryFeedBackByParamsSql"/>
+	 ) T WHERE ROWNUM &lt;= #endIndex#
+		)
+		WHERE ROWNUM1 &gt;=#beignIndex#
+  </select>
+  
+  <select id="queryFeedBackCountByParams" resultClass="java.lang.Long" parameterClass="com.lvmama.comm.pet.po.pub.ComUserFeedback">
+  	select count(*) from (
+  	<include refid="queryFeedBackByParamsSql"/>
+  	) T
+  </select>
+  
+  <select id="getFeedBackTypes" resultMap="feedBackTypeMap" parameterClass="java.lang.String">
+  	select distinct(type) from COM_USER_FEEDBACK where type is not null group by type
+  </select>
+  
+  <select id="getFeedBackStateIds" resultMap="feedBackStateIdMap" parameterClass="java.lang.String">
+  	select distinct(state_Id) from COM_USER_FEEDBACK where state_Id is not null group by state_Id
+  </select>
+</sqlMap>

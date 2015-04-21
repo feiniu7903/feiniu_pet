@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>	
+	<bean id="ebkProdImportJob" class="com.lvmama.pet.job.ebk.EbkProdImportJob">
+		<property name="ebkProdImportService" ref="ebkProdImportService"></property>
+	</bean>
+	<bean id="ebkProdImportFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="ebkProdImportJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="ebkProdImportTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="ebkProdImportFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 3 * * ? *</value> 
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list> 
+	          	<ref local="ebkProdImportTimes"/> 
+			</list>
+		</property>
+	</bean>
+</beans>

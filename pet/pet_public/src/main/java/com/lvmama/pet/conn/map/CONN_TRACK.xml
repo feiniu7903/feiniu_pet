@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CONN_TRACK" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.conn.ConnTrack" >
+    <result column="ORD_TRACK_ID" property="ordTrackId" />
+    <result column="ORDER_ID" property="orderId" />
+    <result column="USER_NAME" property="userName" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="FINISH_TIME" property="finishTime" />
+    <result column="TRACK_STATUS" property="trackStatus" />
+  </resultMap>
+  	
+  <select id="selByOrderId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  		select *From CONN_TRACK where order_id=#orderId#
+  </select>
+  
+  <select id="selByTrackId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  		select *From CONN_TRACK where ord_track_id=#ordTrackId#
+  </select>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.conn.ConnTrack" >
+    <selectKey resultClass="java.lang.Long" keyProperty="ordTrackId" >
+      select CONN_TRACK_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into CONN_TRACK(ORD_TRACK_ID, ORDER_ID,USER_NAME,CREATE_TIME,FINISH_TIME)
+	values (#ordTrackId#, #orderId#, #userName#,#createTime#,#finishTime#)
+  </insert>
+  
+  <update id="update" parameterClass="com.lvmama.comm.pet.po.conn.ConnTrack">
+  	 update CONN_TRACK set FINISH_TIME=#finishTime#,TRACK_STATUS=#trackStatus# where ORD_TRACK_ID=#ordTrackId#
+  </update>
+  
+  <select id="selMakeOrder" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+	  SELECT count(*) FROM CONN_TRACK ordTrack
+	  	WHERE ORDTRACK.FINISH_TIME IS NULL
+		and ordtrack.create_time &gt; #beginDate# 
+		and ordtrack.user_name=#userName#
+		AND ordtrack.track_status is null
+  </select>
+</sqlMap>

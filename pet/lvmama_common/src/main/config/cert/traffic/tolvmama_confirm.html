@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>交通产品确认单</title>
+<style>
+<#include "/chuanzhen.css"/>
+</style>
+</head>
+<body>
+<div class="wrap">
+	<img class="zhang" src="http://pic.lvmama.com/img/ebooking/zhang.png" alt="上海驴妈妈兴旅国际旅行社有限公司" />
+	<div id="header" class="clearfix">
+	    <a class="logo" href="#"><img src="http://pic.lvmama.com/img/new_v/ob_login/login_logo.jpg" width="164"/></a>
+	    <p class="send-time"><span>发送日期：</span><span class="bt">${createTime?string("yyyy-MM-dd HH:mm")}</span>
+		<span class="block">请以发送时间判定传真先后顺序。</span>
+		</p>
+		<h1>确认单</h1>
+	</div>
+	<div class="main">
+		<table class="table table-full">
+			<tr>
+				<td class="label">To:</td>
+				<td><span class="bt">${certificate.entity.toName}</span></td>
+				<td class="label">Tel:</td>
+				<td><span class="bt">${certificate.entity.toTel}</span></td>
+				<td class="label">Fax:</td>
+				<td><span class="bt">${certificate.entity.toFax}</span></td>
+			</tr>
+			<tr>
+				<td class="label">From:</td>
+				<td>驴妈妈旅游网-客服中心支持部</td>
+				<td class="label">Tel:</td>
+				<td>021-60561631</td>
+				<td class="label">Fax:</td>
+				<td>021-60561670<br/>021-69108793*0(备用)<br/>021-69108775*0(备用)</td>
+			</tr>
+		</table>
+		<h3 class="_mt">订单号：  ${certificate.baseInfo.orderId}</h3>
+		
+		<table class="table-border table-full">
+			<tr>
+				<td colspan="4"><b>产品名称：</b>${certificate.baseInfo.metaProductName}</td>
+			</tr>
+			<tr>
+				<th>类别</th>
+				<th>数量</th>
+				<th>结算单价</th>
+				<th>结算总价</th>
+			</tr>
+			<#list items as item>
+			<tr>
+				<td>${item.baseInfo.branchName}</td>
+				<td>${item.baseInfo.quantity}</td>
+				<td>${item.baseInfo.settlementPrice}</td>
+				<#if item_index==0>
+				<td rowspan="${items?size}"><span class="block tc">${certificate.baseInfo.totalSettlementPrice}<br/>（含燃油和机建）<span></td>
+				</#if>
+			</tr>
+			</#list>
+			<#--
+			<tr>
+				<td>经济舱-儿童价</td>
+				<td>1</td>
+				<td>100</td>
+			</tr>
+			<tr>
+				<td>婴儿价</td>
+				<td>1</td>
+				<td>80</td>
+			</tr>
+			-->
+		</table>
+		
+		<h4>客人信息：</h4>
+		<table class="table-border">
+			<tr>
+				<td width="40">姓名</td>
+				<td width="80">证件类型</td>
+				<td width="100">证件号码</td>
+				<td width="110">手机号码</td>
+			</tr>
+			<#list certificate.travellerList as traveller>
+			<tr>
+				<td>${traveller.name}</td>
+				<td>${traveller.zhCertType}</td>
+				<td>${traveller.certNo}</td>
+				<td>${traveller.mobile!"/"}</td>
+			</tr>
+			</#list>
+		</table>
+		
+		<h4>航班信息：</h4>
+		<table class="table-border table-full">
+			<tr>
+				<th>航班</th>
+				<th>时间</th>
+				<th>机场</th>
+			</tr>
+			<tr>
+				<td>${certificate.baseInfo.flightCode}</td>
+				<td>${certificate.baseInfo.flightTime}</td>
+				<td>${certificate.baseInfo.placeAirportName}</td>
+			</tr>
+		</table>
+		
+		<h4>备注栏：（游客特殊需求、调价等）</h4>
+		<div class="box border pb20">
+		    <p>内容自适应高度</p>
+		</div>
+		
+		<#include "/base/foot.html"/>
+	</div>
+</div>
+
+
+</body>
+</html>

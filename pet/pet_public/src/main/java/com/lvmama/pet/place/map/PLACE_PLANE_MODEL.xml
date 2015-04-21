@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PLACE_PLANE_MODEL" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.place.PlacePlaneModel" >
+    <result column="PLANE_MODEL_ID" property="placeModelId" />
+    <result column="PLANE_NAME" property="planeName" />
+    <result column="PLANE_CODE" property="planeCode" />
+    <result column="PLANE_TYPE" property="placeType" />
+    <result column="MIN_SEAT" property="minSeat" />
+    <result column="MAX_SEAT" property="maxSeat" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.place.PlacePlaneModel" >
+    select PLANE_MODEL_ID, PLANE_NAME, PLANE_CODE, PLANE_TYPE, MIN_SEAT, MAX_SEAT
+    from PLACE_PLANE_MODEL
+    where PLANE_MODEL_ID = #placeModelId:DECIMAL#
+  </select>
+    	<sql id="placePlaneModelWhere">
+		<dynamic prepend="where">
+			<isNotEmpty property="planeCode" prepend="and">
+				plane_code=#planeCode#
+			</isNotEmpty>
+			<isNotEmpty property="planeName" prepend="and">
+				plane_name=#planeName#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	<sql id="selectPlacePlaneModelList">
+		SELECT * FROM place_plane_model 
+		<include refid="placePlaneModelWhere" /> 
+		order by plane_model_id DESC
+	</sql>
+	<select id="queryPlacePlaneModelList" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		SELECT *
+		FROM (SELECT A.*, ROWNUM RN
+		FROM (
+		<include refid="selectPlacePlaneModelList" />
+		) A
+		<dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="countPlacePlaneModelList" parameterClass="java.util.Map" resultClass="Long">
+		SELECT COUNT(*) FROM place_plane_model
+		<include refid="placePlaneModelWhere" />
+	</select>
+	
+	<select id="checkPlaneModelByplaneCode" parameterClass="java.util.Map" resultClass="Long">
+		SELECT COUNT(*) FROM place_plane_model WHERE plane_code=#planeCode#
+	</select>
+	
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.place.PlacePlaneModel" >
+    delete from PLACE_PLANE_MODEL
+    where PLANE_MODEL_ID = #placeModelId:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.place.PlacePlaneModel" >
+    <selectKey resultClass="java.lang.Long" keyProperty="placeModelId" >
+      select PLACE_PLANE_MODEL_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PLACE_PLANE_MODEL (PLANE_MODEL_ID, PLANE_NAME, PLANE_CODE, PLANE_TYPE, MIN_SEAT,
+      MAX_SEAT)
+    values (#placeModelId:DECIMAL#, #planeName:VARCHAR#, #planeCode:VARCHAR#, #placeType:VARCHAR#,
+      #minSeat:DECIMAL#, #maxSeat:DECIMAL#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.place.PlacePlaneModel" >
+    <selectKey resultClass="java.lang.Long" keyProperty="placeModelId" >
+      select PLACE_PLANE_MODEL_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PLACE_PLANE_MODEL
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="placeModelId" >
+        PLANE_MODEL_ID
+      </isNotNull>
+      <isNotNull prepend="," property="planeName" >
+        PLANE_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="planeCode" >
+        PLANE_CODE
+      </isNotNull>
+      <isNotNull prepend="," property="placeType" >
+        PLANE_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="minSeat" >
+        MIN_SEAT
+      </isNotNull>
+      <isNotNull prepend="," property="maxSeat" >
+        MAX_SEAT
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="placeModelId" >
+        #placeModelId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="planeName" >
+        #planeName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="planeCode" >
+        #planeCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="placeType" >
+        #placeType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="minSeat" >
+        #minSeat:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="maxSeat" >
+        #maxSeat:DECIMAL#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.place.PlacePlaneModel" >
+    update PLACE_PLANE_MODEL
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="planeName" >
+        PLANE_NAME = #planeName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="planeCode" >
+        PLANE_CODE = #planeCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="placeType" >
+        PLANE_TYPE = #placeType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="minSeat" >
+        MIN_SEAT = #minSeat:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="maxSeat" >
+        MAX_SEAT = #maxSeat:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    where PLANE_MODEL_ID = #placeModelId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.place.PlacePlaneModel" >
+    update PLACE_PLANE_MODEL
+    set PLANE_NAME = #planeName:VARCHAR#,
+      PLANE_CODE = #planeCode:VARCHAR#,
+      PLANE_TYPE = #placeType:VARCHAR#,
+      MIN_SEAT = #minSeat:DECIMAL#,
+      MAX_SEAT = #maxSeat:DECIMAL#
+    where PLANE_MODEL_ID = #placeModelId:DECIMAL#
+  </update>
+</sqlMap>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FINANCE_DEDUCTION" >
+	
+	<typeAlias alias="FinDeduction" type="com.lvmama.comm.pet.po.fin.FinDeduction"/>
+	<insert id="insertFinDeduction" parameterClass="FinDeduction">
+		INSERT INTO FIN_DEDUCTION(
+			DEDUCTION_ID,
+			SUPPLIER_ID,
+			TYPE,
+			DIRECTION,
+			OBJECT_TYPE,
+			OBJECT_ID,
+			AMOUNT,
+			REMARK,
+			CREATOR,
+			CREATETIME,
+			CURRENCY,
+			BUSINESS_NAME
+		)VALUES(
+			FIN_DEDUCTION_SEQ.NEXTVAL,
+			#supplierId#,
+			#type#,
+			#direction#,
+			#objectType#,
+			#objectId#,
+			#amount#,
+			#remark#,
+			#creator#,
+			SYSDATE,
+			#currency#,
+			#businessName#
+		)
+	</insert>
+	
+	<select id="searchRecord" parameterClass="map" resultClass="FinDeduction">
+	SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select * from (
+		 SELECT 
+			T.TYPE          AS type,
+        	T.OBJECT_ID AS objectId,
+        	T.OBJECT_TYPE AS objectType,
+        	T.CREATOR       AS creator,
+        	T.CREATETIME    AS createtime,
+        	T.AMOUNT        AS amount
+   		FROM 
+   			FIN_DEDUCTION T
+   		WHERE 
+   			T.SUPPLIER_ID = #supplierId# AND T.BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+   		ORDER BY T.CREATETIME DESC
+		)) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;#skipResults#
+	</select>
+	<select id="searchRecordCount" parameterClass="map" resultClass="long">
+		 SELECT 
+			COUNT(*)
+   		FROM 
+   			FIN_DEDUCTION T
+   		WHERE 
+   			T.SUPPLIER_ID = #supplierId# AND T.BUSINESS_NAME='NEW_SUPPLIER_BUSINESS'
+	</select>
+	
+</sqlMap>

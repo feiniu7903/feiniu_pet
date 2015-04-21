@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SHOP_LOG" >
+    <resultMap class="com.lvmama.comm.pet.po.shop.ShopLog" id="shopLogMap">
+    	<result property="logId" column="LOG_ID"/>
+    	<result property="createTime" column="CREATE_TIME"/>
+    	<result property="content" column="CONTENT"/>
+    	<result property="objectId" column="OBJECT_ID"/>
+    	<result property="objectType" column="OBJECT_TYPE"/>
+    	<result property="logType" column="LOG_TYPE"/>
+    	<result property="operatorId" column="OPERATOR_ID"/>
+    </resultMap>
+    
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.shop.ShopLog">
+		<selectKey resultClass="java.lang.Long" keyProperty="logId" >
+			select shop_log_seq.nextval as logId from DUAL
+		</selectKey>
+		INSERT INTO SHOP_LOG
+			(LOG_ID, CREATE_TIME,CONTENT,OBJECT_ID,OBJECT_TYPE,LOG_TYPE,OPERATOR_ID)
+		VALUES
+			(#logId#, sysdate, #content#, #objectId#, #objectType#, #logType#, #operatorId#)
+	</insert>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="shopLogMap">
+		SELECT * 
+		FROM SHOP_LOG
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="logId"  prepend=" AND ">LOG_ID=#logId#</isNotEmpty>
+			<isNotEmpty property="objectId"  prepend=" AND ">OBJECT_ID=#objectId#</isNotEmpty>
+			<isNotEmpty property="objectType"  prepend=" AND ">OBJECT_TYPE=#objectType#</isNotEmpty>
+		</dynamic>
+		ORDER BY CREATE_TIME
+	</select>
+	
+	<insert id="savePutPoint" parameterClass="com.lvmama.comm.pet.po.shop.ShopCustomerPresentPoint">
+		insert into
+		SHOP_CUSTOMER_PRESENT_POINT(USER_ID,USER_NAME,ORDER_ID,PUT_THING,PUT_POINT,MEMO,create_date,CS_NAME)
+		values(#userId#,#userName#,#orderId#,#putThing#,#putPoint#,#memo#,sysdate,#csName#)
+	</insert>
+</sqlMap>

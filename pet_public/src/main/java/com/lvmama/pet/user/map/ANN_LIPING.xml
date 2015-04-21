@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ANN_LIPING">
+	<resultMap id="ANN_LIPING_MAP" class="com.lvmama.comm.pet.po.user.Annliping"> 
+	     <result property="lpId" column="LP_id"/>
+	     <result property="lpType" column="LP_TYPE"/>
+	     <result property="lpSpare" column="LP_SPARE"/>
+		 <result property="lpDengjiang" column="LP_DENGJIANG"/>
+		 <result property="lpName" column="LP_NAME"/>
+	</resultMap>
+	 <!-- 2014/5/19的sql -->
+    <select id="queryByPk"  parameterClass="java.lang.Long" resultMap="ANN_LIPING_MAP">
+		select LP_id, LP_TYPE, LP_SPARE,LP_DENGJIANG,LP_NAME from ANN_LIPING where LP_DENGJIANG = #lpDengjiang# and rownum &lt;=1
+	</select>
+	<update id="minUpdateAnnliping"  parameterClass="java.util.HashMap">
+		    update ANN_LIPING
+			SET LP_SPARE=LP_SPARE-#shuliang#
+			   where LP_DENGJIANG = #lpDengjiang#
+			   and  LP_SPARE-#shuliang# &gt;=0
+ 	</update>
+ 	
+ 	<select id="queryAnnLipinByParam"  parameterClass="java.util.HashMap" resultMap="ANN_LIPING_MAP">
+		select LP_id,LP_TYPE,LP_SPARE,LP_DENGJIANG,LP_NAME from ANN_LIPING where LP_ID = #lpId# and ZTNAME = #ztname# and rownum &lt;=1
+	</select>
+ 	
+ 	<update id="updateAnnliping"  parameterClass="java.util.HashMap">
+		    update ANN_LIPING
+			SET LP_SPARE=LP_SPARE-#shuliang#
+			   where LP_ID = #lpId#
+			   and  LP_SPARE-#shuliang# &gt;=0
+ 	</update>
+</sqlMap>

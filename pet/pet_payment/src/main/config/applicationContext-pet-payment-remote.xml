@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  - Application context definition for JPetStore's business layer.
+	- Contains bean references to the transaction manager and to the DAOs in
+	- dataAccessContext-local/jta.xml (see web.xml's "contextConfigLocation").
+	-->
+<beans>
+	<bean id="finReconBankStatementService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/finReconBankStatementService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.FinReconBankStatementService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="finReconResultService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${petPublic.serviceUrl}/finReconResultService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.FinReconResultService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="superOrderPaymentService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${superorder.serviceUrl}/orderServiceProxy" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.NotifierService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+	<bean id="orderServiceProxy" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superorder.serviceUrl}/orderServiceProxy" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.OrderService" />
+		<property name="chunkedPost" value="false" />
+	</bean>
+	<bean id="bonusConfigService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${superorder.serviceUrl}/bonusConfigService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.BonusConfigService" />
+		<property name="chunkedPost" value="false" />
+	</bean>
+    <bean id="hotelPaymentService"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${hotelOrder.serviceUrl}/hotelPayment.remote" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.NotifierService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+    <bean id="cashAccountServiceProxy"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${petPublic.serviceUrl}/cashAccountServiceProxy" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.NotifierService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean> 
+	
+	
+	<bean id="vstPaymentServiceProxy"
+        class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vst.serviceUrl}ordPaymentClientRemote" />
+        <property name="serviceInterface" value="com.lvmama.comm.pet.service.pay.NotifierService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+</beans>

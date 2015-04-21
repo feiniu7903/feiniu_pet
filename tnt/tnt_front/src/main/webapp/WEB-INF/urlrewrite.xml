@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.1//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.1.dtd">
+<!--
+	Configuration file for UrlRewriteFilter
+	http://tuckey.org/urlrewrite/
+-->
+<urlrewrite>
+    <!-- <rule match-type="regex">
+        <from>^/account/checkcode\.htm</from>
+        <to>/kaptchaValidate/kaptcha</to>
+    </rule> -->
+    <rule match-type="regex">
+		<from>^/user/certification/([a-zA-Z0-9]*)/([_a-zA-Z0-9]*)\.htm$</from>
+		<to>/reg/activeCode?emailCode=$1&amp;activeMailType=$2</to>
+    </rule>
+    <rule match-type="regex">
+		<from>^/user/certification/([a-zA-Z0-9]*)\.htm$</from>
+		<to>/reg/activeCode?emailCode=$1</to>
+    </rule> 
+    <!-- 使用邮箱方式，重置密码 -->
+    <rule match-type="regex">
+        <from>^/findPassword/([a-zA-Z0-9]*)\.htm$</from>
+        <to>/findpass/fillNewPass?recallId=$1</to>
+    </rule> 
+      
+</urlrewrite>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/login_bg"
+        android:orientation="vertical"
+        >
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+            
+        	<ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logoin_icon"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_name"
+            android:layout_marginBottom="0dip"
+            />
+        	
+        	<com.ejingtong.view.ViewEditText
+        	    android:id="@+id/login_view_username"
+        	    android:layout_width="250dip"
+        	    android:layout_height="60dip"
+        	    android:gravity="center"/>
+        	
+        	<com.ejingtong.view.ViewEditText
+        	    android:id="@+id/login_view_password"
+        	    android:layout_width="250dip"
+        	    android:layout_height="60dip"
+        	    android:gravity="center"/>
+        	
+        	<Button android:id="@+id/login_btn_login"
+        	    style="@style/btn"
+        	    android:text="@string/login"/>
+        	
+        	<RelativeLayout 
+        	    android:layout_width="250dip"
+        	    android:layout_height="40dip">
+        	    <CheckBox android:id="@+id/is_save_password"
+        	        android:layout_width="wrap_content"
+        	        android:layout_height="wrap_content"
+        	        android:layout_alignParentLeft="true"
+        	        android:text="@string/save_passwprd"
+        	        android:textColor="#666666"
+        	        android:textSize="14sp"/>
+        	    
+        	    <!-- 
+        	    <TextView android:id="@+id/save_password"
+        	        android:layout_width="wrap_content"
+        	        android:layout_height="wrap_content"
+        	        android:layout_toRightOf="@id/is_save_password"
+        	        android:text="@string/save_passwprd"
+        	        android:textColor="#666666"
+        	        android:textSize="14sp"/>
+        	     
+        	     
+        	    <TextView android:id="@+id/forget_password"
+        	        android:layout_width="wrap_content"
+        	        android:layout_height="wrap_content"
+        	        android:layout_alignParentRight="true"
+        	        android:layout_centerVertical="true"
+        	        android:text="@string/forget_password"
+        	        android:textColor="#666666"
+        	        android:textSize="14sp"/>
+        	        -->
+        	</RelativeLayout>
+        </LinearLayout>
+        
+    </LinearLayout>

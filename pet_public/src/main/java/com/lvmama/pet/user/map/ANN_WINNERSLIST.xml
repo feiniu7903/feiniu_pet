@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ANN_WINNERSLIST">
+	<resultMap id="Ann_winnerslist_map" class="com.lvmama.comm.pet.po.user.Annwinnerslist"> 
+	     <result property="userName" column="user_Name"/>
+		 <result property="lpName" column="lp_Name"/>
+	</resultMap>
+	
+	 
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.user.Annwinnerslist">
+		<selectKey resultClass="java.lang.Long" keyProperty="id" >
+			select ANN_WINNERSLIST_SEQ.NEXTVAL as id from DUAL
+		</selectKey>
+		INSERT INTO ANN_WINNERSLIST
+			<dynamic prepend="(">
+			    ID,
+ 				<isNotEmpty property="projectName" prepend=",">PROJECT_NAME</isNotEmpty>
+				<isNotEmpty property="lpId" prepend=",">LP_ID</isNotEmpty>
+				<isNotEmpty property="lpDescription" prepend=",">LP_DESCRIPTION</isNotEmpty>
+				<isNotEmpty property="lpName" prepend=",">LP_NAME</isNotEmpty>
+				<isNotEmpty property="huojiangTime" prepend=",">HUOJIANG_TIME</isNotEmpty>
+				<isNotEmpty property="userId" prepend=",">USER_ID</isNotEmpty>
+				<isNotEmpty property="userName" prepend=",">USER_NAME</isNotEmpty>
+				<isNotEmpty property="realName" prepend=",">real_name</isNotEmpty>
+				<isNotEmpty property="address" prepend=",">address</isNotEmpty>
+				<isNotEmpty property="createDate" prepend=",">create_date</isNotEmpty>
+				<isNotEmpty property="mobile" prepend=",">MOBILE</isNotEmpty>
+				<isNotEmpty property="zipcode" prepend=",">ZIPCODE</isNotEmpty>
+ 				<isNotEmpty property="flag" prepend=",">FLAG</isNotEmpty>
+				)
+			</dynamic>
+			VALUES
+			<dynamic prepend="(">
+				#id#,
+				<isNotEmpty property="projectName" prepend=",">#projectName#</isNotEmpty>
+				<isNotEmpty property="lpId" prepend=",">#lpId#</isNotEmpty>
+				<isNotEmpty property="lpDescription" prepend=",">#lpDescription#</isNotEmpty>
+				<isNotEmpty property="lpName" prepend=",">#lpName#</isNotEmpty>
+				<isNotEmpty property="huojiangTime" prepend=",">#huojiangTime#</isNotEmpty>
+				<isNotEmpty property="userId" prepend=",">#userId#</isNotEmpty>
+				<isNotEmpty property="userName" prepend=",">#userName#</isNotEmpty>
+				<isNotEmpty property="realName" prepend=",">#realName#</isNotEmpty>
+				<isNotEmpty property="address" prepend=",">#address#</isNotEmpty>
+				<isNotEmpty property="createDate" prepend=",">#createDate#</isNotEmpty>
+				<isNotEmpty property="mobile" prepend=",">#mobile#</isNotEmpty>
+				<isNotEmpty property="zipcode" prepend=",">#zipcode#</isNotEmpty>
+ 				<isNotEmpty property="flag" prepend=",">#flag#</isNotEmpty>
+				)
+			</dynamic>
+	</insert>
+
+      <sql id="selectSQL">
+	     SELECT S.user_Name,S.lp_Name FROM ANN_WINNERSLIST S
+	       <dynamic prepend="  where ">
+		         <isNotEmpty prepend=" AND " property="userId">
+		           s.user_id=#userId#
+		         </isNotEmpty>
+		         <isNotEmpty prepend=" AND " property="projectName">
+		           s.project_Name=#projectName#
+		         </isNotEmpty>
+		         <isNotEmpty prepend=" AND " property="flag">
+		           s.FLAG=#flag#
+		         </isNotEmpty>
+		         <isNotEmpty prepend=" AND " property="createDate">
+		           TO_CHAR(S.create_Date,'YYYY-MM-DD')=TO_CHAR(#createDate#,'YYYY-MM-DD')
+		         </isNotEmpty>
+	       </dynamic>
+	     
+	       order by S.create_Date desc
+     </sql>
+	<select id="selectByParam" resultMap="Ann_winnerslist_map" parameterClass="java.util.HashMap">
+		SELECT * FROM 
+		(
+			SELECT A.*,ROWNUM rn FROM
+			( 
+				<include refid="selectSQL"/>
+ 			) A
+			<dynamic prepend="where">
+				<isNotEmpty property="endRows">
+					ROWNUM &lt;= #endRows#
+				</isNotEmpty>
+			</dynamic>
+		)
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows">
+				rn &gt;=#startRows#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	 <update id="updateWinnerslist" parameterClass="com.lvmama.comm.pet.po.user.Annwinnerslist">
+		update ANN_WINNERSLIST 
+		set	 REAL_NAME = #realName#,
+		 	 MOBILE = #mobile#,
+		 	 ZIPCODE =#zipcode#,
+		 	 ADDRESS=#address#
+		 where  USER_ID = #userId#
+	</update>
+</sqlMap>

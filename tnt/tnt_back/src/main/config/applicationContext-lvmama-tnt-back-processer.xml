@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="orderProcesser" class="com.lvmama.tnt.back.processer.OrderProcesser">
+	</bean>
+	
+	<bean id="productProcesser" class="com.lvmama.tnt.back.processer.ProductProcesser">
+	</bean>
+	
+	<!-- 消息接收 -->
+	<bean id="productTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.PRODUCT.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+				<ref bean="productProcesser"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 订阅 -->
+	<bean id="productMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="productTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+	
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="productTopicListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="PRODUCT_TOPIC" />
+		<property name="messageListener" ref="productMessageListener" />
+	</bean>
+
+
+	<!-- 消息接收 -->
+	<bean id="orderTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.ORDER.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+				<ref bean="orderProcesser"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 订阅 -->
+	<bean id="orderMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="orderTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+	
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="orderTopicListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="ORDER_TOPIC" />
+		<property name="messageListener" ref="orderMessageListener" />
+	</bean>
+
+
+</beans>

@@ -1,0 +1,67 @@
+<?page title="现金账户列表" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_userlist"?>
+<?component name="lvmama_user" macroURI="/macors/user.zul"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_userlist" mode="embedded" apply="com.lvmama.pet.web.money.ListMoneyMonitorAction">
+	<grid>
+		<columns>
+			<column width="80px"></column>
+			<column></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>用户名：</hbox>
+				<hbox>
+					<textbox value="@{saction.userId }" id="userId" visible="false"/>
+					<lvmama_user />
+				</hbox>
+				
+				<hbox>
+					<button label="查询" id="search" width="100px" onClick="saction.loadDataList();"/>
+					<!--<button label="对帐" id="checkBalance" width="100px" onClick="saction.checkBalance()" permCode="1038"/>-->
+					<button label="对帐" id="checkBalance" width="100px" onClick="saction.checkBalance()"/>
+				</hbox>
+			</row>
+			
+		</rows>
+	</grid>
+	<listbox multiple="false" model="@{saction.tansList,load-after='search.onClick,_paging.onPaging'}">
+		<listhead>
+			<listheader label="业务ID"/>
+			<listheader label="类型"/>
+			<listheader label="资金进项总额"/>
+			<listheader label="现金账户付款额"/>
+			<listheader label="交易前充值金额"/>
+			<listheader label="交易前退款金额"/>
+			<listheader label="时间"/>
+		</listhead>
+		<listitem height="25px" self="@{each='each'}" >
+			<listcell label="@{each.changeLog.businessId}" />
+			<listcell label="@{each.changeLog.typeName}" />
+			<listcell label="@{each.changeLog.income}" />
+			<listcell label="@{each.changeLog.expenditure}" />
+			<listcell label="@{each.changeLog.rechargeBalance}" />
+			<listcell label="@{each.changeLog.refundBalance}" />
+			<listcell label="@{each.changeLog.createTime}" />
+		</listitem>
+	</listbox>
+	
+	<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="10" onPaging='saction.loadDataList();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+</window>
+</zk>

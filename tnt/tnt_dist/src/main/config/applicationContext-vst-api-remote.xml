@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+http://www.springframework.org/schema/aop 
+http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
+http://www.springframework.org/schema/tx 
+http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!--  -->
+	<bean id="vstProductService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${vst.api.serviceUrl}/vstProductServiceRemote" />
+		<property name="serviceInterface"
+			value="com.lvmama.vst.api.hotel.prod.service.VstProductService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="vstOrderQueryService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${vst.api.serviceUrl}/vstOrderQueryServiceRemote" />
+		<property name="serviceInterface"
+			value="com.lvmama.vst.api.hotel.order.service.VstOrderQueryService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="vstCreditCardService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${vst.api.serviceUrl}/vstCreditCardServiceRemote" />
+		<property name="serviceInterface"
+			value="com.lvmama.vst.api.biz.service.VstCreditCardService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="vstDistrictService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${vst.api.serviceUrl}/vstDistrictServiceRemote" />
+		<property name="serviceInterface"
+			value="com.lvmama.vst.api.biz.service.VstDistrictService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="vstDistrictSignService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${vst.api.serviceUrl}/vstDistrictSignServiceRemote" />
+		<property name="serviceInterface"
+			value="com.lvmama.vst.api.biz.service.VstDistrictSignService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="vstGoodsCheckService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${vst.api.serviceUrl}/vstGoodsCheckServiceRemote" />
+		<property name="serviceInterface"
+			value="com.lvmama.vst.api.hotel.prod.service.VstGoodsCheckService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="vstGoodsService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${vst.api.serviceUrl}/vstGoodsServiceRemote" />
+		<property name="serviceInterface"
+			value="com.lvmama.vst.api.hotel.prod.service.VstGoodsService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="vstOrderManageService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${vst.api.serviceUrl}/vstOrderManageServiceRemote" />
+		<property name="serviceInterface"
+			value="com.lvmama.vst.api.hotel.order.service.VstOrderManageService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<!--  
+	<bean id="shopProductService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="http://localhost:8080/pet_public/remoting/shopProductService" />
+		<property name="serviceInterface"
+			value="com.lvmama.comm.pet.service.shop.ShopProductService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	-->
+	
+	<!-- 搜索 -->
+    <bean id="vstSearchService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${search.api.serviceUrl}/vstSearchServiceRemote" />
+        <property name="serviceInterface" value="com.lvmama.vst.api.search.service.VstSearchService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+	
+
+</beans>

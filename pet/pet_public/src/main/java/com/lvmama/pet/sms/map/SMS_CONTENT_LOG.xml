@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SMS_CONTENT_LOG">
+	<typeAlias alias="smsContentLog" type="com.lvmama.comm.pet.po.sms.SmsContentLog"/>
+	<typeAlias alias="smsLogStat" type="com.lvmama.comm.pet.vo.SmsLogStat"/>
+	<typeAlias alias="smsContent" type="com.lvmama.comm.pet.po.sms.SmsContent"/>
+	
+	<insert id="insert" parameterClass="smsContent">
+		INSERT INTO sms_content_log
+		<dynamic prepend="(">
+		    id,
+			<isNotEmpty property="serialId" prepend=",">serialId</isNotEmpty>
+			<isNotEmpty property="smsId" prepend=",">sms_id</isNotEmpty>
+			<isNotEmpty property="content" prepend=",">content</isNotEmpty>
+			<isNotEmpty property="mobile" prepend=",">mobile</isNotEmpty>
+			<isNotEmpty property="priority" prepend=",">priority</isNotEmpty>
+			<isNotEmpty property="type" prepend=",">type</isNotEmpty>
+			<isNotEmpty property="sendDate" prepend=",">send_date</isNotEmpty>
+			<isNotEmpty property="failure" prepend=",">failure</isNotEmpty>
+			<isNotEmpty property="data" prepend=",">data</isNotEmpty>
+			<isNotEmpty property="numbers" prepend=",">numbers</isNotEmpty>
+			<isNotEmpty property="actualSendDate" prepend=",">actual_send_date</isNotEmpty>
+			<isNotEmpty property="reportStatus" prepend=",">reportStatus</isNotEmpty>
+			<isNotEmpty property="receiveDate" prepend=",">receiveDate</isNotEmpty>
+			<isNotEmpty property="memo" prepend=",">memo</isNotEmpty>
+			<isNotEmpty property="userId" prepend=",">userId</isNotEmpty>
+			<isNotEmpty property="channel" prepend=",">channel</isNotEmpty>
+			<isNotEmpty property="resendSmsId" prepend=",">resend_sms_id</isNotEmpty>
+			)
+		</dynamic>
+		VALUES
+		<dynamic prepend="(">
+		    SMS_CONTENT_LOG_SEQ.NEXTVAL,
+			<isNotEmpty property="serialId" prepend=",">#serialId#</isNotEmpty>
+			<isNotEmpty property="smsId" prepend=",">#smsId#</isNotEmpty>
+			<isNotEmpty property="content" prepend=",">#content#</isNotEmpty>
+			<isNotEmpty property="mobile" prepend=",">#mobile#</isNotEmpty>
+			<isNotEmpty property="priority" prepend=",">#priority#</isNotEmpty>
+			<isNotEmpty property="type" prepend=",">#type#</isNotEmpty>
+			<isNotEmpty property="sendDate" prepend=",">#sendDate#</isNotEmpty>
+			<isNotEmpty property="failure" prepend=",">#failure#</isNotEmpty>
+			<isNotEmpty property="data" prepend=",">#data#</isNotEmpty>
+			<isNotEmpty property="numbers" prepend=",">#numbers#</isNotEmpty>
+			<isNotEmpty property="actualSendDate" prepend=",">#actualSendDate#</isNotEmpty>
+			<isNotEmpty property="reportStatus" prepend=",">#reportStatus#</isNotEmpty>
+			<isNotEmpty property="receiveDate" prepend=",">#receiveDate#</isNotEmpty>
+			<isNotEmpty property="memo" prepend=",">#memo#</isNotEmpty>
+			<isNotEmpty property="userId" prepend=",">#userId#</isNotEmpty>
+			<isNotEmpty property="channel" prepend=",">#channel#</isNotEmpty>
+			<isNotEmpty property="resendSmsId" prepend=",">#resendSmsId#</isNotEmpty>
+			)
+		</dynamic>
+			<selectKey resultClass="java.lang.Long" keyProperty="id">
+				SELECT SMS_CONTENT_LOG_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<insert id="batchCopy" parameterClass="java.util.Map">
+		INSERT INTO sms_content_log(id, sms_id,content,mobile,priority,type,send_date,failure,actual_send_date,data,userId,channel,reportStatus,resend_sms_id) SELECT SMS_CONTENT_LOG_SEQ.NEXTVAL, id,content,mobile,priority,type,send_date,failure,sysdate,data,userId,channel,status,resend_sms_id FROM sms_content
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="condition" prepend=" AND ">($condition$)</isNotEmpty>
+			<isNotEmpty property="failure" prepend=" AND "> failure &gt; #failure#</isNotEmpty>
+		</dynamic>
+	</insert>
+	<select id="querySmsContentLogByPk"  parameterClass="Long" resultClass="smsContentLog">
+		select * from sms_content_log where id = #id#
+	</select>
+	
+	<select id="queryCount" parameterClass="java.util.Map" resultClass="Long">
+		select count(*) from (select * from sms_content_log)
+	</select>
+	
+	<sql id="conditions">
+		<isNotEmpty property="serialId" prepend=" AND "> serialId=#serialId# </isNotEmpty>
+		<isNotEmpty property="status" prepend=" AND "> REPORTSTATUS=#status# </isNotEmpty>
+		<isNotEmpty property="id" prepend=" AND "> id = #id# </isNotEmpty>
+		<isNotEmpty property="mobile" prepend=" AND "> mobile = #mobile#</isNotEmpty>
+		<isNotEmpty property="startDate" prepend=" AND ">send_date &gt;= to_date(#startDate#,'yyyy-mm-dd')</isNotEmpty>
+		<isNotEmpty property="endDate" prepend=" AND ">send_date &lt;= to_date(#endDate#,'yyyy-mm-dd')</isNotEmpty>
+		<isNotEmpty property="condition" prepend=" AND ">($condition$)</isNotEmpty>
+		<isNotEmpty property="content" prepend=" AND ">content = #content#</isNotEmpty>
+		<isNotEmpty property="keyword" prepend=" AND "> content like  '%'||#keyword#||'%' AND send_date &gt;= sysdate - 30</isNotEmpty>
+	</sql>
+	
+	<sql id="reuse_query_sql"> 
+		from ( 
+		<isParameterPresent>
+			<isEqual property="searchAll" compareValue="true">
+			 select * from (
+			</isEqual>
+		</isParameterPresent>
+			select log.* from  sms_content_log log WHERE 1 = 1
+		  	<include refid="conditions"/>
+		  <isParameterPresent>
+		  	<isEqual property="searchAll" compareValue="true"> 
+		  		union all select hs.*,null resend_sms_id from sms_content_log_his hs WHERE 1=1
+		  		<include refid="conditions"/>
+		  		)
+		  	</isEqual>
+		  </isParameterPresent>
+		   ORDER BY ID desc ) log
+    </sql>    
+	
+	<select id="count" parameterClass="java.util.Map" resultClass="smsLogStat">
+		select count(id) as total, max(send_date) sendDate
+		<include refid="reuse_query_sql"/>  	  
+	</select>
+	<!-- //0:发送成功,1:发送失败,2:待发送,3:推送失败,4:已发送等待状态报告,
+		//5:发送失败已重发,6:推送失败已重发,无:已发送等待状态报告 -->
+	<select id="query" parameterClass="java.util.Map" resultClass="smsContentLog">
+		<isNotEmpty property="startIndex">
+			select * from (
+		</isNotEmpty>
+		   select rownum r,log.ID id,
+		   				   log.SMS_ID smsId,
+		   				   log.SERIALID serialId,              
+		                   log.CONTENT content,
+		                   log.MOBILE mobile,
+		                   log.PRIORITY priority,
+		                   log.TYPE type,
+		                   log.FAILURE failure,
+		                   log.REPORTSTATUS reportStatus,
+		                   decode(log.reportstatus,0,'发送成功',1,'发送失败',2,'待发送',3,'推送失败',4,'已发送等待状态报告',5,'发送失败已重发',6,'推送失败已重发','已发送等待状态报告') statusGB,
+		                   log.MEMO memo,
+		                   log.SEND_DATE sendDate,
+		                   log.NUMBERS numbers,
+		                   log.ACTUAL_SEND_DATE actualSendDate,
+						   log.USERId userId
+		          <include refid="reuse_query_sql"/>
+		           <dynamic prepend = " WHERE ">
+		           <isNotEmpty property="complaintId" >
+		           log.SMS_ID in (
+		           	select sms_id from nc_complaint_relation ncr where ncr.complaint_id=#complaintId# and ncr.sms_id is not null)
+		           </isNotEmpty> 
+		          	<isNotEmpty property="endIndex" >rownum &lt;= #endIndex# </isNotEmpty> 
+		          	<isNotEmpty property="limit" >rownum &lt;= (#startIndex# + #limit#) </isNotEmpty> 
+		          </dynamic>
+		 <isNotEmpty property="startIndex"> )  </isNotEmpty>
+		 <dynamic prepend = " WHERE ">
+		 	<isNotEmpty property="startIndex" prepend=" AND "> r &gt; #startIndex# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<update id="updateNumber" parameterClass="long">
+		UPDATE sms_content_log SET NUMBERS = NUMBERS + 1 WHERE ID = #id#
+	</update>
+	
+	<update id="updateReport" parameterClass="java.util.Map">
+		UPDATE sms_content_log SET reportStatus = #reportStatus#,receiveDate=sysdate
+		<dynamic>
+			<!--isNotEmpty property="receiveDate" prepend=",">receiveDate = #receiveDate#</isNotEmpty-->
+			<isNotEmpty property="memo" prepend=",">memo = #memo#</isNotEmpty>
+		</dynamic>
+		<dynamic prepend=" WHERE ">
+			<isEqual prepend="AND" property="reportStatus" compareValue="0">
+				reportStatus=4
+			</isEqual>
+			<isEqual prepend="AND" property="reportStatus" compareValue="1">
+				reportStatus=4
+			</isEqual>
+			<isNotEmpty prepend=" AND " property="serialId"> serialId = #serialId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="beforeMemo"> memo = #beforeMemo#</isNotEmpty>
+		</dynamic>
+		
+	</update>
+
+	<select id="queryStat" parameterClass="java.util.Map" resultClass="smsLogStat">
+		select
+			n.r,
+			nvl(y.total,0) total
+		FROM
+			(select rownum r from dual connect by rownum &lt;7) n,
+		(select 
+			ceil(length(content) / 67) r,
+			count(*) total
+		from 
+			sms_content_log l
+		<dynamic prepend=" WHERE ">
+			<isNull prepend=" AND " property="type"> type is null</isNull>
+			<isNotEmpty prepend=" AND " property="type"> type = #type#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="startDate"> send_date &gt;= #startDate#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="endDate"> send_date &lt;= #endDate#</isNotEmpty>
+		</dynamic>
+		group by ceil(length(content) / 67)) y 
+		WHERE n.r = y.r(+) order by r
+	</select>
+
+	<select id="queryMMSStat" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		SELECT count(id) FROM sms_content_log WHERE type = 'MMS_SUZHOUYEYUAN'
+		<dynamic>
+			<isNotEmpty prepend=" AND " property="startDate"> send_date &gt;= #startDate#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="endDate"> send_date &lt;= #endDate#</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<insert id="moveToHis" parameterClass="java.util.Map">
+		INSERT INTO sms_content_log_his 
+		SELECT * from sms_content_log where send_date&lt;=add_months(sysdate,
+		<isParameterPresent>
+			<isNotEmpty property="offset">#offset#</isNotEmpty>
+			<isEmpty property="offset">-3</isEmpty>
+		</isParameterPresent>
+		)
+	</insert>
+	<delete id="deleteFromLogTable" parameterClass="java.util.Map">
+		DELETE from sms_content_log where send_date&lt;=add_months(sysdate,
+		<isParameterPresent>
+			<isNotEmpty property="offset">#offset#</isNotEmpty>
+			<isEmpty property="offset">-3</isEmpty>
+		</isParameterPresent>
+		)
+	</delete>
+	
+	
+	<sql id="selectSql">
+	select * from (
+		select a.*, 'SMS_CONTENT_LOG' tableName
+			  from lvmama_pet.sms_content_log a
+			union all
+			select a.id,
+			       null sms_id,
+			       null serialid,
+			       a.content,
+			       a.mobile,
+			       a.priority,
+			       a.type,
+			       a.send_date,
+			       a.failure,
+			       1 numbers,
+			       null actual_send_date,
+			       status reportstatus,
+			       null memo,
+			       null receivedate,
+			       a.data,
+			       a.userid,
+			       a.channel,
+			       a.resend_sms_id,
+			       'SMS_CONTENT' tableName
+			  from lvmama_pet.sms_content a			
+		<isNotEmpty property="queryAll" prepend="union all">
+			<![CDATA[
+			select a.*,null resend_sms_id, 'SMS_CONTENT_LOG_HIS' tableName
+			  from lvmama_pet.sms_content_log_his a
+			]]>
+		</isNotEmpty>
+		) t
+		<dynamic prepend="where">
+			<isNotEmpty property="reportStatus" prepend=" AND "> REPORTSTATUS=#reportStatus# </isNotEmpty>
+			<isNotEmpty property="mobile" prepend=" AND "> mobile = #mobile#</isNotEmpty>
+			<isNotEmpty property="startDate" prepend=" AND ">send_date &gt;= to_date(#startDate#,'yyyy-mm-dd')</isNotEmpty>
+			<isNotEmpty property="endDate" prepend=" AND ">send_date &lt;= to_date(#endDate#,'yyyy-mm-dd')</isNotEmpty>
+			<isNotEmpty property="likeContent" prepend="and">
+				CONTENT like '%$likeContent$%'
+			</isNotEmpty>
+		</dynamic>
+		order by t.send_date desc
+	</sql>
+
+	<select id="getListByParams" parameterClass="java.util.Map"
+		 resultClass="smsContentLog" remapResults="true">
+		SELECT 
+			log.ID id,
+			log.SMS_ID smsId,
+			log.SERIALID serialId,  
+			log.CONTENT content,
+			log.MOBILE mobile,
+			log.PRIORITY priority,
+			log.TYPE type,
+			log.FAILURE failure,
+			log.REPORTSTATUS reportStatus,
+			decode(log.reportstatus,0,'发送成功',1,'发送失败',2,'待发送',3,'推送失败',4,'已发送等待状态报告',5,'发送失败已重发',6,'推送失败已重发','已发送等待状态报告') statusGB,
+			log.MEMO memo,
+			log.SEND_DATE sendDate,
+			log.NUMBERS numbers,
+			log.ACTUAL_SEND_DATE actualSendDate,
+			log.USERId userId,
+			log.channel,
+			(select a.user_name from lvmama_pet.perm_user a where log.userid = to_char(a.user_id)) opeUserName,
+			log.tableName
+		 FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select * from (
+		<include refid="selectSql" />
+		)) T 
+		<dynamic prepend="where">
+			<isNotEmpty property="maxResults">
+			ROWNUM &lt;= #maxResults#
+			</isNotEmpty>
+		</dynamic>
+		) log
+		<dynamic prepend="where">
+			<isNotEmpty property="skipResults">
+			ROWNUM1 &gt;#skipResults#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getListCountByParams" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select count(*) from
+		(
+		<include refid="selectSql" />
+		)
+	</select>
+	
+	<!-- 更新短信日志信息 -->
+	<update id="updateSmsLog" parameterClass="smsContentLog">
+		update sms_content_log
+		   set sms_id = #smsId#,
+		       serialid = #serialId#,
+		       content = #content#,
+		       mobile = #mobile#,
+		       priority = #priority#,
+		       type = #type#,
+		       send_date = #sendDate#,
+		       failure = #failure#,
+		       numbers = #numbers#,
+		       actual_send_date = #actualSendDate#,
+		       reportstatus = #reportStatus#,
+		       memo = #memo#,
+		       receivedate = #receiveDate#,
+		       data = #data#,
+		       userid = #userId#,
+		       channel = #channel#,
+		       resend_sms_id = #resendSmsId#
+		 where id = #id#
+	</update>
+	
+	<!-- 查询短信日志信息 -->
+	<select id="getSmsLogListByParams" parameterClass="java.util.Map"
+		 resultClass="smsContentLog">
+		<![CDATA[
+		select id, sms_id smsId, serialId, content, mobile, priority, type, send_date sendDate, failure, numbers, actual_send_date actualSendDate, reportstatus, memo, receivedate, data, userId, channel, resend_sms_id resendSmsId from sms_content_log
+		]]>
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="smsId">
+				sms_id = #sms_id#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="reportStatus">
+				reportStatus in 
+				<iterate open="(" close=")" property="reportStatus" conjunction="," >
+                    #reportStatus[]#
+                </iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="sendDateStart">
+				<![CDATA[
+					send_date>=#sendDateStart#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 查询需要重发的短信列表 -->
+	<select id="getResendSmsLogList" resultClass="smsContentLog">
+		<![CDATA[
+		select id,
+		       sms_id smsId,
+		       serialId,
+		       content,
+		       mobile,
+		       priority,
+		       type,
+		       send_date sendDate,
+		       failure,
+		       numbers,
+		       actual_send_date actualSendDate,
+		       reportstatus,
+		       memo,
+		       receivedate,
+		       data,
+		       userId,
+		       channel,
+		       resend_sms_id resendSmsId
+		  from sms_content_log t
+		 where t.actual_send_date >= sysdate - 1
+		   and (t.reportstatus = 1 or t.reportstatus = 3)
+		   and t.resend_sms_id is null
+		   and ((type is null OR
+		       type not in ('MMS_SUZHOUYEYUAN', 'QUNFA', 'MONTNETS')) and
+		       ((channel is null and exists
+		        (select default_channel
+		             from lvmama_pet.sms_config sc
+		            where sc.default_channel = 'DODOCA'
+		               or sc.default_channel = 'EMAY')) or CHANNEL = 'DODOCA' OR
+		       CHANNEL = 'EMAY'))
+		   and rownum <= 100
+		   
+		]]>
+	</select>
+</sqlMap>

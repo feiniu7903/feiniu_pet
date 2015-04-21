@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+	<bean id="tntOrderService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${tntPublic.serviceUrl}/tntOrderService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.TntOrderService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="buildTntBuyInfoService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${tntPublic.serviceUrl}/buildTntBuyInfoService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.BuildTntBuyInfoService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="orderCreateService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${tntPublic.serviceUrl}/orderCreateService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.OrderCreateService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="orderPayService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${tntPublic.serviceUrl}/orderPayService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.OrderPayService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="tntTimePriceService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${tntPublic.serviceUrl}/tntTimePriceService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.order.service.TntTimePriceService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+</beans>

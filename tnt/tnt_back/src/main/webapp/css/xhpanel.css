@@ -1,0 +1,146 @@
+
+/* ------------------------------------------------------------
+  Pro: xhPanel
+  Create: 2013-12-02
+  Update: 2013-12-02
+------------------------------------------------------------ */
+
+/* common */
+.table-full{width:100%;}
+body .hide{display:none;}
+
+/* 标题应该更贴紧内容，并与其他块区分，margin 值要相应做优化 @引自sofish的typo.css */
+h1, h2, h3, h4, h5, h6 {
+    margin: 1em 0 0.6em;
+    line-height: 1;
+    font-weight: bold;
+}
+h5, h6 {
+    margin: 0.6em 0 0.4em;
+}
+
+h1 { font-size: 2.0em;}
+h2 { font-size: 1.6em;}
+h3 { font-size: 1.3em;}
+h4 { font-size: 1.2em;}
+h5 { font-size: 1em;}
+h6 { font-size: 12px;}
+
+h1 small,
+h2 small,
+h3 small,
+h4 small,
+h5 small,
+h6 small {
+    line-height: 1;
+    color: #888;
+    display: inline-block;
+}
+h1 small { font-size: 24px;}
+h2 small { font-size: 18px;}
+h3 small { font-size: 14px;}
+h4 small { font-size: 14px;}
+h5 small,
+h6 small { font-size: 12px;}
+
+.xtable{width:100%;}
+.xtable tr,.xtable td{border:none;}
+.xtable td{padding:3px 10px 3px 0;}
+hr {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #ffffff;
+}
+
+
+
+/*滚动定位*/
+.affix {
+    position: fixed;
+    z-index: 110;
+}
+.affix-bottom {
+    position: absolute;
+    top: auto;
+    bottom: 100px;
+}
+.J_fixed.affix{top:0;}
+
+
+
+/* 颜色变量 */
+.cc1{color:red }    /*红  */
+.cc2{color:blue}    /*蓝  */
+.cc3{color:#999}    /*浅灰*/
+.cc4{color:#8499B7} /*灰蓝*/
+.cc5{color:#000}    /*黑  */
+.cc6{color:#390}    /*绿  */
+.cc7{color:#F60}    /*橙色*/
+.cc8{color:#528CD7} /*浅蓝*/
+.cc9{color:#666}    /*灰  */
+
+body{min-width:1000px;}
+
+
+.xbox-form{background:#f9fafb;border:1px solid #dbe7ef; padding:15px 15px 5px;}
+.xbox-form label{margin-bottom:10px;}
+.xhform label.checkbox,.xhform label.radio{margin-bottom:10px;}
+
+.xhousingitem{margin-top:10px;}
+
+.xhtitle{background:#4e8ad4;color:#fff;height:40px;line-height:40px;border:1px solid #407fcc;padding: 0 10px;}
+.xhtitle-outer{height:69px;position:relative;}
+.fixedbox {  }
+.xhtitle a{color:#fff;}
+.xhtitle a:hover{color:#fff;}
+.xhtitle h4{font-size:14px;fong-weight:bold;display:inline-block;display:*inline;*zoom:1;}
+.linkitem{display:inline-block;margin-left:10px;}
+.xhtitle h4 small{display:inline-block;margin-left:10px;font-size:12px;color:#fff;font-weight:normal;}
+
+.xhlistbox{}
+.xhlistbox-item{position:relative;}
+.xhlist tr,.xhlist td{border:1px solid #ccd1dd;}
+.xhlist thead td{background:#f9fafb;text-align:center;font-weight:bold;height:26px;line-height:26px;border:none;}
+.xhlist tbody td{padding:0;}
+.xhlist tbody .lefttitle{padding:0;background:#dce6f3;}
+.xhlist .xhname{padding:5px 0;width: 100px;text-align:center;}
+
+
+
+.xhprev,
+.xhnext {
+    position: absolute;
+    z-index: 10;
+    bottom: 4px;
+    width: 20px;
+    height: 20px;
+    background: #538ed7;
+    text-align: center;
+    font-size: 24px;
+    line-height: 18px;
+    color: #fff;
+    font-family:Tahoma;
+    cursor: pointer;
+}
+.xhprev { left: 108px;}
+.xhnext { right: 8px;}
+.xhnext.disabled,
+.xhprev.disabled{background:#cccccc;cursor:default;}
+.textitem{white-space: nowrap;}
+
+
+/*房型列表*/
+.xboxleft{padding:0;background:#dce6f3;width: 4%;}
+.xboxright{padding:0;}
+
+.xhlist .xbox{width:100%;overflow:hidden;}
+.xhlist .xulist td{width:200px;}
+.xulist{overflow:hidden;margin-left:-1px;}
+.xulist li{width:210px;padding-bottom:1000px;margin-bottom:-1000px;border-right:1px solid #ccd1dd;float:left;*display:inline;*zoom:1;}
+.xboxtitle li{padding-left:1px;border:none;}
+.xboxcontent li{min-height:76px;}
+.xulist li p{padding:5px 10px;}
+
+.xhsitem{width:22%;}
+

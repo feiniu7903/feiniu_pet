@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ANN_HONGBAO">
+		<resultMap id="ANN_HONGBAO_MAP" class="com.lvmama.comm.pet.po.user.Annhongbao"> 
+		     <result property="id" column="id"/>
+		     <result property="senddate" column="senddate"/>
+			 <result property="total" column="total"/>
+			 <result column="two_jiebie" property="twoJiebie"/>
+			 <result column="five_jiebie" property="fiveJiebie"/>
+			 <result column="fifteen_jiebie" property="fifteenJiebie"/>
+			 <result column="fifty_jiebie" property="fiftyJiebie"/>
+			 <result column="two_shengyu" property="twoShengyu"/>
+			 <result column="five_shengyu" property="fiveShengyu"/>
+			 <result column="fifteen_shengyu" property="fifteenShengyu"/>
+			  <result column="fifty_shengyu" property="fiftyShengyu"/>
+			   <result column="update_date" property="updateDate"/>
+		</resultMap>
+	 
+    <select id="queryAnnHongbaoByParam"  parameterClass="java.util.HashMap" resultMap="ANN_HONGBAO_MAP">
+		select * from ANN_HONGBAO 
+		<dynamic prepend=" where ">
+			 <isNotEmpty prepend="and" property="senddate">TO_CHAR(senddate,'YYYY-MM-DD')=TO_CHAR(#senddate#,'YYYY-MM-DD')</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<update id="updateAnnHongbao" parameterClass="com.lvmama.comm.pet.po.user.Annhongbao">
+	    update ANN_HONGBAO
+		<dynamic prepend=" SET " >
+		    	<isNotEmpty property="twoShengyu" prepend=" , ">
+				    two_Shengyu = #twoShengyu# 
+				</isNotEmpty>
+				 <isNotEmpty prepend=" , " property="fiveShengyu">
+				    five_Shengyu=#fiveShengyu#
+				 </isNotEmpty> 
+				 <isNotEmpty prepend="," property="fifteenShengyu">  fifteen_shengyu=#fifteenShengyu#</isNotEmpty>
+				  <isNotEmpty prepend="," property="fiftyShengyu">  fifty_shengyu=#fiftyShengyu#</isNotEmpty>
+				  <isNotEmpty prepend="," property="updateDate">  update_date=#updateDate#</isNotEmpty>
+ 		</dynamic>
+		 where  TO_CHAR(senddate,'YYYY-MM-DD')=TO_CHAR(#senddate#,'YYYY-MM-DD') 
+ 	</update>	
+ 	
+ 	   
+ 		<update id="minUpdateAnnHongbao"  parameterClass="java.util.HashMap">
+		    update ANN_HONGBAO
+			<dynamic prepend=" SET " >
+			    	<isNotEmpty property="zhongjiangMoney" prepend=" , ">
+			    	    <isEqual compareValue="2" property="zhongjiangMoney">
+							    two_Shengyu = two_Shengyu-#zhongjiangMoney# 
+			    	    </isEqual>
+			    	    <isEqual compareValue="5" property="zhongjiangMoney">
+							    five_Shengyu = five_Shengyu-#zhongjiangMoney# 
+			    	    </isEqual>
+			    	    <isEqual compareValue="15" property="zhongjiangMoney">
+							    fifteen_shengyu = fifteen_shengyu-#zhongjiangMoney# 
+			    	    </isEqual>
+			    	    <isEqual compareValue="50" property="zhongjiangMoney">
+							    fifty_shengyu = fifty_shengyu-#zhongjiangMoney# 
+			    	    </isEqual>
+					</isNotEmpty>
+ 	 		</dynamic>
+			 where  TO_CHAR(senddate,'YYYY-MM-DD')=TO_CHAR(#senddate#,'YYYY-MM-DD') 
+			<dynamic prepend=" and " >
+			    	<isNotEmpty property="zhongjiangMoney" prepend=" , ">
+			    	    <isEqual compareValue="2" property="zhongjiangMoney">
+							    two_Shengyu-#zhongjiangMoney#  >= 0
+			    	    </isEqual>
+			    	    <isEqual compareValue="5" property="zhongjiangMoney">
+							     five_Shengyu-#zhongjiangMoney# >= 0
+			    	    </isEqual>
+			    	    <isEqual compareValue="15" property="zhongjiangMoney">
+							     fifteen_shengyu-#zhongjiangMoney# >= 0
+			    	    </isEqual>
+			    	    <isEqual compareValue="50" property="zhongjiangMoney">
+							      fifty_shengyu-#zhongjiangMoney# >= 0
+			    	    </isEqual>
+					</isNotEmpty>
+	 		</dynamic>
+ 	</update>
+    
+</sqlMap>

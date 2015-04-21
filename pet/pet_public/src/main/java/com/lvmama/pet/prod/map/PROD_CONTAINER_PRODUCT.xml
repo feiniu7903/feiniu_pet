@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_CONTAINER_PRODUCT">
+	<typeAlias alias="prodContainerProduct" type="com.lvmama.comm.pet.po.prod.ProdContainerProduct" />
+	
+	<resultMap id="prodContainerProductResultMap" class="prodContainerProduct">
+		<result column="CONTAINER_PRODUCT_ID" property="id" />
+		<result column="CONTAINER_NAME" property="containerName" />
+		<result column="RECOMMEND_SEQ" property="recommendSeq" />
+		<result column="DEFAULT_SEQ" property="defaultSeq" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="SELL_PRICE" property="sellPrice" />
+		<result column="FROM_PLACE_NAME" property="fromPlaceName" />
+		<result column="TO_PLACE_NAME" property="toPlaceName" />
+		<result column="IS_VALID" property="isValid" />
+	</resultMap>
+	
+	<sql id="containerProductSql">
+		select pcp.container_product_id, pc.container_name, pcp.SEQ_NUM recommend_seq, psi.SEQ_NUM default_seq, pcp.product_id, psi.product_name, psi.sell_price, pc.from_place_name, pc.to_place_name, pcp.is_valid 
+		from prod_container pc, prod_container_product pcp, product_search_info psi
+		where pc.container_code = #containerCode#
+		and pc.container_id = pcp.container_id 
+		and pcp.product_id = psi.product_id
+		<isNotEmpty property="fromPlaceId" prepend="and">
+			pc.from_place_id = #fromPlaceId#
+		</isNotEmpty>
+		<isNotEmpty property="toPlaceId" prepend="and">
+			pc.to_place_id = #toPlaceId#
+		</isNotEmpty>
+		<isNotEmpty property="subProductType" prepend="and">
+			psi.sub_product_type = #subProductType#
+		</isNotEmpty>
+		<isNotEmpty property="productId" prepend="and">
+			pcp.product_id = #productId#
+		</isNotEmpty>
+		<isNotEmpty property="productName" prepend="and">
+			product_name like '%' || #productName# || '%'
+		</isNotEmpty>
+		<isEmpty property="sortType">
+			order by recommend_seq asc, container_product_id
+		</isEmpty>
+		<isEqual property="sortType" compareValue="1">
+			order by default_seq desc, container_product_id
+		</isEqual>
+		<isEqual property="sortType" compareValue="2">
+			order by default_seq asc, container_product_id
+		</isEqual>
+		<isEqual property="sortType" compareValue="3">
+			order by recommend_seq desc, container_product_id
+		</isEqual>
+		<isEqual property="sortType" compareValue="4">
+			order by recommend_seq asc, container_product_id
+		</isEqual>
+	</sql>
+	
+	<select id="getContainerProductList" parameterClass="java.util.Map" resultMap="prodContainerProductResultMap">
+		select * from (select t.*, rownum rn from (<include refid="containerProductSql" />) t where rownum &lt;= #endRow#) where rn &gt;= #startRow#
+	</select>
+	
+	<select id="getContainerProductListCount" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select count(*) from (<include refid="containerProductSql" />)
+	</select>
+	
+	<update id="setRecommendSeq" parameterClass="java.util.Map">
+		update prod_container_product set SEQ_NUM = #recommendSeq# where container_product_id = #containerProductId#
+	</update>
+	
+	<update id="restoreRecommendSeq" parameterClass="java.util.Map">
+		update prod_container_product pcp set pcp.is_valid = #isValid# where pcp.container_product_id = #containerProductId#
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	<delete id="deleteInvalidTagContainerProducts" parameterClass="java.util.Map">
+		delete from prod_container_product where container_id = #containerId# and product_id not in ($validProductIdStr$)
+	</delete>
+	
+	
+	
+	
+	
+	
+	<!-- 新版本 -->
+	<delete id="deleteInvalidContainerProducts">
+		delete from prod_container_product where product_id in (select product_id from product_search_info where is_valid = 'N' OR channel_front is null)
+	</delete>
+	
+	<delete id="deleteContainerProductsByTagId" parameterClass="java.util.Map">
+		delete from prod_container_product
+	     where container_id = #containerId#
+	       and product_id not in
+	           (select psi.product_id from lvmama_pet.product_search_info psi where  psi.is_valid = 'Y'
+                 and psi.channel like '%FRONTEND%' and psi.tagids like '%,$tagId$,%')
+	</delete>
+	<delete id="deleteNoUsedContainerProducts">
+		delete from prod_container_product where product_id=#productId#
+		<isNotEmpty property="usedContainerIdList" prepend="and">
+			container_id not in
+			<iterate property="usedContainerIdList" conjunction="," open="(" close=")">
+				#usedContainerIdList[]# 
+			</iterate>
+		</isNotEmpty>
+	</delete>
+	<insert id="insertContainerProduct" parameterClass="java.util.Map">
+		<selectKey resultClass="long" keyProperty="id">
+			select prod_container_product_seq.nextval as id from dual
+		</selectKey>
+		insert into prod_container_product(container_product_id, container_id, product_id, SEQ_NUM, is_valid) values (#id#, #containerId#, #productId#, #seq#, 'Y')
+	</insert>
+	<select id="queryContainerProductCount" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+		select count(*) from prod_container_product where container_id = #containerId# and product_id = #productId#
+	</select>
+	<delete id="deleteContainerProduct" parameterClass="java.util.Map">
+		delete from prod_container_product 
+		<dynamic prepend="where">
+			<isNotEmpty property="productId" prepend="and">
+	            product_id = #productId#
+	        </isNotEmpty>
+			<isNotEmpty property="containerId" prepend="and">
+				container_id = #containerId#
+			</isNotEmpty>
+		</dynamic>
+	</delete>
+	
+	<select id="selectContainerIdListProductAlreadyExists" parameterClass="java.lang.Long" resultClass="java.lang.Long">
+		select container_id from prod_container_product where product_id = #productId#
+	</select>
+	
+</sqlMap>

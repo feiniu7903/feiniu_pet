@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ONLINE_LETTER_USER_MESSAGE" >
+  <resultMap id="resultObject" class="com.lvmama.comm.pet.onlineLetter.LetterUserMessage" >
+    <result column="ID" property="id"/>
+    <result column="USER_ID" property="userId" />
+    <result column="TEMPLATE_ID" property="templateId" />
+    <result column="TITLE" property="title" />
+    <result column="MESSAGE_CONTENT" property="messageContent" />
+    <result column="MESSAGE_TYPE" property="messageType" />
+    <result column="CREATE_TIME" property="createdTime" />
+    <result column="READ_TIME" property="readedTime"/>
+  </resultMap>
+  <sql id="parameters">
+   WHERE M.TEMPLATE_ID(+) = T.ID
+  	<dynamic>
+  	 	<isNotEmpty prepend=" AND " property="id"> M.ID = #id#</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="userId"> M.USER_ID(+) = #userId#</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="messageType"> M.MESSAGE_TYPE = #messageType#</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="createdTime"> M.CREATE_TIME = #createdTime#</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="readedTime"> M.READ_TIME = #readedTime#</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="unReadTime"> M.READ_TIME IS NULL</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="type"> T.TYPE = #type#</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="beginTime"> T.BEGIN_TIME &lt;= TRUNC(#beginTime#)</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="endTime"> T.END_TIME &gt;= TRUNC(#endTime#)</isNotEmpty>
+  	 	<isNotEmpty prepend=" AND " property="cleanDate"> T.END_TIME &lt;= TRUNC(#cleanDate#)</isNotEmpty>
+  	 </dynamic>
+  </sql>
+  <sql id="subquery">
+  		SELECT M.ID,
+		       M.USER_ID,
+		       T.TITLE,
+		       NVL(M.MESSAGE_CONTENT, T.CONTENT) MESSAGE_CONTENT,
+		       T.TYPE MESSAGE_TYPE,
+		       NVL(M.CREATE_TIME, T.CREATE_TIME) CREATE_TIME,
+		       T.ID TEMPLATE_ID,
+		       M.READ_TIME
+		  FROM ONLINE_LETTER_USER_MESSAGE M, ONLINE_LETTER_TEMPLATE T
+  </sql>
+  <insert id="insertTemplate">
+  	<selectKey resultClass="java.lang.Long" keyProperty="id">
+			SELECT ONLINE_LETTER_MESSAGE_SEQ.NEXTVAL AS ID FROM DUAL
+	</selectKey>
+	INSERT INTO ONLINE_LETTER_USER_MESSAGE
+	(ID,USER_ID,TEMPLATE_ID,MESSAGE_CONTENT,MESSAGE_TYPE,CREATE_TIME)
+	VALUES
+	(#id#,#userId#,#templateId#,#messageContent#,#messageType#,SYSDATE)
+  </insert>
+  
+  <update id="updateUserLetter" parameterClass="java.lang.Long">
+  	 UPDATE ONLINE_LETTER_USER_MESSAGE
+  	    SET READ_TIME = SYSDATE
+  	  WHERE ID = #id#
+  </update>
+  <delete id="batchDeleteUserLetter"  parameterClass="java.util.HashMap">
+  	 DELETE FROM ONLINE_LETTER_USER_MESSAGE
+  	 WHERE
+  	 <dynamic prepend=" ">
+     <isNotEmpty prepend=" AND " property="id"> ID = #id#</isNotEmpty>
+     <isNotEmpty prepend=" AND " property="rn"> ROWNUM &gt;= #rn#</isNotEmpty>
+     <isNotEmpty prepend=" AND " property="cleanDate"> 
+     EXISTS (SELECT 1
+          FROM ONLINE_LETTER_TEMPLATE T
+         WHERE T.ID = TEMPLATE_ID
+           AND TRUNC(T.END_TIME) &lt;= TRUNC(#cleanDate#))
+     </isNotEmpty>
+    </dynamic>
+  </delete>
+  <select id="queryMessage"  resultMap="resultObject" parameterClass="java.util.HashMap">
+  	SELECT * FROM (
+  	 SELECT T.*,ROWNUM RN FROM (
+  		<include refid="subquery"/>
+  		<include refid="parameters"/>
+  		ORDER BY NVL(M.CREATE_TIME, T.CREATE_TIME) DESC
+  		) T
+  		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="maxResult"  prepend=" AND ">	ROWNUM &lt;= #maxResult#</isNotEmpty>
+		</dynamic>
+  	) T 
+  	<dynamic prepend=" WHERE ">
+		<isNotEmpty property="skipResult" prepend=" AND ">	RN &gt;= #skipResult#</isNotEmpty>
+	</dynamic>
+  </select>
+  <select id="countMessage"  resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+  	SELECT COUNT(*) FROM (<include refid="subquery"/><include refid="parameters"/>) 
+  </select>
+</sqlMap>

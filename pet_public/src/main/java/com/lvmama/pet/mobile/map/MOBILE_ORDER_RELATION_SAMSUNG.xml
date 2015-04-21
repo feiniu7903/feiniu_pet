@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MOBILE_ORDER_RELATION_SAMSUNG" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.MobileOrderRelationSamsung" >
+    <result column="ID" property="id" />
+    <result column="TICKETID" property="ticketid" />
+    <result column="SERIAL" property="serial" />
+    <result column="ORDERID" property="orderid" />
+    <result column="CREATE_DATE" property="createDate" />
+    <result column="CANCAL_DATE" property="cancalDate" />
+    <result column="UPDATE_DATE" property="updateDate" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobileOrderRelationSamsung" >
+    select ID, TICKETID, SERIAL, ORDERID, CREATE_DATE, CANCAL_DATE, UPDATE_DATE
+    from MOBILE_ORDER_RELATION_SAMSUNG
+    where ID = #id#
+  </select>
+   <select id="selectByOrderId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobileOrderRelationSamsung" >
+    select ID, TICKETID, SERIAL, ORDERID, CREATE_DATE, CANCAL_DATE, UPDATE_DATE
+    from MOBILE_ORDER_RELATION_SAMSUNG
+    where ORDERID = #orderid#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileOrderRelationSamsung" >
+    delete from MOBILE_ORDER_RELATION_SAMSUNG
+    where ID = #id#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileOrderRelationSamsung" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      select MOBILE_ORDER_R_SAMSUNG_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into MOBILE_ORDER_RELATION_SAMSUNG (ID, TICKETID, SERIAL, ORDERID, CREATE_DATE,
+      CANCAL_DATE, UPDATE_DATE)
+    values (#id#, #ticketid#, #serial#, #orderid#,
+      #createDate#, #cancalDate#, #updateDate#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileOrderRelationSamsung" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      select MOBILE_ORDER_R_SAMSUNG_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into MOBILE_ORDER_RELATION_SAMSUNG
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="ticketid" >
+        TICKETID
+      </isNotNull>
+      <isNotNull prepend="," property="serial" >
+        SERIAL
+      </isNotNull>
+      <isNotNull prepend="," property="orderid" >
+        ORDERID
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+        CREATE_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="cancalDate" >
+        CANCAL_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="updateDate" >
+        UPDATE_DATE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id#
+      </isNotNull>
+      <isNotNull prepend="," property="ticketid" >
+        #ticketid#
+      </isNotNull>
+      <isNotNull prepend="," property="serial" >
+        #serial#
+      </isNotNull>
+      <isNotNull prepend="," property="orderid" >
+        #orderid#
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+        #createDate#
+      </isNotNull>
+      <isNotNull prepend="," property="cancalDate" >
+        #cancalDate#
+      </isNotNull>
+      <isNotNull prepend="," property="updateDate" >
+        #updateDate#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileOrderRelationSamsung" >
+    update MOBILE_ORDER_RELATION_SAMSUNG
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="ticketid" >
+        TICKETID = #ticketid#
+      </isNotNull>
+      <isNotNull prepend="," property="serial" >
+        SERIAL = #serial#
+      </isNotNull>
+      <isNotNull prepend="," property="orderid" >
+        ORDERID = #orderid#
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+        CREATE_DATE = #createDate#
+      </isNotNull>
+      <isNotNull prepend="," property="cancalDate" >
+        CANCAL_DATE = #cancalDate#
+      </isNotNull>
+      <isNotNull prepend="," property="updateDate" >
+        UPDATE_DATE = #updateDate#
+      </isNotNull>
+    </dynamic>
+    where ID = #id#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileOrderRelationSamsung" >
+    update MOBILE_ORDER_RELATION_SAMSUNG
+    set TICKETID = #ticketid#,
+      SERIAL = #serial#,
+      ORDERID = #orderid#,
+      CREATE_DATE = #createDate#,
+      CANCAL_DATE = #cancalDate#,
+      UPDATE_DATE = #updateDate#
+    where ID = #id#
+  </update>
+</sqlMap>

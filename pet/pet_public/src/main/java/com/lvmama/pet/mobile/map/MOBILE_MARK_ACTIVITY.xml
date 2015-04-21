@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MOBILE_MARK_ACTIVITY">
+	<resultMap class="com.lvmama.comm.pet.po.mobile.MobileMarkActivity"
+		id="BaseResultMap">
+		<result column="MOBILE_MARK_ACTIVITY_ID" property="mobileMarkActivityId" />
+		<result column="NAME" property="name" />
+		<result column="OPERATOR_NUM" property="operatorNum" />
+		<result column="ACTIVITY_TARGET" property="activityTarget" />
+		<result column="ACTIVITY_SCOPE" property="activityScope" />
+		<result column="TOTAL_OPERATOR_NUM" property="totalOperatorNum" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="IS_VALID" property="isValid" />
+	</resultMap>
+	<select id="queryUniqueMobileMarkActivity" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select MOBILE_MARK_ACTIVITY_ID, NAME, OPERATOR_NUM, ACTIVITY_TARGET,
+		ACTIVITY_SCOPE,
+		TOTAL_OPERATOR_NUM, CREATED_TIME, IS_VALID
+		from MOBILE_MARK_ACTIVITY
+		where MOBILE_MARK_ACTIVITY_ID = #mobileMarkActivityId# and rownum = 1
+	</select>
+	<select id="getOperateNumByMobileMarkActivityId" resultClass="java.lang.Long"
+		parameterClass="java.lang.Long">
+		select OPERATOR_NUM
+		from MOBILE_MARK_ACTIVITY
+		where MOBILE_MARK_ACTIVITY_ID = #mobileMarkActivityId:DECIMAL#
+	</select>
+	<select id="getTotalByMobileMarkActivityId" resultClass="java.lang.Long"
+		parameterClass="java.lang.Long">
+		select TOTAL_OPERATOR_NUM
+		from MOBILE_MARK_ACTIVITY
+		where MOBILE_MARK_ACTIVITY_ID = #mobileMarkActivityId:DECIMAL#
+	</select>
+	<select id="selectByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileMarkActivity"
+		resultMap="BaseResultMap">
+		select MOBILE_MARK_ACTIVITY_ID, NAME, OPERATOR_NUM, ACTIVITY_TARGET,
+		ACTIVITY_SCOPE,
+		TOTAL_OPERATOR_NUM, CREATED_TIME, IS_VALID
+		from MOBILE_MARK_ACTIVITY
+		where MOBILE_MARK_ACTIVITY_ID = #mobileMarkActivityId:DECIMAL#
+	</select>
+	<delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileMarkActivity">
+		delete from MOBILE_MARK_ACTIVITY
+		where MOBILE_MARK_ACTIVITY_ID = #mobileMarkActivityId:DECIMAL#
+	</delete>
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileMarkActivity">
+		<selectKey keyProperty="mobileMarkActivityId" resultClass="java.lang.Long">
+			SELECT MOBILE_MARK_ACTIVITY_SEQ.nextval FROM DUAL
+		</selectKey>
+		insert into MOBILE_MARK_ACTIVITY (MOBILE_MARK_ACTIVITY_ID, NAME,
+		OPERATOR_NUM, ACTIVITY_TARGET, ACTIVITY_SCOPE, TOTAL_OPERATOR_NUM,
+		CREATED_TIME, IS_VALID) values (#mobileMarkActivityId#,
+		#name:VARCHAR#, #operatorNum:DECIMAL#, #activityTarget:VARCHAR#,
+		#activityScope:VARCHAR#, #totalOperatorNum:DECIMAL#,
+		#createdTime:DATE#, #isValid:VARCHAR#)
+	</insert>
+	<insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileMarkActivity">
+		insert into MOBILE_MARK_ACTIVITY
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="mobileMarkActivityId">
+				MOBILE_MARK_ACTIVITY_ID
+			</isNotNull>
+			<isNotNull prepend="," property="name">
+				NAME
+			</isNotNull>
+			<isNotNull prepend="," property="operatorNum">
+				OPERATOR_NUM
+			</isNotNull>
+			<isNotNull prepend="," property="activityTarget">
+				ACTIVITY_TARGET
+			</isNotNull>
+			<isNotNull prepend="," property="activityScope">
+				ACTIVITY_SCOPE
+			</isNotNull>
+			<isNotNull prepend="," property="totalOperatorNum">
+				TOTAL_OPERATOR_NUM
+			</isNotNull>
+			<isNotNull prepend="," property="createdTime">
+				CREATED_TIME
+			</isNotNull>
+			<isNotNull prepend="," property="isValid">
+				IS_VALID
+			</isNotNull>
+			)
+		</dynamic>
+		values
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="mobileMarkActivityId">
+				#mobileMarkActivityId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="name">
+				#name:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="operatorNum">
+				#operatorNum:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="activityTarget">
+				#activityTarget:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="activityScope">
+				#activityScope:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="totalOperatorNum">
+				#totalOperatorNum:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="createdTime">
+				#createdTime:DATE#
+			</isNotNull>
+			<isNotNull prepend="," property="isValid">
+				#isValid:VARCHAR#
+			</isNotNull>
+			)
+		</dynamic>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileMarkActivity">
+		update MOBILE_MARK_ACTIVITY
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="name">
+				NAME = #name:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="operatorNum">
+				OPERATOR_NUM = #operatorNum:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="activityTarget">
+				ACTIVITY_TARGET = #activityTarget:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="activityScope">
+				ACTIVITY_SCOPE = #activityScope:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="totalOperatorNum">
+				TOTAL_OPERATOR_NUM = #totalOperatorNum:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="createdTime">
+				CREATED_TIME = #createdTime:DATE#
+			</isNotNull>
+			<isNotNull prepend="," property="isValid">
+				IS_VALID = #isValid:VARCHAR#
+			</isNotNull>
+		</dynamic>
+		where MOBILE_MARK_ACTIVITY_ID = #mobileMarkActivityId:DECIMAL#
+	</update>
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileMarkActivity">
+		update MOBILE_MARK_ACTIVITY
+		set NAME = #name:VARCHAR#,
+		OPERATOR_NUM = #operatorNum:DECIMAL#,
+		ACTIVITY_TARGET = #activityTarget:VARCHAR#,
+		ACTIVITY_SCOPE = #activityScope:VARCHAR#,
+		TOTAL_OPERATOR_NUM = #totalOperatorNum:DECIMAL#,
+		CREATED_TIME = #createdTime:DATE#,
+		IS_VALID = #isValid:VARCHAR#
+		where MOBILE_MARK_ACTIVITY_ID = #mobileMarkActivityId:DECIMAL#
+	</update>
+</sqlMap>

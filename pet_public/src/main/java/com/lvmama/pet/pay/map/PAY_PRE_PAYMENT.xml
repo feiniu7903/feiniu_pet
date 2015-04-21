@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PAY_PRE_PAYMENT">
+	<resultMap id="PayPrePaymentBaseResult" class="com.lvmama.comm.pet.po.pay.PayPrePayment">
+		<result column="PRE_PAYMENT_ID" property="prePaymentId" />
+		<result column="PAYMENT_ID" property="paymentId" />
+		<result column="STATUS" property="status" />
+		<result column="START_TIME" property="startTime" />
+		<result column="END_TIME" property="endTime" />
+		<result column="COMPLETE_TIME" property="completeTime" />
+		<result column="CANCEL_TIME" property="cancelTime" />
+		<result column="NOTIFY_STATUS" property="notifyStatus" />
+		<result column="NOTIFY_TIME" property="notifyTime" />
+		<result column="OPERATOR" property="operator" />
+	</resultMap>
+	
+    <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pay.PayPrePayment" >
+	    <selectKey resultClass="java.lang.Long" keyProperty="prePaymentId">
+				select
+				PAY_PRE_PAYMENT_SEQ.nextval as id from DUAL
+		</selectKey>
+	    insert into PAY_PRE_PAYMENT(PRE_PAYMENT_ID,PAYMENT_ID,STATUS,START_TIME,END_TIME,COMPLETE_TIME,CANCEL_TIME,NOTIFY_STATUS,NOTIFY_TIME,OPERATOR)
+	      values (#prePaymentId#,#paymentId#, #status#,#startTime#,#endTime#,#completeTime#,#cancelTime#,#notifyStatus#,#notifyTime#,#operator#)
+   </insert>
+   
+   <update id="update" parameterClass="com.lvmama.comm.pet.po.pay.PayPrePayment">
+		update PAY_PRE_PAYMENT
+		set
+		STATUS = #status#,
+		COMPLETE_TIME = #completeTime#,
+		CANCEL_TIME = #cancelTime#,
+		NOTIFY_STATUS = #notifyStatus#,
+		NOTIFY_TIME = #notifyTime#,
+		OPERATOR = #operator#,
+		END_TIME = #endTime#,
+		START_TIME=#startTime#
+		where PRE_PAYMENT_ID = #prePaymentId#
+	</update>
+	
+	<select id="selectByPrePaymentId" resultMap="PayPrePaymentBaseResult" parameterClass="java.lang.Long">
+		<![CDATA[
+		SELECT * FROM PAY_PRE_PAYMENT WHERE PRE_PAYMENT_ID = #prePaymentId#
+		]]>
+	</select>
+	
+	<select id="selectByPaymentId" resultMap="PayPrePaymentBaseResult" parameterClass="java.lang.Long">
+		<![CDATA[
+		SELECT * FROM PAY_PRE_PAYMENT WHERE PAYMENT_ID = #paymentId#
+		]]>
+	</select>
+    <select id="selectPrePaymentListBy" resultMap="PayPrePaymentBaseResult" parameterClass="java.util.HashMap">
+		SELECT * FROM PAY_PRE_PAYMENT
+		<dynamic prepend="WHERE">
+		     <isNotNull prepend="and" property="paymentId" >
+		        PAYMENT_ID = #paymentId#
+		      </isNotNull>
+		      <isNotNull prepend="and" property="prePaymentId" >
+		        PRE_PAYMENT_ID = #prePaymentId#
+		      </isNotNull>
+			 <isNotNull prepend="and" property="status" >
+		        STATUS = #status#
+		      </isNotNull>
+	     </dynamic>
+	</select>
+	
+	
+</sqlMap>

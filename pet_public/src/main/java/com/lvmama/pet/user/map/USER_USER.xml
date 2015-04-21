@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="USER_USER">
+	<resultMap id="users" class="com.lvmama.comm.pet.po.user.UserUser"> 
+	     <result property="id" column="user_id"/>    
+		<result property="userId" column="user_no"/>
+		<result property="userNo" column="user_no"/>
+		<result property="groupId" column="group_id"/>
+		<result property="cityId" column="city_id"/>
+		<result property="userName" column="user_name"/>
+		<result property="userPassword" column="user_password"/>
+		<result property="passwordPrompt" column="password_prompt"/>
+		<result property="passwordAnswer" column="password_answer"/>
+		<result property="realName" column="real_name"/>
+		<result property="address" column="address"/>
+		<result property="createdDate" column="created_date"/>
+		<result property="updatedDate" column="updated_date"/>
+		<result property="isValid" column="is_valid"/>
+		<result property="mobileNumber" column="mobile_number"/>
+		<result property="email" column="email"/>
+		<result property="gender" column="gender"/>
+		<result property="idNumber" column="id_number"/>
+		<result property="point" column="point"/>
+		<result property="nickName" column="nick_name"/>
+		<result property="memo" column="memo"/>
+		<result property="birthday" column="birthday"/>
+		<result property="qqAccount" column="qq_account"/>
+		<result property="msnAccount" column="msn_account"/>
+		<result property="spaceUrl" column="space_url"/>
+		<result property="imageUrl" column="image_url"/>
+		<result property="isEmailChecked" column="is_email_checked"/>
+		<result property="isAcceptEdm" column="is_accept_edm"/>
+		<result property="phoneNumber" column="phone_number"/>
+		<result property="isMobileChecked" column="is_mobile_checked"/>
+		<result property="realPass" column="real_pass"/>
+		<result property="memberShipCard" column="membership_card"/>
+		<result property="activeMscardDate" column="ACTIVE_MSCARD_DATE"/>
+		<result property="channel" column="PRIMARY_CHANNEL" />
+		<result property="grade" column="GRADE" />
+    	<result property="levelValidityDate" column="LEVEL_VALIDITY_DATE" />
+    	<result property="lastLoginDate" column="LAST_LOGIN_DATE" />
+    	<result property="nameIsUpdate" column="NAME_IS_UPDATE" />
+    	<result property="wechatId" column="WECHAT_ID" />
+    	<result property="subScribe" column="SUBSCRIBE" />
+    	<result property="saveCreditCard" column="save_credit_card" />
+    	
+	</resultMap>
+	
+	<resultMap class="com.lvmama.comm.pet.po.user.UserUser" id="userAccount" extends="users">
+		<result property="cashBalance" column="CASH_BALANCE" />
+    	<result property="bonusBalance" column="BONUS_BALANCE" />
+	</resultMap>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.user.UserUser">
+		<selectKey resultClass="java.lang.Long" keyProperty="id" >
+			select USER_USER_SEQ.NEXTVAL as id from DUAL
+		</selectKey>
+		INSERT INTO user_user
+			<dynamic prepend="(">
+			    user_id,
+				<isNotEmpty property="userNo" prepend=",">user_no</isNotEmpty>
+				<isNotEmpty property="groupId" prepend=",">group_id</isNotEmpty>
+				<isNotEmpty property="cityId" prepend=",">city_id</isNotEmpty>
+				<isNotEmpty property="userName" prepend=",">user_name</isNotEmpty>
+				<isNotEmpty property="userPassword" prepend=",">user_password</isNotEmpty>
+				<isNotEmpty property="passwordPrompt" prepend=",">password_prompt</isNotEmpty>
+				<isNotEmpty property="passwordAnswer" prepend=",">password_answer</isNotEmpty>
+				<isNotEmpty property="realName" prepend=",">real_name</isNotEmpty>
+				<isNotEmpty property="address" prepend=",">address</isNotEmpty>
+				<isNotEmpty property="createdDate" prepend=",">created_date</isNotEmpty>
+				<isNotEmpty property="updatedDate" prepend=",">updated_date</isNotEmpty>
+				<isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty>
+				<isNotEmpty property="mobileNumber" prepend=",">mobile_number</isNotEmpty>
+				<isNotEmpty property="email" prepend=",">email</isNotEmpty>
+				<isNotEmpty property="gender" prepend=",">gender</isNotEmpty>
+				<isNotEmpty property="idNumber" prepend=",">id_number</isNotEmpty>
+				<isNotEmpty property="point" prepend=",">point</isNotEmpty>
+				<isNotEmpty property="nickName" prepend=",">nick_name</isNotEmpty>
+				<isNotEmpty property="memo" prepend=",">memo</isNotEmpty>
+				<isNotEmpty property="birthday" prepend=",">birthday</isNotEmpty>
+				<isNotEmpty property="qqAccount" prepend=",">qq_account</isNotEmpty>
+				<isNotEmpty property="msnAccount" prepend=",">msn_account</isNotEmpty>
+				<isNotEmpty property="spaceUrl" prepend=",">space_url</isNotEmpty>
+				<isNotEmpty property="imageUrl" prepend=",">image_url</isNotEmpty>
+				<isNotEmpty property="isEmailChecked" prepend=",">is_email_checked</isNotEmpty>
+				<isNotEmpty property="isAcceptEdm" prepend=",">is_accept_edm</isNotEmpty>
+				<isNotEmpty property="phoneNumber" prepend=",">phone_number</isNotEmpty>
+				<isNotEmpty property="isMobileChecked" prepend=",">is_mobile_checked</isNotEmpty>
+				<isNotEmpty property="realPass" prepend=",">real_pass</isNotEmpty>
+				<isNotEmpty property="memberShipCard" prepend=",">membership_card,ACTIVE_MSCARD_DATE</isNotEmpty>
+				<isNotEmpty property="channel" prepend=",">PRIMARY_CHANNEL</isNotEmpty>
+				<isNotEmpty property="grade" prepend=",">GRADE</isNotEmpty>
+				<isNotEmpty property="levelValidityDate" prepend=",">LEVEL_VALIDITY_DATE</isNotEmpty>
+				<isNotEmpty property="lastLoginDate" prepend=",">LAST_LOGIN_DATE</isNotEmpty>
+				<isNotEmpty property="nameIsUpdate" prepend=",">NAME_IS_UPDATE</isNotEmpty>
+				)
+			</dynamic>
+			VALUES
+			<dynamic prepend="(">
+				#id#,
+				<isNotEmpty property="userNo" prepend=",">#userNo#</isNotEmpty>
+				<isNotEmpty property="groupId" prepend=",">#groupId#</isNotEmpty>
+				<isNotEmpty property="cityId" prepend=",">#cityId#</isNotEmpty>
+				<isNotEmpty property="userName" prepend=",">#userName#</isNotEmpty>
+				<isNotEmpty property="userPassword" prepend=",">#userPassword#</isNotEmpty>
+				<isNotEmpty property="passwordPrompt" prepend=",">#passwordPrompt#</isNotEmpty>
+				<isNotEmpty property="passwordAnswer" prepend=",">#passwordAnswer#</isNotEmpty>
+				<isNotEmpty property="realName" prepend=",">#realName#</isNotEmpty>
+				<isNotEmpty property="address" prepend=",">#address#</isNotEmpty>
+				<isNotEmpty property="createdDate" prepend=",">#createdDate#</isNotEmpty>
+				<isNotEmpty property="updatedDate" prepend=",">#updatedDate#</isNotEmpty>
+				<isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty>
+				<isNotEmpty property="mobileNumber" prepend=",">#mobileNumber#</isNotEmpty>
+				<isNotEmpty property="email" prepend=",">#email#</isNotEmpty>
+				<isNotEmpty property="gender" prepend=",">#gender#</isNotEmpty>
+				<isNotEmpty property="idNumber" prepend=",">#idNumber#</isNotEmpty>
+				<isNotEmpty property="point" prepend=",">#point#</isNotEmpty>
+				<isNotEmpty property="nickName" prepend=",">#nickName#</isNotEmpty>
+				<isNotEmpty property="memo" prepend=",">#memo#</isNotEmpty>
+				<isNotEmpty property="birthday" prepend=",">#birthday#</isNotEmpty>
+				<isNotEmpty property="qqAccount" prepend=",">#qqAccount#</isNotEmpty>
+				<isNotEmpty property="msnAccount" prepend=",">#msnAccount#</isNotEmpty>
+				<isNotEmpty property="spaceUrl" prepend=",">#spaceUrl#</isNotEmpty>
+				<isNotEmpty property="imageUrl" prepend=",">#imageUrl#</isNotEmpty>
+				<isNotEmpty property="isEmailChecked" prepend=",">#isEmailChecked#</isNotEmpty>
+				<isNotEmpty property="isAcceptEdm" prepend=",">#isAcceptEdm#</isNotEmpty>
+				<isNotEmpty property="phoneNumber" prepend=",">#phoneNumber#</isNotEmpty>
+				<isNotEmpty property="isMobileChecked" prepend=",">#isMobileChecked#</isNotEmpty>
+				<isNotEmpty property="realPass" prepend=",">#realPass#</isNotEmpty>
+				<isNotEmpty property="memberShipCard" prepend=",">#memberShipCard#,SYSDATE</isNotEmpty>
+				<isNotEmpty property="channel" prepend=",">#channel#</isNotEmpty>
+				<isNotEmpty property="grade" prepend=",">#grade#</isNotEmpty>
+				<isNotEmpty property="levelValidityDate" prepend=",">(select trunc(add_months(sysdate,24),'Year') - 1 from dual)</isNotEmpty>
+				<isNotEmpty property="lastLoginDate" prepend=",">#lastLoginDate#</isNotEmpty>
+				<isNotEmpty property="nameIsUpdate" prepend=",">#nameIsUpdate#</isNotEmpty>
+				)
+			</dynamic>
+	</insert>
+	
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.user.UserUser">
+		UPDATE user_user 
+			<dynamic prepend="SET">
+				<isNotEmpty property="groupId" prepend=",">group_id = #groupId#</isNotEmpty>
+				<isNotEmpty property="cityId" prepend=",">city_id = #cityId#</isNotEmpty>
+				<isNotEmpty property="userName" prepend=",">user_name = #userName#</isNotEmpty>
+				<isNotEmpty property="userPassword" prepend=",">user_password = #userPassword#</isNotEmpty>
+				<isNotEmpty property="passwordPrompt" prepend=",">password_prompt = #passwordPrompt#</isNotEmpty>
+				<isNotEmpty property="passwordAnswer" prepend=",">password_answer = #passwordAnswer#</isNotEmpty>
+				<isNotEmpty property="realName" prepend=",">real_name = #realName#</isNotEmpty>
+				<isNotEmpty property="address" prepend=",">address = #address#</isNotEmpty>
+				<isNotEmpty property="createdDate" prepend=",">created_date = #createdDate#</isNotEmpty>
+				<isNotEmpty property="updatedDate" prepend=",">updated_date = SYSDATE</isNotEmpty>
+				<isNotEmpty property="isValid" prepend=",">is_valid = #isValid#</isNotEmpty>
+				<isNotEmpty property="mobileNumber" prepend=",">mobile_number = #mobileNumber#</isNotEmpty>
+				<isNotEmpty property="email" prepend=",">email = #email#</isNotEmpty>
+				<isNotEmpty property="gender" prepend=",">gender = #gender#</isNotEmpty>
+				<isNotEmpty property="idNumber" prepend=",">id_number = #idNumber#</isNotEmpty>
+				<isNotEmpty property="point" prepend=",">point = #point#</isNotEmpty>
+				<isNotEmpty property="nickName" prepend=",">nick_name = #nickName#</isNotEmpty>
+				<isNotEmpty property="memo" prepend=",">memo = #memo#</isNotEmpty>
+				<isNotEmpty property="birthday" prepend=",">birthday = #birthday#</isNotEmpty>
+				<isNotEmpty property="qqAccount" prepend=",">qq_account = #qqAccount#</isNotEmpty>
+				<isNotEmpty property="msnAccount" prepend=",">msn_account = #msnAccount#</isNotEmpty>
+				<isNotEmpty property="spaceUrl" prepend=",">space_url = #spaceUrl#</isNotEmpty>
+				<isNotEmpty property="imageUrl" prepend=",">image_url = #imageUrl#</isNotEmpty>
+				<isNotEmpty property="isEmailChecked" prepend=",">is_email_checked = #isEmailChecked#</isNotEmpty>
+				<isNotEmpty property="isAcceptEdm" prepend=",">is_accept_edm = #isAcceptEdm#</isNotEmpty>
+				<isNotEmpty property="phoneNumber" prepend=",">phone_number = #phoneNumber#</isNotEmpty>
+				<isNotEmpty property="isMobileChecked" prepend=",">is_mobile_checked = #isMobileChecked#</isNotEmpty>
+				<isNotEmpty property="realPass" prepend=",">real_pass = #realPass#</isNotEmpty>
+				<isNotEmpty property="memberShipCard" prepend=",">membership_card = #memberShipCard#,ACTIVE_MSCARD_DATE = SYSDATE</isNotEmpty>
+				<isNotEmpty property="channel" prepend=",">PRIMARY_CHANNEL = #channel#</isNotEmpty>
+				<isNotEmpty property="lastLoginDate" prepend=",">LAST_LOGIN_DATE = #lastLoginDate#</isNotEmpty>
+				<isNotEmpty property="nameIsUpdate" prepend=",">NAME_IS_UPDATE = #nameIsUpdate#</isNotEmpty>
+				<isNotEmpty property="wechatId" prepend=",">WECHAT_ID=#wechatId#</isNotEmpty>
+				<isNotEmpty property="subScribe" prepend=",">SUBSCRIBE=#subScribe#</isNotEmpty>
+				<isNotEmpty property="saveCreditCard" prepend=",">save_credit_card=#saveCreditCard#</isNotEmpty>
+			</dynamic>	
+		WHERE
+			user_id = #id#
+	</update>
+	
+	<select id="queryUsersByPk"  parameterClass="java.lang.Long" resultMap="users">
+		select * from user_user where user_id = #id#
+	</select>	
+
+	<select id="queryUsersByUserNo"  parameterClass="String" resultMap="users">
+		select * from user_user where user_no = #userNo#
+	</select>
+	
+	<select id="queryUsersListByPkList"  parameterClass="String" resultMap="users">
+		select * from user_user where user_no in ($idList$)
+	</select>
+	<!-- 用户关键信息的Like查询  -->
+	<select id="queryUserUserKeyWordsLike"  parameterClass="Map" resultMap="users">
+		select * from (select * from USER_USER 
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="userName" prepend=" AND ">USER_NAME like #userName#||'%'</isNotEmpty>
+			<isNotEmpty property="mobileNumber" prepend=" AND ">MOBILE_NUMBER like #mobileNumber#||'%'</isNotEmpty>
+			<isNotEmpty property="email" prepend=" AND ">EMAIL like #email#||'%'</isNotEmpty>
+			<isNotEmpty property="memberShipCard" prepend=" AND ">MEMBERSHIP_CARD = #memberShipCard#</isNotEmpty>
+		</dynamic>
+		 order by CREATED_DATE) UU
+		 <dynamic prepend=" WHERE ">
+		 	<isNotEmpty property="_endRow"> rownum &lt;=#_endRow#</isNotEmpty>
+		 </dynamic> 
+	</select>
+	<select id="query"  parameterClass="Map" resultMap="userAccount">
+		select T2.*
+  	      from (select T1.*, rownum as rn
+				  from (select U.*, (C.RECHARGE_BALANCE + C.REFUND_BALANCE) as CASH_BALANCE, (C.BONUS_BALANCE+C.NEW_BONUS_BALANCE) as BONUS_BALANCE from user_user U LEFT JOIN lvmama_pet.cash_account C ON U.user_id=C.user_id 
+						<dynamic prepend=" where ">
+							<isNotEmpty property="search" prepend=" AND ">
+								(U.user_name like ''||#search#||'%' 
+							  		or U.email like ''||#search#||'%' 
+							  		or U.mobile_number like ''||#search#||'%'
+							  		or U.MEMBERSHIP_CARD like ''||#search#||'%' )
+							</isNotEmpty>
+							<isNotEmpty property="userName" prepend=" AND ">U.user_name = #userName#</isNotEmpty>
+							<isNotEmpty property="likeUserName" prepend=" AND ">U.user_name like '%'||#likeUserName#||'%'</isNotEmpty>
+							<isNotEmpty property="mobileNumber" prepend=" AND ">U.mobile_number = #mobileNumber#</isNotEmpty>
+							<isNotEmpty property="email" prepend=" AND ">U.email = #email#</isNotEmpty>
+							<isNotEmpty property="memberShipCard" prepend=" AND ">U.membership_card = #memberShipCard#</isNotEmpty>
+							<isNotEmpty property="wechatId" prepend=" AND ">U.WECHAT_ID = #wechatId#</isNotEmpty>
+							<isNotEmpty property="isValid" prepend=" AND ">U.is_valid = #isValid#</isNotEmpty>
+							<isNotEmpty property="grades" prepend=" AND ">U.grade in ($grades$)</isNotEmpty>
+							<isNotEmpty property="levelValidityDateStart" prepend=" AND ">U.LEVEL_VALIDITY_DATE &gt;= #levelValidityDateStart#</isNotEmpty>
+							<isNotEmpty property="levelValidityDateEnd" prepend=" AND ">U.LEVEL_VALIDITY_DATE &lt;= #levelValidityDateEnd#</isNotEmpty>
+							<isNotEmpty property="cardId" prepend=" AND ">U.membership_card IN (SELECT CARD_CODE FROM MARK_MEMBERSHIP_CARD_CODE WHERE CARD_ID = #cardId#)</isNotEmpty>
+						</dynamic>
+		                order by U.created_date) T1
+         		<dynamic prepend=" where ">
+		           	<isNotEmpty property="_endRow">rownum &lt;= #_endRow#</isNotEmpty>
+		        </dynamic>) T2
+ 		 <dynamic prepend=" where ">
+		      <isNotEmpty property="_startRow">rn &gt;= #_startRow#</isNotEmpty>
+		 </dynamic>
+	</select>
+	
+	<select id="queryForLoginValidate"  parameterClass="Map" resultClass="Integer">
+		select 1  from user_user U 
+			<dynamic prepend=" where ">
+				<isNotEmpty property="userName" prepend=" AND ">U.user_name = #userName#</isNotEmpty>
+				<isNotEmpty property="userPassword" prepend=" AND ">U.USER_PASSWORD = #userPassword#</isNotEmpty>
+				<isNotEmpty property="likeUserName" prepend=" AND ">U.user_name like '%'||#likeUserName#||'%'</isNotEmpty>
+				<isNotEmpty property="mobileNumber" prepend=" AND ">U.mobile_number = #mobileNumber#</isNotEmpty>
+				<isNotEmpty property="email" prepend=" AND ">U.email = #email#</isNotEmpty>
+				<isNotEmpty property="memberShipCard" prepend=" AND ">U.membership_card = #memberShipCard#</isNotEmpty>
+				<isNotEmpty property="wechatId" prepend=" AND ">U.WECHAT_ID = #wechatId#</isNotEmpty>
+				<isNotEmpty property="isValid" prepend=" AND ">U.is_valid = #isValid#</isNotEmpty>
+				<isNotEmpty property="grades" prepend=" AND ">U.grade in ($grades$)</isNotEmpty>
+				<isNotEmpty property="levelValidityDateStart" prepend=" AND ">U.LEVEL_VALIDITY_DATE &gt;= #levelValidityDateStart#</isNotEmpty>
+				<isNotEmpty property="levelValidityDateEnd" prepend=" AND ">U.LEVEL_VALIDITY_DATE &lt;= #levelValidityDateEnd#</isNotEmpty>
+				<isNotEmpty property="cardId" prepend=" AND ">U.membership_card IN (SELECT CARD_CODE FROM MARK_MEMBERSHIP_CARD_CODE WHERE CARD_ID = #cardId#)</isNotEmpty>
+			</dynamic>
+	</select>
+	
+	<select id="count"  parameterClass="Map" resultClass="int">
+		select count(user_id) from user_user where 1 = 1
+		<dynamic>
+			<isNotEmpty property="userName" prepend=" AND ">user_name = #userName#</isNotEmpty>
+			<isNotEmpty property="mobileNumber" prepend=" AND ">mobile_number = #mobileNumber#</isNotEmpty>
+			<isNotEmpty property="email" prepend=" AND ">email = #email#</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=" AND ">is_valid = #isValid#</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="processCash"  resultClass="java.lang.Long">
+		SELECT cash  from draw_money_info where user_id =#userId# and status in ('NEW','PASS')
+	</select>
+	
+	<update id="updatePoint" parameterClass="java.lang.Long">
+		UPDATE user_user SET POINT = (SELECT SUM(POINT) FROM USER_POINT_LOG WHERE USER_ID = #userId#) WHERE USER_ID = #userId#
+	</update>		
+
+	<update id="userMemberGradeUpdate" parameterClass="Map" >
+		update user_user 
+		set GRADE =#grade# ,
+		    LEVEL_VALIDITY_DATE = (select trunc(add_months(sysdate,24), 'Year') - 1 from dual)
+		where  user_id=#userId# AND is_valid = 'Y'
+	</update>
+	
+	<update id="expDateToNextYearForNormalGrade" >
+		update user_user 
+		set LEVEL_VALIDITY_DATE = (select trunc(add_months(#date#,12), 'Year') - 1 from dual)
+		where  GRADE= 'NORMAL' AND is_valid = 'Y'
+		AND LEVEL_VALIDITY_DATE &lt;=  #date#
+	</update>
+	
+
+	<select id="selectUserLastLoginDate" parameterClass="java.lang.String" resultClass="java.util.Date">
+		select created_date from (select * from user_action_collection where action='LOGIN' and user_no=#userNo# order by created_date desc) where rownum=1
+	</select>
+	
+	<select id="queryUserUserByUserId" parameterClass="Map" resultMap="users">
+		select * from user_user 
+		<dynamic prepend=" where ">
+		     <iterate property="ids" open="(" close=")" conjunction="OR" > 
+		                user_id = #ids[]#
+		     </iterate> 
+	     </dynamic>
+	</select>
+	
+	<update id="unBindingMobileByUserId" parameterClass="java.lang.Long">
+		update user_user set mobile_number = null, is_mobile_checked = 'F', updated_date = sysdate where  USER_ID = #userId#
+	</update>
+	
+	<update id="unBindingEmailByUserId" parameterClass="java.lang.Long">
+		update user_user set email = null, is_email_checked = 'F', updated_date = sysdate where  USER_ID = #userId#
+	</update>		
+	
+</sqlMap>

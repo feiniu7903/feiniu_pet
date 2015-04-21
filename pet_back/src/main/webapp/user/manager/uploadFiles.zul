@@ -1,0 +1,71 @@
+<?page title="上传附件" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_uploadFiles"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_uploadFiles" title="上传附件" closable="true" sizable="false" border="normal"  mode="embedded" apply="com.lvmama.pet.web.user.manager.UploadFilesAction">
+		<grid>
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>上传文件：</hbox>
+					<hbox>
+						<textbox id="furl" maxlength="100" value="@{saction.furl,load-after='uploadBtn.onClick'}" readonly="true" width="420px" visible = "false"/>
+						<textbox id="fileName" maxlength="100" width="500px" readonly="true"/>
+						<button id="upBtn" label="上传文件" upload="true" apply="com.lvmama.pet.web.upload.UploadFileCtrl" onUpload='upBtn$composer.onUpload(event, furl, fileName);Events.postEvent("onChange",furl,fileName);saction.fileName=fileName.value;saction.file.name=fileName.value;'></button>
+					</hbox>
+				</row>
+				<row>
+					<hbox>文件名称:</hbox>
+					<hbox><textbox maxlength="50" value="@{saction.file.name,load-after='upBtn.onUpload,uploadBtn.onClick'}" width="420px" id="backup_file_name"/></hbox>
+				</row>
+				<row>
+					<hbox>文件描述:</hbox>
+					<hbox><textbox rows="10" maxlength="300" width="480px" value="@{saction.file.memo,load-after='uploadBtn.onClick'}"/></hbox>
+				</row>	
+				<row>
+					<hbox>附件类型:</hbox>
+					<listbox mold="select" rows="1" id="fileType" onSelect='saction.fileType=self.selectedItem.value;'>
+						<listitem label="--请选择--" value="" selected="true"/>
+					 	<listitem label="修改手机号码" value="MOBILE_NUMBER_MODIFY" />
+					 	<listitem label="修改邮箱地址" value="EMAIL_MODIFY" />
+					 	<listitem label="账户解冻" value="UNFREEZE_USER" />
+					</listbox>
+				</row>
+				<row spans="2">
+					<toolbar>
+			 			<button label="提交" width="100px" onClick="saction.upload();" id="uploadBtn" />
+					</toolbar>
+				</row>				
+			</rows>							
+		</grid>
+		<grid>
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row spans="2,0">
+					<hbox>已存在的文件列表</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox model="@{saction.fileList,load-after='uploadBtn.onClick'}" width="100%" id="uploadFileListId">
+			<listitem  self="@{each='file'}" >
+				<listcell>
+					<label value="@{file.name}"/>
+				</listcell>
+				<listcell>
+					<label value="@{file.zhFileType}"/>
+				</listcell>
+				<listcell>
+					<label value="@{file.memo}"/>
+				</listcell>
+				<listcell>
+					<a label="下载" style="color:blue" onClick='saction.downFile(self.getAttribute("fileId"));'>
+						<custom-attributes fileId="@{file.fileId}" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+	</window>
+</zk>

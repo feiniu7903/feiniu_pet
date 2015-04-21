@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SUP_SUPPLIER">
+	<typeAlias alias="SupSupplier"
+		type="com.lvmama.comm.pet.po.sup.SupSupplier" />
+	<resultMap id="BaseResultMap" class="SupSupplier">
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="SUPPLIER_NAME" property="supplierName" />
+		<result column="CITY_ID" property="cityId" />
+		<result column="WEBSITE" property="webSite" />
+		<result column="TELEPHONE" property="telephone" />
+		<result column="FAX" property="fax" />
+		<result column="ADDRESS" property="address" />
+		<result column="POSTCODE" property="postcode" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="MOBILE" property="mobile" />
+		<result column="BOSSHEAD" property="bosshead" />
+		<result column="SUPPLIER_TYPE" property="supplierType"/>
+		<result column="LEGAL_PERSON" property="legalPerson"/>
+		<result column="TRAVEL_LICENSE" property="travelLicense"/>
+		<result column="assess_points" property="assessPoints"/>
+		<result column="PARENT_ID" property="parentId" />
+		<result column="COMPANY_ID" property="companyId"/>
+		<result column="VALID" property="valid"/>
+	</resultMap>
+
+	<resultMap id="BaseResultMap_withCity" class="SupSupplier"
+		extends="BaseResultMap">
+		<result column="CITY_NAME" property="comCity.cityName" />
+	</resultMap>
+	
+	<!-- 扩展字段：预存款余额、押金余额、担保金额度、预付款预警余额、押金回收时间 、父供应商ID-->
+	<resultMap id="BaseResultMapWithBalance" class="SupSupplier" extends="BaseResultMap">
+		<result column="ADVANCE_DEPOSIT_AMOUNT" property="advancedepositsBalance" />
+		<result column="DEPOSIT_AMOUNT" property="foregiftsBalance" />
+		<result column="GUARANTEELIMIT" property="guaranteeLimit" />
+		<result column="ADVANCE_DEPOSIT_ALERT" property="advancedpositsAlert" />
+		<result column="DEPOSIT_ALERT" property="foregiftsAlert" />
+	</resultMap>
+	
+	<select id="selectSupplier" resultMap="BaseResultMap_withCity"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+		select * from (SELECT ss.*,cc.CITY_NAME
+		FROM SUP_SUPPLIER ss,COM_CITY cc where ss.CITY_ID = cc.CITY_ID
+		and ss.VALID='Y'
+		<dynamic>
+			<isNotNull prepend="and" property="supplierId">
+				ss.SUPPLIER_ID = #supplierId#
+			</isNotNull>
+			<isNotNull prepend="and" property="supplierName">
+				ss.SUPPLIER_NAME like '%$supplierName$%'
+			</isNotNull>
+			<isNotEmpty prepend="and" property="supplierNameEq">
+				ss.SUPPLIER_NAME = #supplierNameEq#
+			</isNotEmpty>
+			<isNotNull prepend="and" property="cityId">
+				ss.CITY_ID = #cityId#
+			</isNotNull>
+			<isNull property="cityId">
+				<isNotNull prepend="and" property="provinceId">
+				cc.PROVINCE_ID = #provinceId#
+				</isNotNull>
+			</isNull>
+			<isNotNull prepend="and" property="beginDate">
+				ss.CREATE_TIME<![CDATA[>=]]>#beginDate#
+			</isNotNull>
+			<isNotNull prepend="and" property="endDate">
+				ss.CREATE_TIME<![CDATA[<]]>#endDate#+1
+			</isNotNull>			
+		</dynamic>
+		order by ss.SUPPLIER_ID desc )
+		) T WHERE ROWNUM &lt;= #_endRow#
+		)
+		WHERE ROWNUM1 &gt;=#_startRow#
+	</select>
+	<sql id="searchSupplierWithBalance">
+		SELECT A.*,
+			B.ADVANCE_DEPOSIT_AMOUNT,
+			B.ADVANCE_DEPOSIT_ALERT,
+			B.GUARANTEE_LIMIT AS GUARANTEELIMIT,
+			B.DEPOSIT_AMOUNT,
+			B.DEPOSIT_ALERT
+	    FROM
+			SUP_SUPPLIER A, FIN_SUPPLIER_MONEY B
+	 	WHERE 
+			A.SUPPLIER_ID = B.SUPPLIER_ID(+)
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMapWithBalance" parameterClass="java.lang.Long">
+		<include refid="searchSupplierWithBalance"/>
+		AND A.SUPPLIER_ID = #supplierId# 
+		AND VALID = 'Y'
+	</select>
+
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.pet.po.sup.SupSupplier">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="supplierId">
+			select SUP_SUPPLIER_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into SUP_SUPPLIER (SUPPLIER_ID, SUPPLIER_NAME,
+		CITY_ID,WEBSITE, TELEPHONE, FAX, ADDRESS, POSTCODE,MOBILE ,
+		CREATE_TIME,VALID,PARENT_ID,BOSSHEAD,SUPPLIER_TYPE,LEGAL_PERSON,TRAVEL_LICENSE,ASSESS_POINTS,COMPANY_ID) values (#supplierId#, #supplierName#,
+		#cityId#, #webSite#, #telephone#, #fax#, #address#, #postcode#,#mobile#, 
+		sysdate,'Y',#parentId#,#bosshead#,#supplierType#,#legalPerson#,#travelLicense#,100,#companyId#)
+	</insert>
+	
+	<!-- 修改供应商信息 -->
+	<update id="updateByPrimaryKey"
+		parameterClass="com.lvmama.comm.pet.po.sup.SupSupplier">
+		update SUP_SUPPLIER set SUPPLIER_NAME = #supplierName#, CITY_ID
+		= #cityId#, WEBSITE = #webSite#, TELEPHONE = #telephone#, FAX =
+		#fax#, ADDRESS = #address#, POSTCODE = #postcode#,  
+		MOBILE = #mobile#,
+		PARENT_ID = #parentId#, 
+		BOSSHEAD = #bosshead#,
+		SUPPLIER_TYPE = #supplierType#,
+		LEGAL_PERSON = #legalPerson#,
+		TRAVEL_LICENSE = #travelLicense#,
+		ASSESS_POINTS = #assessPoints#,
+		COMPANY_ID=#companyId#
+		where SUPPLIER_ID = #supplierId#
+	</update>
+
+	<update id="markIsValid" parameterClass="java.util.Map">
+		update SUP_SUPPLIER set VALID='N' where SUPPLIER_ID =
+		#supplierId#
+	</update>
+	
+	<select id="selectRowCount" resultClass="java.lang.Long">
+		select count(*) from (SELECT ss.*,cc.CITY_NAME
+		FROM SUP_SUPPLIER ss,COM_CITY cc where ss.CITY_ID = cc.CITY_ID
+		and ss.VALID='Y'
+		<dynamic>
+			<isNotNull prepend="and" property="supplierId">
+				ss.SUPPLIER_ID = #supplierId#
+			</isNotNull>
+			<isNotNull prepend="and" property="supplierName">
+				ss.SUPPLIER_NAME like '%$supplierName$%'
+			</isNotNull>
+			<isNotNull prepend="and" property="cityId">
+				ss.CITY_ID = #cityId#
+			</isNotNull>
+			<isNotNull prepend="and" property="beginDate">
+				ss.CREATE_TIME<![CDATA[>=]]>#beginDate#
+			</isNotNull>
+			<isNotNull prepend="and" property="endDate">
+				ss.CREATE_TIME<![CDATA[<]]>#endDate#+1
+			</isNotNull>					
+		</dynamic>
+			)
+	</select>
+	
+	<!-- 查询直接子供应商 -->
+	<select id="getChildSuppliers" parameterClass="long" resultMap="BaseResultMapWithBalance">
+		<include refid="searchSupplierWithBalance"/>
+		AND A.PARENT_ID = #value#
+	</select>
+	
+	<!-- 指定父供应商时，查询供应商列表 -->
+	<select id="getSupplierForParent" resultMap="BaseResultMapWithBalance">
+		<include refid="searchSupplierWithBalance"/>
+		<isNotEmpty property="supplierName" prepend="and">
+			A.SUPPLIER_NAME like '%'||#supplierName#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="supplierId" prepend="and">
+			A.SUPPLIER_ID = #supplierId#
+		</isNotEmpty>
+		<isNotEmpty property="rownum" prepend="and">
+			ROWNUM &lt;= #rownum#
+		</isNotEmpty>
+			
+	</select>
+	<select id="getSupSupplierBySupplierId" resultMap="BaseResultMap" parameterClass="java.util.List">
+		select * from sup_supplier where supplier_id in 
+		<iterate conjunction="," open="(" close=")">
+			#[]#
+		</iterate>
+	</select>
+	
+</sqlMap>

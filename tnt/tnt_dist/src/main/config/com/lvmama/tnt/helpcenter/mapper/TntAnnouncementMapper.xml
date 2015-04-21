@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.helpcenter.mapper.TntAnnouncementMapper">
+	<resultMap id="baseResultMap" type="tntAnnouncement">
+		<result property="announcementId" column="ANNOUNCEMENT_ID" />
+		<result property="title" column="TITLE" />
+		<result property="body" column="BODY" />
+		<result property="publishtime" column="PUBLISH_TIME" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		ANNOUNCEMENT_ID,TITLE,BODY,PUBLISH_TIME
+	    ]]>
+	</sql>
+	
+   	<sql id="whereSQL">
+		<where>
+			<if test="announcementId!=null and announcementId!=''">
+				AND ANNOUNCEMENT_ID = #{announcementId}
+			</if>
+			<if test="title!=null and title!=''">
+				AND TITLE like '%'||#{title}||'%'
+			</if>
+			<if test="body!=null and body!=''">
+				AND BODY = #{body}
+			</if>
+			<if test="publishtime!=null and publishtime!=''">
+				AND PUBLISH_TIME = #{publishtime}
+			</if>
+			<if test="beginpublishdate!=null and beginpublishdate!=''">
+			 <![CDATA[
+				AND PUBLISH_TIME >= to_date(#{beginpublishdate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if test="endpublishdate!=null and endpublishdate!=''">
+			 <![CDATA[
+				AND PUBLISH_TIME <= to_date(#{endpublishdate},'yyyy-mm-dd')+1
+			]]>
+			</if>			
+		</where>
+	</sql>
+	
+	<select id="selectByPrimaryKey" resultMap="baseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="columns" />
+		from TNT_ANNOUNCEMENT
+		where ANNOUNCEMENT_ID = #{announcementId}
+	</select>
+
+	<select id="queryTntAnnouncementList" resultMap="baseResultMap" 
+	    parameterType="page">
+	    <include refid="basic.pageSearchHead"/>
+        SELECT
+		<include refid="columns" />
+		FROM TNT_ANNOUNCEMENT
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<select id="fetchPage" resultMap="baseResultMap" 
+	    parameterType="page">
+	    <include refid="basic.pageSearchHead"/>
+        SELECT
+		<include refid="columns" />
+		FROM TNT_ANNOUNCEMENT
+		<include refid="pageWhere" />
+		<include refid="basic.pageSearchFoot" />
+	</select>
+	
+	<select id="queryCountAnnouncement" resultType="java.lang.Integer">
+		select
+		count(1)
+		from TNT_ANNOUNCEMENT
+	</select>
+
+	<insert id="insertTntAnnouncement" useGeneratedKeys="true">
+		<selectKey resultType="java.lang.Long" keyProperty="announcementId"
+			order="BEFORE">
+			select TNT_ANNOUNCEMENT_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO TNT_ANNOUNCEMENT (
+		ANNOUNCEMENT_ID ,
+		TITLE ,
+		BODY,
+		PUBLISH_TIME
+		) VALUES (
+		#{announcementId},
+		#{title,jdbcType=VARCHAR},
+		#{body,jdbcType=VARCHAR},
+		sysdate
+		)
+	</insert>
+	
+	<select id="findCount" resultType="Integer"
+		parameterType="com.lvmama.tnt.user.po.TntAnnouncement">
+		SELECT count(1) FROM TNT_ANNOUNCEMENT
+		<include refid="whereSQL" />
+	</select>
+	
+    <update id="update">
+		UPDATE TNT_ANNOUNCEMENT
+		<set>
+			<if test="title != null">
+				TITLE = #{title} ,
+			</if>
+			<if test="body != null">
+				BODY = #{body} 
+			</if>
+			<if test="publishtime != null">
+				PUBLISH_TIME = #{publishtime}
+			</if>
+		</set>
+		WHERE ANNOUNCEMENT_ID = #{announcementId}
+	</update>
+	
+	<delete id="delete" parameterType="Long">
+		DELETE FROM TNT_ANNOUNCEMENT
+		WHERE
+		ANNOUNCEMENT_ID =
+		#{announcementId}
+	</delete>
+
+	<sql id="pageWhere">
+		<where>
+			<if test="param.announcementId!=null and param.announcementId!=''">
+				AND ANNOUNCEMENT_ID = #{param.announcementId}
+			</if>
+			<if test="param.title!=null and param.title!=''">
+				AND TITLE like '%'||#{param.title}||'%'
+			</if>
+			<if test="param.body!=null and param.body!=''">
+				AND BODY = #{param.body}
+			</if>
+			<if test="param.publishtime!=null and param.publishtime!=''">
+				AND PUBLISH_TIME = #{param.publishtime}
+			</if>
+			<if test="param.beginpublishdate!=null and param.beginpublishdate!=''">
+			 <![CDATA[
+				AND PUBLISH_TIME >= to_date(#{param.beginpublishdate},'yyyy-mm-dd')
+			]]>
+			</if>
+			<if test="param.endpublishdate!=null and param.endpublishdate!=''">
+			 <![CDATA[
+				AND PUBLISH_TIME <= to_date(#{param.endpublishdate},'yyyy-mm-dd')+1
+			]]>
+			</if>
+		</where>
+	</sql>
+
+</mapper>

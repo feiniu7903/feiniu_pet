@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.lvmama.tnt.user.mapper.TntUserDetailMapper">
+	<resultMap id="baseResultMap" type="tntUserDetail">
+		<result property="userDetailId" column="USER_DETAIL_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="gender" column="GENDER" />
+		<result property="duties" column="DUTIES" />
+		<result property="department" column="DEPARTMENT" />
+		<result property="mobileNumber" column="MOBILE_NUMBER" />
+		<result property="phoneNumber" column="PHONE_NUMBER" />
+		<result property="faxNumber" column="FAX_NUMBER" />
+		<result property="address" column="ADDRESS" />
+		<result property="email" column="EMAIL" />
+		<result property="qqAccount" column="QQ_ACCOUNT" />
+		<result property="imageUrl" column="IMAGE_URL" />
+		<result property="cityId" column="CITY_ID" />
+		<result property="companyName" column="COMPANY_NAME" />
+		<result property="companyTypeId" column="COMPANY_TYPE_ID" />
+		<result property="chargePhone" column="CHARGE_PHONE" />
+		<result property="serviceTel" column="SERVICE_TEL" />
+		<result property="legalRepresentative" column="LEGAL_REPRESENTATIVE" />
+		<result property="companyProfile" column="COMPANY_PROFILE" />
+		<result property="employeeNum" column="EMPLOYEE_NUM" />
+		<result property="isEmailChecked" column="IS_EMAIL_CHECKED" />
+		<result property="isMobileChecked" column="IS_MOBILE_CHECKED" />
+		<result property="createdDate" column="CREATED_DATE" />
+		<result property="updatedDate" column="UPDATED_DATE" />
+		<result property="finalStatus" column="FINAL_STATUS" />
+		<result property="materialStatus" column="MATERIAL_STATUS" />
+		<result property="infoStatus" column="INFO_STATUS" />
+		<result property="failReason" column="FAIL_REASON" />
+		<result property="contractStartDate" column="CONTRACT_START_DATE" />
+		<result property="contractEndDate" column="CONTRACT_END_DATE" />
+		<result property="payType" column="PAY_TYPE" />
+		<result property="memo" column="MEMO" />
+		<result property="zipCode" column="zip_Code" />
+		<result property="netUrl" column="net_Url" />
+		<result property="provinceId" column="province_Id" />
+		<result property="chargeName" column="CHARGE_NAME" />
+	</resultMap>
+
+	<resultMap id="typeTotalMap" type="tntUserDetail">
+		<result property="companyTypeId" column="COMPANY_TYPE_ID" />
+		<result property="total" column="TOTAL" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		USER_DETAIL_ID,USER_ID,GENDER,DUTIES,DEPARTMENT,MOBILE_NUMBER,PHONE_NUMBER,FAX_NUMBER,ADDRESS,EMAIL,CHARGE_NAME,
+		QQ_ACCOUNT,IMAGE_URL,CITY_ID,COMPANY_NAME,COMPANY_TYPE_ID,CHARGE_PHONE,SERVICE_TEL,LEGAL_REPRESENTATIVE,
+		COMPANY_PROFILE,EMPLOYEE_NUM,IS_EMAIL_CHECKED,IS_MOBILE_CHECKED,CREATED_DATE,UPDATED_DATE,FINAL_STATUS,
+		MATERIAL_STATUS,INFO_STATUS,FAIL_REASON,CONTRACT_START_DATE,CONTRACT_END_DATE,MEMO,PAY_TYPE,zip_Code,net_Url,province_Id
+	    ]]>
+	</sql>
+
+	<insert id="insert" parameterType="tntUserDetail">
+		<selectKey resultType="java.lang.Long" keyProperty="userDetailId"
+			order="BEFORE">
+			select TNT_USER_DETAIL_ID_SEQ.nextval from dual
+		</selectKey>
+    <![CDATA[
+        INSERT INTO TNT_USER_DETAIL (
+        	USER_DETAIL_ID ,
+        	USER_ID ,
+        	GENDER ,
+        	DUTIES ,
+        	DEPARTMENT ,
+        	MOBILE_NUMBER ,
+        	PHONE_NUMBER ,
+        	FAX_NUMBER ,
+        	ADDRESS ,
+        	EMAIL ,
+        	QQ_ACCOUNT ,
+        	IMAGE_URL ,
+        	CITY_ID ,
+        	COMPANY_NAME ,
+        	COMPANY_TYPE_ID ,
+        	CHARGE_PHONE ,
+        	charge_Name ,
+        	SERVICE_TEL ,
+        	LEGAL_REPRESENTATIVE ,
+        	COMPANY_PROFILE ,
+        	EMPLOYEE_NUM ,
+        	IS_EMAIL_CHECKED ,
+        	IS_MOBILE_CHECKED ,
+        	CREATED_DATE ,
+        	UPDATED_DATE ,
+        	FINAL_STATUS ,
+        	MATERIAL_STATUS ,
+        	INFO_STATUS ,
+        	FAIL_REASON ,
+        	zip_Code,
+        	net_Url,
+        	PAY_TYPE,
+        	province_Id,
+        	MEMO 
+        ) VALUES (
+        	#{userDetailId} ,
+        	#{userId,jdbcType=BIGINT} ,
+        	#{gender,jdbcType=VARCHAR} ,
+        	#{duties,jdbcType=VARCHAR} ,
+        	#{department,jdbcType=VARCHAR} ,
+        	#{mobileNumber,jdbcType=VARCHAR} ,
+        	#{phoneNumber,jdbcType=VARCHAR} ,
+        	#{faxNumber,jdbcType=VARCHAR} ,
+        	#{address,jdbcType=VARCHAR} ,
+        	#{email,jdbcType=VARCHAR} ,
+        	#{qqAccount,jdbcType=VARCHAR} ,
+        	#{imageUrl,jdbcType=VARCHAR} ,
+        	#{cityId,jdbcType=BIGINT} ,
+        	#{companyName,jdbcType=VARCHAR} ,
+        	#{companyTypeId,jdbcType=BIGINT} ,
+        	#{chargePhone,jdbcType=VARCHAR} ,
+        	#{chargeName,jdbcType=VARCHAR} ,
+        	#{serviceTel,jdbcType=VARCHAR} ,
+        	#{legalRepresentative,jdbcType=VARCHAR} ,
+        	#{companyProfile,jdbcType=VARCHAR} ,
+        	#{employeeNum,jdbcType=VARCHAR} ,
+        	#{isEmailChecked,jdbcType=VARCHAR} ,
+        	#{isMobileChecked,jdbcType=VARCHAR} ,
+        	sysdate ,
+        	sysdate ,
+        	#{finalStatus,jdbcType=VARCHAR} ,
+        	#{materialStatus,jdbcType=VARCHAR} ,
+        	#{infoStatus,jdbcType=VARCHAR} ,
+        	#{failReason,jdbcType=VARCHAR} ,
+        	#{zipCode,jdbcType=VARCHAR} ,
+        	#{netUrl,jdbcType=VARCHAR} ,
+        	#{payType,jdbcType=VARCHAR} ,
+        	#{provinceId,jdbcType=VARCHAR} ,
+        	#{memo,jdbcType=VARCHAR} 
+        )
+    ]]>
+	</insert>
+
+	<update id="update" parameterType="tntUserDetail">
+		UPDATE TNT_USER_DETAIL
+		<set>
+			UPDATED_DATE = sysdate,
+			<if test="gender != null">
+				GENDER = #{gender,jdbcType=VARCHAR} ,
+			</if>
+			<if test="duties != null">
+				DUTIES = #{duties,jdbcType=VARCHAR} ,
+			</if>
+			<if test="department != null">
+				DEPARTMENT = #{department,jdbcType=VARCHAR} ,
+			</if>
+			<if test="mobileNumber != null">
+				MOBILE_NUMBER = #{mobileNumber,jdbcType=VARCHAR} ,
+			</if>
+			<if test="phoneNumber != null">
+				PHONE_NUMBER = #{phoneNumber,jdbcType=VARCHAR} ,
+			</if>
+			<if test="faxNumber != null">
+				FAX_NUMBER = #{faxNumber,jdbcType=VARCHAR} ,
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address,jdbcType=VARCHAR} ,
+			</if>
+			<if test="email != null">
+				EMAIL = #{email,jdbcType=VARCHAR} ,
+			</if>
+			<if test="qqAccount != null">
+				QQ_ACCOUNT = #{qqAccount,jdbcType=VARCHAR} ,
+			</if>
+			<if test="imageUrl != null">
+				IMAGE_URL = #{imageUrl,jdbcType=VARCHAR} ,
+			</if>
+			<if test="cityId != null">
+				CITY_ID = #{cityId} ,
+			</if>
+			<if test="companyName != null">
+				COMPANY_NAME = #{companyName,jdbcType=VARCHAR} ,
+			</if>
+			<if test="companyTypeId != null">
+				COMPANY_TYPE_ID = #{companyTypeId} ,
+			</if>
+			<if test="chargePhone != null">
+				CHARGE_PHONE = #{chargePhone,jdbcType=VARCHAR} ,
+			</if>
+			<if test="chargeName != null">
+				charge_Name = #{chargeName,jdbcType=VARCHAR} ,
+			</if>
+			<if test="serviceTel != null">
+				SERVICE_TEL = #{serviceTel,jdbcType=VARCHAR} ,
+			</if>
+			<if test="legalRepresentative != null">
+				LEGAL_REPRESENTATIVE =
+				#{legalRepresentative,jdbcType=VARCHAR} ,
+			</if>
+			<if test="companyProfile != null">
+				COMPANY_PROFILE = #{companyProfile,jdbcType=VARCHAR} ,
+			</if>
+			<if test="employeeNum != null">
+				EMPLOYEE_NUM = #{employeeNum,jdbcType=VARCHAR} ,
+			</if>
+			<if test="isEmailChecked != null">
+				IS_EMAIL_CHECKED = #{isEmailChecked,jdbcType=VARCHAR} ,
+			</if>
+			<if test="isMobileChecked != null">
+				IS_MOBILE_CHECKED = #{isMobileChecked,jdbcType=VARCHAR} ,
+			</if>
+			<if test="finalStatus != null">
+				FINAL_STATUS = #{finalStatus} ,
+			</if>
+			<if test="materialStatus != null">
+				MATERIAL_STATUS = #{materialStatus,jdbcType=VARCHAR} ,
+			</if>
+			<if test="infoStatus != null">
+				INFO_STATUS = #{infoStatus,jdbcType=VARCHAR} ,
+			</if>
+			<if test="failReason != null">
+				FAIL_REASON = #{failReason,jdbcType=VARCHAR} ,
+			</if>
+			<if test="contractStartDate != null">
+				CONTRACT_START_DATE = #{contractStartDate} ,
+			</if>
+			<if test="contractEndDate != null">
+				CONTRACT_END_DATE = #{contractEndDate} ,
+			</if>
+			<if test="zipCode != null">
+				zip_Code = #{zipCode,jdbcType=VARCHAR} ,
+			</if>
+			<if test="netUrl != null">
+				net_Url = #{netUrl,jdbcType=VARCHAR} ,
+			</if>
+			<if test="provinceId != null">
+				province_Id = #{provinceId} ,
+			</if>
+			<if test="memo != null">
+				MEMO = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="payType != null">
+				PAY_TYPE = #{payType,jdbcType=VARCHAR}
+			</if>
+		</set>
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="userDetailId != null">USER_DETAIL_ID = #{userDetailId} </if>
+			<if test="userId != null">
+				and USER_ID = #{userId}
+			</if>
+		</trim>
+	</update>
+
+	<delete id="delete">
+    <![CDATA[
+        DELETE FROM TNT_USER_DETAIL WHERE
+        USER_DETAIL_ID = #{id} 
+    ]]>
+	</delete>
+
+	<select id="getById" resultMap="baseResultMap">
+		SELECT
+		<include refid="columns" />
+	    <![CDATA[
+		    FROM TNT_USER_DETAIL 
+	        WHERE 
+		        USER_DETAIL_ID = #{id} 
+	    ]]>
+	</select>
+
+	<select id="getByUserId" resultMap="baseResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		<include refid="columns" />
+	    <![CDATA[
+		    FROM TNT_USER_DETAIL 
+	        WHERE 
+		        USER_ID = #{userId} 
+	    ]]>
+	</select>
+
+	<select id="selectOneByUserId" resultMap="baseResultMap">
+		SELECT
+		<include refid="columns" />
+	    <![CDATA[
+		    FROM TNT_USER_DETAIL 
+	        WHERE 
+		        USER_ID = #{id} 
+	    ]]>
+	</select>
+
+	<sql id="whereSQL">
+		<where>
+			<if test="userDetailId!=null and userDetailId!=''">
+				AND USER_DETAIL_ID = #{userDetailId}
+			</if>
+			<if test="userId!=null and userId!=''">
+				AND USER_ID = #{userId}
+			</if>
+			<if test="gender!=null and gender!=''">
+				AND GENDER = #{gender}
+			</if>
+			<if test="duties!=null and duties!=''">
+				AND DUTIES = #{duties}
+			</if>
+			<if test="department!=null and department!=''">
+				AND DEPARTMENT = #{department}
+			</if>
+			<if test="mobileNumber!=null and mobileNumber!=''">
+				AND MOBILE_NUMBER = #{mobileNumber}
+			</if>
+			<if test="phoneNumber!=null and phoneNumber!=''">
+				AND PHONE_NUMBER = #{phoneNumber}
+			</if>
+			<if test="faxNumber!=null and faxNumber!=''">
+				AND FAX_NUMBER = #{faxNumber}
+			</if>
+			<if test="address!=null and address!=''">
+				AND ADDRESS = #{address}
+			</if>
+			<if test="email!=null and email!=''">
+				AND EMAIL = #{email}
+			</if>
+			<if test="qqAccount!=null and qqAccount!=''">
+				AND QQ_ACCOUNT = #{qqAccount}
+			</if>
+			<if test="imageUrl!=null and imageUrl!=''">
+				AND IMAGE_URL = #{imageUrl}
+			</if>
+			<if test="cityId!=null and cityId!=''">
+				AND CITY_ID = #{cityId}
+			</if>
+			<if test="companyName!=null and companyName!=''">
+				AND COMPANY_NAME = #{companyName}
+			</if>
+			<if test="companyTypeId!=null and companyTypeId!=''">
+				AND COMPANY_TYPE_ID = #{companyTypeId}
+			</if>
+			<if test="chargePhone!=null and chargePhone!=''">
+				AND CHARGE_PHONE = #{chargePhone}
+			</if>
+			<if test="serviceTel!=null and serviceTel!=''">
+				AND SERVICE_TEL = #{serviceTel}
+			</if>
+			<if test="legalRepresentative!=null and legalRepresentative!=''">
+				AND LEGAL_REPRESENTATIVE = #{legalRepresentative}
+			</if>
+			<if test="companyProfile!=null and companyProfile!=''">
+				AND COMPANY_PROFILE = #{companyProfile}
+			</if>
+			<if test="employeeNum!=null and employeeNum!=''">
+				AND EMPLOYEE_NUM = #{employeeNum}
+			</if>
+			<if test="isEmailChecked!=null and isEmailChecked!=''">
+				AND IS_EMAIL_CHECKED = #{isEmailChecked}
+			</if>
+			<if test="isMobileChecked!=null and isMobileChecked!=''">
+				AND IS_MOBILE_CHECKED = #{isMobileChecked}
+			</if>
+			<!-- <if test="createdDateBegin!=null and createdDateBegin!=''"> AND CREATED_DATE 
+				>= #{createdDateBegin} </if> <if test="createdDateEnd!=null and createdDateEnd!=''"> 
+				AND CREATED_DATE &lt;= #{createdDateEnd} </if> <if test="updatedDateBegin!=null 
+				and updatedDateBegin!=''"> AND UPDATED_DATE >= #{updatedDateBegin} </if> 
+				<if test="updatedDateBegin!=null and updatedDateBegin!=''"> AND UPDATED_DATE 
+				&lt;= #{updatedDateEnd} </if> -->
+			<if test="finalStatus!=null and finalStatus!=''">
+				AND FINAL_STATUS = #{finalStatus}
+			</if>
+			<if test="materialStatus!=null and materialStatus!=''">
+				AND MATERIAL_STATUS = #{materialStatus}
+			</if>
+			<if test="infoStatus!=null and infoStatus!=''">
+				AND INFO_STATUS = #{infoStatus}
+			</if>
+			<if test="payType!=null and payType!=''">
+				AND PAY_TYPE = #{payType}
+			</if>
+		</where>
+	</sql>
+
+	<select id="findCount" resultType="long">
+		SELECT count(*) FROM TNT_USER_DETAIL
+		<include refid="whereSQL" />
+	</select>
+
+	<!-- 分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页 因为分页查询将传 offset,pageSize,lastRows 
+		三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现 -->
+	<select id="findPage" resultMap="baseResultMap">
+		SELECT
+		<include refid="columns" />
+		FROM TNT_USER_DETAIL
+		<include refid="whereSQL" />
+
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+	</select>
+
+
+	<select id="selectCompanyTypeTotalList" resultMap="typeTotalMap">
+		SELECT COMPANY_TYPE_ID,count(1) as TOTAL FROM TNT_USER_DETAIL
+		<include refid="whereSQL" />
+		GROUP BY COMPANY_TYPE_ID
+	</select>
+
+	<select id="containTypeUsers" resultType="Long" parameterType="tntUserDetail">
+		SELECT USER_DETAIL_ID FROM TNT_USER_DETAIL
+		<include refid="whereSQL" />
+	</select>
+
+</mapper>
+

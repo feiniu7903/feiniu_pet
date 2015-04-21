@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FIN_DEPOSIT" >
+	
+	<typeAlias alias="FinSupplierMoney" type="com.lvmama.comm.pet.po.fin.FinSupplierMoney"/>
+	<typeAlias alias="FinDeposit" type="com.lvmama.comm.pet.po.fin.FinDeposit"/>
+	<!-- 查询押金预警分页信息  -->
+	<select id="searchDepositWarning" parameterClass="map" resultClass="FinSupplierMoney" >
+		<include refid="pageSearchHead"/>
+		SELECT 
+			B.SUPPLIER_ID AS supplierId,
+			A.SUPPLIER_NAME AS supplierName,
+			B.DEPOSIT_AMOUNT AS depositAmount,
+			B.GUARANTEE_LIMIT AS guaranteeLimit,
+			B.DEPOSIT_ALERT AS depositAlert
+		FROM 
+			SUP_SUPPLIER A, FIN_SUPPLIER_MONEY B
+		WHERE 
+			(B.DEPOSIT_AMOUNT &gt; 0 OR B.GUARANTEE_LIMIT &gt; 0)
+		AND
+			B.DEPOSIT_ALERT &lt;= SYSDATE
+		AND 
+			A.SUPPLIER_ID = B.SUPPLIER_ID AND B.BUSINESS_NAME IS NULL
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchDepositWarningCount"  resultClass="Long">
+		SELECT  
+			COUNT(*) 
+		FROM 
+			SUP_SUPPLIER A, FIN_SUPPLIER_MONEY B
+		WHERE 
+			(B.DEPOSIT_AMOUNT &gt; 0 OR B.GUARANTEE_LIMIT &gt; 0)
+		AND
+			B.DEPOSIT_ALERT &lt;= SYSDATE
+		AND 
+			A.SUPPLIER_ID = B.SUPPLIER_ID AND B.BUSINESS_NAME IS NULL
+	</select>
+	
+	<!-- 查询流水记录 -->
+	<select id="searchDepositRecord" parameterClass="map" resultClass="FinDeposit">
+		SELECT * FROM (
+			SELECT T.*, ROWNUM AS ROWNUM1 FROM ( 
+				select * from (
+					SELECT 
+						DEPOSIT_ID AS depositId,
+						SUPPLIER_ID AS supplierId,
+						KIND AS kind,
+						TYPE AS type,
+						DIRECTION AS direction,
+						BANK AS bank,
+						SERIAL AS serial,
+						AMOUNT AS amount,
+						OPERATETIME AS operateTime,
+						REMARK AS remark,
+						CREATOR AS creator,
+						CREATETIME AS createTime
+					FROM
+						FIN_DEPOSIT A
+					WHERE
+						KIND = #type#
+					AND
+						SUPPLIER_ID = #supplierId# AND A.BUSINESS_NAME IS NULL
+					ORDER BY CREATETIME DESC
+				)
+			) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;#skipResults#
+	</select>
+	<select id="searchDepositRecordCount" parameterClass="map" resultClass="long">
+		SELECT 
+			COUNT(*)
+		FROM
+			FIN_DEPOSIT A
+		WHERE
+			KIND = #type#
+		AND
+			SUPPLIER_ID = #supplierId# AND A.BUSINESS_NAME IS NULL
+		ORDER BY CREATETIME DESC
+	</select>
+	
+	<!-- 添加流水记录begin -->
+	<insert id="insertFincDeposit" parameterClass="FinDeposit">
+		INSERT INTO
+			FIN_DEPOSIT
+		(
+			DEPOSIT_ID,
+			SUPPLIER_ID,
+			KIND,
+			TYPE,
+			DIRECTION,
+			BANK,
+			SERIAL,
+			AMOUNT,
+			OPERATETIME,
+			REMARK,
+			CREATOR,
+			CREATETIME,
+			CURRENCY
+		)VALUES(
+			FIN_DEPOSIT_SEQ.NEXTVAL,
+			#supplierId#,
+			#kind#,
+			#type#,
+			#direction#,
+			#bank#,
+			#serial#,
+			#amount#,
+			#operatetime#,
+			#remark#,
+			#creator#,
+			SYSDATE,
+			#currency#
+		)
+	</insert>
+		
+	<!-- 更新供应商押金金额 -->
+	<update id="updateSupplierDepositAmount" parameterClass="map">
+		UPDATE 
+			FIN_SUPPLIER_MONEY
+		SET
+			DEPOSIT_AMOUNT = NVL(DEPOSIT_AMOUNT,0)+#amount#
+		WHERE
+			SUPPLIER_ID = #supplierId# AND BUSINESS_NAME IS NULL
+	</update>
+	
+	<!-- 更新供应商担保函金额 -->
+	<update id="updateSupplierGuaranteeLimit" parameterClass="map">
+		UPDATE 
+			FIN_SUPPLIER_MONEY
+		SET
+			GUARANTEE_LIMIT = NVL(GUARANTEE_LIMIT,0)+#amount#
+		WHERE
+			SUPPLIER_ID = #supplierId# AND BUSINESS_NAME IS NULL
+	</update>
+	
+	<!-- 更新供应商押金/预存款币种begin -->
+	<update id="updateSupplierCurrency" parameterClass="map">
+		UPDATE 
+			FIN_SUPPLIER_MONEY
+		SET
+			<isNotEmpty property="currency">
+				DEPOSIT_CURRENCY = #currency#
+			</isNotEmpty>
+			<isNotEmpty property="advcurrency">
+				ADVANCE_DEPOSIT_CURRENCY = #advcurrency#
+			</isNotEmpty>
+		WHERE
+			SUPPLIER_ID = #supplierId# AND BUSINESS_NAME IS NULL
+	</update>
+	
+	<select id="searchSupplierCash" parameterClass="long" resultClass="FinSupplierMoney">
+		SELECT 
+			B.SUPPLIER_ID AS supplierId,
+			SUPPLIER_NAME AS supplierName,
+       		B.GUARANTEE_LIMIT AS guaranteeLimit,
+			DEPOSIT_AMOUNT AS depositAmount,
+       		DEPOSIT_CURRENCY AS depositCurrency
+	  	FROM 
+	  		SUP_SUPPLIER A, 
+	  		FIN_SUPPLIER_MONEY B
+	  	WHERE
+	  		A.SUPPLIER_ID = B.SUPPLIER_ID
+	  	AND
+	  		B.SUPPLIER_ID = #supplierId# AND B.BUSINESS_NAME IS NULL
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="10dip"
+    android:paddingRight="10dip"
+    android:paddingBottom="5dip">
+    
+    <RelativeLayout android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        >
+        
+    	<TextView android:id="@+id/lable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/gray_333333"/>
+    	
+    	<Button android:id="@+id/change_quantity"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_alignParentRight="true"
+    	    android:layout_centerVertical="true"
+    	    android:padding="5dip"
+    	    android:textSize="18sp"
+    	    android:visibility="gone"
+    	    android:textColor="@color/wihte"
+    	    android:background="@color/red_eb1684"
+    	    android:text="@string/button_change_quantity"/>
+    
+    	<EditText android:id="@+id/value"
+        	android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@id/lable"
+	        android:layout_toLeftOf="@id/value"
+	        android:layout_centerVertical="true"
+	        android:gravity="center_vertical"
+    	    android:textSize="18sp"/>  
+    </RelativeLayout>
+    
+    
+    <View android:id="@+id/base_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dip"
+        android:layout_below="@id/content_layout"
+        android:background="@color/gray_e5e5e5"
+        android:visibility="gone"
+        />
+
+    <View android:id="@+id/bold_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:layout_below="@id/content_layout"
+        android:background="@drawable/line"
+        android:visibility="gone"
+        />
+</RelativeLayout>

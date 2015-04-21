@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FIN_ACCOUNTING_ENTITY" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.sup.FinAccountingEntity" >
+    <result column="ACCOUNTING_ENTITY_ID" property="accountingEntityId" />
+    <result column="GATEWAY_ID" property="gatewayId" />
+    <result column="NAME" property="name" />
+    <result column="PARENT_ID" property="parentId" />
+    <result column="BRANCH" property="branch" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.sup.FinAccountingEntity" >
+    select *
+    from FIN_ACCOUNTING_ENTITY
+    where ACCOUNTING_ENTITY_ID = #accountingEntityId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.sup.FinAccountingEntity" >
+    delete from FIN_ACCOUNTING_ENTITY
+    where ACCOUNTING_ENTITY_ID = #accountingEntityId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.sup.FinAccountingEntity" >
+    <selectKey resultClass="java.lang.Long" keyProperty="accountingEntityId" >
+      select FIN_ACCOUNTING_ENTITY_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into FIN_ACCOUNTING_ENTITY (ACCOUNTING_ENTITY_ID, GATEWAY_ID, NAME, PARENT_ID, BRANCH)
+    values (#accountingEntityId#, #gatewayId#, #name#, #parentId#,
+      #branch#)
+  </insert>
+   
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.sup.FinAccountingEntity" >
+    update FIN_ACCOUNTING_ENTITY
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="gatewayId" >
+        GATEWAY_ID = #gatewayId#
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        NAME = #name#
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        PARENT_ID = #parentId#
+      </isNotNull>
+      <isNotNull prepend="," property="branch" >
+        BRANCH = #branch#
+      </isNotNull>
+    </dynamic>
+    where ACCOUNTING_ENTITY_ID = #accountingEntityId#
+  </update>
+   <select id="selectEntityList" resultMap="BaseResultMap">
+    select *
+    from FIN_ACCOUNTING_ENTITY
+  </select>
+</sqlMap>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="INFO_QUES_TYPE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.info.InfoQuesType" >
+    <result column="TYPE_ID" property="typeId" />
+    <result column="TYPE_NAME" property="typeName" />
+    <result column="OBJECT_TYPE" property="objectType" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.info.InfoQuesType" >
+    select TYPE_ID, TYPE_NAME, OBJECT_TYPE
+    from INFO_QUES_TYPE
+    where TYPE_ID = #typeId# and valid='Y'
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.info.InfoQuesType" >
+    delete from INFO_QUES_TYPE
+    where TYPE_ID = #typeId:LONG#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.info.InfoQuesType" >
+    <selectKey resultClass="java.lang.Long" keyProperty="typeId" >
+      select INFO_QUES_TYPE_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into INFO_QUES_TYPE (TYPE_ID, TYPE_NAME, OBJECT_TYPE)
+    values (#typeId:LONG#, #typeName:VARCHAR#, #objectType:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.info.InfoQuesType" >
+    <selectKey resultClass="java.lang.Long" keyProperty="typeId" >
+      select INFO_QUES_TYPE_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into INFO_QUES_TYPE
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="typeId" >
+        TYPE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="typeName" >
+        TYPE_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        OBJECT_TYPE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="typeId" >
+        #typeId:LONG#
+      </isNotNull>
+      <isNotNull prepend="," property="typeName" >
+        #typeName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        #objectType:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.info.InfoQuesType" >
+    update INFO_QUES_TYPE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="typeName" >
+        TYPE_NAME = #typeName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        OBJECT_TYPE = #objectType:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where TYPE_ID = #typeId:LONG#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.info.InfoQuesType" >
+    update INFO_QUES_TYPE
+    set TYPE_NAME = #typeName:VARCHAR#,
+      OBJECT_TYPE = #objectType:VARCHAR#
+    where TYPE_ID = #typeId:LONG#
+  </update>
+  <select id="selectByObjectType" resultMap="BaseResultMap"  parameterClass="com.lvmama.comm.pet.po.info.InfoQuesType">
+  select * from INFO_QUES_TYPE 
+  <dynamic prepend="where">
+  <isNotEmpty prepend="and" property="objectType">
+      OBJECT_TYPE = #objectType#
+  </isNotEmpty>
+  </dynamic>
+  
+  </select>
+  <select id="selectQuesByType" resultMap="BaseResultMap">
+  select * from INFO_QUES_TYPE 
+  <dynamic prepend="where">
+  <isNotEmpty prepend="and" property="objectType">
+      OBJECT_TYPE = #objectType#
+  </isNotEmpty>
+  </dynamic>
+  and rownum<![CDATA[<=]]>50
+  </select>
+  
+  <update id="markValid" parameterClass="java.util.Map">
+  	update INFO_QUES_TYPE set VALID=#valid# where TYPE_ID=#typeId#
+  </update>
+</sqlMap>

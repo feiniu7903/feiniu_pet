@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lvmama.tnt.cashaccount.mapper.TntCashMoneyDrawMapper">
+
+	<resultMap id="baseResultMap" type="com.lvmama.tnt.cashaccount.po.TntCashMoneyDraw">
+		<id property="cashAccountId" column="CASH_ACCOUNT_ID"/>
+        <result property="moneyDrawId" column="MONEY_DRAW_ID"/>
+        <result property="drawAmount" column="DRAW_AMOUNT"/>
+        <result property="bankName" column="BANK_NAME"/>
+        <result property="bankAccount" column="BANK_ACCOUNT"/>
+        <result property="bankAccountName" column="BANK_ACCOUNT_NAME"/>
+        <result property="kaiHuHang" column="KAI_HU_HANG"/>
+        <result property="auditStatus" column="AUDIT_STATUS"/>
+        <result property="payStatus" column="PAY_STATUS"/>
+        <result property="memo" column="MEMO"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="billNo" column="bill_No"/>
+        <result property="billTime" column="bill_Time"/>
+        <collection property="cashAccount" column="CASH_ACCOUNT_ID" select="queryCashAccount" ></collection>
+	</resultMap>
+	
+	<resultMap id="cashAccountMap" type="com.lvmama.tnt.cashaccount.po.TntCashAccount">
+        <result property="userName" column="user_name"/>
+        <result property="realName" column="real_name"/>
+        <result property="cashAccountId" column="cash_account_id"/>
+        <result property="tntUser.detail.companyName" column="COMPANY_NAME" />
+	</resultMap>
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		MONEY_DRAW_ID,CASH_ACCOUNT_ID,DRAW_AMOUNT,BANK_NAME,BANK_ACCOUNT,BANK_ACCOUNT_NAME,KAI_HU_HANG,AUDIT_STATUS,PAY_STATUS,MEMO,CREATE_TIME,bill_No,bill_Time
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" parameterType="com.lvmama.tnt.cashaccount.po.TntCashMoneyDraw">
+		<selectKey resultType="java.lang.Long" keyProperty="moneyDrawId"
+			order="BEFORE">
+			select  TNT_CASH_MONEY_DRAW_ID_SEQ.nextval from dual
+		</selectKey>
+        INSERT INTO TNT_CASH_MONEY_DRAW (
+        	MONEY_DRAW_ID ,
+        	CASH_ACCOUNT_ID ,
+        	DRAW_AMOUNT ,
+        	BANK_NAME ,
+        	BANK_ACCOUNT ,
+        	BANK_ACCOUNT_NAME ,
+        	KAI_HU_HANG ,
+        	AUDIT_STATUS ,
+        	PAY_STATUS ,
+        	MEMO ,
+        	bill_No,
+        	bill_Time,
+        	CREATE_TIME 
+        ) VALUES (
+        	#{moneyDrawId} ,
+        	#{cashAccountId} ,
+        	#{drawAmount,jdbcType=DECIMAL} ,
+        	#{bankName,jdbcType=VARCHAR} ,
+        	#{bankAccount,jdbcType=DECIMAL} ,
+        	#{bankAccountName,jdbcType=VARCHAR} ,
+        	#{kaiHuHang,jdbcType=VARCHAR} ,
+        	#{auditStatus,jdbcType=VARCHAR} ,
+        	#{payStatus,jdbcType=VARCHAR} ,
+        	#{memo,jdbcType=VARCHAR} ,
+        	#{billNo,jdbcType=VARCHAR} ,
+        	#{billTime,jdbcType=VARCHAR} ,
+        	sysdate
+        )
+	</insert>
+    
+	<update id="update" parameterType="com.lvmama.tnt.cashaccount.po.TntCashMoneyDraw">
+        UPDATE TNT_CASH_MONEY_DRAW SET
+	        CASH_ACCOUNT_ID = #{cashAccountId} ,
+	        DRAW_AMOUNT = #{drawAmount,jdbcType=DECIMAL} ,
+	        BANK_ACCOUNT = #{bankAccount,jdbcType=DECIMAL} ,
+	        BANK_ACCOUNT_NAME = #{bankAccountName,jdbcType=VARCHAR} ,
+	        KAI_HU_HANG = #{kaiHuHang,jdbcType=VARCHAR} ,
+	        AUDIT_STATUS = #{auditStatus,jdbcType=VARCHAR} ,
+	        PAY_STATUS = #{payStatus,jdbcType=VARCHAR} ,
+	        bill_No = #{billNo,jdbcType=VARCHAR} ,
+	        bill_Time = #{billTime,jdbcType=VARCHAR} ,
+	        MEMO = #{memo,jdbcType=VARCHAR}
+        WHERE 
+        	<if test="moneyDrawId !=null">
+	        	MONEY_DRAW_ID = #{moneyDrawId} 
+	        </if>
+	</update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TNT_CASH_MONEY_DRAW WHERE
+        MONEY_DRAW_ID = #{id} 
+    </delete>
+    
+    <select id="getById" resultMap="baseResultMap" parameterType="Long">
+		SELECT <include refid="columns" />
+		    FROM TNT_CASH_MONEY_DRAW 
+	        WHERE 
+		        MONEY_DRAW_ID = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+			<if test="moneyDrawId != null and moneyDrawId !=''">
+				AND MONEY_DRAW_ID = #{moneyDrawId}
+	       	</if> 
+			<if test="cashAccountId != null and cashAccountId !=''">
+				AND CASH_ACCOUNT_ID = #{cashAccountId}
+	       	</if> 
+			<if test="drawAmount != null and drawAmount !=''">
+				AND DRAW_AMOUNT = #{drawAmount}
+	       	</if> 
+			<if test="bankName != null and bankName !=''">
+				AND BANK_NAME = #{bankName}
+	       	</if> 
+			<if test="bankAccount != null and bankAccount !=''">
+				AND BANK_ACCOUNT = #{bankAccount}
+	       	</if> 
+			<if test="bankAccountName != null and bankAccountName !=''">
+				AND BANK_ACCOUNT_NAME = #{bankAccountName}
+	       	</if> 
+			<if test="kaiHuHang != null and kaiHuHang !=''">
+				AND KAI_HU_HANG = #{kaiHuHang}
+	       	</if> 
+			<if test="auditStatus != null and auditStatus !=''">
+				AND AUDIT_STATUS = #{auditStatus}
+	       	</if> 
+			<if test="payStatus != null and payStatus !=''">
+				AND PAY_STATUS = #{payStatus}
+	       	</if> 
+			<if test="memo != null and memo !=''">
+				AND MEMO = #{memo}
+	       	</if> 
+			<if test="createTime != null and createTime !=''">
+				AND CREATE_TIME = #{createTime}
+	       	</if> 
+		</where>
+	</sql>
+		
+	<sql id="pageWhere">
+		<where>	      				
+			<if test="param.moneyDrawId != null and param.moneyDrawId !=''">
+				AND MONEY_DRAW_ID = #{param.moneyDrawId}
+	       	</if>
+			<if test="param.cashAccountId != null and param.cashAccountId !=''">
+				AND CASH_ACCOUNT_ID = #{param.cashAccountId}
+	       	</if>
+			<if test="param.drawAmount != null and param.drawAmount !=''">
+				AND DRAW_AMOUNT = #{param.drawAmount}
+	       	</if>
+			<if test="param.bankName != null and param.bankName !=''">
+				AND BANK_NAME = #{param.bankName}
+	       	</if>
+			<if test="param.bankAccount != null and param.bankAccount !=''">
+				AND BANK_ACCOUNT = #{param.bankAccount}
+	       	</if>
+			<if test="param.bankAccountName != null and param.bankAccountName !=''">
+				AND BANK_ACCOUNT_NAME = #{param.bankAccountName}
+	       	</if>
+			<if test="param.kaiHuHang != null and param.kaiHuHang !=''">
+				AND KAI_HU_HANG = #{param.kaiHuHang}
+	       	</if>
+			<if test="param.auditStatus != null and param.auditStatus !=''">
+				AND AUDIT_STATUS = #{param.auditStatus}
+	       	</if>
+			<if test="param.payStatus != null and param.payStatus !=''">
+				AND PAY_STATUS = #{param.payStatus}
+	       	</if>
+			<if test="param.memo != null and param.memo !=''">
+				AND MEMO = #{param.memo}
+	       	</if>
+			<if test="param.createTime != null and param.createTime !=''">
+				AND CREATE_TIME = #{param.createTime}
+	       	</if>
+		</where>
+	</sql>
+	
+    <select id="count" resultType="Integer" parameterType="com.lvmama.tnt.cashaccount.po.TntCashMoneyDraw">
+        SELECT count(*) FROM TNT_CASH_MONEY_DRAW 
+		<include refid="where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="baseResultMap" parameterType="page">
+    	<include refid="basic.pageSearchHead" />
+    	SELECT <include refid="columns" />
+	    FROM TNT_CASH_MONEY_DRAW 
+		<include refid="pageWhere"/>
+		<include refid="basic.pageSearchFoot" />
+    </select>
+
+	<select id="queryCashAccount"  resultMap="cashAccountMap"  parameterType="long" >
+       select 
+       		u.user_name,u.real_name,tca.cash_account_id
+       from 
+       		tnt_cash_account tca, tnt_user u  
+       where  
+       		tca.user_id=u.user_id
+       and 
+       		tca.cash_account_id=#{cashAccountId}
+    </select>
+
+</mapper>
+

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_KEY_DESC">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComKeyDesc">
+		<result column="CKEY" property="key" />
+		<result column="CDESC" property="desc" />
+	</resultMap>
+	
+	<select id="selectAll" resultMap="BaseResultMap">
+		SELECT * FROM COM_KEY_DESC
+	</select>
+
+	<select id="queryComKeyDescList" resultMap="BaseResultMap" parameterClass="java.util.Map">
+	SELECT *
+    FROM (SELECT A.*, ROWNUM RN
+            FROM (SELECT * FROM COM_KEY_DESC) A
+      		<dynamic prepend="where">
+				<isNotEmpty property="endRows" prepend="and">
+					ROWNUM &lt;= #endRows#
+				</isNotEmpty>
+			</dynamic>
+	       )
+	       <dynamic prepend="where">
+				<isNotEmpty property="startRows" prepend="and">
+					rn &gt;= #startRows#
+				</isNotEmpty>		
+		  </dynamic>
+	</select>
+
+
+
+	<delete id="delete">
+		DELETE FROM COM_KEY_DESC
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="valid" prepend=" AND "> CREATE_DATE &lt;= sysdate - 1/24</isNotEmpty>
+			<isNotEmpty property="key" prepend=" AND "> CKEY = #key#</isNotEmpty>
+		</dynamic>
+	</delete>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComKeyDesc">
+		insert into COM_KEY_DESC values (#key#,#desc#,sysdate)
+	</insert>
+	
+	<select id="count" resultClass="java.lang.Long" >
+		SELECT COUNT(*) FROM COM_KEY_DESC
+	</select>
+</sqlMap>

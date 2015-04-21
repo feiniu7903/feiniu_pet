@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MARK_COUPON">
+  <resultMap class="com.lvmama.comm.pet.po.mark.MarkCoupon" id="BaseResultMap">
+    <result column="COUPON_ID" property="couponId" />
+    <result column="CHANNEL_ID" property="channelId" />
+    <result column="CHANNEL_NAME" property="channelName" />
+    <result column="COUPON_NAME" property="couponName" />
+    <result column="COUPON_TARGET" property="couponTarget" />
+    <result column="COUPON_TYPE" property="couponType" />
+    <result column="WITH_CODE" property="withCode" />
+    <result column="BEGIN_TIME" property="beginTime" />
+    <result column="FIRST_CODE" property="firstCode" />
+    <result column="VALID" property="valid" />
+    <result column="CREATE_TIME" property="createTime"/>
+    <result column="DESCRIPTION" property="description"/>
+    <result column="VALID_TYPE" property="validType" />
+    <result column="TERM_OF_VALIDITY" property="termOfValidity" />
+    <result column="FAVOR_TYPE" property="favorType" />
+    <result column="ARGUMENT_X" property="argumentX" />
+    <result column="ARGUMENT_Y" property="argumentY" />
+    <result column="ARGUMENT_Z" property="argumentZ" />
+    <result column="PAYMENT_CHANNEL" property="paymentChannel" />
+    <result column="MEMO"  property="memo" />
+    <result column="MAX_COUPON"  property="maxCoupon" />
+    <result column="USED_COUPON"  property="usedCoupon" />
+  </resultMap>
+  <resultMap class="com.lvmama.comm.pet.po.mark.MarkCoupon" id="minMarkCoupon">
+  	<result column="PRODUCT_ID" property="productId"/>
+    <result column="BEGIN_TIME" property="beginTime" />
+    <result column="END_TIME" property="endTime" />
+  </resultMap>
+  
+  <sql id="reuse_query_sql">
+  	SELECT
+  		mc.*,
+  		mcl.channel_name
+  	FROM
+  		MARK_COUPON mc,
+    	MARK_CHANNEL mcl
+    WHERE  
+    	mc.channel_id = mcl.channel_id(+)
+  	<dynamic >
+    	<isNotEmpty prepend="and" property="channelName">
+            mcl.CHANNEL_NAME like '%'||#channelName#||'%'
+     	</isNotEmpty>
+	 	<isNotEmpty prepend="and" property="couponName">
+      		mc.COUPON_NAME like '%'||#couponName#||'%'
+     	</isNotEmpty>
+	 	<isNotEmpty prepend="and" property="firstCode">
+      		mc.FIRST_CODE like '%'||#firstCode#||'%' 
+     	</isNotEmpty>	 
+     	<isNotEmpty prepend="and" property="couponType">
+     		mc.COUPON_TYPE = #couponType#
+     	</isNotEmpty>
+     	<isNotEmpty prepend="and" property="couponTarget">
+     		mc.COUPON_TARGET = #couponTarget#
+     	</isNotEmpty>
+       	<isNotEmpty prepend="and" property="beginTime">
+     		mc.BEGIN_TIME  <![CDATA[>=]]> #beginTime#
+     	</isNotEmpty>
+        <isNotEmpty prepend="and" property="endTime">
+     		#endTime# <![CDATA[>=]]> mc.BEGIN_TIME + mc.TERM_OF_VALIDITY 
+     	</isNotEmpty>
+      	<isNotEmpty prepend="and" property="valid">
+     		mc.VALID = #valid#
+     	</isNotEmpty>
+     	<isNotEmpty prepend="and" property="couponIds">
+     		<iterate property="couponIds" conjunction=" OR " open="(" close=")">coupon_id = #couponIds[]#</iterate>
+     	</isNotEmpty>
+  	</dynamic>     		
+  </sql>
+  
+  <select id="selectCountByParam" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+  	SELECT count(*) FROM ( <include refid="reuse_query_sql"/> )
+  </select>
+  
+  <select id="selectByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+	  SELECT * FROM (
+	  	SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+	 		<include refid="reuse_query_sql"/> order by mc.CREATE_TIME desc
+	 	) T 
+	 	<dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_endRow">ROWNUM &lt;= #_endRow#</isNotEmpty>
+	 	</dynamic>
+	  )	
+	  <dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_startRow">ROWNUM1 &gt;=#_startRow#</isNotEmpty>
+	  </dynamic>
+  </select>
+    
+  <select id="selectByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mark.MarkCoupon" resultMap="BaseResultMap">
+    SELECT 
+    	mc.*,
+    	mcl.channel_name
+    FROM 
+    	MARK_COUPON mc,
+    	MARK_CHANNEL mcl
+    where  mc.channel_id = mcl.channel_id(+) AND mc.coupon_id = #couponId#
+  </select>
+  <!--delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mark.MarkCoupon">
+    delete from MARK_COUPON
+    where COUPON_ID = #couponId:DECIMAL#
+  </delete-->
+
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mark.MarkCoupon">
+    <selectKey keyProperty="couponId" resultClass="java.lang.Long">
+      select MARK_COUPON_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into MARK_COUPON 
+    	(COUPON_ID,CHANNEL_ID, COUPON_NAME, COUPON_TARGET, COUPON_TYPE, WITH_CODE, BEGIN_TIME, FIRST_CODE, VALID,CREATE_TIME,DESCRIPTION,VALID_TYPE,TERM_OF_VALIDITY, FAVOR_TYPE,ARGUMENT_X,ARGUMENT_Y,ARGUMENT_Z,PAYMENT_CHANNEL, MEMO,MAX_COUPON,USED_COUPON)
+    values 
+    	(#couponId#,#channelId#, #couponName#, #couponTarget#, #couponType#, #withCode#, #beginTime#, #firstCode#, #valid#, sysdate, #description#, #validType#, #termOfValidity#, #favorType#, #argumentX#, #argumentY#, #argumentZ#, #paymentChannel#, #memo#,#maxCoupon#,#usedCoupon#)
+  </insert>
+ 
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mark.MarkCoupon">
+    update MARK_COUPON
+    set 
+        CHANNEL_ID = #channelId:VARCHAR#,
+        COUPON_NAME = #couponName:VARCHAR#,
+        COUPON_TARGET = #couponTarget:VARCHAR#,
+        COUPON_TYPE = #couponType:VARCHAR#,
+        WITH_CODE = #withCode:VARCHAR#,
+        BEGIN_TIME = #beginTime:DATE#,
+        FIRST_CODE = #firstCode:VARCHAR#,
+        VALID = #valid:VARCHAR#,
+        DESCRIPTION = #description:VARCHAR#,
+        PAYMENT_CHANNEL = #paymentChannel:DECIMAL#,
+        VALID_TYPE = #validType#,
+        TERM_OF_VALIDITY = #termOfValidity#,
+        FAVOR_TYPE = #favorType#,
+        ARGUMENT_X = #argumentX#,
+        ARGUMENT_Y = #argumentY#,
+        ARGUMENT_Z = #argumentZ#,
+        MEMO = #memo#,
+        MAX_COUPON = #maxCoupon#,
+        USED_COUPON = #usedCoupon#
+    where COUPON_ID = #couponId:DECIMAL#
+  </update>
+  <update id="updateUsedCouponByPK" parameterClass="java.util.Map">
+  	update MARK_COUPON
+  	set 
+  	<isEqual property="flag" compareValue="add">
+  			USED_COUPON=(decode(USED_COUPON,null,0,USED_COUPON)+#currentUsedCoupon#)
+  	</isEqual>
+  	<isEqual property="flag" compareValue="subtract">
+  			USED_COUPON=(USED_COUPON-#currentUsedCoupon#)
+  	</isEqual>
+  	where COUPON_ID = #couponId#
+  </update>
+  
+   <!--获得适用某产品/产品类型的优惠券/优惠活动 -->
+    <select id="selectProductCanUseMarkCoupon" resultMap="BaseResultMap" parameterClass="java.util.Map">
+    	<dynamic prepend=" ">
+    		 <isNotEmpty  property="productId" prepend=" UNION ">
+	 	         select 
+			 	 	mc.* , (SELECT   MCL.CHANNEL_NAME FROM  MARK_CHANNEL MCL WHERE    MC.CHANNEL_ID   = MCL.CHANNEL_ID) CHANNEL_NAME  
+			 	 from 
+			 	 	MARK_COUPON mc ,MARK_COUPON_PRODUCT mcp
+			 	 where 
+			 	 	mc.COUPON_ID = mcp.COUPON_ID 
+			 	 and 
+			 	 	mc.VALID='true' 
+			 	 and 
+			 	 	mc.COUPON_TARGET='PRODUCT'
+			 	  and 
+			 	  	mc.BEGIN_TIME<![CDATA[<=]]> sysdate 
+			 	  and
+			 	  	trunc(SYSDATE) <![CDATA[<=]]> mc.BEGIN_TIME + mc.term_of_validity 
+			 	 <isNotEmpty prepend="and" property="withCode">
+			     	mc.WITH_CODE = #withCode#
+			     </isNotEmpty>
+			     <isEqual prepend="and" property="withCode" compareValue="false">
+			     	<![CDATA[(]]> MC.MAX_COUPON <![CDATA[>]]> MC.USED_COUPON OR MC.MAX_COUPON = -1<![CDATA[)]]>
+			     </isEqual>
+			     and mcp.PRODUCT_ID=#productId#
+	 	       </isNotEmpty> 
+	 	       
+	 	      <isNotEmpty  property="subProductType" prepend=" UNION ">
+	 	         select 
+			 	 	mc.* , (SELECT   MCL.CHANNEL_NAME FROM  MARK_CHANNEL MCL WHERE    MC.CHANNEL_ID   = MCL.CHANNEL_ID) CHANNEL_NAME  
+			 	 from 
+			 	 	MARK_COUPON mc ,MARK_COUPON_PRODUCT mcp
+			 	 where 
+			 	 	mc.COUPON_ID = mcp.COUPON_ID 
+			 	 and 
+			 	 	mc.VALID='true' 
+			 	 and 
+			 	 	mc.COUPON_TARGET='PRODUCT'
+			 	  and 
+			 	  	mc.BEGIN_TIME<![CDATA[<=]]> sysdate 
+			 	  and
+			 	  	trunc(SYSDATE) <![CDATA[<=]]> mc.BEGIN_TIME + mc.term_of_validity 
+			 	 <isNotEmpty prepend="and" property="withCode">
+			     	mc.WITH_CODE = #withCode#
+			     </isNotEmpty>
+			     <isEqual prepend="and" property="withCode" compareValue="false">
+			     	<![CDATA[(]]> MC.MAX_COUPON <![CDATA[>]]> MC.USED_COUPON OR MC.MAX_COUPON = -1<![CDATA[)]]>
+			     </isEqual>
+			     and  mcp.SUB_PRODUCT_TYPE=#subProductType#
+	 	      </isNotEmpty>
+    	
+	 	    <isNotEmpty  property="productIds" prepend=" UNION ">
+	 	         select 
+			 	 	mc.* , (SELECT   MCL.CHANNEL_NAME FROM  MARK_CHANNEL MCL WHERE    MC.CHANNEL_ID   = MCL.CHANNEL_ID) CHANNEL_NAME  
+			 	 from 
+			 	 	MARK_COUPON mc ,MARK_COUPON_PRODUCT mcp
+			 	 where 
+			 	 	mc.COUPON_ID = mcp.COUPON_ID 
+			 	 and 
+			 	 	mc.VALID='true' 
+			 	 and 
+			 	 	mc.COUPON_TARGET='PRODUCT'
+			 	  and 
+			 	  	mc.BEGIN_TIME<![CDATA[<=]]> sysdate 
+			 	  and
+			 	  	trunc(SYSDATE) <![CDATA[<=]]> mc.BEGIN_TIME + mc.term_of_validity 
+			 	 <isNotEmpty prepend="and" property="withCode">
+			     	mc.WITH_CODE = #withCode#
+			     </isNotEmpty>
+			     <isEqual prepend="and" property="withCode" compareValue="false">
+			     <![CDATA[(]]> MC.MAX_COUPON <![CDATA[>]]> MC.USED_COUPON OR MC.MAX_COUPON = -1<![CDATA[)]]>
+			     </isEqual>
+		              and mcp.PRODUCT_ID IN
+					 <iterate open="(" close=")" conjunction="," property="productIds">
+					 	#productIds[]#
+					 </iterate>
+	 	        </isNotEmpty>
+	 	     <isNotEmpty property="subProductTypes" prepend=" UNION ">
+			    	select 
+			 	 	mc.* , (SELECT   MCL.CHANNEL_NAME FROM  MARK_CHANNEL MCL WHERE    MC.CHANNEL_ID   = MCL.CHANNEL_ID) CHANNEL_NAME  
+			 	 from 
+			 	 	MARK_COUPON mc ,MARK_COUPON_PRODUCT mcp
+			 	 where 
+			 	 	mc.COUPON_ID = mcp.COUPON_ID 
+			 	 and 
+			 	 	mc.VALID='true' 
+			 	 and 
+			 	 	mc.COUPON_TARGET='PRODUCT'
+			 	  and 
+			 	  	mc.BEGIN_TIME<![CDATA[<=]]> sysdate 
+			 	  and
+			 	  	trunc(SYSDATE) <![CDATA[<=]]> mc.BEGIN_TIME + mc.term_of_validity 
+			 	 <isNotEmpty prepend="and" property="withCode">
+			     	mc.WITH_CODE = #withCode#
+			     </isNotEmpty>
+			     <isEqual prepend="and" property="withCode" compareValue="false">
+			     	<![CDATA[(]]> MC.MAX_COUPON <![CDATA[>]]> MC.USED_COUPON OR MC.MAX_COUPON = -1<![CDATA[)]]>
+			     </isEqual>
+			         and mcp.SUB_PRODUCT_TYPE IN
+				<iterate open="(" close=")" conjunction="," property="subProductTypes">
+				 	#subProductTypes[]#
+				 </iterate>
+	 	    </isNotEmpty>
+	 	  </dynamic>
+    </select>
+    <!-- 获得适用某产品/产品类型的优惠券/优惠活动  有效的活动 -->
+    <select id="selectProductValidMarkCoupon" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  		<dynamic prepend=" ">
+    		 <isNotEmpty  property="productId" prepend=" UNION ">
+	 	         select 
+			 	 	mc.* , (SELECT   MCL.CHANNEL_NAME FROM  MARK_CHANNEL MCL WHERE    MC.CHANNEL_ID   = MCL.CHANNEL_ID) CHANNEL_NAME  
+			 	 from 
+			 	 	MARK_COUPON mc ,MARK_COUPON_PRODUCT mcp
+			 	 where 
+			 	 	mc.COUPON_ID = mcp.COUPON_ID
+			 	 and 
+			 	 	mc.VALID='true' 
+			 	 and 
+			 	 	mc.COUPON_TARGET='PRODUCT'
+			 	 <isNotEmpty prepend="and" property="withCode">
+			     	mc.WITH_CODE = #withCode#
+			     </isNotEmpty>
+			     <isEqual prepend="and" property="withCode" compareValue="false">
+			     	<![CDATA[(]]> MC.MAX_COUPON <![CDATA[>]]> MC.USED_COUPON OR MC.MAX_COUPON = -1<![CDATA[)]]>
+			     </isEqual>
+			     and mcp.PRODUCT_ID=#productId#
+			     <isNotEmpty prepend="and" property="couponIds">
+				     mc.coupon_id IN
+					 <iterate open="(" close=")" conjunction="," property="couponIds">
+					 	#couponIds[]#
+					 </iterate>
+				 </isNotEmpty>
+	 	       </isNotEmpty> 
+	 	      <isNotEmpty  property="subProductType" prepend=" UNION ">
+	 	         select 
+			 	 	mc.* , (SELECT   MCL.CHANNEL_NAME FROM  MARK_CHANNEL MCL WHERE    MC.CHANNEL_ID   = MCL.CHANNEL_ID) CHANNEL_NAME  
+			 	 from 
+			 	 	MARK_COUPON mc ,MARK_COUPON_PRODUCT mcp 
+			 	 where 
+			 	 	mc.COUPON_ID = mcp.COUPON_ID  	 		
+			 	 and 
+			 	 	mc.VALID='true' 
+			 	 and 
+			 	 	mc.COUPON_TARGET='PRODUCT'
+			 	 <isNotEmpty prepend="and" property="withCode">
+			     	mc.WITH_CODE = #withCode#
+			     </isNotEmpty>
+			     <isEqual prepend="and" property="withCode" compareValue="false">
+			     	<![CDATA[(]]> MC.MAX_COUPON <![CDATA[>]]> MC.USED_COUPON OR MC.MAX_COUPON = -1<![CDATA[)]]>
+			     </isEqual>
+			     and  mcp.SUB_PRODUCT_TYPE=#subProductType#
+			     <isNotEmpty prepend="and" property="couponIds">
+				     mc.coupon_id IN
+					 <iterate open="(" close=")" conjunction="," property="couponIds">
+					 	#couponIds[]#
+					 </iterate>
+				 </isNotEmpty>
+	 	      </isNotEmpty>
+ 	   </dynamic> 
+  </select>
+  <!--获得全场通用优惠券/优惠活动 -->
+   <select id="selectAllCanUseMarkCoupon" resultMap="BaseResultMap" parameterClass="java.util.Map">
+	  		SELECT mc.*, mcl.channel_name FROM MARK_COUPON MC, MARK_CHANNEL mcl WHERE MC.COUPON_TARGET='ORDER' 
+	  		 and mc.channel_id = mcl.channel_id
+		  	<dynamic>  	
+			 	 <isNotEmpty prepend="and" property="withCode">
+			     	mc.WITH_CODE = #withCode#
+			     </isNotEmpty>
+			     <isEqual prepend="and" property="withCode" compareValue="false">
+			     	<![CDATA[(]]> MC.MAX_COUPON <![CDATA[>]]> MC.USED_COUPON OR MC.MAX_COUPON = -1<![CDATA[)]]>
+			     </isEqual>
+		 	</dynamic> 	  	
+			AND MC.VALID='true' AND MC.BEGIN_TIME<![CDATA[<=]]>
+			SYSDATE AND trunc(SYSDATE) <![CDATA[<=]]> mc.BEGIN_TIME + mc.term_of_validity 
+   </select>
+   
+   <!-- 查询有效日期范围，根据条件,用于构造TAG -->
+   <select id="selectValidDate"  resultMap="minMarkCoupon" parameterClass="java.util.HashMap" >
+   		SELECT mcp.PRODUCT_ID PRODUCT_ID,
+   			   min(mc.begin_time) begin_time,
+		       max(mc.begin_time+mc.term_of_validity) end_time
+		  FROM mark_coupon_product mcp,
+		       mark_coupon mc
+		 WHERE mcp.coupon_id = mc.coupon_id
+		   AND mc.valid='true'
+		   AND mc.payment_channel is not null
+		   AND mc.coupon_target='PRODUCT'
+		   AND mc.with_code='false'
+		   AND mc.begin_time  <![CDATA[<=trunc(sysdate)]]>
+		   AND <![CDATA[trunc(sysdate)<=]]>mc.begin_time+mc.term_of_validity
+		   AND <![CDATA[(]]>mc.max_coupon <![CDATA[> ]]>mc.used_coupon OR mc.max_coupon=-1<![CDATA[)]]>
+		   AND mcp.product_id is not null
+		   AND mcp.sub_product_type is null
+		   <isNotEmpty prepend="and" property="productIds">
+		   		<![CDATA[ mcp.PRODUCT_ID in ]]>
+	     		<iterate property="productIds" conjunction="," open="(" close=")">
+	     			#productIds[]#
+	     		</iterate>
+		   </isNotEmpty>
+		   GROUP BY mcp.product_id
+   </select>
+
+</sqlMap>

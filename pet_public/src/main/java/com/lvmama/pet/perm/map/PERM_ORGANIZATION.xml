@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PERM_ORGANIZATION">
+
+	<resultMap id="PermOrganizationBaseResult"
+		class="com.lvmama.comm.pet.po.perm.PermOrganization">
+		<result column="ORG_ID" property="orgId" />
+		<result column="DEPARTMENT_NAME" property="departmentName" />
+		<result column="PARENT_ORG_ID" property="parentOrgId" />
+		<result column="PERM_LEVEL" property="permLevel" />
+		<result column="CREATE_USER" property="createUser" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="VALID" property="valid" />
+	</resultMap>
+	
+	<resultMap id="OrganizationBaseResult" extends="PermOrganizationBaseResult" class="com.lvmama.comm.pet.po.perm.PermOrganization">
+		<result column="PARENT_DEP_NAME" property="parentDepName" />
+	</resultMap>
+
+	<select id="selectAllOrganization" resultMap="OrganizationBaseResult">
+		SELECT c.*,
+			p.department_name as PARENT_DEP_NAME
+		FROM perm_organization c,
+			perm_organization p
+		WHERE c.parent_org_id = p.org_id
+			AND c.valid = 'Y' and c.org_id!=0
+			AND c.department_name is not null
+			AND c.parent_org_id IS NOT NULL
+		ORDER BY c.parent_org_id,c.org_id
+	</select>
+	
+	<select id="selectOneOrganization" resultMap="PermOrganizationBaseResult">
+		SELECT * FROM perm_organization	WHERE valid = 'Y' and org_id!=0 and parent_org_id=0 and department_name is not null ORDER BY org_id
+	</select>
+	
+	<select id="selectNameByPk" resultClass="java.lang.String" parameterClass="java.lang.Long">
+		select DEPARTMENT_NAME from Perm_Organization where VALID='Y' and ORG_ID=#orgId#  order by create_time 
+	</select>
+	
+	<select id="selectByGroups"  resultClass="java.lang.Long" parameterClass="java.util.Map" >
+      select count(*) From Perm_Organization po ,perm_user pu where pu.department_id=po.org_id
+      <isNotEmpty prepend=" and" property="userId">
+		 pu.user_id  = #userId#
+	</isNotEmpty>
+	<isNotEmpty prepend="and" property="groupIds">
+		po.org_id in
+			<iterate property="groupIds"  conjunction="," open="(" close=")"  > 
+       			#groupIds[]# 
+   			</iterate> 
+	</isNotEmpty>
+  </select>
+
+	<insert id="addOrganization" parameterClass="com.lvmama.comm.pet.po.perm.PermOrganization">
+		<selectKey keyProperty="orgId" resultClass="java.lang.Long">
+			select
+			PERM_ORGANIZATION_SEQ.nextval as id from DUAL
+	    </selectKey>
+		insert into
+		PERM_ORGANIZATION(ORG_ID,DEPARTMENT_NAME,PARENT_ORG_ID,CREATE_USER,CREATE_TIME,VALID,PERM_LEVEL)
+		values(#orgId#,#departmentName#,#parentOrgId#,#createUser#,sysdate,'Y',#permLevel#)
+	</insert>
+
+	<update id="modifyOrganization" parameterClass="com.lvmama.comm.pet.po.perm.PermOrganization">
+		update
+		PERM_ORGANIZATION set
+		DEPARTMENT_NAME=#departmentName#,PARENT_ORG_ID=#parentOrgId# where
+		ORG_ID=#orgId#
+	</update>
+
+	<select id="checkDepartment" parameterClass="com.lvmama.comm.pet.po.perm.PermOrganization"
+		resultMap="PermOrganizationBaseResult">
+		select * from PERM_ORGANIZATION where
+		DEPARTMENT_NAME=#departmentName# and PARENT_ORG_ID=#parentOrgId# and VALID='Y'
+	</select>
+	<select id="getChildrenIds" parameterClass="Long" resultClass="Long">
+		select ORG_ID from PERM_ORGANIZATION where PARENT_ORG_ID=#parentOrgId# and VALID='Y'
+	</select>
+	
+	<select id="getOrganizationByLevel" parameterClass="int" resultMap="PermOrganizationBaseResult">
+		select * from PERM_ORGANIZATION where perm_level = #value# and VALID='Y'
+	</select>
+	<select id="getOrganizationByOrgId" parameterClass="Long" resultMap="PermOrganizationBaseResult">
+		select * from PERM_ORGANIZATION where ORG_ID = #orgId# and VALID='Y'
+	</select>
+	
+	<select id="getChildOrgList" parameterClass="long" resultMap="PermOrganizationBaseResult">
+		select * from PERM_ORGANIZATION where parent_org_id = #value# and VALID='Y'
+	</select>
+	
+	<delete id="deleteOrganization" parameterClass="list">
+		update perm_organization set valid='N' where org_id in 
+		<iterate conjunction=" , " open=" ( " close=" ) ">
+			#value[]#
+		</iterate>
+	</delete>
+	
+	<select id="getChildOrgCount" parameterClass="long" resultClass="long">
+		select count(org_id) from perm_organization where parent_org_id = #value# and valid='Y'
+	</select>
+	
+	<select id="getUserByOrgCount" parameterClass="long" resultClass="long">
+		select count(user_id) from perm_user where department_id = #value# and valid='Y'
+	</select>
+	
+	<select id="getOrganizationByChildId" parameterClass="long" resultMap="PermOrganizationBaseResult">
+		select * 
+		from perm_organization 
+		where perm_level > 0
+		and valid = 'Y'
+		start with ORG_ID=#childId# connect by PRIOR PARENT_ORG_ID = ORG_ID
+		order by perm_level asc
+	</select>
+</sqlMap>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_MESSAGE_RECEIVERS" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComMessageReceivers" >
+    <result column="MESSAGE_TYPE_ID" property="messageTypeId" />
+    <result column="NAME" property="messageName" />
+    <result column="CODE" property="messageCode" />
+    <result column="RECEIVERS" property="messageReceivers" />
+  </resultMap>
+  
+  	<sql id="selectParam">
+  		<isNotEmpty property="messageName" prepend=" AND ">mesage.name like '%'||#messageName#||'%' </isNotEmpty>
+		<isNotEmpty property="messageTypeId" prepend=" AND ">mesage.MESSAGE_TYPE_ID =#messageTypeId# </isNotEmpty>
+		<isNotEmpty property="messageCode" prepend=" AND ">mesage.CODE =#messageCode# </isNotEmpty>
+  	</sql>
+ 	<select id="selectByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+     SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+  	 select * FROM COM_MESSAGE_RECEIVERS mesage where 1=1
+			<include refid="selectParam"/>
+	     order by mesage.MESSAGE_TYPE_ID desc
+      ) T WHERE ROWNUM &lt;= #maxResults#
+		)
+		WHERE ROWNUM1 &gt;=#skipResults# 
+  </select>
+  
+  <select id="selectByParamCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+  	 select count(*) FROM COM_MESSAGE_RECEIVERS mesage where 1=1 <include refid="selectParam"/>
+  </select>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.pub.ComMessageReceivers" >
+    update COM_MESSAGE_RECEIVERS
+    set 
+      NAME = #messageName#,
+      CODE = #messageCode#,
+      RECEIVERS = #messageReceivers#
+    where MESSAGE_TYPE_ID = #messageTypeId#
+  </update> 
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComMessageReceivers" >
+    <selectKey resultClass="java.lang.Long" keyProperty="messageTypeId" >
+      select COM_MESSAGE_RECEIVERS_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into COM_MESSAGE_RECEIVERS (MESSAGE_TYPE_ID, NAME, CODE, RECEIVERS)
+	values (#messageTypeId#, #messageName#, #messageCode#, #messageReceivers#)
+  </insert>
+</sqlMap>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PLACE_AIRPORT" >
+   <typeAlias alias="Airport" type="com.lvmama.comm.pet.po.place.PlaceAirport" />
+  <resultMap id="BaseResultMap" class="Airport" >
+    <result column="PLACE_AIRPORT_ID" property="placeAirportId" />
+    <result column="PLACE_ID" property="placeId" />
+    <result column="EN_NAME" property="enName" />
+    <result column="AIRPORT_CODE" property="airportCode" />
+    <result column="AIRPORT_NAME" property="airportName" />
+  </resultMap>
+   <resultMap id="PlaceAirPortBaseResultMap" extends="BaseResultMap" class="Airport" >
+     <result column="city_name" property="cityName" />
+     <result column="city_code" property="cityCode" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="Airport" >
+    select PLACE_AIRPORT_ID, PLACE_ID, EN_NAME, AIRPORT_CODE, AIRPORT_NAME
+    from PLACE_AIRPORT
+    where PLACE_AIRPORT_ID = #placeAirportId#
+  </select>
+	<sql id="selectPlaceAirportList">
+	select place_airport_id,place_id,en_name, airport_code,airport_name, city_name, city_code
+	from (select pa.place_airport_id,pa.place_id, pa.en_name, pa.airport_code,pa.airport_name, p.name as city_name,p.airport_code  as   city_code        
+	from place_airport pa, place p
+	where pa.place_id = p.place_id) pp 
+	</sql>
+	<sql id="placeAirportWhere">
+		<dynamic prepend="where">
+			<isNotEmpty property="placeId" prepend="and">
+				PLACE_ID=#placeId#
+			</isNotEmpty>
+			<isNotEmpty property="airportName" prepend="and">
+			    AIRPORT_NAME LIKE '%'||#airportName#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="airportCode" prepend="and">
+				AIRPORT_CODE=#airportCode#
+			</isNotEmpty>
+			<isNotEmpty property="enName" prepend="and">
+				EN_NAME=#enName#
+			</isNotEmpty>
+			<isNotEmpty property="cityName" prepend="and">
+				city_name=#cityName#
+			</isNotEmpty>
+			<isNotEmpty property="cityCode" prepend="and">
+				city_code=#cityCode#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	<select id="queryPlaceAirportList" resultMap="PlaceAirPortBaseResultMap"
+		parameterClass="java.util.Map">
+		SELECT *
+		FROM (SELECT A.*, ROWNUM RN
+		FROM (
+		<include refid="selectPlaceAirportList" />
+		<include refid="placeAirportWhere" />
+		ORDER BY place_airport_id DESC
+		) A
+		<dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="countPlaceAirportList" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		SELECT COUNT(*) FROM (<include refid="selectPlaceAirportList" />  <include refid="placeAirportWhere" /> )
+	</select>
+  <delete id="deleteByPrimaryKey" parameterClass="Airport" >
+    delete from PLACE_AIRPORT
+    where PLACE_AIRPORT_ID = #placeAirportId#
+  </delete>
+  <insert id="insert" parameterClass="Airport" >
+    <selectKey resultClass="java.lang.Long" keyProperty="placeAirportId" >
+       select place_airport_seq.nextval as placeAirportId from DUAL
+    </selectKey>
+    insert into PLACE_AIRPORT (PLACE_AIRPORT_ID, PLACE_ID, EN_NAME, AIRPORT_CODE, AIRPORT_NAME)
+    values (#placeAirportId#, #placeId:DECIMAL#, #enName:VARCHAR#, #airportCode:CHAR#,
+      #airportName:VARCHAR#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="Airport" >
+    update PLACE_AIRPORT
+    set PLACE_ID = #placeId#,
+      EN_NAME = #enName#,
+      AIRPORT_CODE = #airportCode#,
+      AIRPORT_NAME = #airportName#
+    where PLACE_AIRPORT_ID = #placeAirportId#
+  </update>
+</sqlMap>

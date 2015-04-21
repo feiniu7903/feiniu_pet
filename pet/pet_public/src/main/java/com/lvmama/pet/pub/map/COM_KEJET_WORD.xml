@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_KEJET_WORD" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComKeJetWord" >
+    <result column="ID" property="id" />
+    <result column="CODE" property="code" />
+    <result column="DESCRIPTION" property="description" />
+  </resultMap>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComKeJetWord">
+	INSERT INTO com_kejet_word VALUES (com_kejet_word_seq.nextval, #code#, #description#)	
+  </insert>
+
+  <update id="update" parameterClass="com.lvmama.comm.pet.po.pub.ComKeJetWord">
+	UPDATE com_kejet_word SET CODE = #code#, DESCRIPTION = #description# WHERE ID = #id#
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    SELECT ID, CODE, DESCRIPTION FROM com_kejet_word WHERE ID = #id#
+  </select>
+  
+  <delete id="delete" parameterClass="java.lang.Long" >
+    DELETE FROM com_kejet_word WHERE ID = #id#
+  </delete>  
+
+  <select id="query" resultMap="BaseResultMap" parameterClass="java.util.Map" >
+    SELECT ID, CODE, DESCRIPTION FROM com_kejet_word 
+	<dynamic prepend=" WHERE ">
+		<isNotEmpty property="id" prepend=" AND "> ID = #id#</isNotEmpty>
+		<isNotEmpty property="description" prepend=" AND "> DESCRIPTION like '%$description$%'</isNotEmpty>
+	</dynamic>
+  </select>
+
+</sqlMap>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="KEYWORD" >
+  <typeAlias alias="keyWord" type="com.lvmama.comm.businesses.po.review.KeyWord" />
+  <resultMap id="BaseResultMap" class="keyWord" >
+     <result column="K_Id" property="kId" />
+     <result column="K_Content" property="kContent" />
+     <result column="K_Date" property="kDate" />
+  </resultMap>
+  
+  <insert id="insertKey" parameterClass="keyWord">
+        <selectKey keyProperty="kId" resultClass="java.lang.Long">
+            SELECT LVMAMA_PET.REVIEW_KEYWORD_SEQ.NEXTVAL AS ID FROM DUAL
+        </selectKey>
+         INSERT INTO LVMAMA_PET.REVIEW_KEYWORD VALUES
+        <dynamic prepend="(" >
+          <isNotNull prepend="," property="kId" >
+            #kId#
+          </isNotNull>
+          <isNotNull prepend="," property="kContent" >
+            #kContent#
+          </isNotNull>
+         ,sysdate )
+         </dynamic>
+     </insert>
+  
+    <sql id="pageHeader">
+         SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+   </sql>
+   <sql id="pageFooter">
+         ) A
+       <dynamic prepend="where">
+           <isNotEmpty property="endRows" prepend="and">
+               ROWNUM &lt;= #endRows#
+           </isNotEmpty>
+       </dynamic>
+         )
+       <dynamic prepend="where">
+        <isNotEmpty property="startRows" prepend="and">
+           rn &gt;= #startRows#
+        </isNotEmpty>      
+       </dynamic>
+   </sql>
+  
+  
+	  <insert id="batchInsertKeyWord" parameterClass="keyWord">
+	    <selectKey keyProperty="kId" resultClass="java.lang.Long">
+	        SELECT LVMAMA_PET.REVIEW_KEYWORD_SEQ.NEXTVAL AS ID FROM DUAL
+	    </selectKey>
+	     INSERT INTO LVMAMA_PET.REVIEW_KEYWORD VALUES
+	    <dynamic prepend="(" >
+	      <isNotNull prepend="," property="kId" >
+	        #kId#
+	      </isNotNull>
+	      <isNotNull prepend="," property="kContent" >
+	        #kContent#
+	      </isNotNull>
+	     ,sysdate )
+	     </dynamic>
+	 </insert>
+ 
+	 <delete id="deleteKeyWord" parameterClass="keyWord">
+	    DELETE FROM LVMAMA_PET.REVIEW_KEYWORD 
+	    where k_id = #kId#
+	 </delete>
+	 
+	 <update id="updateKeyWord" parameterClass="keyWord">
+	   UPDATE LVMAMA_PET.REVIEW_KEYWORD SET 
+	   K_CONTENT=#kContent# where K_Id = #kId#
+	 </update>
+
+    <sql id="batchQueryKeyWordByParamWhere">
+      <dynamic prepend="where ">
+         <isNotEmpty prepend="and " property="kContent">K_Content like '%$kContent$%'</isNotEmpty>
+         <isNotEmpty prepend="and " property="startDate">K_Date&gt;#startDate#</isNotEmpty>
+         <isNotEmpty prepend="and " property="endDate">K_Date&lt;#endDate#</isNotEmpty>
+      </dynamic>
+   </sql>  
+   <sql id="orderByKIdDesc">
+     ORDER BY K_ID DESC 
+   </sql>
+     <select id="batchKeyWordByParamForReport" parameterClass="java.util.Map" resultMap="BaseResultMap" >
+        <include refid="pageHeader"/>
+	        SELECT K_Id,K_Content,K_Date FROM REVIEW_KEYWORD 
+	        <include refid="batchQueryKeyWordByParamWhere"/>
+	        <include refid="orderByKIdDesc"/>
+        <include refid="pageFooter"/>
+     </select>
+  
+      <select id="getCountKeyWordByParam" parameterClass="java.util.Map" resultClass="java.lang.Long">
+        SELECT COUNT(*) FROM LVMAMA_PET.REVIEW_KEYWORD 
+        <include refid="batchQueryKeyWordByParamWhere"/>
+     </select>
+ 
+    <select id="queryKeyWordByKeyID" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+       SELECT K_Id,K_Content,K_Date FROM LVMAMA_PET.REVIEW_KEYWORD 
+       WHERE K_Id = #kId#
+    </select>
+     <select id="querykeyWordByparam" parameterClass="keyWord" resultMap="BaseResultMap">
+       SELECT K_Id,K_Content,K_Date FROM LVMAMA_PET.REVIEW_KEYWORD 
+       <dynamic prepend="where">
+          <isNotEmpty property="kContent" prepend="and">k_Content=#kContent#</isNotEmpty>
+       </dynamic>
+    </select>
+</sqlMap>

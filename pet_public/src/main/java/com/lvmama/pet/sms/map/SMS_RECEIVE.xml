@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SMS_RECEIVE">
+	<typeAlias alias="smsReceive" type="com.lvmama.comm.pet.po.sms.SmsReceive"/>
+
+	<insert id="insert" parameterClass="smsReceive">
+		<selectKey resultClass="java.lang.Long" keyProperty="id">
+				SELECT SMS_RECEIVE_ID_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO sms_receive
+		<dynamic prepend="(">
+			<isNotEmpty property="id" prepend=",">id</isNotEmpty>
+			<isNotEmpty property="channelNumber" prepend=",">channel_number</isNotEmpty>
+			<isNotEmpty property="mobileNumber" prepend=",">mobile_number</isNotEmpty>
+			<isNotEmpty property="content" prepend=",">content</isNotEmpty>
+			<isNotEmpty property="sendDate" prepend=",">send_date</isNotEmpty>
+			,create_date
+			)
+		</dynamic>
+		VALUES
+		<dynamic prepend="(">
+			<isNotEmpty property="id" prepend=",">#id#</isNotEmpty>
+			<isNotEmpty property="channelNumber" prepend=",">#channelNumber#</isNotEmpty>
+			<isNotEmpty property="mobileNumber" prepend=",">#mobileNumber#</isNotEmpty>
+			<isNotEmpty property="content" prepend=",">#content#</isNotEmpty>
+			<isNotEmpty property="sendDate" prepend=",">#sendDate#</isNotEmpty>
+			,sysdate
+			)
+		</dynamic>
+	</insert>
+
+</sqlMap>

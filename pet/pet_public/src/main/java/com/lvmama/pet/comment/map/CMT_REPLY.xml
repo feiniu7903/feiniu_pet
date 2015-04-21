@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_REPLY" >
+    <resultMap class="com.lvmama.comm.vo.comment.CmtReplyVO" id="cmtReplyMap">
+        <result property="replyId" column="CMT_REPLY_ID"/>
+        <result property="commentId" column="CMT_COMMENT_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="replyType" column="REPLY_TYPE"/>
+        <result property="isAudit" column="IS_AUDIT"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="content" column="CONTENT"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="isHide" column="IS_HIDE"/>
+        <result property="reviewStatus" column="REVIEWSTATUS"/>
+    </resultMap>
+    
+    <resultMap class="com.lvmama.comm.vo.comment.CmtReplyVO" id="cmtReplyMap2">
+        <result property="replyId" column="CMT_REPLY_ID"/>
+        <result property="commentId" column="CMT_COMMENT_ID"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="content" column="CONTENT"/>
+        <result property="reviewStatus" column="REVIEWSTATUS"/>
+    </resultMap>
+    
+    <insert id="insert" parameterClass="com.lvmama.comm.vo.comment.CmtReplyVO">
+        <selectKey resultClass="java.lang.Long" keyProperty="replyId" >
+            select cmt_reply_seq.nextval as replyId from DUAL
+        </selectKey>
+        INSERT INTO CMT_REPLY
+            (CMT_REPLY_ID, CMT_COMMENT_ID, USER_ID, REPLY_TYPE, IS_AUDIT, CREATE_TIME, CONTENT, USER_NAME)
+        VALUES
+            (#replyId#, #commentId#, #userId#, #replyType#, #isAudit#, sysdate, #content#,  #userName#)
+    </insert>
+    
+    <sql id="union_query_sql">
+        select reply.* , CC.place_id, CC.PRODUCT_ID
+        from CMT_REPLY reply, cmt_comment CC
+        where reply.cmt_comment_id = CC.cmt_comment_id
+        order by reply.CREATE_TIME DESC
+    </sql>
+    
+    <sql id="query_base_sql">
+        select CC.* 
+        from (<include refid="union_query_sql"/>) CC
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="replyId"   prepend=" AND ">CMT_REPLY_ID=#replyId#</isNotEmpty>
+            <isNotEmpty property="commentId" prepend=" AND ">CMT_COMMENT_ID=#commentId#</isNotEmpty>
+            <isNotEmpty property="userId"    prepend=" AND ">USER_ID=#userId#</isNotEmpty>
+            <isNotEmpty property="replyType" prepend=" AND ">REPLY_TYPE=#replyType#</isNotEmpty>
+            <isNotEmpty property="isAudit"   prepend=" AND ">IS_AUDIT=#isAudit#</isNotEmpty>
+            <isNotEmpty property="isAudits" prepend=" AND ">
+                <iterate property="isAudits" open="(" close=")" conjunction=" OR ">    
+                    IS_AUDIT = #isAudits[]#
+                </iterate>
+            </isNotEmpty>
+             <isNotEmpty prepend=" and " property="isHide">IS_HIDE = #isHide#</isNotEmpty>
+            <isNotEmpty property="startDate" prepend=" AND ">CREATE_TIME &gt;= #startDate#</isNotEmpty>
+            <isNotEmpty property="endDate"   prepend=" AND ">CREATE_TIME &lt; #endDate# + 1</isNotEmpty>
+            <isNotEmpty property="userName"  prepend=" AND ">USER_NAME LIKE '%'||#userName#||'%'</isNotEmpty>
+            <isNotEmpty  property="orderBy" prepend="ORDER BY"> CREATE_TIME 
+                <isEqual property="orderBy" compareValue="DESC"> DESC </isEqual>
+                <isEqual property="orderBy" compareValue="ASC"> ASC </isEqual>
+            </isNotEmpty>
+            
+        </dynamic>
+    </sql>
+    
+    <sql id="pageHeader">
+         SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+    </sql>
+    
+    <sql id="pageFooter">
+          ) A
+        <dynamic prepend="where">
+            <isNotEmpty property="endRows" prepend="and">
+                ROWNUM &lt;= #endRows#
+            </isNotEmpty>
+        </dynamic>
+          )
+        <dynamic prepend="where">
+         <isNotEmpty property="startRows" prepend="and">
+            rn &gt;= #startRows#
+         </isNotEmpty>      
+        </dynamic>
+    </sql>
+    
+    <sql id="whereParamByReviewContent">
+        <dynamic prepend="WHERE " >
+            <isNotEmpty prepend="and " property="isAudit">IS_AUDIT = #isAudit#</isNotEmpty> 
+            <isNotEmpty prepend="and " property="reviewStatus">REVIEWSTATUS = #reviewStatus#</isNotEmpty>
+            <isNotEmpty prepend="and " property="startDate">CREATE_TIME&gt;#startDate#</isNotEmpty>
+            <isNotEmpty prepend="and " property="endDate">CREATE_TIME&lt;#endDate#</isNotEmpty>
+        </dynamic>
+    </sql>
+    
+    
+    <select id="query" parameterClass="java.util.Map" resultMap="cmtReplyMap">
+        select t2.*
+        from (
+            select t1.*, rownum as rn 
+            from (
+            <include refid="query_base_sql"/>
+            ) t1
+            <dynamic prepend=" WHERE ">
+                <isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+            </dynamic>  
+            ) t2
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="_startRow"> rn &gt;= #_startRow# </isNotEmpty>
+        </dynamic>
+    </select>
+    
+    <select id="count" parameterClass="java.util.Map" resultClass="long">
+        select count(CMT_REPLY_ID) from (
+            <include refid="query_base_sql"/>
+        ) 
+    
+    </select>
+    
+    <update id="update" parameterClass="com.lvmama.comm.vo.comment.CmtReplyVO">
+        UPDATE CMT_REPLY
+        <dynamic prepend=" SET ">           
+            <isNotEmpty property="isAudit" prepend=" , ">IS_AUDIT = #isAudit#</isNotEmpty>
+            <isNotEmpty property="isHide" prepend=" , ">IS_HIDE = #isHide#</isNotEmpty>
+            <isNotEmpty property="reviewStatus" prepend=" , " >REVIEWSTATUS=#reviewStatus#</isNotEmpty>
+        </dynamic>
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty prepend=" AND " property="replyId">CMT_REPLY_ID = #replyId#</isNotEmpty>
+        </dynamic>
+    </update>
+    
+    <select id="queryByKey"  resultMap="cmtReplyMap">
+        SELECT * FROM CMT_REPLY WHERE CMT_REPLY_ID = #replyId#
+    </select>
+    
+    <select id="queryReplyExceptStatus" parameterClass="java.util.Map" resultMap="cmtReplyMap">
+        select t2.*
+        from (
+            select t1.*, rownum as rn 
+            from (
+                select CC.* 
+                from (<include refid="union_query_sql"/>) CC
+                <dynamic prepend=" WHERE ">
+                    <isNotEmpty property="replyId"   prepend=" AND ">CMT_REPLY_ID=#replyId#</isNotEmpty>
+                    <isNotEmpty property="commentId" prepend=" AND ">CMT_COMMENT_ID=#commentId#</isNotEmpty>
+                    <isNotEmpty property="userId"    prepend=" AND ">USER_ID=#userId#</isNotEmpty>
+                    <isNotEmpty property="replyType" prepend=" AND ">REPLY_TYPE=#replyType#</isNotEmpty>
+                    <isNotEmpty property="isAudit"   prepend=" AND "><![CDATA[IS_AUDIT <> #isAudit#]]></isNotEmpty>
+                    <isNotEmpty property="isAudits" prepend=" AND ">
+                        <iterate property="isAudits" open="(" close=")" conjunction=" OR ">    
+                            IS_AUDIT = #isAudits[]# 
+                        </iterate>    
+                    </isNotEmpty>
+                    <isNotEmpty property="startDate" prepend=" AND ">CREATE_TIME &gt;= #startDate#</isNotEmpty>
+                    <isNotEmpty property="endDate"   prepend=" AND ">CREATE_TIME &lt; #endDate# + 1</isNotEmpty>
+                </dynamic>
+                order by CREATE_TIME DESC
+            ) t1
+            <dynamic prepend=" WHERE ">
+                <isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+            </dynamic>  
+            ) t2
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="_startRow"> rn &gt;= #_startRow# </isNotEmpty>
+        </dynamic>
+    </select>
+   
+   <select id="selectCmtReplyReviewContent" resultMap="cmtReplyMap2" parameterClass="java.util.Map">
+         <include refid="pageHeader"/>
+            SELECT CMT_REPLY_ID,CMT_COMMENT_ID,CREATE_TIME,CONTENT,REVIEWSTATUS 
+            FROM LVMAMA_PET.CMT_REPLY
+         <include refid="whereParamByReviewContent"/>
+         order by CREATE_TIME desc,CMT_REPLY_ID asc
+         <include refid="pageFooter"/>
+    </select>
+    
+    <update id="updateCmtReplyReviewStatus" parameterClass="com.lvmama.comm.vo.comment.CmtReplyVO">
+       update LVMAMA_PET.CMT_REPLY set REVIEWSTATUS = #reviewStatus#,IS_HIDE=#isHide#
+       where  CMT_REPLY_ID = #replyId#
+    </update>
+    
+    <select id="selectCountByCmtReplyReviewParam" parameterClass="java.util.Map" resultClass="Long">
+        SELECT COUNT(*) FROM LVMAMA_PET.CMT_REPLY
+        <include refid="whereParamByReviewContent"/>
+    </select> 
+</sqlMap>

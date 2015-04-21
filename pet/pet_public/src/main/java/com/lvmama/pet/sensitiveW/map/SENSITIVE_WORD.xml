@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SENSITIVE_WORD">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.sensitiveW.SensitiveWord">
+		<result column="SENSITIVE_ID" property="sensitiveId" />
+		<result column="CONTENT" property="content" />
+		<result column="CREATE_TIME" property="createTime" />
+	</resultMap>
+	
+	<resultMap id="contentResultMap" class="java.lang.String">
+		<result column="CONTENT" property="content" />
+	</resultMap>
+
+	<select id="selectByPrimarykey" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+		select * from
+		SENSITIVE_WORD where SENSITIVE_ID=#sensitiveId#
+	</select>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.sensitiveW.SensitiveWord">
+		<selectKey keyProperty="sensitiveId" resultClass="java.lang.Long">
+			SELECT
+			SENSITIVE_WORD_SEQ.nextval FROM DUAL
+		</selectKey>
+		insert into SENSITIVE_WORD (SENSITIVE_ID,CONTENT,CREATE_TIME)
+		VALUES(#sensitiveId#,#content#,sysdate)
+	</insert>
+
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.sensitiveW.SensitiveWord">
+		update SENSITIVE_WORD
+		<dynamic prepend="set">
+			<isNotEmpty prepend=" ," property="content">
+				CONTENT =
+				#content#
+			</isNotEmpty>
+			where SENSITIVE_ID = #sensitiveId#
+		</dynamic>
+	</update>
+
+	<select id="selectByParams" parameterClass="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		SELECT * FROM
+		SENSITIVE_WORD
+		<dynamic prepend="where">
+			<isNotEmpty property="content">
+				CONTENT like
+				'%'||#content#||'%'
+			</isNotEmpty>
+		</dynamic>
+		order by SENSITIVE_ID desc
+		)T
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow" prepend="">
+				ROWNUM &lt;=
+				#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend="">
+				ROWNUM1 &gt;=
+				#_startRow#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="selectByParamsCount" parameterClass="java.util.Map"
+		resultClass="java.lang.Long">
+		SELECT count(1) ct
+		FROM SENSITIVE_WORD
+		<dynamic prepend="where">
+			<isNotEmpty prepend="or" property="content">
+				CONTENT like
+				'%'||#content#||'%'
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterClass="java.lang.Long">
+		delete from
+		SENSITIVE_WORD where SENSITIVE_ID=#sensitiveId#
+	</delete>
+	
+	<select id="checkIsExisted" resultClass="java.lang.Long" parameterClass="java.lang.String">
+		SELECT count(1) ct
+		FROM SENSITIVE_WORD where CONTENT = #content#
+	</select>
+	
+	<select id="selectAll" resultMap="BaseResultMap">
+		select * from SENSITIVE_WORD order by SENSITIVE_ID desc
+	</select>
+	
+	<select id="selectListByIds" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		SELECT * FROM SENSITIVE_WORD
+		<dynamic prepend="where">
+			<isNotEmpty property="sensitiveIds">
+				<iterate property="sensitiveIds" open="(" close=")"
+					conjunction="or">
+					SENSITIVE_ID=#sensitiveIds[]#
+				</iterate>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<delete id="deleteByIds" parameterClass="java.util.Map">
+		<isNotEmpty property="sensitiveIds">
+			delete from SENSITIVE_WORD where 
+				<iterate property="sensitiveIds" open="(" close=")"
+					conjunction="or">
+					SENSITIVE_ID=#sensitiveIds[]#
+				</iterate>
+		</isNotEmpty>
+	</delete>
+</sqlMap>

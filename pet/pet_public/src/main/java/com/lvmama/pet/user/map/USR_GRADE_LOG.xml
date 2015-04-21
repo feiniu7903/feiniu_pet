@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="USR_GRADE_LOG">
+	<resultMap id="ResultLogMap" class="com.lvmama.comm.pet.po.user.UserGradeLog">
+		<result column="USER_ID" property="userId" />
+		<result column="GRADE" property="grade" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="VALIDITY_DATE" property="validityDate" />
+		<result column="OPERATER" property="operateName" />
+		<result column="MEMO" property="memo" />
+	</resultMap>
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.user.UserGradeLog">
+		insert into USER_GRADE_LOG
+		values(USER_GRADE_LOG_SEQ.nextval, #userId#,#grade#,sysdate,(select trunc(add_months(sysdate,24), 'Year') - 1 from dual),#operateName#,#memo#)
+	</insert>
+	
+	<select id="queryUserLogs" parameterClass="java.lang.String"
+		resultMap="ResultLogMap">
+		select * from USER_GRADE_LOG l  where l.user_id = #userId#
+		order by create_time desc
+	</select>
+
+</sqlMap>

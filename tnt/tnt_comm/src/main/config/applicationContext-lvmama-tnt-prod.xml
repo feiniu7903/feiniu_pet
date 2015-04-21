@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+	<bean id="tntProdPolicyService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${tntPublic.serviceUrl}/tntProdPolicyService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntProdPolicyService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="tntProdProductService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${tntPublic.serviceUrl}/tntProdProductService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntProdProductService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="tntProductService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${tntPublic.serviceUrl}/tntProductService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.prod.service.TntProductService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	
+	<bean id="tntSearchService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${tntPublic.serviceUrl}/tntSearchService" />
+		<property name="serviceInterface"
+			value="com.lvmama.tnt.search.service.SearchService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+</beans>

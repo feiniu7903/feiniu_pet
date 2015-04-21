@@ -1,0 +1,56 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./newProductWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="newProductWin" title="编辑库存" closable="true" sizable="false" border="normal" mode="embedded" apply="com.lvmama.pet.web.shop.shopProduct.EditStockAction">
+		<grid>
+			<columns>
+				<column width="120px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox></hbox>
+					<hbox><label value="@{saction.productName}" style="color:red;" />的当前库存量为<label value="@{saction.count,load-after='btnPreview.onClick'}" style="color:red;" /></hbox>
+				</row>
+				<row>
+					<hbox>上传文件：</hbox>
+					<hbox>
+						<textbox id="furl" maxlength="100" value="${saction.furl}" readonly="true" width="420px" visible = "false"/>
+						<textbox id="filename" maxlength="100" width="420px" readonly="true"/>
+						<button id="upBtn" label="上传文件" upload="true" apply="com.lvmama.pet.web.upload.UploadCtrl" onUpload='upBtn$composer.onUploadLocalTxt(event, furl, filename);Events.postEvent("onChange",furl,null);'></button>
+						<image width="15px" height="15px" src="/img/qm.gif" tooltip="file_description"/>
+						<popup id="file_description" width="300px"> 
+								<label value="文件格式为txt,编码格式为UTF-8"/> 
+								<label value="中文、英文、数字组成，可有空格"/> 
+								<label value="每行100个字节，文件最大不超过5M"/> 
+						</popup>
+					</hbox>						
+				</row>
+				<!--
+				<row>
+					<hbox>合作网站优惠券：</hbox>
+					<hbox>
+					<textbox id="stocks" 
+						value="@{saction.couponString }" 
+      					rows="20" cols="100" maxlength="100000">
+      				</textbox>
+					</hbox>
+				</row>
+				-->
+				<row>
+					<hbox>清空原库存：</hbox>
+					<hbox>
+						<checkbox id="cleanOldData" onCheck='saction.cleanOldData =self.checked;' label="清空"/>
+					</hbox>	
+				</row>
+				<row>
+					<hbox></hbox>
+					<hbox>
+						 <button label="上传更新" id="btnPreview" width="100px" onClick="saction.save();"/>
+						 <button label="导出库存" id="exportStock" width="100px" onClick="saction.exportStock();"/>
+					</hbox>						
+				</row>
+																											
+			</rows>
+		</grid>	
+	</window>
+</zk>

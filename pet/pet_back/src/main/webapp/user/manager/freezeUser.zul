@@ -1,0 +1,32 @@
+<?page title="冻结用户" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./freezeUser"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window title="冻结用户" border="normal"
+		apply="com.lvmama.pet.web.user.manager.FreezeUserAction" id="freezeUser" width="100px">
+		<grid id="conditions">
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+			     <hbox>用户名：</hbox>
+			     <hbox>
+			      <label value="@{saction.userName}"/>
+			     </hbox>
+			    </row>
+			    <row>
+			     <hbox>冻结理由：</hbox>
+			     <hbox>
+			      <textbox id="freezeReason" value="@{saction.freezeReason}"/>
+			     </hbox>
+			    </row>
+				<row spans="2,0" align="right">
+					<hbox>
+						<button label="确认" id="confirm" width="80px" onClick='saction.doSubmit();' />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+
+</zk>

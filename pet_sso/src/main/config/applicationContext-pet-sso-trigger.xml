@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+	<bean id="defaultRegisterProcesser" class="com.lvmama.sso.processer.DefaultRegisterProcesser" />	
+	<bean id="normalRegisterProcesser" class="com.lvmama.sso.processer.NormalRegisterProcesser" parent="defaultRegisterProcesser"/>
+	<bean id="silentRegisterProcesser" class="com.lvmama.sso.processer.SilentRegisterProcesser" parent="defaultRegisterProcesser"/>
+	<bean id="batchRegisterProcesser" class="com.lvmama.sso.processer.BatchRegisterProcesser" parent="defaultRegisterProcesser"/>
+
+	<bean id="pointProcesser" class="com.lvmama.sso.processer.PointProcesser" />
+	<bean id="confirmRegisterProcesser" class="com.lvmama.sso.processer.ConfirmRegisterProcesser" />
+	<bean id="activateMembershipCardProcesser" class="com.lvmama.sso.processer.ActivateMembershipCardProcesser" />
+	<bean id="activateMembershipCardBySMSProcesser" class="com.lvmama.sso.processer.ActivateMembershipCardBySMSProcesser" />
+
+	<!-- 消息接收 -->
+	<bean id="ssoMessageConsumer" class="com.lvmama.comm.jms.SSOMessageConsumer">
+		<property name="processerList">
+			<list>
+			    <ref bean="normalRegisterProcesser"/>
+			    <ref bean="silentRegisterProcesser"/>
+			    <ref bean="batchRegisterProcesser"/>
+				<ref bean="pointProcesser"/>
+				<ref bean="confirmRegisterProcesser" />
+				<ref bean="activateMembershipCardProcesser" />
+				<ref bean="activateMembershipCardBySMSProcesser" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 订阅 -->
+	<bean id="ssoMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="ssoMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+	
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="ssoTopicListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="SSO_TOPIC" />
+		<property name="messageListener" ref="ssoMessageListener" />
+	</bean>
+	
+</beans>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MOBILE_ACTIVITY_FIFA_LUCKYCODE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.mobile.MobileActivityFifaLuckycode" >
+    <result column="ID" property="id" />
+    <result column="LUCKY_CODE" property="luckyCode" />
+    <result column="SEND_TIME" property="sendTime" />
+    <result column="DEVICE_ID" property="deviceId" />
+    <result column="CHANNEL" property="channel" />
+    <result column="LVVERSION" property="lvversion" />
+    <result column="USERID" property="userid" />
+    <result column="MOBILE" property="mobile" />
+    <result column="MEMO" property="memo" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActivityFifaLuckycode" >
+    select ID, LUCKY_CODE, SEND_TIME, DEVICE_ID, CHANNEL, LVVERSION, USERID, MOBILE, MEMO
+    from MOBILE_ACTIVITY_FIFA_LUCKYCODE
+    where ID = #id#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActivityFifaLuckycode" >
+    delete from MOBILE_ACTIVITY_FIFA_LUCKYCODE
+    where ID = #id#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActivityFifaLuckycode" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      select MOBILE_ACT_FIFA_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into MOBILE_ACTIVITY_FIFA_LUCKYCODE (ID, LUCKY_CODE, SEND_TIME, DEVICE_ID, CHANNEL,
+      LVVERSION, USERID, MOBILE, MEMO)
+    values (#id#, #luckyCode#, #sendTime#, #deviceId#,
+      #channel#, #lvversion#, #userid#, #mobile#, #memo#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActivityFifaLuckycode" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      select MOBILE_ACT_FIFA_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into MOBILE_ACTIVITY_FIFA_LUCKYCODE
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="luckyCode" >
+        LUCKY_CODE
+      </isNotNull>
+      <isNotNull prepend="," property="sendTime" >
+        SEND_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="deviceId" >
+        DEVICE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="channel" >
+        CHANNEL
+      </isNotNull>
+      <isNotNull prepend="," property="lvversion" >
+        LVVERSION
+      </isNotNull>
+      <isNotNull prepend="," property="userid" >
+        USERID
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        MOBILE
+      </isNotNull>
+      <isNotNull prepend="," property="memo" >
+        MEMO
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id#
+      </isNotNull>
+      <isNotNull prepend="," property="luckyCode" >
+        #luckyCode#
+      </isNotNull>
+      <isNotNull prepend="," property="sendTime" >
+        #sendTime#
+      </isNotNull>
+      <isNotNull prepend="," property="deviceId" >
+        #deviceId#
+      </isNotNull>
+      <isNotNull prepend="," property="channel" >
+        #channel#
+      </isNotNull>
+      <isNotNull prepend="," property="lvversion" >
+        #lvversion#
+      </isNotNull>
+      <isNotNull prepend="," property="userid" >
+        #userid#
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        #mobile#
+      </isNotNull>
+      <isNotNull prepend="," property="memo" >
+        #memo#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActivityFifaLuckycode" >
+    update MOBILE_ACTIVITY_FIFA_LUCKYCODE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="sendTime" >
+        SEND_TIME = #sendTime#
+      </isNotNull>
+      <isNotNull prepend="," property="deviceId" >
+        DEVICE_ID = #deviceId#
+      </isNotNull>
+      <isNotNull prepend="," property="channel" >
+        CHANNEL = #channel#
+      </isNotNull>
+      <isNotNull prepend="," property="lvversion" >
+        LVVERSION = #lvversion#
+      </isNotNull>
+      <isNotNull prepend="," property="userid" >
+        USERID = #userid#
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        MOBILE = #mobile#
+      </isNotNull>
+      <isNotNull prepend="," property="memo" >
+        MEMO = #memo#
+      </isNotNull>
+    </dynamic>
+    where ID = #id#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.mobile.MobileActivityFifaLuckycode" >
+    update MOBILE_ACTIVITY_FIFA_LUCKYCODE
+    set LUCKY_CODE = #luckyCode#,
+      SEND_TIME = #sendTime#,
+      DEVICE_ID = #deviceId#,
+      CHANNEL = #channel#,
+      LVVERSION = #lvversion#,
+      USERID = #userid#,
+      MOBILE = #mobile#,
+      MEMO = #memo#
+    where ID = #id#
+  </update>
+  
+   <!-- 分页查询 头部 -->
+  <sql id="pageHeader">
+		 SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+  </sql>
+  
+  <!-- 分页查询 尾部 -->
+  <sql id="pageFooter">
+		 ) A
+	    <dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+	      )
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>		
+		</dynamic>
+  </sql>
+  
+  <!-- 查询条件 -->
+  <sql id="queryListWhere">
+      <dynamic prepend=" WHERE ">
+           <isNotEmpty property="doNothing" prepend=" AND "> 1 = 1 </isNotEmpty>
+		    <isNotEmpty property="id" prepend=" AND ">ID = #id#</isNotEmpty>
+		    <isNotEmpty property="luckyCode" prepend=" AND ">LUCKY_CODE = #luckyCode#</isNotEmpty>
+		    <isNotEmpty property="mobile" prepend=" AND ">MOBILE = #mobile#</isNotEmpty>
+			<isNotEmpty property="deviceId" prepend=" AND ">DEVICE_ID = #deviceId#</isNotEmpty>
+			<isNotEmpty property="channel" prepend=" AND ">CHANNEL = #channel#</isNotEmpty>
+			<isNotEmpty property="userid" prepend=" AND ">USERID = #userid#</isNotEmpty>
+			<isNotEmpty property="useridNotNull" prepend=" AND ">USERID is not null </isNotEmpty>
+			<isNotEmpty property="sendTimeStart" prepend=" AND ">SEND_TIME &gt;= #sendTimeStart#</isNotEmpty>
+			<isNotEmpty property="sendTimeEnd" prepend=" AND ">SEND_TIME &lt;= #sendTimeEnd#</isNotEmpty>
+			 order by SEND_TIME desc
+		</dynamic>
+  </sql>
+  
+  <!-- 查询列表  -->
+  <select id="queryMobileActivityFifaLuckycodeList" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="isPaging">
+		  <include refid="pageHeader"/>
+		</isNotEmpty>
+		SELECT * FROM MOBILE_ACTIVITY_FIFA_LUCKYCODE
+		<include refid="queryListWhere"/>
+		<isNotEmpty property="isPaging">
+		   <include refid="pageFooter"/>
+		</isNotEmpty>
+   </select>
+
+    <!-- 总数  -->
+	<select id="countMobileActivityFifaLuckycodeList" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		SELECT COUNT(*) FROM MOBILE_ACTIVITY_FIFA_LUCKYCODE
+		<include refid="queryListWhere"/>
+	</select>
+  
+	 <!-- 获取当前sequence下一值  -->
+	<select id="selectMafSeqNextval" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		select MOBILE_ACT_FIFA_SEND_SEQ.nextval as id from DUAL
+	</select>
+  
+    <!-- 获取当前sequence值，是当前  -->
+	<select id="selectMafLuckyCodeSeqCurrval" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		select max(t.id) from mobile_activity_fifa_luckycode t
+		<include refid="queryListWhere"/>
+	</select>
+  
+   <!-- 查询每天第10名，100名，1000名用户 -->
+   <select id="queryTheWinningUser4Fifa" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		SELECT t1.*
+		  FROM (SELECT ROW_NUMBER() OVER(PARTITION BY to_char(t.SEND_TIME,'yyyy-MM-dd') ORDER BY t.SEND_TIME ASC) lev,
+		               t.*
+		          FROM mobile_activity_fifa_luckycode t where t.SEND_TIME is not null) t1
+		 WHERE (lev = 10 or lev = 100 or lev = 1000)
+		 <isNotEmpty property="sendTimeStart" prepend=" AND ">SEND_TIME &gt;= to_date(#sendTimeStart#,'yyyy-MM-dd hh24:mi:ss')</isNotEmpty>
+		 <isNotEmpty property="sendTimeEnd" prepend=" AND ">SEND_TIME &lt; to_date(#sendTimeEnd#,'yyyy-MM-dd hh24:mi:ss')</isNotEmpty>
+		 ORDER BY SEND_TIME ASC
+   </select>
+   
+   
+</sqlMap>

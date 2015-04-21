@@ -1,0 +1,1 @@
+<@s.if test="asynchronousResult=='success'">success</@s.if><@s.else>fail</@s.else>

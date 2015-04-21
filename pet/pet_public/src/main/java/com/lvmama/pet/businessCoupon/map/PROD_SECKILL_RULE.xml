@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PROD_SECKILL_RULE">
+  <!-- 别名 -->
+  <typeAlias alias="prodSeckillRule" type="com.lvmama.comm.pet.po.businessCoupon.ProdSeckillRule"/>
+  <typeAlias alias="seckillRuleVO" type="com.lvmama.comm.vo.SeckillRuleVO"/>
+  <resultMap id="prodSeckillRuleResult" class="prodSeckillRule">
+    <result column="ID" property="id" />
+    <result column="BUSINESS_COUPON_ID" property="businessCouponId" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="BRANCH_ID" property="branchId"/>
+    <result column="START_TIME" property="startTime" />
+    <result column="END_TIME" property="endTime" />
+    <result column="REDUCE_PRICE" property="reducePrice" />
+    <result column="AMOUNT" property="amount" />
+    <result column="PAY_VALID_TIME" property="payValidTime" />
+    <result column="IP_BUY_LIMIT" property="ipBuyLimit" />
+    <result column="USER_BUY_LIMIT" property="userBuyLimit"/>
+    <result column="LOCAL_STOCK" property="localStock"/>
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="CREATOR" property="creator" />
+    <result column="TIME_PRICE_STATUS" property="timePriceStatus" />
+    <result column="TIME_PRICE_DATE" property="timePriceDate"></result>
+    <result column="TIME_PRICE" property="timePrice"/>
+  </resultMap>
+  <!-- 特卖规则公共列 -->
+  <sql id="commonColumns">
+	 <![CDATA[
+	 	 ID,
+	     BUSINESS_COUPON_ID,
+		 PRODUCT_ID,
+		 BRANCH_ID,
+		 START_TIME,
+		 END_TIME,
+		 REDUCE_PRICE,
+		 AMOUNT,
+		 PAY_VALID_TIME,
+		 IP_BUY_LIMIT,
+		 USER_BUY_LIMIT,
+		 LOCAL_STOCK,
+		 CREATE_TIME,
+		 CREATOR,
+		 TIME_PRICE_STATUS,
+		 TIME_PRICE_DATE,
+		 TIME_PRICE
+	  ]]>
+  </sql>
+    <insert id="insert" parameterClass="prodSeckillRule">
+    <selectKey keyProperty="id" resultClass="java.lang.Long">
+      select PROD_SECKILL_RULE_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PROD_SECKILL_RULE (
+    	<include refid="commonColumns"/>
+    	)
+    values 
+    	(#id#,#businessCouponId#,#productId#,#branchId#,#startTime#,#endTime#,#reducePrice#,#amount#,#payValidTime#,#ipBuyLimit#,#userBuyLimit#,#localStock#,sysdate,#creator#,#timePriceStatus#,#timePriceDate#,#timePrice#)
+  </insert>
+  <select id="querySeckillRule" parameterClass="java.util.Map" resultMap="prodSeckillRuleResult">
+	 select * from lvmama_pet.prod_seckill_rule seckilltwo
+		join (  
+		  select BRANCH_ID branchId,min(START_TIME) startTime,min(END_TIME) endTime from lvmama_pet.prod_seckill_rule seckill
+		  <isNotEmpty property="nowDate">
+		  	  where  seckill.end_time &gt; #nowDate#
+		  </isNotEmpty>
+		  <isEmpty>
+			  where <![CDATA[ seckill.end_time > sysdate ]]>
+		  </isEmpty>
+		  group by BRANCH_ID
+		) c on seckilltwo.branch_id = c.branchId 
+		       and seckilltwo.start_time = c.startTime 
+		       and seckilltwo.end_time = c.endTime
+  </select>
+   <select id="selectByParam" resultMap="prodSeckillRuleResult" parameterClass="java.util.HashMap">
+   		SELECT * FROM lvmama_pet.PROD_SECKILL_RULE T 
+   			  where 1=1 
+   			  <isNotEmpty prepend="AND" property="branchId">
+	           	T.BRANCH_ID = #branchId#
+	     	 </isNotEmpty>
+	     	 <isNotEmpty prepend="AND" property="valid">
+	           	<![CDATA[  T.END_TIME>sysdate]]>
+	     	 </isNotEmpty>
+	     	 <isNotEmpty prepend="AND" property="businessCouponId">
+	           	T.BUSINESS_COUPON_ID = #businessCouponId#
+	     	 </isNotEmpty>
+	     	 <isNotEmpty prepend="AND" property="productId">
+	            T.PRODUCT_ID = #productId#
+	     	 </isNotEmpty>
+	     	 order by T.CREATE_TIME desc
+   </select>
+  <update id="updateSeckillRule" parameterClass="prodSeckillRule">
+  		update lvmama_pet.prod_seckill_rule
+  		set TIME_PRICE_STATUS = #timePriceStatus#
+  		where ID = #id#
+  </update>
+  <!-- 特卖规则数 -->
+  <select id="selectCountByParam" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+	  select count(*) from 
+	 	 (select T.business_coupon_id 
+	  		from lvmama_pet.prod_seckill_rule T
+		  	     WHERE 1=1
+		  	   	  <isNotEmpty prepend="AND" property="branchId">
+		           	T.BRANCH_ID = #branchId#
+		     	 </isNotEmpty>   	 
+		     	 group by T.business_coupon_id
+		  )   
+  </select>
+  
+  <update id="updateByPk" parameterClass="prodSeckillRule">
+  		update lvmama_pet.prod_seckill_rule
+  		set 
+		 START_TIME =#startTime#,
+		 END_TIME =#endTime#,
+		 REDUCE_PRICE = #reducePrice#,
+		 AMOUNT = #amount#,
+		 PAY_VALID_TIME = #payValidTime#,
+		 IP_BUY_LIMIT = #ipBuyLimit#,
+		 USER_BUY_LIMIT = #userBuyLimit#,
+		 LOCAL_STOCK = #localStock#,
+		 CREATE_TIME =sysdate,
+		 CREATOR = #creator#
+		 	where ID=#id#
+  </update>
+  <delete id="deleteFromProdseckillrule" parameterClass="java.lang.Long">
+		delete from prod_seckill_rule where BUSINESS_COUPON_ID=#businessCouponId#
+  </delete>
+  <delete id="deleteByPk" parameterClass="java.lang.Long">
+		delete from prod_seckill_rule where ID=#id#
+  </delete>
+  <select id="queryValidSeckillRule" parameterClass="java.util.Map" resultMap="prodSeckillRuleResult">
+	 select seckilltwo.* from lvmama_pet.prod_seckill_rule seckilltwo
+		join (  
+		  select BRANCH_ID branchId,min(START_TIME) startTime,min(END_TIME) endTime from lvmama_pet.prod_seckill_rule seckill
+		  <isNotEmpty property="nowDate">
+		  	  where seckill.end_time &gt; #nowDate#
+		  </isNotEmpty>
+		  <isEmpty property="nowDate">
+			  where <![CDATA[ seckill.end_time > sysdate ]]>
+		  </isEmpty>
+		  <isNotEmpty property="branchId" prepend="and">
+		  		seckill.branch_id = #branchId#
+		  </isNotEmpty>
+		  <isNotEmpty property="seckillId" prepend="and">
+		  		seckill.id = #seckillId#
+		  </isNotEmpty>
+		  <isNotEmpty property="productId" prepend="and">
+		  		seckill.PRODUCT_ID = #productId#
+		  </isNotEmpty>
+		  group by BRANCH_ID
+		) c on seckilltwo.branch_id = c.branchId 
+		       and seckilltwo.start_time = c.startTime 
+		       and seckilltwo.end_time = c.endTime
+  </select>
+  <!-- 客户端分页查询规则 -->
+  <select id="querySeckillRuleByClient" parameterClass="java.util.Map" resultMap="prodSeckillRuleResult">
+  	   select * from lvmama_pet.prod_seckill_rule t1
+  	  		where 1=1
+  	  		 <isNotEmpty prepend="AND" property="startDate">
+	           t1.start_time &gt; #startDate#
+	     	 </isNotEmpty>
+	     	  <isNotEmpty prepend="AND" property="endDate">
+	           t1.end_time &lt; #endDate#
+	     	 </isNotEmpty>
+	     	 <isNotEmpty prepend="AND" property="productId">
+	           t1.PRODUCT_ID = #productId#
+	     	 </isNotEmpty>
+	     	 <isNotEmpty prepend="AND" property="branchId">
+	           t1.BRANCH_ID = #branchId#
+	     	 </isNotEmpty>
+  </select>
+  <select id="queryNullitySeckillRule" parameterClass="java.util.Map" resultMap="prodSeckillRuleResult">
+  	select seckilltwo.* from lvmama_pet.prod_seckill_rule seckilltwo
+		join (  
+		  select BRANCH_ID branchId,max(START_TIME) startTime,max(END_TIME) endTime from lvmama_pet.prod_seckill_rule seckill
+		  <isNotEmpty property="nowDate">
+		  	  where seckill.end_time &lt; #nowDate#
+		  </isNotEmpty>
+		  <isEmpty property="nowDate">
+			  where <![CDATA[ seckill.end_time < sysdate ]]>
+		  </isEmpty>
+		  <isNotEmpty property="branchId" prepend="and">
+		  		seckill.branch_id = #branchId#
+		  </isNotEmpty>
+		  <isNotEmpty property="seckillId" prepend="and">
+		  		seckill.id = #seckillId#
+		  </isNotEmpty>
+		  <isNotEmpty property="productId" prepend="and">
+		  		seckill.PRODUCT_ID = #productId#
+		  </isNotEmpty>
+		  group by BRANCH_ID
+		) c on seckilltwo.branch_id = c.branchId 
+		       and seckilltwo.start_time = c.startTime 
+		       and seckilltwo.end_time = c.endTime
+  </select>
+  <update id="restoreStockSeckill" parameterClass="java.util.Map">
+  		update lvmama_pet.prod_seckill_rule seckill
+  		set seckill.AMOUNT = seckill.AMOUNT + #decreaseStock#
+  		where seckill.id = #id#
+  </update>
+  <update id="minusStockSeckill" parameterClass="java.util.Map">
+  		update lvmama_pet.prod_seckill_rule seckill
+		set seckill.AMOUNT = seckill.AMOUNT - #decreaseStock#
+		where seckill.id = #id#
+		and seckill.amount - #decreaseStock# >= 0
+  </update>
+</sqlMap>

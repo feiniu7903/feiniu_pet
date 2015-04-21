@@ -1,0 +1,64 @@
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head>
+<title>行程单</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<style type="text/css">
+*{ margin:0; padding:0; border:0; font-size:12px; font-family:SimSun; font-weight:normal;}
+.chanpin_all{ width:690px; margin:0 auto; padding:20px 0; text-align:left}
+.chanpin_all h3{ position:relative; margin:0 auto; font-size:20px; font-family:SimSun; font-weight: normal; line-height:30px; padding-left:15px;}
+.chanpin_all h3 span.line{ display:block; width:6px; height:100%; position:absolute; left:0; top:10px; margin-top:-9px; _margin-top:-11px; background:#999;}
+.chanpin_all h3 span.xh_name{float:right;padding-right:10px;font-size:12px;color:#666}
+.chanpin_xc,.chanpin_fy,.chanpin_ts,.chanpin_jt,.chanpin_qz{ margin-top:10px;}
+.chanpin_xc dt,.chanpin_fy dt,.chanpin_ts dt,.chanpin_jt dt,.chanpin_qz dt{ border-bottom:4px solid #d65997;}
+.chanpin_xc dt span,.chanpin_fy dt span,.chanpin_ts dt span,.chanpin_jt dt span,.chanpin_qz dt span{ display:block; width:110px; height:26px; line-height:30px; background:#d65997; text-align:center; font-family:SimSun; font-size:16px; color:#FFF; overflow:hidden;}
+.chanpin_xc dd,.chanpin_fy dd,.chanpin_ts dd,.chanpin_jt dd,.chanpin_qz dd{ border:#e5e5e5 solid 6px; padding:10px;}
+.chanpin_xc dd h4{ font-size:16px; height:22px; line-height:22px; font-family:SimSun; color:#333; font-weight:bold;}
+.chanpin_xc dd .border_t,.chanpin_fy dd .border_t,.chanpin_ts dd .border_t,.chanpin_jt dd .border_t,.chanpin_qz dd .border_t{ border-top:#CCC dotted 1px; padding-top:10px; margin-top:15px;}
+.chanpin_xc h4 span{ font-size:18px; font-family:SimSun; color:#cc0066; padding-right:10px; font-weight:bold;}
+.chanpin_xc dd p{ font-size:14px; line-height:24px; padding:10px 0; color:#595959;}
+.yc_zs{ width:640px; margin-top:20px; padding:10px; background:#eee; line-height:24px; font-size:12px; color:#333;}
+.yc_zs b{ padding-right:5px; font-size:12px; font-weight:700;}
+.yc_zs span{ padding-right:20px; font-size:12px;}
+.chanpin_fy h5,.chanpin_ts h5,.chanpin_jt h5,.chanpin_qz h5{ font-size:14px; font-weight:bold; line-height:24px;}
+.chanpin_fy p,.chanpin_ts p,.chanpin_jt p,.chanpin_qz p{ line-height:24px;}
+</style>
+</head>
+
+<body>
+	<center>
+<div class="chanpin_all">
+	<h3><span class="xh_name"></span><span class="line"></span>${PRODUCTNAME}</h3>
+    <dl class="chanpin_xc">
+    	<dt>
+        	<span>行程说明</span>
+        </dt>
+        <dd>
+        	${TRAVELDESC}
+        </dd>
+    </dl>
+    <dl class="chanpin_fy">
+    	<dt>
+        	<span>费用说明</span>
+        </dt>
+        <dd>
+        	<h5>费用包含</h5>
+            <p>${COSTCONTAIN}</p>
+            <h5>费用不包含</h5>
+            <p>${NOCOSTCONTAIN}</p>
+			<h5>推荐项目</h5>
+            <p>${RECOMMENDPROJECT}</p>
+            <h5>购物说明</h5>
+            <p>${SHOPPINGEXPLAIN}</p>
+        </dd>
+    </dl>
+    <dl class="chanpin_jt">
+    	<dt>
+        	<span>交通信息</span>
+        </dt>
+        <dd>
+            <p>${TRAFFICINFO}</p>
+        </dd>
+    </dl>
+</div></center>
+</body>
+</html>

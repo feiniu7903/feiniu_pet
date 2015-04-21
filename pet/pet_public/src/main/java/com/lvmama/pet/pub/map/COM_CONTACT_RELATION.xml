@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_CONTACT_RELATION" >
+ <!-- ===================yuzhibing begin============================= -->
+  <typeAlias alias="ComContactRelation" type="com.lvmama.comm.pet.po.pub.ComContactRelation"/>
+  	
+  <resultMap id="BaseResultMap" class="ComContactRelation" >
+    <result column="CONTACT_RELATION_ID" property="contactRelationId" />
+    <result column="CONTACT_ID" property="contactId" />
+    <result column="OBJECT_ID" property="objectId" />
+    <result column="OBJECT_TYPE" property="objectType" />
+  </resultMap>
+  
+  <select id="selectByComContactRelation" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComContactRelation">
+    select * from COM_CONTACT_RELATION
+    <dynamic prepend="where" >
+      <isNotNull prepend="and" property="contactId" >
+        CONTACT_ID = #contactId#
+      </isNotNull>
+      <isNotNull prepend="and" property="objectId" >
+        OBJECT_ID = #objectId#
+      </isNotNull>
+      <isNotNull prepend="and" property="objectType" >
+        OBJECT_TYPE = #objectType#
+      </isNotNull>
+    </dynamic>
+  </select>
+  
+  <select id="selectByObjectId" resultClass="com.lvmama.comm.pet.po.pub.ComContactRelation" parameterClass="java.lang.Long">
+  	select * from COM_CONTACT_RELATION where OBJECT_ID=#objectId#
+  </select>
+  
+  <delete id="deleteContactRelation">
+    delete from COM_CONTACT_RELATION
+    where CONTACT_RELATION_ID = #contactRelationId#
+  </delete>
+  <delete id="deleteAllContactRelation" parameterClass="com.lvmama.comm.pet.po.pub.ComContactRelation">
+  	delete from COM_CONTACT_RELATION where OBJECT_ID=#objectId# and OBJECT_TYPE = #objectType#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComContactRelation" >
+	<selectKey keyProperty="contactRelationId" resultClass="java.lang.Long">
+    	select COM_CONTACT_RELATION_SEQ.nextVal as id from dual
+    </selectKey>
+    insert into COM_CONTACT_RELATION (CONTACT_RELATION_ID, CONTACT_ID, OBJECT_ID, OBJECT_TYPE)
+    values (#contactRelationId#, #contactId#, #objectId#, #objectType#)
+  </insert>
+  
+  <insert id="addContactRelation" parameterClass="java.lang.Long">
+  	 insert into COM_CONTACT_RELATION
+     (CONTACT_RELATION_ID, CONTACT_ID, OBJECT_ID, OBJECT_TYPE)
+     select COM_CONTACT_RELATION_SEQ.Nextval,
+            CONTACT_ID,
+            OBJECT_ID,
+            OBJECT_TYPE
+       from COM_CONTACT_RELATION
+      where object_type = 'META_PRODUCT'
+        and object_id = #objectId#
+  </insert>
+</sqlMap>
