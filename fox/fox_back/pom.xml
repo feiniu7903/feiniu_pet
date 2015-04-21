@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.lvmama.fox.back</groupId>
+    <artifactId>fox_back</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+    <name>自组团后台</name>
+
+	<!--包依赖关系-->
+    <dependencies>
+		<!--base -->
+		<dependency>
+		  <groupId>pom_base</groupId>
+		  <artifactId>pom_base</artifactId>
+		  <version>1.5</version>
+		  <type>pom</type>
+		</dependency>
+		<dependency>
+		  <groupId>com.lvmama.comm</groupId>
+		  <artifactId>lvmama_comm</artifactId>
+		  <version>1.0.0-SNAPSHOT</version>
+		</dependency>
+    </dependencies>
+	
+</project>
