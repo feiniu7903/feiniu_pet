@@ -1,0 +1,41 @@
+<OrderInfo>
+	<SellerSysNo>${sellerSysNo}</SellerSysNo>
+	<ThirdpartOrderID>${thirdpartOrderId}</ThirdpartOrderID>
+	<SOAmount>${soAmount}</SOAmount>
+	<ThirdpartCustomerID>${thirdpartCustomerId}</ThirdpartCustomerID>
+	<SubscriberName>${subscriberName}</SubscriberName>
+	<SubscriberIDCardType>${subscriberIdCardType}</SubscriberIDCardType>
+	<SubscriberIDCard>${subscriberIdCard}</SubscriberIDCard>
+	<SubscriberPhone>${subscriberPhone}</SubscriberPhone>
+	<OrderDate>${orderDate}</OrderDate>
+	<Memo>LVMAMA</Memo>
+	<IsPay>${isPay}</IsPay>
+	<OrderConsumerList>
+		<#list orderConsumerList as orderConsumer>
+		<OrderConsumer>
+			<ConsumerName>${orderConsumer.consumerName}</ConsumerName>
+			<ConsumerIDCardType>${orderConsumer.consumerIDCardType}</ConsumerIDCardType>
+			<ConsumerIDCard>${orderConsumer.consumerIDCard}</ConsumerIDCard>
+			<OrderConsumerItemList>
+				<#list orderConsumer.orderConsumerItemList as orderConsumerItem>
+				<OrderConsumerItem>
+					<ProductID>${orderConsumerItem.productID}</ProductID>
+					<UnitDate>${orderConsumerItem.unitDate}</UnitDate>
+				</OrderConsumerItem>
+				</#list>
+			</OrderConsumerItemList>
+		</OrderConsumer>
+		</#list>
+	</OrderConsumerList>
+	<OrderItemList>
+		<#list orderItemList as orderItem>
+		<OrderItem>
+			<ProductID>${orderItem.productId}</ProductID>
+			<UnitDate>${orderItem.unitDate}</UnitDate>
+			<Price>${orderItem.price}</Price>
+			<SubscriptionPrice>0</SubscriptionPrice>
+			<Quantity>${orderItem.quantity}</Quantity>
+		</OrderItem>
+		</#list>
+	</OrderItemList>
+</OrderInfo>	

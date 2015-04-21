@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="DISTRIBUTION_PROD_CATEGORY" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributionProductCategory" >
+    <result column="DISTRIBUTION_PROD_CATEGORY_ID" property="distributionProductCategoryId" />
+    <result column="DISTRIBUTOR_INFO_ID" property="distributorInfoId" />
+    <result column="PRODUCT_TYPE" property="productType" />
+    <result column="DISCOUNT_RATE" property="discountRate" />
+    <result column="PAY_ONLINE" property="payOnline" />
+    <result column="SUB_PRODUCT_TYPE" property="subProductType"/> 
+  </resultMap>
+
+	<sql id="sql_where">
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="productType">
+				PRODUCT_TYPE = #productType#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="distributorInfoId">
+				DISTRIBUTOR_INFO_ID = #distributorInfoId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="payOnline">
+				PAY_ONLINE = #payOnline#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="subProductType">
+				SUB_PRODUCT_TYPE = #subProductType#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+
+	<select id="selectByParams" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		SELECT * FROM DISTRIBUTION_PROD_CATEGORY
+		<include refid="DISTRIBUTION_PROD_CATEGORY.sql_where" />
+	</select>
+	
+	<select id="selectListDistributionProductCategory" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+		SELECT * FROM DISTRIBUTION_PROD_CATEGORY DC WHERE DC.DISTRIBUTOR_INFO_ID = #distributorInfoId#
+	</select>
+
+	<insert id="insert"	parameterClass="com.lvmama.comm.bee.po.distribution.DistributionProductCategory">
+		<selectKey  keyProperty="distributionProductCategoryId" resultClass="Long"> SELECT DISTRIBUTION_PROD_CATEGORY_SEQ.NEXTVAL FROM DUAL</selectKey>
+		INSERT INTO DISTRIBUTION_PROD_CATEGORY VALUES
+		(#distributionProductCategoryId#,#distributorInfoId#,#productType#,#discountRate#,#payOnline#,#subProductType#)
+	</insert>
+
+	<update id="updateBydistributionProductCategoryId"
+		parameterClass="com.lvmama.comm.bee.po.distribution.DistributionProductCategory">
+		UPDATE DISTRIBUTION_PROD_CATEGORY  SET DISCOUNT_RATE=#discountRate# 
+		WHERE
+		DISTRIBUTION_PROD_CATEGORY_ID=#distributionProductCategoryId#
+	</update>
+
+	<delete id="deleteBydistributionProductCategoryId"
+		parameterClass="java.lang.Long">
+		DELETE FROM DISTRIBUTION_PROD_CATEGORY WHERE
+		DISTRIBUTION_PROD_CATEGORY_ID=#distributionProductCategoryId#
+	</delete>
+	
+	<select id="selectPistributionProductCategoryConditionByCount" parameterClass="java.util.Map" resultClass="Long">
+		SELECT COUNT(1) FROM DISTRIBUTION_PROD_CATEGORY D
+		WHERE  D.DISTRIBUTOR_INFO_ID = #distributorInfoId#
+		<isNotEmpty prepend="AND" property="productType">
+			D.PRODUCT_TYPE = #productType#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="subProductType">
+			D.SUB_PRODUCT_TYPE = #subProductType#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="payOnline">
+			D.PAY_ONLINE = #payOnline#
+		</isNotEmpty>
+	</select>
+</sqlMap>

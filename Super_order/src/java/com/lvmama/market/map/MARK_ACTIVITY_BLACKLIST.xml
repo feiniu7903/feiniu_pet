@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_ACTIVITY_BLACKLIST">
+
+	<typeAlias alias="markActivityBlacklist"
+		type="com.lvmama.comm.pet.po.mark.MarkActivityBlacklist" />
+
+	<resultMap id="MarkActivityBlacklistMap" class="markActivityBlacklist">
+		<result column="BLACK_ID" property="blackId" />
+		<result column="EMAIL" property="email" />
+		<result column="MOBILE_NUMBER" property="mobileNumber" />
+		<result column="CREATE_TIME" property="createTime" />
+	</resultMap>
+
+	<insert id="insert" parameterClass="markActivityBlacklist">
+		<selectKey keyProperty="blackId" resultClass="java.lang.Long">
+			SELECT
+			MARK_ACTIVITY_BLACKLIST_SEQ.nextval FROM DUAL
+		</selectKey>
+		insert into MARK_ACTIVITY_BLACKLIST (BLACK_ID,EMAIL,MOBILE_NUMBER,CREATE_TIME)
+		VALUES(#blackId#,#email#,#mobileNumber#,sysdate)
+	</insert>
+
+	<delete id="delete" parameterClass="java.lang.Long">
+		DELETE FROM
+		MARK_ACTIVITY_BLACKLIST
+		WHERE BLACK_ID = #blackId#
+	</delete>
+
+	<update id="update" parameterClass="markActivityBlacklist">
+		update MARK_ACTIVITY_BLACKLIST
+		<dynamic prepend="set">
+			<isNotEmpty prepend="," property="email">
+				EMAIL = #email#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="mobileNumber">
+				MOBILE_NUMBER =
+				#mobileNumber#
+			</isNotEmpty>
+		</dynamic>
+		WHERE BLACK_ID = #blackId#
+	</update>
+
+	<sql id="selectSql">
+		<dynamic prepend="where">
+			<isNotEmpty prepend="or" property="mobileNumber">
+				MOBILE_NUMBER like '%'||#mobileNumber#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="or" property="email">
+				EMAIL like '%'||#email#||'%'
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+
+	<select id="getMarkActivityBlacklistCount" parameterClass="java.util.Map"
+		resultClass="java.lang.Long">
+		SELECT count(1) ct
+		FROM MARK_ACTIVITY_BLACKLIST
+		<include refid="selectSql"/>
+	</select>
+	
+	<select id="checkIsExisted" parameterClass="java.util.Map"
+		resultClass="java.lang.Long">
+		SELECT count(1) ct
+		FROM MARK_ACTIVITY_BLACKLIST
+		<dynamic prepend="where">
+			(
+			<isNotEmpty prepend="or" property="mobileNumber">
+				MOBILE_NUMBER = #mobileNumber#
+			</isNotEmpty>
+			<isNotEmpty prepend="or" property="email">
+				EMAIL = #email#
+			</isNotEmpty>
+			)
+			<isNotEmpty prepend="and" property="blackId">
+				BLACK_ID != #blackId#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getMarkActivityBlacklist" parameterClass="java.util.Map"
+		resultMap="MarkActivityBlacklistMap">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		SELECT * FROM
+		MARK_ACTIVITY_BLACKLIST
+		<include refid="selectSql"/>
+		order by BLACK_ID desc
+		)T
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow" prepend="">
+				ROWNUM &lt;=
+				#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend="">
+				ROWNUM1 &gt;=
+				#_startRow#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="selectByPrimaryKey" parameterClass="java.lang.Long"
+		resultMap="MarkActivityBlacklistMap">
+		SELECT
+		*
+		FROM MARK_ACTIVITY_BLACKLIST
+		WHERE BLACK_ID =
+		#blackId#
+	</select>
+</sqlMap>

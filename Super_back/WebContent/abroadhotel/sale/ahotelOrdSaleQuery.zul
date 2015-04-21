@@ -1,0 +1,141 @@
+<?page title="list PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_sale"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?> 
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_sale" mode="embedded"
+		apply="com.lvmama.back.web.abroadhotel.sale.AhotelOrdSaleQueryAction">
+		<grid>
+			<columns>
+				<column width="80px"></column>
+				<column width="180px"></column>
+				<column width="80px"></column>
+				<column width="180px"></column>
+				<column width="80px"></column>
+				<column width="180px"></column>
+				<column width="80px"></column>
+				<column ></column>
+			</columns>
+			<rows>
+				<row spans="1,3,1,1">
+					<hbox>订单号：</hbox>
+					<hbox>
+						<longbox id="ordOrderId"
+							value="@{saction.ordOrderId}" />
+					</hbox>
+					<hbox>售后状态：</hbox>
+					<hbox>
+						<listbox id="saleStatus" mold="select"
+							selectedItem="@{saction.serachSaleMap.saleStatus}">
+							<listitem label="--请选择--" value=""	/>
+							<listitem label="正常" value="NORMAL" selected="true" />
+							<listitem label="结束" value="FINISH" />
+						</listbox>
+					</hbox>
+					<hbox>申请人：</hbox>
+					<hbox>
+						<textbox id="opearUserName"
+							value="@{saction.serachSaleMap.opearUserName}">
+						</textbox>
+					</hbox>
+					
+				</row>
+				<row spans="1,3,2">
+				<hbox>申请时间:</hbox>
+					<hbox>
+						<datebox id="beginDate" cols="20"
+							value="@{saction.saleBeginDate}" format="yyyy-MM-dd HH:mm:ss">
+						</datebox>
+						~
+						<datebox id="endDate" cols="20"
+							value="@{saction.saleEndDate}" format="yyyy-MM-dd HH:mm:ss">
+						</datebox>
+					</hbox>
+					<hbox >
+						<button label="查询" id="search" width="100px"
+							onClick="saction.queryOrderSale();" />
+					</hbox>
+				</row>
+				<row spans="8" align="center">
+					
+				</row>
+			</rows>
+		</grid>
+		<button visible="false" id="refreshDataBtn" />
+		<listbox
+			model="@{saction.ordSaleServiceList,load-after='search.onClick,_paging.onPaging,refreshDataBtn.onClick'}">
+			<listhead>
+				<listheader label="订单号" width="50" />
+				<listheader label="下单人" width="100"/>
+				<listheader label="手机号" width="90" />
+				<listheader label="订单类型"  width="90"/>
+				<listheader label="申请时间" width="70"/>
+				<listheader label="申请类型" width="60"/>
+				<listheader label="申请内容"/>
+				<listheader label="售后状态"  width="60"/>
+				<listheader label="操作" width="60" />
+			</listhead>
+			<listitem height="25px" self="@{each='ordSale'}">
+				<listcell label="@{ordSale.orderId}" />
+				<listcell label="@{ordSale.ordOrder.userId}" />
+				<listcell label="@{ordSale.ordOrder.contactMobile}" />
+				<listcell label="海外酒店" />
+				<listcell label="@{ordSale.createTime}" />
+				<listcell><label value="@{ordSale.serviceTypeName}"/><label value="/有退款" visible="@{ordSale.hasRefund}"/></listcell>
+				<listcell label="@{ordSale.applyContent}" />
+				<listcell label="@{ordSale.statusName}">
+					<label value="@{ordSale.ZkReason}"></label>
+				</listcell>
+				<listcell>
+					<a style="color:blue" label="售后处理" permCode="3209,3212" isShow="@{ordSale.visible}"  permParentCode="${saction.permId}" 
+						onClick='saction.showWindow("/abroadhotel/refundMent/ahotelOrdRefundSaleAdd.zul",self.getAttributes());'
+						>
+						<custom-attributes
+							saleServiceId="@{ordSale.saleServiceId}" />
+						<custom-attributes orderId="@{ordSale.orderId}" />
+						<custom-attributes
+							serviceType="@{saction.serviceType}" />
+					</a>
+					<a style="color:blue" label="查看售后服务内容" permCode="3210,3213" permParentCode="${saction.permId}" 
+						onClick='saction.showWindow("/abroadhotel/refundMent/ahotelOrdRefundSaleAdd.zul",self.getAttributes());'
+						isShow="@{ordSale.notVisible}">
+						<custom-attributes
+							saleServiceId="@{ordSale.saleServiceId}" />
+						<custom-attributes orderId="@{ordSale.orderId}" />
+						<custom-attributes
+							serviceType="@{saction.serviceType}" />
+						<custom-attributes editabled = "false"/>
+					</a>					
+					<a style="color:blue" label="退款处理" permCode="3211,3214" permParentCode="${saction.permId}" 
+						onClick='saction.showWindow("/abroadhotel/refundMent/ahotelRefundList.zul",self.getAttributes());'
+						if="${saction.serviceType!='URGENCY'}" >
+						<custom-attributes
+							saleServiceId="@{ordSale.saleServiceId}" />
+						<custom-attributes orderId="@{ordSale.orderId}" />
+						<custom-attributes
+							serviceType="@{saction.serviceType}" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="10"
+								onPaging='saction.queryOrderSale();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	</window>
+</zk>

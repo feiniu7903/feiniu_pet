@@ -1,0 +1,204 @@
+<?page title="new product" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./editprodhotel"?>
+<?component name="editbase" macroURI="/products/edit_base.zul" inline="true"?>
+<?component name="lvmama_prodtarget" macroURI="/macors/prodtarget.zul"?>
+<zk>
+	<window id="editprodhotel" title="编辑商品信息" closable="true"
+		border="normal" width="100%"
+		apply="com.lvmama.back.web.product.EditProductAction">
+		<space />
+		<editbase />
+		<groupbox style="border: none;">
+		<caption label="特征描述" />
+		<grid fixedLayout="true" width="100%">
+			<columns>
+				<column width="150px" align="right"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>产品子类型：<label value="[*]" style="color:red;" /></hbox>
+					<hbox>
+						<radiogroup id="subProductType"
+								selectedItem="@{saction.product.subProductType}">
+								<radio label="单房间" value="SINGLE_ROOM"
+									selected="true" />
+									<radio label="酒店套餐" value="HOTEL_SUIT"
+									selected="true" />
+							</radiogroup>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</groupbox>
+	<space />
+	<groupbox style="border: none;">
+			<caption label="房型信息" />
+			<grid fixedLayout="true">
+				<columns>
+					<column width="100px" align="right"></column>
+					<column></column>
+					<column width="100px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>酒店房型：</hbox>
+						<hbox>
+							<textbox id="hotelRoom" maxlength="20"
+								value="@{saction.product.hotelRoom}">
+							</textbox>
+						</hbox>
+						<hbox>楼层：</hbox>
+						<hbox>
+							<textbox id="floor" maxlength="3"
+								value="@{saction.product.floor}">
+							</textbox>层
+						</hbox>
+					</row>
+					<row>
+						<hbox>是否可安排无烟房：</hbox>
+						<hbox>
+							<radiogroup id="nonSmokingRoom"
+								selectedItem="@{saction.product.nonSmokingRoom}">
+								<radio id="nonSmokingRoom_Y" label="是"
+									value="true" />
+								<radio id="nonSmokingRoom_N" label="否"
+									value="false" />
+							</radiogroup>
+						</hbox>
+						<hbox>房间面积：</hbox>
+						<hbox>
+							<textbox id="roomArea" maxlength="20"
+								value="@{saction.product.roomArea}">
+							</textbox>平方米
+						</hbox>
+					</row>
+					<row>
+						<hbox>房间地面：</hbox>
+						<hbox>
+							<radiogroup id="roomGround"
+								selectedItem="@{saction.product.roomGround}">
+								<radio label="地板"
+									value="地板" />
+								<radio label="地毯"
+									value="地毯" />
+							</radiogroup>
+						</hbox>
+						<hbox>床型：</hbox>
+						<hbox>
+							<textbox id="bed" maxlength="20"
+								value="@{saction.product.bed}">
+							</textbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>宽带：</hbox>
+						<hbox>
+							<radiogroup id="broadband"
+								selectedItem="@{saction.product.broadband}">
+								<radio label="无"
+									value="无" />
+								<radio label="免费"
+									value="免费" />
+								<radio label="收费"
+									value="收费" />
+							</radiogroup>
+						</hbox>
+						<hbox>入住天数：</hbox>
+						<hbox>
+							<textbox id="days" maxlength="20"
+								value="@{saction.product.days}">
+							</textbox>天
+						</hbox>
+					</row>
+					<row>
+						<hbox>是否含早餐：</hbox>
+						<hbox>
+							<radiogroup id="hasBreakfast"
+								selectedItem="@{saction.product.hasBreakfast}">
+								<radio label="是"
+									value="true" />
+								<radio label="否"
+									value="false" />
+							</radiogroup>
+						</hbox>
+						<hbox></hbox>
+						<hbox></hbox>
+					</row>
+					<row spans="1,3">
+						<hbox>客房服务设施：</hbox>
+						<hbox>
+							<checkbox forEach="${saction.servicesList}"
+								name="${each.name}" onCheck="saction.checkServices(self.name, self.checked);" checked="${each.checked}"
+								label="${each.name}" />
+						</hbox>
+					</row>
+					<row spans="1,3">
+						<hbox>房型特色：</hbox>
+						<hbox>
+						<listbox mold="select" name="@{saction.product.hotelReature}" id="product_htol_room"
+							model="@{saction.roomFeaturesList}" onSelect="saction.selectRoomCode(self.selectedItem.value)">
+							<listitem self="@{each='room' }"
+								label="@{room.name}"
+								value="@{room.code}" selected="@{room.checked}"/>
+						</listbox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+	<groupbox style="border: none">
+		<caption label="标的信息" />
+		<groupbox style="border: true">
+		<longbox id="placeId" visible="false"/>
+		<lvmama_prodtarget />
+		<button id="doAddPlace" width="100px" label="新增" onClick="saction.doInsertPlace(placeId.value);"/>
+		<button id="refreshPlaceList" visible="false" />
+		<listbox fixedLayout="true" model="@{saction.placeList,load-after='refreshPlaceList.onClick'}">
+		<listhead>
+			<listheader label="编号" width="5%"/>
+			<listheader label="名称" />
+			<listheader label="出发地" width="8%"/>	
+			<listheader label="目的地" width="8%"/>
+			<listheader label="操作" />
+		</listhead>
+		<listitem self="@{each='place'}" value="@{place}" height="25px">
+			<listcell label="@{place.placeId}" />
+			<listcell label="@{place.placeName}"/>
+			<listcell label="@{place.from}"/>
+			<listcell label="@{place.to}"/>
+			<listcell>
+				<a label="删除" style="color:blue"
+					onClick='saction.doDeletePlace(self.getAttribute("placeId"));'>
+					<custom-attributes placeId="@{place.placeId}" />
+				</a>
+				|
+				<a label="出发地" style="color:blue" onClick='saction.setPlaceFrom(self.getAttribute("placeId"));'>
+					<custom-attributes placeId="@{place.placeId}" />
+				</a>
+				|
+				<a label="目的地" style="color:blue"
+					onClick='saction.setPlaceTo(self.getAttribute("placeId"));'>
+					<custom-attributes placeId="@{place.placeId}" />
+				</a>
+			</listcell>
+		</listitem>
+
+	</listbox>
+	
+	</groupbox>
+	</groupbox>
+		<toolbar id="bottomTool" align="center">
+		  <button  label="查看操作日志" onClick='saction.showWindow("/log/viewSuperLog.zul",self.getAttributes());'>
+						<custom-attributes parentType="PROD_PRODUCT" />
+						<custom-attributes parentId="@{saction.product.productId}" />
+		</button><space />
+			<button id="save" width="100px"
+				onClick='editCheckValue();'
+				label="提交" />
+			<button id="cancel" width="100px" label="取消"
+				onClick="editprodhotel.detach();" />
+		</toolbar>
+	</window>
+</zk>

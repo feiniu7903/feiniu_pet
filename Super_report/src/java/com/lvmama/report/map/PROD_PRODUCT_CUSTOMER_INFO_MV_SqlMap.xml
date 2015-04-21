@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_CUSTOMER_INFO_MV">
+	<resultMap id="BaseResultMap" class="com.po.ProdProductCustomerInfoMV">
+		<result column="PROD_PRODUCT_ID" property="prodProductId" />
+		<result column="CUSTOMER_AREA" property="customerArea" />
+		<result column="ORDER_QUANTITY" property="orderQuantity" />
+		<result column="PAY_TIME" property="payTime" />
+	</resultMap>
+</sqlMap>

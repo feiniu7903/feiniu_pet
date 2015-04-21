@@ -1,0 +1,23 @@
+<?page title="驴妈妈信息管理系统"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./login_win"?>
+<zk>
+<window id="login_win" border="normal" width="350px"  height="200px" sizable="true" position="center" mode="overlapped" apply="com.lvmama.passport.web.auth.LoginAction">
+	<caption label="欢迎使用驴妈妈信息管理系统"/>
+	<borderlayout height="200px">
+		<center>
+			<div align="center">
+				<separator/>
+				<label value="请输入用户名与密码"/>
+				<separator/>
+				<label style="color:red;" id="message"/>
+				<separator/>
+				用户名：<textbox id="username" value="@{loginAction.user.name}"/>
+				<separator/>
+				密　码：<textbox id="password" value="@{loginAction.user.password}" onOK="loginAction.login();" type="password"/>
+				<separator/>
+				<button label="登录" focus="true" onClick="loginAction.login();"/><space/><button label="取消" onClick='username.value=""; password.value="";'/>
+			</div>
+		</center>
+	</borderlayout>
+</window>
+</zk>

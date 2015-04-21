@@ -1,0 +1,249 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   	<title>${queryText!}驴妈妈酒店</title>
+    <#include "../common/define_v4.html">
+    <script src="${request.contextPath}/js/hotel.js"></script>
+</head>
+
+<body>
+<div id="container">
+    <header class="header" id="hotel_search_title">
+        <a href="javascript:union_skip('${request.contextPath}/hotel/hotel.htm');" class="back"><span class="ic_back"></span></a>
+        <h1>酒店列表</h1>
+        <div class="header_btn">
+            <a href="javascript:union_skip('http://${hostName}');" class="header-icon-home"></a>
+        </div>
+    </header>
+    <div id="content">
+        <!-- 酒店搜索表单 -->
+        <form method="get" action="${request.contextPath}/hotel/hotelSearchList.htm"  id="hotel_search_list" >
+            <input  value="${cityId!}"  type="hidden" name="cityId" id="cityId"><!--cityid  -->
+            <input  value=""  type="hidden" name="cityName" id="cityName"><!-- 城市名 -->
+            <input  value="${arrivalDate!}"  type="hidden" name="arrivalDate" id="arrivalDate"><!--入住日期 -->
+            <input  value="${departureDate!}"  type="hidden" name="departureDate" id="departureDate"><!--离开日期 -->
+            <!-- <input  value="${arrivalZhDate!}"  type="hidden" name="arrivalZhDate" id="arrivalZhDate">入住星期
+            <input  value="${departureZhDate!}"  type="hidden" name="departureZhDate" id="departureZhDate">离开星期 -->
+            <input  value="${lowRate!}"  type="hidden" name="lowRate" id="lowRate"><!-- 价格最小值 -->
+            <input  value="${highRate!}"  type="hidden" name="highRate" id="highRate"><!-- 价格最大值 -->
+            <input  value="${queryText!}"  type="hidden" name="queryText" id="queryText"><!--关键字/商圈/地标  -->
+            <input  value="${locationId!}"  type="hidden" name="locationId" id="locationId"><!--关键字/商圈/地标 编码 -->
+            <input  value="${brandId!}"  type="hidden" name="brandId" id="brandId"><!--品牌Id -->
+            <input  value="${sort!}"  type="hidden" name="sort" id="sort"><!--排序 -->
+            <input  value="${starRate!}"  type="hidden" name="starRate" id="starRate"><!--星级类型 -->
+            <input  value="1"  type="hidden" name="pageIndex" id="pageIndex"><!--分页第几页  -->
+            <input  value="10"  type="hidden" name="pageSize" id="pageSize"><!--分页大小  -->
+            <input  value="false"  type="hidden" name="ajax" id="ajax"><!--是否是AJAX查询  -->
+            <input  value="${searchPriceValue!}"  type="hidden" name="searchPriceValue" id="searchPriceValue"><!--综合筛选价格VALUE  -->
+            <input  value="${searchBrandValue!}"  type="hidden" name="searchBrandValue" id="searchBrandValue"><!--综合筛选品牌VALUE -->
+            <input  value="${searchAreaValue!}"  type="hidden" name="searchAreaValue" id="searchAreaValue"><!--综合筛选区域VALUES -->
+        </form>
+
+        <!-- 酒店列表筛选 -->
+        <div class="lv-filtrate-bar">
+            <div class="tab_select">
+                <ul>
+                    <li>
+                        <span id="span_subProductType">综合筛选</span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span><span class="ic_radio_a selected"><i></i></span>
+                    </li>
+                    <li>
+                    	<#if starRate?? && starRate=="0,1,2">
+                    		<span id="span_subject">经济酒店</span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    	<#elseif starRate?? && starRate=="3">
+                    		<span id="span_subject">舒适酒店</span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    	<#elseif starRate?? && starRate=="4">
+                    		<span id="span_subject">高档酒店</span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    	<#elseif starRate?? && starRate=="5">
+                    		<span id="span_subject">豪华酒店</span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    	<#else>
+                        	<span id="span_subject">全部类型</span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                        </#if>	
+                    </li>
+                    <li>
+                    	<#if sort?? && sort=="RateDesc">
+                    		<span id="span_sort">价格从高到低</span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    	<#elseif sort?? && sort=="RateAsc">
+                    		<span id="span_sort">价格从低到高</span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    	<#elseif sort?? && sort=="StarRankDesc">
+                    		<span id="span_sort">星级从高到低</span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    	<#else>
+                        	<span id="span_sort">默认排序</span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                        </#if>		
+                    </li>
+                </ul>
+            </div>
+            <div class="lv-mask"></div>
+            <div class="lv-cascade-div">
+                <!--综合刷选数据  -->
+                <div class="filtrate-wrap tabChange">
+                    <div class="filtrate-list-l1">
+                        <ul>
+                            <li>价格<span class="ic_radio_a selected"></span></li>
+                            <li>品牌<span class="ic_radio_a selected"></span></li>
+                            <li>区域<span class="ic_radio_a selected"></span></li>
+                        </ul>
+                    </div>
+                    <div class="filtrate-list-l2">
+                        <div class="tabChangeL2" data-child="f21" data-index="-1">
+                            <div class="t_list">
+                                <!-- 价格 -->
+                                <#if priceList?? && priceList?size&gt;0>
+                                    <#list priceList as price>
+                                        <div class="t_li radioOption" data-val="${price.value}">${price.name}<span class="ic_radio_a"><i></i></span></div>
+                                    </#list>
+                                </#if>
+                            </div>
+                        </div>
+                        <div class="tabChangeL2" data-child="f22" data-index="-1">
+                            <div class="t_list">
+                                <!-- 品牌-->
+                                <#if brandList?? && brandList?size&gt;0>
+                                    <#list brandList as brand>
+                                        <div class="t_li radioOption" data-val="${brand.brandId}">${brand.name}<span class="ic_radio_a"><i></i></span></div>
+                                    </#list>
+                                </#if>
+                            </div>
+                        </div>
+                        <div class="tabChangeL2" data-index="-1">
+                            <div class="t_list">
+                                <!-- 区域 -->
+                                <!-- <div class="t_li" onclick="chooselandMarkInlist('','');">全部</div> -->
+                                <#if markList?? && markList?size&gt;0>
+                                    <#list markList as landMark>
+                                        <div class="t_li">${landMark.name}</div>
+                                    </#list>
+                                </#if>
+                            </div>
+                            <div class="filtrate-list-l3">
+                                <#if markList?? && markList?size&gt;0>
+                                    <#list markList as landMark>
+                                        <div class="t_list tabChangeL3">
+                                            <div class="t_title"><span class="ic_li"></span>${landMark.name}</div>
+                                            <div style="width:100%; height:259px; overflow:auto;">
+                                                <#if landMark?? && landMark.datas?size&gt;0>
+                                                    <#list landMark.datas as landMarkOne>
+                                                        <div class="t_li radioOption" data-val="${landMarkOne.locationId},${landMarkOne.locationName},${landMark_index!}"><span class="t_p1 value">${landMarkOne.locationName}</span><span class="ic_radio_a"><i></i></span></div>
+                                                    </#list>
+                                                </#if>
+                                            </div>
+                                        </div>
+                                    </#list>
+                                </#if>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filtrate-btn">
+                        <span class="btn_style_2" id="filtrateReset">重置</span>
+                        <span class="btn_style_1" id="filtrateSubmit">确定</span>
+                    </div>
+                </div>
+                <!-- 星级类型筛选 -->
+                <div class="tabChange">
+                    <ul>
+                    	<li data-val="" data-type="star">全部</li>
+                        <#if starList?? && starList?size&gt;0>
+                            <#list starList as star>
+                                <li data-val="${star.value}" data-type="star">${star.name}</li>
+                            </#list>
+                        </#if>
+                    </ul>
+                </div>
+                <!--排序筛选 -->
+                <div class="tabChange">
+                    <ul>
+                        <#if sortList?? && sortList?size&gt;0>
+                            <#list sortList as sort>
+                                <li data-val="${sort.value}" data-type="sort">${sort.name}</li>
+                            </#list>
+                        </#if>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <#if hotelList?? && hotelList?size&gt;0>
+            <div class="lv-project-list">
+                <div id="data_list">
+                    <#list hotelList as hotel>
+                        <article>
+                            <a href="${request.contextPath!}/hotel/hotelDetail.htm?arrivalDate=${arrivalDate!}&departureDate=${departureDate!}&hotelId=${hotel.placeId!}" class="block">
+                                <div style="background-image: url(${hotel.images!})" class="pro-pic" title="${hotel.name!}">
+                                </div>
+                                <div class="pro-info">
+                                    <h2>${hotel.name!}</h2>
+                                    <p>
+                                        <span class="fr value f-color-1">&yen;${hotel.sellPrice!}<span>起</span></span>
+                                        <span class="f-color-5">${hotel.placeType!}</span>
+                                    </p>
+                                    <p>
+                                    	<#if hotel.cashBack?? && hotel.cashBack!="" &&  hotel.cashBack!="0">
+			                                <span class="fr f-color-1 rebate">
+			                                        <i class="ic_fan"></i>
+			                                        <em>&yen;${hotel.cashBack!}</em>
+			                                </span>
+                                    	</#if>
+                                        <#if hotel.commentGoodRate?? && hotel.commentGoodRate !="">
+                                        	<span class="t_per">好评率${hotel.commentGoodRate!}</span>
+                                        <#else>
+                                        	<span class="t_per">暂无点评</span>
+                                        </#if>
+                                    </p>
+                                    <p><span class="fr">&nbsp;&nbsp;</span><span class="address">${hotel.address!}</span></p>
+                                </div>
+                            </a>
+                        </article>
+                    </#list>
+                </div>
+                <!-- 如果不是最后一页  -->
+                <#if hasNext?? && hasNext>
+                    <div class="view_more" id="show_more"><a href="javascript:void(0)" onclick="showMoreDate();">查看更多</a></div>
+                </#if>
+            </div>
+            <#else>
+            	 <#if msg?? && msg!="">
+            	 	<#assign no_data_msg="${msg!}">
+            	 <#else>
+            	 	<#assign no_data_msg="没有找到相应的酒店<br>请试试搜索其他关键词">
+            	 </#if>
+                <#include "../common/no_data_list.html">
+        </#if>
+
+    </div>
+    <#include "../common/footer_v4.html"/>
+</div>
+<script type="text/javascript">
+	var searchPriceValue=$("#searchPriceValue").val();
+	var searchBrandValue=$("#searchBrandValue").val();
+	var searchAreaValue=$("#searchAreaValue").val();
+	
+	var dataArray = [searchPriceValue,searchBrandValue,searchAreaValue];
+	$(".filtrate-list-l2 .tabChangeL2").each(function(index){
+		var f = $(this);
+		$(this).find(".radioOption").each(function(indexLi){		
+			if($(this).attr("data-val")==dataArray[index]){
+				//console.info($(this).attr("data-val")+"|"+dataArray[index]);
+				//console.info(indexLi);
+				f.attr("data-index",indexLi);
+				$(this).find(".ic_radio_a").attr("item-index",indexLi)
+			}
+		});
+	});
+
+    $(".lv-filtrate-bar").filtrateTab({
+    	submit : function(index){
+    		allSearch(this,index);
+    	}    	
+    },function(){},function(){
+    	if(this.attr("data-type")=="star"){
+        	chooseStarInlist(this.attr("data-val"));     		
+    	}else{
+        	chooseSortInlist(this.attr("data-val"));     		
+    	}   	
+    });
+</script>
+<script type="text/javascript">
+		$(function(){
+			$("#pageIndex").val(1);		
+		});
+	</script>
+</body>
+</html>

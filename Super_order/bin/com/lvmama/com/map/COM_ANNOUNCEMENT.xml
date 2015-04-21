@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_ANNOUNCEMENT" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComAnnouncement" >
+    <result column="ANNOUNCEMENT_ID" property="announcementId" />
+    <result column="CONTENT" property="content" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="OPERATOR_NAME" property="operatorName" />
+    <result column="EXPIRED_TIME" property="expiredTime" />
+    <result column="GROUP_ID" property="announGroupId" />
+  </resultMap>
+  
+  <sql id="selectParam">
+  	<isNotEmpty property="content" prepend=" AND ">
+		announ.content like '%'||#content#||'%'
+	 </isNotEmpty>
+	 <isNotEmpty prepend=" and" property="operatorName">
+		 announ.OPERATOR_NAME like '%'||#operatorName#||'%'
+	</isNotEmpty>
+	 <isNotEmpty prepend=" and" property="beginDate">
+		 announ.CREATE_TIME &gt; = #beginDate#
+	</isNotEmpty>
+	<isNotEmpty prepend=" and" property="endDate">
+		announ.CREATE_TIME &lt; = #endDate#
+	</isNotEmpty>
+	<isNotEmpty prepend=" and" property="date">
+		announ.EXPIRED_TIME &lt; = #date#
+	</isNotEmpty>
+	<isNotEmpty prepend=" and" property="expiredTimeEnd">
+		announ.EXPIRED_TIME &gt; = #expiredTimeEnd#
+	</isNotEmpty>
+	<isNotEmpty prepend=" and" property="expiredTime">
+		to_char(announ.EXPIRED_TIME,'yyyy-MM-dd hh24:mi')=#expiredTime#
+	</isNotEmpty>
+  </sql>
+  
+  <select id="selectByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+     SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		
+		   select * FROM COM_ANNOUNCEMENT announ where 1=1
+		   <include refid="selectParam"/>
+    	   order by announ.ANNOUNCEMENT_ID desc
+    	   
+      ) T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;=#skipResults# 
+  </select>
+  
+   <select id="selectByParamCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+   select count(*) FROM COM_ANNOUNCEMENT announ where 1=1
+	<include refid="selectParam"/>
+  </select>
+  
+    <select id="selectByUserIdOrgId" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+	    	SELECT COUNT(*)
+	FROM lvmama_pet.perm_user pu
+	WHERE pu.user_id      =#userId#
+	AND pu.department_id IN
+	  (SELECT po.org_id
+	  FROM lvmama_pet.perm_organization po
+	  WHERE 1=1
+	  <isNotEmpty prepend="and" property="groupIds">
+		po.org_id in
+			<iterate property="groupIds"  conjunction="," open="(" close=")"  > 
+       			#groupIds[]# 
+   			</iterate> 
+	  </isNotEmpty>
+	  
+	   <isNotEmpty prepend="OR" property="groupIds">
+		parent_org_id in
+			<iterate property="groupIds"  conjunction="," open="(" close=")"  > 
+       			#groupIds[]# 
+   			</iterate> 
+	  </isNotEmpty>
+	  )
+  </select>
+  
+  
+  <select id="selectByBeginTime" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+     SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+			   select * FROM COM_ANNOUNCEMENT announ where 1=1
+			   <include refid="selectParam"/>
+     order by announ.EXPIRED_TIME desc
+      ) T WHERE ROWNUM &lt;=  #msg_maxResults#
+		)
+		WHERE ROWNUM1 &gt;=#msg_skipResults# 
+  </select>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComAnnouncement" >
+    <selectKey resultClass="java.lang.Long" keyProperty="announcementId" >
+      select COM_ANNOUNCEMENT_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into COM_ANNOUNCEMENT (ANNOUNCEMENT_ID, CONTENT, CREATE_TIME, OPERATOR_NAME,EXPIRED_TIME,GROUP_ID)
+	values (#announcementId#, #content#, #createTime#, #operatorName#, #expiredTime#, #announGroupId#)
+  </insert>
+</sqlMap>

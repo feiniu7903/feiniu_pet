@@ -1,0 +1,107 @@
+<?page title="销售渠道分析" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./order_analysis"?>
+<?component name="button" extends="button" class="com.lvmama.report.utils.perm.PermButton" ?> 
+<?component name="a" extends="a" class="com.lvmama.report.utils.perm.PermALink" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+ <window id="order_analysis" title="销售渠道分析" border="normal" apply="com.lvmama.report.web.channel.listSaleChannelAnalysisAction" >
+	<grid id="conditions">
+		<columns>
+			<column width="70px"></column>
+			<column></column>
+			<column width="70px"></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row >
+				<hbox>时间范围：</hbox>
+				<hbox>
+					<datebox id="startDate" value="@{saction.searchConds.startDate}" />
+					至
+					<datebox id="endDate" value="@{saction.searchConds.endDate}" />
+					<image width="15px" height="15px" src="/img/qm.gif" tooltip="time"/>
+				</hbox>
+				<hbox>渠道来源：</hbox>
+				<hbox>
+					<listbox rows="1" mold="select" id="channel" model="@{saction.channelList}" onSelect="saction.changeChannelStatus(self.selectedItem.value);">
+					<listitem id="iterateItem" self="@{each='channel'}" label="@{channel.name}" value="@{channel.code}" selected="@{channel.checked}"></listitem>
+					</listbox>
+				</hbox>
+			</row>
+			<row spans="2,2">
+				<hbox>
+					<checkbox id="freeness" name="FREENESS" checked="@{saction.searchConds.sFree}" label="境内自由行" />
+					<checkbox id="group" name="GROUP" checked="@{saction.searchConds.sGroup}" label="境内跟团游" />
+					<checkbox id="freeness_foreign" name="FREENESS_FOREIGN" checked="@{saction.searchConds.sFreeForeign}" label="境外自由行" />
+					<checkbox id="group_foreign" name="GROUP_FOREIGN" checked="@{saction.searchConds.sGroupForeign}" label="境外跟团游" />
+					<checkbox id="ticket" name="TICKET" checked="@{saction.searchConds.sTicket}" label="门票" />
+					<checkbox id="hotel" name="HOTEL" checked="@{saction.searchConds.sHotel}" label="酒店" />
+				</hbox>
+				<hbox>
+				<button label="导出" id="export" width="100px" onClick="saction.doExport()" permCode="1469"/>
+				<space />
+				<button label="查询" id="search" width="100px" onClick="_paging.activePage=0;saction.doQuery()"/>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+	
+				<listbox model="@{saction.analysisList,load-after='search.onClick,_paging.onPaging'}" >
+					<listhead>
+						<listheader label="渠道"/>
+						<listheader label="销量 ？" tooltip="quantity"/>
+						<listheader label="销售总金额 ?" tooltip="price"/>
+						<listheader label="毛利润"/>
+						<listheader label="毛利率"/>
+					</listhead>
+					<listitem height="25px" self="@{each='analysisList'}">
+						<listcell label="@{analysisList.channelName}" />
+						<listcell label="@{analysisList.quantity}" />
+						<listcell label="@{analysisList.amountYuan}" />
+						<listcell label="@{analysisList.profitYuan}" />
+						<listcell label="@{analysisList.profitPer}" />
+					</listitem>
+				</listbox>
+	<grid id="all">
+	<columns>
+			<column width="70px"></column>
+			<column></column>
+			<column></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>统计：</hbox>
+				<hbox>总销售额：<label value="@{saction.amount,load-after='search.onClick'}" /><image width="15px" height="15px" src="/img/qm.gif" tooltip="allPrice"/></hbox>
+				<hbox>毛利润：<label value="@{saction.profit,load-after='search.onClick'}" /></hbox>
+				<hbox>毛利率：<label value="@{saction.profitPer,load-after='search.onClick'}" /></hbox>
+			</row>
+		</rows>
+	</grid>						
+	<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共 <label id="_totalRowCountLabel" /> 条
+				</cell>
+				<cell>
+					<paging  id="_paging" pageSize = "15" onPaging='saction.doQuery();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+ </window>
+  <popup id="time" width="100px">
+    <label id="lb1" value="下单时间"/>
+</popup>
+<popup id="quantity" width="200px">
+    <label id="lb2" value="实际销售的采购产品的份数"/>
+</popup>
+<popup id="price" width="200px">
+    <label id="lb3" value="订单中销售产品的数量*价格求和"/>
+</popup>
+<popup id="allPrice" width="200px">
+    <label id="lb4" value="按搜索条件销售总金额的列表项求和"/>
+</popup>
+</zk>

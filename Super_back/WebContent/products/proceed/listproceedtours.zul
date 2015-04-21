@@ -1,0 +1,86 @@
+﻿<?page title="巴士班自助统计" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./proceedToursWin"?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?> 
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<zk>
+<window id="proceedToursWin" mode="embedded" apply="com.lvmama.back.web.product.ListProceedToursAction">
+	<grid>
+	<columns>
+		<column width="80px"></column>
+		<column width="300px"></column>
+		<column width="80px"></column>
+		<column></column>
+		<column width="80px"></column>
+		<column></column>
+	</columns>
+		<rows>
+			<row>
+				<hbox>商品名称</hbox>
+				<hbox><textbox id="productName" value="@{saction.searchConds.productName}"/></hbox>
+				<hbox>游玩时间：</hbox>
+				<hbox><datebox value="@{saction.searchConds.beginVisitTime}"/> -- <datebox value="@{saction.searchConds.endVisitTime}"/></hbox>
+				<hbox>产品编号</hbox>
+				<hbox><textbox id="productId" value="@{saction.searchConds.productId}"/></hbox>
+			</row>
+			<row spans=",,,,2">
+				<hbox>成团时间：</hbox>
+				<hbox><datebox value="@{saction.searchConds.beginConfirmTime}"/> -- <datebox value="@{saction.searchConds.endConfirmTime}"/></hbox>
+				<hbox>发班状态</hbox>
+				<hbox>
+					<listbox mold="select" id="proceedStatus" onSelect="saction.changeProceedStatus(self.selectedItem.value)">
+					    <listitem label="全部" value=""/>
+						<listitem label="可发班" value="PROCEED"/>
+						<listitem label="不可发班" value="UNPROCEED"/>
+					</listbox>
+				</hbox>
+				<hbox><button label="查询" id="search" width="100px" onClick='_paging.activePage=0;saction.loadDataList();'/></hbox>
+			</row>
+		</rows>
+	</grid>
+	<listbox id="box" fixedLayout="true"
+		model="@{saction.toursList,load-after='search.onClick,_paging.onPaging'}">
+		<listhead>
+			<listheader label="发班状态"/>
+			<listheader label="商品名称" />
+			<listheader label="游玩时间" />		
+			<listheader label="确定成团时间" />
+			<listheader label="成团人数" />			
+			<listheader label="实际报名人数" />
+			<listheader label="操作" />
+		</listhead>
+		<listitem self="@{each='tours'}" value="@{tours}" height="25px">
+			<listcell label="@{tours.chProceedStatus}" />
+			<listcell label="@{tours.productName}" />
+			<listcell label="@{tours.visitDate}" />
+			<listcell label="@{tours.confirmDate }"/>
+			<listcell label="@{tours.initialNum}"/>
+			<listcell label="@{tours.tourists }"/>
+			<listcell>
+				<a label="详细信息" style="color:blue" onClick='saction.showWindow("/products/proceed/details_tours.zul", self.getAttributes());'>
+					<custom-attributes productId="@{tours.productId}" visitDate="@{tours.visitDate}" />
+				</a>
+				<a label="通知取消发班" style="color:blue" onClick='saction.showWindow("/products/proceed/cancel_tours.zul", self.getAttributes());' isShow="@{tours.isNormal}" permCode="1715">
+					<custom-attributes productId="@{tours.productId}" visitDate="@{tours.visitDate}" />
+				</a>
+				<label value="已通知" visible="@{tours.isCancel}"  />				
+			</listcell>
+		</listitem>
+	</listbox>
+	
+	<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell width="200px">
+					<paging  id="_paging" pageSize = "15" onPaging='saction.loadDataList();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+	<button label="刷新" id="refresh" onClick="saction.loadDataList()" visible="false"></button>	
+</window>
+</zk>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_COUPON_USAGE" >
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.CouponUsegeModel">
+		<result column="OBJECT_ID" 			property="objectId" />
+		<result column="CHANNEL_NAME" 		property="channelName" />
+		<result column="PRODUCT_NAME" 		property="productName" />
+		<result column="COUPON_NAME" 		property="couponName" />
+		<result column="COUPON_CODE" 		property="couponCode" />
+		<result column="CREATE_TIME" 		property="createTime" />
+		<result column="AMOUNT" 			property="amount" />
+		<result column="ORDER_ID" 			property="orderId" />
+		<result column="ACTUAL_PAY_FLOAT" 	property="actualPayFloat" />
+	</resultMap>
+	<sql id="parametersSql">
+		<dynamic>
+			<isNotEmpty prepend=" AND " property="beginDate">   MCU.CREATE_TIME &gt;=#beginDate# 	</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="endDate"> 	MCU.CREATE_TIME &lt;=#endDate#+1 	</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="couponCode">	MCC.COUPON_CODE LIKE '%'||#couponCode#||'%'		</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="productName">	PP.PRODUCT_NAME LIKE '%'||#productName#||'%'		</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="orderId">		OO.ORDER_ID=#orderId#				</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="channelName">	MDC.CHANNEL_NAME LIKE '%'||#channelName#||'%'		</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="orderStatus">	OO.ORDER_STATUS =#orderStatus#					</isNotEmpty>
+		</dynamic>
+	</sql>
+	<select id="query" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		<dynamic>
+			<isEmpty property="productName">
+				SELECT MCU.OBJECT_ID,
+				       MCU.CREATE_TIME,
+				       OO.ACTUAL_PAY / 100 ACTUAL_PAY_FLOAT,
+				       OO.ORDER_ID,
+				       MCC.COUPON_CODE,
+				       MC.COUPON_NAME,
+				       MC.AMOUNT / 100 AMOUNT,
+				       MDC.CHANNEL_NAME,
+				       '' PRODUCT_NAME
+				  FROM LVMAMA_SUPER.MARK_COUPON_USAGE MCU,
+				       LVMAMA_SUPER.ORD_ORDER         OO,
+				       LVMAMA_SUPER.MARK_COUPON_CODE  MCC,
+				       LVMAMA_SUPER.MARK_COUPON       MC,
+				       LVMAMA_PET.MARK_CHANNEL MDC
+				 WHERE MCU.OBJECT_ID = OO.ORDER_ID
+				   AND MCU.COUPON_CODE_ID = MCC.COUPON_CODE_ID
+				   AND MCC.COUPON_ID = MC.COUPON_ID
+				   AND MC.CHANNEL_ID = MDC.CHANNEL_ID
+				   AND MCU.OBJECT_TYPE = 'ORD_ORDER'
+				   <include refid="parametersSql"/>
+				UNION ALL
+			</isEmpty>
+		</dynamic>
+		SELECT MCU.OBJECT_ID,
+		       MCU.CREATE_TIME,
+		       OO.ACTUAL_PAY / 100 ACTUAL_PAY_FLOAT,
+		       OO.ORDER_ID,
+		       MCC.COUPON_CODE,
+		       MC.COUPON_NAME,
+		       MC.AMOUNT / 100 AMOUNT,
+		       MDC.CHANNEL_NAME,
+		       PP.PRODUCT_NAME
+		  FROM LVMAMA_SUPER.MARK_COUPON_USAGE MCU,
+		       LVMAMA_SUPER.ORD_ORDER_ITEM_PROD OOIP,
+		       (SELECT PRODUCT_ID, PRODUCT_NAME FROM LVMAMA_SUPER.PROD_PRODUCT WHERE VALID = 'Y') PP,
+		       LVMAMA_SUPER.ORD_ORDER OO,
+		       LVMAMA_SUPER.MARK_COUPON_CODE MCC,
+		       LVMAMA_SUPER.MARK_COUPON MC,
+		       LVMAMA_PET.MARK_CHANNEL MDC
+		 WHERE MCU.OBJECT_ID = OOIP.ORDER_ITEM_PROD_ID
+		   AND OOIP.PRODUCT_ID = PP.PRODUCT_ID
+		   AND OOIP.ORDER_ID = OO.ORDER_ID
+		   AND MCU.COUPON_CODE_ID = MCC.COUPON_CODE_ID
+		   AND MCC.COUPON_ID = MC.COUPON_ID
+		   AND MC.CHANNEL_ID = MDC.CHANNEL_ID
+		   AND MCU.OBJECT_TYPE != 'ORD_ORDER'
+		   <include refid="parametersSql"/>
+	</select>
+</sqlMap>

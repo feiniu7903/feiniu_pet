@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+
+	<!-- 自动废单_start -->
+	<bean id="autoCancelOrderJob" class="com.lvmama.order.jobs.AutoCancelOrderJob" />
+	
+	<bean id="autoFinishOrderJob" class="com.lvmama.order.jobs.AutoFinishOrderJob" />
+	
+	<bean id="userMembertGradeJob" class="com.lvmama.order.jobs.UserMembertGradeJob" />
+	
+	<bean id="orderForPaymentSendSmsJob" class="com.lvmama.order.jobs.OrderForPaymentSendSmsJob"/>
+	
+	<bean id="autoSetTransferTaskJob" class="com.lvmama.order.jobs.AutoSetTransferTaskJob"/>
+	
+	<bean id="trainFailCancelOrderJob" class="com.lvmama.order.jobs.TrainFailCancelOrderJob"/>
+
+	<bean id="syncSearchInfoJob" class="com.lvmama.order.jobs.SyncSearchInfoJob"/>
+
+	<!-- 将支付时间为2012年6月1日之后的订单拆分收入 -->
+	<bean id="historyOrderPayAmountDivJob" class="com.lvmama.order.jobs.HistoryOrderPayAmountDivJob">
+		<property name="startDate">
+			<value>2013-06-01</value>
+		</property>
+		<property name="endDate">
+			<value></value>
+		</property>
+	</bean>
+	 
+	 
+	
+	<bean id="autoCancelOrderJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="autoCancelOrderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="trainFailCancelOrderJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="trainFailCancelOrderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="autoFinishOrderJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="autoFinishOrderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	 
+	<bean id="historyOrderPayAmountDivJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="historyOrderPayAmountDivJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="historyOrderPayAmountDivJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="historyOrderPayAmountDivJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${historyOrder.payAmountDivJob.Time}</value>
+		</property>
+	</bean>
+	 
+	 <bean id="orderForPaymentSendSmsJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="orderForPaymentSendSmsJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="autoCancelOrderJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="autoCancelOrderJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 */3 * * * ? *</value> 
+		</property>
+	</bean>
+	
+	<bean id="autoFinishOrderJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="autoFinishOrderJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 3 * * ? *</value> 
+		</property>
+	</bean>
+
+	<bean id="orderForPaymentSendSmsJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="orderForPaymentSendSmsJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>59 */10 * * * ? *</value> 
+		</property>
+	</bean>
+	
+	<!-- begin  用户升级等级(每月1日)  -->
+	<bean id="updateUserMemberGradeFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="userMembertGradeJob" />
+		</property>
+		<property name="targetMethod">
+			<value>updateUserMemberGrade</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="updateUserMemberGradeTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="updateUserMemberGradeFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 0 1 * ? *</value> 
+		</property>
+	</bean>	
+	<!-- end  用户升级等级  -->
+	
+	<!-- begin  用户降级(每年1月1日0点10分)  -->
+	<bean id="degardUserMemberGradeFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="userMembertGradeJob" />
+		</property>
+		<property name="targetMethod">
+			<value>degardUserMemberGrade</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="degardUserMemberGradeTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="degardUserMemberGradeFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 10 0 1 1 ? *</value> 
+		</property>
+	</bean>	
+	<!-- end  用户降级等级  -->
+	
+	<!-- begin  用户降级提醒(每年12月1日0点2分)  -->
+	<bean id="remindDegardFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="userMembertGradeJob" />
+		</property>
+		<property name="targetMethod">
+			<value>remindDegard</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="remindDegardTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="remindDegardFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 2 0 1 12 ? *</value> 
+		</property>
+	</bean>	
+	<!-- end  用户降级提醒  -->
+	<!-- 老订单金额转移到新订单金额后产生的退款服务JOB，解决支付与退款一同发生时会出错的问题 -->
+	<bean id="autoSetTransferTaskJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="autoSetTransferTaskJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="autoSetTransferTaskJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="autoSetTransferTaskJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 * * * * ? *</value> 
+		</property>
+	</bean>
+	<bean id="syncSearchInfoJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="syncSearchInfoJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="syncSearchInfoJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="syncSearchInfoJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<!-- 每10分钟执行一次  每天6-23点 -->
+			<value>0 */3 6-23 * * ? *</value> 
+		</property>
+	</bean>
+	
+	<bean id="trainFailCancelOrderJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="trainFailCancelOrderJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<!-- 8-23点 每30分钟执行一次 -->
+			<value>20 */5 8-23 * * ? *</value> 
+		</property>
+	</bean>
+	
+	
+	<bean lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list> 
+	            <ref local="autoCancelOrderJobTimes"/>
+	            <ref local="autoFinishOrderJobTimes"/>
+ 	            <ref local="historyOrderPayAmountDivJobTimes"/>
+	            <ref local="updateUserMemberGradeTimes"/>
+				<ref local="remindDegardTimes"/>				
+				<ref local="degardUserMemberGradeTimes"/>
+				<ref local="orderForPaymentSendSmsJobTimes"/> 
+				<ref local="autoSetTransferTaskJobTimes"/>
+				<ref local="syncSearchInfoJobTimes"/>
+				<ref local="trainFailCancelOrderJobTimes"/>
+				<ref local="afterThreeMonthsPerfromJobTimes"/>
+				<ref local="AutoCatchLvHomeHotSeqJobTimes" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="afterThreeMonthsPerfromJob" class="com.lvmama.order.jobs.AfterThreeMonthsPerfromJob">
+        <property name="orderServiceProxy" ref="orderServiceProxy" />
+        <property name="prodChannelService" ref="prodChannelService" />
+        <property name="smsService" ref="smsService" />
+        <property name="cmtCommentService" ref="cmtCommentService"></property>
+    </bean>
+    
+    <bean id="afterThreeMonthsPerfromJobFactory"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="afterThreeMonthsPerfromJob" />
+        </property>
+        <property name="targetMethod">
+            <value>run</value>
+        </property>
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+    <bean id="afterThreeMonthsPerfromJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="afterThreeMonthsPerfromJobFactory" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0 4 * * ? *</value>
+        </property>
+    </bean>    
+    
+    <bean id="AutoCatchLvHomeHotSeqJob" class="com.lvmama.order.jobs.AutoCatchLvHomeHotSeqJob">
+        <property name="prodProductService" ref="prodProductService" />
+    </bean>
+    
+    <bean id="AutoCatchLvHomeHotSeqJobFactory"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="AutoCatchLvHomeHotSeqJob" />
+        </property>
+        <property name="targetMethod">
+            <value>run</value>
+        </property>
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+    <bean id="AutoCatchLvHomeHotSeqJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="AutoCatchLvHomeHotSeqJobFactory" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0 3 6 * ? *</value>
+        </property>
+    </bean>    
+    
+</beans>

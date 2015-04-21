@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDSETTLEMENT">
+	
+	<typeAlias alias="OrdSettlement" type="com.lvmama.finance.settlement.ibatis.po.OrdSettlement"/>
+	
+	<typeAlias alias="OrdSubSettlement" type="com.lvmama.finance.settlement.ibatis.po.OrdSubSettlement"/>
+	
+	<resultMap id="SimpleOrdSettlementMap" class="com.lvmama.finance.settlement.ibatis.vo.SimpleOrdSettlement" >
+		<result property="settlementId" column="settlementId"/>
+		<result property="targetName" column="targetName"/>
+		<result property="payAmount" column="payAmount"/>
+		<result property="payedAmount" column="payedAmount"/>
+		<result property="memo" column="memo"/>
+		<result property="targetId" column="targetId"/>
+		<result property="bankName" column="bankName"/>
+		<result property="bankAccount" column="bankAccount"/>
+		<result property="bankAccountName" column="bankAccountName"/>
+		<result property="alipayName" column="alipayName"/>
+		<result property="alipayAccount" column="alipayAccount"/>
+		<result property="status" column="status"/>
+		<result property="syncVersion" column="syncVersion"/>
+		<result property="settlementPeriodStr" column="settlementPeriodStr" />
+		<result property="companyIdStr" column="companyIdStr" />
+	</resultMap>
+	<resultMap id="InitalOrdSettlementMap" class="com.lvmama.finance.settlement.ibatis.vo.SimpleOrdSettlement" >
+		<result property="memo" column="memo"/>
+		<result property="bankName" column="bankName"/>
+		<result property="bankAccount" column="bankAccount"/>
+		<result property="bankAccountName" column="bankAccountName"/>
+		<result property="alipayName" column="alipayName"/>
+		<result property="alipayAccount" column="alipayAccount"/>
+		<result property="settlementId" column="settlementId"/>
+		<result property="settlementPeriodStr" column="itemName"/>
+	</resultMap>
+	<!-- 查询结算单begin -->
+	<sql id="searchOrdSettlementWhere">
+		FROM  
+			ORD_SETTLEMENT A,
+			SUP_SETTLEMENT_TARGET B,
+			SUP_SUPPLIER O,
+			lvmama_pet.PERM_USER P
+		<isNotNull property="metaProductId" prepend=",">
+			ORD_SUB_SETTLEMENT C
+		WHERE 
+			A.TARGET_ID = B.TARGET_ID
+		AND
+			B.SUPPLIER_ID =  O.SUPPLIER_ID
+		AND	
+			A.SETTLEMENT_ID = C.SETTLEMENT_ID 
+		AND
+			A.USER_ID = P.USER_ID
+   		AND 
+   			B.SUPPLIER_ID = O.SUPPLIER_ID
+		AND	
+			C.META_PRODUCT_ID = #metaProductId#
+		</isNotNull>
+		<isNull property="metaProductId" prepend="WHERE">
+			A.TARGET_ID = B.TARGET_ID
+		AND
+			B.SUPPLIER_ID =  O.SUPPLIER_ID
+		AND
+			A.USER_ID = P.USER_ID
+   		AND 
+   			B.SUPPLIER_ID = O.SUPPLIER_ID
+		</isNull>
+		<isNotNull property="targetId" prepend="AND">
+			A.TARGET_ID = #targetId#
+		</isNotNull>
+		<isNotEmpty property="settlementId" prepend="AND">
+			A.SETTLEMENT_ID IN ($settlementId$)
+		</isNotEmpty>
+		<isEqual property="payStatus" compareValue="PAYED" prepend="AND">
+			A.PAYED_AMOUNT &gt; 0 
+		</isEqual>
+		<isEqual property="payStatus" compareValue="UNPAYED" prepend="AND">
+			(A.PAYED_AMOUNT = 0 OR PAYED_AMOUNT IS NULL)
+		</isEqual>
+		<isNotEmpty property="status" prepend="AND">
+			A.STATUS = #status#
+		</isNotEmpty>
+		<isNotEmpty property="createTimeBegin" prepend="AND">
+			A.CREATE_TIME &gt;= TO_DATE(#createTimeBegin#,'yyyy-mm-dd')
+		</isNotEmpty>
+		<isNotEmpty property="createTimeEnd" prepend="AND">
+			A.CREATE_TIME  &lt; TRUNC(TO_DATE(#createTimeEnd#,'YYYY-MM-DD') + 1)
+		</isNotEmpty>
+		<isNotEmpty property="parymentTarget" prepend="AND">
+			A.PAYMENT_TARGET = #parymentTarget#
+		</isNotEmpty>
+		<isNotEmpty property="userName" prepend="AND">
+			P.USER_NAME = #userName#
+		</isNotEmpty>
+		<isNotEmpty property="settlementType" prepend="AND">
+			A.SETTLEMENT_TYPE = #settlementType#
+		</isNotEmpty>
+	</sql>
+	<select id="searchOrdSettlement" parameterClass="map" resultClass="OrdSettlement">
+		<include refid="pageSearchHead"/>
+		SELECT 
+			A.SETTLEMENT_ID AS settlementId,
+			A.SETTLEMENT_TIME AS settlementTime,
+			A.TARGET_ID AS targetId,
+			B.NAME AS targetName,
+			NVL(A.PAY_AMOUNT,0)/100 AS payAmount,
+			NVL(A.RECEIVE_AMOUNT,0)/100 AS receiveAmount,
+			A.STATUS AS status,
+			A.CONFIRM_TIME AS confirmTime,
+			A.OPERATOR_NAME AS operatorName,
+			A.BEGIN_TIME AS beginTime,
+			A.END_TIME AS endTime,
+			A.MEMO AS memo,
+			A.CREATE_TIME AS createTime,
+			A.PAYMENT_TARGET AS paymentTarget,
+			NVL(PAYED_AMOUNT,0)/100 AS payedAmount,
+			O.SUPPLIER_ID AS supplierId,
+			O.SUPPLIER_NAME AS supplierName,
+			NVL(O.ADVANCEDEPOSITS_BAL,0)/100 AS advancedepositsBal,
+			ADV_CURRENCY as ADVCURRENCY,
+			SYNC_VERSION as syncVersion,
+			P.USER_NAME AS userName
+		<include refid="searchOrdSettlementWhere"/>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchOrdSettlementCount" parameterClass="map" resultClass="int">
+		SELECT COUNT(*)
+		<include refid="searchOrdSettlementWhere"/>
+	</select>
+	<!-- 查询结算单end -->
+	
+	<!-- 查询结算单ID -->
+	<select id="searchOrdSettlementIdList" parameterClass="map" resultClass="long">
+		SELECT A.SETTLEMENT_ID 
+		<include refid="searchOrdSettlementWhere"/>
+	</select>
+	<!-- 查询结算单ID -->
+	
+	<!-- 根据结算对象id查询未确认的结算单 -->
+	<select id="getNoConfirmedSettlementByTargetId" parameterClass="map" resultClass="OrdSettlement">
+		SELECT
+			T.SETTLEMENT_ID AS settlementId,
+			T.SETTLEMENT_TIME AS settlementTime,
+			T.TARGET_ID AS targetId,
+			T.PAY_AMOUNT AS payAmount,
+			T.RECEIVE_AMOUNT AS receiveAmount,
+			T.STATUS AS status,
+			T.CONFIRM_TIME AS confirmTime,
+			T.OPERATOR_NAME AS operatorName,
+			T.BEGIN_TIME AS beginTime,
+			T.END_TIME AS endTime,
+			T.MEMO AS memo,
+			T.CREATE_TIME AS createTime,
+			T.PAYMENT_TARGET AS paymentTarget,
+			T.PAYED_AMOUNT AS payedAmount,
+			T.TARGET_NAME AS targetName,
+			T.SETTLEMENT_PERIOD AS settlementPeriod,
+			T.ADVANCED_DAYS AS advancedDays,
+			T.BANK_ACCOUNT_NAME AS bankAccountName,
+			T.BANK_NAME AS bankName,
+			T.BANK_ACCOUNT AS bankAccount,
+			T.ALIPAY_ACCOUNT AS alipayAccount,
+			T.ALIPAY_NAME AS alipayName,
+			T.TARGET_TYPE AS targetType,
+			T.BANK_LINES AS bankLines,
+			T.COMPANY_ID AS companyId,
+			T.SYNC_VERSION as syncVersion
+		FROM 
+			ORD_SETTLEMENT T
+		WHERE
+			T.STATUS = 'UNSETTLEMENTED'
+		AND
+			T.TARGET_ID = #targetId#
+		AND T.SETTLEMENT_TYPE = #settlementType#
+	</select>
+	
+	<!-- 更新结算单 -->
+	<update id="updateOrdSettlement" parameterClass="OrdSettlement">
+		UPDATE
+			ORD_SETTLEMENT
+		SET
+			SETTLEMENT_ID = #settlementId#,
+			<isNotEmpty property="settlementTime">
+				SETTLEMENT_TIME = #settlementTime#,
+			</isNotEmpty>
+			<isNotEmpty property="targetId">
+				TARGET_ID = #targetId#,
+			</isNotEmpty>
+			<isNotEmpty property="payAmount">
+				PAY_AMOUNT = #payAmount#,
+			</isNotEmpty>
+			<isNotEmpty property="receiveAmount">
+				RECEIVE_AMOUNT = #receiveAmount#,
+			</isNotEmpty>
+			<isNotEmpty property="status">
+				STATUS = #status#,
+			</isNotEmpty>
+			<isNotEmpty property="confirmTime">
+				CONFIRM_TIME = #confirmTime#,
+			</isNotEmpty>
+			<isNotEmpty property="operatorName">
+				OPERATOR_NAME = #operatorName#,
+			</isNotEmpty>
+			<isNotEmpty property="beginTime">
+				BEGIN_TIME = #beginTime#,
+			</isNotEmpty>
+			<isNotEmpty property="endTime">
+				END_TIME = #endTime#,
+			</isNotEmpty>
+			<isNotEmpty property="memo">
+				MEMO = #memo#,
+			</isNotEmpty>
+			<isNotEmpty property="createTime">
+				CREATE_TIME = #createTime#,
+			</isNotEmpty>
+			<isNotEmpty property="paymentTarget">
+				PAYMENT_TARGET = #paymentTarget#,
+			</isNotEmpty>
+			<isNotEmpty property="payedAmount">
+				PAYED_AMOUNT = #payedAmount#,
+			</isNotEmpty>
+			<isNotEmpty property="targetName">
+				TARGET_NAME = #targetName#,
+			</isNotEmpty>
+			<isNotEmpty property="settlementPeriod">
+				SETTLEMENT_PERIOD = #settlementPeriod#,
+			</isNotEmpty>
+			<isNotEmpty property="advancedDays">
+				ADVANCED_DAYS = #advancedDays#,
+			</isNotEmpty>
+			<isNotEmpty property="bankAccountName">
+				BANK_ACCOUNT_NAME = #bankAccountName#,
+			</isNotEmpty>
+			<isNotEmpty property="bankName">
+				BANK_NAME = #bankName#,
+			</isNotEmpty>
+			<isNotEmpty property="bankAccount">
+				BANK_ACCOUNT = #bankAccount#,
+			</isNotEmpty>
+			<isNotEmpty property="alipayAccount">
+				ALIPAY_ACCOUNT = #alipayAccount#,
+			</isNotEmpty>
+			<isNotEmpty property="alipayName">
+				ALIPAY_NAME = #alipayName#,
+			</isNotEmpty>
+			<isNotEmpty property="targetType">
+				TARGET_TYPE = #targetType#,
+			</isNotEmpty>
+			<isNotEmpty property="bankLines">
+				BANK_LINES = #bankLines#,
+			</isNotEmpty>
+			<isNotEmpty property="companyId">
+				COMPANY_ID = #companyId#,
+			</isNotEmpty>
+			SYNC_VERSION = #syncVersion#+1
+		WHERE
+			SETTLEMENT_ID = #settlementId#
+	</update>
+	
+  	<!-- 新增结算单 -->
+  	<insert id="insertOrdSettlement" parameterClass="OrdSettlement">
+  		<selectKey keyProperty="settlementId" resultClass="long">
+  			SELECT 
+  				ORD_SETTLEMENT_ID_SEQ.NEXTVAL AS settlementId
+  			FROM
+  				DUAL
+  		</selectKey>
+  		INSERT INTO
+  			ORD_SETTLEMENT
+  			(
+  				SETTLEMENT_ID,
+				SETTLEMENT_TIME,
+				TARGET_ID,
+				PAY_AMOUNT,
+				RECEIVE_AMOUNT,
+				STATUS,
+				CONFIRM_TIME,
+				OPERATOR_NAME,
+				BEGIN_TIME,
+				END_TIME,
+				MEMO,
+				CREATE_TIME,
+				PAYMENT_TARGET,
+				PAYED_AMOUNT,
+				TARGET_NAME,
+				SETTLEMENT_PERIOD,
+				ADVANCED_DAYS,
+				BANK_ACCOUNT_NAME,
+				BANK_NAME,
+				BANK_ACCOUNT,
+				ALIPAY_ACCOUNT,
+				ALIPAY_NAME,
+				TARGET_TYPE,
+				BANK_LINES,
+				COMPANY_ID,
+				USER_ID,
+				SYNC_VERSION,
+				SETTLEMENT_TYPE
+  			)
+  		VALUES
+  			(
+  				#settlementId#,
+  				#settlementTime#,
+  				#targetId#,
+  				#payAmount#,
+  				#receiveAmount#,
+  				#status#,
+  				#confirmTime#,
+  				#operatorName#,
+  				#beginTime#,
+  				#endTime#,
+  				#memo#,
+  				#createTime#,
+  				#paymentTarget#,
+  				#payedAmount#,
+  				#targetName#,
+  				#settlementPeriod#,
+  				NVL(#advancedDays#,0),
+  				#bankAccountName#,
+  				#bankName#,
+  				#bankAccount#,
+  				#alipayAccount#,
+  				#alipayName#,
+  				#targetType#,
+  				#bankLines#,
+  				#companyId#,
+  				#userId#,
+  				1,
+  				#settlementType#
+  			)
+  	</insert>
+	
+	<!-- 结算单支付begin -->
+	<update id="updateOrdSettlementPayedAmount" parameterClass="OrdSettlement">
+		UPDATE
+			ORD_SETTLEMENT
+		SET
+			PAYED_AMOUNT = NVL(PAYED_AMOUNT,0)+#payedAmount#*100,
+			SYNC_VERSION = #syncVersion#+1
+		WHERE
+			SETTLEMENT_ID = #settlementId#
+	</update>
+	<!-- 结算单支付end -->
+	
+	<!-- 查询结算单信息begin -->
+	<select id="searchSingleOrdSettlementWithTarget" parameterClass="long" resultMap="SimpleOrdSettlementMap">
+		SELECT
+	      SETTLEMENT_ID as settlementId,
+	      NVL(PAY_AMOUNT,0)/100 AS payAmount,
+	      NVL(PAYED_AMOUNT,0)/100 AS payedAmount,
+	      A.MEMO,
+	      A.TARGET_ID AS targetId,
+	      A.TARGET_NAME AS targetName,
+	      A.BANK_NAME AS bankName,
+	      A.BANK_ACCOUNT AS bankAccount,
+	      A.BANK_ACCOUNT_NAME AS bankAccountName,
+	      A.ALIPAY_NAME AS alipayName,
+	      A.ALIPAY_ACCOUNT AS alipayAccount,
+	      A.STATUS as status,
+	      A.SYNC_VERSION AS syncVersion,
+	      B.ITEM_NAME AS companyIdStr,
+	      C.ITEM_NAME AS SETTLEMENTPERIODSTR
+	    FROM 
+	      ORD_SETTLEMENT A, 
+	      COM_CODE B,
+	      COM_CODE C
+	    WHERE 
+	    	A.COMPANY_ID = B.ITEM_CODE
+	    AND
+	    	B.SET_CODE='SETTLEMENT_COMPANY' 
+	    AND
+	    	A.SETTLEMENT_PERIOD = C.ITEM_CODE
+	    AND
+	    	C.SET_CODE = 'SETTLEMENT_PERIOD'
+     	AND 
+      		A.SETTLEMENT_ID = #id#
+	</select>
+	<!-- 查询结算单信息end -->
+	
+	<!-- 查询原始结算单信息begin -->
+	<select id="searchInitalOrdSettlementWithTarget" parameterClass="long" resultMap="InitalOrdSettlementMap">
+		SELECT 
+			A.MEMO memo,
+       		A.BANK_NAME bankName,
+       		A.BANK_ACCOUNT_NAME bankAccountName,
+       		A.BANK_ACCOUNT bankAccount,
+       		A.ALIPAY_NAME alipayName,
+       		A.ALIPAY_ACCOUNT alipayAccount,
+       		A.TARGET_ID targetId,
+       		B.SETTLEMENT_ID settlementId,
+            C.ITEM_NAME itemName
+  		FROM 
+  			SUP_SETTLEMENT_TARGET A, 
+  			ORD_SETTLEMENT B,
+  			COM_CODE C
+ 		WHERE 
+ 			A.TARGET_ID = B.TARGET_ID
+ 		AND
+ 			A.SETTLEMENT_PERIOD = C.ITEM_CODE
+ 		AND 
+ 			C.SET_CODE = 'SETTLEMENT_PERIOD'
+   		AND 
+   			B.SETTLEMENT_ID = #targetId# 
+	</select>
+	<!-- 查询原始结算单信息end -->
+	<!-- 修改原始结算单信息begin -->
+	<update id="updateInitalInfo" parameterClass="OrdSettlement">
+		UPDATE
+			ORD_SETTLEMENT
+		SET
+			BANK_NAME = #bankName#,
+			BANK_ACCOUNT_NAME = #bankAccountName#,
+			BANK_ACCOUNT = #bankAccount#,
+			ALIPAY_NAME = #alipayName#,
+			ALIPAY_ACCOUNT = #alipayAccount#
+		WHERE
+			SETTLEMENT_ID = #settlementId#
+	</update>
+	<!-- 修改原始结算单信息end -->
+	
+	<!-- 查询结算对象的联系人信息end -->
+	
+	<!-- 修改结算单信息（结算状态，备注）begin -->
+	<update id="updateSettlement" parameterClass="OrdSettlement">
+		UPDATE
+			ORD_SETTLEMENT
+		SET
+			<isNotNull property="confirmTime">
+			CONFIRM_TIME = #confirmTime#,
+			</isNotNull>
+			STATUS = #status#,
+			MEMO = #memo#,
+			SYNC_VERSION = #syncVersion#+1
+		WHERE
+			SETTLEMENT_ID = #settlementId#
+	</update>
+	<!-- 修改结算单信息（结算状态，备注）end -->
+	
+	<!-- 修改订单子子项的结算状态begin -->
+	<update id="updateOrderItemMetaSettlementStatus" parameterClass="long">
+		UPDATE 
+			ORD_ORDER_ITEM_META 
+		SET  
+			SETTLEMENT_STATUS = 'SETTLEMENTED',
+			SETTLEMENT_TIME = SYSDATE
+		WHERE 
+			ORDER_ITEM_META_ID 
+		IN (
+			SELECT 
+				ORDER_ITEM_META_ID  
+			FROM 
+				ORD_SUB_SETTLEMENT A, 
+				ORD_SUB_SETTLEMENT_ITEM B   
+			WHERE 
+				A.SUB_SETTLEMENT_ID = B.SUB_SETTLEMENT_ID   
+			AND 
+				SETTLEMENT_ID = #settlementId#
+			AND
+				B.PAY_AMOUNT &gt; 0
+		)
+	</update>
+	<!-- 修改订单子子项的结算状态end -->
+	
+	<!-- 修改订单的结算状态begin -->
+	<update id="updateOrderSettlementStatus" parameterClass="long">
+		UPDATE <!-- 修改A数量 与 B数量相等的订单为已结算 -->
+			ORD_ORDER 
+		SET 
+			SETTLEMENT_STATUS='SETTLEMENTED' 
+		WHERE ORDER_ID IN(
+			SELECT 
+				ORDER_ID 
+			FROM (
+				SELECT  <!-- 查询结算单下的所有订单的订单子子项的已结算数量(A)和全部数量(B) -->
+					CC.ORDER_ID,
+					COUNT(*) AS SETTLEMENTEDCOUNT,<!-- 订单下的状态为已结算的订单子子项的数量  A-->
+					(SELECT COUNT(*) FROM ORD_ORDER_ITEM_META CCC WHERE CCC.ORDER_ID=CC.ORDER_ID) AS METACOUNT <!-- 订单下的订单子子项的数量 B -->
+				FROM 
+					(SELECT <!-- 查询出结算单下的所有订单子子项 -->
+						DISTINCT C.ORDER_ID  
+						FROM ORD_SUB_SETTLEMENT A, 
+						ORD_SUB_SETTLEMENT_ITEM B ,
+						ORD_ORDER_ITEM_META C  
+					WHERE 
+						A.SUB_SETTLEMENT_ID = B.SUB_SETTLEMENT_ID 
+					AND 
+						C.ORDER_ITEM_META_ID = B.ORDER_ITEM_META_ID  
+					AND 
+						SETTLEMENT_ID = #id#
+					) CA,ORD_ORDER_ITEM_META CC 
+				WHERE 
+					CA.ORDER_ID = CC.ORDER_ID 
+				AND 
+					CC.SETTLEMENT_STATUS='SETTLEMENTED' 
+				GROUP BY CC.ORDER_ID
+				) T 
+			WHERE 
+				T.SETTLEMENTEDCOUNT = T.METACOUNT
+			)
+	</update>
+	<!-- 修改订单的结算状态end -->
+	
+	<!-- 查询结算单的结算信息与支付金额begin -->
+	<select id="searchSingleOrdSettlementAmount"  parameterClass="long" resultClass="OrdSettlement">
+		SELECT
+	      SETTLEMENT_ID as settlementId,
+	      PAY_AMOUNT AS payAmount,
+	      PAYED_AMOUNT AS payedAmount,
+	      STATUS,
+	      PAYMENT_TARGET as PAYMENTTARGET
+	    FROM 
+	      ORD_SETTLEMENT A
+	    WHERE 
+      		A.SETTLEMENT_ID = #id#
+	</select>
+	<!-- 查询结算单的结算信息与支付金额end -->
+	
+	<!-- 修改结算单的应结金额begin -->
+	<update id="refreshSettlementPayAmount" parameterClass="long">
+		UPDATE 
+			ORD_SETTLEMENT C 
+		SET 
+			C.PAY_AMOUNT = (SELECT NVL(SUM(A.PAY_AMOUNT),0)
+		FROM 
+			ORD_SUB_SETTLEMENT AA,
+			ORD_SUB_SETTLEMENT_ITEM A
+		WHERE 
+	      	AA.SUB_SETTLEMENT_ID = A.SUB_SETTLEMENT_ID
+	    AND
+	    	AA.SETTLEMENT_ID = #settlementId#)
+		WHERE 
+			C.SETTLEMENT_ID = #settlementId#
+	</update>
+	<!-- 修改结算单的应结金额end -->
+	<!-- 根据id查询结算单 -->
+	<select id="getOrdSettlementById" parameterClass="long" resultClass="OrdSettlement">
+		SELECT 
+			SETTLEMENT_ID AS settlementId,
+			SETTLEMENT_TIME AS settlementTime,
+			TARGET_ID AS targetId,
+			PAY_AMOUNT AS payAmount,
+			RECEIVE_AMOUNT AS receiveAmount,
+			STATUS AS status,
+			CONFIRM_TIME AS confirmTime,
+			OPERATOR_NAME AS operatorName,
+			BEGIN_TIME AS beginTime,
+			END_TIME AS endTime,
+			MEMO AS memo,
+			CREATE_TIME AS createTime,
+			PAYMENT_TARGET AS paymentTarget,
+			PAYED_AMOUNT AS payedAmount,
+			TARGET_NAME AS targetName,
+			SETTLEMENT_PERIOD AS settlementPeriod,
+			ADVANCED_DAYS AS advancedDays,
+			BANK_ACCOUNT_NAME AS bankAccountName,
+			BANK_NAME AS bankName,
+			BANK_ACCOUNT AS bankAccount,
+			ALIPAY_ACCOUNT AS alipayAccount,
+			ALIPAY_NAME AS alipayName,
+			TARGET_TYPE AS targetType,
+			BANK_LINES AS bankLines,
+			SYNC_VERSION AS syncVersion
+		FROM
+			ORD_SETTLEMENT
+		WHERE
+			SETTLEMENT_ID = #value#
+	</select>
+</sqlMap>

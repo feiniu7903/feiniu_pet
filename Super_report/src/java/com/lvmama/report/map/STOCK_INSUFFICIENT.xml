@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="STOCK_INSUFFICIENT">
+	<!-- 1.产品类型 ('SELFHELP_BUS', 'SINGLE', 'WHOLE', 'UNION', 'SUIT'),('SINGLE_ROOM', 'HOTEL_SUIT') ('GROUP','GROUP_LONG','GROUP_FOREIGN','FREENESS','FREENESS_LONG','FREENESS_FOREIGN') 
+		 2.酒店要查询禁售
+		 3.销售产品库存计算公式:MIN(取整(当天采购产品采购数/销售产品中采购产品数量)),
+		 4.儿童产品不监控库存-->
+	<select id="query" resultClass="java.util.HashMap"
+		parameterClass="java.util.HashMap">
+		SELECT U.USER_ID,
+		       U.MOBILE,
+		       U.EMAIL,
+		       P.PRODUCT_ID,
+		       P.PRODUCT_NAME,
+		       A.TIME_PRICE_ID,
+		       TO_CHAR(A.SPEC_DATE, 'YYYY-MM-DD') SPEC_DATE,
+		       A.DAY_STOCK,
+		       A.STOCK_FLAG,
+		       ROW_NUMBER() OVER(PARTITION BY U.USER_ID ORDER BY P.PRODUCT_ID, A.SPEC_DATE) WOR
+		  FROM LVMAMA_SUPER.PROD_PRODUCT        P,
+		       LVMAMA_SUPER.PROD_PRODUCT_BRANCH B,
+		       
+		       lvmama_pet.PERM_USER U,
+		       (SELECT MB.META_BRANCH_ID,
+		               I.PROD_BRANCH_ID,
+		               MP.SPEC_DATE,
+		               MP.OVER_SALE,
+		               MP.STOCK_FLAG,
+		               MP.TIME_PRICE_ID,
+		               TRUNC(MP.DAY_STOCK / I.QUANTITY) DAY_STOCK,
+		               ROW_NUMBER() OVER(PARTITION BY I.PROD_BRANCH_ID, MP.SPEC_DATE ORDER BY TRUNC(MP.DAY_STOCK / I.QUANTITY)) RN
+		          FROM LVMAMA_SUPER.META_PRODUCT_BRANCH      MB,
+		               LVMAMA_SUPER.META_TIME_PRICE          MP,
+		               LVMAMA_SUPER.PROD_PRODUCT_BRANCH_ITEM I
+		               <dynamic>
+		               		<isNotEqual prepend="," property="banSale" compareValue="false"> LVMAMA_SUPER.PROD_TIME_PRICE          T </isNotEqual>
+		               </dynamic>
+		         WHERE MB.META_BRANCH_ID = MP.META_BRANCH_ID
+		           AND I.META_BRANCH_ID = MB.META_BRANCH_ID
+		           <dynamic>
+		               		<isNotEqual prepend=" AND " property="banSale" compareValue="false"> I.PROD_BRANCH_ID = T.PROD_BRANCH_ID  AND T.SPEC_DATE = MP.SPEC_DATE </isNotEqual>
+		           </dynamic>
+		           AND MP.SPEC_DATE &gt;= TRUNC(SYSDATE)
+		           AND MP.SPEC_DATE &lt;= LAST_DAY(ADD_MONTHS(TRUNC(SYSDATE), 1))
+		           AND MB.VALID = 'Y'
+		           AND MP.DAY_STOCK != -1
+		           AND MP.OVER_SALE = 'false'
+		           <dynamic>
+					 <isNotEmpty prepend=" AND " property="limitNumber"> TRUNC(MP.DAY_STOCK / I.QUANTITY) &lt;= #limitNumber#</isNotEmpty>
+				   </dynamic>
+		           ) A
+		 WHERE P.PRODUCT_ID = B.PRODUCT_ID
+		   AND P.MANAGER_ID = U.USER_ID
+		   AND B.PROD_BRANCH_ID = A.PROD_BRANCH_ID
+		   AND P.ONLINE_TIME &lt;= TRUNC(SYSDATE)
+		   AND P.OFFLINE_TIME &gt;= TRUNC(SYSDATE)
+		   AND B.ADULT_QUANTITY > 0
+		   AND B.ON_LINE = 'true'
+		   AND B.DEFAULT_BRANCH = 'true'
+		   AND P.ON_LINE = 'true'
+		   AND P.VALID = 'Y'
+		   <dynamic>
+		  	 <isNotEmpty prepend=" AND " property="productType">	P.SUB_PRODUCT_TYPE IN ($productType$) </isNotEmpty>
+		   </dynamic>
+		   AND U.VALID = 'Y'
+		   AND A.RN = 1
+		 ORDER BY USER_ID, PRODUCT_ID, SPEC_DATE
+	</select>
+	<select id="productSaleRemindList" resultClass="java.util.HashMap">
+		<![CDATA[
+		SELECT USER_ID,
+		       EMAIL,
+		       PRODUCT_ID,
+		       PRODUCT_NAME,
+		       PROD_BRANCH_ID,
+		       BRANCH_NAME,
+		       TO_CHAR(SPEC_DATE, 'yyyy-mm-dd') SPEC_DATE
+		  FROM (SELECT U.USER_ID,
+		               U.EMAIL,
+		               PP.PRODUCT_ID,
+		               P.PRODUCT_NAME,
+		               P.SUB_PRODUCT_TYPE,
+		               PP.PROD_BRANCH_ID,
+		               PB.BRANCH_NAME,
+		               MAX(PP.SPEC_DATE) SPEC_DATE
+		          FROM LVMAMA_SUPER.PROD_PRODUCT_BRANCH      PB,
+		               LVMAMA_SUPER.PROD_TIME_PRICE          PP,
+		               LVMAMA_SUPER.PROD_PRODUCT_BRANCH_ITEM I,
+		               LVMAMA_SUPER.PROD_PRODUCT             P,
+		               lvmama_pet.PERM_USER                U
+		         WHERE PB.PROD_BRANCH_ID = PP.PROD_BRANCH_ID
+		           AND I.PROD_BRANCH_ID = PB.PROD_BRANCH_ID
+		           AND P.PRODUCT_ID = PB.PRODUCT_ID
+		           AND P.PRODUCT_ID = PP.PRODUCT_ID
+		           AND P.MANAGER_ID = U.USER_ID
+		           AND PB.VALID = 'Y'
+		           AND PP.SPEC_DATE >= TRUNC(SYSDATE)
+		           AND P.SUB_PRODUCT_TYPE IN ('FREENESS',
+		                                      'GROUP',
+		                                      'SELFHELP_BUS',
+		                                      'FREENESS_LONG',
+		                                      'GROUP_LONG',
+		                                      'FREENESS_FOREIGN',
+		                                      'GROUP_FOREIGN')
+		           AND PB.DEFAULT_BRANCH = 'true'
+		           AND PB.ON_LINE = 'true'
+		           AND P.ON_LINE = 'true'
+		           AND P.VALID = 'Y'
+		           AND U.VALID = 'Y'
+		         GROUP BY USER_ID,
+		                  U.EMAIL,
+		                  PP.PRODUCT_ID,
+		                  P.PRODUCT_NAME,
+		                  P.SUB_PRODUCT_TYPE,
+		                  PP.PROD_BRANCH_ID,
+		                  PB.BRANCH_NAME) A
+		 WHERE (SPEC_DATE <= TRUNC(SYSDATE + 7) AND
+		       SUB_PRODUCT_TYPE IN ('FREENESS', 'GROUP', 'SELFHELP_BUS'))
+		    OR (SPEC_DATE <= TRUNC(SYSDATE + 15) AND
+		       SUB_PRODUCT_TYPE IN ('FREENESS_LONG', 'GROUP_LONG'))
+		    OR (SPEC_DATE <= TRUNC(SYSDATE + 30) AND
+		       SUB_PRODUCT_TYPE IN ('FREENESS_FOREIGN', 'GROUP_FOREIGN'))
+		 ORDER BY USER_ID, PRODUCT_ID
+		 ]]>
+	</select>
+	
+	<update id="signIsSendEmail" parameterClass="java.util.HashMap">
+		update meta_time_price mtp set
+		mtp.STOCK_FLAG=#stokflag# where mtp.TIME_PRICE_ID=#priceId#
+	</update>
+</sqlMap>

@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+
+	<bean name="/certificateServiceProxy" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="certificateServiceProxy" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.CertificateService" />
+	</bean>
+<!-- order service proxy -->
+	<bean name="/bonusConfigService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="bonusConfigService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.BonusConfigService" />
+	</bean>
+	<bean name="/ordOrderSHHolidayService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ordOrderSHHolidayService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.OrdOrderSHHolidayService" />
+	</bean>      
+	<bean name="/orderServiceProxy" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderServiceProxy" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.OrderService" />
+	</bean>      
+	<bean name="/orderPerformProxy" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderPerformProxy" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.OrderPerformService" />
+	</bean>  
+	<bean name="/orderRefundService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderRefundService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.sale.OrderRefundService" />
+	</bean>
+	
+	<bean name="/orderHotelService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderHotelService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.OrderHotelService" />
+	</bean>
+	
+	<bean name="/orderParentService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderParentService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.OrderParentService" />
+	</bean>
+	
+<!-- /order service proxy -->
+	<bean name="/productProxy" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="productProxy" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProductService" />
+	</bean>
+	
+<!-- back service proxy -->
+	<bean name="/comMessageService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="comMessageService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComMessageService" />
+	</bean>
+	<bean name="/comPlaceService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="comPlaceService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComPlaceService" />
+	</bean>
+	
+	<bean name="/comSmsTemplateService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="comSmsTemplateService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComSmsTemplateService" />
+	</bean>
+	<bean name="/conditionService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="conditionService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.com.ConditionService" />
+	</bean>
+	<!-- 分销 -->
+	<bean name="/distributionProductService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distributionProductService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.distribution.DistributionProductService" />
+	</bean>
+	<bean name="/distributionService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distributionService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.distribution.DistributionService" />
+	</bean>
+	<bean name="/distributionOrderService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distributionOrderService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.distribution.DistributionOrderService" />
+	</bean>
+	<bean name="/distributionOrderRefundService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distributionOrderRefundService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.distribution.DistributionOrderRefundService" />
+	</bean>
+	<bean name="/distributionRakeBackService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distributionRakeBackService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.distribution.DistributionRakeBackService" />
+	</bean>
+    <bean name="/distributionTuanCouponService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distributionTuanCouponService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.distribution.DistributionTuanCouponService" />
+	</bean>
+	 <bean name="/distributionTuanCouponBatchService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distributionTuanCouponBatchService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.distribution.DistributionTuanCouponBatchService" />
+	</bean>
+	
+	<bean name="/distributionTuanDestroyLogService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distributionTuanDestroyLogService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.distribution.DistributionTuanDestroyLogService" />
+	</bean>
+	
+	<!-- 分销团购 -->
+	<bean name="/distributionTuanService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distributionTuanService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.distribution.DistributionTuanService" />
+	</bean>
+	<bean name="/distributionOrderServiceProxy" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distributionOrderServiceProxy" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.DistributionOrderService" />
+	</bean>
+	
+	<!-- 立式设备 -->
+	<bean name="/deviceService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="deviceService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ckdevice.CkDeviceService" />
+	</bean>
+	<bean name="/deviceProductService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="deviceProductService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ckdevice.CkDeviceProductService" />
+	</bean>
+	
+	<bean name="/downTmallOrderInterface" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="downTmallOrderInterface" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.DownTmallOrderInterface" />
+	</bean>
+	<bean name="/groupAdviceNoteService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="groupAdviceNoteService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.GroupAdviceNoteService" />
+	</bean>
+	<bean name="/groupBudgetService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="groupBudgetService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.IGroupBudgetService" />
+	</bean>
+	<bean name="/groupDreamService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="groupDreamService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.GroupDreamService" />
+	</bean>
+
+	<bean name="/limitSaleTimeService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="limitSaleTimeService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.LimitSaleTimeService" />
+	</bean>
+	<bean name="/metaProductBranchService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="metaProductBranchService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.meta.MetaProductBranchService" />
+	</bean>
+	<bean name="/metaProductService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="metaProductService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.meta.MetaProductService" />
+	</bean>
+	<bean name="/opTravelGroupService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="opTravelGroupService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.op.IOpTravelGroupService" />
+	</bean>
+	<bean name="/ordEContractService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="ordEContractService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.econtract.OrdEContractService" />
+	</bean>
+	<bean name="/ordertrackService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="ordertrackService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.IOrdertrackService" />
+	</bean>
+	<bean name="/ordFaxRecvService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="ordFaxRecvService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.fax.OrdFaxRecvService" />
+	</bean>
+	<bean name="/ordRefundMentService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="ordRefundMentService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.sale.OrdRefundMentService" />
+	</bean>
+	<bean name="/ordSaleServiceServiceDeal" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="ordSaleServiceServiceDeal" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.sale.OrdSaleServiceServiceDeal" />
+	</bean>
+	<bean name="/ordSaleServiceService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="ordSaleServiceService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.sale.OrdSaleServiceService" />
+	</bean>
+	<bean name="/passCodeService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="passCodeService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.pass.PassCodeService" />
+	</bean>
+	<bean name="/proceedToursService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="proceedToursService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ProceedToursService" />
+	</bean>
+	<bean name="/prodChannelService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodChannelService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdChannelService" />
+	</bean>
+	<bean name="/prodPlaceTagService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodPlaceTagService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdPlaceTagService" />
+	</bean>
+	<bean name="/prodCouponIntervalService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodCouponIntervalService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdCouponIntervalService" />
+	</bean>
+	
+	<bean name="/prodProductBranchService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodProductBranchService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdProductBranchService" />
+	</bean>
+	<bean name="/productItemService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="productItemService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdProductItemService" />
+	</bean>
+	<bean name="/prodProductJourneyService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodProductJourneyService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdProductJourneyService" />
+	</bean>
+	<bean name="/prodProductModelPropertyService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodProductModelPropertyService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdProductModelPropertyService" />
+	</bean>
+	<bean name="/prodProductPlaceService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodProductPlaceService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdProductPlaceService" />
+	</bean>
+	<bean name="/prodProductRelationService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodProductRelationService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdProductRelationService" />
+	</bean>
+	<bean name="/prodProductTagService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodProductTagService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdProductTagService" />
+	</bean>
+	<bean name="/prodTagService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodTagService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdTagService" />
+	</bean>
+	<bean name="/productModelPropertyService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="productModelPropertyService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProductModelPropertyService" />
+	</bean>
+	<bean name="/productModelTypeService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="productModelTypeService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProductModelTypeService" />
+	</bean>
+	<bean name="/prodProductService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodProductService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdProductService" />
+	</bean>
+	<bean name="/prodAvailableBonusService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodAvailableBonusService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdAvailableBonusService" />
+	</bean>
+
+	<bean name="/prodProductRoyaltyService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="prodProductRoyaltyService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdProductRoyaltyService" />
+	</bean>
+	
+	<bean name="/smsService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="smsService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.SmsService" />
+	</bean>
+	<bean name="/receiverUserService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="receiverUserService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.user.IReceiverUserService" />
+	</bean>
+	<bean name="/viewPageJourneyService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="viewPageJourneyService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.view.ViewPageJourneyService" />
+	</bean>
+	<bean name="/viewMultiJourneyService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="viewMultiJourneyService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.view.ViewMultiJourneyService" />
+	</bean>
+	<bean name="/viewPageJourneyTipsService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="viewPageJourneyTipsService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.view.ViewPageJourneyTipsService" />
+	</bean>
+	<bean name="/viewPageService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="viewPageService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.view.ViewPageService" />
+	</bean>
+	<bean name="/viewPageTagService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="viewPageTagService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.view.ViewPageTagService" />
+	</bean>
+	<bean name="/viewTravelTipsService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="viewTravelTipsService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.view.ViewTravelTipsService"/>
+	</bean>
+	<bean name="/ordTmallMapService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ordTmallMapService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.tmall.OrdTmallMapService" />
+	</bean>
+	<bean name="/ordTmallDistributorMapService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ordTmallDistributorMapService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.tmall.OrdTmallDistributorMapService" />
+	</bean>
+	<!-- 淘宝商品同步接口 linkai 2014-03-21 -->
+	<bean name="/taobaoProductSyncService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="taobaoProductSyncService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.tmall.TaobaoProductSyncService" />
+	</bean>
+	
+	<bean name="/downTmallDistributorOrderInterface" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="downTmallDistributorOrderInterface"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.DownTmallDistributorOrderInterface" />
+	</bean>
+
+	<bean name="/eplaceService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="eplaceService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.eplace.EPlaceService" />
+	</bean>
+	
+	<bean name="/comAffixService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="comAffixService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComAffixService"/>
+	</bean>
+	<bean name="/beeProdProductService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="beeProdProductService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.BeeProdProductService"/>
+	</bean>
+	
+	<bean name="/travelDescriptionService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="travelDescriptionService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.TravelDescriptionService"/>
+	</bean>
+
+	<bean name="/sendContractEmailService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="sendContractEmailService"></property>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.SendContractEmailService"/>
+	</bean>
+	
+	<bean name="/pageService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="pageService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.PageService"/>
+	</bean>
+	<bean name="/smsHistoryService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="smsHistoryService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.com.ISmsHistoryService"/>
+	</bean>
+	
+	<bean name="/policyInfoService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="policyInfoService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.insurance.PolicyInfoService"/>
+	</bean>	
+	
+	<bean name="/policyOperationLogService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="policyOperationLogService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.insurance.PolicyOperationLogService"/>
+	</bean>
+		
+	<bean name="/insurantService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="insurantService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.InsurantService"/>
+	</bean>			
+	<bean name="/comClientService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="comClientService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.client.ComClientService"/>
+	</bean>	
+	<bean name="/metaTravelCodeService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="metaTravelCodeService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.meta.MetaTravelCodeService"/>
+	</bean>
+	
+	<!-- 对接供应商 -->
+	<bean name="/supplierProdService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="supplierProdService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.duijie.SupplierProdService"/>
+	</bean>
+	<bean name="/supplierViewContentService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="supplierViewContentService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.duijie.SupplierViewContentService"/>
+	</bean>
+	<bean name="/supplierViewJourneyService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="supplierViewJourneyService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.duijie.SupplierViewJourneyService"/>
+	</bean>		
+	
+	<!-- EBk -->
+	<bean name="/ebkProductReportService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProductReportService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProductReportService"/>
+	</bean>
+	<bean name="/ebkUserService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkUserService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.eplace.EbkUserService"/>
+	</bean>
+	
+	<bean name="/ebkPerformLogService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkPerformLogService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.eplace.EbkPerformLogService"/>
+	</bean>
+	
+	
+	<bean name="/ebkUserTargetService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkUserTargetService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.eplace.EbkUserTargetService"/>
+	</bean>
+	<bean name="/ebkPermissionService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkPermissionService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.eplace.EbkPermissionService"/>
+	</bean>
+	<bean name="/ebkUserPermissionService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkUserPermissionService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.eplace.EbkUserPermissionService"/>
+	</bean>
+	<!-- EBooking -->
+	<bean name="/ebkTaskService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkTaskService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkTaskService"/>
+	</bean>	
+	<!-- EBooking公告. -->
+	<bean name="/ebkAnnouncementService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkAnnouncementService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkAnnouncementService"/>
+	</bean>
+	<!-- EBooking房价维护. -->
+	<bean name="/ebkHousePriceService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkHousePriceService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkHousePriceService"/>
+	</bean>
+	
+	<bean name="/ebkFaxTaskService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkFaxTaskService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkFaxTaskService"/>
+	</bean>	
+	
+	<!-- EBK供应商产品 -->
+	<bean name="/ebkProdProductService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdProductService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdProductService"/>
+	</bean>
+	<bean name="/ebkProdSnapshotService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdSnapshotService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdSnapshotService"/>
+	</bean>
+	<bean name="/ebkProdTargetService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdTargetService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdTargetService"/>
+	</bean>
+	<bean name="/ebkProductService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProductService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProductService"/>
+	</bean>
+	<bean name="/ebkProdImportService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdImportService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdImportService"/>
+	</bean>
+	<bean name="/ebkProdPlaceService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdPlaceService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdPlaceService"/>
+	</bean>
+	<bean name="/ebkProdModelPropertyService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdModelPropertyService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdModelPropertyService"/>
+	</bean>
+	<bean name="/ebkProdContentService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdContentService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdContentService"/>
+	</bean>
+	<bean name="/ebkProdRejectInfoService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdRejectInfoService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdRejectInfoService"/>
+	</bean>	
+	<bean name="/ebkProdJourneyService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdJourneyService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdJourneyService"/>
+	</bean>
+	<!-- ebk多行程 -->
+	<bean name="/ebkMultiJourneyService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkMultiJourneyService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkMultiJourneyService"/>
+	</bean>
+	<bean name="/ebkProdTimePriceService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdTimePriceService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdTimePriceService"/>
+	</bean>	
+	<bean name="/ebkProdBranchService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdBranchService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdBranchService"/>
+	</bean>
+	<bean name="/ebkProdRelationService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdRelationService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdRelationService"/>
+	</bean>
+	
+	<bean name="/ebkProdAuditService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkProdAuditService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkProdAuditService"/>
+	</bean>
+	
+	<bean name="/modifySettlementPriceService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="modifySettlementPriceService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.ModifySettlementPriceService"/>
+	</bean>
+	
+	<bean name="/ordOrderChannelService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ordOrderChannelService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.ord.OrdOrderChannelService"/>
+	</bean>	
+	<bean name="/groupTravelTemplateService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="groupTravelTemplateService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.GroupTravelTemplateService"/>
+	</bean>
+	<bean name="/ebkCertificateService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ebkCertificateService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ebooking.EbkCertificateService"/>
+	</bean>		
+	<bean name="/favorOrderService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="favorOrderService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.favor.FavorOrderService" />
+	</bean>
+	<bean name="/workOrderFinishedProxy" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="workOrderFinishedProxy" />
+		<property name="serviceInterface" value="com.lvmama.comm.work.builder.WorkOrderFinishedBiz" />
+	</bean>
+	<bean name="/comSearchInfoUpdateService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="comSearchInfoUpdateService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.pub.ComSearchInfoUpdateService" />
+	</bean>
+	<bean name="/orderItemMetaAperiodicService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderItemMetaAperiodicService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.OrderItemMetaAperiodicService"/>
+	</bean>
+	
+	<bean name="/prodTrainService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="prodTrainService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.ProdTrainService" />
+	</bean>
+	
+	<bean name="/orderTrafficService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderTrafficService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.OrderTrafficService" />
+	</bean>
+	
+	<bean name="/passportMessageService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="passportMessageService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.pass.PassportMessageService" />
+	</bean>
+	
+	<bean name="/workOrderProxy" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="workOrderSenderProxy" />
+		<property name="serviceInterface" value="com.lvmama.comm.work.builder.WorkOrderSenderBiz" />
+	</bean>
+	
+	<bean name="/groupAdviceNoteServiceProxy" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="groupAdviceNoteServiceProxy" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.IGroupAdviceNoteService" />
+	</bean>
+	
+	<bean name="/taobaoProductService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="taobaoProductService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.market.TaobaoProductService" />
+	</bean>
+	
+	<bean name="/taobaoProductDetailService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="taobaoProductDetailService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.market.TaobaoProductDetailService" />
+	</bean>
+	
+	<bean name="/applyCityService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="applyCityService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.market.ApplyCityService" />
+	</bean>
+	<bean name="/comTaskService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="comTaskService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.com.ComTaskService" />
+	</bean>
+	<bean name="/markActivityService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="markActivityService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.market.MarkActivityService" />
+	</bean>
+
+	<bean name="/markActivityBlacklistService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="markActivityBlacklistService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.market.MarkActivityBlacklistService" />
+	</bean>
+
+	<bean name="/ncComplaintTypeService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="ncComplaintTypeService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.complaint.NcComplaintTypeService" />
+	</bean>
+	<bean name="/ncComplaintRoleService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="ncComplaintRoleService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.complaint.NcComplaintRoleService" />
+	</bean>
+	
+	<bean name="/comJobContentService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="comJobContentService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.com.ComJobContentService" />
+	</bean>
+	
+	<bean name="/orderBatchService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="orderBatchService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.OrderBatchService" />
+	</bean>
+	
+	<!-- mobile start -->
+	<bean name="/mobileTrainService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="mobileTrainService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.mobile.MobileTrainService" />
+	</bean>
+	<!-- mobile end -->
+    <bean name="/ncComplaintService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+        <property name="service" ref="ncComplaintService" />
+        <property name="serviceInterface" value="com.lvmama.comm.bee.service.complaint.NcComplaintService" />
+    </bean>
+    
+    <!-- VST产品信息同步RPC服务 -->
+    <bean name="/petProdGoodsService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="petProdGoodsService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.vst.service.PetProdGoodsService"/>
+	</bean>
+	
+    <!-- 提供VST退款接口服务 -->
+    <bean name="/vstOrderRefundmentService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="vstOrderRefundmentService"/>
+		<property name="serviceInterface" value="com.lvmama.comm.vst.service.VstOrderRefundmentService"/>
+	</bean>
+    
+    <bean name="/ordUserOrderService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+        <property name="service" ref="ordUserOrderService" />
+        <property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.IOrdUserOrderService" />
+    </bean>
+    <bean name="/vstUserClient" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="vstUserClient"/>
+		<property name="serviceInterface" value="com.lvmama.comm.pet.client.IUserClient"/>
+	</bean>
+
+	<bean name="/orderRefundmentService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderRefundmentService"/>
+		<property name="serviceInterface" value="com.lvmama.order.service.OrderRefundmentService"/>
+	</bean>
+	
+	<bean name="/metaProductControlService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="metaProductControlService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.meta.MetaProductControlService" />
+	</bean>
+	
+	<bean name="/productControlRoleService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="productControlRoleService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.meta.ProductControlRoleService" />
+	</bean>
+	
+	<bean name="/ordOrderBlackService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="ordOrderBlackService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.ord.OrdOrderBlackService" />
+	</bean>
+	
+	<bean name="/bounsReturnScaleService" class="org.springframework.remoting.caucho.HessianServiceExporter" >
+		<property name="service" ref="bounsReturnScaleService" />
+		<property name="serviceInterface" value="com.lvmama.comm.bee.service.prod.BounsReturnScaleService" />
+	</bean>
+</beans>

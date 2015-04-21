@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_SEARCH_INFO_UPDATE" >
+	<procedure id="syncProductSearchInfo">
+	  	{call UPDATE_PRODUCT_SEARCH_INFO()}
+	</procedure>
+	
+	<procedure id="syncProdBranchSearchInfo">
+	  	{call UPDATE_BRANCH_SEARCH_INFO()}
+	</procedure>
+	
+	<procedure id="syncPlaceSearchInfo">
+	  	{call UPDATE_PLACE_SEARCH_INFO()}
+	</procedure>
+	
+	<insert id="insert" parameterClass="map">
+		INSERT INTO COM_SEARCH_INFO_UPDATE(UPDATE_ID,UPDATE_TYPE,CREATE_TIME,EXT_COL)VALUES(#updateId#,#updateType#,SYSDATE,#extCol#)
+	</insert>
+	<select id="searchUpdatedId" parameterClass="String" resultClass="Long">
+		SELECT 
+			DISTINCT UPDATE_ID 
+		FROM 
+			COM_SEARCH_INFO_UPDATE 
+		WHERE 
+			UPDATE_STATUS = 'UPDATED'
+		AND 
+			UPDATE_TYPE = #updateType#
+	</select>
+	
+	<select id="searchUpdatedIdExtCol" parameterClass="String" resultClass="String">
+		SELECT 
+			DISTINCT UPDATE_ID || ',' || EXT_COL
+		FROM 
+			COM_SEARCH_INFO_UPDATE 
+		WHERE 
+			UPDATE_STATUS = 'UPDATED'
+		AND 
+			UPDATE_TYPE = #updateType#
+	</select>
+	<delete id="deleteUpdated" parameterClass="String">
+		DELETE FROM 
+			COM_SEARCH_INFO_UPDATE
+		WHERE 
+			UPDATE_STATUS = 'UPDATED'
+		AND 
+			UPDATE_TYPE = #updateType#
+	</delete>
+</sqlMap>

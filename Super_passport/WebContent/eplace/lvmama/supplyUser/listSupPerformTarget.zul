@@ -1,0 +1,25 @@
+<?page title="new settlement target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./productObjectWin"?>
+<zk>
+<window id="productObjectWin" title="履行对象" border="normal" mode="embedded" apply="com.lvmama.eplace.web.lvmama.supplyUser.EplaceSupplerAddAction">
+		
+		<listbox model="@{productObjectWin$composer.performTargetList}">
+			<listhead>
+				<listheader label="编号" width="6%"/>
+				<listheader label="名称"/>
+				<listheader label="支付信息"/>
+				<listheader label="履行信息"/>
+			</listhead>
+			<listitem height="25px" self="@{each='supPerformTargett' }">
+				<listcell label="@{supPerformTargett.targetId }"></listcell>
+				<listcell label="@{supPerformTargett.name }"></listcell>
+				<listcell label="@{supPerformTargett.paymentInfo}" />
+				<listcell><label value="@{supPerformTargett.performInfo}"/></listcell>
+			</listitem>
+		</listbox>
+		<space />
+		<toolbar align="center">
+	        <button label="关闭窗口" width="100px" onClick="productObjectWin.detach()"></button>
+	    </toolbar>
+</window>
+</zk>

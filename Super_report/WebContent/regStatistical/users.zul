@@ -1,0 +1,185 @@
+<?page title="用户注册统计" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win"?>
+<zk>
+	<window title="用户筛选" border="normal"
+		apply="com.lvmama.report.web.regStatistics.RegUsersStatisticsAction"
+		id="win">
+		<grid>
+			<rows>
+				<row>
+					<hbox>
+						<label value="筛选条件：" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>
+						<label value="查询时间: " />
+						<datebox id="endDate"
+							value="@{saction.searchConds.endDate}"
+							onChange='saction.checkDate("endDate", "dateException");' />
+						<label id="dateException" />
+					</hbox>
+				</row>
+				<row>
+					<hbox spacing="2">
+						<button label="查询" onClick="saction.search();"
+							id="searchBtn" />
+						<button label="导出EXECL"
+							onClick="saction.exportUsers()" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+
+		<label value="整体状况(数据库统计)" />
+		<listbox id="box0" fixedLayout="true"
+			model="@{saction.totalStatisticsVoList,load-after='searchBtn.onClick'}">
+			<listhead>
+				<listheader align="left" label="用户数分布情况：" width="170px" />
+				<listheader align="right" label="本周" />
+				<listheader align="right" label="上周" />
+				<listheader align="right" label="本周增长率" width="100px;" />
+				<listheader align="right" label="上周周增长率" width="100px;" />
+				<listheader align="right" label="前2周" />
+				<listheader align="right" label="前3周" />
+				<listheader align="right" label="前4周" />
+				<listheader align="right" label="前5周" />
+				<listheader align="right" label="前6周" />
+				<listheader align="right" label="前7周" />
+				<listheader align="right" label="前8周" />
+				<listheader align="right" label="前9周" />
+				<listheader align="right" label="前10周" />
+				<listheader align="right" label="前11周" />
+				<listheader align="right" label="前12周" />
+				<listheader align="right" label="前13周" />
+			</listhead>
+			<listitem self="@{each='totalVo'}" value="@{totalVo }">
+				<listcell label="@{totalVo.name}" />
+				<listcell label="@{totalVo.firstWeek}" />
+				<listcell label="@{totalVo.secondWeek}" />
+				<listcell label="@{totalVo.lastWeek}" />
+				<listcell label="@{totalVo.upLastWeek}" />
+				<listcell label="@{totalVo.thirdWeek}" />
+				<listcell label="@{totalVo.fourthWeek}" />
+				<listcell label="@{totalVo.fifthWeek}" />
+				<listcell label="@{totalVo.sixthWeek}" />
+				<listcell label="@{totalVo.seventhWeek}" />
+				<listcell label="@{totalVo.eighthWeek}" />
+				<listcell label="@{totalVo.ninthWeek}" />
+				<listcell label="@{totalVo.tenthWeek}" />
+				<listcell label="@{totalVo.eleventhWeek}" />
+				<listcell label="@{totalVo.twelfthWeek}" />
+				<listcell label="@{totalVo.thirteenthWeek}" />
+				<listcell label="@{totalVo.fourteenthWeek}" />
+			</listitem>
+		</listbox>
+		<grid>
+			<rows>
+				<row>
+					<space></space>
+				</row>
+			</rows>
+		</grid>
+
+		<label value="本周注册状况(数据库统计)" />
+		<listbox id="box1" fixedLayout="true"
+			model="@{saction.userAnalysisVoList,load-after='searchBtn.onClick'}">
+			<listhead>
+				<listheader align="left" label="用户数分布情况：" width="170px" />
+				<listheader align="right" label="本周" />
+				<listheader align="right" label="上周" />
+				<listheader align="right" label="本周增长率" width="100px;" />
+				<listheader align="right" label="上周周增长率" width="100px;" />
+				<listheader align="right" label="前2周" />
+				<listheader align="right" label="前3周" />
+				<listheader align="right" label="前4周" />
+				<listheader align="right" label="前5周" />
+				<listheader align="right" label="前6周" />
+				<listheader align="right" label="前7周" />
+				<listheader align="right" label="前8周" />
+				<listheader align="right" label="前9周" />
+				<listheader align="right" label="前10周" />
+				<listheader align="right" label="前11周" />
+				<listheader align="right" label="前12周" />
+				<listheader align="right" label="前13周" />
+			</listhead>
+			<listitem self="@{each='userAnalysisVo'}"
+				value="@{userAnalysisVo}">
+				<listcell label="@{userAnalysisVo.name}" />
+				<listcell label="@{userAnalysisVo.firstWeek}" />
+				<listcell label="@{userAnalysisVo.secondWeek}" />
+				<listcell label="@{userAnalysisVo.lastWeek}" />
+				<listcell label="@{userAnalysisVo.upLastWeek}" />
+				<listcell label="@{userAnalysisVo.thirdWeek}" />
+				<listcell label="@{userAnalysisVo.fourthWeek}" />
+				<listcell label="@{userAnalysisVo.fifthWeek}" />
+				<listcell label="@{userAnalysisVo.sixthWeek}" />
+				<listcell label="@{userAnalysisVo.seventhWeek}" />
+				<listcell label="@{userAnalysisVo.eighthWeek}" />
+				<listcell label="@{userAnalysisVo.ninthWeek}" />
+				<listcell label="@{userAnalysisVo.tenthWeek}" />
+				<listcell label="@{userAnalysisVo.eleventhWeek}" />
+				<listcell label="@{userAnalysisVo.twelfthWeek}" />
+				<listcell label="@{userAnalysisVo.thirteenthWeek}" />
+				<listcell label="@{userAnalysisVo.fourteenthWeek}" />
+			</listitem>
+		</listbox>
+		<grid>
+			<rows>
+				<row>
+					<space></space>
+				</row>
+			</rows>
+		</grid>
+		<label value=" 本周用户重要行为状况" />
+		<listbox id="box2" fixedLayout="true"
+			model="@{saction.userBehaviorVoList,load-after='searchBtn.onClick'}">
+			<listhead>
+				<listheader align="left" label="用户数分布情况：" width="170px" />
+				<listheader align="right" label="本周" />
+				<listheader align="right" label="上周" />
+				<listheader align="right" label="本周增长率" width="100px;" />
+				<listheader align="right" label="上周周增长率" width="100px;" />
+				<listheader align="right" label="前2周" />
+				<listheader align="right" label="前3周" />
+				<listheader align="right" label="前4周" />
+				<listheader align="right" label="前5周" />
+				<listheader align="right" label="前6周" />
+				<listheader align="right" label="前7周" />
+				<listheader align="right" label="前8周" />
+				<listheader align="right" label="前9周" />
+				<listheader align="right" label="前10周" />
+				<listheader align="right" label="前11周" />
+				<listheader align="right" label="前12周" />
+				<listheader align="right" label="前13周" />
+			</listhead>
+			<listitem self="@{each='userBehaviorVo'}"
+				value="@{userBehaviorVo}">
+				<listcell label="@{userBehaviorVo.name}" />
+				<listcell label="@{userBehaviorVo.firstWeek}" />
+				<listcell label="@{userBehaviorVo.secondWeek}" />
+				<listcell label="@{userBehaviorVo.lastWeek}" />
+				<listcell label="@{userBehaviorVo.upLastWeek}" />
+				<listcell label="@{userBehaviorVo.thirdWeek}" />
+				<listcell label="@{userBehaviorVo.fourthWeek}" />
+				<listcell label="@{userBehaviorVo.fifthWeek}" />
+				<listcell label="@{userBehaviorVo.sixthWeek}" />
+				<listcell label="@{userBehaviorVo.seventhWeek}" />
+				<listcell label="@{userBehaviorVo.eighthWeek}" />
+				<listcell label="@{userBehaviorVo.ninthWeek}" />
+				<listcell label="@{userBehaviorVo.tenthWeek}" />
+				<listcell label="@{userBehaviorVo.eleventhWeek}" />
+				<listcell label="@{userBehaviorVo.twelfthWeek}" />
+				<listcell label="@{userBehaviorVo.thirteenthWeek}" />
+				<listcell label="@{userBehaviorVo.fourteenthWeek}" />
+			</listitem>
+		</listbox>
+		<grid>
+			<rows>
+				<row>
+					<space></space>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

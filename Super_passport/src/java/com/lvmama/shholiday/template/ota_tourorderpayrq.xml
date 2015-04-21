@@ -1,0 +1,13 @@
+<#import "sh_holiday_base.xml" as base>
+<@base.layout "OrderPayRQ">
+		<OrderPayInfos>
+			<OrderPayInfo OrderPackageNo="${body.payInfo.externalOrderNo}" ExternalOrderNo=""><!-- OrderPackageNo:订单号，ExternalOrderNo:外部订单号(预留字段)，只者必填其一 -->
+				<PayMode>${body.payInfo.payMode}<!--  ★付款方式：CREDIT:信用帐号支付，AUTO_BENEFITS：自动分帐... --></PayMode>
+				<PayStyle>${body.payInfo.payStyle}<!-- 支付类型：MAIN-支付订单费用， ADDED-补款（暂未开放），说明：MAIN只能支付一次;ADDED可以多次支付 --></PayStyle>
+				<PayAmount>${body.payInfo.payAmount}</PayAmount>
+				<PayToBankNo></PayToBankNo>
+				<TransactionNo></TransactionNo>
+				<BookModifyInfo BookModifyNo=""/>
+			</OrderPayInfo>
+		</OrderPayInfos>
+</@base.layout>

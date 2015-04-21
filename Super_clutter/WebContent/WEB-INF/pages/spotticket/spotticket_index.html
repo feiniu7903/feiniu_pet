@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>景点门票_旅游门票手机预订-驴妈妈手机站</title>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/comm.js"></script>
+<script src="${request.contextPath}/js/spotTicket.js?_version=20130813"></script>
+<script type="text/javascript">
+$(function(){
+	/*input 框变色*/
+	$("input.lv-input-search").focus(function(e) {
+		$("input.lv-input-search").parent().parent().addClass("lv-input-focus");
+	});
+	$("input.lv-input-search").blur(function(e) {
+		$("input.lv-input-search").parent().parent().removeClass("lv-input-focus");
+	});
+	$(".city_hot dd a").click(function(){
+		$("input[name='keyword']").val(encodeURI($(this).html()));
+		$("#key_search").submit();
+		$("input[name='keyword']").val("");
+	});
+	
+	$(".lv-excurtion-postion").click(function(){
+		if(longitude==""||longitude==null ||typeof(longitude) == "undefined"){
+			lvToast(false,"无法获取当前地理位置,获不到周边景点",3000);
+		}else{
+			window.location.href = "${request.contextPath}/spotticket/stnearby.htm?windage=100000&mobilePlace.baiduLatitude="+latitude+"&mobilePlace.baiduLongitude="+longitude;
+		}
+	});
+	
+	
+	/********   定位 相关 ************/
+	latitude = getLocalStorage(LOCAL_STORAGE_LAT);
+	longitude = getLocalStorage(LOCAL_STORAGE_LON);
+	currentCity = getLocalStorage(LOCAL_STRTORAGE_CURRENT_CITY);
+	if(null == latitude || "" == latitude  || latitude == "undefined" || null == longitude) {
+		if(navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(function(e){
+				latitude = e.coords.latitude;
+				longitude = e.coords.longitude;
+				setLocalStorage(LOCAL_STORAGE_LAT,latitude);
+				setLocalStorage(LOCAL_STORAGE_LON,longitude);
+				initCity(latitude,longitude,LOCAL_STRTORAGE_CURRENT_CITY); // 定位成功. 
+			},function(e){
+				initDatas(currentCity); // 如果定位失败 ! 
+			},{enableHighAccuracy:true,timeout:3000,maximumAge:3000});
+	    } else {
+	    	initDatas(currentCity); // 如果浏览器不支持定位  
+	    }
+	} else {
+		initDatas(currentCity);;// 如果已经定位过.  
+	}
+});
+
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_skip('http://${hostName}');"> <img src="http://pic.lvmama.com/img/mobile/touch/img/return.png"></a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="http://pic.lvmama.com/img/mobile/touch/img/operate_sep.png"></div>
+  <div class="lv-title">景点门票</div>
+  <div class="lv-position lv-position-e"><a href="javascript:void(0);" class='home' onclick="union_skip('http://${hostName}');"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a></div>
+</div>
+
+<section class="spott_ads">
+	<a href="http://${hostName}/download?ch=menpiao">
+	    <img src="http://pic.lvmama.com/img/mobile/touch/img/banner-140220.jpg" />
+	</a>
+    <a href="javascript:void(0);" id="ads" class="ic_dele"></a>
+</section>
+
+<section class="spott_index">
+	<header class="spottic_search">
+        <p class="search_note">立即搜索景点，抢购优惠门票</p>
+        <div class="lv-div-search">
+          <form method="get" action="${request.contextPath}/place"  id="key_search" >
+		      <span class="lv-clear-icon01" onclick="union_clear_context('keyword');"  style="display:none" id="clear_password">
+		      <img src="${prefix_pic_url!}/img/clear.png"></span>
+			  <input class="lv-input-search" id="keyword" type="text" value="${keyword!}" placeholder="请输入景点目的地/关键词" autocomplete="off">
+		      <input type="hidden" name="keyword" id="hidden_keyword" value="${keyword!}" data-name="">
+		      <input type="button" class="btn_sub" value="" onclick="btnClick()" />
+		   </form>
+        </div>
+  </header>
+         <div  id="search_autocomplete" style="display:none;">
+           <ul class="search_auto_complete" id="search_success"> </ul>
+        </div>
+  
+  <dl class="city_hot">
+	<dt>热门城市</dt>
+    <dd><a href="javascript:void(0);">上海</a></dd>
+    <dd><a href="javascript:void(0);">成都</a></dd>
+    <dd><a href="javascript:void(0);">杭州</a></dd>
+    <dd><a href="javascript:void(0);">常州</a></dd>
+    <dd><a href="javascript:void(0);">广州</a></dd>
+    <dd><a href="javascript:void(0);">无锡</a></dd>
+    <dd><a href="javascript:void(0);">北京</a></dd>
+    <dd><a href="javascript:void(0);">三亚</a></dd>
+    <dd><a href="javascript:void(0);">南京</a></dd>
+    <dd><a href="javascript:void(0);">宁波</a></dd>
+    <dd><a href="javascript:void(0);">苏州</a></dd>
+    <dd><a href="javascript:void(0);">武汉</a></dd>
+    <dd><a href="javascript:void(0);">扬州</a></dd>
+    <dd><a href="javascript:void(0);">舟山</a></dd>
+    <dd><a href="javascript:void(0);">溧阳</a></dd>
+    <dd><a class="f12" href="javascript:void(0);">千岛湖</a></dd>
+  </dl>
+  <a href="javascript:void(0);" onclick="union_skip('/clutter/spotticket/place_choose_city.htm');" class="spott_more">更多>></a>
+</section>
+
+<section class="spott_ambitus">
+	<a href="javascript:void(0);" class="spott_ambitus_con lv-excurtion-postion">
+        <span class="ic_ambitus"></span><em>搜索周边景点</em><span class="ic_next"></span>
+    </a>
+</section>
+</div>
+
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+  <div class="lv-transparent-div lv-transparent" style="display:none;"></div>
+  <script>
+  	$('#ads').bind('click',function(){
+		$(this).siblings('a').find('img').fadeOut();	
+		$(this).hide();
+		//记住点击COOKIE
+		var closeBanner=getcookie("closeTicketBanner");
+    	if(closeBanner==null || closeBanner==''){
+	    	setcookie('closeTicketBanner', 'closeTicketBanner', 30*60*1000, '/', ".lvmama.com",false); //设置cookie 30分钟
+    	}
+	});
+  	//判断用户是否点击过关闭首页BANNER点击过则不再显示
+  	$(function(){
+  		var closeBanner=getcookie("closeTicketBanner");
+  		if(closeBanner!=null &&　closeBanner!=""){
+  			$(".spott_ads").hide();
+  		}
+  	});
+  </script>
+</body>
+</html>

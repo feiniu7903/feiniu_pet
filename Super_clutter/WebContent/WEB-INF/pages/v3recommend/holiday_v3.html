@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<title>度假热销-驴妈妈手机站</title>
+<#include "../common/define.html">
+<link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/ipad_v3.css">
+<script type="text/javascript">
+	function jump(obj){
+		var id = $(obj).attr("_id");
+		window.location="${request.contextPath}/mobile/recommend/holidayRecommend.do?placeId="+id;
+	}
+</script>
+</head>
+
+<body>
+<div class="wrap wrap2">
+<!-- 	<header class="header">
+    	<a href="../../index.html" class="back"><span class="ic_back"></span></a>
+        <h1>热销排行</h1>
+    </header> -->
+    <section class="coupon_main">
+       <#--  <nav>
+        	<ul>
+        	<#list hotCityParam.entrySet() as entry>
+        	    <#if placeId==entry.getValue()?number>
+        		    <li _id="${entry.getValue()}" onclick="jump(this)" class="qz_cur"> ${entry.getKey()} </li>
+        		<#else>
+        			<li _id="${entry.getValue()}" onclick="jump(this)"> ${entry.getKey()} </li>
+        		</#if>
+            	<#if (entry_index+1)%4==0&&hotCityParam?size!=(entry_index+1)>
+            	</ul>
+            	<ul>
+            	</#if>
+			</#list>	
+            </ul>
+        </nav> -->
+        <section>
+        	<ul class="qz_list" style="display:block;">
+        	<#if list?? && list?size&gt;0>
+        	  <#list list as item>
+            	<li>
+                	<a href="<#if item.placeId??>http://${hostName}/ticket/piao-${item.placeId!}/<#else>http://${hostName}/product/${item.recommObjectId!}/</#if>">
+                    	<img src="${item.imgUrl!}" alt="" />
+                       	<alice class='li_bg${item_index%4+1!}'>
+                        	<figure>
+                            	<b>&yen; ${item.bakWord7!}</b>
+                                <#-- <span>已购买</span> -->
+                                <h3><#if item.title?length &gt; 18>${item.title[0..18]?default("")}
+                                <#else>
+									${item.title?default("")}
+                                </#if>
+                                </h3>
+                            </figure>
+                        </alice>
+                    </a>
+                </li>
+                </#list>
+                </#if>
+            	
+           </ul>
+        </section>       
+    </section>
+    <!-- footer -->
+</div>
+<script src="http://pic.lvmama.com/min/index.php?f=/js/new_v/jquery-1.7.2.min.js"></script>
+<!--<script src="../../js/jquery-1.7.2.min.js"></script>
+-->
+	<script>
+		var _obj = $('nav li');
+		_obj.each(function(i) {
+				var _this = $(this);
+			_this.bind("click",function(){
+				var _index = i;
+				_obj.removeClass('qz_cur');
+				_this.addClass('qz_cur');
+				$('.qz_list').hide();
+				$('.qz_list').eq(_index).show(500);
+			});
+			
+        });
+	</script>
+
+</body>
+</html>

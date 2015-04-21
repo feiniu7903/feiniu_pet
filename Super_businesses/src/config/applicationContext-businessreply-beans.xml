@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  - Application context definition for JPetStore's business layer.
+	- Contains bean references to the transaction manager and to the DAOs in
+	- dataAccessContext-local/jta.xml (see web.xml's "contextConfigLocation").
+	-->
+<beans>
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:const.properties</value>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+	<import resource="classpath*:applicationContext-lvmama-comm-remote.xml"/>
+	<import resource="classpath*:applicationContext-lvmama-comm-remote-dest.xml"/>
+	<import resource="classpath*:applicationContext-product-head-remote.xml"/>
+	<import resource="classpath*:applicationContext-lvmama-comm-bee-remote.xml"/>
+	<import resource="classpath*:applicationContext-lvmama-comm-remote.xml"/>
+	<import resource="applicationContext-bussiness-job.xml"/>
+	<import resource="applicationContext-businesses-dao.xml"/>
+	<import resource="applicationContext-bussiness-database.xml"/>
+	<import resource="applicationContext-businesses-service.xml"/>  
+</beans>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="NC_COMPLAINT_DUTY">
+    <resultMap id="NcComplaintDutyResultMap" class="com.lvmama.comm.bee.po.ord.NcComplaintDuty">
+
+        <result column="DUTY_ID" property="dutyId"/>
+        <result column="COMPLAINT_ID" property="complaintId"/>
+        <result column="DEFECT_CATEGORY" property="defectCategory"/>
+        <result column="TOTAL_AMOUNT" property="totalAmount"/>
+        <result column="REMARK" property="remark"/>
+        <result column="TYPE" property="type"/>
+        <result column="DES" property="desc"/>
+        <result column="RST" property="result"/>
+        <result column="ADVICE" property="advice"/>
+
+    </resultMap>
+    <insert id="insertNcComplaintDuty" parameterClass="com.lvmama.comm.bee.po.ord.NcComplaintDuty">
+        <selectKey resultClass="java.lang.Long" keyProperty="dutyId">
+            select NC_COMPLAINT_DUTY_ID_SEQ.nextval as id from DUAL
+        </selectKey>
+        insert into NC_COMPLAINT_DUTY (DUTY_ID,COMPLAINT_ID,DEFECT_CATEGORY,TOTAL_AMOUNT, REMARK,TYPE, DES, RST, ADVICE)
+        values (
+        #dutyId#,#complaintId#,#defectCategory#,#totalAmount#,#remark#,#type#,#desc#,#result#,#advice#)
+    </insert>
+
+    <update id="updateNcComplaintDuty" parameterClass="com.lvmama.comm.bee.po.ord.NcComplaintDuty">
+        update NC_COMPLAINT_DUTY
+        <dynamic prepend="SET">
+            <isNotEmpty prepend="," property="defectCategory">DEFECT_CATEGORY=#defectCategory#</isNotEmpty>
+            <isNotEmpty prepend="," property="totalAmount">TOTAL_AMOUNT=#totalAmount#</isNotEmpty>
+            <isNotEmpty prepend="," property="remark">REMARK=#remark#</isNotEmpty>
+            <isNotEmpty prepend="," property="desc">DES=#desc#</isNotEmpty>
+            <isNotEmpty prepend="," property="result">RST=#result#</isNotEmpty>
+            <isNotEmpty prepend="," property="advice">ADVICE=#advice#</isNotEmpty>
+        </dynamic>
+
+        where DUTY_ID = #dutyId#
+    </update>
+
+    <select id="selectNcComplaintDutyByComplaintId" resultMap="NcComplaintDutyResultMap" parameterClass="java.lang.Long">
+        SELECT
+            DUTY_ID,COMPLAINT_ID,DEFECT_CATEGORY,TOTAL_AMOUNT, REMARK,TYPE, DES, RST, ADVICE
+        FROM NC_COMPLAINT_DUTY
+        WHERE COMPLAINT_ID = #complaintId#
+    </select>
+    <select id="selectNcComplaintDutyByDutyId" resultMap="NcComplaintDutyResultMap" parameterClass="java.lang.Long">
+        SELECT
+            DUTY_ID,COMPLAINT_ID,DEFECT_CATEGORY,TOTAL_AMOUNT, REMARK,TYPE, DES, RST, ADVICE
+        FROM NC_COMPLAINT_DUTY
+        WHERE DUTY_ID = #dutyId#
+    </select>
+    <select id="selectNcComplaintDuty" resultMap="NcComplaintDutyResultMap" parameterClass="java.util.Map">
+        SELECT
+        DUTY_ID,COMPLAINT_ID,DEFECT_CATEGORY,TOTAL_AMOUNT, REMARK,TYPE, DES, RST, ADVICE
+        FROM NC_COMPLAINT_DUTY
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="dutyId">
+                DUTY_ID = #dutyId#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="complaintId">
+                COMPLAINT_ID = #complaintId#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="type">
+                TYPE = #type#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="defectCategory">
+                DEFECT_CATEGORY = #defectCategory#
+            </isNotEmpty>
+        </dynamic>
+
+    </select>
+
+</sqlMap>

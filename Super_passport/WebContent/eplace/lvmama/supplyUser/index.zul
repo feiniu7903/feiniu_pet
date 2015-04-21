@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="供应商登陆管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win"?>
+<zk>
+	<window id="win" mode="embedded">
+		<tabbox width="99%" tabscroll="false">
+			<tabs>
+				<tab id="sale_normal"
+					label="供应商登陆用户" />
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<include src="/eplace/lvmama/supplyUser/supplyUserQuery.zul">
+					</include>
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</window>
+</zk>

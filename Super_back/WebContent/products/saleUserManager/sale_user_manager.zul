@@ -1,0 +1,209 @@
+<?page title="销售产品列表" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./productWin"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset"?>
+<?component name="lvmama_prodtarget" macroURI="/macors/prodtarget.zul"?>
+<?component name="perm_mangerUser" macroURI="/permission/mangerUser.zul"?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="label" extends="label" class="com.lvmama.back.utils.perm.PermLabel" ?>
+<zk>
+	<window id="productWin" mode="embedded"
+		apply="com.lvmama.back.web.product.SaleUserManagerAction">
+		<script type="text/javascript">
+	 <![CDATA[  
+function window_open(productId) {
+	window.open("/super_back/phoneOrder/showImportantTipTabs.do?pageId="+productId+"&needJquery=true");
+}	]]>       
+	</script>
+		<grid>
+			<columns>
+				<column width="80px"></column>
+				<column></column>
+				<column width="80px"></column>
+				<column></column>
+				<column width="80px"></column>
+				<column></column>
+				<column width="80px"></column>
+				<column width="300px"></column>
+			</columns>
+			<rows>
+				<row spans="1,1,1,1,1,3">
+					<hbox>
+						<label value="产品经理：" />
+					</hbox>
+					<hbox>
+						<longbox id="managerId" visible="false" />
+						<perm_mangerUser id="permUser_component"></perm_mangerUser>
+					</hbox>
+					<hbox>
+						<label value="产品名称：" />
+					</hbox>
+					<hbox>
+						<textbox id="productName"
+							value="@{saction.searchConds.productName }" />
+					</hbox>
+					<hbox>
+						<label value="商品类型：" />
+					</hbox>
+					<hbox>
+						<checkbox id="ticket" name="TICKET"
+							checked="@{saction.searchConds.sTicket}" label="门票"
+							onCheck="ticketList.disabled = !self.checked;" />
+						<listbox mold="select" disabled="true"
+							id="ticketList"
+							onSelect="saction.changeSubTicket(self.selectedItem.value)">
+							<listitem label="全部" value="" />
+							<listitem label="单门票" value="SINGLE" />
+							<listitem label="通票" value="WHOLE" />
+							<listitem label="联票" value="UNION" />
+							<listitem label="套票" value="SUIT" />
+						</listbox>
+
+						<checkbox id="hotel" name="HOTEL"
+							checked="@{saction.searchConds.sHotel}" label="酒店"
+							onCheck="hotelList.disabled = !self.checked;" />
+						<listbox mold="select" disabled="true"
+							id="hotelList"
+							onSelect="saction.changeSubHotel(self.selectedItem.value)">
+							<listitem label="全部" value="" />
+							<listitem label="单房间" value="SINGLE_ROOM" />
+							<listitem label="酒店套餐" value="HOTEL_SUIT" />
+						</listbox>
+						<checkbox id="route" name="ROUTE"
+							checked="@{saction.searchConds.sRoute}" label="线路"
+							onCheck="routeList.disabled = !self.checked;" />
+						<listbox width="100px" mold="select"
+							disabled="true" id="routeList"
+							onSelect="saction.changeSubRoute(self.selectedItem.value)">
+							<listitem label="全部" value="" />
+							<listitem label="短途跟团游" value="GROUP" />
+							<listitem label="长途跟团游" value="GROUP_LONG" />
+							<listitem label="出境跟团游"
+								value="GROUP_FOREIGN" />
+							<listitem label="目的地自由行" value="FREENESS" />
+							<listitem label="长途自由行"
+								value="FREENESS_LONG" />
+							<listitem label="出境自由行"
+								value="FREENESS_FOREIGN" />
+							<listitem label="自助巴士班"
+								value="SELFHELP_BUS" />
+						</listbox>
+						<checkbox id="other" name="OTHER"
+							checked="@{saction.searchConds.sOther}" label="其它"
+							onCheck="otherList.disabled = !self.checked;" />
+						<listbox mold="select" disabled="true"
+							id="otherList"
+							onSelect="saction.changeSubOther(self.selectedItem.value)">
+							<listitem label="全部" value="" />
+							<listitem label="保险" value="INSURANCE" />
+							<listitem label="房差" value="FANGCHA" />
+							<listitem label="其它" value="OTHER" />
+						</listbox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>目的地：</hbox>
+					<hbox>
+						<longbox id="placeId"
+							value="@{saction.searchConds.placeId}" visible="false" />
+						<lvmama_prodtarget id="placeBandbox" />
+					</hbox>
+
+					<hbox>
+						<label value="产品ID：" />
+					</hbox>
+					<hbox>
+						<longbox id="productId"
+							value="@{saction.searchConds.productId }" />
+					</hbox>
+					<hbox>上线状态：</hbox>
+					<hbox>
+						<radiogroup id="onlineStatus"
+							selectedItem="@{saction.searchConds.onlineStatus}">
+							<radio label="在线" value="true" />
+							<radio label="已下线" value="false" />
+						</radiogroup>
+					</hbox>
+					<hbox>所属部门：</hbox>
+					<hbox>
+						<listbox mold="select" id="departmentsListBox"
+							model="@{saction.departmentsList}">
+							<listitem self="@{each='department' }"
+								label="@{department.zhDepartmentName}"
+								value="@{department.orgId}" />
+						</listbox>
+					</hbox>
+				</row>
+				<row spans="8" align="center">
+					<hbox>
+						<button id="search" label="查询" width="100px"
+							onClick="_paging.activePage=0;saction.forwardSearch();">
+						</button>
+						<button id="add" label="批量修改产品经理" width="150px"
+							onClick='saction.doOpenDialog();'>
+						</button>
+						
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox id="box" fixedLayout="true" model="@{saction.productList,load-after='search.onClick,_paging.onPaging,productsCheckbox.onCheck'}">
+			<listhead>
+				<listheader width="50px">
+					<checkbox id="productsCheckbox" onCheck="saction.selectAllCheckbox(self.checked);" />
+				</listheader>
+				<listheader width="10%" label="产品ID" />
+				<listheader width="30%" label="产品名称" />
+				<listheader width="10%" label="部门编号" />
+				<listheader width="10%" label="所属部门" />
+				<listheader width="10%" label="原产品经理" />
+				<listheader width="20%" label="目的地" />
+				<listheader label="产品类型" />
+			</listhead>
+			<listitem self="@{each='product'}" value="@{product}" height="25px">
+				<listcell>
+					<checkbox checked="@{product.checked }" onCheck='saction.onCheckboxEvent(self.getAttribute("productId"), self.checked);'>
+						<custom-attributes productId="@{product.productId }" />
+					</checkbox>
+				</listcell>
+				<listcell label="@{product.productId }" />
+				<listcell>
+					<a label="@{product.productName}" style="color:blue">
+						<custom-attributes productId="@{product.productId}" />
+						<custom-attributes subProductType="@{product.subProductType}" />
+						<attribute name="onClick">       
+					     <![CDATA[       
+					         Clients.evalJavaScript("window_open("+self.getAttribute("productId")+");");   
+					     ]]>       
+					     </attribute>
+					</a>
+				</listcell>
+				<listcell label="@{product.departmentId}" />
+				<listcell label="@{product.departmentName }" />
+				<listcell label="@{product.realName}" />
+				<listcell label="@{product.placeName }" />
+				<listcell label="@{product.zhProductType}" />
+			</listitem>
+
+		</listbox>
+
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell width="200px">
+							<paging id="_paging" pageSize="15"
+								onPaging='saction.forwardSearch();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+
+	</window>
+</zk>

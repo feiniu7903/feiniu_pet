@@ -1,0 +1,39 @@
+<?page title="editTag" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./editTagWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="editTagWin" title="修改标签" border="normal" closable="true" apply="com.lvmama.back.web.tag.EditTagAction">
+
+		<grid fixedLayout="true">
+			<columns>
+				<column width="150px" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="标签名：" />
+					<textbox value="@{saction.tag.tagName}" maxlength="20"  disabled="@{saction.tagDisable }"/>
+				</row>
+				<row>
+					<label value="标签拼音：" />
+					<textbox id="tagPinYin" value="@{saction.tag.tagPinYin}" maxlength="20"  />
+				</row>
+				<row>
+					<label value="SEQ" />
+					<longbox id="SEQ" maxlength="20" value="@{saction.tag.tagSEQ}"  />
+				</row>
+				<row>
+					<label value="样式ID：" />
+					<textbox id="cssId" value="@{saction.tag.cssId}" maxlength="40"  />
+				</row>
+				<row>
+					<label value="标签描述" />
+					<textbox value="@{saction.tag.description}" rows="5" width="600px" maxlength="2000"></textbox>
+				</row>
+			</rows>
+		</grid>
+
+		<toolbar id="bottomTool" align="center">
+			<button id="submit" label="提交" width="100px" onClick="saction.editTag();" />
+		</toolbar>
+	</window>
+</zk>

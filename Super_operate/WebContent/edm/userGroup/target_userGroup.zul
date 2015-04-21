@@ -1,0 +1,21 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./bandUserGroup"?>
+<bandbox id="bandUserGroup"
+	apply="com.lvmama.operate.web.userGroup.UserGroupMacroChooseAction"
+	onChanging="bandUserGroup$composer.changeUserGroup(event);" onBlur='if(bandUserGroup.getValue().trim().equals("")){userGroupId.setValue(null);}'
+	mold="rounded" autodrop="true">
+	<bandpopup>
+		<vbox>
+			<listbox width="200px" id="bandboxListBox"
+				model="@{bandUserGroup$composer.userGroupList, load-after='bandUserGroup.onChanging' }"
+				onSelect='bandUserGroup.value=self.selectedItem.lastChild.label; userGroupId.value=self.selectedItem.value;Events.postEvent("onChange",userGroupId,null); bandUserGroup.close();'>
+				<listhead>
+					<listheader label="用户组名称" />
+				</listhead>
+				<listitem self="@{each='userGroup'}"
+					value="@{userGroup.userGroupId}" height="25px">
+					<listcell label="@{userGroup.userGroupName}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

@@ -1,0 +1,4 @@
+<#import "sh_holiday_base.xml" as base>
+<@base.layout "OrderCancelRQ">
+	<OrderCancelActionRQ OrderNo="${body.orderNo}" /><!--OrderNo:订单号-->
+</@base.layout>

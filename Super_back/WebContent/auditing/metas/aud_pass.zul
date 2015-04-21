@@ -1,0 +1,35 @@
+<?page title="aud_pass" contentType="text/html;charset=UTF-8"?>
+
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./aud_pass"?>
+<zk>
+	<window id="aud_pass" title="审核通过" border="normal" closable="true"
+		apply="com.lvmama.back.web.audit.AuditPassAction">
+		<grid width="100%" style="border:none;">
+			<columns>
+				<column width="10%"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row spans="2">
+					<hbox>
+						<textbox rows="6" width="900px"
+							value="@{saction.permFinalAuditTask.description }" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>
+						<button label="发布消息"
+							onClick="saction.doPass();" />
+					</hbox>
+					<hbox>
+						<checkbox id="taskLevel" value="@{saction.permFinalAuditTask.taskLevel}"/>
+						紧急
+						<label style="color:red;">
+							(紧急表明此产品的修改或者上线需要再30分钟内完成)
+						</label>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

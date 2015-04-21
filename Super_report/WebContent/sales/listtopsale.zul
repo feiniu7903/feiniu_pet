@@ -1,0 +1,109 @@
+<?page title="销售" contentType="text/html;charset=UTF-8"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.report.web.other.ListboxCodeset"?>
+<?component name="button" extends="button" class="com.lvmama.report.utils.perm.PermButton" ?> 
+<?component name="a" extends="a" class="com.lvmama.report.utils.perm.PermALink" ?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./listtopsale"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="listtopsale" mode="embedded" apply="com.lvmama.report.web.sales.listTopAction">
+<grid id="conditions">
+	<columns>
+			<column width="70px"></column>
+			<column></column>
+			<column width="100px"></column>
+			<column></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row >
+				<hbox>时间范围：</hbox>
+				<hbox>
+					<datebox id="startDate" value="@{saction.searchConds.startDate}" />
+					至
+					<datebox id="endDate" value="@{saction.searchConds.endDate}" />
+					<image width="15px" height="15px" src="/img/qm.gif" tooltip="time"/>
+				</hbox>
+				<hbox>所属分公司：</hbox>
+				<hbox><listbox codeset="FILIALE_NAME"
+							mold="select" selectedItem="@{saction.searchConds.filialeName}" /></hbox>
+				<hbox>
+					 <button label="导出报表" width="100px" onClick="saction.doExportSale()" permCode="1481"/>
+       				 <button label="查询" width="100px" id="search" onClick="_paging.activePage=0;saction.search()" />
+      			</hbox>
+			</row>
+		</rows>
+</grid>		
+   	
+	<listbox id="topListBoxx" model="@{saction.topList,load-after='search.onClick,_paging.onPaging'}">
+		<listhead>
+			<listheader label="产品ID" />
+			<listheader label="销售产品名称" />
+			<listheader label="目的地" />
+			<listheader label="销量" />
+			<listheader label="销售总金额" />
+			<listheader label="毛利润" />
+			<listheader label="毛利率" />
+			<listheader label="产品类型" />
+		</listhead>
+		<listitem height="25px" self="@{each='topList'}" value="@{topList}">
+			<listcell label="@{topList.prodProductId}"/>
+			<listcell label="@{topList.prodProductName}"/>
+			<listcell label="@{topList.dest}"/>
+			<listcell label="@{topList.quantity}"/>
+			<listcell label="@{topList.amountYuan}"/>
+			<listcell label="@{topList.profitYuan}"/>
+			<listcell label="@{topList.profitPer}"/>
+			<listcell label="@{topList.zhSubProductType}"/>
+		</listitem>
+	</listbox>
+	<grid id="all">
+	<columns>
+			<column width="70px"></column>
+			<column></column>
+			<column></column>
+			<column></column>
+			<column></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>统计：</hbox>
+				<hbox>总产品数:<label value="@{saction.prod}" />(<label value="@{saction.online}" />)<image width="15px" height="15px" src="/img/qm.gif" tooltip="prod"/></hbox>
+				<hbox>产生销售数：<label value="@{saction.saleProd,load-after='search.onClick'}" /><image width="15px" height="15px" src="/img/qm.gif" tooltip="sale"/></hbox>
+				<hbox>总销售额：<label value="@{saction.amount,load-after='search.onClick'}" /><image width="15px" height="15px" src="/img/qm.gif" tooltip="allSale"/></hbox>
+				<hbox>毛利润：<label value="@{saction.perfit,load-after='search.onClick'}" /><image width="15px" height="15px" src="/img/qm.gif" tooltip="profit"/></hbox>
+				<hbox>毛利率：<label value="@{saction.perfitPer,load-after='search.onClick'}" />%</hbox>
+			</row>
+		</rows>
+</grid>	
+	<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共 <label id="_totalRowCountLabel" /> 条
+				</cell>
+				<cell>
+					<paging  id="_paging" pageSize = "15" onPaging='saction.search();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+	 
+</window>
+<popup id="time" width="100px">
+    <label id="lb1" value="下单时间"/>
+</popup>
+<popup id="prod" width="100px">
+    <label id="lb2" value="系统中所有的产品总数（当前在售产品总数）"/>
+</popup>
+<popup id="sale" width="100px">
+    <label id="lb3" value="根据搜索条件计算的有销售产品数"/>
+</popup>
+<popup id="allSale" width="100px">
+    <label id="lb4" value="根据销售总金额列表项求和"/>
+</popup>
+<popup id="profit" width="100px">
+    <label id="lb5" value="根据毛利润列表项求和"/>
+</popup>
+</zk>

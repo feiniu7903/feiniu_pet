@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_CONDITION" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComCondition" >
+    <result column="CONDITION_ID" property="conditionId" />
+    <result column="OBJECT_ID" property="objectId" />
+    <result column="CREATE_DATE" property="createDate" />
+    <result column="BEGIN_TIME" property="beginTime" />
+    <result column="END_TIME" property="endTime" />
+    <result column="CONTENT" property="content" />
+    <result column="FRONTEND" property="frontend" />
+    <result column="CONDITION_TYPE" property="conditionType" />
+    <result column="OBJECT_TYPE" property="objectType"/>
+  </resultMap>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComCondition" >
+    select *
+    from COM_CONDITION
+    where CONDITION_ID = #conditionId#
+  </select>
+  
+  <select id="selectCondition" resultMap="BaseResultMap" parameterClass="Map">
+    select *
+    from COM_CONDITION
+    where OBJECT_ID = #objectId# and OBJECT_TYPE = #objectType#
+  </select>
+  
+  <select id="selectTypitalConditionForObject" resultMap="BaseResultMap" parameterClass="Map">
+    select * 
+    from COM_CONDITION 
+    where OBJECT_ID = #objectId# and OBJECT_TYPE = #objectType# and CONDITION_TYPE=#CONDITION_TYPE#
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.pub.ComCondition" >
+    delete from COM_CONDITION
+    where CONDITION_ID = #conditionId#
+  </delete>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComCondition" >
+	<selectKey keyProperty="conditionId" resultClass="Long">
+		select COM_CONDITION_ID_SEQ.nextVal FROM DUAL
+	</selectKey>
+    insert into COM_CONDITION (CONDITION_ID, OBJECT_ID, CREATE_DATE, BEGIN_TIME, END_TIME,
+      CONTENT, FRONTEND, CONDITION_TYPE,OBJECT_TYPE)
+    values (#conditionId#, #objectId#, sysdate, #beginTime#,
+      #endTime#, #content#, #frontend#, #conditionType#,#objectType#)
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.pub.ComCondition" >
+    update COM_CONDITION
+    set OBJECT_ID = #objectId#,
+      CREATE_DATE = #createDate#,
+      BEGIN_TIME = #beginTime#,
+      END_TIME = #endTime#,
+      CONTENT = #content#,
+      FRONTEND = #frontend#,
+      CONDITION_TYPE = #conditionType#,
+      OBJECT_TYPE = #objectType#
+    where CONDITION_ID = #conditionId#
+  </update>
+</sqlMap>

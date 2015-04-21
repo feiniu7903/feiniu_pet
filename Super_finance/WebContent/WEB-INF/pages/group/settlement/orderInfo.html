@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>订单明细  - ${groupSettlementCode}</title>
+	<#assign dialog_inc = true>
+	<#assign autocomplete_inc = true>
+	<#assign grid_inc = true>
+	<#assign datepicker_inc = true>
+	<#include "/common/define.html"/>
+	<script type="text/javascript" src="/finance/js/group/orderInfoDetail.js"></script>
+</head>
+<body>
+	<div class="wapper_accounts" style="width: 2550px;">
+		<div class="wapper_list wapper_list_cash">
+			<h3 class="order_check">
+				订单明细  - ${groupSettlementCode}
+			</h3>
+			<div class="cash_seach">
+				<div style="display:none;">
+					<form id="search_form" grid_action="/finance/group/settlement/orderInfoDetail/search.json" excel_action = "/finance/group/settlement/orderInfoDetail/export.json">
+						<ul class="order_top_list">
+							<li class="other_cash">
+								<input id="search_button" type="button" class="left_bt" value="查 询" />
+							</li>
+						</ul>
+					</form>
+				</div>
+				<div class="order_list">
+					<table id="result_table"></table>
+					<div id="pagebar_div"></div>
+				 	<div id="search_footer">
+				 		<table width="100%" border="0">
+					 		<tr class="list_contant list_contant01">
+	                           	<td width="80%">
+	                           		<a id ="export_button" href="javascript:void(0);" class="seach_bt yajin_seacher"">导出打款明细</a> 
+	                           	</td>
+	                            <td align="left">
+	                            	<div class="total_nums_money">应付金额：<em id="sumOughtPay"></em> </div>
+	                            </td>
+	                            <td align="left">
+	                            	<div class="total_nums_money">申请付款金额:<em id="subTotalCosts"></em> </div>
+	                            </td>
+	                        </tr>  
+					 		<tr class="list_contant list_contant01">
+	                           	<td></td>
+	                            <td align="left">
+	                            	<div class="total_nums_money">实收金额：<em id="sumActualPay"></em>元 </div>
+	                            </td>
+	                            <td align="left">
+	                            	<div class="total_nums_money">已付金额：<em id="payAmount"></em> </div>
+	                            </td>
+	                        </tr>   
+					 		<tr class="list_contant list_contant01">
+	                           	<td></td>
+	                           	<td></td>
+	                            <td align="left">
+	                            	<div class="total_nums_money">未支付金额：<em id="surplusAmount"></em> </div>
+	                            </td>
+	                        </tr>
+                       </table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<#if init??>
+		<script type="text/javascript">
+			$(document).ready(function(){
+			  $("#search_button").click();
+			});
+		</script>
+	</#if>
+	
+</body>
+</html>

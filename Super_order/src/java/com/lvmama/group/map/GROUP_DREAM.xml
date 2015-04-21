@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="GROUP_DREAM">
+	<typeAlias alias="groupDream"
+		type="com.lvmama.comm.bee.po.group.GroupDream" />
+		
+	<resultMap id="BaseResultMap" class="groupDream">
+		<result column="DREAM_ID" property="dreamId" />
+	    <result column="ENJOYCOUNT" property="enjoyCount" />
+		<result column="NOTENJOYCOUNT" property="notEnjoyCount" />
+		<result column="DREAM_YEAR_MONTH" property="dreamYearMonth" />
+		<result column="INTRODUCTION" property="introduction" />
+		<result column="LOW_DREAM_PRICE" property="lowDreamPrice" />
+		<result column="HIGH_DREAM_PRICE" property="highDreamPrice" />
+		<result column="MARKET_PRICE" property="marketPrice" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="UPDATE_TIME" property="updateTime" />
+		<result column="OPERATOR" property="operator" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="DEST" property="dest" />
+		<result column="VALID" property="valid" />
+	</resultMap>
+	
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		select gd.*,
+		    (select count(*) from group_dream_submitter gds where gds.dream_id= gd.dream_id and gds.is_enjoy='Y' ) as ENJOYCOUNT, 
+            (select count(*) from group_dream_submitter gds where gds.dream_id= gd.dream_id and gds.is_enjoy='N' ) as  NOTENJOYCOUNT
+       from GROUP_DREAM gd where gd.DREAM_ID = #dreamId# 
+	</select>
+	
+	<select id="selectRowCount" resultClass="java.lang.Integer">
+      SELECT COUNT(*)
+      FROM (SELECT gd.DREAM_ID,
+                   gd.DREAM_YEAR_MONTH,
+                   gd.INTRODUCTION,
+                   gd.LOW_DREAM_PRICE,
+                   gd.HIGH_DREAM_PRICE,
+                   gd.CREATE_TIME,
+                   gd.UPDATE_TIME,
+                   gd.OPERATOR
+              FROM GROUP_DREAM gd
+             WHERE gd.valid='Y'
+            <dynamic>
+			<isNotEmpty prepend="and" property="dreamId">
+				   gd.DREAM_ID = #dreamId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="dreamYearMonth">
+				   gd.DREAM_YEAR_MONTH = #dreamYearMonth#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="productName">
+					gd.PRODUCT_NAME = #productName#
+			</isNotEmpty>
+			</dynamic>
+            )
+	</select>
+	
+	
+	<select id="selectGroupDream" resultMap="BaseResultMap" 
+		parameterClass="java.util.HashMap">	
+		SELECT *
+			  FROM (SELECT T.*, ROWNUM AS ROWNUM1
+			          FROM (select *
+			                  from (SELECT gd.DREAM_ID,
+			                              (select count(*) from group_dream_submitter gds where gds.dream_id= gd.dream_id and gds.is_enjoy='Y' ) as ENJOYCOUNT, 
+                                          (select count(*) from group_dream_submitter gds where gds.dream_id= gd.dream_id and gds.is_enjoy='N' ) as  NOTENJOYCOUNT,
+			                               gd.DREAM_YEAR_MONTH,
+			                               gd.INTRODUCTION,
+			                               gd.LOW_DREAM_PRICE,
+			                               gd.HIGH_DREAM_PRICE,
+			                               gd.CREATE_TIME,
+			                               gd.UPDATE_TIME,
+			                               gd.OPERATOR,
+			                               gd.PRODUCT_NAME,
+			                               gd.PRODUCT_TYPE,
+			                               gd.DEST,
+			                               gd.MARKET_PRICE,
+			                               gd.VALID
+			                          FROM group_DREAM gd
+			                          where gd.valid='Y'
+			                          <dynamic>
+											<isNotEmpty prepend="and" property="dreamId">
+												gd.DREAM_ID = #dreamId#
+											</isNotEmpty>
+											<isNotEmpty prepend="and" property="dreamYearMonth">
+												gd.DREAM_YEAR_MONTH = #dreamYearMonth#
+											</isNotEmpty>
+											<isNotEmpty prepend="and" property="productName">
+												gd.PRODUCT_NAME = #productName#
+											</isNotEmpty>
+									 </dynamic>
+			                         order by gd.DREAM_ID desc)
+			                         ) T WHERE ROWNUM &lt;= #_endRow# 
+			                         )	WHERE ROWNUM1 &gt;=#_startRow#
+	</select>
+	
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.bee.po.group.GroupDream">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="dreamId">
+			 select group_DREAM_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into GROUP_DREAM (   DREAM_ID,
+									DREAM_YEAR_MONTH, 
+									INTRODUCTION, 
+									LOW_DREAM_PRICE,
+									HIGH_DREAM_PRICE, 
+									CREATE_TIME,
+									UPDATE_TIME,
+									OPERATOR,
+									PRODUCT_NAME,
+									PRODUCT_TYPE,
+									DEST,
+									MARKET_PRICE
+									)  values
+														( #dreamId#,
+														  #dreamYearMonth#, 
+														  #introduction#,
+														  #lowDreamPrice#,
+														  #highDreamPrice#,
+														  sysdate,
+														  sysdate,
+														  #operator#,
+														  #productName#,
+														  #productType#,
+														  #dest#,
+														  #marketPrice#
+														  )
+	</insert>
+	
+		<update id="updateByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.group.GroupDream">
+				update group_DREAM set 
+											DREAM_YEAR_MONTH=#dreamYearMonth#, 
+											INTRODUCTION=#introduction#,
+											LOW_DREAM_PRICE=#lowDreamPrice#,
+											HIGH_DREAM_PRICE=#highDreamPrice#,
+											UPDATE_TIME=sysdate,
+											PRODUCT_TYPE=#productType#,
+											PRODUCT_NAME=#productName#,
+											DEST=#dest#,
+											OPERATOR=#operator#,
+											MARKET_PRICE=#marketPrice#
+				where DREAM_ID=#dreamId#
+		 </update>                                                         
+	<update id="updateValidByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.group.GroupDream">
+				update group_DREAM set 
+											UPDATE_TIME=sysdate,
+											OPERATOR=#operator#,
+											valid=#valid#
+
+				where DREAM_ID=#dreamId#
+	</update>
+	<delete id="deleteByPrimaryKey"
+		parameterClass="java.util.Map">
+		delete from group_DREAM where DREAM_ID=#dreamId#
+	</delete>
+	
+    <select id="queryDreamProducts"  parameterClass="java.util.Map"  resultMap="BaseResultMap" >
+	   select gd.*,
+           (select count(1)
+              from group_dream_submitter gds
+             where gds.dream_id = gd.dream_id
+               and gds.is_enjoy = 'Y') as ENJOYCOUNT,
+           (select count(1)
+              from group_dream_submitter gds
+             where gds.dream_id = gd.dream_id
+               and gds.is_enjoy = 'N') as NOTENJOYCOUNT
+      from group_dream gd
+      where gd.valid='Y'
+	</select>
+
+</sqlMap>

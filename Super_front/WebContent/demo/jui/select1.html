@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>jQuery UI Autocomplete - Combobox</title>
+<link href="jquery.ui.autocomplete.css" rel="stylesheet" type="text/css">
+<script src="jquery-1.6.2.min.js"></script>
+<script src="jquery.ui.core.js"></script>
+<script src="jquery.ui.widget.js"></script>
+<script src="jquery.ui.button.js"></script>
+<script src="jquery.ui.position.js"></script>
+<script src="jquery.ui.autocomplete.js"></script>
+<!--<link href="demos.css" rel="stylesheet" type="text/css">-->
+<style>
+.ui-button {
+	margin-left: -1px;
+}
+.ui-button-icon-only .ui-button-text {
+	padding: 0.35em;
+}
+.ui-autocomplete-input {
+	margin: 0;
+	padding: 0.48em 0 0.47em 0.45em;
+}
+ul {
+	font-size:14px;
+	border: 1px solid #CBCBCB;
+}
+ul .py_right {
+	font: 10px/22px verdana;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+	text-align: right;
+	white-space: nowrap;
+	width: 110px;
+	float:right;
+}
+ul .li_line {
+	padding: 1px 9px 0;
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #FFF;
+	cursor: pointer;
+	display: block;
+	height: 22px;
+	line-height: 22px;
+	min-height: 22px;
+}
+ul .li_line:hover {
+	color:#C06;
+	background-color:#999999;/*	font-weight:600;*/
+}
+</style>
+</head>
+<body>
+<div class="demo">
+  <label for="search">Search: </label>
+  <input id="search111" />
+</div>
+<!-- End demo --> 
+<script>
+	(function( $ ) {
+		$.widget( "ui.lmmcomplete", $.ui.autocomplete, {
+				options: {
+					appendTo: "body",
+					autoFocus: false,
+					delay: 300,
+					minLength: 1,
+					position: {
+						my: "left top",
+						at: "left bottom",
+						collision: "none"
+					},
+					source: "http://www.lvmama.com/search/placeSearch!searchCity.do"
+				},
+				change: function( event, ui ) {
+					alert(event);
+					var select = this.element.hide();
+							if ( !ui.item ) {
+								alert(ui.find('ul-title').text());//.replace('&&',this.text());
+							}else{
+
+							}
+				},
+			_renderMenu: function( ul, items ) {
+				var self = this;
+				ul.append( "<li class='ui-autocomplete-category ul-title' style='background-color:#5B5B5B;padding:10px 					5px;color:#fff;font-weight:600;font-size:12px;'>&&，(可以输入酒店名称或全拼)</li>" );
+				$.each( items, function( index, item ) {
+					ul.append( "<li class='ui-autocomplete-category li_line'>" + item.value+"<span class='py_right'>"+item.label + "</span></li>" );
+					//self._renderItem( ul, item );
+				});
+			}
+		});
+	})( jQuery );
+
+	$('#search111').lmmcomplete();
+	</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./bandMetaProducts"?>
+<bandbox id="bandMetaProducts" apply="com.lvmama.back.web.product.MacroMetaProducts"
+	onChanging="bandMetaProducts$composer.changeMetaProduct(event.value)"
+	mold="rounded" autodrop="true">
+	<bandpopup>
+		<vbox>
+			<listbox width="300px" id="bandboxListBox"
+				model="@{bandMetaProducts$composer.metaProductsList, load-after='bandMetaProducts.onChanging' }"
+				onSelect='bandMetaProducts.value=self.selectedItem.lastChild.label; metaProductId.value=self.selectedItem.value; Events.sendEvent(new Event("onChange", metaProductId));bandMetaProducts.close();'>
+				<listhead>
+					<listheader width="50px" label="编号" />
+					<listheader label="产品名称" />
+				</listhead>
+				<listitem self="@{each='item'}" value="@{item.metaProductId}"
+					height="25px">
+					<listcell label="@{item.metaProductId}" />
+					<listcell label="@{item.productName}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

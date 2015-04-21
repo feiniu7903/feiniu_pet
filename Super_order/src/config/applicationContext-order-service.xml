@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+<!-- com.lvmama.order  -->
+	<bean id="orderServiceImpl" class="com.lvmama.order.service.proxy.OrderServiceProxy">
+		<property name="orderMessageProducer" ref="orderMessageProducer" />
+	</bean>
+	<bean id="orderPerformProxy" class="com.lvmama.order.service.proxy.OrderPerformProxy">
+		<property name="orderServiceProxy" ref="orderServiceImpl"/>
+	</bean>
+	<bean id="groupAdviceNoteServiceProxy" class="com.lvmama.order.service.proxy.GroupAdviceNoteServiceProxy">
+		<property name="orderServiceProxy" ref="orderServiceImpl"/>
+	</bean>
+	<bean id="certificateServiceProxy" class="com.lvmama.ebk.service.proxy.CertificateServiceProxy" />
+	<bean id="ebkProductReportService" class="com.lvmama.ebk.service.EbkProductReportServiceImpl" />
+	<bean id="ebkCertificateService" class="com.lvmama.ebk.service.EbkCertificateServiceImpl" />
+	<bean id="orderBuildServiceImpl" class="com.lvmama.order.service.impl.OrderBuildServiceImpl" />
+	<bean id="groupTravelTemplateService" class="com.lvmama.ebk.service.GroupTravelTemplateServiceImpl"/>
+	<bean id="generalSequenceNo" class="com.lvmama.order.util.GeneralSequenceNo" />
+	<bean id="productStockLogic" class="com.lvmama.order.logic.ProductStockLogic" />
+	<bean id="productControlLogic" class="com.lvmama.order.logic.ProductControlLogic" />
+	<bean id="bonusReturnLogic" class="com.lvmama.order.logic.BonusReturnLogic" />
+	<bean id="productSeckillLogic" class="com.lvmama.order.logic.ProductSeckillLogic"/>
+	<bean id="transactionLogic" class="com.lvmama.order.logic.TransactionLogic" />
+	<bean id="smsSendLogic" class="com.lvmama.order.logic.SmsSendLogic" />
+	<bean id="orderPriceService" class="com.lvmama.order.service.impl.OrderPriceServiceImpl" />
+	<bean id="orderAuditService" class="com.lvmama.order.service.impl.OrderAuditServiceImpl" />
+	<bean id="modifyOrderAmountService" class="com.lvmama.order.service.impl.ModifyOrderAmountServiceImpl" />
+	<bean id="orderInvoiceService" class="com.lvmama.order.service.impl.OrderInvoiceServiceImpl" />
+	<bean id="orderUpdateService" class="com.lvmama.order.service.impl.OrderUpdateServiceImpl" />
+	<bean id="orderPaymentService" class="com.lvmama.order.service.impl.OrderPaymentServiceImpl" />
+	<bean id="orderPersonService" class="com.lvmama.order.service.impl.OrderPersonServiceImpl" />
+	<bean id="orderItemMetaAperiodicService" class="com.lvmama.order.service.impl.OrderItemMetaAperiodicServiceImpl" />
+	<bean id="orderPerformService" class="com.lvmama.order.service.impl.OrderPerformServiceImpl" />
+	<bean id="orderMemoService" class="com.lvmama.order.service.impl.OrderMemoServiceImpl" />
+	<bean id="orderService" class="com.lvmama.order.service.impl.OrderServiceImpl" />
+	<bean id="orderBatchService" class="com.lvmama.order.service.impl.OrderBatchServiceImpl" />
+	<bean id="orderRefundmentService" class="com.lvmama.order.service.impl.OrderRefundmentServiceImpl" />
+	<bean id="queryService" class="com.lvmama.order.service.impl.AbstractQuery">
+		<lookup-method name="getDirector" bean="director" />
+		<lookup-method name="getSQLBuilder" bean="SQLBuilder" />
+		<lookup-method name="getSQLBuilderCount" bean="SQLBuilderCount" />
+		<lookup-method name="getSQLBuilderSum" bean="SQLBuilderSum"/>
+		<lookup-method name="getSaleServiceSQLBuilder" bean="SaleServiceSQLBuilder" />
+		<lookup-method name="getSaleServiceSQLBuilderCount" bean="SaleServiceSQLBuilderCount" />
+		<lookup-method name="getSettlementQueueSQLBuilder" bean="SettlementQueueSQLBuilder" />
+		<lookup-method name="getSettlementQueueSQLBuilderCount" bean="SettlementQueueSQLBuilderCount" />
+		<lookup-method name="getInvoiceSQLBuilder" bean="InvoiceSQLBuilder" />
+		<lookup-method name="getInvoiceSQLBuilderCount" bean="InvoiceSQLBuilderCount" />
+		<lookup-method name="getSettlementItemSQLBuilder" bean="SettlementItemSQLBuilder" />
+		<lookup-method name="getSettlementItemSQLBuilderCount" bean="SettlementItemSQLBuilderCount" />
+		<!-- mod by lijp 20111103 -->
+		<lookup-method name="getFinishedSettlementItemSQLBuilder" bean="FinishedSettlementItemSQLBuilder" />
+		<lookup-method name="getFinishedSettlementItemSQLBuilderCount" bean="FinishedSettlementItemSQLBuilderCount" />
+		<lookup-method name="getOrdOrderItemMetaSQLBuilder" bean="OrdOrderItemMetaSQLBuilder" />
+		<lookup-method name="getOrdOrderItemMetaSQLBuilderCount" bean="OrdOrderItemMetaSQLBuilderCount" />
+		<lookup-method name="getOrdSettlementSQLBuilder" bean="OrdSettlementSQLBuilder" />
+		<lookup-method name="getOrdSettlementSQLBuilderCount" bean="OrdSettlementSQLBuilderCount" />
+		<lookup-method name="getPerformDetailSQLBuilder" bean="PerformDetailSQLBuilder" />
+		<lookup-method name="getPerformDetailSQLBuilderCount" bean="PerformDetailSQLBuilderCount" />
+		<lookup-method name="getPassPortDetailSQLBuilder" bean="PassPortDetailSQLBuilder" />
+		<lookup-method name="getPassPortDetailSQLBuilderCount" bean="PassPortDetailSQLBuilderCount" />
+		<lookup-method name="getPassPortSummarySQLBuilder" bean="PassPortSummarySQLBuilder" />
+		<lookup-method name="getPassPortSummarySQLBuilderCount" bean="PassPortSummarySQLBuilderCount" />
+	</bean>
+	<bean id="orderResourceService" class="com.lvmama.order.service.impl.OrderResourceServiceImpl" />
+	<bean id="director" class="com.lvmama.order.service.impl.builder.DirectorImpl" scope="prototype" />
+	<bean id="SQLBuilder" class="com.lvmama.order.service.impl.builder.SQLBuilderImpl" scope="prototype" />
+	<bean id="SQLBuilderCount" class="com.lvmama.order.service.impl.builder.SQLBuilderCountImpl" scope="prototype" />
+	<bean id="SQLBuilderSum" class="com.lvmama.order.service.impl.builder.SQLBuilderSumImpl" scope="prototype"/>
+	<bean id="SaleServiceSQLBuilder" class="com.lvmama.order.service.impl.builder.SaleServiceSQLBuilderImpl" scope="prototype" />
+	<bean id="SaleServiceSQLBuilderCount" class="com.lvmama.order.service.impl.builder.SaleServiceSQLBuilderCountImpl" scope="prototype" />
+	<bean id="SettlementQueueSQLBuilder" class="com.lvmama.order.service.impl.builder.SettlementQueueSQLBuilderImpl" scope="prototype" />
+	<bean id="SettlementQueueSQLBuilderCount" class="com.lvmama.order.service.impl.builder.SettlementQueueSQLBuilderCountImpl" scope="prototype" />
+	<bean id="InvoiceSQLBuilder" class="com.lvmama.order.service.impl.builder.InvoiceSQLBuilderImpl" scope="prototype" />
+	<bean id="InvoiceSQLBuilderCount" class="com.lvmama.order.service.impl.builder.InvoiceSQLBuilderCountImpl" scope="prototype" />
+	<bean id="SettlementItemSQLBuilder" class="com.lvmama.order.service.impl.builder.SettlementItemSQLBuilderImpl" scope="prototype" />
+	<bean id="SettlementItemSQLBuilderCount" class="com.lvmama.order.service.impl.builder.SettlementItemSQLBuilderCountImpl" scope="prototype" />
+	<!-- mod by lijp 20111103 -->
+	<bean id="FinishedSettlementItemSQLBuilder" class="com.lvmama.order.service.impl.builder.FinishedSettlementItemSQLBuilderImpl" scope="prototype" />
+	<bean id="FinishedSettlementItemSQLBuilderCount" class="com.lvmama.order.service.impl.builder.FinishedSettlementItemSQLBuilderCountImpl" scope="prototype" />
+	<bean id="OrdOrderItemMetaSQLBuilder" class="com.lvmama.order.service.impl.builder.OrdOrderItemMetaSQLBuilderImpl" scope="prototype" />
+	<bean id="OrdOrderItemMetaSQLBuilderCount" class="com.lvmama.order.service.impl.builder.OrdOrderItemMetaSQLBuilderCountImpl" scope="prototype" />
+	<bean id="OrdSettlementSQLBuilder" class="com.lvmama.order.service.impl.builder.OrdSettlementSQLBuilderImpl" scope="prototype" />
+	<bean id="OrdSettlementSQLBuilderCount" class="com.lvmama.order.service.impl.builder.OrdSettlementSQLBuilderCountImpl" scope="prototype" />
+	<bean id="PerformDetailSQLBuilder" class="com.lvmama.order.service.impl.builder.PerformDetailSQLBuilderImpl" scope="prototype" />
+	<bean id="PerformDetailSQLBuilderCount" class="com.lvmama.order.service.impl.builder.PerformDetailSQLBuilderCountImpl" scope="prototype" />
+	<bean id="PassPortDetailSQLBuilder" class="com.lvmama.order.service.impl.builder.PassPortDetailSQLBuilderImpl" scope="prototype" />
+	<bean id="PassPortDetailSQLBuilderCount" class="com.lvmama.order.service.impl.builder.PassPortDetailSQLBuilderCountImpl" scope="prototype" />
+	<bean id="PassPortSummarySQLBuilder" class="com.lvmama.order.service.impl.builder.PassPortSummarySQLBuilderImpl" scope="prototype" />
+	<bean id="PassPortSummarySQLBuilderCount" class="com.lvmama.order.service.impl.builder.PassPortSummarySQLBuilderCountImpl" scope="prototype" />
+	<bean id="orderRefundService" class="com.lvmama.order.service.impl.OrderRefundServiceImpl" />
+    <bean id="orderTrackMaterialBuilder" class="com.lvmama.order.service.impl.builder.OrderTrackMaterialBuilder" />
+	<bean id="orderStatusMaterialBuilder" class="com.lvmama.order.service.impl.builder.OrderStatusMaterialBuilder" />
+	<bean id="orderContentMaterialBuilder" class="com.lvmama.order.service.impl.builder.OrderContentMaterialBuilder" />
+	<bean id="excludedContentMaterialBuilder" class="com.lvmama.order.service.impl.builder.ExcludedContentMaterialBuilder" />
+	<bean id="orderTimeRangeMaterialBuilder" class="com.lvmama.order.service.impl.builder.OrderTimeRangeMaterialBuilder" />
+	<bean id="orderIdentityMaterialBuilder" class="com.lvmama.order.service.impl.builder.OrderIdentityMaterialBuilder" />
+	<bean id="sortTypeEnumMaterialBuilder" class="com.lvmama.order.service.impl.builder.SortTypeEnumMaterialBuilder" />
+	<bean id="pageIndexMaterialBuilder" class="com.lvmama.order.service.impl.builder.PageIndexMaterialBuilder" />
+	<bean id="invoiceRelateMaterialBuilder" class="com.lvmama.order.service.impl.builder.InvoiceRelateMaterialBuilder" />
+	<bean id="saleServiceRelateMaterialBuilder" class="com.lvmama.order.service.impl.builder.SaleServiceRelateMaterialBuilder" />
+	<bean id="settlementQueueRelateMaterialBuilder" class="com.lvmama.order.service.impl.builder.SettlementQueueRelateMaterialBuilder" />
+	<bean id="settlementItemRelateMaterialBuilder" class="com.lvmama.order.service.impl.builder.SettlementItemRelateMaterialBuilder" />
+	<bean id="finishSettlementItemRelateMaterialBuilder" class="com.lvmama.order.service.impl.builder.FinishSettlementItemRelateMaterialBuilder" />
+	<bean id="ordSettlementRelateMaterialBuilder" class="com.lvmama.order.service.impl.builder.OrdSettlementRelateMaterialBuilder" />
+	<bean id="metaPerformRelateMaterialBuilder" class="com.lvmama.order.service.impl.builder.MetaPerformRelateMaterialBuilder" />
+	<bean id="performDetailRelateMaterialBuilder" class="com.lvmama.order.service.impl.builder.PerformDetailRelateMaterialBuilder" />
+	<bean id="performDetailSortTypeEnumMaterialBuilder" class="com.lvmama.order.service.impl.builder.PerformDetailSortTypeEnumMaterialBuilder" />
+	<bean id="passPortDetailRelateMaterialBuilder" class="com.lvmama.order.service.impl.builder.PassPortDetailRelateMaterialBuilder" />
+	<bean id="passPortSummaryRelateMaterialBuilder" class="com.lvmama.order.service.impl.builder.PassPortSummaryRelateMaterialBuilder" />
+	<bean id="toursMaterialBuilder" class="com.lvmama.order.service.impl.builder.ToursMaterialBuilder" />
+	<bean id="travelGroupBuilderProxy"  class="com.lvmama.order.service.impl.builder.TravelGroupBuilder"/>
+	<bean id="defaultMaterialBuilder" class="com.lvmama.order.service.impl.builder.DefaultMaterialBuilder" />
+	<bean id="orderEContractRelateMaterialBuilder" class="com.lvmama.order.service.impl.builder.OrderEContractRelateMaterialBuilder" />
+	<!-- 门票型订单创建服务 -->
+	<bean id="ticketBuildService" class="com.lvmama.order.service.impl.TicketBuildImpl" />
+	<!-- 交通型订单创建服务 -->
+	<bean id="trafficBuildService" class="com.lvmama.order.service.impl.TrafficBuildImpl" />
+	<!-- 线路型订单创建服务 -->
+	<bean id="routeBuildService" class="com.lvmama.order.service.impl.RouteBuildImpl" />
+	<!-- 酒店型订单创建服务 -->
+	<bean id="hotelBuildService" class="com.lvmama.order.service.impl.HotelBuildImpl" />
+	<!-- 其他型订单创建服务 -->
+	<bean id="otherBuildService" class="com.lvmama.order.service.impl.OtherBuildImpl" />
+	<!-- 订单服务工厂 -->
+	<bean id="buildOrderFactory" class="com.lvmama.order.service.impl.BuildOrderFactory" />
+	<bean id="buildOrderService" class="com.lvmama.order.service.impl.BuildOrderImpl" />
+	<!-- 订单附加团信息的服务 -->
+	<bean id="orderRouteService" class="com.lvmama.order.service.impl.OrderRouteServiceImpl" />
+	<!-- 订单二次跟踪处理 -->
+	<bean id="orderCancleService" class="com.lvmama.order.service.impl.OrderCancleServiceImpl" />
+    <!-- 分拆订单销售收入 -->
+    <bean id="orderItemMetaSaleAmountServie" class="com.lvmama.order.service.impl.OrderItemMetaSaleAmountServieImpl" />
+    <bean id="orderSockCheckService" class="com.lvmama.order.service.impl.OrderSockCheckServiceImpl"/>
+    <bean id="orderForPaymentService" class="com.lvmama.order.service.impl.OrderForPaymentServiceImpl"/>
+    <bean id="orderTrafficService" class="com.lvmama.ord.service.impl.OrderTrafficServiceImpl"/>
+
+	<bean id="orderParentService" class="com.lvmama.order.service.impl.OrderParentServiceImpl"/>
+    <bean id="ncComplaintService" class="com.lvmama.ord.service.impl.NcComplaintServiceImpl"/>
+    <!-- 新投诉-角色配置 -->
+	<bean id="ncComplaintRoleService" class="com.lvmama.ord.service.impl.NcComplaintRoleServiceImpl"/>
+	<bean id="ncComplaintTypeService" class="com.lvmama.ord.service.impl.NcComplaintTypeServiceImpl"/>
+	
+	<!-- 订单整合 -->
+	<bean id="ordUserOrderService" class="com.lvmama.order.service.impl.OrdUserOrderServiceImpl"/>
+<!-- com.lvmama.order  -->
+   
+	
+<!-- com.lvmama.common -->
+	<bean id="comAffixService" class="com.lvmama.com.service.ComAffixServiceImpl" />
+	<bean id="smsHistoryService" class="com.lvmama.sms.service.SmsHistoryServiceImpl" />
+	
+	
+	<bean id="orderContractLogic" class="com.lvmama.ord.logic.CommonOrderContractLogic"/>
+	<bean id="scOrderContractLogic" class="com.lvmama.ord.logic.SCOrderContractLogic"/>
+	<bean id="bjOrderContractLogic" class="com.lvmama.ord.logic.BJOrderContractLogic"/>
+	<bean id="bjOneOrderContractLogic" class="com.lvmama.ord.logic.BJONEOrderContractLogic"/>
+	<bean id="shOrderContractLogic" class="com.lvmama.ord.logic.SHOrderContractLogic"/>
+	<bean id="gzOrderContractLogic" class="com.lvmama.ord.logic.GZOrderContractLogic"/>
+	<bean id="abroadOrderContractLogic" class="com.lvmama.ord.logic.AbroadOrderContractLogic"/>
+	<bean id="spContractLogic"  class="com.lvmama.ord.logic.SimpleOrderContractLogic"/>
+	<bean id="sendContractEmailLogic" class="com.lvmama.ord.logic.SendContractEmailLogic"/>
+	<bean id="travelDescriptionService" class="com.lvmama.ord.service.impl.TravelDescriptionServiceImpl"/>
+	<bean id="sendContractEmailService" class="com.lvmama.ord.service.impl.SendContractEmailServiceImpl"/>
+
+	<bean id="productLogic" class="com.lvmama.prd.logic.ProductLogic"/>
+	<bean id="grouponLogic" class="com.lvmama.prd.logic.GrouponLogic"/>
+	<bean id="prodProductBranchLogic" class="com.lvmama.prd.logic.ProdProductBranchLogic"/>
+	<bean id="prodJourneyLogic" class="com.lvmama.prd.logic.ProdJourneyLogic"/>
+	<bean id="productResourceConfirmLogic" class="com.lvmama.prd.logic.ProductResourceConfirmLogic"/>
+	<bean id="productSellableLogic" class="com.lvmama.prd.logic.ProductSellableLogic"/>
+	<bean id="productTimePriceLogic" class="com.lvmama.prd.logic.ProductTimePriceLogic" />
+	<bean id="ordTmallMapService" class="com.lvmama.tmall.service.OrdTmallMapServiceImpl"/>
+	<bean id="ordTmallDistributorMapService" class="com.lvmama.tmall.service.OrdTmallDistributorMapServiceImpl"/>
+	<bean id="smsSender" class="com.lvmama.sms.SmsSender"/>
+	<bean id="taobaoProductSyncService" class="com.lvmama.tmall.service.TaobaoProductSyncServiceImpl"/>
+<!-- /com.lvmama.common -->
+	
+	<bean id="taobaoTicketSkuService" class="com.lvmama.tmall.service.TaobaoTicketSkuServiceImpl"/>  
+	<bean id="taobaoTravelComboService" class="com.lvmama.tmall.service.TaobaoTravelComboServiceImpl"/>  
+	
+
+	<bean id="productProxy" class="com.lvmama.prd.service.proxy.ProductProxy"/>  
+	<bean id="comMessageService" class="com.lvmama.com.service.ComMessageServiceImpl"/>  
+	<bean id="comSmsTemplateService" class="com.lvmama.sms.service.ComSmsTemplateServiceImpl"/>
+	<bean id="comPlaceService" class="com.lvmama.com.service.ComPlaceServiceImpl"/>
+	<bean id="conditionService" class="com.lvmama.com.service.ConditionServiceImpl"/>
+	<bean id="distributionProductService" class="com.lvmama.distribution.service.DistributionProductServiceImpl" />
+	<bean id="distributionService" class="com.lvmama.distribution.service.DistributionServiceImpl" />
+	<bean id="distributionOrderService" class="com.lvmama.distribution.service.DistributionOrderServiceImpl" />
+	<bean id="distributionOrderRefundService" class="com.lvmama.distribution.service.DistributionOrderRefundServiceImpl" />
+	<bean id="distributionRakeBackService" class="com.lvmama.distribution.service.DistributionRakeBackServiceImpl" />
+	<bean id="distributionTuanCouponBatchService" class="com.lvmama.distribution.service.DistributionTuanCouponBatchServiceImpl" />
+	<bean id="distributionTuanCouponService" class="com.lvmama.distribution.service.DistributionTuanCouponServiceImpl" />
+
+	<bean id="distributionTuanDestroyLogService" class="com.lvmama.distribution.service.DistributionTuanDestroyLogServiceImpl" />
+
+	<bean id="distributionOrderServiceProxy" class="com.lvmama.order.service.proxy.DistributionOrderServiceProxy"/>
+
+	<!-- 分销团购 -->
+	<bean id="distributionTuanService" class="com.lvmama.distribution.service.DistributionTuanServiceImpl" />
+	
+	
+		<!-- 立式设备 -->
+	<bean id="deviceService" class="com.lvmama.ckdevice.service.CkDeviceServiceImpl" />
+	<bean id="deviceProductService" class="com.lvmama.ckdevice.service.CkDeviceProductServiceImpl" />
+	
+	
+	
+	<bean id="downTmallOrderInterface" class="com.lvmama.tmall.service.DownTmallOrderInterfaceImpl"/>
+	<bean id="downTmallDistributorOrderInterface" class="com.lvmama.tmall.service.DownTmallDistributorOrderInterfaceImpl"/>
+	<bean id="groupAdviceNoteService" class="com.lvmama.ord.service.impl.GroupAdviceNoteServiceImpl" />
+	<bean id="groupBudgetService" class="com.lvmama.op.service.GroupBudgetServiceImpl" />
+	<bean id="groupDreamService" 	class="com.lvmama.group.service.GroupDreamServiceImpl"/>
+	<bean id="limitSaleTimeService" class="com.lvmama.prd.service.LimitSaleTimeServiceImpl" />
+	<bean id="metaProductBranchService" class="com.lvmama.prd.service.MetaProductBranchServiceImpl"/>
+	<bean id="metaProductService" class="com.lvmama.prd.service.MetaProductServiceImpl"/>
+	<bean id="metaProductControlService" class="com.lvmama.prd.service.MetaProductControlServiceImpl"/>
+	<bean id="productControlRoleService" class="com.lvmama.prd.service.ProductControlRoleServiceImpl"/>
+	<bean id="opTravelGroupService" class="com.lvmama.op.service.OpTravelGroupServiceImpl" />
+	<bean id="ordEContractService" class="com.lvmama.ord.service.OrdEContractServiceImpl"/>
+	<bean id="ordertrackService" class="com.lvmama.ord.service.OrderTrackServiceImpl"/>
+	<bean id="ordFaxRecvService" class="com.lvmama.ord.service.OrdFaxRecvServiceImpl"/>
+	<bean id="ordRefundMentService" class="com.lvmama.ord.service.OrdRefundMentServiceImpl"/>
+	<bean id="ordSaleServiceServiceDeal" class="com.lvmama.ord.service.OrdSaleServiceServiceDealImpl"/>
+	<bean id="ordSaleServiceService" class="com.lvmama.ord.service.OrdSaleServiceServiceImpl"/>
+	<bean id="passCodeService" class="com.lvmama.passport.service.PassCodeServiceImpl"/>
+	<bean id="proceedToursService" class="com.lvmama.prd.service.ProceedToursServiceImpl"/>
+	<bean id="prodChannelService" class="com.lvmama.prd.service.ProdChannelServiceImpl"/>
+	<bean id="prodPlaceTagService" class="com.lvmama.prd.service.ProdPlaceTagServiceImpl"/>
+	<bean id="prodCouponIntervalService" class="com.lvmama.prd.service.ProdCouponIntervalServiceImpl"/>
+	
+	<bean id="prodProductBranchService" class="com.lvmama.prd.service.ProdProductBranchServiceImpl"/>
+	<bean id="productItemService" class="com.lvmama.prd.service.ProdProductItemServiceImpl"/>
+	<bean id="prodProductJourneyService" class="com.lvmama.prd.service.ProdProductJourneyServiceImpl"/>
+	<bean id="prodProductModelPropertyService" class="com.lvmama.prd.service.ProdProductModelPropertyServiceImpl"/>
+	<bean id="prodProductPlaceService" class="com.lvmama.prd.service.ProdProductPlaceServiceImpl"/>
+	<bean id="prodProductRelationService" class="com.lvmama.prd.service.ProdProductRelationServiceImpl"/>
+	<bean id="prodProductTagService" class="com.lvmama.prd.service.ProdProductTagServiceImpl"/>
+	<bean id="prodTagService" class="com.lvmama.prd.service.ProdTagServiceImpl"/>
+	<bean id="productModelPropertyService" class="com.lvmama.prd.service.ProductModelPropertyServiceImpl"/>
+	<bean id="productModelTypeService" class="com.lvmama.prd.service.ProductModelTypeServiceImpl"/>
+	<bean id="prodProductService" class="com.lvmama.prd.service.ProdProductServiceImpl"/>
+	<bean id="prodAvailableBonusService" class="com.lvmama.prd.service.ProdAvailableBonusServiceImpl"/>
+	<bean id="smsService" class="com.lvmama.sms.service.SmsServiceImpl"/>
+	<bean id="receiverUserService" class="com.lvmama.com.service.ReceiverUserServiceImpl"/>
+	<bean id="viewMultiJourneyService" class="com.lvmama.prd.service.ViewMultiJourneyServiceImpl"/>
+	<bean id="viewPageJourneyService" class="com.lvmama.prd.service.ViewPageJourneyServiceImpl"/>
+	<bean id="viewPageJourneyTipsService" class="com.lvmama.prd.service.ViewPageJourneyTipsServiceImpl"/>
+	<bean id="viewPageService" class="com.lvmama.prd.service.ViewPageServiceImpl"/>
+	<bean id="viewPageTagService" class="com.lvmama.prd.service.ViewPageTagServiceImpl"/>
+	<bean id="viewTravelTipsService" class="com.lvmama.prd.service.ViewTravelTipsServiceImpl"/>
+	<bean id="pageService" class="com.lvmama.prd.service.PageServiceImpl"/>
+	<bean id="eplaceService" class="com.lvmama.passport.service.EPlaceServiceImpl" />
+	<bean id="beeProdProductService" class="com.lvmama.prd.service.BeeProdProductServiceImpl"/>
+	<bean id="prodTrainService" class="com.lvmama.prd.service.ProdTrainServiceImpl"/>
+	<bean id="taobaoProductService" class="com.lvmama.market.service.TaobaoProductServiceImpl"/>
+	<bean id="taobaoProductDetailService" class="com.lvmama.market.service.TaobaoProductDetailServiceImpl"/>
+	<bean id="applyCityService" class="com.lvmama.market.service.ApplyCityServiceImpl"/>
+    <bean id="markActivityService" class="com.lvmama.market.service.MarkActivityServiceImpl"/>
+    <bean id="comTaskService" class="com.lvmama.com.service.ComTaskServiceImpl"/>
+    <bean id="markActivityBlacklistService" class="com.lvmama.market.service.MarkActivityBlacklistServiceImpl"/>
+	<bean id="prodProductRoyaltyService" class="com.lvmama.prd.service.ProdProductRoyaltyServiceImpl"/>
+	<bean id="passportMessageService" class="com.lvmama.passport.service.PassportMessageServiceImpl"/>
+	
+	<bean id="policyInfoService" class="com.lvmama.insurance.service.PolicyInfoServiceImpl" />
+	<bean id="policyOperationLogService" class="com.lvmama.insurance.service.PolicyOperationLogServiceImpl" />
+	<bean id="insurantService" class="com.lvmama.insurance.service.InsurantServiceImpl" />
+	
+	<bean id="comClientService" class="com.lvmama.client.service.ComClientServiceImpl" />
+	<bean id="metaTravelCodeService" class="com.lvmama.prd.service.MetaTravelCodeServiceImpl"/>
+	<bean id="ordOrderSHHolidayService" class="com.lvmama.ord.service.OrdOrderSHHolidayServiceImpl"/>
+	<!-- 供应商对接 -->
+	<bean id="supplierProdService" class="com.lvmama.duijie.service.SupplierProdServiceImpl"/>
+	<bean id="supplierViewContentService" class="com.lvmama.duijie.service.SupplierViewContentServiceImpl"/>
+	<bean id="supplierViewJourneyService" class="com.lvmama.duijie.service.SupplierViewJourneyServiceImpl"/>
+	<!-- EBK -->
+	<bean id="ebkPermissionService" class="com.lvmama.ebk.service.EbkPermissionServiceImpl" />
+	<bean id="ebkUserPermissionService" class="com.lvmama.ebk.service.EbkUserPermissionServiceImpl" />
+	<bean id="ebkUserService" class="com.lvmama.ebk.service.EbkUserServiceImpl" />
+	<bean id="ebkPerformLogService" class="com.lvmama.ebk.service.EbkPerformLogServiceImpl" />	
+	
+	<bean id="ebkUserTargetService" class="com.lvmama.ebk.service.EbkUserTargetServiceImpl" />
+	<bean id="ebkTaskService" class="com.lvmama.ebk.service.EbkTaskServiceImpl" />
+	<bean id="ebkFaxTaskService" class="com.lvmama.ebk.service.EbkFaxTaskServiceImpl" />
+	<bean id="ebkProdRejectInfoService" class="com.lvmama.ebk.service.EbkProdRejectInfoServiceImpl" />
+	<!-- EBooking公告. -->
+	<bean id="ebkAnnouncementService" class="com.lvmama.ebk.service.EbkAnnouncementServiceImpl" />
+ 	<!-- EBooking房价维护. -->
+	<bean id="ebkHousePriceService" class="com.lvmama.ebk.service.EbkHousePriceServiceImpl" />
+	
+	<!-- EBK供应商产品 -->
+	<bean id="ebkProdProductService" class="com.lvmama.ebk.service.EbkProdProductServiceImpl" />
+	<bean id="ebkProdSnapshotService" class="com.lvmama.ebk.service.EbkProdSnapshotServiceImpl" />
+	<bean id="ebkProdPlaceService" class="com.lvmama.ebk.service.EbkProdPlaceServiceImpl" />
+	<bean id="ebkProdTargetService" class="com.lvmama.ebk.service.EbkProdTargetServiceImpl" />
+	<bean id="ebkProdModelPropertyService" class="com.lvmama.ebk.service.EbkProdModelPropertyServiceImpl" />
+	<bean id="ebkProductService" class="com.lvmama.ebk.service.EbkRouteProductServiceImpl" />
+	<bean id="ebkProdContentService" class="com.lvmama.ebk.service.EbkProdContentServiceImpl" />
+	<bean id="ebkMultiJourneyService" class="com.lvmama.ebk.service.EbkMultiJourneyServiceImpl" />
+	<bean id="ebkProdJourneyService" class="com.lvmama.ebk.service.EbkProdJourneyServiceImpl" />
+	<bean id="ebkProdTimePriceService" class="com.lvmama.ebk.service.EbkProdTimePriceServiceImpl" />
+	<bean id="ebkProdBranchService" class="com.lvmama.ebk.service.EbkProdBranchServiceImpl" />
+	<bean id="ebkProdImportService" class="com.lvmama.ebk.service.EbkRouteProdImportServiceImpl" />
+	<bean id="ebkProdRelationService" class="com.lvmama.ebk.service.EbkProdRelationServiceImpl" />
+	<bean id="ebkProdAuditService" class="com.lvmama.ebk.service.EbkProdAuditServiceProxy" />
+	
+	<bean id="ebkCertificateLogic" class="com.lvmama.ebk.service.logic.EbkCertificateLogic" />
+	<bean id="ebkCertificateTicketLogic" class="com.lvmama.ebk.service.logic.EbkCertificateTicketLogic" />
+	<bean id="ebkCertificateHotelLogic" class="com.lvmama.ebk.service.logic.EbkCertificateHotelLogic" />
+	<bean id="ebkCertificateRouteLogic" class="com.lvmama.ebk.service.logic.EbkCertificateRouteLogic" />
+	<bean id="ebkTaskLogic" class="com.lvmama.ebk.service.logic.EbkTaskLogic" />
+	
+	<bean id="modifySettlementPriceService" class="com.lvmama.order.service.impl.ModifySettlementPriceServiceImpl" />
+	
+	<bean id="ordOrderChannelService" class="com.lvmama.order.service.impl.OrdOrderChannelServiceImpl" />
+	<!--港捷旅酒店order  -->
+    <bean id="orderHotelService" class="com.lvmama.order.service.impl.OrderHotelServiceImpl" />
+
+	<bean id="bonusConfigService" class="com.lvmama.order.service.impl.BonusConfigServiceImpl" />
+	
+	<!-- 优惠-->
+	<bean id="favorOrderService" class="com.lvmama.mark.logic.FavorOrderServiceImpl" />
+	<!-- 支付转移退款 -->
+	<bean id="setTransferTaskService" class="com.lvmama.ord.service.SetTransferTaskServiceImpl" />
+	<!-- 定时更新PRODUCT_SEARCH_INFO -->
+	<bean id="comSearchInfoUpdateService" class="com.lvmama.com.service.ComSearchInfoUpdateServiceImpl" />
+	
+	<!-- 工单发送 -->
+	<bean id="workOrderSenderProxy" class="com.lvmama.work.proxy.WorkOrderSenderProxy" />
+	<!-- 工单完成 -->
+	<bean id="workOrderFinishedProxy" class="com.lvmama.work.proxy.WorkOrderFinishedProxy" />
+	
+	<bean id="comJobContentService" class="com.lvmama.com.service.ComJobContentServiceImpl"/>
+	
+	<bean id="bounsReturnScaleService" class="com.lvmama.prd.service.BounsReturnScaleServiceImpl"/>
+	
+	
+	<!-- VST产品信息同步相关服务 -->
+	<bean id="petProdGoodsService" class="com.lvmama.vst.service.PetGoodsServiceProxy" />
+	<bean id="vstProdUpdateService" class="com.lvmama.vst.service.VstProdUpdateServiceImpl" />
+	<bean id="vstOrderRefundmentService" class="com.lvmama.vst.service.VstOrderRefundmentServiceImpl" />
+	
+	
+	<!-- mobile start -->
+	<bean id="mobileTrainService" class="com.lvmama.mobile.service.MobileTrainServiceImpl"/>
+	<!-- mobile end -->
+	
+	<bean id="vstUserClient" class="com.lvmama.vst.service.VstUserClientImpl"/>
+	
+	<!-- 黑名单 -->
+	<bean id="ordOrderBlackService" class="com.lvmama.order.service.impl.OrdOrderBlackServiceImpl"></bean>
+</beans>

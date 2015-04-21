@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_HOTEL">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.prod.ProdHotel">
+		<result column="HOTEL_ID" property="hotelId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="DAYS" property="days" />
+	</resultMap>
+	<delete id="deleteByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.prod.ProdHotel">
+		delete from PROD_HOTEL where HOTEL_ID = #hotelId:DECIMAL#
+	</delete>
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.bee.po.prod.ProdHotel">
+		<selectKey resultClass="java.lang.Long" keyProperty="hotelId">
+			select PROD_HOTEL_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into PROD_HOTEL (HOTEL_ID, PRODUCT_ID, DAYS) values (#hotelId:DECIMAL#, #productId:DECIMAL#,#days#)
+	</insert>
+	<update id="updateByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.prod.ProdHotel">
+		update PROD_HOTEL set DAYS = #days# where
+		HOTEL_ID = #hotelId:DECIMAL#
+	</update>
+	<select id="getProdHotelById" parameterClass="java.lang.Long"
+		resultMap="BaseResultMap">
+		select * from prod_hotel where product_id=#productId#
+	</select>
+</sqlMap>

@@ -1,0 +1,183 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>选择出发城市</title>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/comm.js"></script>
+<script src="${request.contextPath}/js/holiday.js?_version=20130812"></script>
+<script type="text/javascript">
+/*搜索*/
+function btnClick(){
+	$("#search_success").hide();
+	var keyword = $("#citykeyword").val();
+	if(null == keyword || $.trim(keyword)=='') {
+		// 请输入景点目的地或关键词
+		lvToast(false,"请输入城市名称",LT_LOADING_CLOSE);
+		return false;
+	}
+	chooseCity(keyword,keyword,'');
+}
+//获取请求URL-CM线路搜索城市用到
+var callUrl=null;
+var loginUrl= decodeURIComponent(window.location.href);
+
+$(function(){
+	/*input 框变色*/
+	$("input.lv-input-search").focus(function(e) {
+		$("input.lv-input-search").parent().parent().addClass("lv-input-focus");
+	});
+	$("input.lv-input-search").blur(function(e) {
+		$("input.lv-input-search").parent().parent().removeClass("lv-input-focus");
+	});	
+	
+	// 自动补全查询
+	$("#citykeyword").keyup(function() {
+		initCityAutoCompleteDatas();
+	});
+	
+	/* // keyword关键字搜索 
+	$("#citykeyword").keypress(function(e) {
+		var key = e.which;
+		if( key == 13) {
+			btnClick();
+		}
+	});  */
+	
+	if(loginUrl.indexOf("callUrl")>=0){
+		callUrl=loginUrl.split("callUrl=")[1];
+	}
+});
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_back();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">选择出发城市</div>
+</div>
+<div class="lv-search search">
+  <div class="lv-div-search">
+   <form method="get" action="${request.contextPath}/holiday"  id="holiday_search" >
+      <span class="lv-clear-icon01" onclick="union_clear_context('citykeyword');"  style="display:none" id="clear_password">
+               <img src="${prefix_pic_url!}/img/clear.png"></span>
+      <input type="hidden" name="fromDest" id="fromDest" value="${fromDest!}" >
+      <input type="hidden" name="stage" id="stage" value="1" data-name="">
+      <input type="button" class="btn_sub" value="" onclick="btnClick();">
+    </form>
+	  <input class="lv-input-search" id="citykeyword" type="text" value="${fromDest!}" placeholder="请输入出发城市" autocomplete="off">
+  </div>
+
+</div>
+        <div  id="search_autocomplete" style="display:none;">
+           <ul class="search_auto_complete" id="search_success"> </ul>
+        </div>
+<div class="lv-wrapper lv-primary lv-media-width">
+    <#if cityList?? && cityList?size&gt;0>
+      <!-- 热门出发城市 -->
+      <div class="lv-wrapper-container" style="width:100%;">
+    	<div class="lv-city-title">热门出发城市</div>
+        <ul class="lv-city-list">
+           <#list cityList as city>
+             <#if city.isHot?? && city.isHot>
+	        	<li onclick="chooseCity('${city.name!}',<#if city.subName?? && city.subName!="">'${city.name!},${city.subName!}'<#else>'${city.name!}'</#if>,'${city.pinyin!}');">${city.name!}</li>
+	            <div class="lv-seprator-lined2"></div>
+            </#if>
+         </#list>
+        </ul>
+       </div>
+       <#if charList?? && charList?size&gt;0>
+           <#list charList as char>
+	         <div class="lv-wrapper-container" style="width:100%;">
+	    	    <div class="lv-city-title">${char!}</div>
+				<ul class="lv-city-list">
+			        <#list cityList as city>
+			            <#if city.pinyin[0..0] == "${char!}">
+				        	<li onclick="chooseCity('${city.name!}',<#if city.subName?? && city.subName!="">'${city.name!},${city.subName!}'<#else>'${city.name!}'</#if>,'${city.pinyin!}')">${city.name!}</li>
+				            <div class="lv-seprator-lined2"></div>
+				        </#if>
+			        </#list>
+		        </ul>
+		    </div>
+	      </#list>
+	    </#if>
+    </#if>
+    
+    <div class="lv-primary-narrow lv-narrow-right">
+      <ul class="lv-narrow-list">
+        <li class="lv-narrow-li lv-narrow-current" onclick="charClick(this);">热门</li>
+         <#if charList?? && charList?size&gt;0>
+           <#list charList as char>
+              <li class="lv-narrow-li" onclick="charClick(this);">${char!}</li>
+           </#list>
+	    </#if>
+      </ul>
+    </div>
+</div>
+<form method="get" action="${request.contextPath}/holiday/holiday_search.htm"  id="holiday_search_list" >
+	 <input type="hidden" name="keyword" id="hidden_keyword" value="${toDest!}" data-name="">
+	 <input type="hidden" name="fromDest" id="fromDestList" value="${fromDest!}" >
+     <input type="hidden" name="toDest" id="toDestList" value="${toDest!}" >
+     <input type="hidden" name="subProductType" id="subProductType" value="" >
+     <input type="hidden" name="stage" id="stage" value="1" data-name="">
+     <input type="hidden" name="holidayClickStatus" id="holidayClickStatus" value="${holidayClickStatus!}" data-name="">
+</form>
+ <script >
+	 //点击自动补全列表. 
+	 function searchTip(id,name,fromDest,stage) {
+	 	$('#search_autocomplete').hide();
+	 	lvToast(CONTENT_LOGDING,LT_LOADING_MSG,LT_LOADING_TIME);
+	 	
+	 	setLocalStorage(LOCAL_STRTORAGE_ROUTE_CITY,name);
+	 	//判断是度假首页点击城市还是度假列表点击城市
+	 	var holiday_click_status=$("#holidayClickStatus").val();
+	 	//如果是holiday_list_click则是从度假列表点击城市列表
+	 	if(holiday_click_status!=null && holiday_click_status=='holiday_list_address'){
+	 		var mudidi_city=getLocalStorage('holiday_mudidi_city');//目的地
+	 		var subproducttype=getLocalStorage('holiday_subproducttype');//目的地子类型
+	 		
+	 		$("#fromDestList").val(encodeURIComponent(name));//出发地
+	 		$("#toDestList").val(encodeURIComponent(mudidi_city));
+	 		$("#subProductType").val(getSubProductTypeByType(subproducttype));
+	 		$("#holiday_search_list").attr("action",contextPath+"/holiday/list");
+	 		$("#holiday_search_list").submit();
+	 		
+	 	}else if(holiday_click_status!=null && holiday_click_status=='holiday_list_keyword'){
+	 		var mudidi_city=getLocalStorage('holiday_mudidi_city');//目的地
+	 		
+	 		$("#fromDestList").val(encodeURIComponent(name));//出发地
+	 		$("#toDestList").val(encodeURIComponent(mudidi_city));
+	 		$("#holiday_search_list").submit();
+	 	}else if(holiday_click_status!=null && holiday_click_status=='holiday_cms_citys'){//CMS
+	 		if(callUrl!=null && callUrl!=""){
+	 			window.location.href=callUrl+encodeURIComponent(name)+"&fromDest="+encodeURIComponent(fromDest);	
+	 		}
+	 	}else{
+			window.location.href=contextPath+"/holiday";
+	 	}
+	 		
+		
+	 	// 提交表单 
+	 	/* $("#holiday_search #keyword").val(name);
+	 	$("#holiday_search #fromDest").val(encodeURIComponent(name));
+	 	$("#holiday_search").submit(); */
+	 }
+	 
+	 var cityListJson = ${cityListJson!};
+	 
+	 function getSubProductTypeByType(type) {
+			if(type == lv_type_free_tour) {
+				return lv_route_freeness;
+			} else if(type == lv_type_group) {
+				return lv_route_group;
+			} else {
+				return "";
+			}
+		}
+ </script>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+ 
+</body>
+</html>

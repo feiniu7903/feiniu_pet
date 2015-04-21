@@ -1,0 +1,120 @@
+
+.ui-autocomplete { position: absolute; cursor: default; }	
+
+
+* html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */
+
+.ui-menu {
+	list-style:none;
+	padding:0;
+	margin: 0;
+	display:block;
+	float: left;
+}
+.ui-menu .ui-menu {
+	margin-top: -3px;
+}
+.ui-menu .ui-menu-item {
+	margin:0;
+	padding: 0;
+	zoom: 1;
+	float: left;
+	clear: left;
+	width: 100%;
+	cursor:pointer;
+}
+.ui-menu .ui-menu-item a {
+	text-decoration:none;
+	display:block;
+	line-height:20px;
+	zoom:1;
+	white-space: nowrap;
+	word-break: normal;
+	/*border:1px solid blue; */
+}
+/*zd*/
+.ui-autocomplete {
+	font-size:12px;
+	border: 1px solid #CBCBCB;
+	min-width:290px;
+	width:290px;
+}
+.ul-title {
+	background-color:#D48;
+	padding:5px;
+	color:#fff;
+	font-weight:600;
+	font-size:12px;
+}
+.ui-autocomplete .vl_left{
+	overflow: hidden;
+	padding: 0;
+	text-align: left;
+	white-space: nowrap;
+	word-break: normal; 
+	width: 140px;
+	float:left;
+}
+.ui-autocomplete .py_right {
+	overflow: hidden;
+	padding: 0;
+	text-align: right;
+	white-space: nowrap;
+	word-break: normal; 
+	width: 110px;
+	line-height:21px;
+	height:21px;
+	float:right;
+	-o-text-overflow:ellipsis;/*forOpera*/
+	text-overflow:ellipsis;/*forIE*/
+	/*margin:0px0px0px3px;*/
+	display:inline-block;
+	/*border:1px solid red; */
+	cursor:pointer;
+/*	position:absolute;
+	right:0px;*/
+}
+.ui-autocomplete .py_right:after{
+	content:“…”;
+}/*forFirefox*/
+
+@mediaalland(min-width:0px){
+	.ui-autocomplete .py_right:after{content:"";}/*forOpera*/
+}
+.ui-autocomplete li {
+	padding: 1px 5px 0;
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #FFF;
+	cursor: pointer;
+	display: block;
+	height: 22px;
+	line-height: 22px;
+	min-height: 22px;
+	white-space: nowrap;
+	word-break: normal; 
+}
+.ui-autocomplete .ui-state-hover {
+	color:#C06;
+	background-color:#999999;/*	font-weight:600;*/
+}
+.ui-autocomplete div.ui-paging {
+	text-align:center;
+	height:40px;
+	white-space : nowrap;
+}
+.ui-autocomplete div.ui-paging a {
+	float:left;
+	display:block;
+	padding: 0px 5px;
+	margin:5px;
+	color:#C06;
+	border: 1px solid #5B5B5B;
+	background-color:#FFF;
+	height: 20px;
+	line-height: 20px;
+	min-height: 20px;
+}
+.ui-autocomplete div.ui-paging a:hover {
+	background-color:#C06;
+	color:#FFF;
+}

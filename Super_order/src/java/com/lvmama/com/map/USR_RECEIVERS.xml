@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USR_RECEIVERS">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.vo.UsrReceivers">
+		<result column="RECEIVER_ID" property="receiverId" />
+		<result column="USER_ID" property="userId" />
+		<result column="RECEIVER_NAME" property="receiverName" />
+		<result column="MOBILE_NUMBER" property="mobileNumber" />
+		<result column="CREATED_DATE" property="createdDate" />
+		<result column="IS_VALID" property="isValid" />
+		<result column="IS_MOBILE_CHECKED" property="isMobileChecked" />
+		<result column="ADDRESS" property="address" />
+		<result column="POST_CODE" property="postCode" />
+		<result column="IS_THE_OWNER" property="isTheOwner" />
+		<result column="CARD_TYPE" property="cardType" />
+		<result column="CARD_NUM" property="cardNum" />
+		<result column="PHONE" property="phone" />
+		<result column="EMAIL" property="email" />
+		<result column="FAX" property="fax" />
+		<result column="FAX_CONTACTOR" property="faxContactor" />
+		<result column="RECEIVERS_TYPE" property="receiversType" />
+		<result column="PROVINCE" property="province"/>
+		<result column="CITY" property="city"/>
+		<result column="BRITHDAY" property="brithday"/>
+		<result column="GENDER" property="gender"/>
+		<result column="PINYIN" property="pinyin" />
+	</resultMap>
+
+	<select id="selectByPk" resultMap="BaseResultMap">
+		select * from USR_RECEIVERS where RECEIVER_ID=#receiverId#
+	</select>
+
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.bee.vo.UsrReceivers">
+		insert into USR_RECEIVERS (RECEIVER_ID, USER_ID, RECEIVER_NAME,
+		MOBILE_NUMBER, CREATED_DATE, IS_VALID, IS_MOBILE_CHECKED,
+		ADDRESS, POST_CODE, IS_THE_OWNER, CARD_TYPE,
+		CARD_NUM,PHONE,EMAIL,FAX,FAX_CONTACTOR,RECEIVERS_TYPE,PROVINCE,CITY,BRITHDAY,GENDER,PINYIN) values
+		(#receiverId:CHAR#, #userId:CHAR#, #receiverName:VARCHAR#,
+		#mobileNumber:VARCHAR#, #createdDate:TIMESTAMP#, #isValid:CHAR#,
+		#isMobileChecked:CHAR#, #address:VARCHAR#, #postCode:VARCHAR#,
+		#isTheOwner:CHAR#, #cardType:VARCHAR#,
+		#cardNum:VARCHAR#,#phone:VARCHAR#,#email:VARCHAR#,#fax:VARCHAR#,#faxContactor:VARCHAR#,#receiversType:VARCHAR#,#province:VARCHAR#,#city:VARCHAR#,#brithday#,#gender#,#pinyin#)
+	</insert>
+	<insert id="insertSelective"
+		parameterClass="com.lvmama.comm.bee.vo.UsrReceivers">
+		insert into USR_RECEIVERS
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="receiverId">
+				RECEIVER_ID
+			</isNotNull>
+			<isNotNull prepend="," property="userId">USER_ID</isNotNull>
+			<isNotNull prepend="," property="receiverName">
+				RECEIVER_NAME
+			</isNotNull>
+			<isNotNull prepend="," property="mobileNumber">
+				MOBILE_NUMBER
+			</isNotNull>
+			<isNotNull prepend="," property="createdDate">
+				CREATED_DATE
+			</isNotNull>
+			<isNotNull prepend="," property="isValid">
+				IS_VALID
+			</isNotNull>
+			<isNotNull prepend="," property="isMobileChecked">
+				IS_MOBILE_CHECKED
+			</isNotNull>
+			<isNotNull prepend="," property="address">
+				ADDRESS
+			</isNotNull>
+			<isNotNull prepend="," property="postCode">
+				POST_CODE
+			</isNotNull>
+			<isNotNull prepend="," property="isTheOwner">
+				IS_THE_OWNER
+			</isNotNull>
+			<isNotNull prepend="," property="cardType">
+				CARD_TYPE
+			</isNotNull>
+			<isNotNull prepend="," property="cardNum">
+				CARD_NUM
+			</isNotNull>
+			<isNotNull prepend="," property="province">
+				PROVINCE
+			</isNotNull>
+			<isNotNull prepend="," property="brithday">
+				BRITHDAY
+			</isNotNull>
+			<isNotNull prepend="," property="gender">
+				GENDER
+			</isNotNull>
+			<isNotNull prepend="," property="pinyin">
+				PINYIN
+			</isNotNull>
+			)
+		</dynamic>
+		values
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="receiverId">
+				#receiverId:CHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="userId">
+				#userId:CHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="receiverName">
+				#receiverName:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="mobileNumber">
+				#mobileNumber:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="createdDate">
+				#createdDate:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="," property="isValid">
+				#isValid:CHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="isMobileChecked">
+				#isMobileChecked:CHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="address">
+				#address:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="postCode">
+				#postCode:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="isTheOwner">
+				#isTheOwner:CHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="cardType">
+				#cardType:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="cardNum">
+				#cardNum:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="province">
+				#province:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="brithday">
+				#brithday#
+			</isNotNull>
+			<isNotNull prepend="," property="gender">
+				#gender#
+			</isNotNull>
+			<isNotNull prepend="," property="pinyin">
+				#pinyin#
+			</isNotNull>
+			)
+		</dynamic>
+	</insert>
+
+	<update id="updateReceivers"
+		parameterClass="com.lvmama.comm.bee.vo.UsrReceivers">
+		update USR_RECEIVERS
+		<dynamic prepend="set">
+			<isNotEmpty prepend=" ," property="receiverName">
+				RECEIVER_NAME = #receiverName#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="mobileNumber">
+				MOBILE_NUMBER = #mobileNumber#
+			</isNotEmpty>
+
+			<isNotEmpty prepend=" ," property="address">
+				ADDRESS=#address#
+			</isNotEmpty>
+
+
+			<isNotEmpty prepend=" ," property="postCode">
+				POST_CODE=#postCode#
+			</isNotEmpty>
+
+
+			<isNotEmpty prepend=" ," property="cardType">
+				CARD_TYPE = #cardType#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="cardNum">
+				CARD_NUM = #cardNum#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="phone">
+				PHONE = #phone#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="email">
+				EMAIL = #email#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="fax">
+				FAX = #fax#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="faxContactor">
+				FAX_CONTACTOR = #faxContactor#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="province">
+				PROVINCE = #province#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="city">
+				CITY = #city#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="brithday">
+				BRITHDAY = #brithday#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="isValid">
+				IS_VALID = #isValid#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="gender">
+				GENDER = #gender#
+			</isNotEmpty>
+			<isNotNull prepend="," property="pinyin">
+				PINYIN = #pinyin#
+			</isNotNull>
+			where RECEIVER_ID = #receiverId#
+		</dynamic>
+	</update>
+
+	<update id="updateReceiversAddress"
+		parameterClass="com.lvmama.comm.bee.vo.UsrReceivers">
+		update USR_RECEIVERS
+		<dynamic prepend="set">
+			POST_CODE=#postCode#,
+			<isNotEmpty prepend=" ," property="receiverName">
+				RECEIVER_NAME = #receiverName#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="mobileNumber">
+				MOBILE_NUMBER = #mobileNumber#
+			</isNotEmpty>
+
+			<isNotEmpty prepend=" ," property="address">
+				ADDRESS=#address#
+			</isNotEmpty>
+			
+			<isNotEmpty prepend=" ," property="cardType">
+				CARD_TYPE = #cardType#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="cardNum">
+				CARD_NUM = #cardNum#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="phone">
+				PHONE = #phone#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="email">
+				EMAIL = #email#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="fax">
+				FAX = #fax#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="faxContactor">
+				FAX_CONTACTOR = #faxContactor#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="province">
+				PROVINCE = #province#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="city">
+				CITY = #city#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="brithday">
+				BRITHDAY = #brithday#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="isValid">
+				IS_VALID = #isValid#
+			</isNotEmpty>
+			<isNotEmpty prepend=" ," property="gender">
+				GENDER = #gender#
+			</isNotEmpty>
+			<isNotNull prepend="," property="pinyin">
+				PINYIN = #pinyin#
+			</isNotNull>
+			where RECEIVER_ID = #receiverId#
+		</dynamic>
+	</update>
+	
+	
+	<select id="selectReceiversByParams" parameterClass="java.util.Map"
+		resultMap="BaseResultMap">
+		select * from (
+			select * from USR_RECEIVERS where USER_ID=#userId# 
+			<isNotEmpty prepend="and" property="receiversType">
+				RECEIVERS_TYPE=#receiversType#
+			</isNotEmpty>
+			AND IS_VALID = 'Y'
+			ORDER BY CREATED_DATE DESC) a
+		where ROWNUM &lt;100
+	</select>
+	
+	
+	<select id="selectReceiversByPageConfig" parameterClass="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(select * from USR_RECEIVERS where 1=1
+		<isNotEmpty prepend="and" property="userId">
+			USER_ID=#userId#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="receiversType">
+				RECEIVERS_TYPE=#receiversType#
+		</isNotEmpty>
+		
+		AND IS_VALID = 'Y'
+		) T WHERE ROWNUM &lt;= #_endRow#
+		)
+		WHERE ROWNUM1 &gt;=#_startRow#
+	</select>
+	
+	<select id="countSelectReceiversByPageConfig"  parameterClass="java.util.Map" resultClass="java.lang.Long">
+
+		select count(*) from USR_RECEIVERS where 1=1
+		<isNotEmpty prepend="and" property="userId">
+			USER_ID=#userId#
+		</isNotEmpty>
+		AND IS_VALID = 'Y'
+	</select>
+
+	<delete id="deleteReceivers" parameterClass="java.lang.String">
+		delete from USR_RECEIVERS where RECEIVER_ID=#receiverId#
+	</delete>
+</sqlMap>

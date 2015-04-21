@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+	
+	<bean id="placeCityService" class="com.lvmama.operate.service.impl.PlaceCityServiceImpl"/>
+	<!-- EDM -->
+	<bean id="edmSubscribeBatchJobService" class="com.lvmama.operate.service.impl.EdmSubscribeBatchJobServiceImpl"></bean>
+	<bean id="edmSubscribeBatchService" class="com.lvmama.operate.service.impl.EdmSubscribeBatchServiceImpl"></bean>
+	<bean id="onlineMarketingService" class="com.lvmama.operate.service.impl.OnlineMarketingServiceImpl"></bean>
+	<bean id="edmSubscribeTaskService" class="com.lvmama.operate.service.impl.EdmSubscribeTaskServiceImpl"/>
+	<bean id="edmSubscribeUserGroupService" class="com.lvmama.operate.service.impl.EdmSubscribeUserGroupServiceImpl"/>
+	<bean id="edmSubscribeTemplateService" class="com.lvmama.operate.service.impl.EdmSubscribeTemplateServiceImpl"/>
+	<bean id="edmSubscribeService" class="com.lvmama.operate.service.impl.EdmSubscribeServiceImpl" />
+	<bean id="edmSubscribeInfoService" class="com.lvmama.operate.service.impl.EdmSubscribeInfoServiceImpl" />
+	<bean id="edmUsersService" class="com.lvmama.operate.service.impl.EdmUsersServiceImpl" />
+	<bean id="comCityService" class="com.lvmama.operate.service.impl.ComCityServiceImpl"/>
+	<bean id="hqEMailSenderService" class="com.lvmama.operate.mail.HqEMailSenderServiceImpl"/>
+</beans>

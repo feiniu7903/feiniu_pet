@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VIEW_CONTENT">
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ViewContent">
+    <result column="CONTENT_ID" property="contentId" />
+    <result column="CONTENT" property="content" />
+    <result column="SEQ" property="seq" />
+    <result column="PAGE_ID" property="pageId" />
+    <result column="CONTENT_TYPE" property="contentType" />
+    <result column="MULTI_JOURNEY_ID" property="multiJourneyId" />
+  </resultMap>
+  <select id="findViewContentOfTypeByPageId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ViewContent">
+   select CONTENT_ID, CONTENT, SEQ, PAGE_ID, CONTENT_TYPE,MULTI_JOURNEY_ID from VIEW_CONTENT where PAGE_ID = #pageId# and CONTENT_TYPE=#contentType# and MULTI_JOURNEY_ID is null ORDER BY SEQ DESC
+  </select>
+  <select id="getViewContentBypageId" resultMap="BaseResultMap">
+   	select CONTENT_ID, CONTENT, SEQ, PAGE_ID, CONTENT_TYPE,MULTI_JOURNEY_ID from VIEW_CONTENT where PAGE_ID = #pageId# and MULTI_JOURNEY_ID is null ORDER BY CONTENT_TYPE,SEQ DESC
+  </select>
+   <select id="getViewContentByProductId" resultMap="BaseResultMap">
+	   select vc.*
+	from VIEW_CONTENT vc join VIEW_PAGE vp ON vc.PAGE_ID=vp.PAGE_ID
+	where vp.PRODUCT_ID = #productId# and MULTI_JOURNEY_ID is null ORDER BY vc.CONTENT_TYPE,vc.SEQ DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ViewContent">
+    delete from VIEW_CONTENT where CONTENT_ID = #contentId#
+  </delete>
+  <delete id="deleteByPageId" parameterClass="com.lvmama.comm.bee.po.prod.ViewContent">
+    delete from VIEW_CONTENT where PAGE_ID = #pageId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ViewContent">
+    <selectKey keyProperty="contentId" resultClass="java.lang.Long">
+      select VIEW_CONTENT_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into VIEW_CONTENT (CONTENT_ID, CONTENT, SEQ, PAGE_ID, CONTENT_TYPE, MULTI_JOURNEY_ID)
+    values (#contentId#, #content#, #seq#, #pageId#,#contentType#, #multiJourneyId#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ViewContent">
+    update VIEW_CONTENT set CONTENT = #content#,SEQ = #seq#,PAGE_ID = #pageId#,CONTENT_TYPE = #contentType#,MULTI_JOURNEY_ID=#multiJourneyId# where CONTENT_ID = #contentId#
+  </update>
+  <select id="getViewContentByMultiJourneyId" parameterClass="java.util.Map" resultMap="BaseResultMap">
+  	select * from view_content where multi_journey_id=#multiJourneyId# and content_type=#contentType#
+  </select>
+  
+  <select id="getMJViewContentByMultiJourneyId" parameterClass="java.util.Map" resultMap="BaseResultMap">
+  	select * from view_content where multi_journey_id=#multiJourneyId#
+  </select>
+  
+  <select id="getViewContentByContentId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+  	select * from view_content where content_id=#contentId#
+  </select>
+</sqlMap>

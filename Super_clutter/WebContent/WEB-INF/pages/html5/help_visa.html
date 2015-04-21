@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>签注/签证详情</title>
+<#include "../common/define_v5.html">
+<link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/common_v4.css"/>
+<style>
+		nav, header, section {width:100%; height:auto; overflow:hidden;}
+		.main {color:black;padding:5px 10px;}
+		nav {margin:10px 0 5px 0; border-right:1px #333 solid;}
+		nav li{ float:left; display: inline-block;ont-family: "microsoft yahei";font-size: 14px;padding: 4px 10px;
+    text-align: center;background-color: #F1F1F1;border: 1px solid #D2D2D2;color: #333333; border-right:0;}
+		nav li.active{color:#ffffff;background-color: #E7188E;}
+</style>
+</head>
+<body>
+<#if firstChannel?? && firstChannel=="CLIENT" >
+	<!--  头部-->
+	<#if productId??>
+		 <script type="text/javascript">
+			 var siteFlag=3;
+			 var productId='${productId!}';
+		 </script>
+	</#if>
+	<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/header.js"></script>
+</#if>
+<div id="wrapper">
+    <div id="content">
+        <#assign prefix_pic_url="http://pic.lvmama.com/img/mobile/touch">
+            <#if visaVOList?? && visaVOList?size&gt;0>
+                <div class="lv-product-explain">
+                    <nav>
+                        <ul>
+                            <#list visaVOList as st>
+                            	<li>${st.cnOccupation?if_exists}</li>
+                            </#list>
+                        </ul>
+                    </nav>
+                    <#list visaVOList as visa>
+                        <#if visa.visaApplicationDocumentDetailsList?? && visa.visaApplicationDocumentDetailsList?size&gt;0>
+                            <div class="tabChange">
+                            	<#list visa.visaApplicationDocumentDetailsList as dlist>
+                                	<h3>${dlist.title?if_exists}</h3>
+                                	<p>${dlist.content?if_exists}</p>
+                            	</#list>
+                            </div>
+                        </#if>
+                    </#list>
+                </div>
+            <#else>
+            <#assign no_data_msg="暂无签注/签证信息">
+                <#include "../common/no_data_list.html">
+            </#if>
+    </div>
+    <#if firstChannel?? && firstChannel=="CLIENT">
+        <!-- footer -->
+       <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+    </#if>
+</div>
+<script>
+	$(".lv-product-explain nav").tabChange();
+</script>
+</body>
+</html>

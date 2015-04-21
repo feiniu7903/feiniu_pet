@@ -1,0 +1,31 @@
+<?page title="日志查看" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_conlog_detail"?>
+
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_conlog_detail" mode="embedded" title="查看" border="normal"
+ apply="com.lvmama.back.web.abroadhotel.refundMent.AbroadRefundmentLogsAction" closable="true">
+	<button visible="false" id="refreshButton" onClick="saction.loadLogList();"/>
+	<listbox id="ordTargetMetaListBox" multiple="false" model="@{saction.comLogList,load-after='refreshButton.onClick'}">
+		<listhead>
+			<listheader  width="300px"  label="操作时间"/>
+			<listheader  width="300px"  label="操作人"/>
+			<listheader label="操作内容"/>
+		</listhead>
+		<listitem height="25px" self="@{each='comLogs'}" >
+			<listcell label="@{comLogs.createTime}"/>
+			<listcell label="@{comLogs.operatorName}" />	
+			<listcell label="@{comLogs.logName}"/>
+		</listitem>
+	</listbox>
+	
+	<grid style="border:0">
+		<rows>
+			<row>
+				<cell width="100%" align="center">
+					<button onClick="saction.closeWindow();" label="关闭" />
+				</cell>
+			</row>
+		</rows>
+		</grid>
+</window>
+</zk>

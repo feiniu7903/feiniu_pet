@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_SALE_SERVICE_DEAL" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdSaleServiceDeal" >
+    <result column="SERVICE_DEAL_ID" property="serviceDealId" />
+    <result column="SALE_SERVICE_ID" property="saleServiceId" />
+    <result column="DEAL_CONTENT" property="dealContent" />
+    <result column="OPERATOR_NAME" property="operatorName" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="SUPPLIER_NAME" property="supplierName" />
+  </resultMap>
+  
+    <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdSaleServiceDeal" >
+    <selectKey resultClass="java.lang.Long" keyProperty="serviceDealId" >
+      select ORD_SALE_SERVICE_DEAL_ID_SEQ.nextval  from DUAL
+    </selectKey>
+    insert into ORD_SALE_SERVICE_DEAL (SERVICE_DEAL_ID, SALE_SERVICE_ID, DEAL_CONTENT, OPERATOR_NAME, CREATE_TIME,SUPPLIER_NAME)
+    values (#serviceDealId#, #saleServiceId#, #dealContent#,
+      #operatorName#, #createTime#,#supplierName#)
+  </insert>
+  
+  <select id="selectSaleDealFull" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+     SELECT ord_sale_deal.* FROM ORD_SALE_SERVICE_DEAL ord_sale_deal
+     where 1=1 
+     <isNotEmpty prepend=" and" property="saleServiceId">
+    	ord_sale_deal.SALE_SERVICE_ID= #saleServiceId#
+    </isNotEmpty>
+    order by ord_sale_deal.service_deal_id desc
+  </select>
+</sqlMap>

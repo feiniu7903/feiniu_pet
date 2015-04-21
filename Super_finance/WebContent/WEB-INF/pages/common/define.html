@@ -1,0 +1,47 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="/finance/js/jquery/jquery-ui-1.8.18.custom.css">
+<link rel="stylesheet" href="/finance/css/index.css" type="text/css" />
+<!-- <script type="text/javascript" src="http://pic.lvmama.com/js/jquery142.js"></script> -->
+<script type="text/javascript" src="/finance/js/jquery/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="/finance/js/common.js"></script>
+<script type="text/javascript" src="/finance/js/jquery/jquery.form.js"></script>
+<script src="/finance/js/jquery/jquery.validate.js"></script>
+
+<#if dialog_inc?? && dialog_inc>
+<link href="/finance/js/jquery/artDialog/skins/blue.css" rel="stylesheet" />
+<script src="/finance/js/jquery/artDialog/artDialog.min.js"></script> 
+<script src="/finance/js/jquery/artDialog/artDialog.plugins.min.js"></script>
+</#if>
+
+<#if autocomplete_inc?? && autocomplete_inc>
+<link rel="stylesheet" href="/finance/js/jquery/autocomplete/jquery.ui.autocomplete.css">
+<script src="/finance/js/jquery/autocomplete/jquery.ui.core.js"></script>
+<script src="/finance/js/jquery/autocomplete/jquery.ui.widget.js"></script>
+<script src="/finance/js/jquery/autocomplete/jquery.ui.position.js"></script>
+<script src="/finance/js/jquery/autocomplete/jquery.ui.autocomplete.js"></script>
+</#if>
+<#if grid_inc?? && grid_inc>
+<link rel="stylesheet" href="/finance/js/jquery/jqGrid/css/ui.jqgrid.css">
+<link rel="stylesheet" href="/finance/js/jquery/jqGrid/css/ui.multiselect.css">
+<script type="text/javascript" src="/finance/js/jquery/jqGrid/js/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="/finance/js/jquery/jqGrid/js/jquery.jqGrid.src.js"></script>
+</#if>
+
+<#if grid_row_auto_height?? && grid_row_auto_height>
+<style>
+.ui-jqgrid tr.jqgrow td {
+  white-space: normal !important;
+  height:auto;
+  vertical-align:text-top;
+  padding-top:2px;
+ }
+</style>
+</#if>
+
+<#if datepicker_inc?? && datepicker_inc>
+<link rel="stylesheet" href="/finance/js/My97DatePicker/skin/default/datepicker.css">
+<link rel="stylesheet" href="/finance/js//My97DatePicker/skin/WdatePicker.css">
+<script src="/finance/js//My97DatePicker/WdatePicker.js"></script>
+<script src="/finance/js//My97DatePicker/lang/en.js"></script>
+
+</#if>

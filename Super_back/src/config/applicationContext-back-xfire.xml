@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="invoiceWs" class="com.lvmama.back.remote.InvoiceRemoteServiceImpl">
+		<property name="orderServiceProxy" ref="orderServiceProxy"/>
+	</bean>
+
+    <bean id="addressingInHandler" class="org.codehaus.xfire.addressing.AddressingInHandler"/>
+    
+	<bean id="invoiceRemoteService" class="org.codehaus.xfire.spring.ServiceBean">
+		<property name="serviceBean" ref="invoiceWs"/>
+		<property name="serviceClass">
+			<value>com.lvmama.back.remote.InvoiceRemoteService</value>
+		</property>
+		<property name="inHandlers">
+			<list>
+				<ref bean="addressingInHandler"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="MarkActivityDataModelJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="MarkActivityDataModelJobWs"/>
+        <property name="serviceClass" value="com.lvmama.back.remote.MarkActivityDataModelJobService"/>
+		<property name="implementationClass" value="com.lvmama.back.remote.impl.MarkActivityDataModelJobServiceImpl"/>
+	</bean>
+
+    <bean id="PriceUpdateJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="PriceUpdateJobWs"/>
+        <property name="serviceClass" value="com.lvmama.back.remote.PriceUpdateJobService"/>
+		<property name="implementationClass" value="com.lvmama.back.remote.impl.PriceUpdateJobServiceImpl"/>
+	</bean>
+
+	<bean id="BuyOutStockWarningJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="BuyOutStockWarningJobWs"/>
+        <property name="serviceClass" value="com.lvmama.back.remote.BuyOutStockWarningJobService"/>
+		<property name="implementationClass" value="com.lvmama.back.remote.impl.BuyOutStockWarningJobServiceImpl"/>
+	</bean>
+	
+	<bean id="ProductManagerWarningJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="ProductManagerWarningJobWs"/>
+        <property name="serviceClass" value="com.lvmama.back.remote.ProductManagerWarningJobService"/>
+		<property name="implementationClass" value="com.lvmama.back.remote.impl.ProductManagerWarningJobServiceImpl"/>
+	</bean>
+
+</beans>

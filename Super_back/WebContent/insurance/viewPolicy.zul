@@ -1,0 +1,286 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./editPolicyWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="editPolicyWin" title="编辑保单" closable="true" sizable="false" border="normal" mode="embedded" apply="com.lvmama.back.web.insurance.ViewPolicyAction">
+	<script type="text/javascript">
+	 <![CDATA[  
+function window_open(productId) {
+	window.open("/super_back/phoneOrder/showImportantTipTabs.do?pageId="+productId+"&needJquery=true");
+}	]]>       
+	</script>
+		<separator/>
+		<grid>
+			<columns>
+				<column width="100px"></column>
+				<column></column>
+				<column width="100px"></column>
+				<column></column>
+				<column width="100px"></column>
+				<column></column>
+				<column width="100px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>订单号：</hbox>
+					<hbox>${saction.orderDetail.orderId}</hbox>
+					<hbox>下单时间：</hbox>
+					<hbox>${saction.orderDetail.zhCreateTime}</hbox>
+					<hbox>下单人：</hbox>
+					<hbox>${saction.orderDetail.userName}</hbox>
+					<hbox>支付时间：</hbox>
+					<hbox>${saction.orderDetail.waitPayment}</hbox>						
+				</row>
+				<row>
+					<hbox>应付金额：</hbox>
+					<hbox>${saction.orderDetail.oughtPayYuan }</hbox>
+					<hbox>实付金额：</hbox>
+					<hbox>${saction.orderDetail.actualPayYuan }</hbox>
+					<hbox>支付状态：</hbox>
+					<hbox>${saction.orderDetail.zhPaymentStatus }</hbox>
+					<hbox>订单状态：</hbox>
+					<hbox>${saction.orderDetail.zhOrderStatus }</hbox>
+				</row>
+				<row spans="1,7">
+					<hbox>返现金额：</hbox>
+					<hbox>${saction.orderDetail.cashRefundYuan }</hbox>
+				</row>
+				<row spans="1,7">
+					<hbox>订单来源渠道：</hbox>
+					<hbox>${saction.orderDetail.zhProductChannel }</hbox>
+				</row>
+				<row spans="1,7">
+					<hbox>用户备注：</hbox>
+					<hbox>${saction.orderDetail.userMemo }</hbox>
+				</row>
+				<row spans="1,3,1,3">
+					<hbox>保单流水号：</hbox>
+					<hbox>${saction.policy.policySerial }</hbox>
+					<hbox>保单号：</hbox>
+					<hbox>${saction.policy.policyNo }</hbox>
+				</row>
+				<row spans="1,1,1,1,1,3">
+					<hbox>保单状态：</hbox>
+					<hbox>${saction.policy.chPolicyStatus }</hbox>
+					<hbox>状态结果：</hbox>
+					<hbox>${saction.policy.chPolicyResult }</hbox>
+					<hbox>保单验证码：</hbox>
+					<hbox>${saction.policy.validateCode }</hbox>
+				</row>																											
+			</rows>
+		</grid>	
+		<separator/>
+		<separator/>
+		<html><attribute name="content"><div align="center"><strong>被保险人信息</strong></div></attribute></html>
+		<separator bar="true"/>
+		<label value="保单开始时间:${saction.policy.formatterEffectiveDate}"/> 
+		<separator/>
+		<listbox id="grid_insurant" model="@{saction.insInsurants,load-after='refresh.onClick'}">
+			<listhead>
+				<listheader label="类别"/>
+				<listheader label="姓名"/>
+				<listheader label="性别"/>
+				<listheader label="出生日期"/>
+				<listheader label="联系电话" width="140px"/>
+				<listheader label="证件类型"/>
+				<listheader label="证件号码 " width="140px"/>
+				<listheader label="操作"/>
+			</listhead>
+			<listitem height="25px" self="@{each='each'}">
+				<listcell><label value="@{each.chPersonType}"/></listcell>
+ 				<listcell><label value="@{each.name}"/></listcell>
+				<listcell><label value="@{each.sex}"/></listcell> 
+				<listcell><label value="@{each.formatBirthday}"/></listcell>
+				<listcell><label value="@{each.mobileNumber}"/></listcell>
+				<listcell><label value="@{each.chCertType}"/></listcell>
+				<listcell><label value="@{each.certNo}"/></listcell>
+				<listcell>
+					<button label="修改" onClick='saction.showWindow("/insurance/editInsurant.zul", self.getAttributes());' if="${saction.policy.policyResult != 'REQUEST_SUCCESS' }">
+						<custom-attributes insurantId="@{each.insurantId}"/>
+					</button>
+					<button label="删除" onClick='saction.del(self.getAttributes());' if="${saction.policy.policyResult != 'REQUEST_SUCCESS' }">
+						<custom-attributes insurantId="@{each.insurantId}" personType="@{each.personType}"/>
+					</button>
+				</listcell>					
+			</listitem>
+		</listbox>
+		<toolbar align="end">
+			<button label="刷新" id="refresh" onClick="saction.doSearch()" visible="false"></button>
+			<button label="新增被保险人有效" id="enableAddInsurant" onClick="btn_addInsurant.setDisabled(false)" visible="false"></button>
+			<button label="新增被保险人无效" id="disableAddInsurant" onClick="btn_addInsurant.setDisabled(true)" visible="false"></button>
+			<button label="新增被保险人" id="btn_addInsurant" onClick='saction.showAddInsurant("/insurance/editInsurant.zul",self.getAttributes())' if="${saction.policy.policyResult != 'REQUEST_SUCCESS' }">
+				<custom-attributes orderId="${saction.orderId}" policyId="${saction.policyId}"/>
+			</button>
+		</toolbar>			
+		<separator/>
+		<separator/>
+		<html><attribute name="content"><div align="center"><strong>保单日志</strong></div></attribute></html>
+		<grid>
+			<columns>
+				<column>操作时间</column>
+				<column>操作人</column>
+				<column>操作内容</column>
+			</columns>
+			<rows>
+				<row forEach="${saction.policyOperationLogs}">
+					<hbox>${each.createdDate}</hbox>
+					<hbox>${each.operator}</hbox>
+					<hbox>${each.type }</hbox>	
+				</row>
+			</rows>	
+		</grid>	
+		<separator/>
+		<separator/>		
+		<html><attribute name="content"><div align="center"><strong>商品清单</strong></div></attribute></html>
+		<separator bar="true"/>
+		<label value="游玩时间:"/> ${saction.orderDetail.zhVisitTime }
+		<separator/>
+		<grid>
+			<auxhead>        
+				<auxheader label="商品清单" colspan="9"/>       
+			</auxhead>
+			<columns>
+				<column width="80px">序号</column><column>产品名称</column><column>市场价</column><column>会员价 </column><column>数量</column><column>总金额</column><column>产品类型 </column><column>优惠</column><column>游玩时间</column>
+			</columns>
+				<rows>
+					<row forEach="${saction.orderDetail.ordOrderItemProds}" if="${each.productType!='OTHER'}">
+						<hbox>${each.productId }</hbox>
+						<hbox>
+							<a style="color:blue" label="${each.productName}">
+								<custom-attributes productId="${each.productId}"/>
+								<attribute name="onClick">       
+							     <![CDATA[       
+							         Clients.evalJavaScript("window_open("+self.getAttribute("productId")+");");   
+							     ]]>       
+							     </attribute>
+							</a>
+						</hbox> 
+						<hbox>${each.marketPriceYuan }</hbox>
+						<hbox>${each.priceYuan }</hbox>
+						<hbox>${each.quantity }</hbox>
+						<hbox>${each.priceYuan*each.quantity }</hbox>
+						<hbox>${each.zhProductType }</hbox>
+						<hbox><label if="${each.additional=='false'}" value="无"/><label if="${each.additional=='true'}" value="有"/></hbox>
+						<hbox>${each.visitTime}</hbox>						
+					</row>
+				</rows>
+		</grid>
+		<separator/>
+		<grid>
+			<auxhead>        
+				<auxheader label="附件产品" colspan="9"/>       
+			</auxhead>
+			<columns>
+				<column width="80px">序号</column><column>产品名称</column><column>市场价</column><column>会员价 </column><column>数量</column><column>总金额</column><column>产品类型 </column><column>优惠</column><column>游玩时间</column>
+			</columns>
+				<rows>
+					<row forEach="${saction.orderDetail.ordOrderItemProds}" if="${each.productType=='OTHER'}">
+						<hbox>${each.productId }</hbox>
+						<hbox><a style="color:blue" label="${each.productName}">
+								<custom-attributes productId="${each.productId}"/>
+								<attribute name="onClick">       
+							     <![CDATA[       
+							         Clients.evalJavaScript("window_open("+self.getAttribute("productId")+");");   
+							     ]]>       
+							     </attribute>
+						</a></hbox> 
+						<hbox>${each.marketPriceYuan }</hbox>
+						<hbox>${each.priceYuan }</hbox>
+						<hbox>${each.quantity }</hbox>
+						<hbox>${each.priceYuan*each.quantity }</hbox>
+						<hbox>${each.zhProductType }</hbox>
+						<hbox><label if="${each.additional=='false'}" value="无"/><label if="${each.additional=='true'}" value="有"/></hbox>
+						<hbox>${each.visitTime}</hbox>						
+					</row>
+				</rows>
+		</grid>
+		<separator/>
+		<separator/>
+		<html><attribute name="content"><div align="center"><strong>用户信息</strong></div></attribute></html>
+		<separator bar="true"/>
+		<grid>
+			<columns>
+				<column width="120px">卡号</column>
+				<column>用户名</column>
+				<column>用户姓名 </column>
+				<column>手机号</column>
+				<column>现金账户余额</column>
+				<column>返现账户余额 </column>
+			</columns>
+				<rows>
+					<row forEach="${saction.orderDetail.user}">
+						<hbox>${each.cardId }</hbox>
+						<hbox>${each.userName }</hbox> 
+						<hbox>${each.realName }</hbox>
+						<hbox>${each.mobileNumber }</hbox>
+						<hbox></hbox>
+						<hbox></hbox>					
+					</row>
+				</rows>
+		</grid>
+		<separator/>
+		<grid>
+			<columns>
+				<column width="120px">类别</column>
+				<column>姓名</column>
+				<column>联系电话 </column>
+				<column>Email</column>
+				<column width="80px">证件类型</column>
+				<column width="200px">证件号码  </column>
+			</columns>
+				<rows>
+					<row forEach="${saction.orderDetail.booker}">
+						<hbox><label value="订票人" if="${each.personType =='BOOKER'}"/><label value="联系人" if="${each.personType =='CONTACT'}"/><label value="游玩人" if="${each.personType =='TRAVELLER'}"/></hbox>
+						<hbox>${each.name }</hbox>
+						<hbox>${each.tel }</hbox> 
+						<hbox>${each.email }</hbox>
+						<hbox>${each.certType }</hbox>
+						<hbox>${each.certNo }</hbox>					
+					</row>
+					<row forEach="${saction.orderDetail.contact}">
+						<hbox><label value="订票人" if="${each.personType =='BOOKER'}"/><label value="联系人" if="${each.personType =='CONTACT'}"/><label value="游玩人" if="${each.personType =='TRAVELLER'}"/></hbox>
+						<hbox>${each.name }</hbox>
+						<hbox>${each.tel }</hbox> 
+						<hbox>${each.email }</hbox>
+						<hbox>${each.certType }</hbox>
+						<hbox>${each.certNo }</hbox>					
+					</row>									
+					<row forEach="${saction.orderDetail.travellerList}">
+						<hbox><label value="订票人" if="${each.personType =='BOOKER'}"/><label value="联系人" if="${each.personType =='CONTACT'}"/><label value="游玩人" if="${each.personType =='TRAVELLER'}"/></hbox>
+						<hbox>${each.name }</hbox>
+						<hbox>${each.tel }</hbox> 
+						<hbox>${each.email }</hbox>
+						<hbox>${each.certType }</hbox>
+						<hbox>${each.certNo }</hbox>					
+					</row>
+				</rows>
+		</grid>
+		<separator/>
+		<separator/>		
+		<html><attribute name="content"><div align="center"><strong>订单备注</strong></div></attribute></html>
+		<separator bar="true"/>
+		<grid>
+			<columns>
+				<column>备注类别</column>
+				<column width="200px">内容 </column>
+				<column>维护人</column>
+				<column>创建时间</column>	
+			</columns>
+			<rows>
+				<row forEach="${saction.orderMemos}">
+					<hbox>${each.type }</hbox>
+					<hbox>${each.content }</hbox>
+					<hbox>${each.operatorName }</hbox>
+					<hbox>${each.createTime }</hbox>				
+				</row>
+			</rows>
+		</grid>	
+		<separator/>
+		<separator/>
+		<toolbar align="center">
+			 <button label="重新投保" width="100px" onClick="saction.request()" if="${saction.policy.policyResult != 'REQUEST_SUCCESS' || saction.policy.policyStatus != 'REQUESTED' }"/>
+			 <!--button label="人工投保" width="100px" onClick='saction.showWindow("/insurance/manualPolicy.zul", self.getAttributes());' if="${saction.policy.policyResult != 'REQUEST_SUCCESS' }">
+			 	<custom-attributes policyId="@{saction.policyId}"/>
+			 </button-->
+		</toolbar>		
+	</window>
+</zk>

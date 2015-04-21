@@ -1,0 +1,52 @@
+<div class="lv-box lv_tab">
+     <ul class="order_tab">
+     	<li><a href="javascript:void(0);"><span>预订须知</span><div class="lv-cascade-icongrey"></div></a></li>
+     	<li><a href="javascript:void(0);"><span>费用说明</span><div class="lv-cascade-icongrey"></div></a></li>
+     	<li><a href="javascript:void(0);"><span>退款说明</span><div class="lv-cascade-icongrey"></div></a></li>
+     </ul>
+     <#if productItems.orderTips?? && productItems.orderTips!="">	
+     <div class="tab_box">
+         <div class="lv-pad-content spot_note">
+         	${productItems.orderTips?if_exists?replace("\n","</br>")}
+         </div>
+         <div class="spot_note_mor"><a href="javascript:void(0);" class="ic_down"></a></div>
+     </div>
+     <#else>
+     <div class="tab_box">
+         <div class="lv-pad-content spot_note">
+         	暂无
+         </div>
+         <div class="spot_note_mor"><a href="javascript:void(0);" class="ic_down"></a></div>
+     </div>
+     </#if>
+     <#if productItems.constcontain?? && productItems.constcontain!="">	
+     <div class="tab_box" style="display:none;">
+         <div class="lv-pad-content spot_note">
+	${productItems.constcontain?if_exists?replace("\n","</br>")}
+</div>
+         <div class="spot_note_mor"><a href="javascript:void(0);" class="ic_down"></a></div>
+     </div>
+     <#else>
+     <div class="tab_box" style="display:none;">
+         <div class="lv-pad-content spot_note">
+	暂无
+</div>
+         <div class="spot_note_mor"><a href="javascript:void(0);" class="ic_down"></a></div>
+     </div>
+     </#if>
+     <#if productItems.refundsExplanation?? && productItems.refundsExplanation!="">	
+     <div class="tab_box" style="display:none;">
+         <div class="lv-pad-content spot_note">
+         	${productItems.refundsExplanation?if_exists?replace("\n","</br>")}
+</div>
+         <div class="spot_note_mor"><a href="javascript:void(0);" class="ic_down"></a></div>
+     </div>
+     <#else>
+     	<div class="tab_box" style="display:none;">
+         	<div class="lv-pad-content spot_note">
+         	暂无
+	</div>
+          <div class="spot_note_mor"><a href="javascript:void(0);" class="ic_down"></a></div>
+      </div>
+     </#if>
+ </div>

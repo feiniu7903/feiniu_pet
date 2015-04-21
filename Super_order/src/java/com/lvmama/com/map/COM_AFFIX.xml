@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_AFFIX" >	
+	<resultMap class="com.lvmama.comm.pet.po.pub.ComAffix" id="BaseComAffix">
+		<result property="affixId" column="AFFIX_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="objectId" column="OBJECT_ID"/>
+		<result property="objectType" column="OBJECT_TYPE"/>
+		<result property="path" column="PATH"/>
+		<result property="name" column="NAME"/>
+		<result property="memo" column="MEMO"/>
+		<result property="fileType" column="FILE_TYPE"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="fileId" column="FILE_ID"/>
+	</resultMap>
+	<typeAlias alias="ComAffix" type="com.lvmama.comm.pet.po.pub.ComAffix"/>
+	<insert id="insert" parameterClass="ComAffix">
+		<selectKey keyProperty="affixId">
+			SELECT COM_AFFIX_ID_SEQ.nextval FROM dual
+		</selectKey>		
+		INSERT INTO COM_AFFIX(AFFIX_ID,USER_ID,OBJECT_ID,OBJECT_TYPE,FILE_TYPE,NAME,MEMO,PATH
+		<isNotEmpty property="fileId" prepend=",">
+			FILE_ID
+		</isNotEmpty>
+		)
+			values(#affixId#,#userId#,#objectId#,#objectType#,#fileType#,#name#,#memo#,#path#
+			<isNotEmpty property="fileId" prepend=",">
+			#fileId#
+			</isNotEmpty>
+			)
+	</insert>
+	<delete id="delete" parameterClass="ComAffix">
+		delete from COM_AFFIX where AFFIX_ID = #affixId#
+	</delete>
+	
+	<sql id="selectSQL">
+		select c.*,ROWNUM rn from COM_AFFIX c WHERE
+			1=1
+			<isNotEmpty property="objectId" prepend="AND">
+				c.OBJECT_ID = #objectId#
+			</isNotEmpty>
+			<isNotEmpty property="objectType" prepend="AND">
+				c.OBJECT_TYPE = #objectType#
+			</isNotEmpty>
+			<isNotEmpty property="fileType" prepend="AND">
+				c.FILE_TYPE = #fileType#
+			</isNotEmpty>
+			<isNotEmpty property="maxResult" prepend="and">
+				ROWNUM &lt;= #maxResult#
+			</isNotEmpty>
+	</sql>
+	<select id="selectByPrimary" resultMap="BaseComAffix" parameterClass="ComAffix">
+		SELECT * FROM COM_AFFIX WHERE AFFIX_ID=#affixId#
+	</select>
+	<select id="selectByParam" resultMap="BaseComAffix" parameterClass="java.util.HashMap">
+		SELECT * FROM (<include refid="selectSQL"/>)
+			<isNotEmpty property="skipResult">
+				where rn &gt; #skipResult#
+			</isNotEmpty>
+	</select>
+	<select id="selectCountByParam" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT count(*) FROM (<include refid="selectSQL"/>) 
+	</select>
+	<select id="selectLatestRecordByParam" resultMap="BaseComAffix" parameterClass="java.util.HashMap">
+		SELECT * FROM (<include refid="selectSQL"/>) t where 1=1 and t.CREATE_TIME=
+		(SELECT max(Create_time) FROM (<include refid="selectSQL"/>))
+			 
+	</select>
+		<select id="selectListForTimeDescByParam" resultMap="BaseComAffix" parameterClass="java.util.HashMap">
+		SELECT * FROM (select c.*,ROWNUM rn from COM_AFFIX c WHERE
+			1=1
+			<isNotEmpty property="objectId" prepend="AND">
+				c.OBJECT_ID = #objectId#
+			</isNotEmpty>
+			<isNotEmpty property="objectType" prepend="AND">
+				c.OBJECT_TYPE = #objectType#
+			</isNotEmpty>
+			<isNotEmpty property="fileType" prepend="AND">
+				c.FILE_TYPE = #fileType#
+			</isNotEmpty>
+			<isNotEmpty property="maxResult" prepend="and">
+				ROWNUM &lt;= #maxResult#
+			</isNotEmpty> ORDER BY c.CREATE_TIME DESC )
+			<isNotEmpty property="skipResult">
+				where rn &gt; #skipResult#
+			</isNotEmpty>
+	</select>
+	
+	<select id="selectListByObjectIds" resultMap="BaseComAffix" parameterClass="java.util.Map">
+		SELECT * FROM  COM_AFFIX c
+		where  
+		c.OBJECT_ID in
+		<iterate conjunction="," open="(" close=")" property="objectIds">
+			#objectIds[]#
+		</iterate>
+		<isNotEmpty property="objectType" prepend="AND">
+			c.OBJECT_TYPE = #objectType#
+		</isNotEmpty>
+	</select>
+	
+	<insert id="insertAll" parameterClass="ComAffix">
+		<selectKey keyProperty="affixId">
+			SELECT COM_AFFIX_ID_SEQ.nextval FROM dual
+		</selectKey>		
+		INSERT INTO COM_AFFIX(AFFIX_ID,USER_ID,OBJECT_ID,OBJECT_TYPE,FILE_TYPE,NAME,MEMO,PATH,FILE_ID)
+			values(#affixId#,#userId#,#objectId#,#objectType#,#fileType#,#name#,#memo#,#path#,#fileId#)
+	</insert>
+</sqlMap>

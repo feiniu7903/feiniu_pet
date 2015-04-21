@@ -1,0 +1,976 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PASS_CODE">
+
+	<resultMap id="PassCode_BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassCode">
+		<result column="CODE_ID" property="codeId" />
+		<result column="SERIALNO" property="serialNo" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="STATUS" property="status" />
+		<result column="CODE" property="code" />
+		<result column="ADD_CODE" property="addCode" />
+		<result column="MOBILE" property="mobile" />
+		<result column="SMS_CONTENT" property="smsContent" />
+		<result column="TERMINAL_CONTENT" property="terminalContent" />
+		<result column="URL" property="url" />
+		<result column="ADD_CODE_MD5" property="addCodeMd5"/>
+		<result column="EXT_ID" property="extId" />
+		<result column="REAPPLY" property="reapply"/>
+		<result column="OBJECT_ID" property="objectId"/>
+		<result column="OBJECT_TYPE" property="objectType"/>
+		<result column="STATUS_NO" property="statusNo" />
+		<result column="STATUS_EXPLANATION" property="statusExplanation"/>
+		<result column="CODE_IMAGE" property="codeImage"/>
+		<result column="SEND_SMS" property="sendSms"/>
+		<result column="SEND_ORDERID" property="sendOrderid"/>
+		<result column="UPDATE_TIME" property="updateTime"/>
+		<result column="ORDER_ID" property="orderId"/>
+		<result column="REAPPLY_TIME" property="reapplyTime"/>
+		<result column="REAPPLY_COUNT" property="reapplyCount"/>
+		<result column="CODE_TOTAL" property="codeTotal"/>
+		<result column="FAILED_TIME" property="failedTime"/>
+	</resultMap>
+
+  	  <resultMap class="com.lvmama.comm.bee.po.pass.PassCode" id="Ext_BaseResultMap" extends="PassCode_BaseResultMap">
+	     <result column="PROVIDER_NAME" property="providerName" />
+	  </resultMap>
+
+  	  <resultMap class="com.lvmama.comm.bee.po.pass.PassCode" id="Ext_BaseResultMap1" extends="PassCode_BaseResultMap">
+	     <result column="TARGET_ID" property="targetId" />
+	  </resultMap>
+
+	<sql id="selectAutoPerformSQLBody">
+		from pass_code pc , pass_port_code ppc , pass_device pd , pass_provider pp
+        where pc.code_id = ppc.code_id
+        and ppc.target_id = pd.target_id
+        and pd.provider_id = pp.provider_id
+        and pp.auto_perform = 'true'
+        and pc.status='SUCCESS'
+        and ppc.status='UNUSED'
+        and trunc(sysdate) &gt;= ppc.valid_time 
+        and trunc(sysdate) &lt;= ppc.invalid_time
+	</sql>
+
+	 <select id="selectAutoPerformCount" parameterClass="java.util.HashMap" resultClass="java.lang.Long"> 
+	 	select count(1) <include refid="selectAutoPerformSQLBody"/>
+	 </select>
+	 <select id="selectAutoPerform" resultMap="PassCode_BaseResultMap" parameterClass="java.util.HashMap"> 
+		SELECT *
+		  FROM (SELECT T.*, ROWNUM AS ROWNUM1
+		          FROM (select pc.*
+		                  <include refid="selectAutoPerformSQLBody"/>
+		                ) T
+		         WHERE ROWNUM &lt;= #end#)
+		 WHERE ROWNUM1 &gt;= #start#
+
+	 </select>
+	 
+	 <select id="selectApplyCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+        select count(*) from PASS_CODE where (STATUS='SUCCESS' or STATUS='DESTROYED')
+        	<isNotNull prepend=" and" property="objectId">
+					OBJECT_ID=#objectId#
+			</isNotNull>
+			<isNotNull prepend=" and" property="orderId">
+					ORDER_ID=#orderId#
+			</isNotNull>
+     </select>
+    
+	  <select id="selectPerformTotalByObjectId" resultClass="java.lang.Integer" parameterClass="java.util.HashMap" >
+	    SELECT count(*) FROM ORD_PERFORM where 
+	    ORD_PERFORM.OBJECT_ID = #objectId# AND ORD_PERFORM.OBJECT_TYPE = #objectType# 
+  	  </select>
+  	  
+  	  
+  	   <select id="PassCode_selectByOrderIdStatus" resultMap="PassCode_BaseResultMap" parameterClass="Long">
+			select * from PASS_CODE where ORDER_ID=#orderId# and status='SUCCESS'
+		</select>
+	
+	<select id="selectReapplyOrder" resultClass="java.util.List">  
+		  select A.ORDER_ID from (
+			select ORDER_ID from ORD_ORDER O where O.PASSPORT='true'
+		 and O.ORDER_STATUS!='CANCEL' and 
+		 to_date(to_char((sysdate)-5 ,'yyyy-mm-dd hh24:mi'),'yyyy-mm-dd hh24:mi')
+		 &lt;=to_date(to_char(O.CREATE_TIME,'yyyy-mm-dd hh24:mi'),'yyyy-mm-dd hh24:mi') 
+		 ) A where A.order_id not in(select Order_Id from  PASS_CODE B where 
+		  to_date(to_char((sysdate)-(((10/24)/60) ),'yyyy-mm-dd hh24:mi'),'yyyy-mm-dd hh24:mi')&lt;=
+		  to_date(to_char(B.Create_Time,'yyyy-mm-dd hh24:mi'),'yyyy-mm-dd hh24:mi')
+	 	)
+	 </select>
+
+	  <select id="selectByReapplyTime" resultMap="PassCode_BaseResultMap" parameterClass="java.util.HashMap">
+		select * 
+		from PASS_CODE 
+		where STATUS='TEMP_FAILED'
+		and REAPPLY_TIME <![CDATA[<]]> sysdate
+		and  REAPPLY_COUNT <![CDATA[<]]> 3 and REAPPLY is null and REAPPLY_TIME is not null
+	  </select>
+	
+	  <select id="selectVouchersByProviderId"
+		resultMap="Ext_BaseResultMap1"
+		parameterClass="java.util.HashMap">
+		    SELECT * FROM (
+				SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+			 SELECT A.TERMINAL_CONTENT,
+			 D.CODE_ID,D.SERIALNO,D.CREATE_TIME,D.STATUS,D.CODE,
+             D.ADD_CODE,D.ADD_CODE_MD5,D.MOBILE,D.SMS_CONTENT,
+             D.VALID_TIME,D.INVALID_TIME,D.URL,D.EXT_ID,D.OBJECT_ID,D.OBJECT_TYPE,
+             D.STATUS_NO,D.STATUS_EXPLANATION,D.Reapply,D.Code_Image,D.SEND_SMS,D.SEND_ORDERID,D.UPDATE_TIME,D.ORDER_ID,D.REAPPLY_TIME,D.REAPPLY_COUNT,D.CODE_TOTAL,A.TARGET_ID,D.FAILED_TIME
+					 FROM 
+			             (SELECT  B.TARGET_ID,B.CODE_ID, B.TERMINAL_CONTENT FROM  PASS_PORT_CODE B 
+			                    WHERE  B.TARGET_ID in(select TARGET_ID from PASS_DEVICE where PROVIDER_ID=#providerId# 
+			                    					<isNotEmpty prepend=" and " property="deviceNo">
+														device_no=#deviceNo# 
+													</isNotEmpty>
+			                    					group by TARGET_ID ) 
+			                       <isNotEmpty prepend=" and " property="status">
+										  B.STATUS=#status# 
+								   </isNotEmpty>
+			              ) A , PASS_CODE D  where  A.CODE_ID=D.CODE_ID  and D.ADD_CODE is not null
+			       	<isNotEmpty prepend=" and " property="code">
+							  D.CODE=#code#
+					</isNotEmpty>
+         			<isNotEmpty prepend=" and " property="createDate">
+					 D.UPDATE_TIME &gt;= to_date(#createDate#,'yyyy-mm-dd hh24:mi:ss')
+          			and D.UPDATE_TIME &lt;=to_date(to_char(sysdate,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+					</isNotEmpty>
+					<isNotEmpty prepend=" and " property="serialNo">
+					D.SERIALNO =#serialNo#
+					</isNotEmpty>
+
+			   ) T WHERE ROWNUM &lt;= #endRow#
+			)
+			WHERE ROWNUM1 &gt;=#startRow#
+	  </select>
+	  
+ 	 <select id="selectCodeByProviderIdAndValidTime"
+		resultMap="PassCode_BaseResultMap"
+		parameterClass="java.util.HashMap">
+	       SELECT D.*
+              FROM (
+            		 SELECT  B.Target_Id,B.CODE_ID,B.VALID_TIME FROM  PASS_PORT_CODE B 
+                    	WHERE  B.TARGET_ID in(select TARGET_ID from PASS_DEVICE where PROVIDER_ID=#providerId# group by TARGET_ID ) 
+                       and B.STATUS='UNUSED' 
+                     <isNotEmpty prepend=" and " property="startTime">
+					   B.VALID_TIME &gt;=to_date(#startTime#,'yyyy-mm-dd') and B.VALID_TIME &lt;=to_date(#endTime#,'yyyy-mm-dd')
+					</isNotEmpty>
+					<isNotEmpty prepend=" and " property="codeId">
+					   B.CODE_ID=#codeId#
+					</isNotEmpty>
+					
+              ) A , PASS_CODE D where A.CODE_ID=D.CODE_ID and D.Status='SUCCESS' 
+              	<isNotEmpty prepend=" and " property="code">
+					   D.CODE=#code#
+			     </isNotEmpty>
+	  </select>
+	  
+	 <select id="selectRowCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+				select count(A.CODE_ID) from ORD_ORDER O,PASS_CODE A
+				 inner join (
+				 SELECT DISTINCT A.Code_Id,C.NAME AS PROVIDER_NAME ,C.PROVIDER_ID,A.STATUS,A.INVALID_TIME AS INVALIDTIME,C.AUTO_PERFORM AS AUTO_PERFORM
+				      FROM PASS_PORT_CODE A ,
+				      PASS_PROVIDER C, 
+				      PASS_DEVICE D
+				      WHERE A.TARGET_ID=D.TARGET_ID
+				      AND D.PROVIDER_ID=C.PROVIDER_ID
+				      ) B on(A.Code_Id=B.Code_Id) where A.ORDER_ID = O.ORDER_ID
+				<isNotEmpty prepend=" and" property="serialNo">
+					A.SERIALNO like '%'||#serialNo#||'%'
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="createBeginTime">
+					A.CREATE_TIME>=#createBeginTime#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="createEndTime">
+					A.CREATE_TIME<![CDATA[<]]>#createEndTime#+1
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="status">
+					A.STATUS=#status#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="passportStatus">
+					B.STATUS=#passportStatus#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="addCode">
+					A.ADD_CODE like '%'||#addCode#||'%'
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="mobile">
+					A.MOBILE=#mobile#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="orderId">
+					A.ORDER_ID=#orderId#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="codeId">
+					A.CODE_ID=#codeId#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="providerId">
+					B.PROVIDER_ID=#providerId#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="orderChannel">
+					O.CHANNEL=#orderChannel#
+				</isNotEmpty>
+				<isEqual prepend=" and" property="isAutoPerform" compareValue="true">
+					B.AUTO_PERFORM='true'
+				</isEqual>
+				<isEqual prepend=" and" property="isInvalideTime" compareValue="true">
+					B.INVALIDTIME &lt;= sysdate
+				</isEqual>
+    </select>
+    
+	<select id="PassCode_selectByParams"
+		resultMap="Ext_BaseResultMap"
+		parameterClass="java.util.HashMap">
+			<isNotEmpty property="_startRow">
+		    SELECT * FROM (
+				SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+			</isNotEmpty>
+				select A.*,B.PROVIDER_NAME,B.INVALIDTIME,B.AUTO_PERFORM from ORD_ORDER O,PASS_CODE A
+				 inner join (
+				 SELECT DISTINCT A.Code_Id,C.NAME AS PROVIDER_NAME ,C.PROVIDER_ID,A.STATUS,A.INVALID_TIME AS INVALIDTIME,C.AUTO_PERFORM AS AUTO_PERFORM
+				      FROM PASS_PORT_CODE A ,
+				      PASS_PROVIDER C, 
+				      PASS_DEVICE D
+				      WHERE A.TARGET_ID=D.TARGET_ID
+				      AND D.PROVIDER_ID=C.PROVIDER_ID
+				      ) B on(A.Code_Id=B.Code_Id) where A.ORDER_ID = O.ORDER_ID
+				<isNotEmpty prepend=" and" property="serialNo">
+					A.SERIALNO like '%'||#serialNo#||'%'
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="createBeginTime">
+					A.CREATE_TIME>=#createBeginTime#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="createEndTime">
+					A.CREATE_TIME<![CDATA[<]]>#createEndTime#+1
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="status">
+					A.STATUS=#status#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="passportStatus">
+					B.STATUS=#passportStatus#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="addCode">
+					A.ADD_CODE like '%'||#addCode#||'%'
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="mobile">
+					A.MOBILE=#mobile#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="orderId">
+					A.ORDER_ID=#orderId#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="codeId">
+					A.CODE_ID=#codeId#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="providerId">
+					B.PROVIDER_ID=#providerId#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and" property="orderChannel">
+					O.CHANNEL=#orderChannel#
+				</isNotEmpty>
+				<isEqual prepend=" and" property="isAutoPerform" compareValue="true">
+					B.AUTO_PERFORM='true'
+				</isEqual>
+				<isEqual prepend=" and" property="isInvalideTime" compareValue="true">
+					B.INVALIDTIME &lt;= sysdate
+				</isEqual>
+					order by 
+					<isEqual prepend=" " property="status" compareValue="UNDESTROYED">
+						A.FAILED_TIME desc nulls last, 
+					</isEqual>
+					A.CODE_ID desc 
+			<isNotEmpty property="_startRow">			
+				) T WHERE ROWNUM &lt;= #_endRow#
+			)
+			WHERE ROWNUM1 &gt;=#_startRow#
+			</isNotEmpty>
+	</select>
+
+
+    <select id="PassCode_selectBySerialNo"
+		resultMap="PassCode_BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from PASS_CODE where SERIALNO=#serialNo#
+	</select>
+	
+    <select id="PassCode_selectByEventId"
+		resultMap="PassCode_BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select c.* from PASS_CODE c, PASS_EVENT e where e.CODE_ID=c.CODE_ID and e.EVENT_ID=#eventId#
+	</select>
+	
+    <select id="PassCode_selectByAddCodeMd5"
+		resultMap="PassCode_BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from PASS_CODE where ADD_CODE_MD5=#addCodeMd5#
+	</select>
+	
+	<select id="getPassCodeByCodeId"
+		resultMap="PassCode_BaseResultMap"
+		parameterClass="Long">
+		select * from PASS_CODE where  CODE_ID=#codeId#
+	</select>
+	
+	<select id="getPassCodeByOrderId"
+		resultMap="PassCode_BaseResultMap"
+		parameterClass="Long">
+		select * from PASS_CODE where ORDER_ID=#orderId# and ( STATUS='SUCCESS' or code is not null)
+	</select>
+	
+	  <select id="PassCode_selectPassCodeByAddCode"
+		resultMap="PassCode_BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from PASS_CODE where 1=1
+			<isNotEmpty prepend=" and" property="addCodeMd5">
+				ADD_CODE_MD5=#addCodeMd5#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="serialNo">
+				SERIALNO=#serialNo#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="addCode">
+				ADD_CODE=#addCode#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="code">
+				CODE=#code#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="extId">
+				EXT_ID=#extId#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="orderId">
+				ORDER_ID=#orderId#
+			</isNotEmpty>
+	</select>
+
+    <select id="PassCode_getSerialNo" resultClass="Long" >
+		select SERIAL_NO_SEQ.nextval as id from DUAL
+    </select>
+	
+	<select id="PassCode_getAssistNo" resultClass="Long" >
+		select ASSIST_NO_SEQ.nextval as id from DUAL
+    </select>
+
+    <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.pass.PassCode" >
+    <selectKey resultClass="java.lang.Long" keyProperty="codeId" >
+      select PASS_CODE_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    	insert into PASS_CODE
+        <dynamic prepend="(" >
+      <isNotNull prepend="," property="codeId" >
+        CODE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="serialNo" >
+        SERIALNO
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME
+      </isNotNull>
+      
+       <isNotNull prepend="," property="updateTime" >
+        UPDATE_TIME
+      </isNotNull>
+      
+      <isNotNull prepend="," property="status" >
+        STATUS
+      </isNotNull>
+      <isNotNull prepend="," property="code" >
+        CODE
+      </isNotNull>
+      <isNotNull prepend="," property="addCode" >
+        ADD_CODE
+      </isNotNull>
+
+      <isNotNull prepend="," property="mobile" >
+        MOBILE
+      </isNotNull>
+      <isNotNull prepend="," property="smsContent" >
+        SMS_CONTENT
+      </isNotNull>
+      <isNotNull prepend="," property="terminalContent" >
+        TERMINAL_CONTENT
+      </isNotNull>
+       <isNotNull prepend="," property="url" >
+        URL
+      </isNotNull>
+      <isNotNull prepend="," property="addCodeMd5" >
+        ADD_CODE_MD5
+      </isNotNull>
+       <isNotNull prepend="," property="extId" >
+        EXT_ID
+      </isNotNull>
+      
+       <isNotNull prepend="," property="orderId" >
+        ORDER_ID
+      </isNotNull>
+      
+        <isNotNull prepend="," property="objectId" >
+        OBJECT_ID
+      </isNotNull>
+      
+      <isNotNull prepend="," property="objectType" >
+        OBJECT_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="statusNo" >
+        STATUS_NO
+      </isNotNull>
+      <isNotNull prepend="," property="sendSms" >
+        SEND_SMS
+      </isNotNull>
+      <isNotNull prepend="," property="sendOrderid" >
+        SEND_ORDERID
+      </isNotNull>
+      <isNotNull prepend="," property="statusExplanation" >
+        STATUS_EXPLANATION
+      </isNotNull>
+      
+       <isNotNull prepend="," property="reapplyCount" >
+        REAPPLY_COUNT
+      </isNotNull>
+      <isNotNull prepend="," property="codeTotal" >
+        CODE_TOTAL
+      </isNotNull>
+      )
+    </dynamic>
+      values
+    <dynamic prepend="(" >
+       <isNotNull prepend="," property="codeId" >
+        #codeId:LONG# 
+      </isNotNull>
+      <isNotNull prepend="," property="serialNo" >
+        #serialNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        sysdate
+      </isNotNull>
+       <isNotNull prepend="," property="updateTime" >
+        sysdate
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        #status:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="code" >
+        #code:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="addCode" >
+        #addCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        #mobile:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="smsContent" >
+       #smsContent:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="terminalContent" >
+          #terminalContent:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+         #url:VARCHAR#
+      </isNotNull>
+       <isNotNull prepend="," property="addCodeMd5" >
+         #addCodeMd5:VARCHAR#
+      </isNotNull>
+       <isNotNull prepend="," property="extId" >
+         #extId:VARCHAR#
+      </isNotNull>
+      
+      <isNotNull prepend="," property="orderId" >
+        #orderId:LONG#
+      </isNotNull>
+      
+       <isNotNull prepend="," property="objectId" >
+        #objectId:LONG#
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        #objectType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="statusNo" >
+        #statusNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sendSms" >
+        #sendSms:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sendOrderid" >
+        #sendOrderid:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="statusExplanation" >
+        #statusExplanation:VARCHAR#
+      </isNotNull>
+      
+        <isNotNull prepend="," property="reapplyCount" >
+        #reapplyCount:LONG#
+      </isNotNull>
+      <isNotNull prepend="," property="codeTotal" >
+        #codeTotal:LONG#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+   <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.pass.PassCode" >
+    update PASS_CODE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="serialNo" >
+        SERIALNO=#serialNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+       STATUS=#status:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="code" >
+        CODE=#code:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="addCode" >
+        ADD_CODE=#addCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        MOBILE=#mobile:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="smsContent" >
+       SMS_CONTENT=#smsContent:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="terminalContent" >
+          TERMINAL_CONTENT=#terminalContent:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+         URL=#url:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="statusNo" >
+        STATUS_NO=#statusNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="statusExplanation" >
+        STATUS_EXPLANATION=#statusExplanation:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sendSms" >
+        SEND_SMS=#sendSms:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sendOrderid" >
+        SEND_ORDERID=#sendOrderid:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="reapply" >
+        REAPPLY=#reapply:VARCHAR#
+      </isNotNull>
+     <isNotNull prepend="," property="updateTime" >
+        UPDATE_TIME=sysdate
+      </isNotNull>
+       <isNotNull prepend="," property="orderId" >
+        ORDER_ID=#orderId:LONG#
+      </isNotNull>
+      
+       <isNotNull prepend="," property="reapplyTime" >
+       REAPPLY_TIME=#reapplyTime#
+      </isNotNull>
+      <isNotNull prepend="," property="reapplyCount" >
+        REAPPLY_COUNT=#reapplyCount:LONG#
+      </isNotNull>
+      <isNotNull prepend="," property="failedTime" >
+       FAILED_TIME=#failedTime#
+      </isNotNull>
+    </dynamic>
+    where CODE_ID = #codeId:LONG#
+  </update>
+  
+    <update id="updateBySerialNo" parameterClass="com.lvmama.comm.bee.po.pass.PassCode" >
+    update PASS_CODE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="status" >
+       STATUS=#status:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="code" >
+        CODE=#code:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="addCode" >
+        ADD_CODE=#addCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        MOBILE=#mobile:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="smsContent" >
+       SMS_CONTENT=#smsContent:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="terminalContent" >
+          TERMINAL_CONTENT=#terminalContent:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+         URL=#url:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="addCodeMd5" >
+        ADD_CODE_MD5=#addCodeMd5:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="extId" >
+        EXT_ID=#extId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="statusNo" >
+        STATUS_NO=#statusNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="statusExplanation" >
+        STATUS_EXPLANATION=#statusExplanation:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sendSms" >
+        SEND_SMS=#sendSms:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sendOrderid" >
+        SEND_ORDERID=#sendOrderid:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="codeImage">
+        CODE_IMAGE=#codeImage:BLOB#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime" >
+        UPDATE_TIME=sysdate
+      </isNotNull>
+      <isNotNull prepend="," property="orderId" >
+        ORDER_ID=#orderId:LONG#
+      </isNotNull>
+      <isNotNull prepend="," property="reapplyTime">
+       REAPPLY_TIME=#reapplyTime#
+      </isNotNull>
+      <isNotNull prepend="," property="reapplyCount" >
+        REAPPLY_COUNT=#reapplyCount:LONG#
+      </isNotNull>
+      
+    </dynamic>
+    where SERIALNO=#serialNo:VARCHAR#
+  </update>
+  
+   <update id="updateCodeTotalByOrder" parameterClass="java.util.HashMap">
+    update PASS_CODE set CODE_TOTAL=#codeTotal# where ORDER_ID = #orderId#
+  </update>
+  
+  <update id="updateBatchStauts" parameterClass="com.lvmama.comm.bee.po.pass.PassCode" >
+    update PASS_CODE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="status" >
+       STATUS=#status:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime" >
+        UPDATE_TIME=sysdate
+      </isNotNull>
+    </dynamic>
+    where CODE_ID = #codeId:LONG#
+  </update>
+  
+  <update id="getSyncUpdatePassCount"  parameterClass="java.util.HashMap">
+		update pass_code p
+		   set p.update_time = sysdate
+		 where p.code_id in
+		       (select code_id
+		          from pass_code
+		         where code_id in
+		               (select code_id
+		                  from pass_port_code w
+		                 where 1=1 
+		                 	and w.terminal_content like '%'||#termContent#||'%'
+		                   	and w.valid_time &gt;=#validTime#
+		                   	and status = 'UNUSED')
+		           AND status = 'SUCCESS' 
+		        )
+	</update>	
+  <update id="getUpdatePassCountByCodeId"  parameterClass="java.util.HashMap">
+		update pass_code w
+         set w.status        = 'TEMP_FAILED',
+             w.reapply       = null,
+             w.REAPPLY_TIME  = sysdate,
+             w.REAPPLY_COUNT = 2
+             <isParameterPresent>
+				<isPropertyAvailable property="codelist">
+					<isNotEmpty property="codelist">
+						<iterate property="codelist"
+							prepend="where code_id in " open="(" close=")" conjunction=",">
+							#codelist[]#
+						</iterate>
+					</isNotEmpty>
+				</isPropertyAvailable>
+			</isParameterPresent>
+	</update>	
+  <update id="getUpdatePassCountBySerId"  parameterClass="java.util.HashMap">
+		update pass_code w
+          set w.status = 'FAILED',
+          	  w.reapply = null
+             <isParameterPresent>
+				<isPropertyAvailable property="serList">
+					<isNotEmpty property="serList">
+						<iterate property="serList"
+							prepend="where serialno in " open="(" close=")" conjunction=",">
+							#serList[]#
+						</iterate>
+					</isNotEmpty>
+				</isPropertyAvailable>
+			</isParameterPresent>
+	</update>	
+	
+	
+	<!-- EBK -->
+	<!-- 别名 -->
+	<!-- 查询结果集 -->
+    <resultMap id="passCodeResult" class="com.lvmama.comm.bee.po.pass.PassCode" extends="PassCode_BaseResultMap">
+        <result property="codeId" column="CODE_ID"/>
+        <result property="serialNo" column="SERIALNO"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="status" column="STATUS"/>
+        <result property="code" column="CODE"/>
+        <result property="addCode" column="ADD_CODE"/>
+        <result property="addCodeMd5" column="ADD_CODE_MD5"/>
+        <result property="usedTime" column="USED_TIME"/>
+        <result property="mobile" column="MOBILE"/>
+        <result property="smsContent" column="SMS_CONTENT"/>
+        <result property="validTime" column="VALID_TIME"/>
+        <result property="invalidTime" column="INVALID_TIME"/>
+        <result property="extId" column="EXT_ID"/>
+        <result property="url" column="URL"/>
+        <result property="objectId" column="OBJECT_ID"/>
+        <result property="objectType" column="OBJECT_TYPE"/>
+        <result property="statusNo" column="STATUS_NO"/>
+        <result property="statusExplanation" column="STATUS_EXPLANATION"/>
+        <result property="reapply" column="REAPPLY"/>
+        <result property="terminalContent" column="TERMINAL_CONTENT"/>
+        <result property="codeImage" column="CODE_IMAGE"/>
+        <result property="sendSms" column="SEND_SMS"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="sendOrderid" column="SEND_ORDERID"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="reapplyTime" column="REAPPLY_TIME"/>
+        <result property="reapplyCount" column="REAPPLY_COUNT"/>
+        <result property="codeTotal" column="CODE_TOTAL"/>
+        <result property="failedTime" column="FAILED_TIME"/>
+    </resultMap>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="codeId">
+	             CODE_ID = #codeId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="serialno">
+	             SERIALNO = #serialno#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             CREATE_TIME = #createTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="code">
+	             CODE = #code#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="addCode">
+	             ADD_CODE = #addCode#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="addCodeMd5">
+	             ADD_CODE_MD5 = #addCodeMd5#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="usedTime">
+	             USED_TIME = #usedTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="mobile">
+	             MOBILE = #mobile#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="smsContent">
+	             SMS_CONTENT = #smsContent#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="validTime">
+	             VALID_TIME = #validTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="invalidTime">
+	             INVALID_TIME = #invalidTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="extId">
+	             EXT_ID = #extId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="url">
+	             URL = #url#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="objectId">
+	             OBJECT_ID = #objectId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="objectType">
+	             OBJECT_TYPE = #objectType#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="statusNo">
+	             STATUS_NO = #statusNo#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="statusExplanation">
+	             STATUS_EXPLANATION = #statusExplanation#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="reapply">
+	             REAPPLY = #reapply#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="terminalContent">
+	             TERMINAL_CONTENT = #terminalContent#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="codeImage">
+	             CODE_IMAGE = #codeImage#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="sendSms">
+	             SEND_SMS = #sendSms#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="updateTime">
+	             UPDATE_TIME = #updateTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="sendOrderid">
+	             SEND_ORDERID = #sendOrderid#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="orderId">
+	             ORDER_ID = #orderId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="reapplyTime">
+	             REAPPLY_TIME = #reapplyTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="reapplyCount">
+	             REAPPLY_COUNT = #reapplyCount#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="codeTotal">
+	             CODE_TOTAL = #codeTotal#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTimeBegin">
+	             CREATE_TIME &gt; #createTimeBegin#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTimeEnd">
+	             CREATE_TIME &lt; #createTimeEnd#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="status">
+	             STATUS = #status#
+	       </isNotEmpty>
+			<isNotEmpty prepend="AND" property="codeList">
+				<iterate property="codeList"
+					prepend=" code_id in " open="(" close=")" conjunction=",">
+					#codeList[]#
+				</iterate>
+			</isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	CODE_ID ,
+        	SERIALNO ,
+        	CREATE_TIME ,
+        	STATUS ,
+        	CODE ,
+        	ADD_CODE ,
+        	ADD_CODE_MD5 ,
+        	USED_TIME ,
+        	MOBILE ,
+        	SMS_CONTENT ,
+        	VALID_TIME ,
+        	INVALID_TIME ,
+        	EXT_ID ,
+        	URL ,
+        	OBJECT_ID ,
+        	OBJECT_TYPE ,
+        	STATUS_NO ,
+        	STATUS_EXPLANATION ,
+        	REAPPLY ,
+        	TERMINAL_CONTENT ,
+        	CODE_IMAGE ,
+        	SEND_SMS ,
+        	UPDATE_TIME ,
+        	SEND_ORDERID ,
+        	ORDER_ID ,
+        	REAPPLY_TIME ,
+        	REAPPLY_COUNT ,
+        	CODE_TOTAL,
+        	FAILED_TIME
+	    ]]>
+	</sql>
+    <!-- 查询记录 根据特定条件 -->
+    <select id="queryPassCodeByParam"  resultMap="passCodeResult" parameterClass="java.util.Map">
+       select <include refid="commonColumns"/> from PASS_CODE 
+		<include refid="dynamicWhere"/>    
+    </select>
+    <select id="selectPassCodeByAddCode" resultMap="passCodeResult"
+		parameterClass="java.lang.String">
+		SELECT <include refid="commonColumns"/>
+			 FROM PASS_CODE WHERE PASS_CODE.STATUS = 'SUCCESS' AND PASS_CODE.Reapply is null AND PASS_CODE.Add_Code=#addCode#
+	</select>
+	
+	<select id="PassCode_selectByOrderIdAndTargetId" resultMap="PassCode_BaseResultMap" parameterClass="java.util.Map">
+			SELECT C.* FROM PASS_PORT_CODE P,PASS_CODE C WHERE P.CODE_ID=C.CODE_ID
+				AND C.STATUS='SUCCESS' AND C.ORDER_ID=#orderId# AND P.TARGET_ID=#targetId#
+	</select>
+	
+	<select id="checkCodeHasExisting" parameterClass="java.util.Map" resultMap="PassCode_BaseResultMap">
+		select * from pass_code 
+		where
+		to_char(create_time ,'yyyy-mm-dd hh24:mi')>to_char(add_months(create_time,-5),'yyyy-mm-dd hh24:mi') 
+		<isEqual property="codeType" compareValue="add_code" prepend=" and ">
+			add_code=#code# 
+		</isEqual>
+		<isEqual property="codeType" compareValue="code" prepend=" and ">
+			code=#code# 
+		</isEqual>
+	</select>
+	<update id="destoryCode" parameterClass="java.util.Map">
+		update pass_code set status=#status# where serialno=#serialNo#
+	</update>
+	<select id="getAddCodesByEBK" parameterClass="java.util.Map" resultClass="String">
+		select 
+			passcode.add_code 
+		from 
+			pass_device device,
+			pass_code passcode,
+			pass_port_code passport,
+			sup_perform_target target,
+			ord_order ord
+		where 
+			device.device_no=#udid#
+			and target.target_id = device.target_id
+			and passport.target_id = target.target_id
+			and passport.code_id = passcode.code_id
+			and ord.order_id = passcode.object_id
+			and passcode.object_type = 'ORD_ORDER'
+			and ord.order_status = 'NORMAL'
+			and passcode.add_code is not null
+			and passport.status = 'UNUSED'
+			and passcode.status = 'SUCCESS'	
+	</select>
+	
+	<select id="addCodeIsInTarget" parameterClass="java.util.Map" resultClass="hashmap">
+		select 
+		  target.supplier_id,
+		  usr.user_id,
+		  target.target_id,
+		  device.device_id,
+		  device.device_no,
+		  passcode.code_id,
+		  passcode.add_code,
+		  passport.valid_time,
+		  passport.invalid_time 
+		from 
+		  pass_device device ,
+		  pass_code passcode ,
+		  pass_port_code passport ,
+		  sup_perform_target target ,
+		  ebk_user usr
+		
+		where 
+		  device.device_no = #udid#
+		  and device.target_id = target.target_id
+		  and passcode.add_code = #addCode#
+		  and passport.code_id = passcode.code_id
+		  and target.target_id = passport.target_id
+		  and usr.user_id = #userId#
+		  and usr.supplier_id = target.supplier_id
+	</select>
+	
+	<select id="selectRowCountByOrderId" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	 select count(distinct(object_id)) from PASS_CODE where ORDER_ID=#orderId# and ( STATUS='SUCCESS' or code is not null)
+	</select>
+	 
+	<select id="selectByStatusAndTargetId" resultMap="PassCode_BaseResultMap" parameterClass="java.util.Map">
+	
+	</select>
+	
+	
+	<select id="PassCode_selectBySupplierId" resultMap="PassCode_BaseResultMap" parameterClass="java.util.Map">
+		SELECT passcode.*
+			FROM pass_device device,
+			pass_code passcode,
+			pass_port_code passport,
+			sup_perform_target target
+		 WHERE device.target_id = target.target_id
+			and passport.code_id = passcode.code_id
+			and target.target_id = passport.target_id
+			and target.supplier_id = #supplierId#
+			and passcode.status = 'UNDESTROYED'
+	</select>
+	
+	<select id="selectPassCodeListByOrderIdAndStatus" resultMap="PassCode_BaseResultMap" parameterClass="java.util.Map">
+		select * from pass_code
+		<dynamic prepend="where">
+			<isNotEmpty property="status" prepend="and">
+				STATUS=#status#
+			</isNotEmpty>
+			<isNotEmpty property="orderId" prepend="and">
+				ORDER_ID=#orderId#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+</sqlMap>

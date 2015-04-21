@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 定时批次邮件,用于定时的批次任务 -->
+<sqlMap namespace="EDM_SUBSCRIBE_BATCH_JOB">
+	<typeAlias alias="EdmSubscribeBatchJob"
+		type="com.lvmama.comm.pet.po.edm.EdmSubscribeBatchJob" />
+
+	<!-- 更新数据 -->
+	<update id="update" parameterClass="EdmSubscribeBatchJob">
+		<![CDATA[
+		update EDM_SUBSCRIBE_BATCH_JOB
+		   set id = #id#,batch_id = #batchId#,task_id = #taskId#,send_time = #sendTime#,actual_send_time = #actualSendTime#,status = #status#,create_time = #createTime#,msg = #msg#,edm_task_id=#edmTaskId#,fail_count=#failCount#
+		]]>
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="id">
+			  <![CDATA[ id = #id# ]]>
+			</isNotEmpty>
+		</dynamic>
+	</update>
+
+	<!-- 插入数据 -->
+	<insert id="insert" parameterClass="EdmSubscribeBatchJob">
+		<selectKey keyProperty="id" resultClass="java.lang.Long">
+			SELECT
+			EDM_SUBSCRIBE_BATCH_JOB_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+			<![CDATA[
+			insert into EDM_SUBSCRIBE_BATCH_JOB
+			  (id, batch_id, task_id, send_time, actual_send_time, status, create_time, msg, edm_task_id,fail_count)
+			values
+			  (#id#,#batchId#,#taskId#,#sendTime#,#actualSendTime#,#status#,#createTime#,#msg#,#edmTaskId#,#failCount#)
+			]]>
+	</insert>
+
+	<!-- 删除数据 -->
+	<delete id="delete" parameterClass="java.util.Map">
+	<![CDATA[
+		delete from EDM_SUBSCRIBE_BATCH_JOB
+		]]>
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="id">
+			  <![CDATA[ id = #id# ]]>
+			</isNotEmpty>
+		</dynamic>
+	</delete>
+
+	<!-- 查询数量 -->
+	<select id="getModelListCount" parameterClass="java.util.HashMap"
+		resultClass="long">
+		<![CDATA[
+			select count(1)
+			  from EDM_SUBSCRIBE_BATCH_JOB b
+		]]>
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="id">
+			  <![CDATA[ id = #id# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="batchId">
+			  <![CDATA[ batch_id = #batchId# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="taskId">
+			  <![CDATA[ task_id = #taskId# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="sendTime">
+			  <![CDATA[ send_time = #sendTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="actualSendTime">
+			  <![CDATA[ actual_send_time = #actualSendTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+			  <![CDATA[ status = #status# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createTime">
+			  <![CDATA[ create_time = #createTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="msg">
+			  <![CDATA[ msg = #msg# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="edm_task_id">
+			  <![CDATA[ edm_task_id = #edmTaskId# ]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<!-- 分页数据 -->
+	<select id="getModelList" parameterClass="java.util.HashMap"
+		resultClass="EdmSubscribeBatchJob">
+		<![CDATA[
+		select b.*
+			  from (select tb.*, rownum r
+			          from (
+			select id id,batch_id batchId,task_id taskId,send_time sendTime,actual_send_time actualSendTime,status status,create_time createTime,msg msg,edm_task_id edmTaskId,fail_count failCount	       	       
+			  from EDM_SUBSCRIBE_BATCH_JOB
+		]]>
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="id">
+			  <![CDATA[ id = #id# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="batchId">
+			  <![CDATA[ batch_id = #batchId# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="taskId">
+			  <![CDATA[ task_id = #taskId# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="sendTime">
+			  <![CDATA[ send_time = #sendTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startSendTime">
+			  <![CDATA[ send_time <= #startSendTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="actualSendTime">
+			  <![CDATA[ actual_send_time = #actualSendTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+			  <![CDATA[ status = #status# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createTime">
+			  <![CDATA[ create_time = #createTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="msg">
+			  <![CDATA[ msg = #msg# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="edm_task_id">
+			  <![CDATA[ edm_task_id = #edmTaskId# ]]>
+			</isNotEmpty>
+		</dynamic>
+		<![CDATA[ ) tb) b ]]>
+		<dynamic prepend="">
+			<isNotEmpty prepend="" property="rowstartindex">
+				<isNotEmpty prepend="" property="rowendindex">
+					<![CDATA[ where r>= #rowstartindex# and r <= #rowendindex# ]]>
+				</isNotEmpty>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="searchBySql" resultClass="java.util.HashMap" remapResults="true">
+	 select * from ($value$) where rownum&lt;=200
+	</select>
+</sqlMap>

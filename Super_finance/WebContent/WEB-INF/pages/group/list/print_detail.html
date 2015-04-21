@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>团列表</title>
+	<#assign dialog_inc = true>
+	<#assign autocomplete_inc = true>
+	<#assign grid_inc = true>
+	<#assign datepicker_inc = true>
+	<#include "/common/define.html"/>
+	<script type="text/javascript">
+		$(function(){
+			$(document.body).ready(function(){
+				$.get("/finance/group/list/budget/"+encodeURIComponent('${groupCode}')+"/${type}.htm",
+		    			function(data){
+		    				window.document.body.innerHTML=data;
+		    				window.print();window.close();
+		    			});
+		    		});
+			})
+	</script>
+</head>
+<body>
+</body>
+</html>

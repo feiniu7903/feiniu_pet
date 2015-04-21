@@ -1,0 +1,11 @@
+<?page title="Message Sender" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./messageSendWin"?>
+<zk>
+<window id="messageSendWin" title="Message Sender" border="normal" apply="com.lvmama.back.web.utils.MessageSendAction">
+	
+	<longbox width="200px;" id="objectId" maxlength="30" value="@{saction.objectId}"/>
+	<listbox mold="select" rows="1" id="typeListbox" onSelect="saction.changeType(self.selectedItem.value)">
+	</listbox>
+	<button label="发送" width="100px" onClick="saction.send();"/>
+</window>
+</zk>

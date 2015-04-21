@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CLIENT_ORDER_REPORT" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.client.ClientOrderReport" >
+    <result column="ID" property="id" />
+    <result column="UDID" property="udid" />
+    <result column="ORDER_ID" property="orderId" />
+    <result column="CREATED_TIME" property="createdTime" />
+    <result column="CHANNEL" property="channel" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.client.ClientOrderReport" >
+    select ID, UDID, ORDER_ID, CREATED_TIME, CHANNEL
+    from CLIENT_ORDER_REPORT
+    where ID = #id:DECIMAL#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.client.ClientOrderReport" >
+    delete from CLIENT_ORDER_REPORT
+    where ID = #id:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.client.ClientOrderReport" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      select CLIENT_ORDER_REPORT_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into CLIENT_ORDER_REPORT (ID, UDID, ORDER_ID, CHANNEL)
+    values (#id:DECIMAL#, #udid:VARCHAR#, #orderId:DECIMAL#, #channel:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.client.ClientOrderReport" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      select CLIENT_ORDER_REPORT_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into CLIENT_ORDER_REPORT
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="udid" >
+        UDID
+      </isNotNull>
+      <isNotNull prepend="," property="orderId" >
+        ORDER_ID
+      </isNotNull>
+   
+      <isNotNull prepend="," property="channel" >
+        CHANNEL
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="udid" >
+        #udid:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="orderId" >
+        #orderId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="channel" >
+        #channel:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.client.ClientOrderReport" >
+    update CLIENT_ORDER_REPORT
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="udid" >
+        UDID = #udid:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="orderId" >
+        ORDER_ID = #orderId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="createdTime" >
+        CREATED_TIME = #createdTime:DATE#
+      </isNotNull>
+      <isNotNull prepend="," property="channel" >
+        CHANNEL = #channel:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where ID = #id:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.client.ClientOrderReport" >
+    update CLIENT_ORDER_REPORT
+    set UDID = #udid:VARCHAR#,
+      ORDER_ID = #orderId:DECIMAL#,
+      CREATED_TIME = #createdTime:DATE#,
+      CHANNEL = #channel:VARCHAR#
+    where ID = #id:DECIMAL#
+  </update>
+  
+  
+  <select id="countByUdid" parameterClass="java.lang.String" resultClass="java.lang.Long">
+      select count(*) from client_order_report where created_time between
+ trunc(sysdate) and trunc(sysdate+1) and udid =#udid#
+  </select>
+  
+   <select id="getTodayOrderByUdid" parameterClass="java.lang.String" resultMap="BaseResultMap">
+      select * from client_order_report where created_time between
+ trunc(sysdate) and trunc(sysdate+1) and udid =#udid#
+  </select>
+  
+</sqlMap>

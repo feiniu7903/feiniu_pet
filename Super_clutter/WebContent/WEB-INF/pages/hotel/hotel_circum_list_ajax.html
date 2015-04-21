@@ -1,0 +1,33 @@
+<#if hotelList?? && hotelList?size&gt;0>
+    <#list hotelList as hotel>
+        <article>
+            <a href="${request.contextPath!}/hotel/hotelDetail.htm?arrivalDate=${arrivalDate!}&departureDate=${departureDate!}&hotelId=${hotel.placeId!}" class="block">
+                <div style="background-image: url(${hotel.images!})" class="pro-pic" title="${hotel.name!}">
+                </div>
+                <div class="pro-info">
+                    <h2>${hotel.name!}</h2>
+                    <p>
+                        <span class="fr value f-color-1">&yen;${hotel.sellPrice!}<span>起</span></span>
+                        <span class="f-color-5">${hotel.placeType!}</span>
+                    </p>
+                    <p>
+                    	<span class="fr f-color-1 rebate">
+                            <i class="ic_fan"></i>
+                            <em>&yen;${hotel.cashBack!}</em>
+                    	</span>
+                        <#if hotel.commentGoodRate?? && hotel.commentGoodRate !="">
+                        	<span class="t_per">好评率${hotel.commentGoodRate!}</span>
+                        <#else>
+                        	<span class="t_per">暂无点评</span>
+                        </#if>
+                    </p>
+                    <p><span class="fr">&nbsp;&nbsp;<#if hotel.distance?? && hotel.distance gt 0><em class="hotel_distance">${hotel.distance!}</em>m</#if></span><span class="address">${hotel.address!}</span></p>
+                </div>
+            </a>
+        </article>
+    </#list>
+</#if>
+ <input id="tmp_p" type="hidden" value="${pageIndex!}"/>
+<#if !hasNext  >
+    <input id="lastPage_flag" type="hidden" value="1"/>
+</#if>

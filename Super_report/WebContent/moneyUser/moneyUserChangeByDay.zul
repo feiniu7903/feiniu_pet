@@ -1,0 +1,129 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<zk>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit"?>
+<window  title="现金账户日报表" border="normal" apply="com.lvmama.report.web.moneyUser.MoneyUserAction">
+	<grid>
+		<columns>
+			<column width="80px"></column>
+			<column width="300px"></column>
+			<column width="60px"></column>
+			<column width="100px"></column>
+			<column width="90px"></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>时间:</hbox>
+				<hbox>
+					<datebox value="@{saction.paramMap.startDate}"/> 
+					-- 
+					<datebox value="@{saction.paramMap.endDate}"/>
+				</hbox>
+				<hbox>类型：</hbox>
+				<hbox>
+					<listbox mold="select"
+						onSelect='saction.paramMap.put("type",self.selectedItem.value);'>
+						<listitem
+							label="请选择"
+							value=""
+							selected="true" />
+						<listitem
+							label="现金充值"
+							value="RECHARGE" />
+						<listitem
+							label="现金支付"
+							value="PAY" />
+						<listitem
+							label="现金提现"
+							value="DRAW" />
+						<listitem
+							label="现金退款"
+							value="REFUND" />
+						<listitem
+							label="奖金返现"
+							value="BONUS_RETURN" />
+						<listitem
+							label="奖金支付"
+							value="BONUS_BALANCE_PAY" />
+						<listitem
+							label="奖金退款"
+							value="BONUS_REFUND" />
+					</listbox>
+				</hbox>
+				<hbox>
+					<button  label="查询" id="searchBtn" width="80px" 
+						onClick="_paging.activePage=0;saction.queryMoneyUserChangesTV()"></button>
+				</hbox>
+				<hbox>
+					<button  label="导出报表" 
+						id="exportBtn" width="100px" 
+						onClick="saction.doExport()"></button>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+		
+	<listbox  
+		model="@{saction.moneyUserChangeList, load-after='searchBtn.onClick,_paging.onPaging'}">
+		<listhead>
+			<listheader label="交易时间"/>
+			<listheader label="账户类型" />
+			<listheader label="借方金额（元）" />
+			<listheader label="贷方金额（元）" />
+			<listheader label="余额（元）" />
+			<listheader label="类型" />
+			<listheader label="渠道" />
+			<listheader label="流水号" width="200px"/>
+			<listheader label="订单号" />
+			<listheader label="用户名" />
+			<listheader label="备注" />
+		</listhead>
+		<listitem height="25px" width="150px" self="@{each='item'}">
+			<listcell label="@{item.createTimeFormat}"></listcell>
+			<listcell label="@{item.accountTypeName}"></listcell>
+			<listcell label="@{item.debitAmount}"></listcell>
+			<listcell label="@{item.creditAmount}"></listcell>
+			<listcell label="@{item.totalBalance}"></listcell>
+			<listcell label="@{item.typeName}"></listcell>
+			<listcell label="@{item.paymentGatewayName}"></listcell>
+			<listcell label="@{item.serial}"></listcell>
+			<listcell label="@{item.orderNo}"></listcell>
+			<listcell label="@{item.userName}"></listcell>
+			<listcell label="@{item.memo}"></listcell>
+		</listitem>
+	</listbox>
+	
+	<toolbar>
+		<grid style="border:0">
+			<rows >
+				<row >
+					<cell width="10px">
+						共<label id="_totalRowCountLabel" />条	
+					</cell>
+					<cell width="200px">
+						<paging id="_paging" pageSize = "20" 
+							onPaging='saction.queryMoneyUserChangesTV();'/>
+					</cell>
+				</row>
+			</rows>
+		</grid>
+	</toolbar>
+	
+	
+	<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="8px">
+					借方发生总额:<label id="debitAmount" />	
+				</cell>
+				<cell width="8px">
+					贷方发生总额:<label id="creditAmount" />	
+				</cell>
+				<cell width="8px">
+					发生总额:<label id="balanceAmount" />	
+				</cell>
+			</row>
+		</rows>
+	</grid>
+		
+</window>
+</zk>

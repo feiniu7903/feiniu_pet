@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>奖金账户-驴妈妈手机站</title>
+<#include "../common/define_v3.html">
+</head>
+
+<body>
+<div class="wrap">
+	<header class="header">
+    	<a href="javascript:history.back();" class="back"><span class="ic_back"></span></a>
+        <h1>奖金账户</h1>
+        <section class="header_alice">
+   			<a href="http://${hostName}" class="btn1"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a>
+   		</section>
+    </header>
+    <section class="coupon_main">
+       <#if bonus??>
+ 		   	<dl class="reward_li">
+            	<dt><span class="ic_reward"></span><em>奖金帐户余额</em><b>￥${bonus.bonusBalanceYuan!}</b></dt>
+                <dd><a href="${request.contextPath!}/user/bonusInfo.htm?bonusType=income"><b>收入记录</b><i>(${bonus.incomeCount!}笔）</i><span class="ic_ri"></span></a></dd>
+                <dd><a href="${request.contextPath!}/user/bonusInfo.htm?bonusType=pay"><b>支出记录</b><i>(${bonus.paymentCount!}笔）</i><span class="ic_ri"></span></a></dd>
+                <dd><a href="${request.contextPath!}/user/bonusInfo.htm?bonusType=refund"><b>退款记录</b><i>(${bonus.refundCount!}笔）</i><span class="ic_ri"></span></a></dd>
+            	<dt class="reward_ti2">帮助</dt>
+                <dd><a href="${request.contextPath!}/mobile/html5/help.do?pageName=bonus&firstChannel=CLIENT"><b>如何玩转奖金</b><span class="ic_ri"></span></a></dd>
+            </dl>
+            
+        <#else>
+			<#assign no_data_msg="暂时无法获取奖金账号数据!">
+		    <#include "../common/no_data_list.html">
+	    </#if>
+    </section>
+    
+   <!-- footer -->
+   <#include "../common/footer_v3.html"/>
+</div>
+</body>
+</html>

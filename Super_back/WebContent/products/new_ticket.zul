@@ -1,0 +1,84 @@
+<?page title="new product" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./newprodticket"?>
+<?component name="editbase" macroURI="/products/edit_base.zul" inline="true"?>
+<?component name="lvmama_prodtarget" macroURI="/macors/prodtarget.zul"?>
+<zk>
+	<window id="newprodticket" border="normal" width="100%"
+		apply="com.lvmama.back.web.product.EditProductAction">
+		<space />
+		<editbase />
+		<space />
+		<groupbox style="border: none;">
+			<caption label="特征描述" />
+			<grid fixedLayout="true" width="100%">
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>门票类型：</hbox>
+						<hbox>
+							<radiogroup id="subProductType"	selectedItem="@{saction.product.subProductType}">
+								<radio label="单门票" value="SINGLE"
+									checked="true" />
+								<radio label="通票" value="WHOLE" />
+								<radio label="联票" value="UNION" />
+								<radio label="套票" value="SUIT" />
+							</radiogroup>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<space />
+		
+		<groupbox style="border: none">
+	<caption label="标的信息" />
+	<groupbox style="border: true">
+		<longbox id="placeId" visible="false"/>
+		<lvmama_prodtarget />
+		<button id="doAddPlace" width="100px" label="新增" onClick="saction.doInsertPlace(placeId.value);"/>
+		<button id="refreshPlaceList" visible="false" />
+		<listbox fixedLayout="true" model="@{saction.placeList,load-after='refreshPlaceList.onClick'}">
+		<listhead>
+			<listheader label="编号" width="5%"/>
+			<listheader label="名称" />
+			<listheader label="出发地" width="8%"/>	
+			<listheader label="目的地" width="8%"/>
+			<listheader label="操作" />
+		</listhead>
+		<listitem self="@{each='place'}" value="@{place}" height="25px">
+			<listcell label="@{place.placeId}" />
+			<listcell label="@{place.placeName}"/>
+			<listcell label="@{place.from}"/>
+			<listcell label="@{place.to}"/>
+			<listcell>
+				<a label="删除" style="color:blue"
+					onClick='saction.doDeletePlace(self.getAttribute("placeId"));'>
+					<custom-attributes placeId="@{place.placeId}" />
+				</a>
+				|
+				<a label="出发地" style="color:blue" onClick='saction.setPlaceFrom(self.getAttribute("placeId"));'>
+					<custom-attributes placeId="@{place.placeId}" />
+				</a>
+				|
+				<a label="目的地" style="color:blue"
+					onClick='saction.setPlaceTo(self.getAttribute("placeId"));'>
+					<custom-attributes placeId="@{place.placeId}" />
+				</a>
+			</listcell>
+		</listitem>
+
+	</listbox>
+	
+	</groupbox>
+	</groupbox>
+	
+		<toolbar id="bottomTool" align="center">
+			<button id="save" width="100px" onClick='checkValue();' label="提交" />
+			<button id="cancel" width="100px" label="取消"
+				onClick="win_editprod.detach();" />
+		</toolbar>
+	</window>
+</zk>

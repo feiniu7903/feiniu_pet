@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="INS_INSURANT" >
+	<resultMap id="InsInsurantMap" class="com.lvmama.comm.pet.po.ins.InsInsurant" >
+		<result column="insurant_id" property="insurantId"/>
+		<result column="policy_id" property="policyId"/>
+		<result column="order_id" property="orderId"/>
+		<result column="name" property="name"/>
+		<result column="sex" property="sex"/>
+		<result column="birthday" property="birthday"/>
+		<result column="cert_type" property="certType"/>
+		<result column="cert_no" property="certNo"/>
+		<result column="mobile_number" property="mobileNumber"/>
+		<result column="person_type" property="personType"/>
+	</resultMap>
+	
+	<sql id="reuse_query_sql"> 
+		FROM (SELECT * FROM ins_insurant WHERE 1 = 1
+		<isNotEmpty property="insurantId" prepend=" AND "> insurant_id = #insurantId# </isNotEmpty>
+		<isNotEmpty property="orderId" prepend=" AND "> order_id = #orderId# </isNotEmpty>
+		<isNotEmpty property="policyId" prepend=" AND "> policy_id = #policyId# </isNotEmpty>
+		) insurant
+    </sql>	
+  
+	<select id="count" parameterClass="java.util.Map" resultClass="long">
+		SELECT COUNT(insurant_id)
+		<include refid="reuse_query_sql"/>  	  
+	</select>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="InsInsurantMap">
+		<isNotEmpty property="skipResults">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT 
+			rownum r,
+			insurant.*
+		<include refid="reuse_query_sql"/>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="maxResults" >rownum &lt;= #maxResults# </isNotEmpty> 
+		</dynamic>
+		<isNotEmpty property="skipResults">
+			)
+		</isNotEmpty>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="skipResults" prepend=" AND "> r &gt; #skipResults# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="queryByPK" parameterClass="long" resultMap="InsInsurantMap">
+		SELECT * FROM ins_insurant where insurant_id = #id#
+	</select>
+
+	<update id="update" parameterClass="com.lvmama.comm.pet.po.ins.InsInsurant">
+		UPDATE ins_insurant
+		<dynamic prepend="SET" >
+			<isNotNull prepend="," property="policyId" >policy_id = #policyId# </isNotNull>
+			<isNotNull prepend="," property="orderId" >order_id = #orderId# </isNotNull>
+			<isNotNull prepend="," property="name" >name = #name# </isNotNull>
+			<isNotNull prepend="," property="birthday" >birthday = #birthday# </isNotNull>
+			<isNotNull prepend="," property="sex" >sex = #sex# </isNotNull>
+			<isNotNull prepend="," property="certType" >cert_type = #certType# </isNotNull>
+			<isNotNull prepend="," property="certNo" >cert_no = #certNo# </isNotNull>
+			<isNotNull prepend="," property="mobileNumber">mobile_number = #mobileNumber#</isNotNull>
+			<isNotNull prepend="," property="personType">person_type = #personType#</isNotNull>
+		</dynamic>
+		 WHERE insurant_id = #insurantId#
+	</update>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.ins.InsInsurant">
+		<selectKey resultClass="java.lang.Long" keyProperty="insurantId" >
+			select ins_insurant_id_sql.nextval as insurantId from DUAL
+		</selectKey>
+		INSERT INTO ins_insurant
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="insurantId" >insurant_id</isNotNull>
+			<isNotNull prepend="," property="policyId" >policy_id</isNotNull>
+			<isNotNull prepend="," property="orderId" >order_id</isNotNull>
+			<isNotNull prepend="," property="name" >name</isNotNull>
+			<isNotNull prepend="," property="birthday">birthday</isNotNull>
+			<isNotNull prepend="," property="sex" >sex</isNotNull>
+			<isNotNull prepend="," property="certType" >cert_type</isNotNull>
+			<isNotNull prepend="," property="certNo" >cert_no</isNotNull>
+			<isNotNull prepend="," property="mobileNumber">mobile_number</isNotNull>
+			<isNotNull prepend="," property="personType">person_type</isNotNull>
+		</dynamic>
+		<dynamic prepend=") VALUES (" >
+			<isNotNull prepend="," property="insurantId" >#insurantId# </isNotNull>
+			<isNotNull prepend="," property="policyId" >#policyId# </isNotNull>
+			<isNotNull prepend="," property="orderId" >#orderId# </isNotNull>
+			<isNotNull prepend="," property="name" >#name# </isNotNull>
+			<isNotNull prepend="," property="birthday">#birthday#</isNotNull>
+			<isNotNull prepend="," property="sex" >#sex# </isNotNull>
+			<isNotNull prepend="," property="certType" >#certType# </isNotNull>
+			<isNotNull prepend="," property="certNo" >#certNo# </isNotNull>
+			<isNotNull prepend="," property="mobileNumber">#mobileNumber#</isNotNull>
+			<isNotNull prepend="," property="personType">#personType#</isNotNull>
+		)
+		</dynamic>
+	</insert>
+
+	<delete id="delete" parameterClass="java.util.Map">
+		DELETE FROM ins_insurant
+		<dynamic prepend=" WHERE ">
+			<isNotNull prepend=" AND " property="insurantId">insurant_id = #insurantId#</isNotNull>
+			<isNotNull prepend=" AND " property="policyId">policy_id = #policyId#</isNotNull>
+		</dynamic>
+	</delete>
+</sqlMap>

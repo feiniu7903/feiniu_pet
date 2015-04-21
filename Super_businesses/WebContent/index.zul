@@ -1,0 +1,68 @@
+<?page title="Auto Generated index.zul"?>
+<window id="bl_com" height="100%" apply="com.lvmama.businessreply.web.SuperMenuAction">
+
+
+		<borderlayout>
+			<north size="80px">
+				<grid width="100%" style="border: none">
+					<columns>
+						<column width="160px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column valign="bottom"></column>
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<button id="refreshCategory"
+									visible="false">
+								</button>
+								<image style="padding:0 10px;"
+									src="/img/logo.gif" />
+							</hbox>
+							<hbox>
+								<space />
+								<a onClick="saction.logout();">登出</a>
+							</hbox>
+						</row>
+					</rows>
+				</grid>
+			</north>
+
+			<!-- Side bar -->
+			<west width="150px" border="0" flex="true" splittable="true"
+				collapsible="true" margins="0,5,0,0">
+				<div height="100%">
+					<tree id="tree" zclass="z-dottree"></tree>
+					<!--<panel width="100%" height="100%" border="none" title="Navigation">
+						<panelchildren style="padding:5px;">
+						<listbox id="itemList" model="@{saction.resourceList, load-after=refreshCategory.onClick}" onSelect="saction.changeFunc(self.selectedItem.value);" fixedLayout="true" vflex="true" style="border:none;" height="100%">
+						<listhead>
+						<listheader width="27px"/>
+						<listheader/>
+						</listhead>
+						<listitem self="@{each='item'}" value="@{item}" height="32px">
+						<listcell label="@{item.resourceName}" />
+						</listitem>
+						</listbox> 
+						</panelchildren>
+						</panel>
+					-->
+				</div>
+			</west>
+
+			<!-- Content -->
+			<center id="test" flex="true" autoscroll="true">
+				<iframe width="100%" height="100%" id="iframe"
+					src="${saction.currResource }">
+				</iframe>
+			</center>
+		</borderlayout>
+
+</window>

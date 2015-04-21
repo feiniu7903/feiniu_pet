@@ -1,0 +1,43 @@
+<?page title="addTag" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./addTagWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="addTagWin" title="新增标签" border="normal" closable="true" apply="com.lvmama.back.web.tag.AddTagAction">
+		<grid fixedLayout="true">
+			<columns>
+				<column width="150px" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label id="groupName" value="小组名：" />
+					<listbox id="groupListbox" model="@{saction.groups}" mold="select" onSelect="saction.setGroupId(self.selectedItem.value);">
+						<listitem self="@{each='group'}" label="@{group.tagGroupName}" value="@{group.tagGroupId}" />
+					</listbox>
+				</row>
+				<row>
+					<label value="标签名：" />
+					<textbox id="tagName" value="@{saction.tag.tagName}" maxlength="20"  />
+				</row>
+				<row>
+					<label value="标签拼音：" />
+					<textbox id="tagPinYin" value="@{saction.tag.tagPinYin}" maxlength="20"  />
+				</row>
+				<row>
+					<label value="SEQ" />
+					<longbox id="SEQ" maxlength="20" value="@{saction.tag.tagSEQ}"  />
+				</row>
+				<row>
+					<label value="样式ID" />
+					<textbox id="cssId" maxlength="40" value="@{saction.tag.cssId,load-after='groupListbox.onSelect'}"  />
+				</row>
+				<row>
+					<label value="标签描述" />
+					<textbox value="@{saction.tag.description}" rows="5" width="600px" maxlength="2000"></textbox>
+				</row>
+			</rows>
+		</grid>
+		<toolbar id="bottomTool" align="center">
+			<button id="submit" label="提交" onClick="saction.addTag()" />
+		</toolbar>
+	</window>
+</zk>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PRODUCT_GROUP" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProductGroup" >
+    <result column="GROUP_ID" property="groupId" />
+    <result column="GROUP_NAME" property="groupName" />
+    <result column="NECESSARY" property="necessary" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProductGroup" >
+     select GROUP_ID, decode(necessary,'true',group_name||'[必选]', group_name||'[非必选]') GROUP_NAME, NECESSARY from PRODUCT_GROUP where GROUP_ID=#groupId#
+  </select> 
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProductGroup" >
+    delete from PRODUCT_GROUP
+    where GROUP_ID = #groupId:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProductGroup" >
+    insert into PRODUCT_GROUP (GROUP_ID, GROUP_NAME, NECESSARY)
+    values (#groupId:DECIMAL#, #groupName:VARCHAR#, #necessary:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.prod.ProductGroup" >
+    insert into PRODUCT_GROUP
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="groupId" >
+        GROUP_ID
+      </isNotNull>
+      <isNotNull prepend="," property="groupName" >
+        GROUP_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="necessary" >
+        NECESSARY
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="groupId" >
+        #groupId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="groupName" >
+        #groupName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="necessary" >
+        #necessary:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.ProductGroup" >
+    update PRODUCT_GROUP
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="groupName" >
+        GROUP_NAME = #groupName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="necessary" >
+        NECESSARY = #necessary:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where GROUP_ID = #groupId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProductGroup" >
+    update PRODUCT_GROUP
+    set GROUP_NAME = #groupName:VARCHAR#,
+      NECESSARY = #necessary:VARCHAR#
+    where GROUP_ID = #groupId:DECIMAL#
+  </update>
+  
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select GROUP_ID, decode(necessary,'true',group_name||'[必选]', group_name||'[非必选]') GROUP_NAME, NECESSARY from PRODUCT_GROUP
+  </select>
+</sqlMap>

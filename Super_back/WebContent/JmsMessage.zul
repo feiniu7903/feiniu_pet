@@ -1,0 +1,8 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./jmsWin"?>
+<zk>
+<window title="new page title" id="jmsWin" border="normal" apply="com.lvmama.back.web.JmsTest">
+<textbox id="msg" value="@{saction.msg }"></textbox>
+<button onClick="jmsWin$composer.sendMsg();" label="发送短消息"></button>
+</window>
+</zk>

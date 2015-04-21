@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="GBK" ?>
+<!DOCTYPE sqlMap
+    PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="RECOMMEND_BLOCK">
+
+    <typeAlias alias="Recommendblock" type="com.lvmama.comm.vo.RecommendBlock" />
+
+	<resultMap class="Recommendblock" id="recommendblockresultMap">
+		<result property="id" column="ID" nullValue=""/>
+		<result property="placeId" column="PLACE_ID" nullValue=""/>
+		<result property="modeType" column="MODE_TYPE" nullValue=""/>
+		<result property="remark" column="REMARK" nullValue=""/>
+		<result property="blockId" column="BLOCK_ID" nullValue=""/>
+		<result property="blockNumber" column="BLOCK_NUMBER" jdbcType="NUMBER" nullValue="0"/>
+		<result property="station" column="STATION" nullValue=""/>
+	</resultMap>
+    <select id="getRecommendBlockById" resultMap="recommendblockresultMap">
+    	select * from recommend_block where id=#id#
+    </select>
+    <select id="getRecommendBlockByBlockIdAndStation" resultMap="recommendblockresultMap">
+    	select * from recommend_block where block_id=#blockId# and station=#station#
+    </select>
+    <!-- 根据placeId查询block -->
+    <select id="getRecommendBlockByPlaceIdAndStation" resultMap="recommendblockresultMap">
+	      select 
+	      		*
+	       from 
+	       		recommend_block rb
+	      where 
+		      	rb.place_id = #placeId#
+		        and rb.station = #station#
+		        and rb.level_ = 1
+    </select>
+</sqlMap>

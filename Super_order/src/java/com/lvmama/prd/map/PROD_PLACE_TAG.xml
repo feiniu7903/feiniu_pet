@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PLACE_TAG">
+	<typeAlias alias="ProdPlaceTag" type="com.lvmama.comm.pet.po.prod.ProdPlaceTag" />
+
+	<resultMap id="BaseResultMap" class="ProdPlaceTag">
+		<result column="PLACE_TAG_ID" property="id" />
+		<result column="PLACE_ID" property="place.placeId"/>
+		<result column="TAG_ID" property="tag.tagId"/>
+		<result column="BEGIN_TIME" property="beginTime" />
+		<result column="END_TIME" property="endTime" />
+	    <result column="CREATOR" property="creator" />
+	</resultMap>
+	
+	<resultMap id="selectByParamsResultMap" class="ProdPlaceTag" extends="BaseResultMap" >
+		<result column="STAGE" property="place.stage" />
+		<result column="NAME" property="place.name" />
+		<result column="TAG_NAME" property="tag.tagName" />
+		<result column="TAG_GROUP_NAME" property="tag.tagGroupName" />
+	</resultMap>
+
+	<sql id="selectByParamsSql">
+		SELECT PPT.*,PT.TAG_NAME,P.STAGE,P.NAME,PTG.TAG_GROUP_NAME 
+		FROM PROD_PLACE_TAG PPT,PROD_TAG PT,PROD_TAG_GROUP PTG ,COM_PLACE P 
+		WHERE PPT.TAG_ID = PT.TAG_ID 
+			AND PT.TAG_GROUP_ID = PTG.TAG_GROUP_ID  
+			AND P.PLACE_ID = PPT.PLACE_ID 
+	</sql>
+	
+	<select id="selectPlaceTagsByPlace" resultMap="selectByParamsResultMap">
+		<include refid="selectByParamsSql"/>
+		AND PPT.PLACE_ID=#placeId#
+	</select>
+	
+  	<select id="selectProdPlaceByParams" parameterClass="ProdPlaceTag" resultMap="selectByParamsResultMap">
+		<include refid="selectByParamsSql"/>
+	</select>
+	
+	<select id="selectByParams" parameterClass="java.util.Map" resultMap="selectByParamsResultMap">
+		select * from (
+			select t.*, ROWNUM rn from (
+				<include refid="selectByParamsSql"/>
+				AND ppt.TAG_ID=#tagId#
+				order by P.STAGE DESC  
+			) t
+				<isNotNull prepend="where" property="_endRow">
+					ROWNUM &lt;= #_endRow#
+				</isNotNull>
+		)
+		<isNotNull prepend="where" property="_startRow">
+			rn &gt;= #_startRow#
+		</isNotNull>
+	</select>
+	
+	<select id="selectByParamsCount" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+		select count(PLACE_TAG_ID) from (
+			<include refid="selectByParamsSql"/>
+			AND ppt.TAG_ID=#tagId#
+		)
+	</select>
+
+	<delete id="deleteProdPlaceTag" parameterClass="ProdPlaceTag">
+	
+		delete from PROD_PLACE_TAG
+		<dynamic prepend="where">
+			<isNotNull prepend="AND" property="id">
+				PLACE_TAG_ID = #id#
+			</isNotNull>
+			<isNotNull prepend="AND" property="place.placeId">
+				TAG_ID = #tag.tagId# AND PLACE_ID=#place.placeId#
+			</isNotNull>
+		</dynamic>
+		
+  </delete>
+	
+
+	<select id="selectByPrimaryKey" resultClass="ProdPlaceTag">
+		select * from
+		PROD_PLACE_TAG where PLACE_TAG_ID =#id#
+	</select>
+	
+	<select id="selectBytagId" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+		select * from
+		PROD_PLACE_TAG where TAG_ID =#tagId#
+	</select>
+	
+	<delete id="deleteByPrimaryKey">
+		delete from PROD_PLACE_TAG where PLACE_TAG_ID = #id#
+	</delete>
+	
+	<delete id="deleteProdPlaceTagTimeOut">
+		delete from prod_place_tag where end_time &lt;to_date(to_char(sysdate,'yyyy-mm-dd'),'yyyy-mm-dd')
+	</delete>
+	
+	<delete id="deleteByPlaceIdAndTagId" parameterClass="ProdPlaceTag">
+		delete
+		from
+		PROD_PLACE_TAG
+		where PLACE_ID = #place.placeId# and TAG_ID=#tag.tagId#
+	</delete>
+
+	<insert id="insertSelective" parameterClass="ProdPlaceTag">
+		<selectKey resultClass="java.lang.Long" keyProperty="id">
+			select
+			PROD_PLACE_TAG_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into PROD_PLACE_TAG
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="id">
+				PLACE_TAG_ID
+			</isNotNull>
+			<isNotNull prepend="," property="place.placeId">
+				PLACE_ID
+			</isNotNull>
+			<isNotNull prepend="," property="tag.tagId">
+				TAG_ID
+			</isNotNull>
+			<isNotNull prepend="," property="beginTime">
+				BEGIN_TIME
+			</isNotNull>
+			<isNotNull prepend="," property="endTime">
+				END_TIME
+			</isNotNull>
+			<isNotNull prepend="," property="creator">
+				CREATOR
+			</isNotNull>
+			)
+		</dynamic>
+		values
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="id">
+				#id#
+			</isNotNull>
+			<isNotNull prepend="," property="place.placeId">
+				#place.placeId#
+			</isNotNull>
+			<isNotNull prepend="," property="tag.tagId">
+				#tag.tagId#
+			</isNotNull>
+			<isNotNull prepend="," property="beginTime">
+				#beginTime#
+			</isNotNull>
+			<isNotNull prepend="," property="endTime">
+				#endTime#
+			</isNotNull>
+			<isNotNull prepend="," property="creator">
+				#creator#
+			</isNotNull>
+			)
+		</dynamic>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterClass="ProdPlaceTag">
+		update PROD_PLACE_TAG
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="place.placeId">
+				PLACE_ID=#place.placeId#
+			</isNotNull>
+			<isNotNull prepend="," property="tag.id">
+				TAG_ID=#tag.id#
+			</isNotNull>
+			<isNotNull prepend="," property="beginTime">
+				BEGIN_TIME = #beginTime#
+			</isNotNull>
+			<isNotNull prepend="," property="endTime">
+				END_TIME = #endTime#
+			</isNotNull>
+			<isNotNull prepend="," property="creator">
+				CREATOR = #creator#
+			</isNotNull>
+		</dynamic>
+		where PLACE_TAG_ID = #id#
+	</update>
+
+	<select id="selectByTagId" resultMap="BaseResultMap">
+		select * from
+		PROD_PLACE_TAG where TAG_ID=#tagId#
+	</select>
+
+	<select id="selectPlaceTagByPlaceIdAndTagGroupId" resultMap="BaseResultMap">
+		select ppt.* 
+		from PROD_PLACE_TAG PPT,PROD_TAG PT 
+		WHERE PT.TAG_ID=PPT.TAG_ID
+			AND PT.TAG_GROUP_ID=#tagGroupId#
+			AND PPT.PLACE_ID=#placeId#
+	</select>
+
+	<select id="selectPlaceTagByPlaceIdAndTagId" resultMap="BaseResultMap">
+		select ppt.* 
+		from PROD_PLACE_TAG PPT 
+		WHERE PPT.TAG_ID=#tag.tagId#
+		  AND PPT.PLACE_ID=#place.placeId#
+	</select>
+</sqlMap>

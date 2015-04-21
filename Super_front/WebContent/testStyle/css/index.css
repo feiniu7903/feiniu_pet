@@ -1,0 +1,179 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+.tcBox{ margin-top:15px;}
+.tcNavBox{ height:36px; border-bottom:2px solid #ee0088;}
+.tcNav{ height:36px;}
+.tcNav li{ float:left; height:35px; line-height:35px; font-size:14px; font-weight:bold; padding:0 30px; color:#333; background:#f3f3f3; border:#c6c6c6 solid 1px; border-bottom:none; cursor:pointer;}
+.tcNav li.tcNavThis{ background:#999; background:#ee0088; border:#ee0088 solid 1px; border-bottom:none; color:#fff; cursor:default;}
+
+
+.tcListBox{ padding-top:15px; border-left:#ccc solid 1px; border-right:#ccc solid 1px;}
+.taocanBox{ padding:10px; border-bottom:#ccc solid 1px;}
+
+.taocanTab{ width:100%; border:#ccc solid 1px;}
+.taocanTab th{ padding:0 10px; height:25px; line-height:25px; color:#999; background:#f6f6f6; text-align:left; border:#ccc solid 1px;}
+.taocanTab td{ padding:10px; height:25px; line-height:25px; color:#333; background:#fff; text-align:left; border:#ccc solid 1px; vertical-align:middle;}
+.taocanTab td p{ line-height:20px;}
+.taocanTab td b{ font-weight:bold;}
+.taocanTab td p span{ color:#ee0088; margin-right:5px;}
+.taocanTab td samp{ font-size:12px; color:#ff6600; margin-right:10px;}
+.taocanTab td samp i{ font-family:Arial; font-size:14px; font-style:normal; font-weight:bold;}
+.tc_btn{ float:right; margin-right:15px; display:inline-block; width:71px; height:25px; line-height:25px; color:#fff; text-align:center; background:url(../images/tc_btn.gif) no-repeat 0 -25px;}
+.tc_btn:hover{ color:#fff; text-decoration:none; background:url(../images/tc_btn.gif) no-repeat 0 0;}
+.tc_btnNO{ float:right; margin-right:15px; display:inline-block; width:71px; height:25px; line-height:25px; color:#fff; text-align:center; background:url(../images/tc_btnNO.gif) no-repeat 0 -25px;} 
+.tc_btnNO:hover{ color:#fff; text-decoration:none; background:url(../images/tc_btnNO.gif) no-repeat 0 0;}
+.taocanTime{}
+.taocanTime td{ padding:0;}
+.taocanTimeBox{ width:590px; margin:10px auto 10px; height:380px; display:none; position:relative; overflow:hidden;}
+.taocanTimeBox .calendar_free{ padding:0;}
+.tc_btn2{ position:absolute; right:0px; bottom:0; color:#666; text-decoration:underline;}
+
+
+.zuheBox{ display:none;}
+.zuheTop{ height:35px; line-height:35px; padding:0 10px; position:relative; z-index:99;}
+.zuheTimeB{ display:inline-block; width:155px; height:31px; line-height:31px; border:#a7968e solid 2px; padding:0 0 0 10px; margin-right:50px; position:relative;}
+.zuheTimeB i{ float:right; width:44px; height:31px; background:url(../images/riliBnt_bg.gif) no-repeat 0 0; position:relative; cursor:pointer; z-index:99;}
+.zuheNumber{ display:inline-block; vertical-align:middle; height:35px; overflow:hidden;}
+.zuheNumber span{ float:left; margin-top:8px; width:19px; height:19px; line-height:19px; text-align:center; overflow:hidden; font-family:Arial; font-size:20px; cursor:pointer;}
+.numberJian{ background:url(../images/jiajian_bg.gif) no-repeat 0 0;}
+.numberJia{ background:url(../images/jiajian_bg.gif) no-repeat 0 -19px;}
+.zuheNumber input{ float:left; display:inline; width:35px; text-align:center; height:30px; margin:0 10px; padding:0 10px; line-height:30px; border:#a7968e solid 2px; font-size:20px; *height:28px; *line-height:28px;}
+.zuheTimeBox{ width:550px; height:380px; position:absolute; top:33px; left:0; background:#fff; z-index:88; border:#a7968e solid 2px; display:none; overflow:hidden;}
+.zuheTimeBox .calendar_free{ padding:0;}
+
+.zuheTimeBClick{ width:157px; height:35px; border:none; padding:0 0 0 12px;}
+.zuheTimeBClick i{ border:#a7968e solid 2px; border-bottom:#fff solid 2px; background:url(../images/riliBnt_bg.gif) no-repeat 0 -31px;}
+.zuheTimeBClick span{ *display:inline-block; *padding-top:2px;}
+.zuheTimeBClick .zuheTimeBox{ display:block;}
+
+.zuheyuding{ float:right; margin:3px 0 0 0; width:113px; height:29px; background:url(../images/zuheyuding.gif) no-repeat; border:#ef5a15 solid 1px;}
+
+
+
+
+
+
+
+.zuheDay{ padding:10px 10px 0 10px; position:relative; z-index:88;}
+.zuheDay h4{ height:37px; line-height:37px; padding-left:10px; font-family:"微软雅黑"; font-size:16px; border-bottom:#CCC solid 1px; background:url(../images/zuheTitle_bg.gif) repeat-x; font-weight:bold;}
+.zuheDay h4 span{ font-size:14px; margin-left:45px; font-weight:normal;}
+.zuheDayP{ color:#555; line-height:22px; padding:15px;}
+.dayBoxAll{ padding:0 10px 25px 0;}
+.dayBoxAll h6{ height:28px; background:#f7f7f7; line-height:28px; padding-left:10px; font-weight:bold; color:#101010;}
+.dayBox1{ overflow:hidden; zoom:1; padding:10px 0; position:relative;}
+.dayBox1_L{ float:left; margin-left:10px; display:inline; border:#dedede solid 1px;}
+.dayBox1_R{ float:left; margin-left:10px; width:838px;}
+.dayBox1_R h5{ font-size:14px; color:#0066cc; font-weight:bold;}
+.dayBox1_R h5 b{ cursor:pointer;}
+.xingji{ display:inline-block; width:90px; height:16px;}
+.xingji i{ display:inline-block; height:16px; padding:0; width:100%; background:url(../images/xing1.gif) no-repeat left top;}
+.dayTable{ width:100%; margin-top:5px;}
+.dayTable th{ text-align:left; height:25px; line-height:25px; padding:0 10px; background:#f6f6f6; color:#999;}
+.dayTable td{ text-align:left; height:25px; line-height:25px; padding:10px 10px 0;}
+.dayTableText{ display:none; width:100%;}
+.dayTableText td{ background:#FAFAFA; padding:0 20px; border-bottom:#CCC dashed 1px;}
+.dayTableText td p{ display:none; padding:10px 0 5px;}
+.dayTableText td span{ margin-left:20px; color:#0066CC; cursor:pointer;}
+
+.btn_gg{ position:absolute; right:20px; top:35px; display:block; width:64px; height:22px; line-height:22px; color:#fff; text-align:center; border:#ee3388 solid 1px; background:#ff44aa; cursor:pointer;}
+.dayBox1 .btn_gg{ top:69px;}
+.btn_tj{ position:absolute; right:20px; bottom:10px; display:block; width:64px; height:22px; line-height:22px; color:#fff; text-align:center; border:#ee3388 solid 1px; background:#ff44aa; cursor:pointer;}
+.btn_save{ float:right; margin:10px 450px 0 0; display:inline; width:64px; height:22px; line-height:22px; color:#fff; text-align:center; border:#ee3388 solid 1px; background:#ff44aa; cursor:pointer;}
+
+.dayBox2{ overflow:hidden; zoom:1; padding:0 0 10px; position:relative;}
+.dayBox2List{ overflow:hidden; zoom:1;}
+.dayBox2List li{ float:left; margin:10px 0 0 10px; width:380px; height:60px; display:inline; overflow:hidden; zoom:1;}
+.dayBox2_L{ float:left; display:inline; border:#dedede solid 1px;}
+.dayBox2_R{ float:left; margin-left:20px; width:270px;}
+.dayBox2_R h5{ font-size:14px; color:#0066cc; font-weight:bold; line-height:22px; width:250px;overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.dayBox2_R h5 span{ cursor:pointer;}
+.dayBox2_R p{ color:#555; padding:5px 0;}
+.dayBox3{ position:relative; overflow:hidden; zoom:1;}
+.dayBox3 .btn_gg{ top:8px;}
+.dayBox3List{ overflow:hidden; zoom:1;}
+.dayBox3List li{ float:left; margin:10px 0 0 10px; width:380px; display:inline; overflow:hidden; zoom:1; line-height:22px;}
+.dayBox3List li h5{ float:left; font-size:14px; color:#0066cc; font-weight:bold; width:210px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.dayBox3List li h5 span{ cursor:pointer;}
+.dayBox3List li p{ float:left; margin-left:20px;}
+.zuhe_B{ height:52px; background:url(../images/zuhe_B_bg.gif) no-repeat; border-bottom:#ccc solid 1px; border-top:#ccc solid 1px;}
+.zuhe_yh,.zuhe_zj{ float:right; margin-right:20px;}
+.zuhe_yh{ margin-top:22px; color:#5d5d5d; font-size:12px;}
+.zuhe_yh span{ margin-left:5px;}
+.zuhe_zj{ margin-top:6px; font-size:18px; font-family:"微软雅黑"; font-size:16px; color:#555;}
+.zuhe_zj b{ font-family:"微软雅黑"; font-size:28px; color:#ff6600;}
+.zuhe_zj small{ font-size:12px; font-family:"微软雅黑";}
+.zuhe_B .zuheyuding{ margin:10px 20px 0 0;}
+
+
+
+.tanBoxGai{ width:966px; overflow:hidden; position:fixed; top:50px; left:50%; margin-left:-489px; background:#fff; border:#767576 solid 6px; _left:0; _margin-left:0; z-index:999;}
+.zuheDayT{ padding:0 0 10px;}
+.gaiTitle{ font-family:"宋体"; height:37px; line-height:37px; padding-left:10px; font-size:16px; border-bottom:#CCC solid 1px; background:url(../images/zuheTitle_bg.gif) repeat-x; font-weight:bold;}
+.gaiTitle span{ font-size:12px; margin-left:45px; font-weight:normal;}
+.zuheDayT .dayBox1_L{ margin-left:0;}
+.zuheDayT .dayBox1_R{ width:828px;}
+.zuheDayT .dayBox1_R p{ margin-top:5px; line-height:20px;}
+.zuheDayT .dayBoxAll{ width:928px; padding:5px 0 10px 0; border-bottom:#999 dotted 1px;}
+.xuanBnt{ display:inline-block; width:57px; height:22px; line-height:22px; color:#0066cc; border:#cecece solid 1px; text-align:center; background:url(../images/xuanBnt.gif) repeat-x 0 0; cursor:pointer;}
+.zuheDayT .xuanBnt2{ width:45px; padding-left:12px; background:url(../images/xuanBnt.gif) no-repeat 3px -22px #ef008d; border:#ef008d solid 1px; color:#fff;}
+.zuheDayT .dayTable samp{ color:#f48627;}
+.GaiBoxS{ height:422px; padding-left:10px; overflow-y:scroll; position:relative;}
+.tanBoxGaiClose{ display:block; position:absolute; right:10px; top:10px; width:18px; height:18px; background:url(http://pic.lvmama.com/img/common_pop/close.gif) no-repeat 5px 5px; cursor:pointer;}
+
+.jdxqBox{ padding:10px 0 10px 10px; height:412px; overflow:hidden; zoom:1; overflow-y:scroll;}
+.jiudianImg{ float:right; margin-right:5px;}
+.jdxqName{ background:#b7b7b7; padding:5px 10px 10px; width:300px; color:#fff;}
+.jdxqName h4{ line-height:30px; font-weight:bold; font-family:"微软雅黑"; font-size:20px; color:#fff;}
+.jdxqName p{ line-height:20px;}
+.jdxqB{ font-weight:bold; color:#333; padding-left:10px;}
+.jdxqText{ line-height:20px; color:#555; padding:5px 10px 15px;}
+
+
+/*js-popup */
+.js-popup-layer{position:fixed;_position:absolute;z-index:999;overflow:hidden;background:#fff;border:6px solid #767576;}
+.js-popup-title{background:url(../images/zuheTitle_bg.gif) repeat-x scroll 0 0 transparent;border-bottom:1px solid #ccc;font-family:"微软雅黑";font-size:16px;font-weight:bold;height:37px;line-height:37px; position:relative}
+.js-popup-close{background:url(http://pic.lvmama.com/img/common_pop/close.gif) no-repeat scroll 5px 5px transparent;cursor:pointer;display:block;height:18px;position:absolute;right:10px;top:10px;width:18px}
+.js-overlay{position:absolute;z-index:2;width:100%;height:100%;left:0;top:0;opacity:.3;filter:Alpha(opacity=30);background:#000;}
+
+
+
+
+
+
+.superFreeProdJourney{position: relative;}
+.height45{ height:45px;}
+
+.tuan-diamond { display: inline-block; 
+background-position: 0 -142px; 
+height: 12px; 
+overflow: hidden; 
+position: relative; 
+width: 60px; 
+} 
+.tuan-diamond i { 
+background-position: 0 -130px; 
+float: left; 
+height: 12px; 
+width: 78px; 
+} 
+.tuan-diamond i,.tuan-diamond{background-image: url(http://pic.lvmama.com/img/v3/holiday/hotel_img.png); 
+background-repeat: no-repeat;}
+
+.tuan-star,.tuan-star i{background-image: url(http://pic.lvmama.com/img/v3/holiday/hotel_img.png); 
+background-repeat: no-repeat;} 
+.tuan-star { 
+display:inline-block; 
+background-position: -64px -142px; 
+height: 11px; 
+overflow: hidden; 
+position: relative; 
+width: 60px; 
+} 
+.tuan-star i { 
+background-position: -64px -131px; 
+float: left; 
+height: 11px; 
+width: 60px; 
+}

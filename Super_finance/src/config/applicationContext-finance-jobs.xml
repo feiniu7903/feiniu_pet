@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+
+	<!-- 
+	<bean id="createSettlementQueueItemJob" class="com.lvmama.finance.job.CreateSettlementQueueItemJob" />
+	<bean id="createPermOrderSettlementQueueItemJob" class="com.lvmama.finance.job.CreatePermOrderSettlementQueueItemJob" />
+	
+	<bean id="createSettlementQueueItemJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="createSettlementQueueItemJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="createPermOrderSettlementQueueItemJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="createPermOrderSettlementQueueItemJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="createSettlementQueueItemJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="createSettlementQueueItemJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 30 2 * * ? *</value> 
+		</property>
+	</bean>
+	
+	<bean id="createPermOrderSettlementQueueItemJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="createPermOrderSettlementQueueItemJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 */2 * * ? *</value>
+		</property>
+	</bean>
+	
+	<bean lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list> 
+	            <ref local="createSettlementQueueItemJobTimes"/>
+	            <ref local="createPermOrderSettlementQueueItemJobTimes"/>
+			</list>
+		</property>
+	</bean>
+	 -->
+</beans>

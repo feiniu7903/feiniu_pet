@@ -1,0 +1,897 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>	
+ 	<bean id="faxSendJob" class="com.lvmama.back.job.FaxSendJob">
+		<property name="faxServiceProxy" ref="faxServiceProxy"/>
+		<property name="ebkCertificateService" ref="ebkCertificateService"/>
+		<property name="ebkFaxTaskService" ref="ebkFaxTaskService"/>
+		<property name="bCertificateTargetService" ref="bCertificateTargetService"/>
+	</bean>
+		
+	<bean id="faxSendJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="faxSendJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+		<bean id="faxSendJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="faxSendJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 */2 * * * ? *</value> 
+		</property>
+	</bean> 
+   <bean id="createTmallOrderJob" class="com.lvmama.back.job.CreateTmallOrderJob">
+    	 <property name="ordTmallMapService" ref="ordTmallMapService"></property>
+    	 <property name="prodProductService" ref="prodProductService"></property>
+	</bean>
+	<bean id="createTmallOrderFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="createTmallOrderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="createTmallOrderTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="createTmallOrderFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/1 * * * ? *</value> 
+		</property>
+	</bean>
+	
+	<!-- 分销批量下单 每天凌晨1点开始 -->
+	<bean id="batchOrderJob" class="com.lvmama.back.job.BatchOrderJob">
+		<property name="orderBatchService" ref="orderBatchService"/>
+		<property name="prodProductBranchService" ref="prodProductBranchService"/>
+		<property name="orderServiceProxy" ref="orderServiceProxy"/>
+		<property name="payPaymentService" ref="payPaymentService"/>
+		<property name="resourceMessageProducer" ref="resourceMessageProducer"/>
+		<property name="userUserProxy" ref="userUserProxy"/>
+		<property name="distributionTuanService" ref="distributionTuanService"/>
+		<property name="distributionTuanDestroyLogService" ref="distributionTuanDestroyLogService"/>
+		<property name="fsClient" ref="fsClient"/>
+		<property name="passCodeService" ref="passCodeService"/>
+		
+	</bean>
+		
+	<bean id="batchOrderJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="batchOrderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+		<bean id="batchOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="batchOrderJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 50 23 * * ?</value> 
+		</property>
+	</bean> 
+	
+	<bean id="cancelBatchOrderJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="batchOrderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>runCancel</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+		<bean id="cancelBatchOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="cancelBatchOrderJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 30 23 * * ?</value> 
+		</property>
+	</bean> 
+	
+	<!-- 自动更新评论返现值每天凌晨1点开始 -->
+	<bean id="autoUpdateCommentsCashbackJob" class="com.lvmama.back.job.AutoUpdateCommentsCashbackJob">
+		<property name="distributionService" ref="distributionService"/>
+		<property name="distributionProductService" ref="distributionProductService"/>
+		<property name="comLogRemoteService" ref="comLogRemoteService"/>
+	</bean>
+		
+	<bean id="autoUpdateCommentsCashbackJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="autoUpdateCommentsCashbackJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+		<bean id="autoUpdateCommentsCashbackJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="autoUpdateCommentsCashbackJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 0 1 * ?</value> 
+		</property>
+	</bean> 
+	<!-- 淘宝后台下单job配置 -->
+
+	<bean id="downOrderTmallJob" class="com.lvmama.back.job.DownOrderTmallJob">
+    	  <property name="ordTmallMapService" ref="ordTmallMapService"></property>
+    	  <property name="downTmallOrderInterface" ref="downTmallOrderInterface"></property>
+	</bean>
+	<bean id="downOrderTmallFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="downOrderTmallJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="downOrderTmallTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="downOrderTmallFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/1 * * * ? *</value> 
+		</property>
+	</bean> 
+	
+	<bean id="smsSendJob" class="com.lvmama.back.job.SmsSendJob">
+    	 <property name="orderServiceProxy" ref="orderServiceProxy"></property>
+    	 <property name="smsService" ref="smsService"/>
+    	 <property name="smsRemoteService" ref="smsRemoteService"></property>
+	</bean>
+	<bean id="smsJobSnderFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="smsSendJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="smsSenderTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="smsJobSnderFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 * * * * ? *</value> 
+		</property>
+	</bean> 
+	
+	<bean id="priceUpdateJob" class="com.lvmama.back.job.PriceUpdateJob">
+		<property name="prodProductService" ref="prodProductService"/>
+		<property name="prodProductBranchService" ref="prodProductBranchService"/>
+	</bean>
+	
+	<!-- begin 删除过了今天有效期的产品标签和目的地标签 -->
+	<bean id="prodTagDeleteTimeOutService" class="com.lvmama.back.job.ProdTagDeleteTimeOutJob">
+		<property name="prodProductTagService" ref="prodProductTagService"></property>
+		<property name="prodPlaceTagService" ref="prodPlaceTagService"></property>
+	</bean>
+	
+	<bean id="prodTagDeleteTimeOutJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="prodTagDeleteTimeOutService" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="prodTagDeleteTimeOutJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="prodTagDeleteTimeOutJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 * * * * ? *</value>
+		</property>
+	</bean>
+	<!-- end  删除过了今天有效期的产品标签和目的地标签 -->
+	
+	<bean id="updatePriceJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="priceUpdateJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="updatePriceJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="updatePriceJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 10 0 * * ? *</value> 
+		</property>
+	</bean>
+	
+	 <bean id="reApplyPassCodeJob" class="com.lvmama.back.job.ReApplyPassCodeJob">
+    	 <property name="passCodeService" ref="passCodeService"></property>
+    	 <property name="passportMessageProducer" ref="passportMessageProducer"></property>
+    	 <property name="passportChimelongMessageProducer" ref="passportChimelongMessageProducer"></property>
+    	 <property name="orderServiceProxy" ref="orderServiceProxy"></property>
+
+	</bean>
+	
+	<bean id="reApplyPassCodeJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="reApplyPassCodeJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="reApplyPassCodeTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="reApplyPassCodeJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 * * * * ? *</value> 
+		</property>
+	</bean>
+	
+	<!-- 
+	<bean id="amqMessageCleanJob" class="com.lvmama.back.job.AmqMessageCleanJob">
+		<property name="comAmqMessageService" ref="comAmqMessageService"></property>
+	</bean>
+	
+	<bean id="amqMessageCleanJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="amqMessageCleanJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="amqMessageCleanJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="amqMessageCleanJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 */30 * * * ? *</value>
+		</property>
+	</bean>
+	
+	<bean id="amqMessageMonitorJob" class="com.lvmama.back.job.AmqMessageMonitorJob">
+		<property name="comAmqMessageService" ref="comAmqMessageService"></property>
+		<property name="smsRemoteService" ref="smsRemoteService"></property>
+	</bean>
+	
+	<bean id="amqMessageMonitorJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="amqMessageMonitorJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="amqMessageMonitorJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="amqMessageMonitorJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>30 * * * * ? *</value>
+		</property>
+	</bean>
+ 	-->
+  
+	
+	<!-- begin  订单送优惠券  -->
+	<bean id="orderCouponJob"
+		class="com.lvmama.back.job.OrderCouponJob">
+		<property name="orderServiceProxy" ref="orderServiceProxy"></property>
+		<property name="smsService" ref="smsService"></property>
+		<property name="markOrderCouponRuleService" ref="markOrderCouponRuleService"></property>
+		<property name="comSmsTemplateService" ref="comSmsTemplateService"></property>
+		
+		
+	</bean>
+	
+	<bean id="orderCouponJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="orderCouponJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="orderCouponJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="orderCouponJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 3 * * ? *</value> 
+		</property>
+	</bean>	
+	<!-- end  订单送优惠券  -->
+	
+	<!-- begin  订单游玩结束送积分  -->
+	<bean id="orderPointJob"
+		class="com.lvmama.back.job.OrderPointJob">
+		<property name="orderServiceProxy" ref="orderServiceProxy"></property>
+		<property name="userUserProxy" ref="userUserProxy"></property>
+	</bean>
+	
+	<bean id="orderPointJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="orderPointJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="orderPointJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="orderPointJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 2 * * ? *</value> 
+		</property>
+	</bean>	
+	<!-- end  订单游玩结束送积分  -->
+	
+	<!-- 线路类型代售产品，系统自动做实际成本表 -->
+	<bean id="groupBudgetCreateJob" class="com.lvmama.back.job.GroupBudgetCreateJob">
+		<property name="groupBudgetService">
+			<ref bean="groupBudgetService"/>
+		</property>
+	</bean>
+	<bean id="groupBudgetCreateJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="groupBudgetCreateJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="groupBudgetCreateJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="groupBudgetCreateJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 10 0 * * ? *</value> 
+		</property>
+	</bean>
+	
+	<bean id="PinAnPolicyJob" class="com.lvmama.back.job.PinAnPolicyJob">
+    	 <property name="insurantService" ref="insurantService"></property>
+    	 <property name="policyInfoService" ref="policyInfoService"></property>
+    	 <property name="orderServiceProxy" ref="orderServiceProxy"></property>
+    	 <property name="policyOperationLogService" ref="policyOperationLogService"></property>
+		<property name="pinAnOperator">
+			<bean class="com.lvmama.back.web.utils.insurance.pinan.PinAnOperator">
+				<property name="keystoreFile">
+					<value>${insurance.keystore.file}</value>
+				</property>
+				<property name="keystorePassword">
+					<value>${insurance.keystore.password}</value>
+				</property>
+				<property name="trustKeyFile">
+					<value>${insurance.trust.key.file}</value>
+				</property>
+				<property name="trustPassword">
+					<value>${insurance.trust.password}</value>
+				</property>
+				<property name="server">
+					<value>${insurance.server}</value>
+				</property>
+				<property name="port">
+					<value>${insurance.port}</value>
+				</property>
+				<property name="postURL">
+					<value>${insurance.postURL}</value>
+				</property>
+			</bean>
+		</property>    	 
+    	 <property name="comSmsTemplateService" ref="comSmsTemplateService"></property>
+    	 <property name="smsService" ref="smsService"></property> 	 
+	</bean>
+	<bean id="PinAnPolicyJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="PinAnPolicyJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>	
+	<bean id="PinAnPolicyJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="PinAnPolicyJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/15 * * * ? *</value> 
+		</property>
+	</bean>	
+	
+	<bean id="daZhongPolicyJob" class="com.lvmama.back.job.DaZhongPolicyJob">
+    	 <property name="insurantService" ref="insurantService"></property>
+    	 <property name="policyInfoService" ref="policyInfoService"></property>
+    	 <property name="orderServiceProxy" ref="orderServiceProxy"></property>
+    	 <property name="policyOperationLogService" ref="policyOperationLogService"></property>    	 
+    	 <property name="comSmsTemplateService" ref="comSmsTemplateService"></property>
+    	 <property name="smsService" ref="smsService"></property> 	 
+	</bean>
+	<bean id="daZhongPolicyJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="daZhongPolicyJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>	
+	<bean id="daZhongPolicyJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="daZhongPolicyJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/15 * * * ? *</value> 
+		</property>
+	</bean>
+	
+	<bean id="taiPinPolicyJob" class="com.lvmama.back.job.TaiPinPolicyJob">
+    	 <property name="insurantService" ref="insurantService"></property>
+    	 <property name="policyInfoService" ref="policyInfoService"></property>
+    	 <property name="orderServiceProxy" ref="orderServiceProxy"></property>
+    	 <property name="policyOperationLogService" ref="policyOperationLogService"></property>    	 
+    	 <property name="comSmsTemplateService" ref="comSmsTemplateService"></property>
+    	 <property name="smsService" ref="smsService"></property> 	 
+	</bean>
+	<bean id="taiPinPolicyJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="taiPinPolicyJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>	
+	<bean id="taiPinPolicyJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="taiPinPolicyJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/15 * * * ? *</value> 
+		</property>
+	</bean>	
+	
+	<bean id="sinosigPolicyJob" class="com.lvmama.back.job.SinosigPolicyJob">
+    	 <property name="insurantService" ref="insurantService"></property>
+    	 <property name="policyInfoService" ref="policyInfoService"></property>
+    	 <property name="orderServiceProxy" ref="orderServiceProxy"></property>
+    	 <property name="policyOperationLogService" ref="policyOperationLogService"></property>    	 
+    	 <property name="comSmsTemplateService" ref="comSmsTemplateService"></property>
+    	 <property name="smsService" ref="smsService"></property> 	 
+	</bean>
+	<bean id="sinosigPolicyJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="sinosigPolicyJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>	
+	<bean id="sinosigPolicyJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="sinosigPolicyJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/15 * * * ? *</value> 
+		</property>
+	</bean>	
+	
+	<!-- 同步目的地到PHPjob配置 -->
+	<bean id="syncPlaceToPhpSystemJob" class="com.lvmama.back.job.SyncPlaceToPhpSystemJob">
+    	  <property name="placeService" ref="placeService"></property>
+	</bean>
+	<bean id="syncPlaceToPhpSystemJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="syncPlaceToPhpSystemJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="syncPlaceToPhpSystemJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="syncPlaceToPhpSystemJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 23 * * ? *</value> 
+		</property>
+	</bean> 
+
+	<!-- 点评返现job配置 -->
+	<bean id="returnBonusForOrderCommentJob" class="com.lvmama.back.job.ReturnBonusForOrderCommentJob">
+    	  <property name="cashAccountService" ref="cashAccountService"></property>
+    	  <property name="orderServiceProxy" ref="orderServiceProxy"></property>
+    	   <property name="userUserProxy" ref="userUserProxy"></property>
+    	   <property name="cmtCommentService" ref="cmtCommentService"></property>
+	</bean>
+	<bean id="returnBonusForOrderCommentFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="returnBonusForOrderCommentJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="returnBonusForOrderCommentTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="returnBonusForOrderCommentFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/2 * * * ? *</value> 
+		</property>
+	</bean> 	
+	
+	<bean id="autoResetStockJob" class="com.lvmama.back.job.AutoResetStockJob">
+		<property name="metaProductBranchService" ref="metaProductBranchService"/>
+	</bean>
+	
+	<bean id="autoResetStockJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="autoResetStockJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="autoResetStockTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="autoResetStockJobDetail"/>
+		<property name="cronExpression">
+			<value>0 0/3 * * * ? *</value>
+		</property>
+	</bean>	
+
+	<bean id="moveSmsContentLogToHisBean" class="com.lvmama.back.job.MoveSmsContentLogJob">
+    	 <property name="smsRemoteService" ref="smsRemoteService"></property>
+    	 <property name="offset" value="-3"></property>
+	</bean>
+	<bean id="returnMoveSmsContentLogToHisBeanFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="moveSmsContentLogToHisBean" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="moveSmsContentLogToHisBeanTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="returnMoveSmsContentLogToHisBeanFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 2 * * ?</value>
+		</property>
+	</bean> 	
+	
+	<!-- 系统自动打TAGjob配置 -->
+	<bean id="autoSystemTagJob" class="com.lvmama.back.job.AutoSystemTagJob">
+    	  <property name="markCouponService" ref="markCouponService"></property>
+    	  <property name="prodProductTagService" ref="prodProductTagService"></property>
+	</bean>
+	<bean id="autoSystemTagFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="autoSystemTagJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="autoSystemTagTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="autoSystemTagFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 1 * * ? *</value> 
+		</property>
+	</bean>
+	
+	<!-- ===========淘宝分销平台 Begin=========== -->
+	<bean id="createTmallDistributorOrderJob" class="com.lvmama.back.job.CreateTmallDistributorOrderJob">
+    	 <property name="ordTmallDistributorMapService" ref="ordTmallDistributorMapService"></property>
+    	 <property name="prodProductService" ref="prodProductService"></property>
+	</bean>
+	<bean id="createTmallDistributorOrderFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="createTmallDistributorOrderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="createTmallDistributorOrderTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="createTmallDistributorOrderFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/1 * * * ? *</value> 
+		</property>
+	</bean>
+	
+	<bean id="downOrderTmallDistributorJob" class="com.lvmama.back.job.DownOrderTmallDistributorJob">
+    	 <property name="downTmallDistributorOrderInterface" ref="downTmallDistributorOrderInterface"></property>
+    	 <property name="ordTmallDistributorMapService" ref="ordTmallDistributorMapService"></property>
+	</bean>
+	<bean id="downOrderTmallDistributorFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="downOrderTmallDistributorJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="downOrderTmallDistributorTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="downOrderTmallDistributorFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/1 * * * ? *</value> 
+		</property>
+	</bean>
+	<!-- ===========淘宝分销平台 End=========== -->
+
+
+    <!--营销活动发邮件 Begin-->
+    <bean id="markActivitySendMailJob" class="com.lvmama.back.job.MarkActivitySendMailJob">
+        <property name="markActivityService" ref="markActivityService"/>
+        <!-- 清理 cleanupDays 天以前的发送日志 -->
+        <property name="cleanupDays" value="100"/>
+    </bean>
+
+    <bean id="markActivitySendMailJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="markActivitySendMailJob"/>
+        </property>
+        <property name="targetMethod">
+            <value>run</value>
+        </property>
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+    <bean id="markActivitySendMailJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="markActivitySendMailJobFactory"/>
+        </property>
+        <property name="cronExpression">
+            <!-- 测试，每1分钟执行一次 -->
+            <!--<value>0 */1 * * * ? *</value>-->
+            <!-- 生产，每15分钟执行 -->
+            <value>0 */15 * * * ? *</value>
+        </property>
+    </bean>
+    <!--营销活动发邮件 End-->
+
+    <!--公共任务守护Job Begin-->
+    <bean id="comTaskGuardJob" class="com.lvmama.back.job.ComTaskGuardJob">
+        <property name="comTaskService" ref="comTaskService"/>
+    </bean>
+
+    <bean id="comTaskGuardJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="comTaskGuardJob"/>
+        </property>
+        <property name="targetMethod">
+            <value>run</value>
+        </property>
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+    <bean id="comTaskGuardJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="comTaskGuardJobFactory"/>
+        </property>
+        <property name="cronExpression">
+            <!-- 每15秒执行一次 -->
+            <value>*/15 * * * * ? *</value>
+        </property>
+    </bean>
+    <!--公共任务守护Job End-->
+
+    <!--公共任务执行Job Begin-->
+    <bean id="comTaskExecuteJob" class="com.lvmama.back.job.ComTaskExecuteJob">
+        <property name="comTaskService" ref="comTaskService"/>
+    </bean>
+
+    <bean id="comTaskExecuteJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="comTaskExecuteJob"/>
+        </property>
+        <property name="targetMethod">
+            <value>run</value>
+        </property>
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+    <bean id="comTaskExecuteJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="comTaskExecuteJobFactory"/>
+        </property>
+        <property name="cronExpression">
+            <!-- 每分10秒执行一次 -->
+            <value>*/10 * * * * ? *</value>
+        </property>
+    </bean>
+    <!--公共任务执行Job End-->
+    
+    <!-- 淘宝商品同步Job linkai 2014-03-26 Start -->
+    <bean id="taobaoProductSyncJob" class="com.lvmama.back.job.TaobaoProductSyncJob">
+        <property name="taobaoProductSyncService" ref="taobaoProductSyncService"/>
+    </bean>
+    <bean id="taobaoProductSyncJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="taobaoProductSyncJob"/>
+        </property>
+        <property name="targetMethod">
+            <value>run</value>
+        </property>
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+    <bean id="taobaoProductSyncJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="taobaoProductSyncJobFactory"/>
+        </property>
+        <property name="cronExpression">
+            <!-- 每周天凌晨2点运行 -->
+            <value>0 0 2 ? * SUN</value>
+        </property>
+    </bean>
+	<!-- 淘宝商品同步Job End -->
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list> 
+				<ref bean="faxSendJobTrigger" />
+	          	<ref local="smsSenderTimes"/>
+	            <!--<ref local="updatePriceJobTimes"/>-->
+	            <ref local="reApplyPassCodeTimes"/>
+	            <ref local="prodTagDeleteTimeOutJobTimes"/>
+				<ref local="orderCouponJobTimes"/>
+				<ref local="orderPointJobTimes"/>
+				<ref local="groupBudgetCreateJobTimes"/>
+				<ref local="createTmallOrderTimes"/>
+				<ref local="downOrderTmallTimes"/>
+				<ref local="returnBonusForOrderCommentTimes"/>
+				<ref local="autoResetStockTriggerBean"/>
+				<ref local="daZhongPolicyJobTimes"/>
+				<ref local="PinAnPolicyJobTimes"/>
+				<ref local="taiPinPolicyJobTimes"/>
+				<ref local="moveSmsContentLogToHisBeanTimes"/>
+				<ref local="sinosigPolicyJobTimes" />
+				<ref local="syncPlaceToPhpSystemJobTimes"/>
+				<ref local="autoSystemTagTimes"/>
+				<ref local="createTmallDistributorOrderTimes" />
+				<ref local="downOrderTmallDistributorTimes" />
+				<ref local="batchOrderJobTrigger" />
+				<ref local="cancelBatchOrderJobTrigger" />
+				<ref local="markActivitySendMailJobTrigger" />
+				<ref local="comTaskGuardJobTrigger" />
+				<ref local="comTaskExecuteJobTrigger" />
+				<ref local="autoUpdateCommentsCashbackJobTrigger"/>
+				<ref local="taobaoProductSyncJobTrigger"/>
+			</list>
+		</property>
+	</bean>
+</beans>

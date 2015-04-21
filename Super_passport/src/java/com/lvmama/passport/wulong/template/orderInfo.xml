@@ -1,0 +1,32 @@
+<root>
+	<type>${type}</type>
+	<orderid>${orderId}</orderid>
+	<realprice>${realPrice}</realprice>
+	<contactname>${contactName}</contactname>
+	<contactphone>${contactPhone}</contactphone>
+	<provincename>上海</provincename>
+	<cityname>上海市</cityname>
+	<idcardcode>${idcardCode}</idcardcode>
+	<arrivedate>${arriveDate}</arrivedate>
+	<productLists>
+		<#list productLists as pro>
+		<product>
+			<procode>${pro.proCode}</procode>
+			<buynum>${pro.buyNum}</buynum>
+			<buyprice>${pro.buyPrice}</buyprice>
+			<buytotalprice>${pro.buyTotalPrice}</buytotalprice>
+			<extend><date>${arriveDate}</date></extend>
+		</product>
+		</#list>
+	</productLists>
+	<touristLists>
+	<#list touristLists as tour>
+		<tourist>
+			<fullname>${tour.fullName}</fullname>
+			<idcardcode>${tour.idcardCode}</idcardcode>
+			<sex>不确定</sex>
+			<address>${tour.address}</address>
+		</tourist>
+	</#list>
+	</touristLists>
+</root>

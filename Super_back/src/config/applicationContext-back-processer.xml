@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+    <bean id="couponSetProcesser" class="com.lvmama.back.message.CouponSetProcesser" />
+	<bean id="orderPassportProcesser" class="com.lvmama.back.message.OrderPassportProcesser" />
+	<bean id="orderPaymentCheckProcessor" class="com.lvmama.back.message.OrderPaymentCheckProcessor" />
+	<bean id="advancedPolicyProcesser" class="com.lvmama.back.message.AdvancedPolicyProcesser" />
+	<bean id="proceedToursManagerProcesser" class="com.lvmama.back.message.ProceedToursManagerProcesser" />
+	<bean id="travelGroupStatusMessageProcesser" class="com.lvmama.back.message.TravelGroupStatusMessageProcesser" />
+	<bean id="createContractProcesser" class="com.lvmama.back.message.CreateContractProcesser" />
+	<bean id="routeManagerProcesser" class="com.lvmama.back.message.RouteManagerProcesser" />
+	<bean id="eContractProcesser" class="com.lvmama.back.message.EContractProcesser">
+		<constructor-arg index="0">
+			<value>${mail.from}</value>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<value>${mail.subject}</value>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<value>${mail.personal}</value>
+		</constructor-arg>
+	</bean>
+	<!-- 发送出团通知书消息处理 -->
+	<bean id="groupAdviceNoteProcesser" class="com.lvmama.back.message.GroupAdviceNoteProcesser"></bean>
+	<bean id="visaApprovalProcesser" class="com.lvmama.back.message.VisaApprovalProcesser"></bean>
+	<bean id="eticketPerformPorcesser" class="com.lvmama.back.message.EticketPerformPorcesser"></bean>
+
+	<!-- EBK订单 -->
+	<bean id="ebkResourceConfirmTaskProcesser" class="com.lvmama.back.message.EbkResourceConfirmTaskProcesser"/>
+	<bean id="homePageLastestOrderProcesser" class="com.lvmama.back.message.HomePageLastestOrderProcesser" />
+	<!-- 期票订单生成密码券 add by shihui -->
+	<bean id="orderItemMetaAperiodicProcesser" class="com.lvmama.back.message.OrderItemMetaAperiodicProcesser" />
+	<!-- 资源审核通过消息处理 -->
+	<bean id="orderCheckPassProcesser" class="com.lvmama.back.message.OrderCheckPassProcesser"/>
+	<!-- 变更团通知书消息处理 -->
+	<bean id="orderGroupWordStatusProcesser" class="com.lvmama.back.message.OrderGroupWordStatusProcesser"/>
+	<!-- 订单自动分配消息处理 -->
+	<bean id="orderCreateAutoAssignProcesser" class="com.lvmama.back.message.OrderCreateAutoAssignProcesser"/>
+	<!-- 订单取消发送订单取消提醒工单 -->
+	<bean id="orderCancelSendWorkOrderProcesser" class="com.lvmama.back.message.OrderCancelSendWorkOrderProcesser"/>
+	<!-- 订单重新退款补偿消息 -->
+	<bean id="orderPrePayRefundProcesser" class="com.lvmama.back.message.OrderPrePayRefundProcesser"/>
+	<!-- 消息接收 -->
+	<bean id="orderTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.ORDER.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+			    <ref bean="couponSetProcesser" />
+				<ref bean="orderPassportProcesser" />
+				<ref bean="orderPaymentCheckProcessor" />
+				<ref bean="advancedPolicyProcesser" />
+				<ref bean="proceedToursManagerProcesser" />
+				<ref bean="createContractProcesser" />
+				<ref bean="eContractProcesser" />
+				<ref bean="travelGroupStatusMessageProcesser" />
+				<ref bean="groupAdviceNoteProcesser" />
+				<ref bean="routeManagerProcesser" />
+				<ref bean="orderItemMetaAperiodicProcesser" />
+				<!-- EBK订单 -->
+				<ref bean="ebkResourceConfirmTaskProcesser" />
+				<ref bean="homePageLastestOrderProcesser" />
+				<ref bean="visaApprovalProcesser" />
+				<ref bean="orderCreateAutoAssignProcesser" />
+				<ref bean="orderCheckPassProcesser" />
+				<ref bean="orderGroupWordStatusProcesser" />
+				<ref bean="orderCancelSendWorkOrderProcesser" />
+				<ref bean="eticketPerformPorcesser"/>
+				<ref bean="orderPrePayRefundProcesser"/>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 订阅 -->
+	<bean id="orderMessageListener"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="orderTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="orderTopicListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="ORDER_TOPIC" />
+		<property name="messageListener" ref="orderMessageListener" />
+		<property name="concurrentConsumers" value="5" />
+		<property name="maxConcurrentConsumers" value="20" />
+	</bean>
+
+	<bean id="updateProductPriceProcesser" class="com.lvmama.back.message.UpdateProductPriceProcesser" />
+	<bean id="updateMarketPriceProcesser" class="com.lvmama.back.message.UpdateMarketPriceProcesser" />
+	<bean id="updateProdBranchValidTimeProcesser" class="com.lvmama.back.message.UpdateProdBranchValidTimeProcesser" />
+	<bean id="productProcesser" class="com.lvmama.back.message.ProductProcesser" />
+	<bean id="realTimeUpdateTimePriceProcesser" class="com.lvmama.back.message.RealTimeUpdateTimePriceProcesser"/>
+	<bean id="productOnOffProcesser" class="com.lvmama.back.message.ProductOnOffProcesser" />
+	<bean id="searchInfoUpdateProcesser" class="com.lvmama.back.message.SearchInfoUpdateProcesser" />
+	<bean id="productRateOfMarginProcesser" class="com.lvmama.back.message.ProductRateOfMarginProcesser" />
+    <bean id="ebkProductImportProcesser" class="com.lvmama.back.message.EbkProductImportProcesser"/>
+	<!-- 淘宝同步接口处理 linkai 2014-03-26
+	<bean id="taobaoProductSyncProcesser" class="com.lvmama.back.message.TaobaoProductSyncProcesser" />
+    -->
+	<!-- 消息接收 -->
+	<bean id="productTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.PRODUCT.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+				<ref bean="productRateOfMarginProcesser" />
+				<ref bean="updateProductPriceProcesser" />
+				<ref bean="updateMarketPriceProcesser" />
+				<ref bean="productProcesser" />
+				<ref bean="productOnOffProcesser" />
+				<ref bean="realTimeUpdateTimePriceProcesser"/>
+				<!--<ref bean="taobaoProductSyncProcesser"/>-->
+				<!-- 需保证searchInfoUpdateProcesser是在processerList的最后一个执行-->
+				<ref bean="searchInfoUpdateProcesser"/>
+				<ref bean="updateProdBranchValidTimeProcesser" />
+				<ref bean="ebkProductImportProcesser"/>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 订阅 -->
+	<bean id="productMessageListener"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="productTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="productListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="PRODUCT_TOPIC" />
+		<property name="messageListener" ref="productMessageListener" />
+		<!--
+		<property name="concurrentConsumers" value="5" /> 
+		<property name="maxConcurrentConsumers" value="20" />
+		-->			
+	</bean>
+
+
+	<bean id="passCodeApplyFailedProcesser" class="com.lvmama.back.message.PassCodeApplyFailedProcesser" />
+
+	<!-- 消息接收 -->
+	<bean id="passportTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.PASSPORT.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+				<ref bean="passCodeApplyFailedProcesser" />
+				<ref bean="eticketPerformPorcesser"/>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 订阅 -->
+	<bean id="passportMessageListener"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="passportTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="passportListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="PASSPORT_TOPIC" />
+		<property name="messageListener" ref="passportMessageListener" />
+		<!--
+		<property name="concurrentConsumers" value="5" /> 
+		<property name="maxConcurrentConsumers" value="20" />
+		-->	
+	</bean>
+</beans>

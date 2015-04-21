@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:const.properties</value>
+			</list>
+		</property>
+	</bean>
+		
+	<import resource="classpath*:applicationContext-lvmama-comm-remote.xml" />
+	<import resource="classpath*:applicationContext-lvmama-comm-client.xml" />
+	<import resource="applicationContext-operate-database.xml"/>
+	<import resource="applicationContext-operate-service.xml"/>
+	<import resource="applicationContext-operate-dao.xml"/>
+	<import resource="applicationContext-operate-remote.xml"/>
+	<import resource="applicationContext-operate-job.xml"/>
+	
+	<bean id="sessionUserFilter" class="com.lvmama.operate.web.filter.SessionUserFilter">
+	</bean>
+</beans>

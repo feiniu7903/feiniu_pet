@@ -1,0 +1,20 @@
+<?page title="ShowMemo" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_listOrderPerson"?>
+<zk>
+<window id="win_listOrderPerson" border="normal" title="查看订单游玩人" mode="embedded" apply="com.lvmama.eplace.web.lvmama.ListOrderPersonAction">
+ <listbox id="personList" model="@{saction.ordPersonList}">
+ 	<listhead>
+ 		<listheader>游客姓名</listheader>
+ 		<listheader>联系电话</listheader>
+ 		<listheader>证件类型</listheader>
+ 		<listheader>证件号码</listheader>
+ 	</listhead>
+ 	<listitem self="@{each='person'}">
+ 		<listcell label="@{person.name}" />
+ 		<listcell label="@{person.mobile}" />
+ 		<listcell label="@{person.certType}" />
+ 		<listcell label="@{person.certNo}" />
+ 	</listitem>
+ </listbox>
+</window>
+</zk>

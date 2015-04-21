@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+	<meta name="description" content="">
+	<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+	<link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/font-icons.css">
+	<link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/global.css">
+	<link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/list.css">
+	<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/lib/zepto.min.js"></script>
+	<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/globe.js"></script>
+	<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/base.js"></script>
+	<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/ui/filtrateTab.js"></script>
+	</head>
+	<body>
+	    
+	</body>
+	<script name="baidu-tc-cerfication" src="http://apps.bdimg.com/cloudaapi/lightapp.js"></script>
+	 <script>
+		 var loginStatus = false;
+		 clouda.lightapp("4tjhI1dx8WPmCIKtl365x7Xg",function(){
+		     loginStatus = true;
+		 }); 
+		 $(function(){
+				var code = window.location.href.split("code=")[1];
+				//alert(code);
+				//window.location.href="https://openapi.baidu.com/oauth/2.0/token?grant_type=authorization_code&client_id=4tjhI1dx8WPmCIKtl365x7Xg&client_secret=CdRBKcdVQDdZn8AFoBwgZlfyAxd5Es08&redirect_uri=http://m.lvmama.com/static/baidulogin.html&code="+code
+				$.ajax({
+					url : 'http://qing.lvmama.com/clutter/bd/t_baiduLogin.htm',
+					data : {'code': code},
+					type : "POST",
+					success : function(datas) {
+						if(datas!=null && datas.error==null){
+							//alert(datas.username);
+							window.parent.location.href="http://qing.lvmama.com/clutter/${service!}";
+						}else{
+							alert(datas.error);
+						}
+					},
+					error:function() {
+						alert("error");
+					}
+				});		
+		 });
+		 function getUrlParam(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+				var r = window.location.search.substr(1).match(reg); // 匹配目标参数
+				if (r != null)
+					return unescape(r[2]);
+				return null; // 返回参数值
+		}
+	 </script>
+</html>

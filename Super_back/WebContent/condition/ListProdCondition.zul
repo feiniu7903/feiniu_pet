@@ -1,0 +1,29 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./prodConditionWin"?>
+
+<?component name="conditions" macroURI="/condition/conditions.zul" inline="true"?>
+<zk>
+<window id="prodConditionWin" title="信息提示" border="normal" apply="com.lvmama.back.web.condition.ListProdConditionAction">
+		<conditions/>
+		<separator/>
+		<label value="来自采购产品的信息提示" ></label>
+		<listbox id="box2" fixedLayout="true" model="@{saction.metaConditionList}">
+			<listhead>
+				<listheader label="序号" width="5%"/>
+				<listheader label="时间" width="20%"/>
+				<listheader label="预定限制内容" />
+				<listheader label="类型" width="10%"/>
+			</listhead>
+			<listitem self="@{each='condition'}" value="@{condition}" height="25px">
+				<listcell label="@{condition.conditionId}"/>
+				<listcell label="@{condition.timeDescription}"></listcell>	
+				<listcell label="@{condition.content}" />
+				<listcell label="@{condition.zhConditionType}" />
+			</listitem>
+		</listbox>
+		<space />
+		<toolbar align="center">
+	        <button label="关闭窗口" width="100px" onClick="prodConditionWin.detach()"></button>
+	    </toolbar>
+</window>
+</zk>

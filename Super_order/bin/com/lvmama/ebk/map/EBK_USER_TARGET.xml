@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="EBK_USER_TARGET">
+	<!-- 别名 -->
+    <typeAlias alias="ebkUserTarget" type="com.lvmama.comm.bee.po.eplace.EbkUserTarget"/>
+	<!-- 查询结果集 -->
+    <resultMap id="ebkUserTargetResult" class="ebkUserTarget">
+        <result property="userTargetId" column="USER_TARGET_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="supPerformTargetId" column="SUP_PERFORM_TARGET_ID"/>
+    </resultMap>
+    
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="userTargetId">
+	             USER_TARGET_ID = #userTargetId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="userId">
+	             USER_ID = #userId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="supPerformTargetId">
+	             SUP_PERFORM_TARGET_ID = #supPerformTargetId#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="com.lvmama.comm.bee.po.eplace.EbkUserTarget">
+		<selectKey keyProperty="userTargetId" resultClass="java.lang.Long">
+			SELECT EBK_USER_TARGET_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	    <![CDATA[
+	        INSERT INTO
+	        EBK_USER_TARGET (
+	        	USER_TARGET_ID ,
+	        	USER_ID ,
+	        	SUP_PERFORM_TARGET_ID 
+	        ) VALUES (
+	        	#userTargetId# ,
+	        	#userId# ,
+	        	#supPerformTargetId# 
+	        )
+	    ]]>
+    </insert>
+    
+    <delete id="delete" parameterClass="com.lvmama.comm.bee.po.eplace.EbkUserTarget">
+    	delete EBK_USER_TARGET
+    	<dynamic prepend=" where ">
+    		 <isNotEmpty prepend="AND" property="userId">
+	             USER_ID = #userId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="supPerformTargetId">
+	             SUP_PERFORM_TARGET_ID = #supPerformTargetId#
+	       </isNotEmpty>
+    	</dynamic>
+    </delete>
+    
+    <select id="queryTargetListByParams" parameterClass="map" resultMap="ebkUserTargetResult">
+    	select * from EBK_USER_TARGET
+    	<include refid="dynamicWhere"/>
+    </select>
+</sqlMap>

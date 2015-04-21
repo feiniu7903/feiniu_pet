@@ -1,0 +1,48 @@
+<?page title="修改产品经理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./manager_user_win"?>
+<?component name="perm_mangerUser" macroURI="/permission/mangerUser.zul"?>
+<zk>
+	<window id="manager_user_win" border="normal" closable="true"
+		apply="com.lvmama.back.web.metas.ListMetaProductAction">
+		<groupbox style="border: none">
+			<caption label="查询采购经理" />
+			<grid>
+				<columns>
+					<column width="100px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+					<hbox></hbox>
+					<hbox>
+						您选择了
+						<label style="color:red;"
+							value="@{saction.managerCount}" />
+						款产品，您要修改为负责人为
+					</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="姓名：" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<longbox id="managerId" visible="false"
+								value="@{saction.manager_Id }" />
+							<perm_mangerUser id="permUser_component">
+							</perm_mangerUser>
+						</hbox>
+					</row>
+					<row>
+						<hbox></hbox>
+						<hbox>
+							<button label="修改" onClick="saction.doUpdate();" />
+							<space />
+							<button label="取消" onClick="saction.closeWindow();" />
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+	</window>
+</zk>

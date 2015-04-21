@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="EBK_PROD_BRANCH" >
+
+  <typeAlias alias="ebkProdBranchDO" type="com.lvmama.comm.bee.po.ebooking.EbkProdBranch" />
+
+  <resultMap id="ebkProdBranchDOResultMap" class="ebkProdBranchDO" >
+    <result property="prodBranchId" column="PROD_BRANCH_ID" />
+    <result property="prodProductId" column="PROD_PRODUCT_ID" />
+    <result property="branchName" column="BRANCH_NAME" />
+    <result property="branchType" column="BRANCH_TYPE" />
+    <result property="adultQuantity" column="ADULT_QUANTITY" />
+    <result property="childQuantity" column="CHILD_QUANTITY" />
+    <result property="createTime" column="CREATE_TIME" />
+    <result property="metaProdBranchId" column="META_PROD_BRANCH_ID" />
+    <result property="prodProductBranchId" column="PROD_PRODUCT_BRANCH_ID" />
+    <result property="defaultBranch" column="DEFAULT_BRANCH"/>
+    <result property="virtualBranchIds" column="VIRTUAL_BRANCH_IDS"/>
+  </resultMap>
+
+  <sql id="ebkProdBranch_columns" >
+    a1.PROD_BRANCH_ID, a1.PROD_PRODUCT_ID, a1.BRANCH_NAME, a1.BRANCH_TYPE, a1.ADULT_QUANTITY, 
+      a1.CHILD_QUANTITY, a1.CREATE_TIME,a1.META_PROD_BRANCH_ID,a1.PROD_PRODUCT_BRANCH_ID,a1.DEFAULT_BRANCH,a1.VIRTUAL_BRANCH_IDS
+  </sql>
+
+  <sql id="ebkProdBranch_do_columns" >
+    a1.PROD_BRANCH_ID, a1.PROD_PRODUCT_ID, a1.BRANCH_NAME, a1.BRANCH_TYPE, a1.ADULT_QUANTITY, 
+      a1.CHILD_QUANTITY, a1.CREATE_TIME,a1.META_PROD_BRANCH_ID,a1.PROD_PRODUCT_BRANCH_ID,a1.DEFAULT_BRANCH,a1.VIRTUAL_BRANCH_IDS
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="prodBranchId" prepend="AND" >
+        <![CDATA[  
+        PROD_BRANCH_ID = #prodBranchId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodProductId" prepend="AND" >
+        <![CDATA[  
+        PROD_PRODUCT_ID = #prodProductId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="branchName" prepend="AND" >
+        <![CDATA[  
+        BRANCH_NAME = #branchName#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="branchType" prepend="AND" >
+        <![CDATA[  
+        BRANCH_TYPE = #branchType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="adultQuantity" prepend="AND" >
+        <![CDATA[  
+        ADULT_QUANTITY = #adultQuantity#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="childQuantity" prepend="AND" >
+        <![CDATA[  
+        CHILD_QUANTITY = #childQuantity#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createTime" prepend="AND" >
+        <![CDATA[  
+        CREATE_TIME = #createTime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="metaProdBranchId" prepend="AND" >
+        <![CDATA[  
+        META_PROD_BRANCH_ID = #metaProdBranchId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodProductBranchId" prepend="AND" >
+        <![CDATA[  
+        PROD_PRODUCT_BRANCH_ID = #prodProductBranchId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="virtualBranchIds" prepend="AND" >
+        <![CDATA[  
+        VIRTUAL_BRANCH_IDS = #virtualBranchIds#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <sql id="doQueryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="prodBranchId" prepend="AND" >
+        <![CDATA[  
+        PROD_BRANCH_ID = #prodBranchId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodProductId" prepend="AND" >
+        <![CDATA[  
+        PROD_PRODUCT_ID = #prodProductId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="branchName" prepend="AND" >
+        <![CDATA[  
+        BRANCH_NAME = #branchName#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="branchType" prepend="AND" >
+        <![CDATA[  
+        BRANCH_TYPE = #branchType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="adultQuantity" prepend="AND" >
+        <![CDATA[  
+        ADULT_QUANTITY = #adultQuantity#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="childQuantity" prepend="AND" >
+        <![CDATA[  
+        CHILD_QUANTITY = #childQuantity#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createTime" prepend="AND" >
+        <![CDATA[  
+        CREATE_TIME = #createTime#  
+        ]]>  
+      </isNotNull>
+       <isNotNull property="metaProdBranchId" prepend="AND" >
+        <![CDATA[  
+        META_PROD_BRANCH_ID = #metaProdBranchId#  
+        ]]>  
+      </isNotNull>
+       <isNotNull property="prodProductBranchId" prepend="AND" >
+        <![CDATA[  
+        PROD_PRODUCT_BRANCH_ID = #prodProductBranchId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="virtualBranchIds" prepend="AND" >
+        <![CDATA[  
+        VIRTUAL_BRANCH_IDS = #virtualBranchIds#  
+        ]]> 
+      </isNotNull> 
+    </dynamic>
+  </sql>
+
+  <insert id="insert" parameterClass="ebkProdBranchDO" >
+  	<selectKey keyProperty="prodBranchId" resultClass="java.lang.Long" >
+       SELECT EBK_PROD_BRANCH_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO EBK_PROD_BRANCH( PROD_BRANCH_ID, PROD_PRODUCT_ID, BRANCH_NAME, BRANCH_TYPE, ADULT_QUANTITY, 
+      CHILD_QUANTITY, CREATE_TIME,META_PROD_BRANCH_ID,PROD_PRODUCT_BRANCH_ID,DEFAULT_BRANCH,VIRTUAL_BRANCH_IDS)
+     VALUES ( #prodBranchId#, #prodProductId#, #branchName#, #branchType#, #adultQuantity#, 
+      #childQuantity#, SYSDATE,#metaProdBranchId#,#prodProductBranchId#,#defaultBranch#,#virtualBranchIds#)
+  </insert>
+
+  <update id="update" parameterClass="ebkProdBranchDO" >
+    UPDATE EBK_PROD_BRANCH   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="prodBranchId" prepend="," >
+        <![CDATA[  
+        PROD_BRANCH_ID = #prodBranchId#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="prodProductId" prepend="," >
+        <![CDATA[  
+        PROD_PRODUCT_ID = #prodProductId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="branchName" prepend="," >
+        <![CDATA[  
+        BRANCH_NAME = #branchName#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="branchType" prepend="," >
+        <![CDATA[  
+        BRANCH_TYPE = #branchType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="adultQuantity" prepend="," >
+        <![CDATA[  
+        ADULT_QUANTITY = #adultQuantity#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="childQuantity" prepend="," >
+        <![CDATA[  
+        CHILD_QUANTITY = #childQuantity#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createTime" prepend="," >
+        <![CDATA[  
+        CREATE_TIME = #createTime#  
+        ]]>  
+      </isNotNull>
+       <isNotNull property="metaProdBranchId" prepend="," >
+        <![CDATA[  
+        META_PROD_BRANCH_ID = #metaProdBranchId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodProductBranchId" prepend="," >
+        <![CDATA[  
+        PROD_PRODUCT_BRANCH_ID = #prodProductBranchId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="defaultBranch" prepend="," >
+        <![CDATA[  
+        DEFAULT_BRANCH = #defaultBranch#  
+        ]]>  
+      </isNotNull>
+       <isNotNull property="virtualBranchIds" prepend="," >
+        <![CDATA[  
+        VIRTUAL_BRANCH_IDS = #virtualBranchIds#  
+        ]]>  
+      </isNotNull> 
+    </dynamic>
+     WHERE
+     <dynamic prepend=" ">
+     	
+     	<isNotNull property="prodBranchId"> PROD_BRANCH_ID = #prodBranchId#  </isNotNull>
+     	<isNull property="prodBranchId"> PROD_PRODUCT_ID = #prodProductId#  </isNull>
+     </dynamic>
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="ebkProdBranchDOResultMap" >
+     SELECT 
+    <include refid="ebkProdBranch_do_columns" />
+    <![CDATA[  
+     FROM EBK_PROD_BRANCH a1 WHERE PROD_BRANCH_ID = #prodBranchId#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_BRANCH WHERE PROD_BRANCH_ID = #prodBranchId#
+    ]]>  
+  </delete>
+
+  <select id="countByDOExample" parameterClass="ebkProdBranchDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(PROD_BRANCH_ID) AS num FROM EBK_PROD_BRANCH 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="ebkProdBranchDOResultMap" parameterClass="ebkProdBranchDO" >
+     SELECT 
+    <include refid="ebkProdBranch_do_columns" />
+     FROM EBK_PROD_BRANCH a1 
+    <include refid="doQueryParams" />
+  </select>
+</sqlMap>

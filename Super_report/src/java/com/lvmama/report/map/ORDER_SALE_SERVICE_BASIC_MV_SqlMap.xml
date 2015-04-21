@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_SALE_SERVICE_BASIC_MV">
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.OrderSaleServiceBasicMV">
+		<result column="PRODUCT_ID" property="prodProductId" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="PRODUCT_NAME" property="prodProductName" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="REFUND_AMOUNT" property="refundAmount" />
+		<result column="COMPENSATION_AMOUNT" property="compensationAmount" />
+		<result column="NORMAL_QUANTITY" property="normalQuantity" />
+		<result column="COMPLAINT_QUANTITY" property="complaintQuantity" />
+		<result column="URGENCY_QUANTITY" property="urgencyQuantity" />
+	</resultMap>
+	
+	<resultMap id="ServiceResultMap" class="com.lvmama.report.po.OrderSaleServiceBasicMV">
+		<result column="PRODUCT_ID" property="prodProductId" />
+		<result column="PRODUCT_NAME" property="prodProductName" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="REFUND_AMOUNT" property="refundAmount" />
+		<result column="COMPENSATION_AMOUNT" property="compensationAmount" />
+		<result column="NORMAL_QUANTITY" property="normalQuantity" />
+		<result column="COMPLAINT_QUANTITY" property="complaintQuantity" />
+		<result column="URGENCY_QUANTITY" property="urgencyQuantity" />
+	</resultMap>
+	
+	<sql id="queryOrderSaleServiceBasicMVSql">
+		from (select t.product_id,
+				       t.product_name,
+				       t.sub_product_type,
+				       sum(t.normal_quantity) as normal_quantity,
+				       sum(t.complaint_quantity) as complaint_quantity,
+				       sum(t.urgency_quantity) as urgency_quantity,
+				       sum(t.refund_amount) as refund_amount,
+				       sum(t.compensation_amount) as compensation_amount
+				       from ORDER_SALE_SERVICE_BASIC_MV t where 1=1
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="startDate">
+			to_date(t.CREATE_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			to_date(t.CREATE_TIME,'yyyy-mm-dd')<![CDATA[<]]>#endDate#+1
+		</isNotNull>
+		<isNotNull prepend="and" property="prodName">
+			t.PRODUCT_NAME like '%$prodName$%'
+		</isNotNull>
+		group by t.product_id, t.product_name, t.sub_product_type
+		) info
+	</sql>
+	
+	<select id="countOrderSaleServiceBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(*) 
+			<include refid="queryOrderSaleServiceBasicMVSql"/>
+	</select>
+	
+	<select id="sumCompensationAmountOrderSaleServiceBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select sum(COMPENSATION_AMOUNT) from ORDER_SALE_SERVICE_BASIC_MV where 1=1
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="startDate">
+			to_date(CREATE_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			to_date(CREATE_TIME,'yyyy-mm-dd')<![CDATA[<]]>#endDate#+1
+		</isNotNull>
+		<isNotNull prepend="and" property="prodName">
+			PRODUCT_NAME like '%$prodName$%'
+		</isNotNull>
+	</select>
+	
+	<select id="sumRefundAmountOrderSaleServiceBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select sum(REFUND_AMOUNT) from ORDER_SALE_SERVICE_BASIC_MV where 1=1
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="startDate">
+			to_date(CREATE_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			to_date(CREATE_TIME,'yyyy-mm-dd')<![CDATA[<]]>#endDate#+1
+		</isNotNull>
+		<isNotNull prepend="and" property="prodName">
+			PRODUCT_NAME like '%$prodName$%'
+		</isNotNull>
+	</select>
+	
+	<select id="queryOrderSaleServiceBasicMV" parameterClass="java.util.Map" resultMap="ServiceResultMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT 
+			rownum r,
+			info.*
+		<include refid="queryOrderSaleServiceBasicMVSql"/>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt; #_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+</sqlMap>

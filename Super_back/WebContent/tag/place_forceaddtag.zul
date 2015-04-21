@@ -1,0 +1,44 @@
+<?page title="强制添加" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./place_forceaddtag"?>
+<window id="place_forceaddtag" visible="false" border="normal"
+	title="添加失败" width="500px" height="auto"
+	apply="com.lvmama.back.web.tag.BatchAddTagAction">
+
+
+	<listbox multiple="true" checkmark="true" mold="paging"
+		pageSize="10" id="selectedPlaceTags"
+		model="@{saction.batchAddPlaceTags}">
+		<listhead>
+			<listheader label="选择" width="10%" />
+			<listheader label="目的地编号" visible="false"></listheader>
+			<listheader label="目的地名称" />
+			<listheader label="标签编号" visible="false"></listheader>
+			<listheader label="所选标签" />
+			<listheader label="起始有效期" />
+			<listheader label="结束有效期" />
+		</listhead>
+		<listitem height="25px" self="@{each=prodPlaceTag}"
+			value="@{prodPlaceTag }">
+			<listcell label="@{prodPlaceTag.place.placeId }"></listcell>
+			<listcell label="@{prodPlaceTag.place.placeId }"
+				visible="false">
+			</listcell>
+			<listcell label="@{prodPlaceTag.place.name}"></listcell>
+			<listcell label="@{prodPlaceTag.tag.tagId}" visible="false"></listcell>
+			<listcell label="@{prodPlaceTag.tag.tagName}"></listcell>
+			<listcell label="@{prodPlaceTag.beginTime}"></listcell>
+			<listcell label="@{prodPlaceTag.endTime}"></listcell>
+		</listitem>
+	</listbox>
+	<zscript>
+              	</zscript>
+	<hbox style="margin:10px;">
+		<button label="强制添加"
+			onClick="saction.startBatchAddPlaceTags(selectedPlaceTags.getSelectedItems())">
+		</button>
+		<button label="取消" onClick="place_forceaddtag.detach();"></button>
+	</hbox>
+
+
+
+</window>

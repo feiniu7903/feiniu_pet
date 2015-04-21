@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>结算单管理</title>
+	<#assign dialog_inc = true>
+	<#assign autocomplete_inc = true>
+	<#assign grid_inc = true>
+	<#assign datepicker_inc = true>
+	<#include "/common/define.html"/>
+	<script type="text/javascript" src="/finance/js/ordsettlement.js"></script>
+</head>
+
+<body>
+	<div class="wapper_accounts" style="width: 1300px;">
+		<div class="wapper_list wapper_list_cash">
+			<h3 class="order_check">结算单管理</h3>
+			<div class="cash_seach">
+				<form id="search_form" grid_action="/finance/settlement/ordsettlement/search.json" excel_action = "/finance/settlement/ordsettlement/detail/export.json" method="post" >
+					<input type="hidden" id="settlementType" name="settlementType" value="${settlementType}"/>
+					<ul class="order_top_list">
+						<li class="other_list">
+							<label> 结算对象：</label> 
+							<input id="targetId" type="text" class="input_text02 input_combox"   autocomplete="off" />
+						</li>
+						<li class="other_list">
+							<label> 采购产品：</label> 
+							<input id="metaProductId" type="text" class="input_text02 input_combox"   autocomplete="off" />
+						</li>
+						<li class="other_list2" >
+							<label>生成时间：</label> 
+							<input name="createTimeBegin" type="text" class="input_text01 Wdate" onclick="WdatePicker({isShowClear:true,readOnly:true})"/>
+								~
+							<input name="createTimeEnd" type="text" class="input_text01 Wdate" onclick="WdatePicker({isShowClear:true,readOnly:true})"/>
+						</li>
+					</ul>
+					<ul class="order_top_list ">
+						<li class="other_list">
+							<label class="data_list">结算单号：</label>
+							<input name="settlementId" type="text" class="input_text02" value="${settlementId!""}"/>
+						</li>
+						<li class="other_list">
+							<label>用&nbsp;户&nbsp;名：</label>
+							<input name="userName" type="text" class="input_text02 input_combox" autocomplete="off" />
+						</li>
+						<li class="other_list">
+							<label>支付对象：</label> 
+							<select name="parymentTarget" class="cash_select">
+									<option value="">全部</option>
+									<option value="TOLVMAMA">支付给驴妈妈</option>
+									<option value="TOSUPPLIER">支付给供应商</option>
+							</select>
+						</li>
+						
+					</ul>
+					<ul class="order_top_list ">
+						<li class="other_list">
+							<label class="other_list01">打款状态：</label> 
+							<select name="payStatus" class="cash_select" style="float:left;">
+									<option value="">全部</option>
+									<option value="UNPAYED">未打款</option>
+									<option value="PAYED">已打款</option>
+							</select>
+						</li>
+						<li class="other_list" >
+							<label>结算状态：</label> 
+							<select name="status"	class="cash_select">
+									<option value="">全部</option>
+									<option value="UNSETTLEMENTED" selected="selected">未确认</option>
+									<option value="CONFIRMED">已确认</option>
+									<option value="SETTLEMENTED">已结算</option>
+							</select>
+						</li>
+						<li class="other_cash" >
+							<input id="search_button" type="button" class="left_bt" style="margin-left: 55px;" value="查 询" />
+							<a id ="export_button" href="javascript:void(0);" class="hid" >导出excel</a> 
+						</li>
+					</ul>
+				</form>
+				<div class="order_list">
+					<table id="result_table"></table> 
+					<div id="pagebar_div"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+ 	<!--预存款打款-->
+    <div id="advancedepositsBal_pay_div" class="hid" style="width: 390px">
+    	<form id="advancedepositsBal_pay_form"  method="post"> 
+    	   <ul class="cash_tan">
+    	   		<li>
+    	   			<input type="hidden" id="advancedepositsBal_pay_suppliderId" name="supplierId"/>
+    	   			<input type="hidden" id="advancedepositsBal_pay_targetId" name="targetId"/>
+    	   			<input type="hidden" id="advancedepositsBal_pay_settlementId" name="settlementId"/>
+    	   			<input type="hidden" id="advancedepositsBal_pay_syncVersion" name="syncVersion"/>
+    	   			<label class="cash_name">供应商名称：</label> 
+					<div id="advancedepositsBal_pay_supplier" class="tan_text"></div>
+				</li>
+				<li>
+    	   			<label class="cash_name">预存款余额：</label> 
+					<div id="advancedepositsBal" class="tan_text"></div>
+				</li>
+                <li>
+                    <label class="cash_name">使用预存款的金额(元)：</label>
+                    <input id="advancedepositsBal_pay_amount" name="payedAmount" type="text" class="input_text02" />
+                </li>
+           </ul>
+           <div class="popups_button" style="width: 190px;">
+				<input type="submit" class="left_bt" value="确 定" />
+				<input id="bankpay_button" type="button" class="seach_bt"  value="使用线下打款" />
+			</div>
+			
+         </form>
+    </div>
+    <!--线下打款-->
+    <div id="bank_pay_div" class="hid" style="width: 390px">
+    	<form id="bank_pay_form"  method="post"> 
+    	   <ul class="cash_tan">
+    	   		<li>
+    	   			<input type="hidden" id="bank_pay_suppliderId" name="supplierId"/>
+    	   			<input type="hidden" id="bank_pay_targetId" name="targetId"/>
+    	   			<input type="hidden" id="bank_pay_settlementId" name="settlementId"/>
+    	   			<input type="hidden" id="bank_pay_syncVersion" name="syncVersion"/>
+    	   			<label class="cash_name">打款金额：</label> 
+					<input id="bank_pay_amount" name="payedAmount" type="text" class="input_text02" />
+				</li>
+				<li>
+    	   			<label class="cash_name">打款银行：</label> 
+					<select name="bank" class="cash_select">
+						<option value="中国银行">中国银行</option>
+						<option value="交通银行">交通银行</option>
+						<option value="建设银行">建设银行</option>
+						<option value="招商银行">招商银行</option>
+					</select>
+				</li>
+                <li>
+					<label class="cash_name">打款时间：</label> 
+					<input name="operatetimes" type="text" class="input_text02 Wdate"  onclick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})"/></li>
+				<li>
+					<label class="cash_name">流水号：</label> 
+					<input name="serial" type="text" class="input_text02" maxlength="80"/>
+				</li>
+           </ul>
+           <div class="popups_button" >
+				<input type="submit" class="left_bt" value="确 定" />
+			</div>
+         </form>
+    </div>
+    <#if init??>
+		<script type="text/javascript">
+			$(document).ready(function(){
+			  $("#search_button").click();
+			});
+		</script>
+	</#if>
+</body>
+</html>

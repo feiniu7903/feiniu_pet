@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="BBSPREFORUMPOST" >
+    <typeAlias alias="bbsPreForumPost" type="com.lvmama.comm.businesses.po.review.BbsPreForumPost"/>
+    <resultMap id="baseMap" class="bbsPreForumPost" >
+    	<result  column="tid"  property="tid"/>
+    	<result  column="pid"  property="pid"/>
+    	<result column="subject" property="subject"/>
+    	<result column="message" property="message"/>
+    	<result column="reviewstatus" property="reviewstatus"/>
+    </resultMap>
+    <resultMap class="bbsPreForumPost" id="newBaseMap" extends="baseMap">
+    <result property="createdate"  column="createdate"/>
+    </resultMap>
+    <sql id="where_query">
+                where 1=1
+ 	           <isNotEmpty property="reviewstatus"  prepend="and">
+	                reviewstatus=#reviewstatus# 
+	                <isNotEqual prepend="and" property="reviewstatus" compareValue="2">
+	                    invisible =0 
+	                </isNotEqual> 
+	           </isNotEmpty>
+	           <isNotEmpty property="datebegin" prepend="and">
+	                FROM_UNIXTIME(dateline) &gt; #datebegin# 
+	           </isNotEmpty>
+	           <isNotEmpty property="dateend" prepend="and">
+	                FROM_UNIXTIME(dateline) &lt; #dateend# 
+	           </isNotEmpty>
+     </sql>
+    <select id="select" resultMap="baseMap" parameterClass="java.lang.Integer">
+       select DISTINCT pt.pid,pt.tid,pt.subject,pt.message,pt.reviewstatus from utf8_pre_forum_post  pt where pt.pid=#pid#
+    </select>
+    <select id="queryBbsPreForumPostByParam" resultMap="newBaseMap" parameterClass="java.util.Map">
+        select pid,tid,subject,reviewstatus ,message,FROM_UNIXTIME(dateline) as createdate from utf8_pre_forum_post 
+         <include refid="where_query"/>
+        order by FROM_UNIXTIME(dateline) desc
+        LIMIT #start#,#end#
+     </select>
+      <select id="count" resultClass="java.lang.Long" parameterClass="java.util.Map">
+        select COUNT(*) from utf8_pre_forum_post   <include refid="where_query"/>
+        
+     </select>
+     <update id="update" parameterClass="java.util.Map">
+         update    utf8_pre_forum_post 
+         set reviewstatus=#reviewstatus# 
+         <isNotEmpty  property="invisible">, invisible=#invisible#</isNotEmpty> 
+         where pid=#pid# 
+     </update>
+</sqlMap>

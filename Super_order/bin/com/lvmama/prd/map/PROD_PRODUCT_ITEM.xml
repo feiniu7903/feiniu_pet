@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_ITEM" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductItem" >
+    <result column="PRODUCT_ITEM_ID" property="productItemId" />
+    <result column="QUANTITY" property="quantity" />
+    <result column="META_PRODUCT_ID" property="metaProductId" />
+    <result column="PRODUCT_ID" property="productId" />
+	<result column="PRODUCT_TYPE" property="productType" />
+    <result column="metaProductName" property="metaProductName" />
+    
+  </resultMap>
+
+	<resultMap id="ProdProductMeta" class="com.lvmama.comm.bee.po.prod.ProdProductItem">
+		<result column="META_PRODUCT_ID" property="metaProductId" />
+		<result column="PRODUCT_ITEM_ID" property="productItemId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="PRODUCT_MANAGE_NAME" property="productManageName" />
+		<result column="PRODUCT_STATE" property="productState" />
+	</resultMap>
+  
+  <resultMap id="ResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductItem" >
+    <result column="PRODUCT_ITEM_ID" property="productItemId" />
+    <result column="QUANTITY" property="quantity" />
+    <result column="META_PRODUCT_ID" property="metaProductId" />
+    <result column="PRODUCT_ID" property="productId" />
+    </resultMap>
+  <select id="exists_flag" resultClass="java.lang.Integer" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductItem" >
+  	select count(*) 
+  	from PROD_PRODUCT_ITEM
+  	where Product_Id=#productId#
+  	and META_PRODUCT_ID =#metaProductId#
+  </select>
+  
+  <select id="selectProductItemByPid" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+	  select t.PRODUCT_ITEM_ID, 
+	       t.QUANTITY, 
+	       t.META_PRODUCT_ID, 
+	       t.PRODUCT_ID ,
+	       t2.PRODUCT_TYPE,
+	       t2.product_name as "metaProductName"
+	  from PROD_PRODUCT_ITEM t, meta_product t2
+	  where t.Meta_Product_Id = t2.meta_product_id
+   	  and t.Product_Id = #productId#
+  </select>
+  
+  <select id="selectMetaProductId" resultClass="java.lang.Long">
+  	select META_PRODUCT_ID from PROD_PRODUCT_ITEM where PRODUCT_ID=#productId#  
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductItem" >
+    
+    delete from PROD_PRODUCT_ITEM
+    where PRODUCT_ITEM_ID = #productItemId#
+  </delete>
+  
+  <select id="countProductItem" parameterClass="java.lang.Long" resultClass="java.lang.Integer">
+  	select count(*) from PROD_PRODUCT_ITEM where Product_Id = #productId#
+  </select>
+  
+  <select id="selectProductByMetaId" parameterClass="java.lang.Long" resultMap="ResultMap">
+  	select * from PROD_PRODUCT_ITEM where META_PRODUCT_ID=#productId#  
+  </select>
+  
+	<select id="selectProdProductByMetaId" parameterClass="java.lang.Long" resultMap="ProdProductMeta">
+		select 
+			ppi.meta_product_id as META_PRODUCT_ID,
+			ppi.product_item_id as PRODUCT_ITEM_ID,
+			ppi.product_id as PRODUCT_ID,
+			pp.product_name as PRODUCT_NAME,
+			pp.product_type as PRODUCT_TYPE,
+			(select pu.real_name from lvmama_pet.perm_user pu where pp.manager_id = pu.user_id) as PRODUCT_MANAGE_NAME,
+			pp.ON_LINE as PRODUCT_STATE
+		from 
+			PROD_PRODUCT_ITEM ppi, prod_product pp, meta_product mp
+		where 
+			mp.meta_product_id = ppi.meta_product_id
+			and ppi.product_id = pp.product_id
+			and ppi.META_PRODUCT_ID = #metaProductId#  
+	</select>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductItem" >
+    insert into PROD_PRODUCT_ITEM (
+	    PRODUCT_ITEM_ID, 
+	    QUANTITY, 
+	    META_PRODUCT_ID, 
+	    PRODUCT_ID)
+    values (
+	    PROD_PRODUCT_ITEM_ID_SEQ.NEXTVAL, 
+	    #quantity#, 
+	    #metaProductId#,
+	    #productId#
+	)
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductItem" >
+    update PROD_PRODUCT_ITEM
+    set QUANTITY = #quantity#
+    where PRODUCT_ITEM_ID = #productItemId#
+  </update>
+
+</sqlMap>

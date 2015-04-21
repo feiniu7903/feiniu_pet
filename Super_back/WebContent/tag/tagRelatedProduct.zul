@@ -1,0 +1,50 @@
+<?page title="标签管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./tagRelatedProduct"?>
+<window id="tagRelatedProduct" mode="embedded" title="关联产品的标签" apply="com.lvmama.back.web.tag.TagRelatedProductAction" closable="false">
+
+	<listbox fixedLayout="true" model="@{saction.searchProductTagsList,load-after='searchProdTag.onClick,_paging1.onPaging,checkAllTagbox.onCheck'}">
+		<listhead>
+			<listheader width="5%">
+					<checkbox id="checkAllTagbox" onCheck="saction.selectAllCheckbox(self.checked);" />
+			</listheader>
+			<listheader width="10%" label="商品ID" />
+			<listheader  label="商品名称" />
+			<listheader width="15%" label="起始日期" />
+			<listheader width="15%" label="结束日期" />
+			<listheader width="10%" label="类型" />
+		</listhead>
+		<listitem self="@{each='tag'}">
+			<listcell>
+				<checkbox checked="@{tag.checked}" onCheck='saction.onCheckboxEvent(self.getAttribute("productTagId"), self.getAttribute("productId"),self.getAttribute("tagId"), self.checked);'>
+					<custom-attributes productTagId="@{tag.productTagId}" />
+					<custom-attributes productId="@{tag.productId}" />
+					<custom-attributes tagId="@{tag.tagId}" />
+				</checkbox>
+			</listcell>
+			<listcell label="@{tag.productId}" />
+			<listcell label="@{tag.productName}" />
+			<listcell label="@{tag.strBeginTime}" />
+			<listcell label="@{tag.strEndTime}" />
+			<listcell label="@{tag.productType}" />
+		</listitem>
+	</listbox>
+	<toolbar>
+		<grid style="border:0">
+			<rows>
+				<row>
+					<cell width="60px">
+						共
+						<label id="_totalCountLabel1" />
+						条
+					</cell>
+					<cell width="200px">
+						<paging id="_paging1" pageSize="15" onPaging='saction.searchProductTags();'></paging>
+					</cell>
+				</row>
+			</rows>
+		</grid>
+	</toolbar>
+	<button id="delButton" label="删除" onClick="saction.delProductTags();" />
+
+	<button id="searchProdTag" visible="false" label="查询" onClick="saction.searchProductTags()" />
+</window>

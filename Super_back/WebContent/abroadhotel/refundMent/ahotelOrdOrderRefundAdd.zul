@@ -1,0 +1,141 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_refund_add"?>
+<?component name="ordSaleAddComponent" macroURI="/abroadhotel/sale/ahotelOrdSaleAdd.zul" ?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	
+	<window  id="win_refund_add" title="售后服务处理" border="normal"
+		apply="com.lvmama.back.web.abroadhotel.refundMent.AhotelOrdOrderRefundAddAction">
+		<groupbox style="border: none">
+			<caption label="添加售后服务内容" />
+			<grid>
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label width="150px" value="申请售后服务类型:" />
+						</hbox>
+						<hbox>
+							<listbox id="serviceTypeListbox" mold="select" 
+								model="@{saction.serviceTypes}" >
+								<listitem self="@{each='item'}" label="@{item.name }" value="@{item.code}"/>
+							</listbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="申请内容:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox id="ordSale_applyContent" rows="5"
+								maxlength="200" value="@{saction.ordSalePo.applyContent}"
+								constraint="no empty:申请内容不能为空" width="680px">
+							</textbox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<groupbox style="border: none">
+			<caption label="添加退款服务内容" />
+			<grid>
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+					<column></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label width="150px" value="退款金额:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<longbox id="amount"
+								value="@{saction.ordRefundment.amount}"
+								constraint="/^[0-9]*$/:仅允许输入数字;" />
+						</hbox>
+						<hbox>
+							<label width="150px" value="退款类型:" />
+						</hbox>
+						<hbox>
+							<listbox id="refundTypeListbox" if='${saction.isCancelOrder=="true"}' mold="select"
+								model="@{saction.refundTypes}" >
+								<listitem self="@{each='item'}" label="@{item.name }" value="@{item.code}"/>
+							</listbox>
+						</hbox>
+						</row>
+					<row spans="1,3">
+						<hbox>
+							<label value="退款要求及备注:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox id="ord_applyContent" rows="5"
+								maxlength="200" value="@{saction.ordRefundment.memo}"
+								constraint="no empty:退款要求信息不能为空" width="680px">
+							</textbox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		
+		<textbox id="btnPayTotal"  value="@{saction.historyOrderDetail.oughtPayYuan}" visible="false"/>
+		<textbox id="btnActualPay"  value="@{saction.historyOrderDetail.actualPayYuan}" visible="false"/>
+		<toolbar align="center">
+			<button id="saveSale" width="100px" label="提交" 
+				onClick="chk_value()">
+				<custom-attributes
+					saleServiceId="${saction.saleServiceId}" />
+				<custom-attributes isCancelOrder="@{saction.isCancelOrder}" />
+				<custom-attributes cancelResson="旅客申请取消" />
+			</button>
+			<button label="关闭窗口" width="100px"
+				onClick="win_refund_add.detach()">
+			</button>
+		</toolbar>
+		<zscript>
+	public void chk_value() {
+		if(serviceTypeListbox.getSelectedItem()==null || serviceTypeListbox.getSelectedItem().getValue()==""){
+				alert("请选择售后服务申请服务类型!");
+				return;
+		}
+		if(ordSale_applyContent.getValue()==""){
+				alert("请填写售后服务申请内容!");
+				return;
+		}
+		if (amount.getValue() == null) {
+				alert("请填写退款单中的退款金额!");
+				return;
+		}
+		int amount=amount.getValue();
+		int paytotal=Float.parseFloat(btnPayTotal.getValue());
+		int actualPay=Float.parseFloat(btnActualPay.getValue());
+		if(amount>actualPay){
+				alert("应付金额:"+paytotal+"元，实付金额:"+btnActualPay.getValue()+"元,退款金额不能大于【实付金额】!");
+				return;
+		}else if (amount>paytotal) {
+				alert("应付金额:"+paytotal+"元,退款金额不能大于【订单总金额】!");
+				return;
+		}
+		
+		if(refundTypeListbox.getSelectedItem()==null || refundTypeListbox.getSelectedItem().getValue()==""){
+				alert("请填写退款单中的退款类型!");
+				return;
+		}
+		if (ord_applyContent.getValue() == "") {
+				alert("请填写退款单中的退款要求及备注!");
+				return;
+		}
+		saction.addRefundMent();
+	}
+</zscript>
+	</window>
+</zk>

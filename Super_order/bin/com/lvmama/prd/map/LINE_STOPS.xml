@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="LINE_STOPS" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.LineStops" >
+    <result column="LINE_STOPS_ID" property="lineStopsId" />
+    <result column="LINE_INFO_ID" property="lineInfoId" />
+    <result column="LINE_STOP_VERSION_ID" property="lineStopVersionId" />
+    <result column="STATION_ID" property="stationId" />
+    <result column="STOP_STEP" property="stopStep" />
+    <result column="ARRIVAL_TIME" property="arrivalTime" />
+    <result column="DEPARTURE_TIME" property="departureTime" />
+    <result column="TAKE_TIME" property="takeTime" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap2" class="com.lvmama.comm.bee.po.prod.LineStops" >
+    <result column="LINE_STOPS_ID" property="lineStopsId" />
+    <result column="LINE_INFO_ID" property="lineInfoId" />
+    <result column="STATION_ID" property="stationId" />
+    <result column="STOP_STEP" property="stopStep" />
+    <result column="ARRIVAL_TIME" property="arrivalTime" />
+    <result column="DEPARTURE_TIME" property="departureTime" />
+    <result column="STATION_NAME" property="stationName"/>
+    <result column="STATION_PINYIN" property="stationPinyin"/>
+    <result column="TAKE_TIME" property="takeTime" />
+  </resultMap>
+  
+  <select id="selectByLineInfoId" resultMap="BaseResultMap" parameterClass="java.util.Map" >
+    select stop.*
+    from LINE_STOPS stop,LINE_STOP_VERSION ver
+    where 
+    stop.LINE_STOP_VERSION_ID = ver.LINE_STOP_VERSION_ID
+    and
+    <isNotEmpty property="visitTimeEq">
+    	ver.START_VALID_TIME=#visitTime#
+    </isNotEmpty>
+    <isNotEmpty property="visitTimeNotEq">
+	ver.LINE_STOP_VERSION_ID IN(select T.LINE_STOP_VERSION_ID from (select
+	v.LINE_STOP_VERSION_ID,ROWNUM rn from LINE_STOP_VERSION v where
+	v.START_VALID_TIME &lt;=#visitTime# and v.LINE_INFO_ID=#lineInfoId# ORDER BY v.START_VALID_TIME DESC) T
+	where T.rn=1)
+    </isNotEmpty>
+    and ver.LINE_INFO_ID = #lineInfoId# order by stop.STOP_STEP asc
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.LineStops" >
+    select *
+    from LINE_STOPS
+    where LINE_STOPS_ID = #lineStopsId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.LineStops" >
+    delete from LINE_STOPS
+    where LINE_STOPS_ID = #lineStopsId#
+  </delete>
+  <delete id="deleteByVersionId" parameterClass="com.lvmama.comm.bee.po.prod.LineStops" >
+  	delete from LINE_STOPS
+    where LINE_STOP_VERSION_ID = #lineStopVersionId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.LineStops" >
+    <selectKey resultClass="java.lang.Long" keyProperty="lineStopsId" >
+      select LINE_STOPS_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into LINE_STOPS (LINE_STOPS_ID, LINE_INFO_ID, STATION_ID, STOP_STEP, ARRIVAL_TIME,
+      DEPARTURE_TIME, TAKE_TIME,LINE_STOP_VERSION_ID)
+    values (#lineStopsId#, #lineInfoId#, #stationId#, #stopStep#,
+      #arrivalTime#, #departureTime#, #takeTime#,#lineStopVersionId#)
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.LineStops" >
+    update LINE_STOPS
+    set LINE_INFO_ID = #lineInfoId#,
+      STATION_ID = #stationId#,
+      STOP_STEP = #stopStep#,
+      ARRIVAL_TIME = #arrivalTime#,
+      DEPARTURE_TIME = #departureTime#,
+      LINE_STOP_VERSION_ID = #lineStopVersionId#,
+      TAKE_TIME = #takeTime#
+    where LINE_STOPS_ID = #lineStopsId#
+  </update>
+  
+  <select id="selectCheZhanStops" resultMap="BaseResultMap2">
+      select distinct a.line_stops_id,b.line_info_id,a.arrival_time,a.departure_time,a.stop_step,a.station_id,c.station_name,c.station_pinyin,a.take_time   from line_stops a 
+  inner join (select a1.line_info_id,a1.end_station_id from line_info a1,line_stops b1 
+   where a1.line_info_id = b1.line_info_id and b1.station_id=#stationId#) b 
+  on a.line_info_id=b.line_info_id  
+  inner join line_station c on a.station_id = c.station_id 
+   where a.LINE_STOP_VERSION_ID in 
+   (select max(LINE_STOP_VERSION.LINE_STOP_VERSION_ID) from LVMAMA_SUPER.LINE_STOP_VERSION group by line_info_id)  
+    order by line_info_id,stop_step
+  </select>
+ <select id="selectZhanZhanStops" resultMap="BaseResultMap2">
+ select distinct a.line_stops_id,b.line_info_id,a.arrival_time,a.departure_time,a.stop_step,a.station_id,c.station_name,c.station_pinyin,a.take_time   from line_stops a
+   inner join (select distinct a1.line_info_id from line_station_station a1  
+    where a1.station_key = #pinyinKey# or a1.city_key =#pinyinKey#) b 
+   on a.line_info_id=b.line_info_id  
+   inner join line_station c on a.station_id = c.station_id where a.LINE_STOP_VERSION_ID in 
+   (select max(LINE_STOP_VERSION.LINE_STOP_VERSION_ID) from LVMAMA_SUPER.LINE_STOP_VERSION group by line_info_id) 
+    order by line_info_id,stop_step
+  </select>
+  <select id="selectLineStopsCheci" resultMap="BaseResultMap2">
+  select distinct a.line_stops_id,b.line_info_id,a.arrival_time,a.departure_time,a.stop_step,a.station_id,c.station_name,c.station_pinyin,a.take_time  
+         from line_stops a ,line_info b,line_station c where a.line_info_id = b.line_info_id and a.station_id = c.station_id  and b.full_name = #fullName# 
+           and  a.LINE_STOP_VERSION_ID in 
+    (select max(LINE_STOP_VERSION.LINE_STOP_VERSION_ID) from LVMAMA_SUPER.LINE_STOP_VERSION group by line_info_id)
+          order by a.stop_step
+ </select>
+</sqlMap>

@@ -1,0 +1,38 @@
+<?page title="editTag" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./del_product_tag"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="del_product_tag" title="删除 产品 关联标签" border="normal" closable="true"
+		apply="com.lvmama.back.web.tag.ProductTagAction">
+		<groupbox style="border: none">
+			<hbox style="margin:5px;">
+				小组名：
+				<listbox mold="select" id="tagGroup"
+					model="@{saction.groupsList }"
+					onSelect="saction.selectTagesInGroups(self.selectedItem.value);saction.createtag(self.selectedItem.value);"
+					style="width:100px;">
+					<listitem self="@{each=prodTagGroup}"
+						value="@{prodTagGroup.tagGroupId}"
+						label="@{prodTagGroup.tagGroupName}">
+					</listitem>
+				</listbox>
+			</hbox>
+			<hbox style="margin:5px;">
+				<hbox>标签名：</hbox>
+				<hbox>
+					<groupbox id="checkboxChildren"
+						style="border:none">
+					</groupbox>
+					<radiogroup id="radioChildren"></radiogroup>
+				</hbox>
+			</hbox>
+			<hbox style="margin:5px;">
+				<button label="提交" autodisable="self"
+					onClick="saction.submitDelProductTag();">
+				</button>
+				<button onClick="del_product_tag.detach();"
+					label="取消">
+				</button>
+			</hbox>
+		</groupbox>
+	</window>
+</zk>

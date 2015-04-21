@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+<head>
+    <title>图文详情</title>
+    <#include "../common/define_v5.html">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/detail.css">
+    <style>
+    .copyright{ text-align: center;}
+    </style>
+</head>
+<body>
+<!--  头部-->
+ <#if product?? && product.productId??>
+	 <script type="text/javascript">
+		 var siteFlag=3;
+		 var productId='${product.productId!}';
+	 </script>
+  </#if>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/header.js"></script>
+<div id="wrapper">
+    <div id="content">
+        <div class="lv-box">
+            <!-- 景点 -->
+            <#if place?? >
+                <!-- 特色 -->
+                ${place.description!?if_exists?replace("\n","</br>")}
+            </#if>
+            <!-- 产品特色 -->
+            <!-- 费用说明  -->
+            <!-- 重要提示 -->
+                <!-- 行程介绍  -->
+                 <#if viewJourneyList?? && viewJourneyList?size &gt; 0>
+                     <#list viewJourneyList as vjl>
+                         <div class="t_content bb1">
+                             <h3 class="ic_calendar">
+                                 <span class="f-color-1">DAY ${vjl.seq}</span>&nbsp;&nbsp;${vjl.title?if_exists}</h3>
+                             <p class="f-justify">${vjl.contentBr?if_exists?replace("\n","</br>")}</p>
+                             <p>
+                                 <#if vjl.journeyPictureList?? && vjl.journeyPictureList?size &gt; 0>
+                                     <#list vjl.journeyPictureList as jp>
+                                         <#if jp_index == 0>
+                                             <img title="${jp.pictureName?if_exists}"  style="width:124px; height:92px;" src="${jp.absoluteUrl?if_exists}">
+                                             <#elseif jp_index == 1>
+                                                 <img title="${jp.pictureName?if_exists}" style="width:124px; height:92px;margin-left:10px;" src="${jp.absoluteUrl?if_exists}">
+                                         </#if>
+                                     </#list>
+                                 </#if>
+                             </p>
+                             <#if vjl.dinner??>
+                                 <p><img style="width:20px; height:20px;" src="${prefix_pic_url!}/img/restaurant.png">&nbsp;${vjl.dinner?default("")} </p>
+                             </#if>
+                             <#if vjl.hotel??>
+                                 <p><img style="width:20px; height:20px;" src="${prefix_pic_url!}/img/lodging.png">&nbsp;${vjl.hotel?default("")}</p>
+                             </#if>
+                         </div>
+                     </#list>
+                 </#if>
+                 <#if viewPage??>  
+                     <!-- 特色 -->
+                     <#if  viewPage.hasContent('FEATURES') >
+                         <div class="t_content bb1">
+                             ${viewPage.contents.get('FEATURES').content!}
+                         </div>
+                     </#if>
+                 	 <!-- 费用 -->
+                     <#if viewPage.hasContent('COSTCONTAIN')>
+                         <div class="t_content bb1">
+                             <h3>费用包含</h3>
+                             <p>${viewPage.contents.get('COSTCONTAIN').content?if_exists?replace("\n","</br>")}</p>
+                         </div>
+                     </#if>
+                     <#if viewPage.hasContent('NOCOSTCONTAIN')>
+                         <div class="t_content bb1">
+                             <h3>费用不包含</h3>
+                             <p>${viewPage.contents.get('NOCOSTCONTAIN').content?if_exists?replace("\n","</br>")}</p>
+                         </div>
+                     </#if>
+
+                     <#if viewPage.hasContent('RECOMMENDPROJECT')>
+                         <div class="t_content bb1">
+                             <h3>推荐项目</h3>
+                             <p>${viewPage.contents.get('RECOMMENDPROJECT').content?if_exists?replace("\n","</br>")}</p>
+                         </div>
+                     </#if>
+                     <#if viewPage.hasContent('SHOPPINGEXPLAIN')>
+                         <div class="t_content bb1">
+                             <h3>购物说明</h3>
+                             <p>${viewPage.contents.get('SHOPPINGEXPLAIN').content?if_exists?replace("\n","</br>")}</p>
+                         </div>
+                     </#if>
+                 	<!-- 重要提示 -->
+                     <#if viewPage.hasContent('ACITONTOKNOW')>
+                         <div class="t_content bb1">
+                             <h3>行前须知</h3>
+                             <p>${viewPage.contents.get('ACITONTOKNOW').content?if_exists?replace("\n","</br>")}</p>
+                         </div>
+                     </#if>
+                     <#if viewPage.hasContent('ORDERTOKNOWN')>
+                         <div class="t_content bb1">
+                             <h3>预订须知</h3>
+                             <p>${viewPage.contents.get('ORDERTOKNOWN').content?if_exists?replace("\n","</br>")}</p>
+                         </div>
+                     </#if>
+                     <#if viewPage.hasContent('REFUNDSEXPLANATION')>
+                         <div class="t_content bb1">
+                             <h3>退款须知</h3>
+                             <p>${viewPage.contents.get('REFUNDSEXPLANATION').content?if_exists?replace("\n","</br>")}</p>
+                         </div>
+                     </#if>
+                     <#if viewPage.hasContent('SERVICEGUARANTEE')>
+                         <div class="t_content bb1">
+                             <h3>旅游服务保障</h3>
+                             <p>${viewPage.contents.get('SERVICEGUARANTEE').content?if_exists?replace("\n","</br>")}</p>
+                         </div>
+                     </#if>
+                     <#if viewPage.hasContent('PLAYPOINTOUT')>
+                         <div class="t_content bb1">
+                             <h3>游玩提示</h3>
+                             <p>${viewPage.contents.get('PLAYPOINTOUT').content?if_exists?replace("\n","</br>")}</p>
+                         </div>
+                     </#if>
+                </#if>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+</div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+<script>
+    $(function(){
+        $(".lv-item-sprite01 a").click(function(e){
+            $(this).parent().removeClass().addClass("lv-item-scroe"+($(this).index()+1)).addClass("lv-item-sprite01").addClass("fl");
+            $(this).siblings("input:first").val($(this).index()+1);
+        });
+        $("textarea").focus(function(e) {
+            $(this).addClass("lv-input01-focus");
+        });
+        $("textarea").blur(function(e) {
+            $(this).removeClass("lv-input01-focus");
+        });
+    });
+</script>
+</body>
+</html>

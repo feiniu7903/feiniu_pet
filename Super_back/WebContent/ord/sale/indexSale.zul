@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="用户退款管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win"?>
+<zk>
+	<window id="win" mode="embedded"
+		apply="com.lvmama.back.web.ord.sale.OrdSaleQueryAction">
+		<tabbox width="99%" tabscroll="false">
+			<tabs>
+				<tab id="sale_normal"
+					label="@{saction.serviceTypeName}" />
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<include src="/ord/sale/ordSaleQuery.zul">
+					</include>
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</window>
+</zk>

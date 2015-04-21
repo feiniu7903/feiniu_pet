@@ -1,0 +1,415 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>订单信息</title>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/comm.js"></script>
+<script src="${request.contextPath}/js/order.js??version=20131023" ></script>
+<script >
+  $(function() {
+	   var isTodayOrder = '${order.todayOrder?string}';
+	   var t_second = '${surplusSeconds!}';
+	   if(isTodayOrder == "true" && parseInt(t_second) < 1) {
+		   lvToast(false,"订单支付超时，请返回重新下单!",LT_LOADING_CLOSE);
+		   $("#lv-pay-list").hide();
+		   setTimeout(function(){ window.history.go(-1); }, LT_LOADING_CLOSE); 
+	   }
+	   //截取商品名称，只显示一行17字加...
+	   SubstringOrdername();
+	   
+	   if($.trim($(".myorder_v3_list").text())==""){
+		   $(".myorder_v3_list").hide();
+	   }
+	   
+  });
+  //截取名称
+  function SubstringOrdername(){
+	   var ordername=$("#ordername").html();
+	   var ordernamelength;
+	   if(ordername!=null  && ordername!=''){
+		   ordernamelength=ordername.length;
+	   }
+	   if(ordernamelength>=17){
+		   $("#ordername").html(ordername.substring(0, 17)+"...")
+	   }
+	}
+</script>
+<style type="text/css">
+	.view_more{ margin: 10px 0; } 
+	.view_more a{ display: block; height: 38px; border-radius: 2px; line-height: 36px; text-align: center; color: #666; font-size: 16px; background-color: #E7188E; 
+	border: 1px solid #C4006E; color:#fff; }
+</style>
+</head>
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+ <!--  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:pay_back_now();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div> 
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>-->
+  <div class="lv-title"><#if order.canToPay>支付方式<#else>订单信息</#if></div>
+  <div class="lv-position lv-position-e"><a href="javascript:void(0);" class='home' onclick="home_back();"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a></div>
+</div>
+<div class="lv-wrapper lv-media-width pay_wrap">
+  <div class="lv-wrapper-container">
+      <a class="myorder_v3_list" style="background:#fef8e7; ">
+	      <!-- 如果是支付给驴妈妈  -->
+	      <#if order.canToPay>
+	      		<!--  如果是当日定  -->
+		      <#if order.todayOrder>
+			      <p>请在30分钟内完成订单支付，超时系统将自动取消订单！ </p>
+		      <#else>
+			      <!-- <p>订单提交成功，<br> 
+				     请赶紧支付吧，以免影响您的行程！</p> -->
+		      </#if>
+		  <#elseif order.needResourceConfirm>
+	     		 <!-- 如果需要资源审核 --> 
+				<#if order.orderViewStatus =="UNVERIFIED"> <!-- 待审核  -->
+					<p class="t_update_1">订单已提交，等待客服审核</p> 
+					<p class="t_update_2">1.客服会尽快审核您的订单是否有资源，<br>&nbsp;&nbsp;&nbsp;审核结果以短信方式通知到您。</p> 
+					<p class="t_update_2 f-999">2.如果确认有资源，请到<br>&nbsp;&nbsp;&nbsp;<span class="f-ff4000">我的驴妈妈&gt;我的订单</span> 页面支付。</p> 
+					<p class="t_update_3">提示：如确定无资源，订单将自动取消。</p> 
+
+				<#elseif order.orderViewStatus =="VERIFIED"><!-- 审核通过  -->
+					<!--  <p>订单提交成功，<br> 
+				             请赶紧支付吧，以免影响您的行程！</p> -->
+				<#elseif order.orderViewStatus =="CANCEL"><!-- 审核不通过  -->
+		            <p>抱歉，订单已取消或未审核通过。</p>
+				<#else>
+					<div class="common-order-sp-tips"><span class="icon-lv-01"></span>恭喜您，订单预订成功！</div>
+				   	<#if order.mainProductType =="TICKET">
+						<div>取票人手机将收到驴妈妈订单确认短信，按短信说明可顺利入园。</div>
+					<#else>
+						<div>订单联系人手机将收到驴妈妈订单确认短信。</div>
+					</#if>
+				</#if>
+		  <#elseif order.orderViewStatus?? && order.orderViewStatus =="CANCEL"> 
+				<p>订单已取消。 </p> 
+		  <#else>
+			   	<div class="common-order-sp-tips"><span class="icon-lv-01"></span>恭喜您，订单预订成功！</div>
+			   	<#if order.mainProductType =="TICKET">
+					<div>取票人手机将收到驴妈妈订单确认短信，按短信说明可顺利入园。</div>
+				<#else>
+					<div>订单联系人手机将收到驴妈妈订单确认短信。</div>
+				</#if>
+	      </#if>
+	      <!--用户未登录匿名下单门票(在线支付)  -->
+	       <#if !user?? && order.mainProductType =="TICKET">
+	       		<#if order.payTarget?? && order.payTarget =="TOLVMAMA">
+		       		<#if userStatus?? && userStatus =="oldUer">
+		      			<!-- <p style="font-size: 12px; color: #666; padding-top: 7px; font-weight: 100; line-height: 16px;">订单中的手机号码已注册，我们会将订单直接绑定您已注册的账号，登录即可查询。 </p> --> 
+		       		</#if>
+		       		<#if userStatus?? && userStatus =="newUer">
+		      			<div>由于订单中的手机号码未注册，已帮您免费注册驴妈妈账号，注册短信已发送至此手机，登录即可查询。</div>
+		       		</#if>
+	       		</#if>
+	       </#if>
+      </a>
+      <input type="hidden" id="reportFlag" value="${order.canToPay?string('true','false')}"/> 
+      <!--判断匿名下单查看订单详情  -->
+	 <div class="lv-box" style="margin-top:10px;"> 
+	      <#if !user?? && order.mainProductType =="TICKET">
+       		<#if userStatus?? && (userStatus =="oldUer" || userStatus =="newUer")>
+      			<div class="lv-order-list clear" onclick="union_skip('${request.contextPath}/order/order_detail.htm?orderId=${order.orderId}&orderDetailStatus=niming_order');"> 
+       		<#else>
+      			<div class="lv-order-list clear" onclick="union_skip('${request.contextPath}/order/order_detail.htm?orderId=${order.orderId}');">
+       		</#if>
+	      <#else>
+	    		<div class="lv-order-list clear" onclick="union_skip('${request.contextPath}/order/order_detail.htm?orderId=${order.orderId}');">
+		  </#if>
+	      	<a href="javascript:void(0)" class="dapay_a">
+	         <div class="lv-order-li">  
+				 <span class="lv-span-04">订&nbsp;单&nbsp;号：</span><span class="lv-span-03" >${order.orderId!}</span>
+			 </div>
+	        
+	        <div class="lv-order-li">
+	        	<!-- <span class="lv-span-04">产品名称：</span> -->
+	        	<span id="ordername" style="font-size:14px; padding-right:15px;">${order.productName!}</span>
+	        </div>
+	       <!--  <div class="lv-order-li"><span class="lv-span-04">游玩时间：</span>
+	          <span class="lv-span-03">${order.visitTime!} </span>
+	        </div> -->
+	        
+	        <!-- 景点门票 特有 -->
+	        <#if order.mainProductType =="TICKET" && order.earliestPassTime?? && order.earliestPassTime != "">
+		        <div class="lv-order-li"><span class="lv-span-04">最早入园：</span>
+		          <span class="lv-span-03">${order.earliestPassTime!}
+		          </span>
+		        </div>
+		        <div class="lv-order-li"><span class="lv-span-04">最晚入园：</span>
+		          <span class="lv-span-03">${order.latestPassTime!}
+		          </span>
+		        </div>
+	        </#if>
+	       <!--  <div class="lv-order-li"><span class="lv-span-04">支付方式：</span>
+	        	<span class="lv-span-03">${order.zhPaymentTarget!}</span>
+	        </div> -->
+	        
+	        <div class="lv-order-li">
+	            <#if order.orderItem?? && order.orderItem?size&gt;0 >
+	                <#list order.orderItem as item >
+			        	<span class="lv-span-04 pay_w1 lv-ellipsis">${item.shortName!}</span>
+			        	<span class="lv-color lv-pull-right">&yen;${item.price!}&times;${item.quantity!}</span>
+	                </#list>
+	            </#if>
+	            <!-- 优惠券 -->
+	            <#if order.couponUsageAmount?? && order.couponUsageAmount&gt;0>
+	                    <span class="lv-span-04 pay_w1">优惠券</span>
+			        	<span class="lv-color lv-pull-right">&yen;-${order.couponUsageAmount!}</span>
+	            </#if>
+	        </div>
+	           <img class="ic_right" src="http://pic.lvmama.com/img/mobile/touch/img/next.png" />
+	        </a>
+	      </div>
+	      <div class="lv-order-price">
+		      <span class="pay_w2">总额：</span>
+		      <span class="lv-color pay_w3">&yen; ${order.amount?number!}</span>
+		      <span class="pay_w4">省</span>
+		      <span class="pay_w5">&yen; ${order.jieshen!}</span>
+	      </div>
+    </div>
+    <!--用户未登录匿名下单门票(景区支付)  -->
+    <#if !user?? && order.mainProductType =="TICKET">
+    	<#if order.payTarget?? && order.payTarget =="TOSUPPLIER">
+			<section class="stday_succ_con simplenes" style="padding: 20px; border:1px #d2d2d2 solid; background:#fff; position: relative;"> 
+			<p style="font-size: 13px;">感谢您预订驴妈妈门票<br>
+			<#if userStatus?? && userStatus =="oldUer">
+	   			若订单中的手机号码已注册，我们会将订单直接绑定您已注册的账号，登录即可查询。 <br> 
+	    	</#if>
+	    	<#if userStatus?? && userStatus =="newUer">
+	   			由于订单中的手机号码未注册，已帮您免费注册驴妈妈账号，注册短信已发送至此手机，登录即可查询。<br>
+	    	</#if>
+			</p> 
+			<div class="lv-nav-li lv-btn-01 more_btn" style="margin: 10px 0 0 0;"> <a href="http://${hostName}/clutter/login.htm"> <span style="color:#ffffff;">马上登录</span> </a> </div> 
+			</section> 
+		</#if>
+	</#if>
+    <!-- 如果支付给驴妈妈  -->
+    <#if order.canToPay>
+        <#if needResourceTicketCanToPay?? && !needResourceTicketCanToPay>
+	       <!-- 奖金支付  --> 
+		   <#if order.actBonus?? && order.actBonus&gt;0 && user??> 
+			   <section class="reward">
+			    	<span class="reward_ti1">支付订单</span>
+			        <ul _check='ic_check_right'>
+			        	<li onclick="bonusPay('ic_check_right_id');">
+			            	<span class="reward_ti2">奖金账户</span><b>￥${order.bonusBalance!}</b>
+			                <p>奖金总余额¥${order.bonusBalance!}，当前订单可用奖金¥${order.bonus!}，实际可用¥${order.actBonus!}</p>
+			                <span class="ic_check_right" id="ic_check_right_id"><i></i></span>
+			                <input type="hidden" id="reward_check" name="reward_check" _val='1' value="1" />
+			            </li>
+			            
+			        	<li id="needPay_id" style="display:none">
+						    <#assign x="${order.amount!}"/>  
+						    <#assign y="${order.bonusPaidAmount!}"/>  
+			            	<span class="reward_ti2">还需支付</span><b id="bonus_false">￥${(x?number-y?number)}</b>
+			                <p>订单总额¥${order.amount?number!} - 奖金¥${order.bonusPaidAmount!}</p>
+			            </li>
+			            <li id="hasPay_id" style="display:none">
+						    <#assign x="${order.amount!}"/>  
+						    <#assign y="${order.actBonus!}"/>  
+			            	<span class="reward_ti2">还需支付</span><b id="bonus_true">￥${(x?number-y?number)}</b>
+			                <p>订单总额¥${order.amount?number!} - 奖金¥${order.actBonus!}</p>
+			            </li>
+			        </ul>
+			    </section>
+		    </#if>
+		    
+		   <!-- 奖金支付  --> 
+		   <#if order.bonusPaidAmount?? && order.bonusPaidAmount&gt;0 && user??> 
+			   <section class="reward">
+			    	<span class="reward_ti1">支付订单</span>
+			        <ul _check='ic_check_right'>
+			        	<li id="needPay_id">
+			        	    <span class="reward_ti2">奖金抵扣</span><b>¥${order.bonusPaidAmount!}</b>
+			                <p>当前订单已使用奖金抵扣¥${order.bonusPaidAmount!} </p>
+			                <span class="ic_check_right3"><i></i></span>
+			            </li>
+			           <!--  <li id="needPay_id">
+			                <#assign x="${order.amount}"/>  
+						    <#assign y="${order.bonusPaidAmount}"/>  
+			        	    <span class="reward_ti2">还需支付</span><b>¥${(x?number-y?number)}</b>
+			                <p>订单总额¥${order.amount!}-奖金¥${order.bonusPaidAmount!}</p>
+			            </li> -->
+			        </ul>
+			    </section>
+		    </#if>
+        </#if>
+    
+	    <section class="reward reward2">
+	    	<div class="reward_ti1">
+	    	   <#if needResourceTicketCanToPay?? && !needResourceTicketCanToPay>
+	    	                选择支付方式 
+	    	   </#if>
+	    	    <#if order.todayOrder >
+			      <span id="remainTime" class="lv-clock lv-pull-right"></span>
+				  <div id="remainSeconds" style="display:none">${surplusSeconds!}</div>
+			    </#if>
+	    	</div>
+	    	<!--  门票直接去支付 ，线路现在app支付 ，其它支付按钮灰色 -->
+	        <#if order.mainProductType=="TICKET" || 
+			     order.orderType=="FREENESS" || 
+			     order.orderType=="GROUP" || 
+			     order.orderType=="SELFHELP_BUS" || 
+			     order.orderType=="GROUP_LONG" || 
+			     order.orderType=="FREENESS_LONG" || 
+			     order.orderType=="GROUP_FOREIGN" || 
+			     order.orderType=="FREENESS_FOREIGN">
+			     
+		        <#if order.needResourceConfirm>
+	            <!--  需要资源审核-->
+		             <#if order.orderViewStatus =="UNPAY" || order.orderViewStatus =="PARTPAY"> 
+		             <!-- 审核通过 或者订单状态是等待支付，部分支付  -->
+						 	<#include "../order/order_pay_temp.html">
+						 	<div class='pay_sub01' style="margin-bottom:0;">
+						        <span class='pay_ti01'>订单总额：
+						        	<b id="order_price">
+						        	 <#if needResourceTicketCanToPay?? && !needResourceTicketCanToPay>
+						        	  	 <!-- 奖金支付  -->
+						        	  	<#if user??> 
+						        	  		<#if order.actBonus?? && order.actBonus&gt;0> 
+						        	  		<#assign x="${order.amount!}"/>  
+										    <#assign y="${order.actBonus!}"/>  
+							            	&yen;${(x?number-y?number)}
+							        	  	<!-- 奖金支付  --> 
+			  								<#elseif order.bonusPaidAmount?? && order.bonusPaidAmount&gt;0> 
+							        	  		<#assign x="${order.amount}"/>  
+											    <#assign y="${order.bonusPaidAmount}"/>  
+												&yen;${(x?number-y?number)}
+							        	  	<#else>
+							        	  		&yen;${order.amount?number!}
+							        	  	</#if>
+						        	  	<#else>
+						        	  		&yen;${order.amount?number!}
+						        	  	</#if>
+		  								
+						             <#else>
+						             	&yen;${order.amount?number!}
+						        	 </#if>
+						        	</b>
+						        </span>
+						        <a class="lv-btn-booking lv-btn-01 lv-pull-right pay_submit" href="javascript:void(0)" onclick="pay_now('${order.orderId!}');">确认支付</a>
+					        </div>
+					 <#else>
+						 	<a class="lv-btn-booking lv-btn-01 lv-pull-right pay_order" href="http://${hostName}">返回首页</a>
+		             </#if>
+				<#else>
+			         <#include "../order/order_pay_temp.html">
+			         <div class='pay_sub01' style="margin-bottom:0;">
+				        <span class='pay_ti01'>订单总额：
+				        	<b id="order_price">
+				        	 <#if needResourceTicketCanToPay?? && !needResourceTicketCanToPay>
+				        	  	 <!-- 奖金支付  --> 
+				        	  	<#if user??> 
+	  								<#if order.actBonus?? && order.actBonus&gt;0> 
+					        	  		<#assign x="${order.amount!}"/>  
+									    <#assign y="${order.actBonus!}"/>  
+						            	&yen;${(x?number-y?number)}
+					        	  	<!-- 奖金支付  --> 
+	  								<#elseif order.bonusPaidAmount?? && order.bonusPaidAmount&gt;0> 
+					        	  		<#assign x="${order.amount}"/>  
+									    <#assign y="${order.bonusPaidAmount}"/>  
+										&yen;${(x?number-y?number)}
+					        	  	<#else>
+					        	  		&yen;${order.amount?number!}
+					        	  	</#if>
+					        	  <#else>
+				        	  		&yen;${order.amount?number!}
+				        	  	  </#if>
+				             <#else>
+				             	&yen;${order.amount?number!}
+				        	 </#if>
+				        	</b>
+				        </span>
+				        <a class="lv-btn-booking lv-btn-01 lv-pull-right pay_submit" href="javascript:void(0)" onclick="pay_now('${order.orderId!}');">确认支付</a>
+			        </div>
+			    </#if>
+	        <#elseif order.mainProductType=="ROUTE" && order.orderType!="FREENESS">
+	           <a class="lv-btn-booking lv-btn-01 lv-pull-left" href="javascript:void(0);" onclick="union_skip('http://${hostName}/download?Ch=1');">下载App支付</a>
+	        <#else>
+	          <a class="lv-btn-booking lv-btn-01 lv-pull-left" href="javascript:void(0);" onclick="union_skip('http://${hostName}/download?Ch=1');">下载App支付</a>
+	        </#if>
+	    	
+	    </section>
+	 </#if>
+ </div>
+</div>
+<div class="telBox telBox_logout">
+   	<div class="telBox_con"></div>
+       <div class="p">
+           <span>您的支付尚未完成，是否确定要离开当前页面？</span>
+           <a href="javascript:void(0);" class="ic_ret" onclick="logout(1);"></a>
+     <a href="javascript:void(0);" class="ic_logout" onclick="logout(2);"></a>
+     <input  value=""  type="hidden" name="backStatus" id="backStatus">
+    </div>
+</div> 
+<script >
+ $(function() {
+	 if(navigator.geolocation) {
+	    var cashierCode = getLocalStorage("LT_cashierCode");
+	    var cashierName = getLocalStorage("LT_cashierName");
+	    if(null != cashierCode && $.trim(cashierCode) != '' && null != cashierName && $.trim(cashierName) != '') {
+	    	// 如果最近使用支付宝  
+	    	if("ALIPAY" == cashierCode) {
+	    		$("#ALIPAY_ID").html("最近使用：</br>支付宝支付");
+	    		$("#pay-alipayWap").attr("checked","checked");
+	    	}else if("TENPAYWAP" == cashierCode){//财付通
+	    		var tenpayWap=$("#pay-tenpayWap").val();//判断是否支持财付通
+	    		if(tenpayWap!=null && tenpayWap=="TENPAYWAP"){
+		    		// 取消选择 
+			    	$(".ic_radio_right").removeClass().addClass("ic_radio2_right");
+			    	$("input:radio[name=paypath]").attr("checked",false);
+			    	
+			    	var nearHtml = "<li onclick=\"chose_payment_pattern('span_lastUsed','pay-lastUsed');\"> "+
+					        	"<span class=\"ic_tenpay\"><i></i></span><span class=\"reward_ti2\">最近使用：</br>"+cashierName+"</span>"+
+					            "<span class=\"ic_radio_right\" id=\"span_lastUsed\"><i></i></span> "+
+					            "<input id='pay-lastUsed' type='radio' checked value='lastUsed' name='paypath' style=\"display:none\""+
+					            " data-payurl=\"${tenpayWapUrl!}?orderId=${orderId!}\" >"+
+					            "</li>";
+		            $("#payment_pattern_id").prepend(nearHtml);
+		            $("#pay-lastUsed").attr("checked","checked");
+		            $("#TENPAY_ID").parent('li').remove();//删除存在第二位置的财付通标签
+	    		}	
+	    	} else {
+		    	// 取消选择 
+		    	$(".ic_radio_right").removeClass().addClass("ic_radio2_right");
+		    	$("input:radio[name=paypath]").attr("checked",false);
+		    	var ic_credit = "ic_credit"; // 信用卡
+		    	if(cashierCode.indexOf("DEBITCARD") != -1) { // 储蓄卡 
+		    		ic_credit = "ic_deposit";
+		    	}
+		    	var nearHtml = "<li onclick=\"chose_payment_pattern('span_lastUsed','pay-lastUsed');\"> "+
+				        	"<span class=\""+ic_credit+"\"><i></i></span><span class=\"reward_ti2\">最近使用：</br>"+cashierName+"</span>"+
+				            "<span class=\"ic_radio_right\" id=\"span_lastUsed\"><i></i></span> "+
+				            "<input id='pay-lastUsed' type='radio' checked value='lastUsed' name='paypath' style=\"display:none\""+
+				            " data-payurl=\"${order.alipayWapUrl!}?orderId=${orderId!}&cashierCode="+cashierCode+"\" >"+
+				            "</li>";
+	            $("#payment_pattern_id").prepend(nearHtml);
+	            $("#pay-lastUsed").attr("checked","checked");
+	    	}
+	    	
+	    	
+	    }
+	 }
+ })
+ 	//点击首页弹框
+	function home_back(){
+		 var boolBack=${order.canToPay?string("1","0")};
+		 if(boolBack==1){
+			//第一个TRUE是半段弹出框是否显示true显示false隐藏,第二个TRUE判断几个按钮TRUE一个FALSE是两个
+			popupModal(true, "您的订单尚未完成，是否确定要离开当前页面？", null, 0,false); 
+			$('.ic_roseo').bind('click',function(){
+				 window.location.href='http://${hostName}';
+			});
+			$('.ic_yellow').bind('click',function(){
+				popupModal_logOut();
+			});
+		 }else{
+			 window.location.href='http://${hostName}';
+		 }
+	 }
+	function popupModal_logOut(){
+		popupModal(false, '', null, 0,false);
+	}
+</script>
+ <!-- footer -->
+ <#include "../common/order_footer.html"/>
+</body>
+</html>

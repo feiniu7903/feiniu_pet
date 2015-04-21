@@ -1,0 +1,22 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./mc_banduser"?>
+<bandbox id="mc_banduser" apply="com.lvmama.back.utils.MacroUserSelect" onChanging='if (event.getValue().equals("")) {userId.value=""; Events.sendEvent(new Event("onChange", userId));} mc_banduser$composer.changeUser(event);'
+	mold="rounded" autodrop="true" width="150px" >
+	<bandpopup>
+		<vbox>
+			<listbox width="350px" id="bandboxListBox" 
+				model="@{mc_banduser$composer.userList, load-after='mc_banduser.onChanging' }"
+				onSelect=' if (self.selectedItem==null) return;mc_banduser.value=self.selectedItem.firstChild.label; userId.value=self.selectedItem.value; Events.sendEvent(new Event("onChange", userId));mc_banduser.close();'>
+				<listhead>
+					<listheader label="用户名"  width="100px"/>
+					<listheader label="手机号"  width="100px"/>
+					<listheader label="邮件"/>
+				</listhead>
+				<listitem self="@{each='user'}" value="@{user.userId}" height="25px">
+					<listcell label="@{user.userName}"/>
+					<listcell label="@{user.mobileNumber}"/>
+					<listcell label="@{user.email}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

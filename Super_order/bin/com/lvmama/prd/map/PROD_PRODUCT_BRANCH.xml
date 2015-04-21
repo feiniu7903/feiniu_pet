@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_BRANCH">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		<result column="PROD_BRANCH_ID" property="prodBranchId" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="BRANCH_TYPE" property="branchType" />
+		<result column="BRANCH_NAME" property="branchName" />
+		<result column="ADULT_QUANTITY" property="adultQuantity" />
+		<result column="CHILD_QUANTITY" property="childQuantity" />
+		<result column="MINIMUM" property="minimum" />
+		<result column="MAXIMUM" property="maximum" />
+		<result column="PRICE_UNIT" property="priceUnit" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="ADDITIONAL" property="additional" />
+		<result column="DEFAULT_BRANCH" property="defaultBranch" />
+		<result column="ON_LINE" property="online" />
+		<result column="ICON" property="icon" />
+		<result column="BREAKFAST" property="breakfast" />
+		<result column="BROADBAND" property="broadband" />
+		<result column="BED_TYPE" property="bedType" />
+		<result column="SELL_PRICE" property="sellPrice" />
+		<result column="MARKET_PRICE" property="marketPrice" />
+		<result column="VISIBLE" property="visible" />
+		<result column="VALID" property="valid" />
+		<result column="EXTRA_BED_ABLE" property="extraBedAble" />
+		<result column="BRANCH_SERIAL_NUMBER" property="branchSerialNumber" nullValue="0"/>
+		<result property="berth" column="BERTH"/>
+		<result property="stationStationId" column="STATION_STATION_ID"/>
+		<result property="todayOrderAble" column="TODAY_ORDER_ABLE"/>
+		<result property="validBeginTime" column="VALID_BEGIN_TIME" />
+		<result property="validEndTime" column="VALID_END_TIME" />
+		<result property="invalidDate" column="INVALID_DATE"/>
+		<result property="invalidDateMemo" column="INVALID_DATE_MEMO"/>
+		<result property="weixinLijian" column="WEIXIN_LIJIAN"/>
+	</resultMap>
+	<resultMap id="sortResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		<result column="PROD_BRANCH_ID" property="prodBranchId" />
+		<result column="BRANCH_SERIAL_NUMBER" property="branchSerialNumber" />
+	</resultMap>
+	<resultMap id="idForDistributionMap" class="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		<result column="PROD_BRANCH_ID" property="prodBranchId" />
+		<result column="PRODUCT_ID" property="productId" />
+	</resultMap>
+	
+	<resultMap id="B2BResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		<result column="PROD_BRANCH_ID" property="prodBranchId" />
+		<result column="BRANCH_NAME" property="branchName" />
+		<result column="BRANCH_TYPE" property="branchType" />
+		<result column="ON_LINE" property="online" />
+		<result column="VALID" property="valid" />	
+		<result column="PRODUCT_ID" property="productId" />
+	</resultMap>
+	
+	<select id="selectProdCanDistributeByProdType" resultMap="idForDistributionMap"
+		parameterClass="java.util.Map">
+		SELECT distinct PPB.PRODUCT_ID, PPB.PROD_BRANCH_ID
+		FROM PROD_PRODUCT PP,
+		PROD_PRODUCT_BRANCH PPB,
+		PROD_PRODUCT_CHANNEL PPC,
+		(SELECT PRODUCT_ID FROM VIEW_PAGE WHERE PAGE_ID IN (select PAGE_ID from VIEW_CONTENT)) VP
+		WHERE PP.PRODUCT_ID = VP.PRODUCT_ID
+		AND PP.PRODUCT_ID = PPB.PRODUCT_ID
+		AND PPC.PRODUCT_ID = PP.PRODUCT_ID
+		<isNotEmpty prepend="AND" property="productId">
+			PP.PRODUCT_ID = #productId#
+		</isNotEmpty>
+		AND PPC.PRODUCT_CHANNEL = 'FRONTEND'
+		AND PP.ON_LINE = 'true'
+		AND PPB.ON_LINE = 'true'
+		AND PP.VALID = 'Y'
+		AND PPB.VALID = 'Y'
+		AND PP.OFFLINE_TIME > SYSDATE
+		AND PPB.ADDITIONAL = 'false'
+		AND PP.IS_APERIODIC = 'false'
+		AND exists(select 1 from PROD_TIME_PRICE ptp 
+		where ptp.prod_branch_id = ppb.prod_branch_id 
+		and ptp.spec_date > sysdate)
+		<isNotEmpty prepend="AND" property="productType">
+			PP.PRODUCT_TYPE = #productType#
+		</isNotEmpty>
+		<isEqual prepend="AND" property="productType" compareValue="TICKET">
+			exists (SELECT 1 
+		    FROM PROD_PRODUCT_BRANCH_ITEM PPBI, 
+		    META_PRODUCT_BRANCH MPB, 
+		    META_PRODUCT MP, 
+		    META_PERFORM MS, 
+		    SUP_PERFORM_TARGET SPT 
+		    WHERE PPBI.META_BRANCH_ID = MPB.META_BRANCH_ID 
+		    AND MPB.META_PRODUCT_ID = MS.META_PRODUCT_ID 
+		    AND MS.TARGET_ID = SPT.TARGET_ID 
+		    AND MPB.META_PRODUCT_ID = MP.META_PRODUCT_ID 
+		    <isNotEmpty  prepend="AND" property="paytolvmama">
+		    	MP.PAY_TO_LVMAMA=#paytolvmama#
+		    </isNotEmpty>
+		    AND SPT.CERTIFICATE_TYPE IN ('DIMENSION', 'SMS')
+		    AND PPB.PROD_BRANCH_ID = PPBI.PROD_BRANCH_ID)
+		    AND PP.IS_FOREGIN = 'N'
+		</isEqual>
+		<isNotEmpty prepend="AND" property="subProductType">
+			PP.SUB_PRODUCT_TYPE =#subProductType#
+		</isNotEmpty>
+		AND PPB.DEFAULT_BRANCH = 'true'
+	</select>
+	
+	<select id="getProductBranchByMetaProdBranchId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+		SELECT PPB.*
+		  FROM PROD_PRODUCT_BRANCH PPB, PROD_PRODUCT_BRANCH_ITEM PPBI
+		 WHERE PPB.PROD_BRANCH_ID = PPBI.PROD_BRANCH_ID
+		   AND PPBI.META_BRANCH_ID = #metaBranchId#
+	</select>
+	
+	<select id="getProductBranchByProductId" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+		select * from PROD_PRODUCT_BRANCH
+		where PRODUCT_ID = #productId# AND VALID='Y' 
+		<isNotNull prepend="and" property="online">
+			ON_LINE=#online#				
+		</isNotNull>
+		<isNotNull prepend="and" property="additional">
+			additional=#additional#
+		</isNotNull>
+		<isNotNull prepend="and" property="visible">
+			VISIBLE=#visible#
+		</isNotNull>
+		ORDER BY BRANCH_SERIAL_NUMBER ASC
+	</select>
+	
+	<!-- 获取上一位ID -->
+	<select id="getPreProductBranch" resultMap="sortResultMap" parameterClass="java.util.HashMap">
+		select PROD_BRANCH_ID,BRANCH_SERIAL_NUMBER from (select PROD_BRANCH_ID,BRANCH_SERIAL_NUMBER from PROD_PRODUCT_BRANCH where PRODUCT_ID = #productId# AND VALID='Y' AND branch_serial_number &lt; #branchSerialNumber# ORDER BY BRANCH_SERIAL_NUMBER DESC)
+		where ROWNUM=1
+	</select>
+	
+	<!-- 获取下一位ID -->
+	<select id="getNextProductBranch" resultMap="sortResultMap" parameterClass="java.util.HashMap">
+		select PROD_BRANCH_ID,BRANCH_SERIAL_NUMBER from (select PROD_BRANCH_ID,BRANCH_SERIAL_NUMBER from PROD_PRODUCT_BRANCH where PRODUCT_ID = #productId# AND VALID='Y' AND branch_serial_number &gt; #branchSerialNumber# ORDER BY BRANCH_SERIAL_NUMBER)
+		where ROWNUM=1
+	</select>
+	
+	<!-- 更新排序 -->
+	<update id="updateProductBranchSerialNumber" parameterClass="java.util.HashMap">
+		update PROD_PRODUCT_BRANCH SET branch_serial_number=#branchSerialNumber# WHERE PROD_BRANCH_ID=#prodBranchId#
+	</update>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		<selectKey keyProperty="prodBranchId" resultClass="java.lang.Long">
+			select PROD_BRANCH_ID_SEQ.NEXTVAL from dual 
+		</selectKey>
+		insert into PROD_PRODUCT_BRANCH (PROD_BRANCH_ID, CREATE_TIME, BRANCH_TYPE,BRANCH_NAME, ADULT_QUANTITY,
+		CHILD_QUANTITY, MINIMUM, MAXIMUM, PRICE_UNIT, DESCRIPTION,
+		PRODUCT_ID,ADDITIONAL,DEFAULT_BRANCH,ON_LINE,
+		ICON,BREAKFAST,BROADBAND,BED_TYPE,VISIBLE,EXTRA_BED_ABLE,VALID,BRANCH_SERIAL_NUMBER, BERTH,STATION_STATION_ID,WEIXIN_LIJIAN)
+		values (#prodBranchId#, sysdate,#branchType#, #branchName#,
+		#adultQuantity#, #childQuantity#, #minimum#, #maximum#,
+		#priceUnit#, #description#, #productId#,#additional#,#defaultBranch#,nvl(#online#,'true'),#icon#,#breakfast#,#broadband#,#bedType#,
+		#visible#,#extraBedAble#,'Y',#prodBranchId#, #berth#,#stationStationId#,#weixinLijian#)
+	</insert>
+	
+	<delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		delete from PROD_PRODUCT_BRANCH where PROD_BRANCH_ID=#prodBranchId#
+	</delete>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		select * from PROD_PRODUCT_BRANCH where PROD_BRANCH_ID = #prodBranchId# AND VALID='Y'
+	</select>
+	
+	<select id="selectByPrimaryProdBranchId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		select * from PROD_PRODUCT_BRANCH where PROD_BRANCH_ID = #prodBranchId#
+	</select>
+
+	<update id="clearProductDef" parameterClass="java.lang.Long">
+		update PROD_PRODUCT_BRANCH SET DEFAULT_BRANCH=null WHERE PRODUCT_ID=#productId# AND VALID='Y'
+	</update>
+
+	<update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		update PROD_PRODUCT_BRANCH
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="createTime">
+				CREATE_TIME = #createTime#
+			</isNotNull>
+			<isNotNull prepend="," property="branchName">
+				BRANCH_NAME = #branchName#
+			</isNotNull>
+			<isNotNull prepend="," property="branchType">
+				BRANCH_TYPE = #branchType#
+			</isNotNull>
+			<isNotNull prepend="," property="adultQuantity">
+				ADULT_QUANTITY = #adultQuantity#
+			</isNotNull>
+			<isNotNull prepend="," property="childQuantity">
+				CHILD_QUANTITY = #childQuantity#
+			</isNotNull>
+			<isNotNull prepend="," property="minimum">
+				MINIMUM = #minimum#
+			</isNotNull>
+			<isNotNull prepend="," property="maximum">
+				MAXIMUM = #maximum#
+			</isNotNull>
+			<isNotNull prepend="," property="priceUnit">
+				PRICE_UNIT = #priceUnit#
+			</isNotNull>
+			<isNotNull prepend="," property="description">
+				DESCRIPTION = #description#
+			</isNotNull>
+			<isNotNull prepend="," property="productId">
+				PRODUCT_ID = #productId#
+			</isNotNull>
+			<isNotNull prepend="," property="additional">
+				ADDITIONAL = #additional#
+			</isNotNull>
+			<isNotNull prepend="," property="defaultBranch">
+				DEFAULT_BRANCH = #defaultBranch#
+			</isNotNull>
+			<isNotNull prepend="," property="sellPrice">
+				SELL_PRICE = #sellPrice#
+			</isNotNull>
+			<isNotNull prepend="," property="marketPrice">
+				MARKET_PRICE = #marketPrice#
+			</isNotNull>
+			<isNotNull prepend="," property="online">
+				ON_LINE = #online#
+			</isNotNull>
+			<isNotNull prepend="," property="icon">
+				ICON = #icon#
+			</isNotNull>
+			<isNotNull prepend="," property="breakfast">
+				BREAKFAST = #breakfast#
+			</isNotNull>
+			<isNotNull prepend="," property="broadband">
+				BROADBAND = #broadband#
+			</isNotNull>
+			<isNotNull prepend="," property="bedType">
+				BED_TYPE = #bedType#
+			</isNotNull>
+			<isNotNull prepend="," property="visible">
+				VISIBLE = #visible#
+			</isNotNull>
+			<isNotNull prepend="," property="extraBedAble">
+				EXTRA_BED_ABLE = #extraBedAble#
+			</isNotNull>
+			<isNotNull prepend="," property="valid">
+				VALID = #valid#
+			</isNotNull>
+			<isNotNull prepend="," property="berth">
+				BERTH = #berth#
+			</isNotNull>
+			<isNotNull prepend="," property="todayOrderAble">
+				TODAY_ORDER_ABLE = #todayOrderAble#
+			</isNotNull>
+			<isNotNull prepend="," property="validBeginTime">
+			    VALID_BEGIN_TIME = #validBeginTime#
+			</isNotNull>
+			<isNotNull prepend="," property="validEndTime">
+			    VALID_END_TIME = #validEndTime#
+			</isNotNull>
+			<isNotNull prepend="," property="invalidDate">
+				INVALID_DATE = #invalidDate#
+			</isNotNull>
+			<isNotNull prepend="," property="invalidDateMemo">
+				INVALID_DATE_MEMO = #invalidDateMemo#
+			</isNotNull>
+			<isNotNull prepend="," property="weixinLijian">
+				WEIXIN_LIJIAN = #weixinLijian#
+			</isNotNull>
+		</dynamic>
+		where PROD_BRANCH_ID = #prodBranchId# AND VALID='Y'
+	</update>
+
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		update PROD_PRODUCT_BRANCH
+		<dynamic prepend="set">
+			CREATE_TIME = #createTime#,
+			BRANCH_NAME = #branchName#,
+			BRANCH_TYPE = #branchType#,
+			ADULT_QUANTITY = #adultQuantity#,
+			CHILD_QUANTITY = #childQuantity#,
+			MINIMUM = #minimum#,
+			MAXIMUM = #maximum#,
+			PRICE_UNIT = #priceUnit#,
+			DESCRIPTION = #description#,
+			PRODUCT_ID = #productId#,
+			ADDITIONAL = #additional#,
+			DEFAULT_BRANCH = #defaultBranch#,
+			SELL_PRICE = #sellPrice#,
+			MARKET_PRICE =
+			#marketPrice#,
+			ON_LINE = #online#,
+			ICON = #icon#,
+			BREAKFAST = #breakfast#,
+			BROADBAND = #broadband#,
+			BED_TYPE = #bedType#,
+			VISIBLE = #visible#,
+			EXTRA_BED_ABLE = #extraBedAble#,
+			VALID = #valid#,
+			BERTH = #berth#,
+			TODAY_ORDER_ABLE = #todayOrderAble#,
+			VALID_BEGIN_TIME = #validBeginTime#,
+			VALID_END_TIME = #validEndTime#,
+			INVALID_DATE = #invalidDate#,
+			INVALID_DATE_MEMO = #invalidDateMemo#,
+			WEIXIN_LIJIAN = #weixinLijian#
+	</dynamic>
+		where PROD_BRANCH_ID = #prodBranchId# AND VALID='Y'
+	</update>
+
+	<select id="selectByParam" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		select * from PROD_PRODUCT_BRANCH where VALID='Y' 
+		<!-- <dynamic prepend="where"> -->
+			<isNotEmpty prepend="and" property="branchType">
+				BRANCH_TYPE = #branchType#
+		</isNotEmpty>
+			<isNotEmpty prepend="and" property="productId">
+				PRODUCT_ID = #productId#
+		</isNotEmpty>
+			<isNotEmpty prepend="and" property="additional">
+				ADDITIONAL = #additional#
+				</isNotEmpty>
+			<isNotEmpty prepend="and" property="defaultBranch">
+				DEFAULT_BRANCH = #defaultBranch#
+				</isNotEmpty>
+			<isNotEmpty prepend="and" property="online">
+				ON_LINE = #online#
+				</isNotEmpty>
+			<isNotEmpty prepend="and" property="visible">
+				VISIBLE = #visible#
+				</isNotEmpty>
+			<isNotEmpty prepend="and" property="berth">
+				BERTH = #berth#
+			</isNotEmpty>
+		<!--</dynamic>-->
+	</select>
+	<sql id="selectAllSQL">
+		select ppb.PROD_BRANCH_ID,ROWNUM RN from PROD_PRODUCT_BRANCH ppb
+  		where ppb.ON_LINE='true' AND exists(select 1 from PROD_PRODUCT pp 
+  		where pp.ON_LINE='true' AND pp.VALID='Y' AND pp.sub_product_type not in('TRAIN') AND pp.product_id=ppb.product_id) AND ppb.VALID='Y'
+	</sql>
+  <select id="selectAll" resultClass="java.lang.Long" parameterClass="java.util.Map">
+  	select T.PROD_BRANCH_ID from(
+  		<include refid="selectAllSQL"/>
+	 and ROWNUM &lt;= #maxResults#
+  	) T where T.RN &gt;= #skipResults#
+  </select>
+   
+  <select id="selectAllCount" resultClass="java.lang.Long">
+  	select count(*) from (<include refid="selectAllSQL"/>)
+  </select>
+  
+  <update id="updatePriceByPK" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+  		update PROD_PRODUCT_BRANCH set SELL_PRICE=#sellPrice#,MARKET_PRICE=#marketPrice#
+  		where  PROD_BRANCH_ID = #prodBranchId# AND VALID='Y'
+  </update>
+  
+  <select id="selectListByProdJourney" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+    	select * from prod_product_branch ppb where ppb.VALID='Y' AND exists(select 1 from prod_journey_product pjp where pjp.prod_branch_id=ppb.prod_branch_id and pjp.PROD_JOURENY_ID=#prodJourneyId#)
+  </select>
+  
+  <select id="selectProdBranchsByStationStation" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranch" resultMap="BaseResultMap">
+  		select * from prod_product_branch ppb where ppb.station_station_id=#stationStationId#
+  </select>
+  
+  <select id="selectProdTrainBranchsByParams" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+  	select * from prod_product_branch ppb,line_station_station lss
+  	where ppb.on_line='true' and ppb.valid='Y' and  ppb.station_station_id = lss.station_station_id
+	<isNotEmpty prepend="and" property="stationKey">
+		station_key=#stationKey#
+	</isNotEmpty>
+	<isNotEmpty prepend="and" property="lineName">
+		line_name=#lineName#
+	</isNotEmpty>
+	<isNotEmpty prepend="and" property="visitTime">
+		exists(select 1 from prod_time_price where spec_date = #visitTime#)
+	</isNotEmpty>
+  </select>
+  
+  <sql id="selectB2BProdSql" >
+		FROM PROD_PRODUCT PP,
+		PROD_PRODUCT_BRANCH PPB,
+		PROD_PRODUCT_CHANNEL PPC
+		where PP.PRODUCT_ID = PPB.PRODUCT_ID
+		AND PPC.PRODUCT_ID = PP.PRODUCT_ID
+		<isNotEmpty prepend="AND" property="productId">
+			PPB.PRODUCT_ID = #productId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="prodBranchId">
+			PPB.PROD_BRANCH_ID = #prodBranchId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="branchName">
+			PPB.BRANCH_NAME LIKE '%'|| #branchName# ||'%'			
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="productName">
+			PP.PRODUCT_NAME LIKE '%'|| #productName# ||'%'			
+		</isNotEmpty>
+		<isNotEmpty  prepend="AND" property="paytolvmama">
+		   	PP.PAY_TO_LVMAMA = #paytolvmama#
+		</isNotEmpty>
+		AND PPC.PRODUCT_CHANNEL = 'FRONTEND'
+		AND PP.ON_LINE = 'true'
+		AND PPB.ON_LINE = 'true'
+		AND PP.VALID = 'Y'
+		AND PPB.VALID = 'Y'
+		AND PP.OFFLINE_TIME > SYSDATE
+		AND PPB.ADDITIONAL = 'false'
+		AND PP.IS_APERIODIC = 'false'
+		AND exists(select 1 from PROD_TIME_PRICE ptp 
+		where ptp.prod_branch_id = ppb.prod_branch_id 
+		and ptp.spec_date > sysdate)
+		<isNotEmpty prepend="AND" property="productType">
+			PP.PRODUCT_TYPE = #productType#
+			<isEqual prepend="AND" property="productType" compareValue="TICKET">
+			exists (SELECT 1 
+		    FROM PROD_PRODUCT_BRANCH_ITEM PPBI, 
+		    META_PRODUCT_BRANCH MPB, 
+		    META_PRODUCT MP, 
+		    META_PERFORM MS, 
+		    SUP_PERFORM_TARGET SPT 
+		    WHERE PPBI.META_BRANCH_ID = MPB.META_BRANCH_ID 
+		    AND MPB.META_PRODUCT_ID = MS.META_PRODUCT_ID 
+		    AND MS.TARGET_ID = SPT.TARGET_ID 
+		    AND MPB.META_PRODUCT_ID = MP.META_PRODUCT_ID 
+		    <isNotEmpty  prepend="AND" property="paytolvmama">
+		    	MP.PAY_TO_LVMAMA=#paytolvmama#
+		    </isNotEmpty>		    
+		    AND SPT.CERTIFICATE_TYPE IN ('DIMENSION', 'SMS')
+		    AND PPB.PROD_BRANCH_ID = PPBI.PROD_BRANCH_ID)
+		    AND PP.IS_FOREGIN = 'N'
+		</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="subProductType">
+			PP.SUB_PRODUCT_TYPE =#subProductType#
+		</isNotEmpty>
+ </sql>
+ 	
+ <select id="selectB2BProdByParam" resultMap="B2BResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT PPB.PROD_BRANCH_ID,PPB.BRANCH_NAME,PPB.BRANCH_TYPE,PPB.PRODUCT_ID, PPB.ON_LINE,PPB.VALID
+		<include refid="selectB2BProdSql"/>		
+ </select>	
+ 	
+  <select id="selectB2BProd" resultMap="B2BResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM (SELECT
+			P_T.*,ROWNUM AS RN FROM (
+		SELECT PPB.PROD_BRANCH_ID,PPB.BRANCH_NAME,PPB.BRANCH_TYPE,PPB.PRODUCT_ID, PPB.ON_LINE,PPB.VALID
+		<include refid="selectB2BProdSql"/>
+		) P_T ) WHERE RN BETWEEN
+		#startRows# AND #endRows#
+ </select>
+ 
+  <select id="selectB2BProdCount" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		select count(1) 
+		<include refid="selectB2BProdSql"/>		
+ </select>
+
+</sqlMap>

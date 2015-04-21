@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ORD_ECONTRACT_LOG" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdEContract" >
+    <result column="ECONTRACT_ID" property="econtractId" />
+	<result column="ECONTRACT_NO" property="econtractNo" />
+    <result column="ORDER_ID" property="orderId" />
+	<result column="ECONTRACT_STATUS" property="econtractStatus" />
+	<result column="CONFIRMED_DATE" property="confirmedDate" />
+	<result column="CONTENT_FILE_ID" property="contentFileId" />
+	<result column="FIXED_FILE_ID" property="fixedFileId" />
+	<result column="CONTRACT_VERSION" property="contractVersion" />
+	<result column="COMPLEMENT_XML" property="complementXml" />
+  </resultMap>
+  <insert id="insert"  parameterClass="com.lvmama.comm.bee.po.ord.OrdEContractLog">
+	  INSERT INTO ORD_ECONTRACT_LOG
+		  (ECONTRACT_ID,
+		   ECONTRACT_NO,
+		   ORDER_ID,
+		   ECONTRACT_STATUS,
+		   CONFIRMED_DATE,
+		   CONTENT_FILE_ID,
+		   FIXED_FILE_ID,
+		   UPDATE_DATE,
+		   UPDATE_BY,
+		   CONTRACT_VERSION,
+		   COMPLEMENT_XML)
+	  SELECT ECONTRACT_ID,
+	         ECONTRACT_NO,
+	         ORDER_ID,
+	         ECONTRACT_STATUS,
+	         CONFIRMED_DATE,
+	         CONTENT_FILE_ID,
+	         FIXED_FILE_ID,
+	         SYSDATE,
+	         #updateBy#,
+	         CONTRACT_VERSION,
+	         COMPLEMENT_XML
+	    FROM ORD_ECONTRACT E
+	   WHERE E.ORDER_ID = #orderId#
+  </insert>
+  <select id="queryByPK" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+	SELECT ECONTRACT_ID,
+		   ECONTRACT_NO,
+		   ORDER_ID,
+		   ECONTRACT_STATUS,
+		   CONFIRMED_DATE,
+		   CONTENT_FILE_ID,
+		   FIXED_FILE_ID,
+		   CONTRACT_VERSION,
+		   COMPLEMENT_XML
+	FROM ORD_ECONTRACT_LOG 
+	<dynamic prepend=" WHERE ">
+  		<isNotEmpty prepend=" AND " property="econtractNo"> ECONTRACT_NO = #econtractNo# </isNotEmpty>
+  		<isNotEmpty prepend=" AND " property="orderId"> ORDER_ID = #orderId# </isNotEmpty>
+  	</dynamic>
+  </select>
+</sqlMap>

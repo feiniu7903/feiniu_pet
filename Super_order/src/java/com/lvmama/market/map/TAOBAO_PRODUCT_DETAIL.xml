@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TAOBAO_PRODUCT_DETAIL">
+	<typeAlias alias="detailProduct" type="com.lvmama.comm.bee.po.market.TaobaoProductDetail"/>
+	<resultMap id="detailResultMap" class="detailProduct">
+		<result column="TB_PRODUCT_DETAILS_ID" property="tbProductDetailsId" />
+		<result column="TB_PRODUCT_INTERFACE_ID" property="tbProductInterfaceId" />
+		<result column="TB_JHS_RETURN_ID" property="tbJhsReturnId" />
+		<result column="APPLY_CITY_ID" property="applyCityId" />
+		<result column="PLATFORM_ID" property="platFormId" />
+		<result column="IS_STORAGE" property="isStorage" />
+		<result column="MAIN_PIC" property="mainPic" />
+		<result column="SHORT_NAME" property="shortName" />
+		<result column="LONG_NAME" property="longName" />
+		<result column="ORIGINAL_PRICE" property="originalPrice" />
+		<result column="ACTIVITY_PRICE" property="activityPrice" />
+		<result column="DISCOUNT" property="discount" />
+		<result column="ITEM_COUNT" property="itemCount" />
+		<result column="LIMIT_NUM" property="limitNum" />
+		<result column="LOC_CITY" property="locCity" />
+		<result column="TRIP_FORM_TYPE" property="tripFormType" />
+		<result column="START_AREA" property="startArea" />
+		<result column="DESTINY_AREA" property="destinyArea" />
+		<result column="OPINION" property="optinion" />
+		<result column="MULTI_CITY_REASON" property="multiCityReason" />
+		<result column="SCHEDULE_ADVICE" property="scheduleAdvice" />
+		<result column="TG_HISTORY" property="tgHistory" />
+		<result column="STRENGTH" property="strength" />
+		<result column="ACTIVITY_ENTER_ID" property="activityEnterId" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="MODIFY_DATE" property="modifyDate" />
+	</resultMap>
+	
+	<select id="getDetailProdProductById" parameterClass="java.lang.Long" resultMap="detailResultMap"> 
+  		select * from taobao_product_details tpd
+		where tpd.TB_PRODUCT_INTERFACE_ID=#id#
+  	</select>
+  	
+  	<insert id="insert" parameterClass="detailProduct" >
+		<selectKey keyProperty="tbProductDetailsId" resultClass="java.lang.Long">
+			SELECT taobao_product_details_seq.nextval FROM DUAL
+		</selectKey>
+		insert into taobao_product_details 
+			(tb_product_details_id,
+			tb_product_interface_id,
+			apply_city_id,
+			platform_id,
+			is_storage,
+			main_pic,
+			short_name,
+			long_name,
+			original_price,
+			activity_price,
+			discount,
+			item_count,
+			limit_num,
+			loc_city,
+			trip_form_type,
+			start_area,
+			destiny_area,
+			opinion,
+			multi_city_reason,
+			schedule_advice,
+			tg_history,
+			strength,
+			activity_enter_id,
+			create_date,
+			modify_date,
+			TB_JHS_RETURN_ID)
+		VALUES(#tbProductDetailsId#,#tbProductInterfaceId#,#applyCityId#,#platFormId#,#isStorage#,
+			#mainPic#,#shortName#,#longName#,#originalPrice#,#activityPrice#,#discount#,#itemCount#,
+			#limitNum#,#locCity#,#tripFormType#,#startArea#,#destinyArea#,#optinion#,#multiCityReason#,
+			#scheduleAdvice#,#tgHistory#,#strength#,#activityEnterId#,#createDate#,#modifyDate#,#tbJhsReturnId#)
+	</insert>
+	
+	<update id="updateDetailUpdateById" parameterClass="detailProduct">
+		UPDATE taobao_product_details
+	        <dynamic prepend="set">
+	            <isNotNull prepend="," property="tbJhsReturnId">
+	             	TB_JHS_RETURN_ID = #tbJhsReturnId#
+	            </isNotNull>
+	            <isNotNull prepend="," property="applyCityId">
+	             	apply_city_id = #applyCityId#
+	            </isNotNull>
+	            <isNotNull prepend="," property="mainPic">
+	            	main_pic = #mainPic#
+	            </isNotNull>
+	            <isNotNull prepend="," property="shortName">
+	               	short_name = #shortName# 
+	            </isNotNull>
+	            <isNotNull prepend="," property="longName">
+		        	long_name=#longName#
+		        </isNotNull>
+	            <isNotNull prepend="," property="originalPrice">
+	              	original_price = #originalPrice# 
+	            </isNotNull>
+	            <isNotNull prepend="," property="activityPrice">
+	               	activity_price = #activityPrice# 
+	            </isNotNull>
+	            <isNotNull prepend="," property="discount">
+	               	discount = #discount#
+	            </isNotNull>
+	            <isNotNull prepend="," property="itemCount">
+	               	item_count = #itemCount#
+	            </isNotNull>
+	            <isNotNull prepend="," property="limitNum">
+	               	limit_num = #limitNum# 
+	            </isNotNull>
+	            <isNotNull prepend="," property="locCity">
+	               	loc_city=#locCity#
+	            </isNotNull>
+	            <isNotNull prepend="," property="startArea">
+	              	start_area = #startArea# 
+	            </isNotNull>
+	            <isNotNull prepend="," property="destinyArea">
+	               	destiny_area = #destinyArea# 
+	            </isNotNull>
+	            <isNotNull prepend="," property="optinion">
+	               	opinion = #optinion#
+	            </isNotNull>
+	            <isNotNull prepend="," property="multiCityReason">
+	               	multi_city_reason = #multiCityReason#
+	            </isNotNull>
+	            <isNotNull prepend="," property="scheduleAdvice">
+	               	schedule_advice = #scheduleAdvice# 
+	            </isNotNull>
+	            <isNotNull prepend="," property="tgHistory">
+	               	tg_history=#tgHistory#
+	            </isNotNull>
+	            <isNotNull prepend="," property="strength">
+	              	strength = #strength# 
+	            </isNotNull>
+	            <isNotNull prepend="," property="modifyDate">
+	               	modify_date = #modifyDate# 
+	            </isNotNull>
+	        </dynamic>
+        WHERE tb_product_details_id = #tbProductDetailsId# 
+	</update>
+</sqlMap>

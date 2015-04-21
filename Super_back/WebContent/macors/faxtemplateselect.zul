@@ -1,0 +1,7 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./mc_faxTemplateBox"?>
+<hbox id="mc_faxTemplateBox" apply="com.lvmama.back.utils.MacroFaxTemplate">
+<custom-attributes defaultvalue="${arg.defaultvalue }"/>
+<listbox id="mc_faxTemplateListBox" rows="1" mold="select" onSelect="faxTemplateId.value=self.selectedItem.value">
+<listitem self="@{each='faxtemplate'}" label="@{faxtemplate.templateName}" value="@{faxtemplate.templateId}"></listitem>
+</listbox>
+</hbox>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_REPORT" >
+
+<select id="weekReport" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+select 
+product_type_zh,
+sub_product_type_zh,
+order_id,
+order_item_prod_id,
+create_time,
+deal_time,
+visit_time,
+max_send_time,
+order_status_zh,
+payment_status_zh ,
+payment_time,
+payment_gateway_zh,
+serial,
+gateway_trade_no,
+settlement_period,
+product_name,
+meta_product_name,
+certificat_ename,
+settlement_name,
+supplier_name,
+supplier_id_zh,
+quantity,
+product_quantity,
+adult_quantity,
+child_quantity,
+price_unit,
+actual_settlement_price,
+product_settlement_price,
+item_pay,
+actual_pay,
+last_price,
+payment_target_zh,
+channel_zh,
+user_name,
+order_count,
+final_operator_name,
+audit_operator_name ,
+concat_name,
+mobile,
+address,
+order_memo,
+backorder_operator_name,
+receivers_address,
+bank_name,
+bank_account_name,
+bank_account,
+alipay_name,
+alipay_account,
+cancel_reason_zh
+from report_detail_tv  t
+where 1=1
+	   <isNotEmpty prepend="and" property="orderStatus">
+	   	order_status = #orderStatus#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="metaProductId">
+	   	meta_product_id = #metaProductId#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="productId">
+	   	product_id = #productId#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="paymentStatus">
+	   	payment_status = #paymentStatus#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="metaProductName">
+	   	meta_product_name like '%$metaProductName$%'
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="productName">
+	   	product_name like '%$productName$%'
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="paymentTarget">
+	   	payment_target = #paymentTarget#
+	   </isNotEmpty>
+	    <isNotEmpty prepend="and" property="orderId">
+	   	order_id = #orderId#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="createTimeB">
+	   	create_time &gt;= #createTimeB#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="createTimeE">
+	   	create_time &lt; (#createTimeE# + 1)
+	   </isNotEmpty>
+	   
+	    <isNotEmpty prepend="and" property="visitTimeB">
+	   	visit_time &gt;= #visitTimeB#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="visitTimeE">
+	   	visit_time &lt; (#visitTimeE# + 1)
+	   </isNotEmpty>
+	   
+	   <isNotEmpty prepend="and" property="payTimeB">
+	   	payment_time &gt;= #payTimeB#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="payTimeE">
+	   	payment_time &lt; (#payTimeE# + 1)
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="filialeName">
+	   	filiale_name = #filialeName#
+	   </isNotEmpty>	   
+	   <isNotEmpty prepend="and" property="channelCode">
+	   	channel = #channelCode#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="physical">
+	    physical = #physical#
+	   </isNotEmpty>
+	   ) T WHERE ROWNUM &lt;= #_endRow#
+	)
+	WHERE ROWNUM1 &gt;=#_startRow#
+</select>
+
+<select id="weekReportCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	  select  count(*)
+	  from report_detail_tv  t
+	  where 1=1
+	   <isNotEmpty prepend="and" property="orderStatus">
+	   	order_status = #orderStatus#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="metaProductId">
+	   	meta_product_id = #metaProductId#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="productId">
+	   	product_id = #productId#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="paymentStatus">
+	   	payment_status = #paymentStatus#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="metaProductName">
+	   	meta_product_name like '%$metaProductName$%'
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="productName">
+	   	product_name like '%$productName$%'
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="paymentTarget">
+	   	payment_target = #paymentTarget#
+	   </isNotEmpty>
+	    <isNotEmpty prepend="and" property="orderId">
+	   	order_id = #orderId#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="supplierId">
+	   	supplier_id = #supplierId#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="createTimeB">
+	   	create_time &gt;= #createTimeB#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="createTimeE">
+	   	create_time &lt; (#createTimeE# + 1)
+	   </isNotEmpty>
+	   
+	    <isNotEmpty prepend="and" property="visitTimeB">
+	   	visit_time &gt;= #visitTimeB#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="visitTimeE">
+	   	visit_time &lt; (#visitTimeE# + 1)
+	   </isNotEmpty>
+	   
+	   <isNotEmpty prepend="and" property="payTimeB">
+	   	payment_time &gt;= #payTimeB#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="payTimeE">
+	   	payment_time &lt; (#payTimeE# + 1)
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="filialeName">
+	   	filiale_name = #filialeName#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="channelCode">
+	   	channel = #channelCode#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="physical">
+	    physical = #physical#
+	   </isNotEmpty>
+</select>
+
+	<select id="queryClientOrderStatDatas" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		select count(*) as COUNT,sum(actual_pay) as AMOUNT from lvmama_super.ord_order where 1=1
+		<isNotEmpty property="channel" prepend="and">
+			channel=#channel#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createTime">
+  			to_char(create_Time,'yyyy-MM-dd')=#createTime#
+  		</isNotEmpty>
+  		<isNotEmpty prepend="and" property="paymentStatus">
+  			payment_status=#paymentStatus#
+  		</isNotEmpty>
+	</select>
+</sqlMap>

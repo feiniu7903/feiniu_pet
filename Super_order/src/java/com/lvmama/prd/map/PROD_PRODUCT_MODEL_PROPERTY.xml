@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_MODEL_PROPERTY">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.prod.ProdProductModelProperty">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="MODEL_PROPERTY_ID" property="modelPropertyId" />
+		<result column="IS_MAINTAIN" property="isMaintain" />
+	</resultMap>
+	<resultMap id="BaseResultMap_01" class="com.lvmama.comm.vo.ProdProductModelPropertyVO">
+		<result column="ID" property="id" />
+		<result column="SECOND_MODEL_ID" property="secondModelId" />
+		<result column="PROPERTY" property="property" />
+		<result column="IS_MAINTAIN" property="isMaintain" />
+	</resultMap>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.prod.ProdProductModelProperty">
+		INSERT INTO PROD_PRODUCT_MODEL_PROPERTY
+			(PRODUCT_ID, MODEL_PROPERTY_ID,IS_MAINTAIN)
+		VALUES
+			(#productId#,#modelPropertyId#,#isMaintain#)
+	</insert>
+	<delete id="deleteByProductId" parameterClass="java.util.Map">
+		DELETE FROM PROD_PRODUCT_MODEL_PROPERTY WHERE PRODUCT_ID=#productId# 
+		<isNotEmpty prepend=" and " property="isMaintain">
+			IS_MAINTAIN=#isMaintain#
+		</isNotEmpty>
+	</delete>
+	<select id="getProdProductModelPropertyByProductId" parameterClass="java.lang.String" resultMap="BaseResultMap">
+		SELECT PRODUCT_ID, MODEL_PROPERTY_ID,IS_MAINTAIN FROM PROD_PRODUCT_MODEL_PROPERTY WHERE PRODUCT_ID=#productId#
+	</select>
+	<select id="isCheckExistByProperty" parameterClass="java.lang.String" resultClass="java.lang.Long">
+		SELECT COUNT(*) FROM PROD_PRODUCT_MODEL_PROPERTY WHERE MODEL_PROPERTY_ID=#modelPropertyId#
+	</select>
+	<select id="getProdProductModelPropertyVOByProductId" parameterClass="java.lang.String" resultMap="BaseResultMap_01">
+		select pmp.id,pmp.second_model_id,pmp.property,ppmp.is_maintain
+		  from prod_model_property pmp, prod_product_model_property ppmp
+		 where pmp.id = ppmp.model_property_id
+		   and ppmp.product_id =#productId#
+	</select>
+	
+	<select id="selectByParam" parameterClass="java.util.Map" resultMap="BaseResultMap">
+	    SELECT PRODUCT_ID, MODEL_PROPERTY_ID,IS_MAINTAIN 
+	    FROM PROD_PRODUCT_MODEL_PROPERTY 
+	    <dynamic prepend="where">
+				<isNotNull prepend="AND" property="productId">
+					PRODUCT_ID = #productId#
+				</isNotNull>
+				<isNotNull prepend="AND" property="modelPropertyId">
+					MODEL_PROPERTY_ID = #modelPropertyId#
+				</isNotNull>
+			</dynamic>
+	  </select>
+
+</sqlMap>

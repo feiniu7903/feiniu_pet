@@ -1,0 +1,8 @@
+<#import "sh_holiday_rs_base.xml" as base>
+<@base.layout "ProductNotifyRS" ''>
+	<OrderInfos>
+		<#list body.orderInfos as orderNo>
+			<OrderInfo OrderPackageNo="${orderNo}"></OrderInfo>
+		</#list>
+	</OrderInfos>
+</@base.layout>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="DISTRIBUTION_PLACE_IMAGE">
+	<resultMap id="baseResultMap"
+		class="com.lvmama.comm.bee.po.distribution.DistributionPlaceImage">
+		<result column="PLACE_ID" property="placId" />
+		<result column="placename" property="placename" />
+	</resultMap>
+
+	<resultMap id="placeImageMap"
+		class="com.lvmama.comm.bee.po.distribution.DistributionPlaceImage"
+		extends="baseResultMap">
+		<result column="href" property="href" />
+	</resultMap>
+
+	<resultMap id="productNamePriceResultMap"
+		class="com.lvmama.comm.bee.po.distribution.DistributionPlaceProduct">
+		<result column="ID" property="placeId" />
+		<result column="NAME" property="placeName" />
+		<result column="PRICE" property="sellPrice" />
+		<result column="MARKET_PRICE" property="marketPrice" />
+		<result column="URL" property="url" />
+	</resultMap>
+	<resultMap id="routeProductMap"
+		class="com.lvmama.comm.bee.po.distribution.DistributionPlaceProduct">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="SELL_PRICE" property="sellPrice" nullValue="0" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="CONTENT" property="info" />
+		<result column="DAYS" property="days" />
+		<result column="PICTURE_URL" property="imgsrc" />
+		<result column="ONLINE_TIME" property="onlineTime" />
+		<result column="OFFLINE_TIME" property="offlineTime" />
+	</resultMap>
+
+	<select id="selectAllRouteProductCount" resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM PROD_PRODUCT PP, VIEW_CONTENT VC, VIEW_PAGE VP,LVMAMA_PET.COM_PICTURE
+		CP,PROD_ROUTE PR
+		WHERE VC.CONTENT_TYPE = 'MANAGERRECOMMEND'
+		AND VP.PAGE_ID = VC.PAGE_ID
+		AND VP.VALID = 'Y'
+		AND VP.PRODUCT_ID = PP.PRODUCT_ID
+		AND PP.PRODUCT_ID=PR.PRODUCT_ID
+		AND CP.PICTURE_OBJECT_ID=PP.PRODUCT_ID
+		AND CP.SEQ_NUM=1
+		AND PP.PRODUCT_TYPE = 'ROUTE'
+		AND TRUNC(PP.OFFLINE_TIME,'DD')> TRUNC(SYSDATE,'DD')
+		AND PP.VALID='Y'
+		AND PP.ON_LINE='true'
+	</select>
+
+	<select id="selectAllRouteProduct" resultMap="routeProductMap"
+		parameterClass="java.util.Map">
+		SELECT *
+		FROM
+		(SELECT T.*,
+		ROWNUM AS ROWNUM1
+		FROM
+		(SELECT
+		PP.PRODUCT_ID,
+		PP.PRODUCT_NAME,
+		(PP.SELL_PRICE / 100) SELL_PRICE,
+		PP.SUB_PRODUCT_TYPE,
+		VC.CONTENT,
+		PR.DAYS,
+		CP.PICTURE_URL,
+		PP.ONLINE_TIME,
+		PP.OFFLINE_TIME,
+		PP.VALID
+		FROM PROD_PRODUCT PP, VIEW_CONTENT VC,
+		VIEW_PAGE VP,LVMAMA_PET.COM_PICTURE
+		CP,PROD_ROUTE PR
+		WHERE
+		VC.CONTENT_TYPE = 'MANAGERRECOMMEND'
+		AND VP.PAGE_ID = VC.PAGE_ID
+		AND
+		VP.VALID = 'Y'
+		AND VP.PRODUCT_ID = PP.PRODUCT_ID
+		AND
+		CP.PICTURE_OBJECT_ID=PP.PRODUCT_ID
+		AND CP.SEQ_NUM=1
+		AND PP.PRODUCT_TYPE =
+		'ROUTE'
+		AND TRUNC(PP.OFFLINE_TIME,'DD')> TRUNC(SYSDATE,'DD')
+		AND
+		PP.VALID = 'Y'
+		AND PP.PRODUCT_ID=PR.PRODUCT_ID
+		AND PP.ON_LINE='true') T)
+		WHERE ROWNUM1
+		&lt;=#_endRow#
+		AND ROWNUM1
+		&gt;=#_startRow#
+	</select>
+
+	<select id="selectPlaceCityByName" resultMap="baseResultMap"
+		parameterClass="java.util.Map">
+		SELECT CP.place_id,CP.CITY AS PLACENAME FROM COM_PLACE CP
+		WHERE CP.STAGE=1
+		AND CP.CITY IN(
+		SELECT CP.CITY
+		FROM COM_PLACE CP WHERE
+		CP.NAME=#placeName#
+		<isNotEmpty prepend="AND" property="stages">
+			CP.STAGE IN
+			<iterate property="stages" conjunction="," open="(" close=")">
+				#stages[]#
+			</iterate>
+		</isNotEmpty>
+		)
+	</select>
+
+
+	<select id="selectProductByPlaceId" resultMap="productNamePriceResultMap"
+		parameterClass="java.lang.Long">
+		SELECT CP.place_id,CP.NAME,CP.PIN_YIN URL,(PTP.PRICE/100) AS
+		PRICE
+		,(PPB.MARKET_PRICE/100) AS MARKET_PRICE
+		FROM COM_PLACE
+		CP,PROD_PRODUCT_PLACE PPP,PROD_PRODUCT
+		PP,PROD_PRODUCT_BRANCH
+		PPB,PROD_TIME_PRICE PTP
+		WHERE CP.place_id=PPP.PLACE_ID
+		AND
+		PPP.PRODUCT_ID=PP.PRODUCT_ID
+		AND PP.PRODUCT_ID=PPB.PRODUCT_ID
+		AND
+		PPB.PROD_BRANCH_ID=PTP.PROD_BRANCH_ID
+		AND PP.PRODUCT_TYPE='TICKET'
+		AND
+		CP.STAGE=2
+		AND CP.PIN_YIN IS NOT NULL
+		AND
+		TRUNC(PTP.SPEC_DATE,'DD')=TRUNC(SYSDATE,'DD')
+		AND PPP.PLACE_ID =
+		#placeId#
+	</select>
+
+	<select id="selectImageByPlaceId" resultClass="java.lang.String"
+		parameterClass="java.lang.Long">
+		SELECT PIC.PICTURE_URL FROM LVMAMA_PET.COM_PICTURE PIC
+		WHERE
+		PIC.PICTURE_OBJECT_ID IN ( SELECT D.PRODUCT_ID FROM
+		PROD_PRODUCT_PLACE D ,PROD_PRODUCT P WHERE D.PRODUCT_ID=P.PRODUCT_ID
+		and
+		P.valid='Y' AND (P.PRODUCT_TYPE='TICKET' OR P.PRODUCT_TYPE='HOTEL')
+		AND
+		D.PLACE_ID IN(#placeId#)
+		) AND ROWNUM &lt;=6
+	</select>
+
+	<select id="selectPlaceByName" resultMap="placeImageMap"
+		parameterClass="java.util.Map">
+		SELECT P.place_id ,P.NAME
+		AS PLACENAME 
+		,P.PIN_YIN AS
+		HREF
+		FROM COM_PLACE P WHERE P.PIN_YIN IS NOT NULL
+		AND P.NAME=#placeName#
+		<isNotEmpty prepend="AND" property="stages">
+			P.STAGE IN
+			<iterate property="stages" conjunction="," open="(" close=")">
+				#stages[]#
+			</iterate>
+		</isNotEmpty>
+	</select>
+
+
+
+	<select id="selectSightByPlaceName" resultMap="placeImageMap"
+		parameterClass="java.util.Map">
+		SELECT P.place_id ,D.sight_name_360
+		AS PLACENAME 
+		,P.PIN_YIN AS HREF
+		FROM COM_PLACE P,DISTRIBUTOR_360 D WHERE
+		P.place_id=D.sight_id
+		and P.PIN_YIN IS NOT NULL and
+		D.sight_name_360=#placeName#
+	</select>
+
+</sqlMap>

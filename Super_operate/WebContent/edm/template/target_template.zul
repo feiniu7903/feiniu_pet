@@ -1,0 +1,21 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./bandTemplate"?>
+<bandbox id="bandTemplate"
+	apply="com.lvmama.operate.web.template.TemplateMacroChooseAction"
+	onChanging="bandTemplate$composer.changeTemplate(event);" onBlur='if(bandTemplate.getValue().trim().equals("")){tempId.setValue(null);}'
+	mold="rounded" autodrop="true">
+	<bandpopup>
+		<vbox>
+			<listbox width="200px" id="bandboxListBox"
+				model="@{bandTemplate$composer.tempList, load-after='bandTemplate.onChanging' }"
+				onSelect='bandTemplate.value=self.selectedItem.lastChild.label; tempId.value=self.selectedItem.value;Events.postEvent("onChange",tempId,null); bandTemplate.close();'>
+				<listhead>
+					<listheader label="模板名称" />
+				</listhead>
+				<listitem self="@{each='template'}"
+					value="@{template.tempId}" height="25px">
+					<listcell label="@{template.tempName}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

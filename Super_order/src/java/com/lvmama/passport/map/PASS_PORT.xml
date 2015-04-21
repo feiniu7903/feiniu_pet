@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- ShiHui -->
+<sqlMap namespace="PASS_PORT">
+	<resultMap id="PassPort_BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassPort">
+		<result column="NAME" property="name" />
+		<result column="TARGET_ID" property="targetId" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+	</resultMap>
+	
+	 <resultMap id="ext_PassPort_BaseResultMap" class="com.lvmama.comm.bee.po.pass.PassPort" extends="PassPort_BaseResultMap" >
+		<result column="PROVIDER_NAME" property="providerName" />
+		<result column="PROVIDER_ID" property="providerId" />
+	</resultMap>
+	
+	<select id="getPassPortByOutPortId"
+		resultMap="PassPort_BaseResultMap"
+		parameterClass="Long">
+		select * from SUP_PERFORM_TARGET  where TARGET_ID=#targerId#
+	</select>
+	
+	<select id="queryPassPortCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+		select count(*) from SUP_PERFORM_TARGET A,
+			PASS_PROVIDER B ,
+			PASS_DEVICE C
+			where B.PROVIDER_ID=C.PROVIDER_ID
+			  AND A.TARGET_ID=C.TARGET_ID
+			<isNotEmpty property="providerId">
+				<isNotEqual prepend=" and" property="providerId"
+					compareValue="-999999">
+					C.PROVIDER_ID=#providerId#
+				</isNotEqual>
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="name">
+				A.NAME like '%$name$%'
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="targetId">
+				A.TARGET_ID=#targetId#
+			</isNotEmpty>
+	</select>
+	
+	<select id="PassPort_selectByParams"
+		resultMap="ext_PassPort_BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select T.* from(
+		select A.NAME,A.TARGET_ID,A.SUPPLIER_ID,B.NAME as PROVIDER_NAME, C.PROVIDER_ID,
+		ROWNUM rn from SUP_PERFORM_TARGET A,
+		PASS_PROVIDER B ,
+		PASS_DEVICE C
+		where B.PROVIDER_ID=C.PROVIDER_ID
+		  AND A.TARGET_ID=C.TARGET_ID
+		<isNotEmpty property="providerId">
+			<isNotEqual prepend=" and" property="providerId"
+				compareValue="-999999">
+				C.PROVIDER_ID=#providerId#
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="name">
+			A.NAME like '%$name$%'
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="targetId">
+			A.TARGET_ID=#targetId#
+		</isNotEmpty>
+		and ROWNUM &lt;=#_endRow#
+		order by A.TARGET_ID
+		
+		) T where T.rn &gt; #_startRow#
+	</select>
+	
+   <select id="getPassPortByName"
+		resultMap="PassPort_BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from SUP_PERFORM_TARGET where CERTIFICATE_TYPE='DIMENSION'
+		<isNotEmpty prepend=" and" property="name">
+			NAME like '%$name$%'
+		</isNotEmpty>
+	    <isNotEmpty prepend=" and" property="targerId">
+			TARGET_ID=#targerId#
+		</isNotEmpty>
+		 and rownum<![CDATA[<=10]]> order by TARGET_ID
+   </select>
+   <select id="getPassPort"
+		resultMap="PassPort_BaseResultMap"
+		parameterClass="Long">
+		select * from SUP_PERFORM_TARGET where TARGET_ID=#targerId#
+   </select>
+</sqlMap>

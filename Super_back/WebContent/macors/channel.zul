@@ -1,0 +1,20 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./mc_bandchannel"?>
+<bandbox id="mc_bandchannel" apply="com.lvmama.back.utils.MacroChannelSelect" mold="rounded" autodrop="true" width="150px" 
+	onChanging='if (event.getValue().equals("")) {channelValue.value=""; Events.sendEvent(new Event("onChange", channelValue));}mc_bandchannel$composer.changeChannel(event);'>
+	<bandpopup>
+		<vbox>
+			<listbox width="300px" id="bandboxListBox" 
+				model="@{mc_bandchannel$composer.channelList, load-after='mc_bandchannel.onChanging' }"
+				onSelect='if (self.selectedItem==null) return;mc_bandchannel.value=self.selectedItem.firstChild.label; channelValue.value=self.selectedItem.value+"";Events.sendEvent(new Event("onChange", channelValue));mc_bandchannel.close();'>
+				<listhead>
+					<listheader label="渠道名称" />
+					<listheader label="渠道代码" />
+				</listhead>
+				<listitem self="@{each='channel'}" value="@{channel.channelCode}" height="25px">
+					<listcell label="@{channel.channelName}" />
+					<listcell label="@{channel.channelCode}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

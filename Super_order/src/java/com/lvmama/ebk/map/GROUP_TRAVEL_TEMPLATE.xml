@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="GROUP_TRAVEL_TEMPLATE" >
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ebooking.GroupTravelTemplate">
+		<result column="ORDER_ID" property="orderId"/>
+		<result column="SUB_PRODUCT_TYPE" property="subProductType"/>
+		<result column="TEMPLATE_CONTENT" property="templateContent" typeHandler="org.springframework.orm.ibatis.support.ClobStringTypeHandler"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="CREATE_DATE" property="createDate"/>
+	</resultMap>
+	<select id="selectByOrdId" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+		SELECT * FROM GROUP_TRAVEL_TEMPLATE WHERE ORDER_ID = #orderId#
+	</select>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ebooking.GroupTravelTemplate">
+	insert into GROUP_TRAVEL_TEMPLATE(
+		ORDER_ID,
+		SUB_PRODUCT_TYPE,
+		TEMPLATE_CONTENT,
+		CREATE_USER,
+		CREATE_DATE
+	)
+	values(
+		#orderId#,
+		#subProductType#,
+		#templateContent,handler=org.springframework.orm.ibatis.support.ClobStringTypeHandler#,
+		#createUser#,
+		#createDate#				 
+	)
+	</insert>
+	<update id="update" parameterClass="com.lvmama.comm.bee.po.ebooking.GroupTravelTemplate">
+		UPDATE GROUP_TRAVEL_TEMPLATE
+		<dynamic prepend="set">
+			<isNotEmpty prepend="," property="templateContent">
+				TEMPLATE_CONTENT = #templateContent,handler=org.springframework.orm.ibatis.support.ClobStringTypeHandler#
+			</isNotEmpty>
+		</dynamic>
+		WHERE ORDER_ID = #orderId#
+	</update>
+</sqlMap>

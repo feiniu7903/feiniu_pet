@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EDM_SUBSCRIBE_TASK">
+	<typeAlias alias="edmSubscribeTask"
+		type="com.lvmama.comm.pet.po.edm.EdmSubscribeTask" />
+	<resultMap class="com.lvmama.comm.pet.po.edm.EdmSubscribeTask"
+		id="resultClass">
+		<result column="TASK_ID" property="taskId" />
+		<result column="TASK_NAME" property="taskName" />
+		<result column="TASK_DESC" property="taskDesc" />
+		<result column="TASK_STATUS" property="taskStatus" />
+		<result column="TEMP_ID" property="tempId" />
+		<result column="USER_GROUP_ID" property="userGroupId" />
+		<result column="CHANNEL_TYPE" property="channelType" />
+		<result column="SEND_DAY" property="sendDay" />
+		<result column="SEND_TIME" property="sendTime" />
+		<result column="SEND_CYCLE" property="sendCycle" />
+		<result column="TASK_TYPE" property="taskType" />
+		<result column="EMAIL_TITLE" property="emailTitle" />
+		<result column="SEND_USER" property="sendUser" />
+		<result column="SEND_EMAIL" property="sendEmail" />
+		<result column="LAST_SEND_DATE" property="lastSendDate" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="CREATE_USER" property="createUser" />
+		<result column="UPDATE_DATE" property="updateDate" />
+		<result column="UPDATE_USER" property="updateUser" />
+		<result column="TEMP_NAME" property="tempName" />
+		<result column="USER_GROUP_NAME" property="userGroupName" />
+		<result column="ZH_TASK_TYPE" property="zhTaskType" />
+		<result column="ZH_SEND_CYCLE" property="zhSendCycle" />
+		<result column="ZH_CHANNEL_TYPE" property="zhChannelType" />
+		<result column="ZH_SEND_TIME" property="zhSendTime" />
+		<result column="EXECUTE_DATE" property="executeDate" />
+		<result column="NEXT_EXECUTE_DATE" property="nextExecuteDate" />
+		<result column="FAIL_COUNT" property="failCount" />
+		<result column="GROUP_ID" property="groupId" />
+	</resultMap>
+	<sql id="searchParam">
+		<isNotNull prepend=" AND " property="taskId"> TASK_ID = #taskId#
+		</isNotNull>
+		<isNotNull prepend=" AND " property="taskType"> TASK_TYPE = #taskType#
+		</isNotNull>
+		<isNotNull prepend=" AND " property="taskName"> TASK_NAME LIKE
+			'%$taskName$%'</isNotNull>
+		<isNotNull prepend=" AND " property="taskStatus"> TASK_STATUS
+			IN(#taskStatus#,'S') </isNotNull>
+		<isNotNull prepend=" AND " property="sendDay"> (SEND_DAY IN
+			(#sendDay#,#sendDay#+1) OR SEND_DAY IS NULL)</isNotNull>
+		<!-- 1.任务为有效 2. 周期为每月一次为一月，两周一次的相距14天，一周一次相距7天，一天一次相距一天，或者最后发送空的 3.(发送日期为当天发送，或发送日期为空的)&&(发送时间比当前时间大一个小时的) 
+			|| 发送日期为第二天&&发送时间<=第二天一个小时 4.最后发送时间不是当天，或没有最后发送时间 -->
+		<isNotNull prepend=" AND " property="isActive">
+			A.TASK_STATUS = 'Y'
+			AND (CASE
+			WHEN A.SEND_CYCLE = 'ONE_MONTH' AND
+			ADD_MONTHS(TRUNC(SYSDATE), 1) &lt;= TRUNC(SYSDATE) THEN
+			'Y'
+			WHEN A.SEND_CYCLE = 'TWO_WEEK' AND
+			TRUNC(A.LAST_SEND_DATE + 8) &lt;= TRUNC(SYSDATE) THEN
+			'Y'
+			WHEN A.SEND_CYCLE = 'ONE_WEEK' AND
+			TRUNC(A.LAST_SEND_DATE + 1) &lt;= TRUNC(SYSDATE) THEN
+			'Y'
+			WHEN A.SEND_CYCLE = 'ONE_DAY' AND
+			TRUNC(A.LAST_SEND_DATE + 1) &lt;= TRUNC(SYSDATE) THEN
+			'Y'
+			WHEN A.SEND_CYCLE IS NOT NULL AND A.LAST_SEND_DATE IS NULL THEN
+			'Y'
+			ELSE
+			'N'
+			END) = 'Y'
+			AND ((((A.SEND_CYCLE='ONE_MONTH' AND A.SEND_DAY = TO_CHAR(SYSDATE,
+			'dd')) OR (A.SEND_CYCLE IN ('TWO_WEEK','ONE_WEEK') AND A.SEND_DAY =
+			TO_CHAR(SYSDATE, 'd')) OR A.SEND_DAY IS NULL) AND
+			TO_DATE(A.SEND_TIME, 'HH24:MI:SS') >=
+			TO_DATE(TO_CHAR(SYSDATE, 'HH24:MI:SS'), 'HH24:MI:SS') +
+			$isActive$) OR
+			((A.SEND_CYCLE='ONE_MONTH' AND A.SEND_DAY = TO_CHAR(SYSDATE+1, 'dd')) OR (A.SEND_CYCLE IN
+			('TWO_WEEK','ONE_WEEK') AND A.SEND_DAY = TO_CHAR(SYSDATE+1, 'd')))
+			AND
+			TO_DATE(A.SEND_TIME, 'HH24:MI:SS') &lt;=
+			TRUNC(TO_DATE(TO_CHAR(SYSDATE, 'HH24:MI:SS'), 'HH24:MI:SS')) +
+			$isActive$)
+			AND (A.LAST_SEND_DATE &lt; TRUNC(SYSDATE) OR A.LAST_SEND_DATE IS NULL)
+		</isNotNull>
+	</sql>
+	<sql id="searchSub">
+		SELECT A.*,
+		T.TEMP_NAME,
+		G.USER_GROUP_NAME,
+		ETT.ITEM_NAME ZH_TASK_TYPE,
+		ETSC.ITEM_NAME ZH_SEND_CYCLE,
+		ECT.ITEM_NAME ZH_CHANNEL_TYPE,
+		ETSW.ITEM_NAME||' '||A.SEND_TIME ZH_SEND_TIME,
+		ROWNUM RN
+		FROM EDM_SUBSCRIBE_TASK A,
+		EDM_SUBSCRIBE_TEMPLATE T,
+		EDM_SUBSCRIBE_USER_GROUP G,
+		(SELECT C.ITEM_CODE, C.ITEM_NAME
+		FROM COM_CODE C
+		WHERE C.SET_CODE = 'EDM_TIMING_TYPE') ETT,
+		(SELECT C.ITEM_CODE, C.ITEM_NAME
+		FROM COM_CODE C
+		WHERE C.SET_CODE = 'EDM_TASK_SEND_CYCLE') ETSC,
+		(SELECT C.ITEM_CODE, C.ITEM_NAME
+		FROM COM_CODE C
+		WHERE C.SET_CODE = 'EDM_CHANNEL_TYPE') ECT,
+		(SELECT C.ITEM_CODE, C.ITEM_NAME
+		FROM COM_CODE C
+		WHERE C.SET_CODE IN ( 'EDM_TASK_SEND_WEEK','EDM_TASK_SEND_DAYS')) ETSW
+		WHERE A.TEMP_ID = T.TEMP_ID
+		AND A.USER_GROUP_ID = G.USER_GROUP_ID
+		AND T.TEMP_STATUS = 'Y'
+		AND G.USER_GROUP_STATUS = 'Y'
+		AND A.TASK_TYPE = ETT.ITEM_CODE
+		AND A.SEND_CYCLE = ETSC.ITEM_CODE
+		AND A.CHANNEL_TYPE = ECT.ITEM_CODE
+		AND A.SEND_DAY = ETSW.ITEM_CODE(+)
+	</sql>
+	<select id="search" parameterClass="java.util.HashMap"
+		resultMap="resultClass">
+		SELECT * FROM (
+		<include refid="searchSub" />
+		<dynamic>
+			<include refid="searchParam" />
+			<isNotEmpty property="_endRow" prepend=" AND "> ROWNUM
+				&lt;=#_endRow#   </isNotEmpty>
+			ORDER BY A.UPDATE_DATE DESC
+		</dynamic>
+		)
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> RN
+				&gt;=#_startRow#   </isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="count" resultClass="java.lang.Long">
+		SELECT COUNT(*) FROM (
+		<include refid="searchSub" />
+		) T
+		<dynamic prepend=" WHERE">
+			<include refid="searchParam" />
+		</dynamic>
+	</select>
+	<select id="searchUser" parameterClass="java.lang.String"
+		resultClass="java.util.HashMap">
+		$value$
+	</select>
+	<insert id="insert" parameterClass="edmSubscribeTask">
+		<selectKey keyProperty="taskId" resultClass="java.lang.Long">
+			SELECT
+			EDM_TASK_ID_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO EDM_SUBSCRIBE_TASK
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="taskId">TASK_ID</isNotNull>
+			<isNotNull prepend="," property="taskName">TASK_NAME</isNotNull>
+			<isNotNull prepend="," property="taskDesc">TASK_DESC</isNotNull>
+			<isNotNull prepend="," property="taskStatus">TASK_STATUS</isNotNull>
+			<isNotNull prepend="," property="tempId">TEMP_ID</isNotNull>
+			<isNotNull prepend="," property="userGroupId">USER_GROUP_ID</isNotNull>
+			<isNotNull prepend="," property="channelType">CHANNEL_TYPE</isNotNull>
+			<isNotNull prepend="," property="sendDay">SEND_DAY</isNotNull>
+			<isNotNull prepend="," property="sendTime">SEND_TIME</isNotNull>
+			<isNotNull prepend="," property="sendCycle">SEND_CYCLE</isNotNull>
+			<isNotNull prepend="," property="taskType">TASK_TYPE</isNotNull>
+			<isNotNull prepend="," property="emailTitle">EMAIL_TITLE</isNotNull>
+			<isNotNull prepend="," property="sendUser">SEND_USER</isNotNull>
+			<isNotNull prepend="," property="sendEmail">SEND_EMAIL</isNotNull>
+			<isNotNull prepend="," property="createUser">CREATE_DATE,CREATE_USER,UPDATE_DATE,UPDATE_USER</isNotNull>
+			<isNotNull prepend="," property="groupId">GROUP_ID</isNotNull>
+		</dynamic>
+		<dynamic prepend=") VALUES (">
+			<isNotNull prepend="," property="taskId">#taskId#</isNotNull>
+			<isNotNull prepend="," property="taskName">#taskName#</isNotNull>
+			<isNotNull prepend="," property="taskDesc">#taskDesc#</isNotNull>
+			<isNotNull prepend="," property="taskStatus">#taskStatus#</isNotNull>
+			<isNotNull prepend="," property="tempId">#tempId#</isNotNull>
+			<isNotNull prepend="," property="userGroupId">#userGroupId#</isNotNull>
+			<isNotNull prepend="," property="channelType">#channelType#</isNotNull>
+			<isNotNull prepend="," property="sendDay">#sendDay#</isNotNull>
+			<isNotNull prepend="," property="sendTime">#sendTime#</isNotNull>
+			<isNotNull prepend="," property="sendCycle">#sendCycle#</isNotNull>
+			<isNotNull prepend="," property="taskType">#taskType#</isNotNull>
+			<isNotNull prepend="," property="emailTitle">#emailTitle#</isNotNull>
+			<isNotNull prepend="," property="sendUser">#sendUser#</isNotNull>
+			<isNotNull prepend="," property="sendEmail">#sendEmail#</isNotNull>
+			<isNotNull prepend="," property="createUser">SYSDATE,#createUser#,SYSDATE,#createUser#</isNotNull>
+			<isNotNull prepend="," property="groupId">#groupId#</isNotNull>
+			)
+		</dynamic>
+	</insert>
+	<update id="update" parameterClass="edmSubscribeTask">
+		UPDATE EDM_SUBSCRIBE_TASK
+		SET
+		TASK_NAME=#taskName#
+		,TASK_DESC=#taskDesc#
+		,TASK_STATUS=#taskStatus#
+		,TEMP_ID=#tempId#
+		,USER_GROUP_ID=#userGroupId#
+		,CHANNEL_TYPE=#channelType#
+		,SEND_DAY=#sendDay#
+		,SEND_TIME=#sendTime#
+		,SEND_CYCLE=#sendCycle#
+		,TASK_TYPE=#taskType#
+		,EMAIL_TITLE=#emailTitle#
+		,SEND_USER=#sendUser#
+		,SEND_EMAIL=#sendEmail#
+		,LAST_SEND_DATE=#lastSendDate#
+		,UPDATE_DATE=SYSDATE,UPDATE_USER=#updateUser#,
+		EXECUTE_DATE = #executeDate#,
+		NEXT_EXECUTE_DATE = #nextExecuteDate#,
+		FAIL_COUNT = #failCount#,
+		GROUP_ID = #groupId#
+		WHERE TASK_ID=#taskId#
+	</update>
+
+	<update id="updateTask" parameterClass="edmSubscribeTask">
+		<![CDATA[
+			UPDATE EDM_SUBSCRIBE_TASK
+					   SET TASK_NAME = #taskName#,
+					       TASK_DESC = #taskDesc#,
+					       TEMP_ID = #tempId#,
+					       USER_GROUP_ID = #userGroupId#,
+					       CHANNEL_TYPE = #channelType#,
+					       SEND_DAY = #sendDay#,
+					       SEND_TIME = #sendTime#,
+					       SEND_CYCLE = #sendCycle#,
+					       TASK_TYPE = #taskType#,
+					       EMAIL_TITLE = #emailTitle#,
+					       SEND_USER = #sendUser#,
+					       SEND_EMAIL = #sendEmail#,
+					       LAST_SEND_DATE = #lastSendDate#,
+					       TASK_STATUS = #taskStatus#,
+					       CREATE_DATE = #createDate#,
+					       CREATE_USER = #createUser#,
+					       UPDATE_DATE = #updateDate#,
+					       UPDATE_USER = #updateUser#,
+					       EXECUTE_DATE = #executeDate#,
+					       NEXT_EXECUTE_DATE = #nextExecuteDate#,
+					       FAIL_COUNT = #failCount#,
+					       GROUP_ID = #groupId#
+					 where TASK_ID = #taskId#
+		]]>
+	</update>
+	<!-- 分页数据 -->
+	<select id="getTaskList" parameterClass="java.util.HashMap"
+		resultClass="edmSubscribeTask">
+		<![CDATA[
+		select b.*
+			  from (select tb.*, rownum r
+			          from ( SELECT TASK_ID           taskId,
+									       TASK_NAME         taskName,
+									       TASK_DESC         taskDesc,
+									       TEMP_ID           tempId,
+									       USER_GROUP_ID     userGroupId,
+									       CHANNEL_TYPE      channelType,
+									       SEND_DAY          sendDay,
+									       SEND_TIME         sendTime,
+									       SEND_CYCLE        sendCycle,
+									       TASK_TYPE         taskType,
+									       EMAIL_TITLE       emailTitle,
+									       SEND_USER         sendUser,
+									       SEND_EMAIL        sendEmail,
+									       LAST_SEND_DATE    lastSendDate,
+									       TASK_STATUS       taskStatus,
+									       CREATE_DATE       createDate,
+									       CREATE_USER       createUser,
+									       UPDATE_DATE       updateDate,
+									       UPDATE_USER       updateUser,
+									       EXECUTE_DATE      executeDate,
+									       NEXT_EXECUTE_DATE nextExecuteDate,
+									       GROUP_ID groupId
+									  FROM EDM_SUBSCRIBE_TASK A
+		]]>
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="notCalcExecuteDate">
+			  <![CDATA[ A.EXECUTE_DATE is null and A.NEXT_EXECUTE_DATE is null ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="taskId">
+			  <![CDATA[ A.TASK_ID = #taskId# ]]>
+			</isNotEmpty>
+		</dynamic>
+		<![CDATA[ ) tb) b ]]>
+		<dynamic prepend="">
+			<isNotEmpty prepend="" property="rowstartindex">
+				<isNotEmpty prepend="" property="rowendindex">
+					<![CDATA[ where r>= #rowstartindex# and r <= #rowendindex# ]]>
+				</isNotEmpty>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+
+	<!-- 分页数据 -->
+	<select id="getModelList" parameterClass="java.util.HashMap"
+		resultMap="resultClass">
+		<![CDATA[
+		select b.*
+			  from (select tb.*, rownum r
+			          from (
+			SELECT A.*,
+			       T.TEMP_NAME,
+			       G.USER_GROUP_NAME,
+			       ETT.ITEM_NAME ZH_TASK_TYPE,
+			       ETSC.ITEM_NAME ZH_SEND_CYCLE,
+			       ECT.ITEM_NAME ZH_CHANNEL_TYPE,
+			       ETSW.ITEM_NAME||' '||A.SEND_TIME ZH_SEND_TIME,
+			       ROWNUM RN
+			  FROM EDM_SUBSCRIBE_TASK A,
+			       EDM_SUBSCRIBE_TEMPLATE T,
+			       EDM_SUBSCRIBE_USER_GROUP G,
+			       (SELECT C.ITEM_CODE, C.ITEM_NAME
+			          FROM COM_CODE C
+			         WHERE C.SET_CODE = 'EDM_TIMING_TYPE') ETT,
+			       (SELECT C.ITEM_CODE, C.ITEM_NAME
+			          FROM COM_CODE C
+			         WHERE C.SET_CODE = 'EDM_TASK_SEND_CYCLE') ETSC,
+			       (SELECT C.ITEM_CODE, C.ITEM_NAME
+			          FROM COM_CODE C
+			         WHERE C.SET_CODE = 'EDM_CHANNEL_TYPE') ECT,
+			       (SELECT C.ITEM_CODE, C.ITEM_NAME
+			          FROM COM_CODE C
+			         WHERE C.SET_CODE IN ( 'EDM_TASK_SEND_WEEK','EDM_TASK_SEND_DAYS')) ETSW
+			 WHERE A.TEMP_ID = T.TEMP_ID
+			   AND A.USER_GROUP_ID = G.USER_GROUP_ID
+			   AND T.TEMP_STATUS = 'Y'
+			   AND G.USER_GROUP_STATUS = 'Y'
+			   AND A.TASK_TYPE = ETT.ITEM_CODE
+			   AND A.SEND_CYCLE = ETSC.ITEM_CODE
+			   AND A.CHANNEL_TYPE = ECT.ITEM_CODE
+			   AND A.SEND_DAY = ETSW.ITEM_CODE(+)
+		]]>
+		<isNotEmpty prepend="AND" property="taskStatus">
+			  <![CDATA[ A.TASK_STATUS = #taskStatus# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="startNextExecuteDate">
+			  <![CDATA[ A.next_execute_date <= #startNextExecuteDate# ]]>
+		</isNotEmpty>
+		<![CDATA[ ) tb) b ]]>
+		<dynamic prepend="">
+			<isNotEmpty prepend="" property="rowstartindex">
+				<isNotEmpty prepend="" property="rowendindex">
+					<![CDATA[ where r>= #rowstartindex# and r <= #rowendindex# ]]>
+				</isNotEmpty>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+</sqlMap>

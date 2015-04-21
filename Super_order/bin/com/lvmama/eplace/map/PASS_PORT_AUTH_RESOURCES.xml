@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PASS_PORT_AUTH_RESOURCES">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassPortAuthResources">
+		<result column="RESOURCE_ID" property="resourceId" />
+		<result column="RESOURCE_NAME" property="resourceName" />
+		<result column="FILE_NAME" property="fileName" />
+		<result column="IMAGE" property="image" />
+		<result column="CATEGORY" property="category" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="SEQ" property="seq" />
+		<result column="PARENT_ID" property="parentId" />
+	</resultMap>
+
+	<select id="AuthResources_selectByParms" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from PASS_PORT_AUTH_RESOURCES where 
+		1=1 
+		<isNotEmpty prepend=" and" property="category">
+			CATEGORY in
+			<iterate property="category" conjunction="," open="("
+				close=")">
+				#category[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="parentIdIsNull">
+			parent_id is null
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="resourceName">
+			RESOURCE_NAME like '%'||#resourceName#||'%'
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="fileName">
+			FILE_NAME like '%'||#fileName#||'%'
+		</isNotEmpty>
+		order by category , seq ,RESOURCE_ID
+	</select>
+	
+	<select id="selectSecondItems" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		select * from pass_port_auth_resources where parent_id =
+		#parentId# order by seq
+	</select>
+
+	<select id="selectSecondResourceByParentId"
+		resultMap="BaseResultMap" parameterClass="java.util.Map">
+		select ppar.* From pass_port_auth_resources ppar ,
+		user_relate_menu urm,pass_port_user ppu where
+		ppu.pass_port_user_id=#userId# and
+		ppar.parent_id=#parentId# and
+		ppu.pass_port_user_id=urm.pass_port_user_id and
+		ppar.resource_id=urm.resource_id order by ppar.seq
+	</select>
+
+
+	<select id="AuthResources_selectByUserAndCategory"
+		resultMap="BaseResultMap" parameterClass="java.util.Map">
+		select ppar.* From PASS_PORT_AUTH_RESOURCES
+		ppar,USER_RELATE_MENU urm,PASS_PORT_USER ppu where
+		ppar.resource_id=urm.resource_id and
+		urm.pass_port_user_id=ppu.pass_port_user_id and
+		ppu.pass_port_user_id=#userId# and 
+		ppar.category=#category# 
+		order by ppar.SEQ
+	</select>
+
+	<select id="selectCategoryByUserId" resultClass="java.lang.String"
+		parameterClass="java.util.Map">
+		SELECT ppar.category FROM PASS_PORT_AUTH_RESOURCES ppar,
+		USER_RELATE_MENU urm, PASS_PORT_USER ppu WHERE ppar.resource_id
+		=urm.resource_id AND urm.pass_port_user_id=ppu.pass_port_user_id
+		<isNotEmpty prepend=" and" property="userId">
+			ppu.pass_port_user_id=#userId#
+		</isNotEmpty>
+		GROUP BY ppar.category
+	</select>
+
+
+	<select id="selectCategoryByAdmin" resultClass="java.lang.String"
+		parameterClass="java.util.Map">
+		SELECT ppar.category FROM PASS_PORT_AUTH_RESOURCES ppar GROUP BY
+		ppar.category
+	</select>
+
+
+
+
+
+	<select id="AuthResources_selectByPrimaryKey"
+		resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.bee.po.pass.PassPortAuthResources">
+		select * from PASS_PORT_AUTH_RESOURCES where RESOURCE_ID =
+		#resourceId#
+	</select>
+	<delete id="AuthResources_deleteByPrimaryKey"
+		parameterClass="java.lang.Long">
+		delete from PASS_PORT_AUTH_RESOURCES where RESOURCE_ID =
+		#resourceId#
+	</delete>
+	<insert id="AuthResources_insert"
+		parameterClass="com.lvmama.comm.bee.po.pass.PassPortAuthResources">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="resourceId">
+			select PASS_PORT_RESOURCES_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into PASS_PORT_AUTH_RESOURCES (RESOURCE_ID,
+		RESOURCE_NAME, FILE_NAME, IMAGE, CATEGORY,
+		DESCRIPTION,SEQ,PARENT_ID) values (#resourceId#, #resourceName#,
+		#fileName#, #image#, #category#, #description# ,
+		#seq#,#parentId#)
+	</insert>
+	<update id="AuthResources_updateByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.pass.PassPortAuthResources">
+		update PASS_PORT_AUTH_RESOURCES set RESOURCE_NAME =
+		#resourceName#, FILE_NAME = #fileName#, IMAGE = #image#,
+		CATEGORY = #category#, DESCRIPTION = #description#, SEQ = #seq#,
+		PARENT_ID = #parentId# where RESOURCE_ID = #resourceId#
+	</update>
+</sqlMap>

@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>团单项结算</title>
+	<#assign dialog_inc = true>
+	<#assign autocomplete_inc = true>
+	<#assign grid_inc = true>
+	<#assign datepicker_inc = true>
+	<#include "/common/define.html"/>
+	<script type="text/javascript" src="/finance/js/jquery/accounting.min.js"></script>
+	<script type="text/javascript" src="/finance/js/group/settlement.js"></script>
+</head>
+
+<body>
+	<div class="wapper_accounts">
+		<div class="rad5 wapper_list wapper_list_cash">
+			<h3 class="order_check">团单项结算</h3>
+			<div class="cash_seach">
+				<form id="search_form" search_action="/finance/group/settlement/search.json" excel_action = "/finance/group/settlement/export.json" method="post">
+					<ul class="order_top_list">
+						<li class="other_list">
+							<label>结算对象：</label> 
+							<input id="targetId" type="text" class="input_text02 input_combox"   autocomplete="off" />
+						</li>
+						<li class="other_list">
+							<label>团号：</label> 
+							<input name="travelGroupCode" type="text" class="input_text02 input_combox" />
+						</li>
+						<li class="other_list">
+							<label>结算周期：</label> 
+							<select name="settlementPeriod" >
+								<option value="" selected="selected">全部</option>
+								<option value="PERMONTH" >月结</option>
+								<option value="PER_HALF_MONTH">半月结</option>
+								<option value="PERQUARTER">季结</option>
+								<option value="PER_WEEK">周结</option>
+								<option value="PERORDER">单结</option>
+							</select>
+						</li>
+						<li class="other_list" >
+							<label>付款方式：</label> 
+							<select name="paymentType">
+								<option value="" selected="selected">全部</option>
+								<option value="CASH">现金</option>
+								<option value="TRANSFER">银行转账</option>
+							</select>
+						</li>
+						<li class="other_list" >
+							<label>供应商：</label> 
+							<input id="supplierId" type="text" class="input_text02 input_combox" autocomplete="off" />
+						</li>
+						<li class="other_list">
+							<label>状态：</label>
+							<select name="paymentStatus">
+								<option value="" selected="selected">全部</option>
+								<option value="NOPAY">未打款</option>
+								<option value="PARTPAY">部分打款</option>
+								<option value="PAYED">已打款</option>
+							</select>
+						</li>
+						<li class="other_list">
+							<label> 订单号：</label> 
+							<input id="orderId" name="orderId" type="text" class="input_text02" maxlength= "80">
+						</li>
+						<li class="other_list">
+							<label> 销售产品：</label> 
+							<input id="product" type="text" class="input_text02 input_combox" autocomplete="off" />
+						</li>
+						<li class="other_list2">
+							<label>出团日期：</label> 
+							<input name="visitTimeBegin" type="text" class="input_text01 Wdate" onclick="WdatePicker({isShowClear:true,readOnly:true})"/>
+								~
+							<input name="visitTimeEnd" type="text" class="input_text01 Wdate" onclick="WdatePicker({isShowClear:true,readOnly:true})"/>
+						</li>
+						<li class="other_list2" style="width:900px;">
+							<label>销售产品类型：</label>
+							<label style="width: 85px;"><input name="routeType" type="checkbox" value="GROUP" checked="checked" />短途跟团游</label>
+							<label style="width: 85px;"><input name="routeType" type="checkbox" value="GROUP_LONG" checked="checked" />长途跟团游</label>
+							<label style="width: 85px;"><input name="routeType" type="checkbox" value="GROUP_FOREIGN" checked="checked" />出境跟团游</label>
+							<label style="width: 85px;"><input name="routeType" type="checkbox" value="FREENESS_LONG" checked="checked" />长途自由行</label>
+							<label style="width: 85px;"><input name="routeType" type="checkbox" value="FREENESS_FOREIGN" checked="checked" />出境自由行</label>
+							<label style="width: 85px;"><input name="routeType" type="checkbox" value="SELFHELP_BUS" checked="checked" />自助巴士班</label>
+							<input id ="search_button" type="button" class="left_bt_add yajin_seacher" value="查 询" />
+							<input id ="export_button" type="button" class="seach_bt yajin_seacher" value="导出订单明细" />
+						</li>
+					</ul>
+				</form>
+				<div class="order_list">
+					<table id="result_table"></table> 
+					<div id="pagebar_div"></div>
+				</div>
+				<div id="search_footer" class = "hid">
+				 	<table width="100%" border="0">
+				 		<tr class="list_contant list_contant01">
+                           	<td>
+                           		<a id ="merge_pay" href="javascript:void(0);" class="left_bt_add yajin_seacher">合并打款</a> 
+                           	</td>
+                        </tr>  
+                    </table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

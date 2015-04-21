@@ -1,0 +1,93 @@
+<?page title="通关点管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./passportEdit"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.passport.utils.ListboxProviderSet"?>
+
+<zk>
+	<window id="passportEdit" title="通关点管理" border="normal"
+		apply="com.lvmama.passport.web.pass.PassPortEditAction">
+		<zscript>
+		<![CDATA[
+			public void checkValues() {
+				String msg = "";
+				if (name.getValue().equals("")) {
+					msg += "请输入通关点名称！\n";
+				}
+				if (providerListbox.getSelectedItem() == null
+						|| providerListbox.getSelectedItem().getValue().equals(
+								new Long(-999999))) {
+					msg += "请选择一位服务商！\n";
+				}
+				if (outPortId.getValue().equals("")) {
+					msg += "请输入业务系统对应ID！";
+				} else {
+					try {
+						Long.parseLong(outPortId.getValue());
+					} catch (NumberFormatException nfe) {
+						msg += "业务系统ID必须为数字！";
+					}
+				}
+				if (supplierId.getValue().equals("")) {
+					msg += "请输入产品供应商ID！";
+				} else {
+					try {
+						Long.parseLong(supplierId.getValue());
+					} catch (NumberFormatException nfe) {
+						msg += "产品供应商ID必须为数字！";
+					}
+				}
+				if (msg.trim().length() > 0) {
+					alert(msg);
+				} else {
+					saction.doSave();
+				}
+			}
+		]]> 
+		</zscript>
+		<grid>
+			<columns>
+				<column width="110px"></column>
+				<column></column>
+				<column width="110px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>通关点名称：</hbox>
+					<hbox>
+						<textbox id="name"
+							value="@{saction.passPort.name}"
+							constraint="no empty:通关点名称不能为空！" />
+					</hbox>
+					<hbox>服务商名称：</hbox>
+					<hbox>
+						<listbox id="providerListbox" mold="select"
+							selectedItem="@{saction.passPort.providerId}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>业务系统对应ID：</hbox>
+					<hbox>
+						<textbox id="outPortId"
+							value="@{saction.passPort.outPortId}"
+							constraint="no empty:业务系统对应ID不能为空！" />
+					</hbox>
+				    <hbox>产品供应商ID：</hbox>
+					<hbox>
+				       <textbox id="supplierId"
+							value="@{saction.passPort.supplierId}"
+							constraint="no empty:产品供应商ID不能为空！" />
+					</hbox>
+				</row>
+				<row>
+					<hbox></hbox>
+					<hbox></hbox>
+					<hbox></hbox>
+					<hbox>
+						<button label="保存" width="100px"
+							onClick="checkValues();" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

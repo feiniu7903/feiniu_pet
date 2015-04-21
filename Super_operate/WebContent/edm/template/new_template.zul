@@ -1,0 +1,39 @@
+<?page title="EDM模板管理-新增页面" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./addTemplate"?>
+	<window id="addTemplate" title="EDM模板管理-新增页面" mode="embedded" apply="com.lvmama.operate.web.template.EditTemplateAction">
+		<grid>
+			<columns>
+				<column width="120px"></column>
+				<column></column>
+			</columns>
+			<rows>
+			 	<row>
+					<hbox>模板名称：<label value="[*]" style="color:red;"/></hbox>
+					<hbox>
+						<textbox id="tempName" value="@{saction.template.tempName}" width="200px"/>
+						<image width="15px" height="15px" src="/img/qm.gif" tooltip="popup_TemName"/>
+						<popup id="popup_TemName" width="200px"> 
+								<label pre="true" value="名称长度小于100个字符"/> 
+						</popup>
+					</hbox>
+				</row>
+				<row>
+					<hbox>模板路径：<label value="[*]" style="color:red;"/></hbox>
+					<hbox>
+						<textbox id="tempUrl" value="@{saction.template.tempUrl}" width="400px"/>
+						<image width="15px" height="15px" src="/img/qm.gif" tooltip="popup_tempUrl"/>
+						<popup id="popup_tempUrl" width="200px"> 
+								<label pre="true" value="路径长度小于400个字符"/> 
+						</popup>
+					</hbox>
+				</row>
+				<row spans="2">
+					<hbox><button id="save" label="保 存"
+							onClick='saction.save();'
+							width="100px"/></hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

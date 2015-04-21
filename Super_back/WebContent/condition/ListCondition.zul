@@ -1,0 +1,13 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./conditionWin"?>
+
+<?component name="conditions" macroURI="/condition/conditions.zul" inline="true"?>
+<zk>
+<window id="conditionWin" title="信息提示" border="normal" apply="com.lvmama.back.web.condition.ListConditionAction">
+		<conditions/>
+		<space />
+		<toolbar align="center">
+	        <button label="关闭窗口" width="100px" onClick="conditionWin.detach()"></button>
+	    </toolbar>
+</window>
+</zk>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VIEW_TRAVEL_TIPS">
+	<resultMap class="com.lvmama.comm.bee.po.prod.ViewTravelTips"
+		id="BaseResultMap">
+		<result column="ID" property="viewTravelTipsId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="TRAVEL_TIPS_ID" property="travelTipsId" />
+		<result column="COUNTRY" property="country" />
+		<result column="TIPS_NAME" property="tipsName" />
+ 	</resultMap>
+	<select id="selectByProductId" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		SELECT VTT.*,TT.COUNTRY,TT.TIPS_NAME FROM VIEW_TRAVEL_TIPS VTT,TRAVEL_TIPS TT WHERE VTT.TRAVEL_TIPS_ID = TT.ID 
+		AND VTT.PRODUCT_ID=#productId#	
+	</select>
+	<select id="selectByViewtravelTipsId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+		SELECT * FROM VIEW_TRAVEL_TIPS WHERE ID = #viewTravelTipsId#
+	</select>
+	<delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ViewTravelTips">
+		DELETE FROM VIEW_TRAVEL_TIPS
+		WHERE ID = #viewTravelTipsId#
+	</delete>
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.bee.po.prod.ViewTravelTips">
+		<selectKey resultClass="java.lang.Long" keyProperty="viewTravelTipsId" >
+	      select VIEW_TRAVEL_TIPS_SEQ.nextval as id from DUAL
+	    </selectKey>	    
+		INSERT INTO VIEW_TRAVEL_TIPS (ID,PRODUCT_ID,TRAVEL_TIPS_ID)
+		VALUES(#viewTravelTipsId#,#productId#,#travelTipsId#)
+	</insert>	
+</sqlMap>

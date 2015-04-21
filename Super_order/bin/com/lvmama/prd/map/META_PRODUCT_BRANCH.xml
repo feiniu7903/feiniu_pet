@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_PRODUCT_BRANCH" >
+	<resultMap class="com.lvmama.comm.bee.po.meta.MetaProductBranch" id="BaseResultMap">
+		<result property="metaBranchId" column="META_BRANCH_ID"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="branchName" column="BRANCH_NAME"/>
+		<result property="adultQuantity" column="ADULT_QUANTITY"/>
+		<result property="childQuantity" column="CHILD_QUANTITY"/>
+		<result property="totalStock" column="TOTAL_STOCK"/>
+		<result property="metaProductId" column="META_PRODUCT_ID"/>
+		<result property="totalDecrease" column="TOTAL_DECREASE"/>
+		<result property="productIdSupplier" column="PRODUCT_ID_SUPPLIER"/>
+		<result property="productTypeSupplier" column="PRODUCT_TYPE_SUPPLIER"/>
+		<result property="branchType" column="BRANCH_TYPE"/>
+		<result property="description" column="DESCRIPTION"/>
+		<result property="additional" column="ADDITIONAL"/>
+		<result property="sendFax" column="SEND_FAX"/>
+		<result property="valid" column="VALID"/>
+		<result property="virtual" column="VIRTUAL"/>
+		<result property="berth" column="BERTH"/>
+		<result property="stationStationId" column="STATION_STATION_ID"/>
+		<result property="checkStockHandle" column="CHECK_STOCK_HANDLE"/>
+	</resultMap>
+	
+	<resultMap id="MeatBranchRelateProductBranch" class="com.lvmama.comm.bee.vo.MetaBranchRelateProdBranch">
+		<result column="PRODUCT_ID" property="prodProductId" />
+		<result column="PRODUCT_NAME" property="prodProductName" />
+		<result column="PROD_BRANCH_ID" property="prodBranchId" />
+		<result column="PROD_BRANCH_NAME" property="prodBranchName" />
+		<result column="REAL_NAME" property="prodManagerName" />
+		<result column="ON_LINE" property="prodBranchState" />
+		<result column="PRODUCT_ON_LINE" property="prodProductState" />
+	</resultMap>
+	<resultMap class="com.lvmama.comm.bee.po.meta.MetaProductBranch" id="EbkMetaBranchResultMap">
+		<result property="metaBranchId" column="META_BRANCH_ID"/>
+		<result property="branchName" column="BRANCH_NAME"/>
+		<result property="metaProductId" column="META_PRODUCT_ID"/>
+		<result property="metaProductName" column="meta_product_name"/>
+		<result property="productType" column="product_type"/>
+		<result property="valid" column="VALID"/>
+		<result property="totalStock" column="TOTAL_STOCK"/>
+	</resultMap>
+	<resultMap id="EbkDayStockDetail" class="com.lvmama.comm.bee.vo.EbkDayStockDetail">
+		<result column="META_BRANCH_ID" property="metaBranchId"/>
+		<result column="META_PRODUCT_NAME" property="metaProductName" />
+		<result column="META_BRANCH_NAME" property="metaBranchName" />
+		<result column="SPEC_DATE" property="specDate" />
+		<result column="TOTAL_DAY_STOCK" property="totalDayStock"/>
+		<result column="DAY_STOCK" property="dayStock" nullValue="0"/>
+		<result column="SOLD_STOCK" property="soldStock"/>
+		<result column="SEAT_OCCUPIED_QUANTITY" property="seatOccupiedQuantity"/>
+	</resultMap>
+	<sql id="EbkDayStockDetailSql">
+		select mpb.meta_branch_id meta_Branch_Id,mp.product_name meta_Product_Name,mpb.branch_name meta_Branch_Name,
+	           mtp.spec_date spec_Date,mtp.total_day_stock total_Day_Stock,(mtp.total_day_stock-mtp.day_stock)sold_Stock,
+	           mtp.day_stock day_Stock,0 seat_Occupied_Quantity
+        from meta_product mp,meta_product_branch mpb,meta_time_price mtp 
+        where mp.meta_product_id=mpb.meta_product_id 
+	          and mpb.meta_branch_id=mtp.meta_branch_id
+	          and mpb.valid='Y'
+	          and mp.valid='Y'
+			  and mp.product_type = #productType#  	
+  		  	  and mp.supplier_id = #supplierId#
+  		<isNotNull property="metaProductName" prepend=" and ">
+   			  mp.product_name like '%' || #metaProductName# || '%'
+   		</isNotNull>
+  		<isNotNull property="specDate" prepend="and">
+  		  	  to_char(spec_Date,'yyyy-MM-dd') = #specDate#
+  		</isNotNull>
+  		<isNotEmpty property="isNotAperiodic" prepend=" and ">
+    		(mp.is_aperiodic  != #isNotAperiodic# or mp.is_aperiodic is null)
+    	</isNotEmpty>
+        order by spec_Date 
+	</sql>
+	<select id="selectEbkDayStockDetail" resultMap="EbkDayStockDetail" parameterClass="java.util.HashMap">
+       select TT.* from(
+                select T.*, ROWNUM RN from( 
+	    <include refid="EbkDayStockDetailSql"></include>
+ 	    )t )TT WHERE TT.RN &gt;=#beginIndex# and TT.RN &lt;=#endIndex#
+	</select>
+	<select id="selectEbkDayStockPageCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+        select count(*)from(
+         <include refid="EbkDayStockDetailSql"></include>
+         )
+	</select>
+  <select id="selectBrachByPrimaryKey" resultMap="BaseResultMap">
+  	select * from META_PRODUCT_BRANCH where META_BRANCH_ID=#metaBranchId#
+  </select>
+  
+  <select id="selectBranchListByProductId"  resultMap="BaseResultMap">
+  	select * from META_PRODUCT_BRANCH where META_PRODUCT_ID=#metaProductId# and VALID='Y'
+  </select>
+  
+  <select id="selectBranchListByParam" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+  	select * from META_PRODUCT_BRANCH 
+  	<dynamic prepend="where">
+  		<isNotNull property="metaProductId" prepend="and">
+  		META_PRODUCT_ID=#metaProductId#
+  		</isNotNull>
+  		<isNotNull property="valid" prepend="and">
+  		VALID=#valid#
+  		</isNotNull>
+  	</dynamic>
+  	
+  </select>
+  
+  	
+	<select id="selectMetaProductBranchBySupplierId" parameterClass="java.util.HashMap" resultMap="BaseResultMap">		
+          select META_PRODUCT_BRANCH.*
+            from META_PRODUCT,
+                 lvmama_pet.PERM_ORGANIZATION,
+                 META_PRODUCT_BRANCH
+           where META_PRODUCT.ORG_ID = PERM_ORGANIZATION.ORG_ID
+             AND META_PRODUCT_BRANCH.META_PRODUCT_ID = META_PRODUCT.META_PRODUCT_ID
+             AND META_PRODUCT.SUPPLIER_ID=#supplierId#
+            <isNotNull property="productIdSupplier" prepend="and">
+	  		META_PRODUCT_BRANCH.PRODUCT_ID_SUPPLIER=#productIdSupplier#
+	  		</isNotNull>
+	  		<isNotNull property="productTypeSupplier" prepend="and">
+	  		META_PRODUCT_BRANCH.PRODUCT_TYPE_SUPPLIER=#productTypeSupplier#
+	  		</isNotNull>
+           order by META_PRODUCT_BRANCH.META_BRANCH_ID DESC
+		
+	</select>
+
+	<select id="selectSupplierTypeBySupplierId" parameterClass="java.lang.Long"
+		resultClass="java.lang.String">
+		select DISTINCT MPB.PRODUCT_TYPE_SUPPLIER from
+		META_PRODUCT MP,META_PRODUCT_BRANCH MPB
+		where MP.META_PRODUCT_ID = MPB.META_PRODUCT_ID AND
+		MP.SUPPLIER_ID=#supplierId#
+	</select>
+	
+
+  <select id="getMetaProductBranchByProdBranchId" resultMap="BaseResultMap">
+  	 select mpb.* from META_PRODUCT_BRANCH mpb,PROD_PRODUCT_BRANCH_ITEM ppb where mpb.meta_branch_id=ppb.meta_branch_id and ppb.prod_branch_id=#prodBranchId#
+  </select>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductBranch">
+  	<selectKey keyProperty="metaBranchId" resultClass="java.lang.Long">
+  		select META_BRANCH_ID_SEQ.nextval FROM dual
+  	</selectKey>
+  	insert into META_PRODUCT_BRANCH(META_BRANCH_ID,CREATE_TIME,BRANCH_NAME,BRANCH_TYPE,ADULT_QUANTITY,CHILD_QUANTITY,TOTAL_STOCK,
+  			META_PRODUCT_ID,TOTAL_DECREASE,PRODUCT_ID_SUPPLIER,PRODUCT_TYPE_SUPPLIER,DESCRIPTION,VALID,ADDITIONAL,SEND_FAX, VIRTUAL, BERTH,STATION_STATION_ID,CHECK_STOCK_HANDLE
+  			)
+  		values(#metaBranchId#,sysdate,#branchName#,#branchType#,#adultQuantity#,#childQuantity#,#totalStock#,
+  			#metaProductId#,#totalDecrease#,#productIdSupplier#,#productTypeSupplier#,#description#,'Y',#additional#,#sendFax#, #virtual#, #berth#,#stationStationId#,#checkStockHandle#
+  			)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductBranch">
+  	update META_PRODUCT_BRANCH
+  	<dynamic prepend="set">
+  			BRANCH_NAME=#branchName#,
+  			BRANCH_TYPE=#branchType#,
+  			CREATE_TIME=#createTime#,
+  			ADULT_QUANTITY=#adultQuantity#,
+  			CHILD_QUANTITY=#childQuantity#,
+  			TOTAL_STOCK=#totalStock#,
+  			META_PRODUCT_ID=#metaProductId#,
+  			TOTAL_DECREASE=#totalDecrease#,
+  			PRODUCT_ID_SUPPLIER=#productIdSupplier#,
+  			PRODUCT_TYPE_SUPPLIER=#productTypeSupplier#,
+  			DESCRIPTION=#description#,
+  			ADDITIONAL=#additional#,
+  			VALID=#valid#,
+  			VIRTUAL=#virtual#,
+  			SEND_FAX=#sendFax#,
+  			BERTH=#berth#
+  	</dynamic>
+  	WHERE META_BRANCH_ID=#metaBranchId#
+  </update>
+  
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductBranch">
+  	update META_PRODUCT_BRANCH 
+  	<dynamic prepend="set">
+  		<isNotNull property="branchName" prepend=", ">
+  			BRANCH_NAME=#branchName#
+  		</isNotNull>
+  		<isNotNull property="branchType" prepend=", ">
+  			BRANCH_TYPE=#branchType#
+  		</isNotNull>
+  		<isNotNull property="createTime" prepend=", ">
+  			CREATE_TIME=#createTime#
+  		</isNotNull>
+  		<isNotNull property="adultQuantity" prepend=", ">
+  			ADULT_QUANTITY=#adultQuantity#
+  		</isNotNull>
+  		<isNotNull property="childQuantity" prepend=", ">
+  			CHILD_QUANTITY=#childQuantity#
+  		</isNotNull>
+  		<isNotNull property="totalStock" prepend=", ">
+  			TOTAL_STOCK=#totalStock#
+  		</isNotNull>
+  		<isNotNull property="metaProductId" prepend=", ">
+  			META_PRODUCT_ID=#metaProductId#
+  		</isNotNull>
+  		<isNotNull property="totalDecrease" prepend=", ">
+  			TOTAL_DECREASE=#totalDecrease#
+  		</isNotNull>
+  		<isNotNull property="productIdSupplier" prepend=", ">
+  			PRODUCT_ID_SUPPLIER=#productIdSupplier#
+  		</isNotNull>
+  		<isNotNull property="productTypeSupplier" prepend=", ">
+  			PRODUCT_TYPE_SUPPLIER=#productTypeSupplier#
+  		</isNotNull>
+  		<isNotNull property="description" prepend=", ">
+  			DESCRIPTION=#description#
+  		</isNotNull>
+  		<isNotNull property="valid" prepend=", ">
+  			VALID=#valid#
+  		</isNotNull>
+  		<isNotNull property="additional" prepend=", ">
+  			ADDITIONAL=#additional#  		  		
+  		</isNotNull>
+  		<isNotNull property="sendFax" prepend=", ">  			  		  		
+  			SEND_FAX=#sendFax#
+  		</isNotNull>
+  		<isNotNull property="virtual" prepend=", ">  			  		  		
+  			VIRTUAL=#virtual#
+  		</isNotNull>
+  		<isNotNull prepend="," property="berth">
+  			BERTH=#berth#
+  		</isNotNull>
+  	</dynamic>
+  	WHERE META_BRANCH_ID=#metaBranchId#
+  </update>
+  
+  <select id="selectRelativeProdProductBranchByMetaBranchId" parameterClass="java.lang.Long" resultMap="MeatBranchRelateProductBranch">
+		select 
+			p2.product_id as PRODUCT_ID,
+			p2.product_name as PRODUCT_NAME,
+			p1.prod_branch_id as PROD_BRANCH_ID,
+			p1.branch_name as 	PROD_BRANCH_NAME,
+			u.real_name as REAL_NAME,
+			p1.on_line as ON_LINE,
+      		p2.on_line as PRODUCT_ON_LINE
+		from
+			PROD_PRODUCT_BRANCH_ITEM p, PROD_PRODUCT_BRANCH p1, PROD_PRODUCT p2 , lvmama_pet.PERM_USER u
+		where
+		    p.prod_branch_id = p1.prod_branch_id 
+		    and p1.product_id = p2.product_id 
+		    and p2.manager_id = u.user_id
+		    and p.meta_branch_id = #metaBranchId#
+	</select>
+	<select id="selectMetaBranchByProductIds" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select * from META_PRODUCT_BRANCH WHERE META_PRODUCT_ID in 
+		<iterate open="(" close=")" conjunction=",">
+			#[]#
+		</iterate>
+	</select>
+	
+		
+	<sql id="pageSearchHead" >
+		<isNotNull property="start" prepend="">
+			<isNotNull property="end" prepend="">
+		SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM ( 
+			</isNotNull>
+		</isNotNull>
+	</sql>
+	<sql id="pageSearchFoot" >
+		<isNotNull property="orderby" prepend="">
+			<isNotEmpty property="orderby" prepend="ORDER BY">
+				$orderby$ $order$
+			</isNotEmpty>
+  		</isNotNull>
+		<isNotNull property="start" prepend="">
+			<isNotNull property="end" prepend="">
+		) P_T ) WHERE RN BETWEEN #start# AND #end#
+			</isNotNull>
+		</isNotNull>
+	</sql>
+	<sql id="getEbkMetaBrnchSql">
+    	where m.meta_product_id = b.meta_product_id
+    	  <!-- 查询E景通产品，门票和自由行的线路 类型的采购产品 -->
+    	  <isNotEmpty property="isSearchEplaceProduct">
+    	  and (m.product_type = 'TICKET' or (m.product_type = 'ROUTE' and m.sub_product_type = 'FREENESS')) 
+    	  </isNotEmpty>
+    	  <isNotEmpty property="isSearchEbookingProduct">
+    	  <!--and (m.product_type = 'HOTEL' or m.product_type = 'ROUTE') -->
+    	  and m.product_type = 'ROUTE'
+    	  </isNotEmpty>
+    	  and m.valid = 'Y'
+    	  and b.valid = 'Y'
+    	<isNotEmpty property="ebkUserId">
+    	  and not exists (
+    	  	select 
+    	  		target.sup_perform_target_id
+			from 
+				ebk_user_target target,
+				meta_product_branch branch,
+				meta_perform perform
+			
+			where 
+				target.user_id = #ebkUserId# and 
+				branch.meta_branch_id = b.meta_branch_id and 
+				perform.target_id = target.sup_perform_target_id and 
+				perform.meta_product_id = branch.meta_product_id
+    	  )
+    	</isNotEmpty>
+   		<isNotEmpty property="supplierId" prepend=" and ">
+   			m.supplier_id = #supplierId#
+   		</isNotEmpty>
+   		<isNotEmpty property="metaProductId" prepend=" and ">
+   			m.meta_product_id = #metaProductId#
+   		</isNotEmpty>
+   		<isNotEmpty property="metaProductName" prepend=" and ">
+   			m.product_name like '%' || #metaProductName# || '%'
+   		</isNotEmpty>
+   		<isNotEmpty property="productType" prepend=" and ">
+    		m.product_type = #productType#
+   		</isNotEmpty>
+    	<isNotEmpty property="isNotAperiodic" prepend=" and ">
+    		(m.is_aperiodic  != #isNotAperiodic# or m.is_aperiodic is null)
+    	</isNotEmpty>
+   		order by m.product_type 
+    </sql>
+    
+    <select id="getEbkMetaBranchCount" parameterClass="map" resultClass="long">
+    	select count(b.meta_branch_id) 
+    	from meta_product m,meta_product_branch b
+    	<include refid="getEbkMetaBrnchSql"/>
+    </select>
+    <select id="getEbkMetaBranch" parameterClass="map" resultMap="EbkMetaBranchResultMap">
+    	<include refid="pageSearchHead"/>
+   		select m.meta_product_id,m.product_name as meta_product_name,m.product_type,b.branch_name,b.meta_branch_id,b.VALID, b.TOTAL_STOCK
+   		from meta_product m,meta_product_branch b
+   		<include refid="getEbkMetaBrnchSql"/>
+    	<include refid="pageSearchFoot"/>
+    </select>
+    
+    <select id="getEbkMetaBranchParam" parameterClass="map" resultMap="EbkMetaBranchResultMap">
+    	select b.meta_branch_id,b.branch_name,m.meta_product_id,m.product_name as meta_product_name,m.product_type,b.VALID, b.TOTAL_STOCK
+    	from meta_product_branch b, meta_product m
+    	where
+    		b.meta_product_id = m.meta_product_id
+    	<isNotEmpty property="metaBranchIds" prepend=" and ">
+    	b.meta_branch_id in (
+    		<iterate conjunction=" , " property="metaBranchIds">
+    			#metaBranchIds[]#
+    		</iterate>
+    	)
+    	</isNotEmpty>
+    </select>
+    
+    <select id="getEbkMetaBranchByProductId" parameterClass="long" resultMap="EbkMetaBranchResultMap">
+    	select b.meta_branch_id,b.branch_name,b.meta_product_id,'' as meta_product_name,'' product_type,
+    		b.VALID, b.TOTAL_STOCK
+    	  from meta_product_branch b
+    	  where b.meta_product_id = #value#
+    </select>
+	
+	<select id="getMetaBranch" parameterClass="map" resultClass="com.lvmama.comm.bee.po.meta.MetaProductBranch">
+		select 
+				p.product_name as metaProductName,
+				p.meta_product_id as metaProductId,
+				b.branch_name as branchName,
+				b.meta_branch_id as metaBranchId
+		  from meta_product_branch b,meta_product p
+		  where b.meta_product_id = p.meta_product_id  
+		  <isNotEmpty property="supplierId">
+		  	and p.supplier_id = #supplierId#
+		  </isNotEmpty>
+		  <isNotEmpty property="productType">
+		  	and p.product_type = #productType#
+		  </isNotEmpty>
+	</select>
+	
+	<select id="selectMetaBranchsByStationStation"  parameterClass="com.lvmama.comm.bee.po.meta.MetaProductBranch"  resultMap="BaseResultMap">
+		select * from meta_product_branch
+		where station_station_id=#stationStationId#
+		and valid='Y'
+	</select>
+	
+	<select id="getProductIdByMetaBranchId" parameterClass="java.lang.Long" resultClass="java.lang.Long">
+		SELECT PPB.PRODUCT_ID
+  FROM PROD_PRODUCT_BRANCH PPB
+ WHERE PPB.PROD_BRANCH_ID =
+       (SELECT max(PPBI.Prod_Branch_Id)
+          FROM PROD_PRODUCT_BRANCH_ITEM PPBI
+         WHERE PPBI.META_BRANCH_ID = #metaBranchId#)
+	</select>
+	
+	<select id="selectPayMentAmountByBranchId" resultClass="Double" parameterClass="java.util.HashMap" >
+	<![CDATA[
+		SELECT SUM(SALE_AMOUNT) / 100 AS PAYMENT_AMOUNT
+		  FROM (SELECT DISTINCT (META.ORDER_ID),
+		                        META.META_BRANCH_ID,
+		                        (((CASE
+		                          WHEN (((select sum(i.price * i.quantity) as p1
+		                                    from ord_order_item_prod i
+		                                   where i.order_id = META.ORDER_ID) *
+		                               (SELECT SUM(m.settlement_price * m.quantity *
+		                                         m.product_quantity)
+		                                    FROM ORD_ORDER_ITEM_META M
+		                                   WHERE M.ORDER_ID = META.ORDER_ID
+		                                     AND M.META_BRANCH_ID =
+		                                         META.META_BRANCH_ID) /
+		                               (SELECT sum(m.settlement_price * m.quantity *
+		                                             m.product_quantity)
+		                                    FROM ORD_ORDER_ITEM_META M
+		                                   WHERE M.ORDER_ID = META.ORDER_ID)) -
+		                               (SELECT SUM(m.settlement_price * m.quantity *
+		                                        m.product_quantity)
+		                                   FROM ORD_ORDER_ITEM_META M
+		                                  WHERE M.ORDER_ID = META.ORDER_ID
+		                                    AND M.META_BRANCH_ID = META.META_BRANCH_ID)) <= 0 THEN
+		                           1 
+		                           	ELSE 
+		                           	(((select sum(i.price * i.quantity) as p1
+		                                    from ord_order_item_prod i
+		                                   where i.order_id = META.ORDER_ID) *
+		                               (SELECT SUM(m.settlement_price * m.quantity *
+		                                         m.product_quantity)
+		                                    FROM ORD_ORDER_ITEM_META M
+		                                   WHERE M.ORDER_ID = META.ORDER_ID
+		                                     AND M.META_BRANCH_ID =
+		                                         META.META_BRANCH_ID) /
+		                               (SELECT sum(m.settlement_price * m.quantity *
+		                                             m.product_quantity)
+		                                    FROM ORD_ORDER_ITEM_META M
+		                                   WHERE M.ORDER_ID = META.ORDER_ID)) -
+		                               (SELECT SUM(m.settlement_price * m.quantity *
+		                                        m.product_quantity)
+		                                   FROM ORD_ORDER_ITEM_META M
+		                                  WHERE M.ORDER_ID = META.ORDER_ID
+		                                    AND M.META_BRANCH_ID = META.META_BRANCH_ID))
+		                        END) / (CASE
+		                          WHEN ((select sum(i.price * i.quantity) as p1
+		                                   from ord_order_item_prod i
+		                                  where i.order_id = META.ORDER_ID) -
+		                               (SELECT sum(m.settlement_price * m.quantity *
+		                                            m.product_quantity)
+		                                   FROM ORD_ORDER_ITEM_META M
+		                                  WHERE M.ORDER_ID = META.ORDER_ID)) <= 0 THEN
+		                           1
+		                           	ELSE
+		                           		((select sum(i.price * i.quantity) as p1
+		                                   from ord_order_item_prod i
+		                                  where i.order_id = META.ORDER_ID) -
+		                               (SELECT sum(m.settlement_price * m.quantity *
+		                                            m.product_quantity)
+		                                   FROM ORD_ORDER_ITEM_META M
+		                                  WHERE M.ORDER_ID = META.ORDER_ID))
+		                        END)
+		                        
+		                        ) * (select sum(i.price * DECODE(META.BUY_OUT_QUANTITY, NULL, 0, META.BUY_OUT_QUANTITY)) as p1
+		                                from ord_order_item_prod i
+		                               where i.order_id = META.ORDER_ID) *
+		                        (SELECT SUM(DECODE(M.BUY_OUT_QUANTITY, NULL, 0, M.BUY_OUT_QUANTITY))
+		                            FROM ORD_ORDER_ITEM_META M
+		                           WHERE M.ORDER_ID = META.ORDER_ID) /
+		                        (SELECT SUM(M.PRODUCT_QUANTITY * PROD.QUANTITY)
+		                            FROM ORD_ORDER_ITEM_META M
+		                            JOIN ord_order_item_prod PROD
+		                              ON PROD.ORDER_ID = M.ORDER_ID
+		                           WHERE M.ORDER_ID = META.ORDER_ID)
+		                        ) AS SALE_AMOUNT
+		          FROM ORD_ORDER_ITEM_META META
+		         WHERE META.META_BRANCH_ID = #branchId#
+		           AND META.BUY_OUT_QUANTITY > 0) TEMP_TABLE
+		 GROUP BY META_BRANCH_ID
+		]]>
+	</select>
+  <select id="getMetaProductBranchValid" parameterClass="map" resultClass="java.lang.String">
+  	 select mpb.valid from meta_product_branch mpb,meta_product m where 
+	mpb.meta_product_id = m.meta_product_id 
+	and mpb.meta_branch_id =#metaBranchId#
+	<isNotEmpty property="productType" prepend=" and ">
+   		 m.product_type =#productType# 
+   	</isNotEmpty>
+	
+  </select>
+</sqlMap>

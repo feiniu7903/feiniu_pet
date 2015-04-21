@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_ORDER_AMOUNT_APPLY" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderAmountApply" >
+    <result column="AMOUNT_APPLY_ID" property="amountApplyId" />
+    <result column="ORDER_ID" property="orderId" />
+    <result column="AMOUNT" property="amount" />
+    <result column="APPLY_STATUS" property="applyStatus" />
+    <result column="APPLY_TYPE" property="applyType" />
+    <result column="APPLY_USER" property="applyUser" />
+    <result column="APPROVE_USER" property="approveUser" />
+    <result column="APPROVE_TIME" property="approveTime" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="APPLY_MEMO" property="applyMemo" />
+    <result column="APPROVE_MEMO" property="approveMemo" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderAmountApply" >
+    select * from ORD_ORDER_AMOUNT_APPLY where AMOUNT_APPLY_ID = #amountApplyId#
+  </select>
+  
+  <sql id="selectSQL">
+		SELECT * FROM ORD_ORDER_AMOUNT_APPLY t
+		<dynamic prepend="WHERE">
+		  <isNotNull prepend="AND" property="amountApplyId" >
+	        t.AMOUNT_APPLY_ID=#amountApplyId#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="orderId" >
+	        t.ORDER_ID=#orderId#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="amount" >
+	        t.AMOUNT=#amount#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="applyStatus" >
+	        t.APPLY_STATUS=#applyStatus#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="applyType" >
+	        t.APPLY_TYPE=#applyType#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="notApplyType" >
+	        t.APPLY_TYPE not in ($notApplyType$) 
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="inApplyType" >
+	        t.APPLY_TYPE in ($inApplyType$) 
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="applyUser" >
+	        t.APPLY_USER=#applyUser#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="approveUser" >
+	        t.APPROVE_USER=#approveUser#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="approveTime" >
+	        t.APPROVE_TIME=#approveTime#
+	      </isNotNull>
+	      <isNotEmpty prepend="AND" property="orgId">
+	       exists (SELECT 1 FROM ORD_ORDER S WHERE S.ORG_ID =#orgId# and t.order_id=s.order_id)
+	      </isNotEmpty>
+		</dynamic>
+	</sql>
+ 
+ <select id="selectByOrdParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+		SELECT * FROM (SELECT a.*,ROWNUM rn FROM( 
+			<include refid="selectSQL"/>
+			order by AMOUNT_APPLY_ID ASC
+			) a
+			<dynamic prepend="where">
+			<isNotEmpty property="maxResult" prepend="and">
+				ROWNUM &lt;= #maxResult#
+			</isNotEmpty>
+			</dynamic>
+			)<dynamic prepend="where">
+			<isNotEmpty property="skipResult" prepend="and">
+				rn &gt;= #skipResult#
+			</isNotEmpty>		
+			</dynamic>
+	</select>
+	
+	<select id="selectByParamCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM (
+			<include refid="selectSQL"/>
+		)
+	</select>
+ 
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderAmountApply" >
+  	<selectKey resultClass="java.lang.Long" keyProperty="amountApplyId" >
+      select AMOUNT_APPLY_ID_SEQ.nextval as amountApplyId from DUAL
+    </selectKey>
+    insert into ORD_ORDER_AMOUNT_APPLY
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="amountApplyId" >
+        AMOUNT_APPLY_ID
+      </isNotNull>
+      <isNotNull prepend="," property="orderId" >
+        ORDER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="amount" >
+        AMOUNT
+      </isNotNull>
+      <isNotNull prepend="," property="applyStatus" >
+        APPLY_STATUS
+      </isNotNull>
+      <isNotNull prepend="," property="applyType" >
+        APPLY_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="applyUser" >
+        APPLY_USER
+      </isNotNull>
+      <isNotNull prepend="," property="approveUser" >
+        APPROVE_USER
+      </isNotNull>
+      <isNotNull prepend="," property="approveTime" >
+        APPROVE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="applyMemo" >
+        APPLY_MEMO
+      </isNotNull>
+      <isNotNull prepend="," property="approveMemo" >
+        APPROVE_MEMO
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="amountApplyId" >
+        #amountApplyId#
+      </isNotNull>
+      <isNotNull prepend="," property="orderId" >
+        #orderId#
+      </isNotNull>
+      <isNotNull prepend="," property="amount" >
+        #amount#
+      </isNotNull>
+      <isNotNull prepend="," property="applyStatus" >
+        #applyStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="applyType" >
+        #applyType#
+      </isNotNull>
+      <isNotNull prepend="," property="applyUser" >
+        #applyUser#
+      </isNotNull>
+      <isNotNull prepend="," property="approveUser" >
+        #approveUser#
+      </isNotNull>
+      <isNotNull prepend="," property="approveTime" >
+        #approveTime#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        sysdate
+      </isNotNull>
+      <isNotNull prepend="," property="applyMemo" >
+        #applyMemo#
+      </isNotNull>
+      <isNotNull prepend="," property="approveMemo" >
+        #approveMemo#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderAmountApply" >
+    update ORD_ORDER_AMOUNT_APPLY
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="orderId" >
+        ORDER_ID = #orderId#
+      </isNotNull>
+      <isNotNull prepend="," property="amount" >
+        AMOUNT = #amount#
+      </isNotNull>
+      <isNotNull prepend="," property="applyStatus" >
+        APPLY_STATUS = #applyStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="applyType" >
+        APPLY_TYPE = #applyType#
+      </isNotNull>
+      <isNotNull prepend="," property="applyUser" >
+        APPLY_USER = #applyUser#
+      </isNotNull>
+      <isNotNull prepend="," property="approveUser" >
+        APPROVE_USER = #approveUser#
+      </isNotNull>
+      <isNotNull prepend="," property="approveTime" >
+        APPROVE_TIME = #approveTime#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="applyMemo" >
+        APPLY_MEMO = #applyMemo#
+      </isNotNull>
+      <isNotNull prepend="," property="approveMemo" >
+        APPROVE_MEMO = #approveMemo#
+      </isNotNull>
+    </dynamic>
+    where AMOUNT_APPLY_ID = #amountApplyId#
+  </update>
+  
+  
+  
+  
+</sqlMap>

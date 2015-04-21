@@ -1,0 +1,38 @@
+<?page title="add assembly" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_newassembly"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_newassembly" title="新建上车地点" closable="true" apply="com.lvmama.back.web.product.AddAssemblyAction">
+    <grid>
+    <columns>
+				<column width="100px" align="right"></column>
+				<column align="center"></column>
+				<column width="200px" align="center"></column>
+			</columns>
+    	<rows>
+    		<row>
+    			<hbox>上车地点：</hbox>
+    			<hbox><textbox id="assembly" width="600px"/></hbox>
+    			<hbox><button label="新增" id="addAssembly" width="100px" onClick='saction.addAssembly(assembly.value);'/></hbox>
+    		</row>
+    	</rows>
+    </grid>
+    <button label="刷新" id="refresh" width="100px" onClick='saction.doBefore();' visible="false"/>
+    <space/>
+    <listbox id="box" fixedLayout="true" model="@{saction.assemblyList,load-after='refresh.onClick'}">
+		<listhead>
+			<listheader label="" width="3%"/>
+			<listheader label="上车地点" width="85%"/>
+			<listheader label="操作" align="center"/>
+		</listhead>
+		<listitem self="@{each='assembly'}" value="@{assembly}" height="25px">
+			<listcell />
+			<listcell label="@{assembly.assemblyPoint}"/>
+			<listcell>
+				<a label="删除" style="color:blue" onClick='saction.delAssembly(self.getAttributes());'>
+					<custom-attributes assemblyPointId="@{assembly.assemblyPointId}"/>
+				</a>
+			</listcell>
+		</listitem>
+	</listbox>
+  </window>
+</zk>

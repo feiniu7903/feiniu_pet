@@ -1,0 +1,433 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>中国好温泉</title>
+<#include "../common/define_v3.html">
+<meta content="telephone=no" name="format-detection" />
+<script src="${request.contextPath}/js/hot_spring.js"></script>
+<style>
+	body { background:#fff;}
+	.ic_dele {
+		display: block;
+		position: absolute;
+		right: 15px;
+		top: 50%;
+		margin-top: -12px;
+	}
+	.banner { position:relative;}
+	.hotspring_list { margin-top:10px;}
+	.hotspring_list dt { margin:10px; margin-top:0; position:relative;}
+	.hotspring_list dt span {background:rgba(0,0,0, 0.5); display:block; position:absolute; top:50%; margin-top:-30px; right:10px; color:#fff; 
+	padding:10px 50px 10px 10px; text-align:center;}
+	.hotspring_list dt span em, .hotspring_list dt span i{ display:block;}
+	.hotspring_list dt span i { font-size:12px;}
+	.hotspring_list dt span em { font-size:20px;}
+	.hotspring_list dd, .hotspring_list dd ul { clear:both; width:100%; height:auto; overflow:hidden;}
+	.hotspring_list dd li a{
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		-o-text-overflow: ellipsis;
+		-ms-text-overflow: ellipsis; font-size:15px; background:#eee; color:#555; width:42%; margin:0 0 10px 10px; padding:10px 7px;text-align:center; float:left;
+		}
+	.hotspring_list dd li:nth-child(1) a{ background:#28b9fd; color:#fff;}
+	.more { padding:10px 6px!important; position:relative;color:#fff !important; float:right !important; margin-right:3px !important;}
+	.morebg1{ background:#ff7dc3 !important;}
+	.morebg2{ background:#ff8502 !important;}
+	.morebg3{ background:#6a9fff !important;}
+	.morebg4{ background:#ffbf2a !important;}
+	.morebg5{ background:#2a79fd !important;}
+	.morebg6{ background:#53c7f4 !important;}
+	.morebg7{ background:#43d6b5 !important;}
+	.morebg8{ background:#ff6357 !important;}
+	.morebg9{ background:#0ad4d2 !important;}
+	.morebg10{ background:#28b9fd !important;}
+	.morebg11{ background:#d275ea !important;}
+	
+	.more span{
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAbCAYAAAD28DaZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpCMDgwRUM3QjhBQUNFMjExOUE3NkU3NDEzQTU0MTZGRSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpBNjM4QTJBQjQ1MzMxMUUzQkYwNjkwQjhFRkZBRjhCOCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpBNjM4QTJBQTQ1MzMxMUUzQkYwNjkwQjhFRkZBRjhCOCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozMTNDN0M5MzE3NDVFMzExODNBQ0EyMEIxOEIwNkYyMiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpCMDgwRUM3QjhBQUNFMjExOUE3NkU3NDEzQTU0MTZGRSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pg/f7XIAAAIkSURBVHjaxNfPSxRxGMfxmXVXTJMgC0JDQU9GIAkKpUF68GCHhI5dFMSD/geeQyjr4EU6dRHBQ1kIehAiBMuTevHQj0MQUYsihusPXH+M70eeEZGZr86sX/eBFwu78t2PM995vs+6nuc5EasKt7ER8FkKafxxYpQbI0wTelCPdeyd+Cyh701iOOrCyRj/wCp+oxV3Q/6mBluYxt9zryxXJoYUOjCPrBdcy+hHBdzzrBs3jLiKp1gICbOPVQziiu0wogTPMOeF1z+8xC3bYUShBlrETkigbQyg2nYYR2/DE3w2BPI00A0kbIbxr9AdjBjCrGAIN4PWkF1ewkNVjF0nfkmz2tE12tCnr6mQ1jCBt5g93WfaUYusk3tJmAMs62tQlaEL1/T7vx5/N1dmystffUSjv4eS2sLzVdLFXbzCfPLU2XLZVYrH+CkkTEEew8iF+I61oz3GvZrM4575gV4U+HtmDoUh80nUkidoE9cNj7Zfv/Aa49j35xl5rMuxnWMQ6TUZHSs6dXOGhVnCG4zif64jhOkkl7Ehg4OA25LRQ7U36Ei4yCAJHRfWQoJIfcB9FAXNOBcVpA6jSBs263u0IGnz1JYOOmYIsYFxNNucZ2T0rMU7Q5BNvTX3bE961Xq2bJ1x9jRpcGthHuGTIYQ8NS/QYNojQfNM1H5SiW797ZTVOebkSCKtfQbPdXax+iPuAR5qk3S12flVhG/4EjWI1KEAAwAn4yDlHUv1QwAAAABJRU5ErkJggg=='); width:30px; height:15px; display:block; right:0; position:absolute; top:50%; margin-top:-7px; background-size:20px auto; background-repeat:no-repeat; vertical-align:middle; margin-left:5px;}
+	
+.ic_hos_ri {width:38px; height:25px; display:block; right:0; position:absolute; top:50%; margin-top:-12px; background-size:25px auto; background-repeat:no-repeat; vertical-align:middle; margin-left:5px;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADUAAAA1CAYAAADh5qNwAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpCMDgwRUM3QjhBQUNFMjExOUE3NkU3NDEzQTU0MTZGRSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozQURGNzUzRDQ1RjAxMUUzOUVDNDhEOTlBOThBNzA3MSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozQURGNzUzQzQ1RjAxMUUzOUVDNDhEOTlBOThBNzA3MSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpEM0NGQUJFMERENDVFMzExOEE0MUM1OEM4M0M0ODIzOSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpCMDgwRUM3QjhBQUNFMjExOUE3NkU3NDEzQTU0MTZGRSIvPiA8L3JkZjpEZXNjcmlwdGlv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');}
+
+	
+</style>
+</head>
+
+<body>
+<div class="wrap">
+	<header class="header">
+    	<a href="javascript:void(0);" onclick="window.history.go(-1);" class="back"><span class="ic_back"></span></a>
+        <h1>中国好温泉</h1>
+        <section class="header_alice">
+        	<a href="javascript:void(0);" onclick="union_skip('http://${hostName}');" class="btn1"><img src="http://pic.lvmama.com/img/mobile/touch/img/index/home.png"></a>
+        </section>
+    </header>
+	<form method="get" action="${request.contextPath}/placeHotSpring"  id="key_search" >
+		<input type="hidden" name="keyword" id="keyword" value="" data-name="">
+		<input type="hidden" name="stage" id="stage" value="2" data-name="">
+		<input type="hidden" name="subjects" id="subjects" value="" data-name="">
+		<input type="hidden" name="sort" id="sort" value="seq" data-name="">
+		<input type="hidden" name="page" id="page" value="1" data-name="">
+		<input type="hidden" name="ajax" id="ajax" value="false" data-name="">
+	</form>
+    <section class="hotspring_con">
+    	<aside class="banner">
+            <a href="http://${hostName}/static/zt/3.0.0/wenquan20131024.html"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/hotspring/banner.jpg" alt="中国好温泉" /></a>
+            <a href="javascript:void(0);" id="ads" class="ic_dele"></a>
+        </aside>
+            
+        <dl class="hotspring_list">
+        	<dt>
+            	<a href="javascript:getPlaceHotSpring('江苏')">
+                    <img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/hotspring/jiangsu.jpg" alt="江苏" />
+                    <span>
+                    	<em>江苏</em>
+                        <i>Jiang Su</i>
+                        <ins class="ic_hos_ri"></ins>
+                    </span>
+                </a>
+            </dt>
+            <dd>
+            	<ul>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',100593);">天目湖御水温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',103896);">南京汤山颐尚温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',151330);">苏州金凤凰温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',154014);">无锡灵山元一温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',122261);">常州恐龙谷温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',156553);">扬州瘦西湖温泉</a>
+                    </li>
+<!--                	<li>
+                        <a href="javascript:redirectSpecial('place',151800);">泰州华侨城云海温泉</a>
+                    </li>
+--><!--                	<li>
+                        <a href="###" class="more morebg1">更多<span></span></a>
+                    </li>
+-->                </ul>
+            </dd>
+        	<dt>
+            	<a href="javascript:getPlaceHotSpring('浙江')">
+                    <img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/hotspring/zhejiang.jpg" alt="浙江" />
+                    <span>
+                    	<em>浙江</em>
+                        <i>Zhe Jiang</i>
+                        <ins class="ic_hos_ri"></ins>
+                    </span>
+                </a>
+            </dt>
+            <dd>
+            	<ul>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',159069);">临安湍口众安氡温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',154254);">安吉江南天池高山温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',108257);">宁海森林温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',154635);">湖州雷迪森天沐温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',105208);">武义唐风温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',157584);">新安江玉温泉</a>
+                    </li>
+<!--                	<li>
+                        <a href="javascript:redirectSpecial('place',154185);">余姚阳明温泉</a>
+                    </li>
+--><!--                	<li>
+                        <a href="###" class="more morebg2">更多<span></span></a>
+                    </li>
+-->                </ul>
+            </dd>
+        	<dt>
+            	<a href="javascript:getPlaceHotSpring('安徽')">
+                    <img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/hotspring/anhui.jpg" alt="安徽" />
+                    <span>
+                    	<em>安徽</em>
+                        <i>An Hui</i>
+                        <ins class="ic_hos_ri"></ins>
+                    </span>
+                </a>
+            </dt>
+            <dd>
+            	<ul>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',106195);">黄山飘雪温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',120100);">黄山醉温泉</a>
+                    </li>
+<!--                	<li>
+                        <a href="###" class="more morebg3">更多<span></span></a>
+                    </li>
+-->                </ul>
+            </dd>
+        	<dt>
+            	<a href="javascript:getPlaceHotSpring('上海')">
+                    <img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/hotspring/shanghai.jpg" alt="上海" />
+                    <span>
+                    	<em>上海</em>
+                        <i>Shang Hai</i>
+                        <ins class="ic_hos_ri"></ins>
+                    </span>
+                </a>
+            </dt>
+            <dd>
+            	<ul>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',157434);">上海之根雪浪湖温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',154001);">浦江源温泉森林度假村</a>
+                    </li>
+<!--                	<li>
+                        <a href="###" class="more morebg4">更多<span></span></a>
+                    </li>
+-->                </ul>
+            </dd>
+        	<dt>
+            	<a href="javascript:getPlaceHotSpring('北京')">
+                    <img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/hotspring/beijing.jpg" alt="北京" />
+                    <span>
+                    	<em>北京</em>
+                        <i>Bei Jing</i>
+                        <ins class="ic_hos_ri"></ins>
+                    </span>
+                </a>
+            </dt>
+            <dd>
+            	<ul>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',154425);">九华山庄温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',151870);">北京凤山温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',151645);">顺景温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',154212);">龙熙温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',153323);">温都水城</a>
+                    </li>
+<!--                	<li>
+                        <a href="###" class="more morebg5">更多<span></span></a>
+                    </li>
+-->                </ul>
+            </dd>
+        	<dt>
+            	<a href="javascript:getPlaceHotSpring('江西')">
+                    <img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/hotspring/jiangxi.jpg" alt="江西" />
+                    <span>
+                    	<em>江西</em>
+                        <i>Jiang Xi</i>
+                        <ins class="ic_hos_ri"></ins>
+                    </span>
+                </a>
+            </dt>
+            <dd>
+            	<ul>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',158249);">庐山醉石温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',120300);">庐山西海国际温泉度假村</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',100010);">庐山天沐温泉度假村</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',158307);">明月山硒温泉</a>
+                    </li>
+<!--                	<li>
+                        <a href="###" class="more morebg6">更多<span></span></a>
+                    </li>
+-->                </ul>
+            </dd>
+        	<dt>
+            	<a href="javascript:getPlaceHotSpring('福建')">
+                    <img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/hotspring/fujian.jpg" alt="福建" />
+                    <span>
+                    	<em>福建</em>
+                        <i>Fu Jian</i>
+                        <ins class="ic_hos_ri"></ins>
+                    </span>
+                </a>
+            </dt>
+            <dd>
+            	<ul>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',151920);">厦门日月谷温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',155601);">厦门天沐温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',122860);">厦门翠丰SPA温泉</a>
+                    </li>
+<!--                	<li>
+                        <a href="###" class="more morebg7">更多<span></span></a>
+                    </li>
+-->                </ul>
+            </dd>
+        	<dt>
+            	<a href="javascript:getPlaceHotSpring('广东')">
+                    <img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/hotspring/zhuhaiwenquan.jpg" alt="广东" />
+                    <span>
+                    	<em>广东</em>
+                        <i>Guang Dong</i>
+                        <ins class="ic_hos_ri"></ins>
+                    </span>
+                </a>
+            </dt>
+            <dd>
+            	<ul>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',154885);">海泉湾</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',154285);">清远森波拉火山温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',103564);">台山康桥温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',108244);">惠州海滨温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',102879);">新会古兜温泉</a>
+                    </li>
+<!--                	<li>
+                        <a href="###" class="more morebg8">更多<span></span></a>
+                    </li>
+-->                </ul>
+            </dd>
+        	<dt>
+            	<a href="javascript:getPlaceHotSpring('四川')">
+                    <img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/hotspring/sichuanwenquan.jpg" alt="四川" />
+                    <span>
+                    	<em>四川</em>
+                        <i>Si Chuan</i>
+                         <ins class="ic_hos_ri"></ins>
+                    </span>
+                </a>
+            </dt>
+            <dd>
+            	<ul>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',158417);">名人四季温泉谷</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',158986);">花水湾叠香溪温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',154262);">红珠山森林温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',154261);">峨眉山灵秀温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',157396);">青城豪生温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',154265);">文锦江温泉酒店</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',157395);">海螺沟逸家温泉</a>
+                    </li>
+<!--                	<li>
+                        <a href="###" class="more morebg9">更多<span></span></a>
+                    </li>
+-->                </ul>
+            </dd>
+        	<dt>
+            	<a href="javascript:getPlaceHotSpring('重庆')">
+                    <img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/hotspring/chongqing.jpg" alt="重庆" />
+                    <span>
+                    	<em>重庆</em>
+                        <i>Chong Qing</i>
+                        <ins class="ic_hos_ri"></ins>
+                    </span>
+                </a>
+            </dt>
+            <dd>
+            	<ul>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',154378);">永川香海温泉票</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',108316);">仙沐苑温泉酒店</a>
+                    </li>
+<!--                	<li>
+                        <a href="###" class="more morebg10">更多<span></span></a>
+                    </li>
+-->                </ul>
+            </dd>
+        	<dt>
+            	<a href="javascript:getPlaceHotSpring('云南')">
+                    <img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/hotspring/yunnanwenquan.jpg" alt="云南" />
+                    <span>
+                    	<em>云南</em>
+                        <i>Yun Nan</i>
+                        <ins class="ic_hos_ri"></ins>
+                    </span>
+                </a>
+            </dt>
+            <dd>
+            	<ul>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',107461);">西部大峡谷温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',158576);">昆明柏联SPA温泉</a>
+                    </li>
+                	<li>
+                        <a href="javascript:redirectSpecial('place',101111);">玉溪映月潭温泉</a>
+                    </li>
+<!--                	<li>
+                        <a href="###" class="more morebg11">更多<span></span></a>
+                    </li>
+-->                </ul>
+            </dd>
+        </dl>
+	  <script>
+	  	$('#ads').bind('click',function(){
+			$(this).siblings('a').find('img').fadeOut();	
+			$(this).hide();
+		});
+	  </script>
+
+   </section>
+    <!-- footer -->
+	<#include "../common/footer_v3.html"/>
+	<!--电话弹出层 st-->
+	<div class="telBox">
+    	<div class="telBox_con"></div>
+        <div class="p">
+            <span>咨询预订的产品ID为3629</span>
+            <p>4001-570-570</p>
+            <a href="javascript:void(0);" class="ic_ret" _dele=""></a>
+            <a href="tel:4001-570-570" class="ic_tel"></a>
+        </div>
+    </div>
+<div class='model'></div>
+</div>
+</body>
+</html>

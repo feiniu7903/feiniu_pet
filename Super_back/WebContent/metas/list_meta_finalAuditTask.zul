@@ -1,0 +1,22 @@
+<zk>
+<window border="none" id="finalAudit" width="100%" apply="com.lvmama.back.web.audit.PermFinalAuditTaskAction">
+	<listbox id="metaProductListBox" model="@{saction.permFinalAuditTaskList,load-after=''}">
+		<listhead>
+			<listheader label="操作内容" width="5%"/>
+			<listheader label="一审时间" width="10%"/>
+			<listheader label="初审审核人"/>
+			<listheader label="一审消息内容" width="5%"/>
+			<listheader label="生效/不生效时间"/>
+			<listheader label="终审审核人" width="14%"/>
+		</listhead>
+		<listitem id="mysearch" height="25px" self="@{each='finalList'}">
+			<listcell label="@{finalList.finalTaskId}" />
+			<listcell label="@{finalList.createTime}" />
+			<listcell label="" />
+			<listcell label="@{finalList.finalTaskId}" />
+			<listcell label="@{finalList.updateTime}" />
+			<listcell label="" />
+		</listitem>
+	</listbox>
+</window>
+</zk>

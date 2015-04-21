@@ -1,0 +1,159 @@
+<?page title="频道管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./containerProductWin"?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="label" extends="label" class="com.lvmama.back.utils.perm.PermLabel" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="containerProductWin" title="频道管理" mode="embedded" apply="com.lvmama.back.web.container.ContainerProductAction">
+		<grid>
+			<columns>
+				<column width="80px"></column>
+				<column width="250px"></column>
+				<column width="80px"></column>
+				<column width="200px"></column>
+				<column width="80px"></column>
+				<column width="250px"></column>
+			</columns>
+			<rows>
+				<row>
+					<cell>
+						<label value="频道板块：" />
+					</cell>
+					<cell>
+						<listbox id="containerListbox" mold="select"
+							model="@{saction.getContainerList}"
+							onSelect="saction.setContainerCode(self.selectedItem.value);">
+							<listitem self="@{each='container'}" label="@{container.containerName}" value="@{container.containerCode}" />
+						</listbox>
+					</cell>
+
+					<cell>
+						<label value="出发地：" />
+					</cell>
+					<cell>
+						<listbox id="fromPlaceListbox" mold="select"
+							model="@{saction.getFromPlaceList, load-after='containerListbox.onSelect'}"
+							onSelect="saction.setFromPlaceId(self.selectedItem.value);">
+							<listitem self="@{each='fromPlace'}" label="@{fromPlace.fromPlaceName}" value="@{fromPlace.fromPlaceId}" />
+						</listbox>
+					</cell>
+
+					<cell>
+						<label value="目的地：" />
+					</cell>
+					<cell>
+						<listbox id="toPlaceListbox" mold="select"
+							model="@{saction.getToPlaceList, load-after='fromPlaceListbox.onSelect, containerListbox.onSelect'}"
+							onSelect="saction.setDestId(self.selectedItem.value);">
+							<listitem self="@{each='toPlace'}" label="@{toPlace.toPlaceName}" value="@{toPlace.toPlaceId}" />
+						</listbox>
+						<listbox id="toPlaceListbox2" mold="select"
+							model="@{saction.getToPlaceList2, load-after='toPlaceListbox.onSelect, containerListbox.onSelect'}"
+							onSelect="saction.setToPlaceId(self.selectedItem.value);">
+							<listitem self="@{each='toPlace'}" label="@{toPlace.toPlaceName}" value="@{toPlace.toPlaceId}" />
+						</listbox>
+					</cell>
+
+					<cell>
+						<label value="产品类型：" />
+					</cell>
+					<cell>
+						<listbox id="subProductTypeListbox" mold="select"
+							model="@{saction.getSubProductTypeList, load-after='containerListbox.onSelect'}"
+							onSelect="saction.setSubProductType(self.selectedItem.value);">
+							<listitem self="@{each='subProductType'}" label="@{subProductType.name}" value="@{subProductType.value}" />
+						</listbox>
+					</cell>
+				</row>
+				<row>
+					<cell>
+						<label value="产品ID：" />
+					</cell>
+					<cell>
+						<longbox value="@{saction.productId}" maxlength="20" />
+					</cell>
+
+					<cell>
+						<label value="产品名称：" />
+					</cell>
+					<cell>
+						<textbox value="@{saction.productName}" maxlength="20" />
+					</cell>
+					
+					<cell>
+						<label value="排序：" />
+					</cell>
+					<cell>
+						<listbox id="sortType" mold="select"
+							onSelect="saction.setSortType(self.selectedItem.value)">
+							<listitem label="按SEQ值从高到低" value="1" />
+							<listitem label="按SEQ值从低到高" value="2" />
+							<listitem label="按推荐排序值从高到低" value="3" />
+							<listitem label="按推荐排序值从低到高" value="4" />
+						</listbox>
+					</cell>
+					<cell colspan="2">
+						<button width="100px" id="queryButton" label="查询" onClick="saction.setContainerProductIndex();saction.getContainerProductList();" />
+					</cell>
+				</row>
+			</rows>
+		</grid>
+
+		<listbox id="box" fixedLayout="true"
+			model="@{saction.getContainerProductList, load-after='queryButton.onClick, _paging.onPaging'}">
+			<listhead>
+				<listheader label="频道板块" width="180px" />
+				<listheader label="推荐排序值" />
+				<listheader label="默认排序值" />
+				<listheader label="产品ID" />
+				<listheader label="产品名称" />
+				<listheader label="产品起价" />
+				<listheader label="出发地" />
+				<listheader label="目的地" />
+				<listheader label="操作" width="300px" />
+			</listhead>
+			<listitem self="@{each='containerProduct'}"  value="@{containerProduct}" onCreate ='saction.setBgColor(self);'>
+				<listcell label="@{containerProduct.containerName}" />
+				<listcell label="@{containerProduct.recommendSeq}" />
+				<listcell label="@{containerProduct.defaultSeq}" />
+				<listcell label="@{containerProduct.productId}" />
+				<listcell label="@{containerProduct.productName}" />
+				<listcell label="@{containerProduct.sellPriceYuan}" />
+				<listcell label="@{containerProduct.fromPlaceName}" />
+				<listcell label="@{containerProduct.toPlaceName}" />
+				<listcell>
+					<button width="90px" id="recommendSeqButton" label="推荐排序值"
+						onClick='saction.showWindow("/container/recommend_seq.zul", self.getAttributes());'>
+						<custom-attributes containerProductId="@{containerProduct.id}" />
+						<custom-attributes oldRecommendSeq="@{containerProduct.recommendSeq}" />
+					</button>
+					<button width="90px" id="showOrHideButton" label="前台显示" onCreate='saction.showOrHideButtOnCreate(self);'
+						onClick='saction.containerProductShowOrHide(self);'>
+						<custom-attributes containerProductId="@{containerProduct.id}" />
+						<custom-attributes containerProductIsValid="@{containerProduct.isValid}" />
+					</button>
+					<button width="90px"  id="logButton" visible="true" label="操作日志"
+						onClick='saction.showWindow("/log/viewSuperLog.zul", self.getAttributes());'>
+						<custom-attributes objectType="CONTAINER_PRODUCT" />
+						<custom-attributes objectId="@{containerProduct.id}" />
+					</button>
+				</listcell>
+			</listitem>
+		</listbox>
+
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共<label id="_totalRowCountLabel" />条
+						</cell>
+						<cell width="200px">
+							<paging id="_paging" pageSize="15" onPaging='saction.getContainerProductList();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	</window>
+</zk>

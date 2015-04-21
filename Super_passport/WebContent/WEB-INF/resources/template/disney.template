@@ -1,0 +1,89 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+        </title>
+        <style type="text/css">
+            * {margin:0;padding:0;}
+			body{font-family: SimSun;padding:0 40px;}
+            .txt-hetong {color:#666;width:635px;margin:10px auto;text-align:center;font:12px/1.5 arial,SimSun;} 
+			.firspan{display:inline-block;width:auto;height:22px;line-height:22px;padding:0 10px;float:left; text-align:left;font-size:16px;}
+			.senspan{display:inline-block;width:auto;height:22px;line-height:22px;padding:0 10px;float:right;text-align:left;font-size:14px;}
+			.clearBox{overflow:hidden;zoom:1;clear:both;}
+			.beizhuBox{font-size:16px; text-align:left;}
+			.ewmBox{display:inline-block;width:110px;float:right;height:auto; text-align:center;font-size:14px;line-height:20px;}
+			.tgList{overflow:hidden;zoom:1;clear:both;}
+			.tgList li{width:280px;float:left;height:26px;line-height:26px; list-style:disc; text-align:left;margin-left:20px;}
+			.redLi{color:#F00}
+        </style>
+    </head>
+    
+    <body>
+        <div class="txt-hetong">
+            <h3>本换票证由下列旅遊供应商发出，而并非香港迪士尼乐园</h3>
+            <br/>
+            <div>
+            	<p class="clearBox"><span class="firspan">馿媽媽</span><span class="senspan">换票证发出日期：</span></p>
+                <p class="clearBox"><span class="firspan"><b>LVMAMA BRANCH 1</b></span><span class="senspan">${date} (月/日/年)</span></p>
+            </div>
+            <h3>香港 迪士 尼 乐园<br/>${productName} 换票证</h3>
+            <div>
+            	<p class="clearBox"><span class="firspan">宾客姓名(英文) ： ${guestName}</span></p>
+            </div>
+            <br/>
+            <div>
+            	<p class="clearBox"><span class="firspan" style="font-size:12px">门票数量 –</span></p>
+            </div>
+            <div>
+            	${branchInfo}
+            </div><br/>
+            <div>
+            	<p class="clearBox beizhuBox">${productRemark}</p>
+            </div><br/>
+            <div>
+            	<p class="clearBox beizhuBox"><b>换领地点及时间：</b><br/>请在香港迪士尼乐园正门入口的神奇迅达印票机换取门票，时间由乐园开放至关门前一小时
+宾客须打印换票证方可领取所订购的門票 (换票证上的QR码及条码须清晰及完整)</p>
+            </div><br/>
+            <div>
+            	<p class="clearBox">
+                	<img src="http://pic.lvmama.com/pics/disney.png" width="450" height="170" style="float:left"/>
+                	<span class="ewmBox">
+                    	<img src="http://pic.lvmama.com/pics/${qrCodeUrl}" width="110" height="112" />
+                        此QR码适用于神奇迅达印票机
+                    </span>
+                </p>
+            </div>
+            <div><br/>
+            	<p class="clearBox beizhuBox"><b>条款及规章：</b></p>
+                <ul class="tgList">
+                	<li class="redLi">不可转让、退换 及退款。一经修改即作废</li>
+                    <li>未经香港国际主题乐园有限公司确定即作废</li>
+                    <li>宾客须持有有效及附有照片之身份证明，以供查阅</li>
+                    <li>以换票证之正本作实</li>
+                    <li>如换票证之号码重复即作废</li>
+                </ul>
+            </div><br/>
+            <div>
+            	<p style=" text-align:left;font-size:14px;">所有进入香港迪士尼乐园 ("乐园") 的宾客均受乐园的规则所约束，有关规则已列明于迪士尼网页www.hongkongdisneyland.com 及印于乐园指南上，迪士尼
+可随时及不时更改乐园的规则。乐园指南可于本公司各分行／办事处或乐园内任何售票处或宾客服务地点索取。宾客进入乐园时须出示门票及身份证明。
+若同一天之内再次进入乐园，则必须出示门票及手印(或身份证明)。所有人士、手提包、包裹及其他物品均可能需在乐园入口处及乐园内迪士尼认为适当
+的其他地点接受保安检查。迪士尼可基于以下原因不时更改乐园或游乐设施的开放时间、暂停开放乐园或其任何部分、控制入园人数及/或暂停或取消任何
+游乐设施或娱乐节目而不作事先通知，并毋须退款或作出任何赔偿: 乐园容纳量、恶劣天气或特备节目，或为保障安全、治安或秩序，或迪士尼认为情况
+所需。<span class="redLi">迪士尼毋须为宾客之财物损坏或损失负责，不论此等损坏或损失是否因迪士尼的疏忽或其他原因所致。</span><br/>此换票证乃你好专业国际旅运有限公司所发出。你好专业国际旅运有限公司已获迪士尼授权售卖乐园之入场门票。
+你好专业国际旅运有限公司及其中间销售商均并非迪士尼之代理商，亦未获授权以迪士尼之名义或代表迪士尼承担或订立任何责任，或代表迪士尼作出任
+何陈述、保证、契诺、协议或承诺。旅行团或旅程由你好专业国际旅运有限公司或其中间销售商所安排，迪士尼毋须为旅行团进入乐园前，或离开乐园后
+之安排、旅游、游览或交通负责。<br/>
+在上述内容中，"迪士尼"意指香港国际主题乐园有限公司或香港迪士尼乐园管理有限公司或以上两者。</p>
+            </div> <br/>
+            <div>
+            	<p class="clearBox"><img src="http://pic.lvmama.com/pics/${barCodeUrl}" width="221" height="60" style="float:right;"/></p>
+            </div>
+      
+            <div>
+            	<p class="clearBox"><span style="display:inline-block;width:auto;padding:0 5px;float:right;font-size:14px;">预留号码: ${reservationNo}</span></p>
+            </div>
+        </div>
+    </body>
+<br/><br/><br/><br/><br/>
+</html>

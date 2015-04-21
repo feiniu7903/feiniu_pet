@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TRACK_LOG" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.vo.ord.TrackLog" >
+    <result column="TRACK_LOG_ID" property="trackLogId" />
+    <result column="TRACK_ID" property="trackId" />
+    <result column="TRACK_STATUS" property="trackStatus" />
+    <result column="MEMO" property="memo" />
+    <result column="CREATE_TIME" property="createTime" />
+  </resultMap>
+  	
+   <select id="selByTrackId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  		select *From TRACK_LOG where TRACK_ID=#trackId# order by CREATE_TIME desc
+  </select>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.vo.ord.TrackLog" >
+    <selectKey resultClass="java.lang.Long" keyProperty="trackLogId" >
+      select TRACK_LOG_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into TRACK_LOG(TRACK_LOG_ID,TRACK_ID,TRACK_STATUS,MEMO,CREATE_TIME)
+	values (#trackLogId#, #trackId#, #trackStatus#,#memo#,#createTime#)
+  </insert>
+  
+</sqlMap>

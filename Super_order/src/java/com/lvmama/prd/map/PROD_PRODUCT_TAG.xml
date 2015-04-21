@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_TAG" >
+	<typeAlias alias="ProdProductTag" type="com.lvmama.comm.pet.po.prod.ProdProductTag"/>
+  <resultMap id="BaseResultMap" class="ProdProductTag" >
+    <result column="PRODUCT_TAG_ID" property="productTagId" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="TAG_ID" property="tagId" />
+    <result column="BEGIN_TIME" property="beginTime" />
+    <result column="END_TIME" property="endTime" />
+    <result column="CREATOR" property="creator" />
+  </resultMap>
+  
+  <resultMap id="extBaseResultMap" extends="BaseResultMap" class="ProdProductTag">
+  	<result column="TAG_GROUP_NAME" property="tagGroupName" />
+    <result column="TAG_NAME" property="tagName" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="ProdProductTag" >
+    select * from PROD_PRODUCT_TAG    where PRODUCT_TAG_ID = #productTagId#
+  </select>
+  
+  <delete id="deleteProdProductTagTimeOut">
+  	delete from prod_product_tag where end_time &lt;to_date(to_char(sysdate,'yyyy-mm-dd'),'yyyy-mm-dd')
+  </delete>
+  
+  <delete id="deleteByPrimaryKey">
+    DELETE FROM PROD_PRODUCT_TAG
+    WHERE PRODUCT_TAG_ID = #productTagId#
+  </delete>
+  
+   <delete id="deleteByTagId">
+	    DELETE FROM PROD_PRODUCT_TAG
+	    WHERE TAG_ID=#tagId#
+  </delete>
+  
+   <delete id="deleteProductTag" parameterClass="ProdProductTag" >
+    delete from PROD_PRODUCT_TAG
+    <dynamic prepend="where">
+			<isNotNull prepend="AND" property="productTagId">
+				PRODUCT_TAG_ID = #productTagId#
+			</isNotNull>
+			<isNotNull prepend="AND" property="tagId">
+				TAG_ID = #tagId# AND PRODUCT_ID=#productId#
+			</isNotNull>
+		</dynamic>
+  </delete>
+  
+  
+  <delete id="deleteByProductIdAndTagId" parameterClass="java.util.Map" >
+    delete from PROD_PRODUCT_TAG
+    where PRODUCT_ID = #productId# and TAG_ID=#tagId#
+  </delete>
+  
+  <!-- 根据多个产品Id和一个tagId做删除动作 -->
+  <delete id="deleteByProductIdsAndTagId" parameterClass="java.util.Map" >
+    DELETE FROM PROD_PRODUCT_TAG
+     WHERE TAG_ID=#tagId#
+	    	<isNotEmpty prepend="AND" property="productIds">
+	    		<![CDATA[ PRODUCT_ID in ]]>
+	     		<iterate property="productIds" conjunction="," open="(" close=")">
+	     			#productIds[]#
+	     		</iterate>
+	     	</isNotEmpty>
+  </delete>
+ 
+  <insert id="insertSelective" parameterClass="ProdProductTag" >
+  	<selectKey resultClass="java.lang.Long" keyProperty="productTagId">
+  		select PROD_PRODUCT_TAG_ID_SEQ.nextval as id from DUAL
+	</selectKey>
+    insert into PROD_PRODUCT_TAG
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="productTagId" >
+        PRODUCT_TAG_ID
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="tagId" >
+        TAG_ID
+      </isNotNull>
+      <isNotNull prepend="," property="beginTime" >
+        BEGIN_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="endTime" >
+        END_TIME
+      </isNotNull>
+       <isNotNull prepend="," property="creator" >
+        CREATOR
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="productTagId" >
+        #productTagId#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        #productId#
+      </isNotNull>
+      <isNotNull prepend="," property="tagId" >
+        #tagId#
+      </isNotNull>
+      <isNotNull prepend="," property="beginTime" >
+        #beginTime#
+      </isNotNull>
+      <isNotNull prepend="," property="endTime" >
+        #endTime#
+      </isNotNull>
+       <isNotNull prepend="," property="creator" >
+        #creator#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="ProdProductTag" >
+    update PROD_PRODUCT_TAG
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID = #productId#
+      </isNotNull>
+      <isNotNull prepend="," property="tagId" >
+        TAG_ID = #tagId#
+      </isNotNull>
+      <isNotNull prepend="," property="beginTime" >
+        BEGIN_TIME = #beginTime#
+      </isNotNull>
+      <isNotNull prepend="," property="endTime" >
+        END_TIME = #endTime#
+      </isNotNull>
+       <isNotNull prepend="," property="creator" >
+        CREATOR = #creator#
+      </isNotNull>
+    </dynamic>
+    where PRODUCT_TAG_ID = #productTagId#
+  </update>
+  
+  	<select id="selectByTagId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select * from PROD_PRODUCT_TAG where TAG_ID=#tagId#
+	</select>
+	
+	<delete id="deleteByProductTagId" parameterClass="java.lang.Long">
+  		delete from PROD_PRODUCT_TAG where PRODUCT_TAG_ID = #productTagId#
+  	</delete>
+  	
+	<sql id="selectByParamsSql">
+		select ppt.*,pt.TAG_NAME,ptg.TAG_GROUP_NAME 
+		from PROD_PRODUCT_TAG ppt, PROD_TAG pt, PROD_TAG_GROUP ptg , PROD_PRODUCT p 
+		where ppt.TAG_ID = pt.TAG_ID and pt.TAG_GROUP_ID = ptg.TAG_GROUP_ID  AND p.product_id = ppt.product_id
+				<isNotNull prepend="and" property="productTagId">
+					ppt.PRODUCT_TAG_ID = #productTagId#
+				</isNotNull>
+				<isNotNull prepend="and" property="tagName">
+						TAG_NAME = #tagName#
+				</isNotNull>
+				<isNotNull prepend="and" property="productId">
+					ppt.PRODUCT_ID = #productId#
+				</isNotNull>
+				<isNotNull prepend="and" property="tagId">
+					ppt.TAG_ID = #tagId#
+				</isNotNull>
+				<isNotNull prepend="and" property="beginTime">
+					ppt.BEGIN_TIME = #beginTime#
+				</isNotNull>
+				<isNotNull prepend="and" property="endTime">
+					ppt.END_TIME = #endTime#
+				</isNotNull>
+				<isNotNull prepend="and" property="creator">
+					ppt.CREATOR = #creator#
+				</isNotNull>
+	</sql>
+	
+  	<select id="selectProdProductByParams" parameterClass="ProdProductTag" resultMap="extBaseResultMap">
+		<include refid="selectByParamsSql"/>
+	</select>
+	
+	<select id="selectByParams" parameterClass="java.util.Map" resultMap="extBaseResultMap">
+		select * from (
+			select t.*, ROWNUM rn from (
+				<include refid="selectByParamsSql"/>
+				order by P.product_type   desc , p.product_id desc
+			) t
+				<isNotNull prepend="where" property="_endRow">
+					ROWNUM &lt;= #_endRow#
+				</isNotNull>
+		)
+		<isNotNull prepend="where" property="_startRow">
+			rn &gt;= #_startRow#
+		</isNotNull>
+	</select>
+	
+	<select id="selectByParamsCount" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+		select count(PRODUCT_TAG_ID) from (
+			<include refid="selectByParamsSql"/>
+		)
+	</select>
+	
+	<select id="selectProductTagByProductIdAndTagGroupId" resultMap="BaseResultMap">
+		select ppt.* 
+		from PROD_PRODUCT_TAG PPT,PROD_TAG PT 
+		WHERE PT.TAG_ID=PPT.TAG_ID 
+			AND PT.TAG_GROUP_ID=#tagGroupId#
+			AND PPT.PRODUCT_ID=#productId#
+	</select>
+	
+	<select id="selectProductTagByProductIdAndTagId" resultMap="BaseResultMap">
+		SELECT PPT.* 
+		FROM PROD_PRODUCT_TAG PPT 
+		WHERE  PPT.TAG_ID=#tagId#
+			AND PPT.PRODUCT_ID=#productId#
+	</select>
+	
+	<select id="selectProductTagByProductId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select * from prod_product_tag 
+		where product_id = #productId#
+	</select>
+</sqlMap>

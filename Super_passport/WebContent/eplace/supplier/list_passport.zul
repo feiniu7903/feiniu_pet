@@ -1,0 +1,116 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./providerList"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.passport.utils.ListboxSupplierProductSet"?>
+<?component name="toolbar_user_sp" macroURI="/eplace/supplier/toolbar_user_sp.zul" ?>
+<zk>
+	<window id="providerList" title="" border="normal"
+		apply="com.lvmama.eplace.web.supplier.ListPassAction">
+		<zscript>
+		<![CDATA[
+	public void checkValues() {
+		if (metaProductid.getValue()==-999999) {
+			alert("产品名称不能为空！");
+		}else{
+			saction.doQuery();
+		}
+	}
+]]>			
+		</zscript>
+		<toolbar_user_sp></toolbar_user_sp>
+		<grid>
+			<columns>
+				<column width="100px"></column>
+				<column  width="250px"></column>
+				<column width="100px"></column>
+				<column></column>
+				<column width="110px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>游玩时间：</hbox>
+					<hbox>
+						<datebox
+							value="@{saction.queryOption.visitTimeStart}" />
+						~
+						<datebox
+							value="@{saction.queryOption.visitTimeEnd}" />
+					</hbox>
+					<hbox>产品名称：</hbox>
+					<hbox>
+						<listbox id="metaProductid" mold="select"
+							selectedItem="@{saction.metaProductBranchId}" />
+					</hbox>
+					<hbox>
+						<checkbox
+							checked="@{saction.orderStatus}"
+							label="显示取消订单">
+						</checkbox>
+					</hbox>
+					<hbox>
+						<button label="实时通关" visible="false" width="100px" onClick='saction.showWindow("/eplace/supplier/passport_check.zul",self.getAttributes());'/>
+						<button label="查询" id="search" width="80px"
+							onClick="saction.doQuery();" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox
+			model="@{saction.passList,load-after='search.onClick'}">
+			<listhead>
+				<listheader label="游玩时间" />
+				<listheader label="订购数" />
+				<listheader label="预计游玩人数" />
+				<listheader label="已通关" />
+				<listheader label="待通关" />
+				<listheader label="查看明细" />
+			</listhead>
+			<listitem height="25px" self="@{each='passList'}">
+				<listcell label="@{passList.visitTime}" />
+				<listcell label="@{passList.orderCount}" />
+				<listcell label="@{passList.visitorQuantity}" />
+				<listcell label="@{passList.passedCount}" />
+				<listcell label="@{passList.toBePassCount}" />
+				<listcell>
+								<a style="color:blue" label="已通关"
+						onClick='saction.showWindow("/eplace/supplier/list_passport_detail.zul",self.getAttributes());'>
+						<custom-attributes
+							visitTime="@{passList.visitTime}" />
+						<custom-attributes
+							metaProductBranchId="@{saction.metaProductBranchId}" />
+						<custom-attributes
+							orderStatus="@{saction.orderStatus}" />
+						<custom-attributes
+							operate="@{saction.operate}" />
+								<custom-attributes
+							 passed="true" />
+					</a>
+					<a style="color:blue" label="未通关"
+						onClick='saction.showWindow("/eplace/supplier/list_passport_detail.zul",self.getAttributes());'>
+						<custom-attributes
+							visitTime="@{passList.visitTime}" />
+						<custom-attributes
+							metaProductBranchId="@{saction.metaProductBranchId}" />
+						<custom-attributes
+							orderStatus="@{saction.orderStatus}" />
+						<custom-attributes
+							operate="@{saction.operate}" />
+						<custom-attributes
+							 passed="false" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+		<listbox
+			model="@{saction.passPortTotals,load-after='search.onClick'}">
+			<listitem height="35px" self="@{each='passPortTotal'}">
+				<listcell label="@{passPortTotal.title}" />
+				<listcell label="@{passPortTotal.orderCount}" />
+				<listcell label="@{passPortTotal.visitorQuantity}" />
+				<listcell label="@{passPortTotal.passedCount}" />
+				<listcell label="@{passPortTotal.toBePassCount}" />
+				<listcell label="" />
+			</listitem>
+		</listbox>
+	</window>
+</zk>

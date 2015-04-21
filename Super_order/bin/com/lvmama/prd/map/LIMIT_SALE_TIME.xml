@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="LIMIT_SALE_TIME" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.LimitSaleTime" >
+    <result column="LIMIT_SALE_TIME_ID" property="limitSaleTimeId" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="LIMIT_SALE_TIME" property="limitSaleTime" />
+    <result column="LIMIT_VISIT_TIME" property="limitVisitTime" />
+    <result column="LIMIT_HOUR_START" property="limitHourStart" />
+    <result column="LIMIT_HOUR_END" property="limitHourEnd" />
+    <result column="LIMIT_TYPE" property="limitType" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.LimitSaleTime" >
+    select * from LIMIT_SALE_TIME
+    where LIMIT_SALE_TIME_ID = #limitSaleTimeId#
+  </select>
+  
+  <select id="queryLimitSaleTimeByproductId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.LimitSaleTime" >
+    select *
+    from LIMIT_SALE_TIME
+    where PRODUCT_ID = #productId#
+  </select>
+  
+  <select id="queryByproductIdAndLimitTime" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.LimitSaleTime" >
+    select * from LIMIT_SALE_TIME
+    <dynamic prepend="where">
+		  <isNotNull prepend="and" property="productId">
+		  PRODUCT_ID = #productId# 
+		  </isNotNull>
+		  <isNotNull prepend="and" property="limitSaleTime">
+		  LIMIT_SALE_TIME<![CDATA[=]]>#limitSaleTime#
+		  </isNotNull>
+		  <isNotNull prepend="and" property="limitVisitTime">
+		  LIMIT_VISIT_TIME<![CDATA[=]]>#limitVisitTime#
+		  </isNotNull>
+	</dynamic>
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.LimitSaleTime" >
+    delete from LIMIT_SALE_TIME
+    where LIMIT_SALE_TIME_ID = #limitSaleTimeId:DECIMAL#
+  </delete>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.LimitSaleTime" >
+  		<selectKey resultClass="long" keyProperty="limitSaleTimeId">
+			select LIMIT_SALE_TIME_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+	insert into LIMIT_SALE_TIME
+	<dynamic prepend="(">
+		<isNotNull prepend="," property="limitSaleTimeId">
+			LIMIT_SALE_TIME_ID
+		</isNotNull>
+		<isNotNull prepend="," property="productId">
+			PRODUCT_ID
+		</isNotNull>
+		<isNotNull prepend="," property="limitSaleTime">
+			LIMIT_SALE_TIME
+		</isNotNull>
+		<isNotNull prepend="," property="limitVisitTime">
+			LIMIT_VISIT_TIME
+		</isNotNull>
+		<isNotNull prepend="," property="limitHourStart">
+			LIMIT_HOUR_START
+		</isNotNull>
+		<isNotNull prepend="," property="limitHourEnd">
+			LIMIT_HOUR_END
+		</isNotNull>
+		<isNotNull prepend="," property="limitType">
+			LIMIT_TYPE
+		</isNotNull>
+		)
+	</dynamic>
+	values
+	<dynamic prepend="(">
+		<isNotNull prepend="," property="limitSaleTimeId">
+			#limitSaleTimeId#
+		</isNotNull>
+		<isNotNull prepend="," property="productId">
+			#productId#
+		</isNotNull>
+		<isNotNull prepend="," property="limitSaleTime">
+			#limitSaleTime#
+		</isNotNull>
+		<isNotNull prepend="," property="limitVisitTime">
+			#limitVisitTime#
+		</isNotNull>
+		<isNotNull prepend="," property="limitHourStart">
+			#limitHourStart#
+		</isNotNull>
+		<isNotNull prepend="," property="limitHourEnd">
+			#limitHourEnd#
+		</isNotNull>
+		<isNotNull prepend="," property="limitType">
+			#limitType#
+		</isNotNull>
+		)
+	</dynamic>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.LimitSaleTime" >
+    update LIMIT_SALE_TIME
+    <dynamic prepend="set" >
+	<isNotNull prepend="," property="productId">
+		PRODUCT_ID = #productId:DECIMAL#
+	</isNotNull>
+	<isNotNull prepend="," property="limitSaleTime">
+		LIMIT_SALE_TIME = #limitSaleTime:DATE#
+	</isNotNull>
+	<isNotNull>
+		LIMIT_HOUR_START = #limitHourStart#
+	</isNotNull>
+	<isNotNull>
+		LIMIT_HOUR_END = #limitHourEnd#
+	</isNotNull>
+	<isNotNull prepend="," property="limitVisitTime">
+		LIMIT_VISIT_TIME = #limitVisitTime:DATE#
+	</isNotNull>
+    </dynamic>
+    where LIMIT_SALE_TIME_ID = #limitSaleTimeId:DECIMAL#
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.LimitSaleTime" >
+    update LIMIT_SALE_TIME
+    set PRODUCT_ID = #productId:DECIMAL#,
+      LIMIT_SALE_TIME = #limitSaleTime:DATE#,
+      LIMIT_VISIT_TIME = #limitVisitTime:DATE#
+    where LIMIT_SALE_TIME_ID = #limitSaleTimeId:DECIMAL#
+  </update>
+  
+</sqlMap>

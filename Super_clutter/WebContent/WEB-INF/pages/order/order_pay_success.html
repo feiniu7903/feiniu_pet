@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>支付完成</title>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/comm.js"></script>
+</head>
+<script>
+   $(function() {
+	   var orderId = getLocalStorage(LT_ORDER_CURRENT_PAY_ORDER_ID);
+	   removeLocalStorage(LT_ORDER_CURRENT_PAY_ORDER_ID);
+	   if(null != orderId && $.trim(orderId) != '') {
+		    lvToast(CONTENT_LOGDING,LT_LOADING_MSG,LT_LOADING_TIME);
+			var param = {"orderId":orderId,"ajax":true};
+			$.post(contextPath+"/ticketorder/order_pay_callback.htm",param,function(data){
+				if(null != data) {
+					$(".lv-toast-loading").hide(); // 隐藏遮罩层
+					$("#has_order_id").html(data);
+				} else {
+					 $("#no_order_id").show();
+					 $("#order_list_view").show();
+					 $("#order_list_view2").show();
+				}
+			});
+	   } else {
+		   $("#no_order_id").show();
+		   $("#order_list_view").show();
+		   $("#order_list_view2").show();
+	   }
+   });
+</script>
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> 
+	  <a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/order/myorder.htm');"> 
+	  <img src="${prefix_pic_url!}/img/return.png"> </a> 
+  </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">支付完成</div>
+  <div class="lv-position lv-position-e"><a href="javascript:void(0);" class='home' onclick="union_skip('http://${hostName}');"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a></div>
+</div>
+<div class="lv-wrapper lv-media-width">
+  <div class="lv-wrapper-container" id="has_order_id">
+        
+	    <div class="lv-box lv-warn-bg" style="text-align:center;display:none" id="no_order_id">
+		    	<img class="lv-smile-icon" src="${prefix_pic_url!}/img/smile.png">
+		        <p class="lv-lineheight-15 lv-fontsize-12 lv-fontweight-bold" style="padding-bottom:10px;"">支付完成，您已成功预订！</p>
+		        <!-- <p class=" lv-lineheight-15 lv-fontsize-12 lv-fontweight-bold" style="padding-bottom:10px;">预祝您游玩愉快!</p> -->
+		</div>
+	    <#if !user??>
+				<section class="stday_succ_con simplenes" style="padding: 20px; position: relative;"> 
+				<!-- <span class="ic_neddy" style="width: 53px; height: 58px; position: absolute; left: 22px; top: 20px;"></span>  -->
+				<p style="font-size: 13px;">感谢你预订驴妈妈门票，<br>
+					你可使用订单中的手机号码<br>
+					登录并查询你的订单。<br>
+				</p> 
+				<div class="lv-nav-li lv-btn-01 more_btn" style="margin: 10px 0 0 0;"> <a href="http://${request.serverName}/clutter/login.htm"> <span style="color:#ffffff;">马上登录</span> </a> </div> 
+				</section> 
+		<#else>
+		    <div class="lv-nav-li lv-btn-01  more_btn"  id="order_list_view" style="display:none"> <a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/order/myorder.htm');"> <span style="color:#ffffff;">查看订单列表</span> </a> </div>
+		    <div class="lv-nav-li lv-btn-03" id="order_list_view2" style="display:none"> <a href="javascript:void(0);" onclick="union_skip('http://${hostName}/ticket/');" > <span>返回门票首页</span> </a> </div>
+    	</#if>
+  </div>
+</div>
+ <!-- footer -->
+ <#include "../common/order_footer.html"/>
+</body>
+</html>

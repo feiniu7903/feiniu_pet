@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_PRODUCT_TRAFFIC" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.meta.MetaProductTraffic" >
+    <result column="META_TRAFFIC_ID" property="metaTrafficId" />
+    <result column="META_PRODUCT_ID" property="metaProductId" />
+    <result column="DIRECTION" property="direction" />
+    <result column="DAYS" property="days" />
+    <result column="GO_FLIGHT" property="goFlight" />
+    <result column="BACK_FLIGHT" property="backFlight" />
+    <result column="LINE_INFO_ID" property="lineInfoId" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductTraffic" >
+    select *
+    from META_PRODUCT_TRAFFIC
+    where META_TRAFFIC_ID = #metaTrafficId:DECIMAL#
+  </select>
+  <select id="getMetaProductByLineInfoId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductTraffic" >
+    select * from(
+    select *
+    from META_PRODUCT_TRAFFIC
+    where LINE_INFO_ID = #lineInfoId#
+    ) where rownum = 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductTraffic" >
+    delete from META_PRODUCT_TRAFFIC
+    where META_TRAFFIC_ID = #metaTrafficId:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductTraffic" >
+    <selectKey resultClass="java.lang.Long" keyProperty="metaTrafficId" >
+      select META_PRODUCT_TRAFFIC_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into META_PRODUCT_TRAFFIC (META_TRAFFIC_ID, META_PRODUCT_ID, DIRECTION, DAYS, GO_FLIGHT,
+      BACK_FLIGHT,LINE_INFO_ID)
+    values (#metaTrafficId:DECIMAL#, #metaProductId:DECIMAL#, #direction:VARCHAR#, #days:DECIMAL#,
+      #goFlight:DECIMAL#, #backFlight:DECIMAL#,#lineInfoId#)
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductTraffic" >
+    update META_PRODUCT_TRAFFIC
+    <dynamic prepend="set" >      
+      <isNotNull prepend="," property="direction" >
+        DIRECTION = #direction:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="days" >
+        DAYS = #days:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="goFlight" >
+        GO_FLIGHT = #goFlight:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="backFlight" >
+        BACK_FLIGHT = #backFlight:DECIMAL#
+      </isNotNull>
+      <isNotEmpty prepend="," property="lineInfoId">
+      	LINE_INFO_ID = #lineInfoId#
+      </isNotEmpty>
+    </dynamic>
+    where META_TRAFFIC_ID = #metaTrafficId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductTraffic" >
+    update META_PRODUCT_TRAFFIC
+    set DIRECTION = #direction:VARCHAR#,
+      DAYS = #days:DECIMAL#,
+      GO_FLIGHT = #goFlight:DECIMAL#,
+      BACK_FLIGHT = #backFlight:DECIMAL#
+    where META_TRAFFIC_ID = #metaTrafficId:DECIMAL#
+  </update>
+</sqlMap>

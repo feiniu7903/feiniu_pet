@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PRODUCT_CONTROL_ROLE">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.meta.ProductControlRole">
+		<result column="PRODUCT_CONTROL_ROLE_ID" property="productControlRoleId" />
+		<result column="USER_ID" property="userId" />
+		<result column="ROLE_AREA" property="roleArea" />
+		<result column="MANAGER_ID_LIST" property="managerIdList" />
+		<result column="USER_NAME" property="userName" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="UPDATE_TIME" property="updateTime" />
+	</resultMap>
+	
+	<resultMap id="UserResultMap"
+		class="com.lvmama.comm.pet.po.perm.PermUser">
+		<result column="USER_ID" property="userId" />
+		<result column="REAL_NAME" property="realName" />
+	</resultMap>
+	
+	<sql id="condition">
+		<dynamic>
+			<isNotEmpty prepend="and" property="userName">
+				U.REAL_NAME LIKE #userName#
+			</isNotEmpty>		
+		</dynamic>
+	</sql>
+	
+	<select id="countByCondition" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		SELECT COUNT(1)
+		  FROM PRODUCT_CONTROL_ROLE R
+		  LEFT JOIN LVMAMA_PET.PERM_USER U
+		    ON R.USER_ID = U.USER_ID
+		 WHERE 1 = 1
+		<include refid="condition" />
+	</select>
+
+	<select id="find" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.bee.po.meta.ProductControlRole">
+		SELECT R.*, U.REAL_NAME AS USER_NAME
+		  FROM PRODUCT_CONTROL_ROLE R
+		  LEFT JOIN LVMAMA_PET.PERM_USER U
+		    ON R.USER_ID = U.USER_ID
+		 WHERE R.PRODUCT_CONTROL_ROLE_ID = #productControlRoleId#
+	</select>
+	
+	<select id="findByUserId" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.bee.po.meta.ProductControlRole">
+		SELECT R.*, U.REAL_NAME AS USER_NAME
+		  FROM PRODUCT_CONTROL_ROLE R
+		  LEFT JOIN LVMAMA_PET.PERM_USER U
+		    ON R.USER_ID = U.USER_ID
+		 WHERE R.USER_ID = #userId#
+	</select>
+	
+	<select id="getUserListByMap" resultMap="UserResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT U.USER_ID, U.REAL_NAME
+			  FROM LVMAMA_PET.PERM_USER U
+			 WHERE U.USER_ID IN ($userList$)
+
+	</select>
+
+	<select id="getListByCondition" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT *
+		  FROM (SELECT T.*, ROWNUM AS ROWNUM1
+		          FROM (SELECT *
+		                  FROM (SELECT R.*, U.REAL_NAME AS USER_NAME
+								  FROM PRODUCT_CONTROL_ROLE R
+								  LEFT JOIN LVMAMA_PET.PERM_USER U
+								    ON R.USER_ID = U.USER_ID
+		                         WHERE 1 = 1
+		                         <include refid="condition" />
+		                         ORDER BY R.CREATE_TIME ASC)) T
+		<![CDATA[
+		         WHERE ROWNUM <= #_endRow#)
+		 WHERE ROWNUM1 >= #_startRow#
+		]]>
+	</select>
+	
+	<insert id="save"
+		parameterClass="com.lvmama.comm.bee.po.meta.ProductControlRole">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="productControlRoleId">
+			SELECT PRODUCT_CONTROL_ROLE_ID_SEQ.NEXTVAL AS ID FROM DUAL
+		</selectKey>
+		INSERT INTO PRODUCT_CONTROL_ROLE (
+			PRODUCT_CONTROL_ROLE_ID,
+			USER_ID,
+			ROLE_AREA,
+			MANAGER_ID_LIST,
+			CREATE_TIME
+		)
+		VALUES (
+			#productControlRoleId#,
+			#userId#,
+			#roleArea#,
+			#managerIdList#,
+			SYSDATE
+		)
+	</insert>
+	
+	<update id="update" parameterClass="com.lvmama.comm.bee.po.meta.ProductControlRole">
+		UPDATE PRODUCT_CONTROL_ROLE
+			SET 
+				ROLE_AREA = #roleArea#,
+				MANAGER_ID_LIST = #managerIdList#,
+				UPDATE_TIME = SYSDATE
+		WHERE PRODUCT_CONTROL_ROLE_ID = #productControlRoleId#
+	</update>
+	
+	<delete id="deleteControlByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.ProductControlRole" >
+		DELETE FROM PRODUCT_CONTROL_ROLE WHERE PRODUCT_CONTROL_ROLE_ID = #productControlRoleId#
+	</delete>
+</sqlMap>

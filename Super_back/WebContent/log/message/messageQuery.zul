@@ -1,0 +1,90 @@
+<?page title="list PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./wind_refund_query"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?> 
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="wind_refund_query" title="查询接收消息" mode="embedded"
+		apply="com.lvmama.back.web.log.MessageQueryAction">
+		<grid>
+			<columns>
+				<column width="100px"></column>
+				<column width="400px"></column>
+				<column width="100px"></column>
+				<column></column>
+				<column width="180px"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>创建时间：</hbox>
+					<hbox>
+						<datebox id="beginDate"
+							value="@{saction.searchMessageMap.createBeginDate}"
+							cols="20" format="yyyy-MM-dd HH:mm:ss">
+						</datebox>
+						~
+						<datebox id="endDate"
+							value="@{saction.searchMessageMap.createEndDate}"
+							cols="20" format="yyyy-MM-dd HH:mm:ss">
+						</datebox>
+					</hbox>
+					<hbox>接收人:</hbox>
+					<hbox>
+						<textbox id="ordRefundOperatorName"
+							value="@{saction.searchMessageMap.receiver}">
+						</textbox>
+					</hbox>
+					<hbox><button label="查询" id="search" width="100px"
+							onClick="saction.queryMsgReceiver();" /></hbox>
+				</row>
+			</rows>
+		</grid>
+		<button visible="false" id="refreshDataBtn"/>
+		<listbox mold="paging" pageSize="20"
+			model="@{saction.comMessageList,load-after='search.onClick,_paging.onPaging,refreshDataBtn.onClick'}">
+			<listhead>
+				<listheader label="序列号" width="5%" />
+				<listheader label="内容" width="30%" />
+				<listheader label="发送者" width="10%" />
+				<listheader label="接收者" width="10%" />
+				<listheader label="创建时间" width="15%" />
+				<listheader label="开始显示时间" width="15%" />			
+				<listheader label="状态" />
+			</listhead>
+			<listitem height="25px" self="@{each='msg'}">
+				<listcell label="@{msg.messageId}" />
+				<listcell >
+						<a style="color:blue" label="@{msg.sub20Content}"
+						onClick='saction.showWindow("/log/message/comMessageDetail.zul",self.getAttributes());'>
+						<custom-attributes
+							messageId="@{msg.messageId}" />
+						</a>
+				</listcell>
+				<listcell label="@{msg.sender}" />
+				<listcell label="@{msg.receiver}" />
+				<listcell label="@{msg.createTime}" />
+				<listcell label="@{msg.beginTime}" />
+				<listcell label="@{msg.zkStatus}" />
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="10"
+								onPaging='saction.queryMsgReceiver();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	</window>
+</zk>

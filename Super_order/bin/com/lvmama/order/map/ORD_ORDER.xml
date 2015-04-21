@@ -1,0 +1,1821 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrder">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="ORDER_NO" property="orderNo" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="USER_ID" property="userId" />
+		<result column="ORDER_STATUS" property="orderStatus" />
+		<result column="ORDER_VIEW_STATUS" property="orderViewStatus" />
+		<result column="CHANNEL" property="channel" />
+		<result column="PAYMENT_STATUS" property="paymentStatus" />
+		<result column="PAYMENT_TIME" property="paymentTime" />
+		<result column="ORDER_PAY" property="orderPay" />
+		<result column="OUGHT_PAY" property="oughtPay" />
+		<result column="ACTUAL_PAY" property="actualPay" />
+		<result column="APPROVE_STATUS" property="approveStatus" />
+		<result column="REDAIL" property="redail" />
+		<result column="PAYMENT_TARGET" property="paymentTarget" />
+		<result column="CANCEL_REASON" property="cancelReason" />
+		<result column="CANCEL_OPERATOR" property="cancelOperator" />
+		<result column="CANCEL_TIME" property="cancelTime" />
+		<result column="USER_MEMO" property="userMemo" />
+		<result column="USER_REPLY" property="userReply" />
+		<result column="WAIT_PAYMENT" property="waitPayment" />
+		<result column="RESOURCE_CONFIRM" property="resourceConfirm" />
+		<result column="RESOURCE_CONFIRM_STATUS" property="resourceConfirmStatus" />
+		<result column="PERFORM_STATUS" property="performStatus" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="DEAL_TIME" property="dealTime" />
+		<result column="APPROVE_TIME" property="approveTime" />
+		<result column="ORI_ORDER_ID" property="originalOrderId" />
+		<result column="TAKEN" property="taken" />
+		<result column="TAKEN_OPERATOR" property="takenOperator" />
+		<result column="PASSPORT" property="passport" />
+		<result column="ORDER_TYPE" property="orderType" />
+		<result column="CASH_REFUND" property="cashRefund" />
+		<result column="IS_CASH_REFUND" property="isCashRefund" />
+		<result column="PHYSICAL" property="physical" />
+		<result column="NEED_INVOICE" property="needInvoice" />
+		<result column="NEED_PRE_PAY" property="needPrePay"/>
+		<result column="NEED_SALE_SERVICE" property="needSaleService" />
+		<result column="PAYMENT_CHANNEL" property="paymentChannel" />
+		<result column="NEED_CONTRACT" property="needContract" />
+		<result column="ECONTRACT_STATUS" property="eContractStatus" />
+		<result column="IS_OPEN_PART_PAY" property="isOpenPartPay" />
+		<result column="TRAVEL_GROUP_CODE" property="travelGroupCode" />
+		<result column="PAY_DEPOSIT" property="payDeposit" nullValue="0"/>
+		<result column="ORG_ID" property="orgId" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="SETTLEMENT_STATUS" property="settlementStatus" nullValue="UNSETTLEMENTED"/>
+		<result column="LAST_CANCEL_TIME" property="lastCancelTime" />
+		<result column="RESOURCE_LACK_REASON" property="resourceLackReason" />
+		<result column="AHEAD_TIME" property="aheadTime" />
+		<result column="SELF_PACK" property="selfPack" />
+		<result column="REFUNDED_AMOUNT" property="refundedAmount"/>
+		<result column="TODAY_ORDER" property="todayOrder"/>
+		<result column="LATEST_USE_TIME" property="latestUseTime"/>
+		<result column="BONUS_PAID_AMOUNT" property="bonusPaidAmount"  nullValue="0"/>
+		<result column="INFO_APPROVE_STATUS" property="infoApproveStatus"/>
+		<result column="CANCEL_STRATEGY" property="cancelStrategy" />
+		<result column="IS_APERIODIC" property="isAperiodic" />
+		<result column="VALID_BEGIN_TIME" property="validBeginTime" />
+		<result column="VALID_END_TIME" property="validEndTime" />
+		<result column="TEST_ORDER_FLAG" property="testOrderFlag" />
+		<result column="PRE_PAYMENTABLE" property="prePaymentAble"/>
+		<result column="SUPPLIER_CHANNEL" property="supplierChannel"/>
+		<result column="SECKILL_ID" property="seckillId"/>
+		<result column="CANCEL_REORDER_REASON" property="cancelReorderReason"/>
+	</resultMap>
+	<resultMap id="OrderRoute" class="com.lvmama.comm.bee.po.ord.OrdOrder" extends="BaseResultMap">
+		<result column="ORDER_ROUTE_ID" property="orderRoute.orderRouteId"/>
+		<result column="TRAFFIC_TICKET_STATUS" property="orderRoute.trafficTicketStatus" />
+		<result column="GROUP_WORD_STATUS" property="orderRoute.groupWordStatus" />
+		<result column="VISA_STATUS" property="orderRoute.visaStatus" />
+		<result column="CONTRACT_STATUS" property="orderEContract.econtractStatus"/>
+		<result column="CONFIRMED_DATE" property="orderEContract.confirmedDate"/>
+	</resultMap>
+	<resultMap class="com.lvmama.comm.bee.po.ord.OrdOrderSum" id="OrdOrderSum">
+		<result column="ORDER_PAY" property="orderPay"/>
+		<result column="OUGHT_PAY" property="oughtPay"/>
+		<result column="ACTUAL_PAY" property="actualPay"/>
+	</resultMap>
+	<resultMap id="ProdProduct" class="com.lvmama.comm.bee.po.prod.ProdProduct">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="BIZ_CODE" property="bizcode" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="ADDITIONAL" property="additional" />
+		<result column="ONLINE_TIME" property="onlineTime" />
+		<result column="OFFLINE_TIME" property="offlineTime" />
+		<result column="MARKET_PRICE" property="marketPrice" nullValue="0" />
+		<result column="SELL_PRICE" property="sellPrice" nullValue="0" />
+		<result column="SMS_CONTENT" property="smsContent" />
+		<result column="WRAP_PAGE" property="wrapPage" />
+		<result column="PAY_TO_LVMAMA" property="payToLvmama" />
+		<result column="PAY_TO_SUPPLIER" property="payToSupplier" />
+		<result column="PRICE_UNIT" property="priceUnit" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="PHYSICAL" property="physical" nullValue="false" />
+	</resultMap>
+	<resultMap id="MetaProduct" class="com.lvmama.comm.bee.po.meta.MetaProduct">
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="META_PRODUCT_ID" property="metaProductId" />
+		<result column="BIZ_CODE" property="bizCode" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="PAY_TO_LVMAMA" property="payToLvmama" />
+		<result column="PAY_TO_SUPPLIER" property="payToSupplier" />
+	</resultMap>
+	 
+	<resultMap id="OrdPerson" class="com.lvmama.comm.bee.po.ord.OrdPerson">
+		<result column="PERSON_ID" property="personId" />
+		<result column="NAME" property="name" />
+		<result column="TEL" property="tel" />
+		<result column="MOBILE" property="mobile" />
+		<result column="QQ" property="qq" />
+		<result column="ADDRESS" property="address" />
+		<result column="POSTCODE" property="postcode" />
+		<result column="MEMO" property="memo" />
+		<result column="FAX" property="fax" />
+		<result column="FAX_TO" property="faxTo" />
+		<result column="OBJECT_ID" property="objectId" />
+		<result column="OBJECT_TYPE" property="objectType" />
+		<result column="PERSON_TYPE" property="personType" />
+		<result column="CERT_NO" property="certNo" />
+		<result column="CERT_TYPE" property="certType" />
+		<result column="EMAIL" property="email" />
+		<result column="BRITHDAY" property="brithday"/>
+	</resultMap>
+
+	<resultMap id="OrdOrderItemProd" class="com.lvmama.comm.bee.po.ord.OrdOrderItemProd">
+		<result column="ORDER_ITEM_PROD_ID" property="orderItemProdId" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="MARKET_PRICE" property="marketPrice" />
+		<result column="PRICE" property="price" />
+		<result column="QUANTITY" property="quantity" />
+		<result column="WRAP_PAGE" property="wrapPage" />
+		<result column="ADDITIONAL" property="additional" />
+	</resultMap>
+	<resultMap id="OrderAndComment"
+		class="com.lvmama.comm.bee.vo.OrderAndComment">
+		<result column="USER_NO" property="userNo" />
+		<result column="CASH_REFUND" property="cashRefund" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="ORDER_VISIT_TIME" property="orderVisitTime" />
+	</resultMap>
+	
+	<resultMap id="OrderProductAndComment"
+		class="com.lvmama.comm.bee.vo.OrderAndComment">
+		<result column="CASH_REFUND" property="cashRefund" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="ORDER_NO" property="orderNo" />
+		<result column="CREATE_TIME" property="orderCreateTime" />
+		<result column="IS_CASH_REFUND" property="isCashRefund" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="SMALL_IMAGE" property="productSmallImage" />
+		<result column="ON_LINE" property="productOnLine" />
+		<result column="QUANTITY" property="productQuantity" />
+		<result column="visit_time" property="orderVisitTime" />
+	</resultMap>
+	<resultMap class="com.lvmama.comm.bee.vo.OrderAndComment" id="OrderProductAndCommentForLetter">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="USER_NO" property="userNo"/>
+		<result column="USER_NAME" property="userName"/>
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+	</resultMap>
+	 
+	<resultMap id="ComContact" class="com.lvmama.comm.pet.po.pub.ComContact">
+		<result column="CONTACT_ID" property="contactId" />
+		<result column="NAME" property="name" />
+		<result column="SEX" property="sex" />
+		<result column="TELEPHONE" property="telephone" />
+		<result column="MOBILEPHONE" property="mobilephone" />
+		<result column="EMAIL" property="email" />
+		<result column="ADDRESS" property="address" />
+		<result column="TITLE" property="title" />
+		<result column="MEMO" property="memo" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="OTHER_CONTACT" property="otherContact"/>
+	</resultMap>
+	<resultMap id="PerformDetail"
+		class="com.lvmama.comm.bee.vo.ord.PerformDetail">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="BRANCH_NAME" property="branchName" />
+		<result column="ADULT_QUANTITY" property="adultQuantity" />
+		<result column="CHILD_QUANTITY" property="childQuantity" />
+		<result column="SINGLE_PERFORM_PASSED_QUANTITY" property="singlePerformPassedQuantity" />
+		<result column="MULTIPLE_QUANTITY" property="multiplePerformPassedQuantity" />
+		<result column="AMOUNT" property="amount" />
+		<result column="CONTACT_NAME" property="contactName" />
+		<result column="CONTACT_MOBILE" property="contactMobile" />
+		<result column="CONTACT_Cert_No" property="contactCertNo" />
+		<result column="DEADLINE_TIME" property="deadlineTime" />
+		<result column="FAX_MEMO" property="faxMemo" />
+		<result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+		<result column="TARGET_ID" property="targetId" />
+		<result column="ORDER_STATUS" property="orderStatus" />
+		<result column="PAYMENT_TARGET" property="paymentTarget" />
+		<result column="SINGLE_FLAG" property="singlePerformPassedQuantityFlag" />
+		<result column="MULTIPLE_FLAG" property="multipleQuantityFlag" />
+		<result column="USED_TIME" property="usedTime" />
+		<result column="STATUS" property="status" />
+		<result column="PERFORM_TIME" property="performTime" />
+		<result column="CERTIFICATE_TYPE" property="certificateType" />
+		<result column="ORDER_CREATE_TIME" property="orderCreateTime" />
+		<result column="PROD_PRICE" property="prodPrice" />
+	</resultMap>
+	<resultMap id="SimplePerformDetail"
+		class="com.lvmama.comm.bee.vo.ord.PerformDetail">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="CONTACT_NAME" property="contactName" />
+		<result column="CONTACT_MOBILE" property="contactMobile" />
+		<result column="ADDRESS" property="contactAddress" />
+		<result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+		<result column="ORDER_STATUS" property="orderStatus" />
+		<result column="IS_APERIODIC" property="isAperiodic" />
+		<result column="FAX_MEMO" property="faxMemo" />
+		<result column="USER_MEMO" property="userMemo" />
+		<result column="ORDER_CREATE_TIME" property="orderCreateTime" />
+		<result column="DEADLINE_TIME" property="deadlineTime" />
+		<result column="PAYMENT_TARGET" property="paymentTarget" />
+		<result column="ADULT_QUANTITY" property="adultQuantity" />
+		<result column="CHILD_QUANTITY" property="childQuantity" />
+		<result column="MULTIPLE_FLAG" property="multipleQuantityFlag" />
+		<result column="SINGLE_FLAG" property="singlePerformPassedQuantityFlag" />
+		<result column="QUANTITY" property="quantity" />
+		<result column="MULTIPLE_ADULTQUANTITY" property="multipleAdultQuantity" />
+		<result column="MULTIPLE_CHILDQUANTITY" property="multipleChildQuantity" />
+		<result column="SINGLE_ADULTQUANTITY" property="singleAdultQuantity" />
+		<result column="SINGLE_CHILDQUANTITY" property="singleChildQuantity" />
+		<result column="META_BRANCH_ID" property="metaBrandId"/>
+		<result column="META_PRODUCT_ID" property="metaProductId"/>
+		<result column="MEMO" property="performMemo"/>
+		<result column="BRANCH_NAME" property="branchName" />
+		<result column="PRODUCT_NAME" property="metaProductName" />
+		<result column="SELL_PRICE" property="sellPrice" />
+		<result column="CONTACT_CERT_NO" property="contactCertNo" />
+		<result column="PERFORM_TIME" property="performTime" />
+		<result column="PERFORM_STATUS" property="performStatus" />
+		<result column="SETTLEMENT_PRICE" property="settlementPrice" />
+		<result column="TOTAL_SETTLEMENT_PRICE" property="totalSettlementPrice" />
+	</resultMap>
+	<resultMap id="PassPortDetail"
+		class="com.lvmama.comm.bee.po.pass.PassPortDetail">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="BRANCH_NAME" property="branchName" />
+		<result column="ADULT_QUANTITY" property="adultQuantity" />
+		<result column="CHILD_QUANTITY" property="childQuantity" />
+		<result column="SINGLE_PERFORM_PASSED_QUANTITY" property="singlePerformPassedQuantity" />
+		<result column="MULTIPLE_QUANTITY" property="multiplePerformPassedQuantity" />
+		<result column="AMOUNT" property="amount" />
+		<result column="CONTACT_NAME" property="contactName" />
+		<result column="CONTACT_MOBILE" property="contactMobile" />
+		<result column="DEADLINE_TIME" property="deadlineTime" />
+		<result column="FAX_MEMO" property="faxMemo" />
+		<result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+		<result column="TARGET_ID" property="targetId" />
+		<result column="ORDER_STATUS" property="orderStatus" />
+		<result column="PAYMENT_TARGET" property="paymentTarget" />
+		<result column="SINGLE_FLAG" property="singlePerformPassedQuantityFlag" />
+		<result column="MULTIPLE_FLAG" property="multipleQuantityFlag" />
+		<result column="USED_TIME" property="usedTime" />
+		<result column="STATUS" property="status" />
+	</resultMap>
+	
+	<resultMap id="PassPortSummary"
+		class="com.lvmama.comm.bee.po.pass.PassPortSummary">
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="ORDER_COUNT" property="orderCount" />
+		<result column="VISITOR_QUANTITY" property="visitorQuantity" />
+		<result column="SINGLE_PERFORM_PASSED_QUANTITY" property="singlePerformPassedQuantity" />
+		<result column="MULTIPLE_QUANTITY" property="multiplePerformPassedQuantity" />
+		<result column="TO_BE_PASS_COUNT" property="toBePassCount" />
+	</resultMap>
+
+	<resultMap class="com.lvmama.comm.bee.po.ord.OrdOrderItemProdTime"
+		id="OrdOrderItemProdTime">
+		<result column="ITEM_PROD_TIME_ID" property="itemProdTimeId" />
+		<result column="ORDER_ITEM_PROD_ID" property="orderItemProdId" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="PRICE" property="price" />
+		<result column="QUANTITY" property="quantity" />
+		<result column="VISIT_TIME" property="visitTime" />
+	</resultMap>
+
+	<resultMap class="com.lvmama.comm.bee.po.ord.OrdOrderItemMetaTime"
+		id="OrdOrderItemMetaTime">
+		<result column="ITEM_META_TIME_ID" property="itemMetaTimeId" />
+		<result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="SETTLEMENT_PRICE" property="settlementPrice" />
+		<result column="QUATITY" property="quatity" />
+		<result column="MARKET_PRICE" property="marketPrice" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="STOCK_REDUCED" property="stockReduced"/>
+		<result column="SUGGEST_PRICE" property="suggestPrice"/>
+		<result column="BREAKFAST_COUNT" property="breakfastCount"/>
+		<result column="BUY_OUT_QUANTITY" property="buyOutQuantity"/>
+	</resultMap>
+
+	<resultMap class="com.lvmama.comm.bee.vo.ord.OrderPersonCount"
+		id="OrderPersonCount">
+		<result column="ADULT_COUNT" property="adultCount" />
+		<result column="CHILD_COUNT" property="childCount" />
+	</resultMap>
+
+	<resultMap id="OrdOrderRoute" class="com.lvmama.comm.bee.po.ord.OrdOrderRoute">
+		<result column="ORDER_ROUTE_ID" property="orderRouteId" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="TRAFFIC_TICKET_STATUS" property="trafficTicketStatus" />
+		<result column="GROUP_WORD_STATUS" property="groupWordStatus" />
+		<result column="VISA_STATUS" property="visaStatus" />
+	</resultMap>
+	
+	<resultMap id="OrdOrderTrack" class="com.lvmama.comm.bee.po.ord.OrdOrderTrack">
+		<result column="ORD_TRACK_ID" property="ordTrackId" />
+        <result column="ORDER_ID" property="orderId" />
+        <result column="USER_NAME" property="userName" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="FINISH_TIME" property="finishTime" />
+        <result column="TRACK_STATUS" property="trackStatus" />
+	</resultMap>
+	<resultMap id="OrderForEplaceCountQuantity" class="com.lvmama.comm.bee.po.ord.OrdEplaceOrderQuantity">
+		<result column="QUERY_DATE" property="queryDate"/>
+		<result column="SUM_BOOK_TICKET_QUANTITY" property="sumBookTicketQuantity" />
+		<result column="SUM_PICKUP_TICKET_QUANTITY" property="sumPickupTicketQuantity" />
+		<result column="SUM_UNPICKUP_TICKET_QUANTITY" property="sumUnpickupTicketQuantity" />
+		<result column="SUM_EXPECT_PLAY_QUANTITY" property="sumExpectPlayQuantity" />
+		<result column="SUM_PLAY_QUANTITY" property="sumPlayQuantity" />
+		<result column="SUM_UNPLAY_QUANTITY" property="sumUnplayQuantity" />					
+	</resultMap>
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrder">
+		<selectKey resultClass="java.lang.Long" keyProperty="orderId">
+			select
+			ORD_ORDER_ID_SEQ.nextval as id from DUAL
+	    </selectKey>
+		insert into ORD_ORDER (
+		ORDER_ID, ORDER_NO, CREATE_TIME, USER_ID,
+		ORDER_STATUS, ORDER_VIEW_STATUS, CHANNEL,
+		PAYMENT_STATUS,
+		PAYMENT_TIME,
+		ORDER_PAY,OUGHT_PAY,
+		ACTUAL_PAY, APPROVE_STATUS, REDAIL,
+		PAYMENT_TARGET,
+		PAYMENT_CHANNEL,
+		CANCEL_REASON,
+		CANCEL_OPERATOR,
+		CANCEL_TIME, USER_MEMO,
+		USER_REPLY,WAIT_PAYMENT,RESOURCE_CONFIRM,RESOURCE_CONFIRM_STATUS,PERFORM_STATUS,
+		VISIT_TIME,
+		APPROVE_TIME,
+		ORI_ORDER_ID,
+		TAKEN,
+		TAKEN_OPERATOR,
+		PASSPORT,
+		ORDER_TYPE,
+		CASH_REFUND,
+		IS_CASH_REFUND,
+		PHYSICAL,
+		NEED_INVOICE,
+		NEED_PRE_PAY,
+		NEED_SALE_SERVICE,
+		NEED_CONTRACT,
+		ECONTRACT_STATUS,
+		IS_OPEN_PART_PAY,
+		TRAVEL_GROUP_CODE,
+		PAY_DEPOSIT,
+		ORG_ID,
+		FILIALE_NAME,
+		LAST_CANCEL_TIME,
+		AHEAD_TIME,
+	    INFO_APPROVE_STATUS,
+	    SELF_PACK,
+	    TODAY_ORDER,
+	    LATEST_USE_TIME,REFUNDED_AMOUNT,
+	    BONUS_PAID_AMOUNT,CANCEL_STRATEGY,IS_APERIODIC,VALID_BEGIN_TIME,
+        VALID_END_TIME,PRE_PAYMENTABLE,SUPPLIER_CHANNEL,SECKILL_ID,CANCEL_REORDER_REASON)
+		values (
+		#orderId#, #orderNo#, sysdate,
+		#userId#,
+		#orderStatus#,
+		#orderViewStatus#, #channel#,
+		#paymentStatus#,
+		#paymentTime#,
+		#orderPay#,
+		#oughtPay#,
+		#actualPay#,
+		#approveStatus#, #redail#,
+		#paymentTarget#,
+		#paymentChannel#,
+		#cancelReason#,
+		#cancelOperator#,
+		#cancelTime#,
+		#userMemo#,
+		#userReply#, #waitPayment#,
+		#resourceConfirm#,#resourceConfirmStatus#, #performStatus#,
+		#visitTime#,
+		#approveTime#,
+		#originalOrderId#,
+		#taken#,
+		#takenOperator#,
+		#passport#,
+		#orderType#,
+		#cashRefund#,
+		#isCashRefund#,
+		#physical#,
+		#needInvoice#,
+		#needPrePay#,
+		#needSaleService#,
+		#needContract#,
+		#eContractStatus#,
+		#isOpenPartPay#,
+		#travelGroupCode#,
+		#payDeposit#,
+		#orgId#,
+		#filialeName#,
+		#lastCancelTime#,
+		#aheadTime#,
+	    #infoApproveStatus#,
+	  #selfPack#,
+	  #todayOrder#,
+	  #latestUseTime#,
+	  #refundedAmount#,
+	  #bonusPaidAmount#,#cancelStrategy#,#isAperiodic#,#validBeginTime#,#validEndTime#,#prePaymentAble#,#supplierChannel#,#seckillId#,#cancelReorderReason#)
+
+	</insert>
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrder">
+		update ORD_ORDER
+		set ORDER_NO = #orderNo#,
+		USER_ID = #userId#,
+		ORDER_VIEW_STATUS = #orderViewStatus#,
+		CHANNEL = #channel#,
+		PAYMENT_STATUS = #paymentStatus#,
+		<dynamic>
+		<isNotNull prepend="" property="paymentFinishTime">
+			PAYMENT_FINISH_TIME = #paymentFinishTime#,
+		</isNotNull>
+		</dynamic>
+		PAYMENT_TIME = #paymentTime#,
+		ORDER_PAY = #orderPay#,
+		OUGHT_PAY = #oughtPay#,
+		ACTUAL_PAY = #actualPay#,
+		APPROVE_STATUS = #approveStatus#,
+		REDAIL = #redail#,
+		RESOURCE_CONFIRM_STATUS = #resourceConfirmStatus#,
+		PAYMENT_TARGET = #paymentTarget#,
+		PAYMENT_CHANNEL=#paymentChannel#,
+		CANCEL_REASON = #cancelReason#,
+		CANCEL_OPERATOR = #cancelOperator#,
+		CANCEL_TIME = #cancelTime#,
+		USER_MEMO = #userMemo#,
+		WAIT_PAYMENT = #waitPayment#,
+		RESOURCE_CONFIRM = #resourceConfirm#,
+		PERFORM_STATUS = #performStatus#,
+		VISIT_TIME = #visitTime#,
+		DEAL_TIME = #dealTime#,
+		APPROVE_TIME = #approveTime#,
+		ORDER_STATUS = #orderStatus#,
+		TAKEN = #taken#,
+		TAKEN_OPERATOR = #takenOperator#,
+		PASSPORT = #passport#,
+		ORDER_TYPE = #orderType#,
+		CASH_REFUND = #cashRefund#,
+		IS_CASH_REFUND = #isCashRefund#,
+		PHYSICAL = #physical#,
+		NEED_INVOICE = #needInvoice#,
+		NEED_PRE_PAY = #needPrePay#,
+		NEED_SALE_SERVICE = #needSaleService#,
+		NEED_CONTRACT= #needContract#,
+		ECONTRACT_STATUS= #eContractStatus#,
+		IS_OPEN_PART_PAY=#isOpenPartPay#,
+		TRAVEL_GROUP_CODE=#travelGroupCode#,
+		PAY_DEPOSIT=#payDeposit#,
+		FILIALE_NAME=#filialeName#,
+		RESOURCE_LACK_REASON=#resourceLackReason#,
+		AHEAD_TIME=#aheadTime#,
+		LAST_CANCEL_TIME=#lastCancelTime#,
+		TODAY_ORDER = #todayOrder#,
+		LATEST_USE_TIME = #latestUseTime#,
+		BONUS_PAID_AMOUNT=#bonusPaidAmount#,
+		SUPPLIER_CHANNEL = #supplierChannel#,
+        CANCEL_REORDER_REASON = #cancelReorderReason#,
+		CANCEL_STRATEGY=#cancelStrategy#
+		<isNotNull prepend="," property="testOrderFlag">
+			TEST_ORDER_FLAG = #testOrderFlag#
+		</isNotNull>
+		<isNotNull prepend="," property="prePaymentAble">
+			PRE_PAYMENTABLE = #prePaymentAble#
+		</isNotNull>
+		where ORDER_ID = #orderId#
+	</update>
+
+	<update id="updateByParamMap" parameterClass="java.util.HashMap">
+		update ORD_ORDER
+		set
+		ORDER_ID=#orderId#
+		<isPropertyAvailable prepend=" ," property="orderNo">
+			ORDER_NO = #orderNo#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="waitPayment">
+			WAIT_PAYMENT = #waitPayment#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="approveStatus">
+			APPROVE_STATUS = #approveStatus#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="channel">
+			CHANNEL = #channel#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="paymentStatus">
+			PAYMENT_STATUS = #paymentStatus#
+  	 	</isPropertyAvailable>
+  	 	<isNotNull prepend="," property="paymentFinishTime">
+			PAYMENT_FINISH_TIME = #paymentFinishTime#
+  	 	</isNotNull>
+		<isPropertyAvailable prepend=" ," property="paymentTime">
+			PAYMENT_TIME = #paymentTime#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="oughtPay">
+			OUGHT_PAY = #oughtPay#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="actualPay">
+			ACTUAL_PAY = #actualPay#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="orderStatus">
+			ORDER_STATUS = #orderStatus#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="orderViewStatus">
+			ORDER_VIEW_STATUS = #orderViewStatus#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="redail">
+			REDAIL
+			= #redail#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="paymentTarget">
+			PAYMENT_TARGET = #paymentTarget#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="resourceConfirm">
+			RESOURCE_CONFIRM = #resourceConfirm#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ,"
+			property="resourceConfirmStatus">
+			RESOURCE_CONFIRM_STATUS = #resourceConfirmStatus#
+		</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="performStatus">
+			PERFORM_STATUS = #performStatus#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="visitTime">
+			VISIT_TIME = #visitTime#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="dealTime">
+			DEAL_TIME = #dealTime#
+  	 	</isPropertyAvailable>
+		<isPropertyAvailable prepend=" ," property="approveTime">
+			APPROVE_TIME = #approveTime#
+  	 	</isPropertyAvailable>
+		<isNotNull prepend=" ," property="cancelOperator">
+			CANCEL_OPERATOR = #cancelOperator#
+  	 	</isNotNull>
+		<isNotNull prepend=" ," property="cancelTime">
+			CANCEL_TIME = sysdate
+		</isNotNull>
+		<isNotNull prepend=" ," property="cancelReason">
+			CANCEL_REASON = #cancelReason#
+  	 	</isNotNull>
+		<isNotNull prepend=" ," property="taken">
+			TAKEN = #taken#
+  	 	</isNotNull>
+		<isNotNull prepend=" ," property="takenOperator">
+			TAKEN_OPERATOR =
+			#takenOperator#
+  	 	</isNotNull>
+		<isNotNull prepend=" ," property="passport">
+			PASSPORT = #passport#
+		</isNotNull>
+		<isNotNull prepend=" ," property="orderType">
+			ORDER_TYPE = #orderType#
+		</isNotNull>
+		<isNotNull prepend=" ," property="cashRefund">
+			CASH_REFUND = #cashRefund#
+		</isNotNull>
+		<isNotNull prepend=" ," property="isCashRefund">
+			IS_CASH_REFUND =
+			#isCashRefund#
+  	 	</isNotNull>
+		<isNotNull prepend=" ," property="physical">
+			PHYSICAL = #physical#
+		</isNotNull>
+		<isNotNull prepend=" ," property="needInvoice">
+			NEED_INVOICE =
+			#needInvoice#
+		</isNotNull>
+		<isNotNull prepend=" ," property="needPrePay">
+			NEED_PRE_PAY =
+			#needPrePay#
+		</isNotNull>
+		<isNotNull prepend=" ," property="needSaleService">
+			NEED_SALE_SERVICE =
+			#needSaleService#
+		</isNotNull>
+		<isNotNull prepend=" ," property="needContract">
+			NEED_CONTRACT=
+			#needContract#
+		</isNotNull>
+		<isNotNull prepend=" ," property="eContractStatus">
+			ECONTRACT_STATUS=
+			#eContractStatus#
+		</isNotNull>
+		<isNotNull prepend=" ," property="isOpenPartPay">
+			IS_OPEN_PART_PAY=
+			#isOpenPartPay#
+		</isNotNull>
+		<isNotNull prepend=" ," property="travelGroupCode">
+			TRAVEL_GROUP_CODE=
+			#travelGroupCode#
+		</isNotNull>
+		<isNotNull prepend=" ," property="filialeName">
+			FILIALE_NAME=#filialeName#
+		</isNotNull>
+		<isPropertyAvailable prepend=" ," property="payDeposit">
+			PAY_DEPOSIT = #payDeposit#
+  	 	</isPropertyAvailable>
+  	 	<isPropertyAvailable prepend=" ," property="settlementStatus">
+			SETTLEMENT_STATUS = #settlementStatus#
+  	 	</isPropertyAvailable>
+  	 	<isPropertyAvailable prepend=" ," property="aheadTime">
+			AHEAD_TIME = #aheadTime#
+  	 	</isPropertyAvailable>
+  	 	<isPropertyAvailable prepend=" ," property="todayOrder">
+			TODAY_ORDER = #todayOrder#
+  	 	</isPropertyAvailable>  	 
+  	 	<isPropertyAvailable prepend=" ," property="latestUseTime">
+			LATEST_USE_TIME = #latestUseTime#
+  	 	</isPropertyAvailable>  		
+  	 	<isNotNull prepend=" ," property="bonusPaidAmount">
+			BONUS_PAID_AMOUNT=#bonusPaidAmount#
+		</isNotNull>
+		<isNotNull prepend=" ," property="infoApproveStatus">
+			INFO_APPROVE_STATUS=#infoApproveStatus#
+		</isNotNull>
+		<isNotNull prepend="," property="cancelStrategy">
+		    CANCEL_STRATEGY=#cancelStrategy#		    
+		</isNotNull>
+  	 <isNotNull prepend="," property="cancelReorderReason">
+         CANCEL_REORDER_REASON=#cancelReorderReason#
+		</isNotNull>
+  	 	where ORDER_ID = #orderId#
+	</update>
+
+     <select id="queryOrdOrderId" resultClass="java.lang.Long">
+			<![CDATA[
+			select
+			ORD_ORDER_ID_SEQ.nextval as id from DUAL
+	    	]]>
+    </select>
+    
+	<select id="queryOrdOrderList" resultMap="BaseResultMap"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+	
+	<select id="queryOrdOrderPaySum" resultMap="OrdOrderSum" parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryOrdOrderListCount" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+
+	<select id="selectByOrderNo" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.bee.po.ord.OrdOrder">
+		select * from
+		ORD_ORDER where ORDER_NO = #orderNo#
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.bee.po.ord.OrdOrder">
+		select * from ORD_ORDER where ORDER_ID = #orderId#
+	</select>
+	
+	<select id="selectByPrimaryKeyForUpdate" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.bee.po.ord.OrdOrder">
+		select * from ORD_ORDER where ORDER_ID = #orderId# for update
+	</select>
+
+	<select id="selectForAuditOrder" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select oo.* from ORD_ORDER oo
+		where
+		oo.ORDER_STATUS =
+		#orderStatus#
+		and oo.INFO_APPROVE_STATUS = #infoApproveStatus#
+		and oo.TAKEN =
+		#taken#
+		and oo.ORDER_TYPE = #orderType#
+		and (oo.NEED_PRE_PAY = 'false' or (oo.NEED_PRE_PAY = 'true' and oo.PAYMENT_STATUS = 'PAYED'))
+		order by oo.CREATE_TIME
+	</select>
+
+	<select id="selectForAuditOrderByOrderId" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select oo.* from ORD_ORDER oo
+		where
+		oo.ORDER_STATUS = #orderStatus#
+		<isNotEmpty prepend="and" property="infoApproveStatus">
+			oo.INFO_APPROVE_STATUS = #infoApproveStatus#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="approveStatus">
+			oo.APPROVE_STATUS = #approveStatus#
+		</isNotEmpty>
+		<isEqual property="taken" compareValue="UNTAKEN" prepend=" and ">
+			(oo.TAKEN = #taken# or oo.TAKEN is null)
+		</isEqual>
+		<isEqual property="taken" compareValue="TAKEN" prepend=" and ">
+			(oo.TAKEN = #taken#)
+		</isEqual>
+		
+		and oo.ORDER_ID = #orderId#
+	</select>
+	
+	<select id="queryOrdersAmountByParams" resultClass="Float" parameterClass="java.util.Map">
+		select sum(actual_pay) from ord_order where user_id=#userId# and order_status=#status#
+	</select>
+
+	<select id="queryOrdOrder" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+		SELECT *  FROM ORD_ORDER WHERE ORDER_ID = #orderId#  
+		]]>
+	</select>
+	<select id="queryOrderCashRefundByOrderId" resultClass="java.lang.Long" parameterClass="java.util.Map">
+			select sum(pp.max_cash_refund*ooip.quantity)
+              from ord_order_item_prod ooip,prod_product pp
+              where ooip.product_id=pp.product_id
+              and ooip.order_id=#orderId#
+	</select>
+	
+	<select id="queryOrderCashRefundByOrderIdForClient" resultClass="java.lang.Long" parameterClass="java.util.Map">
+			select sum((max_cash_refund + #extAmount#) * quantity) 
+			from (select case pp.is_refundable 
+			when 'Y' then 
+			pp.max_cash_refund 
+			when 'N' then 
+			null 
+			end max_cash_refund, 
+			ooip.quantity 
+			from ord_order_item_prod ooip, prod_product pp 
+			where ooip.product_id = pp.product_id 
+			and ooip.order_id = #orderId#)
+	</select>
+	
+	<select id="queryOrderProfitByOrderId" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		select nvl((p1 - p2 - p3),0) as profit
+		  from (select sum(i.price * i.quantity) as p1
+		          from ord_order_item_prod i
+		         where i.order_id = #orderId#
+		           and exists (select 1
+		                  from prod_product p
+		                 where p.product_id = i.product_id
+		                 <isNotNull property="canPayByBonus" prepend="and">
+		                    p.can_pay_by_bonus = 'Y'
+		                 </isNotNull>)),
+		       (select sum(ii.settlement_price * ii.quantity * ii.product_quantity) as p2
+		          from ord_order_item_meta ii
+		         where ii.order_id = #orderId#
+		           and exists (select 1
+		                  from prod_product             p,
+		                       prod_product_branch_item pbi,
+		                       prod_product_branch      pb
+		                 where p.product_id = pb.product_id
+		                   and pb.prod_branch_id = pbi.prod_branch_id
+		                   and ii.meta_branch_id = pbi.meta_branch_id
+		                 <isNotNull property="canPayByBonus" prepend="and">
+		                    p.can_pay_by_bonus = 'Y'
+		                 </isNotNull>)),
+		       (select nvl(sum(i.item_amount), 0) as p3
+		          from ord_order_amount_item i
+		         where i.order_id = #orderId#
+		           and i.oder_amount_type = 'ORDER_COUPON_AMOUNT')
+	</select>
+
+	<select id="queryOrdOrderIdBySerialNo" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		<![CDATA[
+SELECT OBJECT_ID
+  FROM PASS_CODE
+ WHERE OBJECT_TYPE = 'ORD_ORDER'
+   AND SERIALNO = #serialNo#
+		]]>
+	</select>
+	 
+	<select id="queryUserIdFromLatestComment" resultClass="java.lang.String">
+		<![CDATA[
+			select distinct(user_id) from COM_CMT_COMMENT ccc 
+			where 
+			ccc.is_audit='AUDIT_SUCCESS'
+			and ccc.audit_time>sysdate-1/2
+		]]>
+	</select>
+
+	<select id="queryUserIdFromLatestPerformedOrder" resultClass="java.lang.String">
+		<![CDATA[
+			select distinct(user_id) from ord_order oo , ord_perform op
+			where oo.perform_status='PERFORMED'
+		      and op.object_id=oo.order_id
+		      and op.object_type='ORD_ORDER'
+		      and op.create_time>sysdate-1/2
+		]]>
+	</select>
+	
+	
+	<select id="queryCanRefundOrderList" resultMap="OrderAndComment"
+		parameterClass="java.util.Map">
+		<![CDATA[
+		SELECT DISTINCT ORD_ORDER.USER_ID     AS USER_NO, 
+		                ORD_ORDER.CASH_REFUND AS CASH_REFUND,
+		                ORD_ORDER.ORDER_ID    AS ORDER_ID,
+		                ORD_ORDER.VISIT_TIME AS ORDER_VISIT_TIME
+		                
+		  FROM ORD_ORDER
+		 WHERE ORD_ORDER.VISIT_TIME >= SYSDATE - 90
+		   AND ORD_ORDER.CASH_REFUND > 0
+		   AND ORD_ORDER.IS_CASH_REFUND = #isCashRefund#
+		   AND ORD_ORDER.ORDER_STATUS != 'CANCEL'
+		]]>
+		<isNotNull property="userId">
+			AND ORD_ORDER.USER_ID = #userId#
+		</isNotNull>
+		<isNotNull property="orderId">
+			AND ORD_ORDER.ORDER_ID = #orderId#
+		</isNotNull>
+	</select>
+	
+	
+	<select id="queryOrderAndCommentOnPeriod" resultMap="OrderAndComment"
+		parameterClass="java.util.Map">
+		<![CDATA[
+		SELECT DISTINCT ORD_ORDER.USER_ID     AS USER_NO,
+		                ORD_ORDER.CASH_REFUND AS CASH_REFUND,
+		                ORD_ORDER.ORDER_ID    AS ORDER_ID, 
+		                ORD_ORDER.VISIT_TIME AS ORDER_VISIT_TIME 
+		  FROM ORD_ORDER
+		 WHERE  ORD_ORDER.CASH_REFUND >= 0
+		   AND ORD_ORDER.IS_CASH_REFUND = #isCashRefund#
+		   AND ORD_ORDER.ORDER_STATUS != 'CANCEL'
+		   AND ORD_ORDER.VISIT_TIME < SYSDATE
+	]]>	
+		<isNotNull property="userId">
+			AND ORD_ORDER.USER_ID = #userId#
+		</isNotNull>
+		<isNotNull property="orderId">
+			AND ORD_ORDER.ORDER_ID = #orderId#
+		</isNotNull>
+		<isNotNull property="commentCreateTime">
+		   AND ORD_ORDER.VISIT_TIME  &lt;= #commentCreateTime# 
+		   AND ORD_ORDER.VISIT_TIME  + 90 &gt;= #commentCreateTime#
+		</isNotNull>
+		
+	</select>
+	
+	<select id="selectCanRefundOrderByOrderId" resultMap="OrderAndComment"
+		parameterClass="java.util.Map">
+		<![CDATA[
+		SELECT DISTINCT ORD_ORDER.USER_ID     AS USER_NO,
+		                ORD_ORDER.CASH_REFUND AS CASH_REFUND,
+		                ORD_ORDER.ORDER_ID    AS ORDER_ID, 
+		                ORD_ORDER.VISIT_TIME AS ORDER_VISIT_TIME 
+		  FROM ORD_ORDER
+		 WHERE  ORD_ORDER.CASH_REFUND > 0
+		   AND ORD_ORDER.IS_CASH_REFUND = #isCashRefund#
+		   AND ORD_ORDER.VISIT_TIME < SYSDATE
+		]]>
+		<isNotNull property="userId">
+			AND ORD_ORDER.USER_ID = #userId#
+		</isNotNull>
+		<isNotNull property="orderId">
+			AND ORD_ORDER.ORDER_ID = #orderId#
+		</isNotNull>
+	</select>
+	
+<select id="selectCanCommentOrderProductByUserNo" parameterClass="java.lang.String" resultMap="OrderProductAndComment">		
+<![CDATA[							
+	 select T2.* 
+		from (
+		    select T1.* , rownum as rn 
+		    from (
+		        SELECT DISTINCT O.ORDER_ID,
+	                O.ORDER_NO,
+	                O.CREATE_TIME,
+	                O.IS_CASH_REFUND,
+	                O.CASH_REFUND,
+	                O.VISIT_TIME,
+	                P.PRODUCT_ID,
+	                P.PRODUCT_NAME,
+	                P.PRODUCT_TYPE,
+	                P.SMALL_IMAGE,
+	                P.ON_LINE,
+	                (SELECT SUM(I.QUANTITY)
+	                   FROM ORD_ORDER_ITEM_PROD I
+	                  WHERE I.ORDER_ID = O.ORDER_ID
+	                    AND I.PRODUCT_ID = P.PRODUCT_ID) QUANTITY
+	  FROM ORD_ORDER O, ORD_ORDER_ITEM_PROD I, PROD_PRODUCT P
+	 WHERE O.ORDER_ID = I.ORDER_ID
+	   AND I.PRODUCT_ID = P.PRODUCT_ID
+	   AND O.VISIT_TIME <= SYSDATE
+	   AND O.ORDER_STATUS != 'CANCEL'
+	   AND (O.PAYMENT_STATUS = 'PAYED' AND P.PRODUCT_TYPE in ('ROUTE','HOTEL','TICKET') 
+       OR  (O.PAYMENT_STATUS!= 'PAYED' AND P.PRODUCT_TYPE = 'TICKET' AND P.PAY_TO_SUPPLIER = 'true'))     
+	   AND O.IS_CASH_REFUND IS NOT NULL
+	   AND O.CASH_REFUND IS NOT NULL
+	   AND O.IS_CASH_REFUND != 'true'
+	   AND O.USER_ID = #userId#
+	   order by  O.ORDER_ID desc
+			      ) T1			      
+			      where rownum <= 500
+	   	) T2
+	   where RN >= 1
+	   ]]>
+</select>
+
+<select id="selectCanCommentOrderProductByDate" resultMap="OrderProductAndCommentForLetter">		
+<![CDATA[							
+        SELECT DISTINCT O.ORDER_ID,
+               U.USER_NO,
+               U.USER_NAME,
+               P.PRODUCT_ID,
+               P.PRODUCT_NAME,
+               P.PRODUCT_TYPE
+ 	      FROM ORD_ORDER O, ORD_ORDER_ITEM_PROD I, PROD_PRODUCT P,USER_USER U
+		 WHERE O.ORDER_ID = I.ORDER_ID
+		   AND I.PRODUCT_ID = P.PRODUCT_ID
+		   AND O.USER_ID = U.User_No
+		   AND TRUNC(O.VISIT_TIME) = TRUNC(SYSDATE-1)
+		   AND O.ORDER_STATUS != 'CANCEL'
+		   AND O.PAYMENT_STATUS = 'PAYED'
+		   AND O.IS_CASH_REFUND IS NOT NULL
+		   AND O.CASH_REFUND IS NOT NULL
+		   AND O.IS_CASH_REFUND != 'true'
+		   AND P.PRODUCT_TYPE in ('ROUTE','HOTEL','TICKET')
+		   order by  O.ORDER_ID desc
+	   ]]>
+</select>
+
+	<update id="cancelOrderByOrderId" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrder">
+		update
+		ORD_ORDER set ORDER_STATUS = 'CANCEL', ORDER_VIEW_STATUS='CANCEL',
+		CANCEL_TIME=sysdate, CANCEL_OPERATOR = #cancelOperator#, CANCEL_REASON
+		= #cancelReason#
+		where ORDER_ID = #orderId#
+  </update>
+	<select id="selectToAutoCancelOrder" resultMap="BaseResultMap">
+	<![CDATA[
+		select * from
+		ORD_ORDER
+		where ORDER_STATUS='NORMAL' and PAYMENT_TARGET='TOLVMAMA'
+		and
+		((NEED_PRE_PAY = 'false' and
+		APPROVE_STATUS='VERIFIED' and PAYMENT_STATUS!='PAYED'
+		and APPROVE_TIME
+		is not null and WAIT_PAYMENT!=-1
+		and sysdate >
+		APPROVE_TIME+(WAIT_PAYMENT+20)/24/60) or
+		((NEED_PRE_PAY = 'true' or NEED_PRE_PAY = 'normalPay') and sysdate > AHEAD_TIME and (APPROVE_STATUS !='VERIFIED' OR PAYMENT_STATUS!='PAYED')))
+		union
+		select * from ORD_ORDER
+		where ORDER_STATUS='NORMAL' and
+		PAYMENT_TARGET='TOLVMAMA'
+		and APPROVE_STATUS='VERIFIED' and
+		PAYMENT_STATUS!='PAYED'
+		and APPROVE_TIME is not null
+		and WAIT_PAYMENT=-1 and sysdate>visit_time-6/24
+	]]>
+	</select>
+
+	<select id="selectToAutoApproveOrder" resultMap="BaseResultMap">
+		select * from ORD_ORDER
+		where ORDER_STATUS='NORMAL' and APPROVE_STATUS='UNVERIFIED'
+		and PAYMENT_TARGET='TOSUPPLIER' and APPROVE_TIME is null
+		and sysdate > CREATE_TIME+1/24/5
+	</select>
+
+	<update id="updateOrderFinish">
+		UPDATE ORD_ORDER SET ORDER_STATUS = 'FINISHED' 
+		WHERE ORDER_STATUS='NORMAL'
+		and PERFORM_STATUS='PERFORMED'
+		and payment_target='TOLVMAMA'
+		and VISIT_TIME<![CDATA[<]]>sysdate-30
+	</update>
+	
+	<update id="updateOrderCash" parameterClass="java.lang.Long">
+		<![CDATA[
+		UPDATE ORD_ORDER SET IS_CASH_REFUND = 'true' WHERE ORDER_ID = #orderId#
+		]]>
+	</update>
+	 
+	<select id="queryOrdOrderByOrderNo" resultMap="BaseResultMap"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			SELECT * FROM ORD_ORDER WHERE ORDER_NO = #orderNo#
+		]]>
+	</select>
+<!-- UsrUsers -->
+<!-- 
+	<select id="queryUsrUsers" resultMap="UsrUsers" parameterClass="java.lang.String">
+		<![CDATA[
+			$completeSQL$
+		]]>
+	</select>
+ -->
+	<select id="queryOrdOrder1" resultMap="BaseResultMap"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryComContactBySettlementId" resultMap="ComContact"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+SELECT COM_CONTACT.*
+  FROM COM_CONTACT, COM_CONTACT_RELATION, SUP_SETTLEMENT_TARGET
+ WHERE COM_CONTACT.CONTACT_ID = COM_CONTACT_RELATION.CONTACT_ID
+   AND COM_CONTACT_RELATION.OBJECT_TYPE = 'SUP_SETTLEMENT_TARGET'
+   AND COM_CONTACT_RELATION.OBJECT_ID = SUP_SETTLEMENT_TARGET.TARGET_ID
+   AND SUP_SETTLEMENT_TARGET.TARGET_ID = #settlementId#
+		]]>
+	</select>
+
+	<select id="queryPerformDetail" resultMap="PerformDetail"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryPerformDetailCount" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryPassPortDetail" resultMap="PassPortDetail"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryPassPortDetailCount" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryPassPortSummary" resultMap="PassPortSummary"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryPassPortSummaryCount" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+
+
+	<select id="queryOrdOrderItemMetaTime" resultMap="OrdOrderItemMetaTime"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryOrdOrderItemMetaTimeCount" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+
+
+	<select id="queryOrdOrderItemProdTime" resultMap="OrdOrderItemProdTime"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryOrdOrderItemProdTimeCount" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryOrderPersonCount" resultMap="OrderPersonCount"
+		parameterClass="java.util.Map">
+		<![CDATA[
+SELECT NVL(SUM(ORD_ORDER_ITEM_PROD.QUANTITY *
+               ORD_ORDER_ITEM_META.PRODUCT_QUANTITY *
+               ORD_ORDER_ITEM_META.ADULT_QUANTITY),
+           0) AS ADULT_COUNT,
+       NVL(SUM(ORD_ORDER_ITEM_PROD.QUANTITY *
+               ORD_ORDER_ITEM_META.PRODUCT_QUANTITY *
+               ORD_ORDER_ITEM_META.CHILD_QUANTITY),
+           0) AS CHILD_COUNT
+  FROM ORD_ORDER, ORD_ORDER_ITEM_PROD, ORD_ORDER_ITEM_META
+ WHERE ORD_ORDER.ORDER_ID = ORD_ORDER_ITEM_PROD.ORDER_ID
+   AND ORD_ORDER.ORDER_ID = ORD_ORDER_ITEM_META.ORDER_ID
+   AND ORD_ORDER_ITEM_PROD.ORDER_ID = ORD_ORDER_ITEM_META.ORDER_ID
+   AND ORD_ORDER_ITEM_PROD.ORDER_ITEM_PROD_ID =
+       ORD_ORDER_ITEM_META.ORDER_ITEM_ID
+		]]>
+		<isNotNull property="productid">
+		<![CDATA[
+	AND ORD_ORDER_ITEM_PROD.PRODUCT_ID = #productid#
+		]]>
+		</isNotNull>
+		<isNotNull property="ordOrderVisitTimeStart">
+		<![CDATA[
+   	AND ORD_ORDER.VISIT_TIME >= TO_DATE(#ordOrderVisitTimeStart#, 'YYYY-MM-DD HH24:MI:SS')
+		]]>
+		</isNotNull>
+		<isNotNull property="ordOrderVisitTimeEnd">
+		<![CDATA[
+   	AND ORD_ORDER.VISIT_TIME < TO_DATE(#ordOrderVisitTimeEnd#, 'YYYY-MM-DD HH24:MI:SS')
+		]]>
+		</isNotNull>
+		<isNotNull property="paymentStatus">
+		<![CDATA[
+ 	AND ORD_ORDER.PAYMENT_STATUS = #paymentStatus#
+		]]>
+		</isNotNull>
+		<isNotNull property="orderStatus">
+		<![CDATA[
+   	AND ORD_ORDER.ORDER_STATUS = #orderStatus#
+		]]>
+		</isNotNull>
+	</select>
+
+	<select id="queryOrdOrderRoute" resultMap="OrdOrderRoute"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			$completeSQL$
+		]]>
+	</select>
+	
+	
+	<select id="queryOrdOrderTrack" resultMap="OrdOrderTrack"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			$completeSQL$
+		]]>
+	</select>
+
+
+	<select id="queryOrderNotTrack" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+        SELECT * FROM (SELECT * FROM ORD_ORDER O WHERE O.ORDER_ID NOT IN(SELECT OT.ORDER_ID FROM ORD_ORDER_TRACK OT) 
+        AND O.ORDER_STATUS='CANCEL'
+        AND O.CREATE_TIME BETWEEN TRUNC(SYSDATE-1)+18/24  AND SYSDATE
+        AND ( 
+        (O.WAIT_PAYMENT &gt; 0 AND O.WAIT_PAYMENT &lt; CEIL((CANCEL_TIME  - O.CREATE_TIME) * 24 * 60 ) 
+        AND O.CANCEL_TIME &lt; SYSDATE-30/24/60) 
+        OR (O.CANCEL_OPERATOR='SELF' AND O.CANCEL_TIME &lt; SYSDATE-30/24/60)
+        OR (O.APPROVE_STATUS='RESOURCEFAIL' AND O.CANCEL_TIME &lt; SYSDATE))
+         ORDER BY O.CANCEL_TIME ASC ) WHERE ROWNUM &lt;= #number#
+	</select>
+
+	<update id="updateOrderPerformed"  parameterClass="java.lang.Long">
+		<![CDATA[
+		UPDATE ORD_ORDER SET PERFORM_STATUS = 'PERFORMED', PERFORM_TIME = sysdate WHERE ORDER_ID = #orderId#
+		]]>
+	</update>
+	
+	<!-- 查询已支付的订单ID -->
+	<select id="getHistoryOrderId" parameterClass="map" resultClass="long">
+		SELECT ORDER_ID
+		  FROM LVMAMA_SUPER.ORD_ORDER O
+		 WHERE O.ACTUAL_PAY &lt;&gt; (SELECT SUM(P.PAID_AMOUNT)
+		                        FROM LVMAMA_SUPER.ORD_ORDER_ITEM_PROD P
+		                       WHERE P.ORDER_ID = O.ORDER_ID)
+		   <isNotEmpty property="startDate">
+		   	AND O.CREATE_TIME &gt;= #startDate#
+		   </isNotEmpty>
+		   AND O.PAYMENT_STATUS IN ('PAYED','PARTPAY','TRANSFERRED')
+	</select>
+
+	<update id="updateRefundedAmount" parameterClass="map">
+		UPDATE ORD_ORDER SET REFUNDED_AMOUNT = REFUNDED_AMOUNT + #amount# WHERE ORDER_ID = #orderId#
+	</update>
+	
+	<update id="updateProdRefundedAmount" parameterClass="map">
+		update ord_order_item_prod p
+		   set p.refunded_amount = nvl((select sum(rp.refunded_amount)
+		                                 from ord_refundment_item_prod rp,
+		                                      ord_refundment           r
+		                                where rp.ord_item_prod_id =
+		                                      p.order_item_prod_id
+		                                  and rp.refundment_id = r.refundment_id
+		                                  and r.status = 'REFUNDED'
+		                                  and rp.refundment_id != #refundmentId#),
+		                               0) + nvl((select rp.refunded_amount
+		                                          from ord_refundment_item_prod rp
+		                                         where rp.ord_item_prod_id =
+		                                               p.order_item_prod_id
+		                                           and rp.refundment_id = #refundmentId#),
+		                                        0)
+		 where p.order_id = #orderId#
+ 	</update>
+	
+	<!-- 新E景通begin -->
+	<sql id="queryPerformDetailForEPlaceSQL">
+		<![CDATA[
+			SELECT ORD_ORDER.ORDER_ID,
+			       ORD_ORDER.ORDER_STATUS AS order_status,
+			       ORD_ORDER.USER_MEMO,
+			       ORD_ORDER.IS_APERIODIC,
+			       ORD_ORDER.CREATE_TIME AS ORDER_CREATE_TIME,
+			       ORD_PERSON.NAME AS CONTACT_NAME,
+			       ORD_PERSON.MOBILE AS CONTACT_MOBILE,
+			       ORD_PERSON.ADDRESS,
+			       ORD_PERSON.CERT_NO AS CONTACT_CERT_NO,
+			       ORD_ORDER.PAYMENT_TARGET AS payment_target,
+			       ORD_ORDER_ITEM_META.FAX_MEMO,
+			       ORD_ORDER_ITEM_META.ORDER_ITEM_META_ID,
+			       ORD_ORDER_ITEM_META.VISIT_TIME AS DEADLINE_TIME,
+			       ORD_ORDER_ITEM_META.META_BRANCH_ID,
+			       ORD_ORDER_ITEM_META.META_PRODUCT_ID,
+			       ORD_ORDER_ITEM_META.PRODUCT_NAME,
+			       ORD_ORDER_ITEM_META.SETTLEMENT_PRICE AS SETTLEMENT_PRICE,
+			       ORD_ORDER_ITEM_META.TOTAL_SETTLEMENT_PRICE AS TOTAL_SETTLEMENT_PRICE,
+			       (case when ORD_ORDER_ITEM_META.perform_status = 'AUTOPERFORMED' then 'PERFORMED' else ORD_ORDER_ITEM_META.perform_status end) PERFORM_STATUS,
+			       ORD_ORDER_ITEM_PROD.PRICE SELL_PRICE,
+			       META_PRODUCT_BRANCH.BRANCH_NAME,
+			       ORD_ORDER_ITEM_META.PRODUCT_QUANTITY * ORD_ORDER_ITEM_META.QUANTITY AS QUANTITY,
+			       ORD_ORDER_ITEM_META.ADULT_QUANTITY * ORD_ORDER_ITEM_META.PRODUCT_QUANTITY * ORD_ORDER_ITEM_META.QUANTITY AS ADULT_QUANTITY,
+			       ORD_ORDER_ITEM_META.CHILD_QUANTITY * ORD_ORDER_ITEM_META.PRODUCT_QUANTITY * ORD_ORDER_ITEM_META.QUANTITY AS CHILD_QUANTITY,
+			       NVL((SELECT SUM(NVL(ORD_PERFORM.ADULT_QUANTITY, 0)) +
+			                  SUM(NVL(ORD_PERFORM.CHILD_QUANTITY, 0))
+			             FROM ORD_PERFORM WHERE ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER'
+			              AND ORD_PERFORM.OBJECT_ID = ORD_ORDER_ITEM_META.ORDER_ID),
+			           -1) AS SINGLE_FLAG,
+			       NVL((SELECT NVL(ORD_PERFORM.ADULT_QUANTITY, 0)
+			             FROM ORD_PERFORM WHERE ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER'
+			              AND ORD_PERFORM.OBJECT_ID = ORD_ORDER_ITEM_META.ORDER_ID),
+			           0) AS SINGLE_ADULTQUANTITY,
+			       NVL((SELECT NVL(ORD_PERFORM.CHILD_QUANTITY, 0)
+			             FROM ORD_PERFORM WHERE ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER'
+			              AND ORD_PERFORM.OBJECT_ID = ORD_ORDER_ITEM_META.ORDER_ID),
+			           0) AS SINGLE_CHILDQUANTITY,
+			           
+			       NVL((SELECT NVL(ORD_PERFORM.ADULT_QUANTITY, 0) +
+			                  NVL(ORD_PERFORM.CHILD_QUANTITY, 0)
+			             FROM ORD_PERFORM WHERE ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER_ITEM_META'
+			              AND ORD_PERFORM.OBJECT_ID = ORD_ORDER_ITEM_META.ORDER_ITEM_META_ID),
+			           -1) AS MULTIPLE_FLAG,
+			       NVL((SELECT NVL(ORD_PERFORM.ADULT_QUANTITY, 0)
+			             FROM ORD_PERFORM WHERE ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER_ITEM_META'
+			              AND ORD_PERFORM.OBJECT_ID = ORD_ORDER_ITEM_META.ORDER_ITEM_META_ID),
+			           0) AS MULTIPLE_ADULTQUANTITY,
+			       NVL((SELECT NVL(ORD_PERFORM.CHILD_QUANTITY, 0)
+			             FROM ORD_PERFORM WHERE ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER_ITEM_META'
+			              AND ORD_PERFORM.OBJECT_ID = ORD_ORDER_ITEM_META.ORDER_ITEM_META_ID),
+			           0) AS MULTIPLE_CHILDQUANTITY,
+			           
+			       (SELECT ORD_PERFORM.CREATE_TIME
+			          FROM ORD_PERFORM WHERE (ORD_ORDER_ITEM_META.ORDER_ID = ORD_PERFORM.OBJECT_ID AND ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER')
+			            		OR (ORD_ORDER_ITEM_META.ORDER_ITEM_META_ID = ORD_PERFORM.OBJECT_ID AND ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER_ITEM_META')) AS PERFORM_TIME,
+			               
+			       (SELECT ORD_PERFORM.MEMO
+			          FROM ORD_PERFORM WHERE (ORD_ORDER_ITEM_META.ORDER_ID = ORD_PERFORM.OBJECT_ID AND ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER') 
+			          	OR (ORD_ORDER_ITEM_META.ORDER_ITEM_META_ID =ORD_PERFORM.OBJECT_ID AND ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER_ITEM_META')) AS MEMO
+			               
+			  FROM ORD_ORDER,
+			       ORD_ORDER_ITEM_META,
+			       (SELECT OBJECT_ID, NAME, MOBILE, CERT_NO, OBJECT_TYPE, ADDRESS
+			          FROM ORD_PERSON
+			         WHERE PERSON_TYPE = 'CONTACT') ORD_PERSON,
+			       ORD_ORDER_ITEM_PROD,
+			       META_PRODUCT_BRANCH
+			 WHERE ORD_ORDER_ITEM_META.ORDER_ID = ORD_ORDER.ORDER_ID
+			   AND ORD_ORDER_ITEM_META.META_BRANCH_ID =     META_PRODUCT_BRANCH.META_BRANCH_ID
+			   AND ORD_ORDER_ITEM_META.ORDER_ITEM_ID =       ORD_ORDER_ITEM_PROD.ORDER_ITEM_PROD_ID
+			   AND ORD_PERSON.OBJECT_ID(+) = ORD_ORDER.ORDER_ID
+			   AND ORD_ORDER.ORDER_STATUS IN ('NORMAL', 'FINISHED', 'CANCEL')
+			   AND ORD_ORDER.APPROVE_STATUS='VERIFIED'
+			   AND ((ORD_ORDER.PAYMENT_TARGET = 'TOLVMAMA' AND       ORD_ORDER.PAYMENT_STATUS = 'PAYED') OR
+			       (ORD_ORDER.PAYMENT_TARGET = 'TOSUPPLIER'))
+		]]>
+		<isNotEmpty property="contactName" prepend="AND">
+			ORD_PERSON.NAME LIKE '%$contactName$%'
+		</isNotEmpty>
+		<isNotEmpty property="contactMobile" prepend="AND">
+			ORD_PERSON.MOBILE=#contactMobile#
+		</isNotEmpty>
+		<isNotEmpty property="orderStatus" prepend="AND">
+			ORD_ORDER.ORDER_STATUS =#orderStatus#
+		</isNotEmpty>
+		<isNotEmpty property="paymentTarget" prepend="AND">
+			ORD_ORDER.PAYMENT_TARGET =#paymentTarget#
+		</isNotEmpty>
+		<isNotEmpty property="metaBrandIds" prepend="AND">  
+                ORD_ORDER_ITEM_META.META_BRANCH_ID IN   
+            <iterate property="metaBrandIds" open="(" close=")" conjunction=",">  
+                    #metaBrandIds[]#  
+            </iterate>  
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="performStatus">
+        	(case when ORD_ORDER_ITEM_META.perform_status = 'AUTOPERFORMED' then 'PERFORMED' else ORD_ORDER_ITEM_META.perform_status end)=#performStatus#
+        </isNotEmpty>
+		<isNotEmpty property="createTimeStart" prepend="AND">
+			ORD_ORDER.CREATE_TIME &gt;=#createTimeStart#
+		</isNotEmpty>
+		<isNotEmpty property="createTimeEnd" prepend="AND">
+			ORD_ORDER.CREATE_TIME &lt;=#createTimeEnd#
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeStart" prepend="AND">
+			ORD_ORDER_ITEM_META.VISIT_TIME &gt;=#visitTimeStart#
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd" prepend="AND">
+			ORD_ORDER_ITEM_META.VISIT_TIME &lt;=#visitTimeEnd#
+		</isNotEmpty>
+		<isNotEmpty property="orderId" prepend="AND">
+			ORD_ORDER.ORDER_ID =#orderId#
+		</isNotEmpty>
+		<isNotEmpty property="orderItemMetaId" prepend="AND">
+			ORD_ORDER_ITEM_META.ORDER_ITEM_META_ID=#orderItemMetaId#
+		</isNotEmpty>
+		ORDER BY ORD_ORDER.ORDER_ID DESC,ORD_ORDER_ITEM_META.META_BRANCH_ID
+	</sql>
+	
+	<select id="queryPerformDetailForEPlaceCountSQL" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		SELECT COUNT(1) FROM ( <include refid="queryPerformDetailForEPlaceSQL"/> )
+	</select>
+	<select id="queryPerformDetailForEPlacePageListSQL" resultMap="SimplePerformDetail"
+		parameterClass="java.util.Map">
+		SELECT * FROM (SELECT T.*,ROWNUM RN FROM ( <include refid="queryPerformDetailForEPlaceSQL"/>)T )TT
+			WHERE TT.RN &gt;=#beginIndex# and TT.RN &lt;=#endIndex#
+	</select>
+	<select id="queryPerformDetailForEPlaceListSQL" resultMap="SimplePerformDetail"
+		parameterClass="java.util.Map">
+		<include refid="queryPerformDetailForEPlaceSQL"/>
+	</select>
+	<sql id="queryEbkOrderForEplaceOrderQuantity">
+		<![CDATA[
+		 select v.day as days,
+                   v.quantity as book_ticket_quantity,
+		 		   v.adult_quantity+v.child_quantity as expect_play_quantity,
+                  (case when v.single_flag!=-1 or v.multiple_flag!=-1 and v.order_status!='CANCEL'and  v.payment_target='TOLVMAMA' 
+                  then v.quantity
+                  when v.single_flag!=-1 or v.multiple_flag!=-1 and v.order_status!='CANCEL' and v.payment_target='TOSUPPLIER' 
+                  and  v.single_adultquantity+v.multiple_adultquantity+v.single_childquantity+v.multiple_childquantity!=0
+                  then (v.single_adultquantity+v.multiple_adultquantity+v.single_childquantity+v.multiple_childquantity)/
+                      ((v.adult_quantity+v.child_quantity)/v.quantity)
+                  else 0
+                  end)pickup_ticket_quantity,
+                  (case when v.single_flag=-1 and v.multiple_flag=-1 or v.order_status='CANCEL' then v.quantity
+                  else 0
+                   end) unpickup_ticket_quantity,
+                  (case when v.single_flag=-1 and v.multiple_flag=-1 or v.order_status='CANCEL' then v.adult_quantity+v.child_quantity
+                  else 0
+                  end)unplay_quantity ,
+                  (case when v.single_flag!=-1 or v.multiple_flag!=-1 and v.order_status!='CANCEL'
+                    and  v.single_adultquantity+v.multiple_adultquantity+v.single_childquantity+v.multiple_childquantity!=0
+                    then v.single_adultquantity+v.multiple_adultquantity+v.single_childquantity+v.multiple_childquantity
+                    else 0
+                  end)play_quantity
+		  	from(         
+					SELECT TO_CHAR(OOIM.VISIT_TIME, 'YYYY-MM-DD')day,OO.ORDER_ID,
+			       OO.ORDER_STATUS AS order_status,
+			       OO.PAYMENT_TARGET AS payment_target,
+			       (case when OOIM.perform_status = 'AUTOPERFORMED' then 'PERFORMED' else OOIM.perform_status end) PERFORM_STATUS,
+			       OOIM.PRODUCT_QUANTITY * OOIM.QUANTITY AS QUANTITY,
+			       OOIM.ADULT_QUANTITY * OOIM.PRODUCT_QUANTITY * OOIM.QUANTITY AS ADULT_QUANTITY,
+			       OOIM.CHILD_QUANTITY * OOIM.PRODUCT_QUANTITY * OOIM.QUANTITY AS CHILD_QUANTITY,
+			       NVL((SELECT SUM(NVL(ORD_PERFORM.ADULT_QUANTITY, 0)) +SUM(NVL(ORD_PERFORM.CHILD_QUANTITY, 0))
+			             FROM ORD_PERFORM WHERE ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER' AND ORD_PERFORM.OBJECT_ID = OOIM.ORDER_ID),
+			           -1) AS SINGLE_FLAG,
+			       NVL((SELECT NVL(ORD_PERFORM.ADULT_QUANTITY, 0) FROM ORD_PERFORM WHERE ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER' 
+			       		AND ORD_PERFORM.OBJECT_ID = OOIM.ORDER_ID),
+			           0) AS SINGLE_ADULTQUANTITY,
+			       NVL((SELECT NVL(ORD_PERFORM.CHILD_QUANTITY, 0) FROM ORD_PERFORM WHERE ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER'  
+			       		AND ORD_PERFORM.OBJECT_ID = OOIM.ORDER_ID),
+			           0) AS SINGLE_CHILDQUANTITY,			           
+			       NVL((SELECT NVL(ORD_PERFORM.ADULT_QUANTITY, 0) + NVL(ORD_PERFORM.CHILD_QUANTITY, 0)
+			             FROM ORD_PERFORM WHERE ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER_ITEM_META' AND ORD_PERFORM.OBJECT_ID = OOIM.ORDER_ITEM_META_ID),
+			           -1) AS MULTIPLE_FLAG,
+			       NVL((SELECT NVL(ORD_PERFORM.ADULT_QUANTITY, 0)FROM ORD_PERFORM WHERE ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER_ITEM_META'
+			       		 AND ORD_PERFORM.OBJECT_ID = OOIM.ORDER_ITEM_META_ID),
+			           0) AS MULTIPLE_ADULTQUANTITY,
+			       NVL((SELECT NVL(ORD_PERFORM.CHILD_QUANTITY, 0)FROM ORD_PERFORM WHERE ORD_PERFORM.OBJECT_TYPE = 'ORD_ORDER_ITEM_META' 
+			       AND ORD_PERFORM.OBJECT_ID = OOIM.ORDER_ITEM_META_ID),
+			           0) AS MULTIPLE_CHILDQUANTITY			               
+			  FROM ORD_ORDER OO,ORD_ORDER_ITEM_META OOIM,
+			       ORD_ORDER_ITEM_PROD OOIP,
+			       META_PRODUCT_BRANCH MPB,
+                              (SELECT OBJECT_ID FROM ORD_PERSON
+			         WHERE PERSON_TYPE = 'CONTACT') ORD_PERSON
+			 WHERE OOIM.ORDER_ID = OO.ORDER_ID
+			   AND OOIM.META_BRANCH_ID = MPB.META_BRANCH_ID
+			   AND OOIM.ORDER_ITEM_ID =  OOIP.ORDER_ITEM_PROD_ID
+			   AND ORD_PERSON.OBJECT_ID(+) = OO.ORDER_ID
+			   AND OO.ORDER_STATUS IN ('NORMAL', 'FINISHED', 'CANCEL')
+			   AND OO.APPROVE_STATUS='VERIFIED'
+			   AND ((OO.PAYMENT_TARGET = 'TOLVMAMA' AND OO.PAYMENT_STATUS = 'PAYED') OR
+			       (OO.PAYMENT_TARGET = 'TOSUPPLIER'))
+		]]>
+		<isNotEmpty property="metaBrandIds" prepend="AND">  
+                OOIM.META_BRANCH_ID IN   
+            <iterate property="metaBrandIds" open="(" close=")" conjunction=",">  
+                    #metaBrandIds[]#  
+            </iterate>  
+        </isNotEmpty>
+		<isNotEmpty property="visitTimeStart" prepend="AND">
+			OOIM.VISIT_TIME &gt;=#visitTimeStart#
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd" prepend="AND">
+			OOIM.VISIT_TIME &lt;=#visitTimeEnd#
+		</isNotEmpty>
+		ORDER BY OO.ORDER_ID DESC,OOIM.META_BRANCH_ID)v 
+	</sql>
+	<select id="queryEbkOrderForEplaceTotalQuantity" resultMap="OrderForEplaceCountQuantity" parameterClass="java.util.Map">
+		select 'TotalQuantity' as QUERY_DATE, sum(t.book_ticket_quantity)AS SUM_BOOK_TICKET_QUANTITY,
+		  sum(t.pickup_ticket_quantity)AS SUM_PICKUP_TICKET_QUANTITY,
+		  sum(t.unpickup_ticket_quantity)AS SUM_UNPICKUP_TICKET_QUANTITY,
+		  sum(t.expect_play_quantity)AS SUM_EXPECT_PLAY_QUANTITY,
+		  sum(t.play_quantity)AS SUM_PLAY_QUANTITY,
+		  sum(t.unplay_quantity)AS SUM_UNPLAY_QUANTITY 
+		  from(	
+		  		<include refid="queryEbkOrderForEplaceOrderQuantity"/>
+		   )t
+	</select>
+	
+	<select id="queryEbkOrderForEplaceDailyTotalQuantity" resultMap="OrderForEplaceCountQuantity" parameterClass="java.util.Map">
+		 select * from
+ 		 (select TT.*,ROWNUM RN from(
+		  select  t.days as QUERY_DATE,sum(t.book_ticket_quantity)AS SUM_BOOK_TICKET_QUANTITY,
+	      sum(t.pickup_ticket_quantity)AS SUM_PICKUP_TICKET_QUANTITY,
+	      sum(t.unpickup_ticket_quantity)AS SUM_UNPICKUP_TICKET_QUANTITY,
+	      sum(t.expect_play_quantity)AS SUM_EXPECT_PLAY_QUANTITY,
+	      sum(t.play_quantity)AS SUM_PLAY_QUANTITY,
+	      sum(t.unplay_quantity)AS SUM_UNPLAY_QUANTITY 
+	      from( 
+		  		<include refid="queryEbkOrderForEplaceOrderQuantity"/>
+		  	)t group by t.days order by t.days)TT)TTT 
+		  where TTT.RN &gt;=#beginIndex# and TTT.RN &lt;=#endIndex#
+	</select>
+	
+	<select id="selectForPaymentOrderList" resultMap="BaseResultMap">
+		<![CDATA[
+		select oo.*
+      from ord_order oo
+     where oo.order_type = 'HOTEL'
+       AND oo.payment_status != 'PAYED'
+       AND oo.payment_target = 'TOLVMAMA'
+       AND oo.approve_status = 'VERIFIED'
+       AND oo.wait_payment > -1
+       AND oo.order_status = 'NORMAL'
+       AND oo.need_pre_pay = 'false'
+       AND sysdate>=
+           oo.approve_time + (oo.wait_payment-30) / 24 / 60
+       AND oo.last_cancel_time is not null
+       AND oo.last_cancel_time > oo.approve_time + (oo.wait_payment + 20) / 24 / 60
+       and not exists(select 1 from ord_order_for_payment_sms ps where ps.order_id = oo.order_id)
+       AND (oo.resource_confirm='false'
+       OR not exists (select 1
+              from ord_order_item_meta ooim
+             where ooim.order_id = oo.order_id
+               and ooim.product_type != 'OTHER'
+               and ooim.resource_confirm = 'true'
+               and ooim.send_fax = 'true' and
+                  ooim.is_resourcesendfax = 'false'))
+		]]>
+	</select>
+	<select id="selectForPaymentOrderListByCondition" resultMap="BaseResultMap">
+		select oo.* from ord_order oo where oo.order_status='NORMAL' 
+		and oo.payment_status!='PAYED' and oo.approve_status='VERIFIED'
+		and oo.payment_target = 'TOLVMAMA' 
+		<isNotEmpty property="time1" prepend="AND">
+			(oo.approve_time+(oo.wait_payment-#time1#)/24/60)&gt;=sysdate
+		</isNotEmpty>
+		<isNotEmpty property="time2" prepend="AND">
+			(oo.approve_time+(oo.wait_payment-#time2#)/24/60)&lt;=sysdate
+		</isNotEmpty>
+		<isNotEmpty property="orderType" prepend="AND">
+			oo.order_type IN   
+            <iterate property="orderType" open="(" close=")" conjunction=",">  
+            	#orderType[]#  
+            </iterate> 
+		</isNotEmpty>
+		<isNotEmpty property="channel" prepend="AND">
+			oo.channel IN
+			<iterate property="channel" open="(" close=")" conjunction=",">  
+            	#channel[]#  
+            </iterate>
+		</isNotEmpty>
+	</select>
+	
+	<sql id="queryPerformDetailForEPlaceTongjiSQL">
+    <![CDATA[
+      select  t.days as QUERY_DATE 
+	      from( 
+	       select v.day as days
+	        from(         
+	          SELECT TO_CHAR(OOIM.VISIT_TIME, 'YYYY-MM-DD')day,OO.ORDER_ID,
+	             OO.ORDER_STATUS AS order_status,
+	             OO.PAYMENT_TARGET AS payment_target               
+	        FROM ORD_ORDER OO,ORD_ORDER_ITEM_META OOIM,
+	             ORD_ORDER_ITEM_PROD OOIP,
+	             META_PRODUCT_BRANCH MPB,
+	               (SELECT OBJECT_ID FROM ORD_PERSON
+	               WHERE PERSON_TYPE = 'CONTACT') ORD_PERSON
+	       WHERE OOIM.ORDER_ID = OO.ORDER_ID
+	         AND OOIM.META_BRANCH_ID = MPB.META_BRANCH_ID
+	         AND OOIM.ORDER_ITEM_ID =  OOIP.ORDER_ITEM_PROD_ID
+	         AND ORD_PERSON.OBJECT_ID(+) = OO.ORDER_ID
+	         AND OO.ORDER_STATUS IN ('NORMAL', 'FINISHED', 'CANCEL')
+	         AND OO.APPROVE_STATUS='VERIFIED'
+	         AND ((OO.PAYMENT_TARGET = 'TOLVMAMA' AND OO.PAYMENT_STATUS = 'PAYED') OR
+            (OO.PAYMENT_TARGET = 'TOSUPPLIER'))
+        	]]>
+		<isNotEmpty property="metaBrandIds" prepend="AND">  
+                OOIM.META_BRANCH_ID IN   
+            <iterate property="metaBrandIds" open="(" close=")" conjunction=",">  
+                    #metaBrandIds[]#  
+            </iterate>  
+        </isNotEmpty>
+		<isNotEmpty property="visitTimeStart" prepend="AND">
+			OOIM.VISIT_TIME &gt;=#visitTimeStart#
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd" prepend="AND">
+			OOIM.VISIT_TIME &lt;=#visitTimeEnd#
+		</isNotEmpty>)v )t group by t.days order by t.days
+	</sql>
+	<select id="queryPerformDetailForEPlaceTongjiCountSQL" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		SELECT COUNT(1) FROM ( <include refid="queryPerformDetailForEPlaceTongjiSQL"/> )
+	</select>
+	<select id="queryPerformDetailForEPlaceTongjiPageListSQL" resultClass="java.lang.String"
+		parameterClass="java.util.Map">
+		SELECT * FROM (SELECT T.*,ROWNUM RN FROM ( <include refid="queryPerformDetailForEPlaceTongjiSQL"/> ORDER BY TO_CHAR(ORD_ORDER_ITEM_META.VISIT_TIME, 'YYYY-MM-DD'))T )TT
+			WHERE TT.RN &gt;=#beginIndex# and TT.RN &lt;=#endIndex#
+	</select>
+	<!-- 新E景通end -->
+	<!-- 检验该用户是否已为游客下了相同的订单(酒店套餐、目的地自由行) -->
+	<select id="queryOrderByParams1" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		select count(*) from ord_order o, ord_order_item_prod ooip
+	 where o.order_id = ooip.order_id
+	   and o.order_status = 'NORMAL'
+	   and o.user_id = #userId#
+	   and ooip.product_id = #productId#
+	   and ooip.visit_time = #visitTime#
+	   and exists (select 1
+          from ord_person op
+         where op.object_id = o.order_id
+           and op.name = #visitorName#
+           and op.person_type = #personType#)
+	</select>
+	<select id="queryOrderLimitByUserId" resultClass="java.lang.Long" parameterClass="java.util.Map">
+            select count(distinct oo.order_id) from ord_order oo, ord_order_item_prod ooip where
+            oo.order_id=ooip.order_id
+           and create_time<![CDATA[>=]]>to_date(#beginTime#,'yyyy-mm-dd') 
+           and  create_time<![CDATA[<=]]>to_date(#endTime#,'yyyy-mm-dd')
+           and ooip.product_id=#productId#
+           and oo.ORDER_STATUS='NORMAL'
+           and  user_id=#userId#
+	</select>
+	<select id="queryOrderLimitByMobile" resultClass="java.lang.Long" parameterClass="java.util.Map">
+        select count(distinct oo.order_id) from ord_order oo, ord_person op,ord_order_item_prod ooip where
+           oo.order_id=op.object_id
+           and oo.order_id=ooip.order_id
+           and ooip.product_id=#productId#
+           and op.object_type='ORD_ORDER'
+           AND oo.create_time<![CDATA[>=]]>to_date(#beginTime#,'yyyy-mm-dd') 
+           and oo.create_time<![CDATA[<=]]>to_date(#endTime#,'yyyy-mm-dd')
+           and oo.ORDER_STATUS='NORMAL'
+           and op.mobile=#contactMobile#
+	</select>
+	
+	<!--故宫同一游玩时间只能下一个订单-->
+	<select id="queryOrderLimitByCertNo" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select count(distinct oo.order_id) from ord_order oo, ord_person
+		op,ord_order_item_prod ooip where
+		oo.order_id=op.object_id
+		and oo.order_id=ooip.order_id
+		and ooip.product_id=#productId#
+		and op.object_type='ORD_ORDER'
+		and ooip.visit_time = #visitTime#
+		and oo.ORDER_STATUS='NORMAL'
+		and op.cert_no=#certNo#
+	</select>
+	<!-- 检验该用户是否已为游客下了相同的订单(酒店单房型) -->
+	<select id="queryOrderByParams2" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+		select min(ooipt.visit_time) as visitTime,max(ooipt.visit_time) as leaveTime
+	  from ord_order o, ord_order_item_prod ooip,ord_order_item_prod_time ooipt
+	 where o.order_id = ooip.order_id
+	   and ooip.order_item_prod_id=ooipt.order_item_prod_id
+	   and o.order_status = 'NORMAL'
+	   and o.user_id = #userId#
+	   and ooip.product_id = #productId#
+	   and exists (select 1
+          from ord_person op
+         where op.object_id = o.order_id
+           and op.name = #visitorName#
+           and op.person_type = #personType#)
+           group by o.order_id
+	</select>
+	<select id="checkTrainOrderLimit" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select T.product_id from(
+		select ooip.product_id,ooip.visit_time,count(*) as a from ord_order oo,ord_order_item_prod ooip,ord_person op
+		where oo.order_id=ooip.order_id and oo.order_id=op.object_id and op.person_type='TRAVELLER' 
+		AND oo.object_type='ORD_ORDER' AND oo.order_status='NORMAL' 
+		and ooip.visit_time = #visitTime#		
+		and ooip.product_id in
+		<iterate conjunction="," open="(" close=")" property="productIds">
+			#productIds[]#
+		</iterate>
+		and (
+		<iterate conjunction="OR" property="personList">
+		op.cert_type = #personList[].certType# and
+		op.cert_no = #personList[].certNo#
+		</iterate>
+		)
+		)T where T.a>0
+	</select>
+	<resultMap id="ordOrderPerformResourceVO"
+		class="com.lvmama.comm.bee.vo.ord.OrdOrderPerformResourceVO">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="IS_APERIODIC" property="isAperiodic" />
+		<result column="ORDER_VIEW_STATUS" property="orderViewStatus" />
+		<result column="PAYMENT_TARGET" property="payTo"/>
+		<result column="ORDER_STATUS" property="orderStatus" />
+		<result column="CODESTATUS" property="addCodeStatus" />
+		<result column="VALID_TIME" property="validTime" />
+		<result column="INVALID_TIME" property="invalidTime" />
+		<result column="ADD_CODE" property="addCode" />
+		<result column="INVALID_DATE" property="invalidDate" />
+		<result column="INVALID_DATE_MEMO" property="invalidDateMemo" />
+	</resultMap>
+	<sql id="queryOrderPerformSql">
+	SELECT 
+		DISTINCT ORD_ORDER.*
+	FROM
+		ORD_ORDER_ITEM_META,
+		ORD_ORDER_ITEM_PROD,
+		ORD_ORDER,
+		PASS_PORT_CODE,
+		PASS_CODE
+	WHERE
+		ORD_ORDER_ITEM_META.ORDER_ID = ORD_ORDER.ORDER_ID
+		AND ORD_ORDER_ITEM_META.ORDER_ITEM_ID =ORD_ORDER_ITEM_PROD.ORDER_ITEM_PROD_ID
+		AND PASS_PORT_CODE.CODE_ID(+) = PASS_CODE.CODE_ID
+		AND PASS_CODE.ORDER_ID(+) = ORD_ORDER.ORDER_ID
+		AND PASS_CODE.Reapply is null
+		AND ORD_ORDER_ITEM_PROD.ADDITIONAL = 'false'
+		AND	((ORD_ORDER.PAYMENT_TARGET = 'TOLVMAMA' AND ORD_ORDER.PAYMENT_STATUS = 'PAYED' AND ORD_ORDER.ORDER_STATUS IN ('NORMAL', 'FINISHED'))
+			OR
+		(ORD_ORDER.PAYMENT_TARGET = 'TOSUPPLIER' AND ORD_ORDER.APPROVE_STATUS = 'VERIFIED' AND ORD_ORDER.ORDER_STATUS IN ('NORMAL', 'FINISHED')))
+		<isNotEmpty property="metaBranchIds" prepend="AND">
+			ORD_ORDER_ITEM_META.META_BRANCH_ID in 
+			<iterate property="metaBranchIds" open="(" close=")" conjunction=",">  
+          		#metaBranchIds[]#  
+  			</iterate>  
+		</isNotEmpty>
+		<isNotEmpty property="createTimeStart" prepend="AND">
+			ORD_ORDER.CREATE_TIME &gt;= TO_DATE(#createTimeStart#, 'YYYY-MM-DD	HH24:MI:SS')
+		</isNotEmpty>
+		<isNotEmpty property="createTimeEnd" prepend="AND">
+			ORD_ORDER.CREATE_TIME &lt;= TO_DATE(#createTimeEnd#, 'YYYY-MM-DD	HH24:MI:SS')
+		</isNotEmpty>
+		<isNotEmpty property="orderId" prepend="AND">
+			ORD_ORDER.ORDER_ID=#orderId#
+		</isNotEmpty>
+	</sql>
+	<select id="queryOrderPerform" resultMap="ordOrderPerformResourceVO">
+		SELECT * FROM (SELECT T.*,ROWNUM RN FROM ( 
+			<include refid="queryOrderPerformSql"/>
+			ORDER BY ORD_ORDER.ORDER_ID DESC 
+		)T )TT
+			WHERE TT.RN &gt;=#beginIndex# and TT.RN &lt;=#endIndex#
+	</select>
+	<select id="queryOrderPerformCount"  resultClass="java.lang.Long">
+		select count(1) from(
+		<include refid="queryOrderPerformSql"/>
+		)
+	</select>
+	<select id="queryOrdOrderCount"  resultClass="java.lang.Long">
+		select count(1) from ord_order 		
+	    <dynamic prepend="WHERE">
+			<isNotEmpty property="orderId" prepend="AND">
+				order_id=#orderId#
+			</isNotEmpty>
+			<isNotEmpty property="takenOperator" prepend="AND">
+				taken_Operator=#takenOperator#
+			</isNotEmpty>
+			<isNotEmpty property="infoApproveStatus" prepend="AND">
+				info_approve_status=#infoApproveStatus#
+			</isNotEmpty>
+			<isNotEmpty property="orderStatus" prepend="AND">
+				order_status=#orderStatus#
+			</isNotEmpty>
+	    </dynamic>
+	</select>
+	
+	<select id="getOrdersByDeviceOrCode" resultMap="ordOrderPerformResourceVO">
+		select 
+			DISTINCT 
+			ord.*,
+			passCode.Add_Code,
+			portCode.status codeStatus,
+			portCode.valid_time,
+			portCode.invalid_time,
+			portCode.invalid_Date,
+			portCode.INVALID_DATE_MEMO
+		from 
+			pass_device device,
+			sup_perform_target target,
+			pass_port_code portCode,
+			pass_code passCode,
+			ord_order ord
+		where 
+			target.certificate_type='DIMENSION'
+			<isNotEmpty property="udid" prepend="AND">
+				device.device_no     = #udid#
+			</isNotEmpty>
+			
+			<isNotEmpty property="addCodes" prepend="AND">
+				passCode.Add_Code in
+				<iterate property="addCodes" open="(" close=")" conjunction=",">  
+                    #addCodes[]#  
+	            </iterate>  
+			</isNotEmpty>
+			
+			<isEmpty property="addCodes">
+				<isNotEmpty property="addCode" prepend="AND">
+					passCode.Add_Code = #addCode#
+				</isNotEmpty>
+			</isEmpty>
+			
+			and
+			(
+				(ord.PAYMENT_TARGET = 'TOLVMAMA' AND ord.PAYMENT_STATUS = 'PAYED' AND ord.ORDER_STATUS IN ('NORMAL', 'FINISHED', 'CANCEL'))
+			     OR
+				(ord.PAYMENT_TARGET = 'TOSUPPLIER' AND ord.APPROVE_STATUS = 'VERIFIED' AND ord.ORDER_STATUS IN ('NORMAL', 'FINISHED', 'CANCEL'))
+			)
+			
+			
+			and device.target_id     = target.target_id 
+			and portCode.Target_Id   = device.target_id
+			and portCode.Code_Id  (+)= passCode.Code_Id
+			and passCode.Order_Id (+)= ord.order_id
+			and passCode.Reapply is null
+	</select>
+	
+	<update id = "updateIsCashRefundByOrderId" parameterClass="map">
+		update ORD_ORDER
+		set IS_CASH_REFUND = #isCashRefund#
+		<isNotEmpty prepend="," property="cashRefund">
+			CASH_REFUND = #cashRefund#
+		</isNotEmpty>
+		where ORDER_ID = #orderId#
+	</update> 
+	
+	<!-- 查询用户第一笔订单ID -->
+	<select id="queryUserFirstOrderId" resultClass="java.lang.Long" parameterClass="java.lang.String" >
+		SELECT TT.ORDER_ID FROM (SELECT T.*,ROWNUM RN FROM ( 
+			SELECT T.* FROM ORD_ORDER T WHERE T.USER_ID=#userId# ORDER BY T.CREATE_TIME ASC 
+		) T ) TT WHERE TT.RN =1
+	</select>
+	
+	<!-- 查询用户游玩时间晚于当前时间减去7天的订单数量 -->
+	<select id="queryUserOrderVisitTimeGreaterCounts" resultClass="java.lang.Long" parameterClass="java.lang.String" >
+		<![CDATA[
+			SELECT COUNT(T.ORDER_ID) FROM ORD_ORDER T WHERE T.USER_ID=#userId# AND T.VISIT_TIME>(sysdate-7)
+		]]>
+	</select>
+	
+	<!-- 查询三个月内所有支付完成的没有返现的订单~ -->
+	<select id="queryOrderByThreeMonthsAgoWeek" resultMap="BaseResultMap" parameterClass="java.util.HashMap"> 
+        SELECT O.* FROM ORD_ORDER O WHERE O.VISIT_TIME = (SELECT TO_DATE(#YYYYMMDD#,'yyyy-mm-dd') FROM DUAL)  
+		AND ORDER_STATUS != 'CANCEL'
+		AND IS_CASH_REFUND = 'false' 
+		AND PAYMENT_STATUS = 'PAYED' 
+		AND cash_refund is not null
+		AND CASH_REFUND!=0 
+    </select>
+    
+    <!--  -->
+    <select id="queryOrderBySeckill" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+    	select * from ord_order ord
+		where ord.seckill_Id = #seckillId#
+		and ord.payment_status = #status#
+    </select>
+</sqlMap>

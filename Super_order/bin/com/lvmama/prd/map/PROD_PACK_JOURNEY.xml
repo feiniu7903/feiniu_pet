@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PACK_JOURNEY" >
+
+  <resultMap id="PackJourneyMap" class="com.lvmama.comm.bee.po.prod.ProdPackJourneyProduct" >
+    <result column="PROD_PACK_JOURNEY_ID" property="prodPackJourneyId" />
+    <result column="PROD_JOURNEY_PACK_ID" property="prodJourneyPackId" />
+    <result column="JOURNEY_PRODUCT_ID" property="journeyProductId" />
+    <result column="prod_branch_id" property="prodBranchId" />
+  </resultMap>
+  
+  
+  <insert id="insertPackProduct" parameterClass="com.lvmama.comm.bee.po.prod.ProdPackJourneyProduct">
+  	<selectKey keyProperty="prodPackJourneyId" resultClass="java.lang.Long" >
+  		select PROD_JOURNEY_PACK_SEQ.NEXTVAL from dual
+  	</selectKey>
+    insert into PROD_PACK_JOURNEY (PROD_PACK_JOURNEY_ID,PROD_JOURNEY_PACK_ID, prod_branch_id, JOURNEY_PRODUCT_ID)
+    values (#prodPackJourneyId#,#prodJourneyPackId#, #prodBranchId#, #journeyProductId#)
+  </insert>
+  
+  <delete id="deletePackProduct" parameterClass="Long" >
+    delete from  PROD_PACK_JOURNEY where PROD_JOURNEY_PACK_ID=#prodJourneyPackId#
+  </delete>
+    
+  <select id="queryPackProductByPackId" parameterClass="Long" resultMap="PackJourneyMap">
+  	select * from PROD_PACK_JOURNEY where PROD_JOURNEY_PACK_ID=#prodJourneyPackId#
+  </select>
+
+</sqlMap>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_PRODUCT_TICKET" >
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductTicket" >
+    delete from META_PRODUCT_TICKET
+    where META_TICKET_ID = #metaTicketId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductTicket">
+     <selectKey resultClass="java.lang.Long" keyProperty="metaTicketId" >
+              select META_PRODUCT_TICKET_ID_SEQ.nextval  as id  from  DUAL 
+    </selectKey>
+    insert into META_PRODUCT_TICKET (META_TICKET_ID, META_PRODUCT_ID,TODAY_ORDER_ABLE,LAST_TICKET_TIME,LAST_PASS_TIME) 
+    values (#metaTicketId#, #metaProductId#,#todayOrderAble#,#lastTicketTime#,#lastPassTime#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductTicket" >
+    update META_PRODUCT_TICKET
+    set META_PRODUCT_ID = #metaProductId#
+    <isNotEmpty prepend="," property="todayOrderAble">
+				TODAY_ORDER_ABLE = #todayOrderAble#
+	</isNotEmpty>
+	<isNotEmpty prepend="," property="lastTicketTime">
+				LAST_TICKET_TIME = #lastTicketTime#
+	</isNotEmpty>
+	<isNotEmpty prepend="," property="lastPassTime">
+				LAST_PASS_TIME = #lastPassTime#
+	</isNotEmpty>
+    where META_TICKET_ID = #metaTicketId#
+  </update>
+</sqlMap>

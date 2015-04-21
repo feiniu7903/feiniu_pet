@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!-- 自动废单_start -->
+	<bean id="reportOrderRefreshJob" class="com.lvmama.report.jobs.ReportOrderRefreshJob">
+		<property name="reportOrderService" ref="reportOrderService"></property>
+		<property name="distributionRakeBackService" ref="distributionRakeBackService"></property>
+	</bean>
+
+
+	<bean id="reportOrderRefreshJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="reportOrderRefreshJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+
+	<bean id="reportOrderRefreshJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="reportOrderRefreshJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 30 2,12 * * ? *</value>
+		</property>
+	</bean>
+
+	<!-- 自动废单_end -->
+
+	<!-- 现金账户日报表数据生成_start -->
+	<bean id="moneyUserChangeJob" class="com.lvmama.report.jobs.MoneyUserChangeJob">
+		<property name="moneyUserService" ref="moneyUserService"></property>
+	</bean>
+	<bean id="moneyUserChangeJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="moneyUserChangeJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="moneyUserChangeJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="moneyUserChangeJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 2 * * ?</value>
+		</property>
+	</bean>
+	<!-- 现金账户日报表数据生成_end -->
+
+	<!-- 库存不足发送消息 -->
+	<bean id="ticketMap" class="java.util.HashMap">
+	   <constructor-arg>
+	    <map>
+	     <entry key="productType" value="${store.minus.productType.ticket}" />
+		 <entry key="limitNumber" value="${store.minus.limitNumber.ticket}" />
+	    </map>
+	   </constructor-arg>
+	</bean>
+	<bean id="hotelMap" class="java.util.HashMap">
+	   <constructor-arg>
+	    <map>
+	     <entry key="productType" value="${store.minus.productType.hotel}" />
+		 <entry key="limitNumber" value="${store.minus.limitNumber.hotel}" />
+		 <entry key="banSale" value="false" />
+	    </map>
+	   </constructor-arg>
+	</bean>
+	<bean id="tourMap" class="java.util.HashMap">
+	   <constructor-arg>
+	    <map>
+	     <entry key="productType" value="${store.minus.productType.tour}" />
+		 <entry key="limitNumber" value="${store.minus.limitNumber.tour}" />
+	    </map>
+	   </constructor-arg>
+	</bean>
+	<bean id="storeMinusParentJob" class="com.lvmama.report.jobs.StockInsufficientJob">
+		<property name="stockInsufficientService" ref="stockInsufficientService"/>
+		<property name="metaProductService" ref="metaProductService"/>
+		<property name="mailFrom" value="${mail.from}"/>
+		<property name="subject" value="${store.minus.subject}"/>
+		<property name="contentMsg" value="${store.minus.shortMsg}"/>
+		<property name="emailClient" ref="emailClient"/>
+	</bean>	
+	<bean id="storeMinusTicketJob" parent="storeMinusParentJob">
+		<property name="parameters" ref="ticketMap"/>
+	</bean>
+	<bean id="storeMinusHotelJob" parent="storeMinusParentJob">
+		<property name="parameters" ref="hotelMap"/>
+	</bean>
+	<bean id="storeMinusTourJob" parent="storeMinusParentJob">
+		<property name="parameters" ref="tourMap"/>
+	</bean>
+	<bean id="storeMinusTicketJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="storeMinusTicketJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="storeMinusHotelJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="storeMinusHotelJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="storeMinusTourJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="storeMinusTourJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="storeMinusTicketJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="storeMinusTicketJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${store.minus.cron.ticket}</value>
+		</property>
+	</bean>
+	<bean id="storeMinusHotelJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="storeMinusHotelJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${store.minus.cron.hotel}</value>
+		</property>
+	</bean>
+	<bean id="storeMinusTourJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="storeMinusTourJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${store.minus.cron.tour}</value>
+		</property>
+	</bean>
+	
+	<!-- 更新支付时间为2012年6月1日之后的订单的子单应收金额 -->
+	<!-- 
+	<bean id="updateHistoryOrderJob" class="com.lvmama.report.jobs.UpdateHistoryOrderJob">
+		<property name="reportOrderService" ref="reportOrderService">
+		</property>
+		<property name="startDate">
+			<value>2012-06-01</value>
+		</property>
+		<property name="endDate">
+			<value></value>
+		</property>
+	</bean>
+	<bean id="updateHistoryOrderJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="updateHistoryOrderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="updateHistoryOrderJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="updateHistoryOrderJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 10 3 21 8 ? *</value>
+		</property>
+	</bean>
+	 -->
+	<bean id="productSaleRemindJob" class="com.lvmama.report.jobs.ProductSaleRemindJob">
+		<property name="stockInsufficientService" ref="stockInsufficientService"/>
+		<property name="mailFrom" value="${mail.from}"/>
+		<property name="subject" value="${product.sale.subject}"/>
+		<property name="emailClient" ref="emailClient"/>
+	</bean>	
+	<bean id="productSaleRemindJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="productSaleRemindJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="productSaleRemindJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="productSaleRemindJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${product.sale.timer}</value>
+		</property>
+	</bean>
+	
+	
+	<!-- 奖金账户统计job -->
+	<bean id="cashBonusReportJob" class="com.lvmama.report.jobs.CashBonusReportJob">
+		<property name="cashBonusReportService" ref="cashBonusReportService" />
+	</bean>
+	<bean id="cashBonusReportJobJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="cashBonusReportJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="cashBonusReportJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="cashBonusReportJobJobFactory" />
+		</property>
+		<property name="cronExpression">
+			 <value>0 0 2 * * ?</value>
+		</property>
+	</bean>	
+	<!-- /奖金账户统计job -->
+	
+	
+	<!-- 库存不足发送消息 -->
+	<bean lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+
+		<property name="triggers">
+			<list>
+				<ref local="reportOrderRefreshJobTimes" />
+				<ref local="moneyUserChangeJobTimes" />
+				
+				<ref local="storeMinusTicketJobTimes" />
+				<ref local="storeMinusHotelJobTimes" />
+				<ref local="storeMinusTourJobTimes" />
+				<ref local="productSaleRemindJobTimes"/>
+				<ref bean="cashBonusReportJobTimes"/>
+<!-- 				<ref local="updateHistoryOrderJobTimes" /> -->
+			</list>
+		</property>
+	</bean>
+	
+	
+	
+
+</beans>

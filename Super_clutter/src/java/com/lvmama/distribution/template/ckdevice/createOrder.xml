@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<response>
+	<#include "responseHeader.xml">
+	<#if order??>
+		<body>
+			<order>
+				<orderId>${order.orderId}</orderId>
+				<status>${order.status}</status>
+				<paymentStatus>${order.paymentStatus}</paymentStatus>
+			</order>
+		</body>
+	</#if>
+</response>

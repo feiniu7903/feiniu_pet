@@ -1,0 +1,23 @@
+<?page title="分销商日志查询" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./selectDistributorLogsWin"?>
+<zk>
+<window id="selectDistributorLogsWin" title="分销商日志查询" border="normal" closable="false" mode="embedded" 
+apply="com.lvmama.back.web.distribution.DistributorLogAction">
+	<listbox id="box" fixedLayout="true" model="@{saction.distributorProductBlacklists}">
+		<listhead>
+			<listheader label="创建时间" width="30%"/>
+			<listheader label="操作人" width="20%"/>
+			<listheader label="操作内容" width="50%"/>
+		</listhead>
+		<listitem self="@{each=BlacklistLog}" >
+			<listcell label="@{BlacklistLog.createTime}" />
+			<listcell label="@{BlacklistLog.operatorName}" />
+			<listcell>
+				<label value="将该产品加入分销商" />
+				<label value="@{BlacklistLog.distributorName}" style="color:red"/>
+				<label value="的分销黑名单"/>
+			</listcell>
+		</listitem>
+	</listbox>
+</window>
+</zk>

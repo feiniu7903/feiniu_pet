@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PASS_PORT_USER">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassPortUser">
+		<result column="PASS_PORT_USER_ID" property="passPortUserId" />
+		<result column="USER_ID" property="userId" />
+		<result column="PASSWORD" property="password" />
+		<result column="NAME" property="name" />
+		<result column="STATUS" property="status" />
+		<result column="USER_TYPE" property="userType" />
+		<result column="EPLACE_SUPPLIER_ID" property="eplaceSupplierId" />
+		<result column="CREATE_DATE" property="createDate" />
+	</resultMap>
+	
+	
+	<select id="selectByUserIDAndPassword" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from PASS_PORT_USER where USER_ID = #userId# and PASSWORD = #password# and
+		STATUS='Y'
+	</select>
+	
+
+	<select id="selectFull" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select
+		*from PASS_PORT_USER p where 1=1
+		<isNotEmpty prepend=" and" property="passPortUserId">
+			p.PASS_PORT_USER_ID= #passPortUserId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="eplaceSupplierId">
+			p.eplace_supplier_id= #eplaceSupplierId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="name">
+			p.name like '%'||#name#||'%'
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="password">
+			p.PASSWORD= #password#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="userId">
+			p.user_id= #userId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="status">
+			p.STATUS= #status#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="userType">
+			p.USER_TYPE= #userType#
+		</isNotEmpty>
+		order by p.CREATE_DATE desc 
+		) T WHERE ROWNUM &lt;= #_endRow# ) WHERE ROWNUM1
+		&gt;=#_startRow#
+	</select>
+
+
+	<update id="updateByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.pass.PassPortUser">
+		update PASS_PORT_USER set USER_ID = #userId#, PASSWORD =
+		#password#, NAME = #name#, STATUS = #status#, USER_TYPE =
+		#userType#, EPLACE_SUPPLIER_ID = #eplaceSupplierId#, CREATE_DATE
+		= #createDate# where PASS_PORT_USER_ID= #passPortUserId#
+	</update>
+
+	<select id="selectFullCount" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		select count(*) from PASS_PORT_USER p where 1=1
+		<isNotEmpty prepend=" and" property="passPortUserId">
+			p.PASS_PORT_USER_ID= #passPortUserId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="eplaceSupplierId">
+			p.eplace_supplier_id= #eplaceSupplierId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="name">
+			p.name like '%'||#name#||'%'
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="password">
+			p.PASSWORD= #password#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="userId">
+			p.user_id= #userId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="status">
+			p.STATUS= #status#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="userType">
+			p.USER_TYPE= #userType#
+		</isNotEmpty>
+	</select>
+
+
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.bee.po.pass.PassPortUser">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="passPortUserId">
+			select PASS_PORT_USER_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into PASS_PORT_USER
+		(PASS_PORT_USER_ID,USER_ID,PASSWORD,NAME,STATUS,USER_TYPE,EPLACE_SUPPLIER_ID,CREATE_DATE)
+		values
+		(#passPortUserId#,#userId#,#password#,#name#,#status#,#userType#,#eplaceSupplierId#,#createDate#)
+	</insert>
+
+</sqlMap>

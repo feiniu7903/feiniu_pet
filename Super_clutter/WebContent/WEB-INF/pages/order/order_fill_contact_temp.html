@@ -1,0 +1,108 @@
+    <!-- 订单联系人 -->
+    <h3>订单联系人</h3>
+    <!-- 门票联系人 -->
+     <#if product.productType?? && product.productType=='TICKET'><!-- 自由行 -->
+	   	<div class="lv-box" style="margin-top:4px;">
+	         <input  value="${productItems.needIdCard!?string}"  type="hidden" name="needIdCard" id="needIdCard">
+	         <ul class="lv-proinfo-list">
+	            <!-- 最近一次联系人  -->
+	            <#if productItems?? && productItems.personList?? && productItems.personList?size&gt;0 >
+	              <#list productItems.personList as item>
+	                   <#if item.personType=="CONTACT" >
+			             <li>
+			              	<span class='lv-span-01'><label for="username">取&nbsp;票&nbsp;人</label></span>
+			              	<input class="lv-input-text" id="userName" name="userName" value="${item.personName!}" type="text" placeholder="姓名">
+			             </li>
+			             <li>
+			            	<span class='lv-span-01'><label for="tel">手&nbsp;机&nbsp;号</label></span><input class="lv-input-text"  id="mobile" name="mobile" value="${item.personMobile!}" type="tel" placeholder="接收取票凭证短信">
+			             </li>
+		             </#if>
+		        </#list>
+	            <#else>
+	               <li>
+	              	<span class='lv-span-01'><label for="username">取&nbsp;票&nbsp;人</label></span>
+	              	<input class="lv-input-text" id="userName" name="userName" value="${userName!}" type="text" placeholder="姓名">
+	             </li>
+	             <li>
+	            	<span class='lv-span-01'><label for="tel">手&nbsp;机&nbsp;号</label></span><input class="lv-input-text"  id="mobile" name="mobile" value="${mobile!}" type="tel" placeholder="接受取票短信凭证 ">
+	             </li>
+	            </#if>
+	            <#if productItems?? && productItems.needIdCard!>
+		             <li>
+		            	<span class='lv-span-01'><label for="tel">身&nbsp;份&nbsp;证</label></span>
+		            	<input class="lv-input-text"  id="idCard" name="idCard" value="${idCard!}" type="text" placeholder="用于景区入园等凭证">
+		             </li>
+	         	</#if>
+	          </ul>
+	     </div>
+     <#else>
+	     <!-- 自由行 联系人-->
+	      <div class="lv-box" style="margin-top:4px;">
+	         <input  value="${productItems.needIdCard!?string}"  type="hidden" name="needIdCard" id="needIdCard">
+	         <input  value="${productItems.needEcontractEmail!?string}"  type="hidden" name="needEcontractEmail" id="needEcontractEmail">
+	         <ul class="lv-proinfo-list">
+	            <!-- 最近一次联系人  -->
+	            <#if productItems?? && productItems.personList?? && productItems.personList?size&gt;0 >
+	              <#list productItems.personList as item>
+	                   <#if item.personType=="CONTACT" >
+			             <li>
+			              	<span class='lv-span-01'><label for="username">联&nbsp;系&nbsp;人</label></span>
+			              	<input class="lv-input-text" id="userName" name="userName" value="${item.personName!}" type="text" placeholder="姓名">
+			             </li>
+			             <li>
+			            	<span class='lv-span-01'><label for="tel">手&nbsp;机&nbsp;号</label></span><input class="lv-input-text"  id="mobile" name="mobile" value="${item.personMobile!}" type="tel" placeholder="接收取票凭证短信">
+			             </li>
+		             </#if>
+		        </#list>
+	            <#else>
+	               <li>
+	              	<span class='lv-span-01'><label for="username">联&nbsp;系&nbsp;人</label></span>
+	              	<input class="lv-input-text" id="userName" name="userName" value="${userName!}" type="text" placeholder="姓名">
+	             </li>
+	             <li>
+	            	<span class='lv-span-01'><label for="tel">手&nbsp;机&nbsp;号</label></span><input class="lv-input-text"  id="mobile" name="mobile" value="${mobile!}" type="tel" placeholder="接受取票短信凭证 ">
+	             </li>
+	            </#if>
+	            <#if productItems?? && productItems.needIdCard!>
+		             <li>
+		            	<span class='lv-span-01'><label for="tel">身&nbsp;份&nbsp;证</label></span>
+		            	<input class="lv-input-text"  id="idCard" name="idCard" value="${idCard!}" type="text" placeholder="用于景区入园等凭证">
+		             </li>
+	         	</#if>
+	         	<!--预订合同是否需要邮箱  -->
+	         	<#if productItems.needEcontractEmail?? && productItems.needEcontractEmail!>
+		             <li>
+		            	<span class='lv-span-01'><label for="tel">邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱</label></span>
+		            	<input class="lv-input-text"  id="econtractEmail" name="econtractEmail" value="${econtractEmail!}" type="text" placeholder="用于接收协议等">
+		             </li>
+	         	</#if>
+	          </ul>
+	     </div>
+     </#if>
+<script src="${request.contextPath!}/js/comm.js"></script>
+<script>
+	$(function(){
+		var userName=$("#userName").val();
+		var mobile=$("#mobile").val();
+		var idCard=$("#idCard").val();
+		var econtractEmail=$("#econtractEmail").val();
+		
+		var userNameLoc= getLocalStorage("link_user_name");
+		var mobileLoc= getLocalStorage("link_user_mobile");
+		var idCardLoc= getLocalStorage("link_user_idCard");
+		var econtractEmailLoc= getLocalStorage("link_user_email");
+		if((userName==null || userName=="") && (userNameLoc!=null && userNameLoc!="")){
+			$("#userName").val(userNameLoc);
+		}
+		if((mobile==null || mobile=="") && (mobileLoc!=null && mobileLoc!="")){
+			$("#mobile").val(mobileLoc);
+		}
+		if((idCard==null || idCard=="") && (idCardLoc!=null && idCardLoc!="")){
+			$("#idCard").val(idCardLoc);
+		}
+		if((econtractEmail==null || econtractEmail=="") && (econtractEmailLoc!=null && econtractEmailLoc!="")){
+			$("#econtractEmail").val(econtractEmailLoc);
+		}
+	});
+</script>
+        

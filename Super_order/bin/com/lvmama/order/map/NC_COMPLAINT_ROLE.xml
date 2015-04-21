@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="NC_COMPLAINT_ROLE">
+	<typeAlias alias="complaintRole" type="com.lvmama.comm.bee.po.ord.NcComplaintRole"/>
+	<resultMap id="RoleMap" class="complaintRole">
+		<result column="ROLE_ID" property="roleId" />
+        <result column="PERSONS" property="persons" />
+        <result column="ORG_ID" property="orgId" />
+		<result column="DEPARTMENT_NAME" property="departmentName" />
+	</resultMap>
+   <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.NcComplaintRole">
+       <selectKey resultClass="java.lang.Long" keyProperty="roleId">
+           select NC_COMPLAINT_ROLE_ID_SEQ.nextval as id from DUAL
+       </selectKey>
+       insert into NC_COMPLAINT_ROLE (ROLE_ID,PERSONS,ORG_ID)
+       values ( #roleId#,#persons#,#orgId#)
+   </insert>
+	<select id="selectAllRoleByPage" resultMap="RoleMap">
+		SELECT * FROM (SELECT T.*,ROWNUM RN FROM (
+
+        select cr.role_id,cr.persons,po.org_id,po.department_name
+        from lvmama_pet.PERM_ORGANIZATION po,nc_complaint_role cr
+        where po.perm_level = 1
+        and po.VALID='Y'
+        and po.org_id=cr.org_id(+)
+
+		)T )TT WHERE 1=1
+		<isNotEmpty prepend="AND" property="start">
+	    	TT.RN &gt;=#start#
+	    </isNotEmpty>
+	    <isNotEmpty prepend="AND" property="end">
+	    	TT.RN &lt;=#end#
+	    </isNotEmpty>
+ 	</select>
+ 	
+ 	<select id="getRolePageCount" parameterClass="map" resultClass="long">
+        select count(*)
+        from lvmama_pet.PERM_ORGANIZATION po, nc_complaint_role cr
+        where po.perm_level = 1
+              and po.VALID = 'Y'
+              and po.org_id = cr.org_id (+)
+    </select>
+    <select id="getRoleById" resultMap="RoleMap">
+        select cr.role_id,cr.persons,po.org_id,po.department_name
+        from lvmama_pet.PERM_ORGANIZATION po,nc_complaint_role cr
+        where po.perm_level = 1
+              and po.VALID='Y'
+              and po.org_id=cr.org_id(+)
+              and cr.role_Id = #roleId#
+    </select>
+    <select id="getRoleByOrgId" resultMap="RoleMap">
+        select cr.role_id,cr.persons,po.org_id,po.department_name
+        from lvmama_pet.PERM_ORGANIZATION po,nc_complaint_role cr
+        where po.perm_level = 1
+              and po.VALID='Y'
+              and po.org_id=cr.org_id(+)
+              and po.org_Id = #orgId#
+    </select>
+    <!-- 修改记录 -->
+    <update id="updateRoleById" parameterClass="complaintRole">
+        UPDATE NC_COMPLAINT_ROLE
+        set PERSONS = #persons#
+        WHERE ROLE_ID = #roleId#
+	</update>
+</sqlMap>

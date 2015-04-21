@@ -1,0 +1,88 @@
+<?page title="ShowMemo" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_faxMemo"?>
+<zk>
+<window id="win_faxMemo" border="normal" title="通关信息" apply="com.lvmama.eplace.web.supplier.PassPortInfoAction">
+ <grid>
+		<columns>
+			<column></column>
+			<column></column>
+			<column></column>
+			<column></column>
+			<column></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row spans="1,5">
+				<hbox>订单号：</hbox>
+				<hbox>${saction.passPortInfo.orderId}</hbox>
+			</row>
+			<row spans="1,5">
+				<hbox>取票人：</hbox>
+				<hbox>${saction.passPortInfo.name}</hbox>
+			</row>
+			<row spans="1,5">
+				<hbox>手机号：</hbox>
+				<hbox>${saction.passPortInfo.mobile}</hbox>
+			</row>
+			<row>
+				<hbox>游玩人数：</hbox>
+				<hbox>${saction.passPortInfo.totalMan}</hbox>
+				<hbox>成人数：</hbox>
+				<hbox>${saction.passPortInfo.adult}</hbox>
+				<hbox>儿童数：</hbox>
+				<hbox>${saction.passPortInfo.child}</hbox>
+			</row>
+			 <row spans="1,5">
+				<hbox>支付：</hbox>
+				<hbox>${saction.passPortInfo.payChannel}</hbox>
+			</row>
+			<row spans="1,5" visible="@{saction.passPortInfo.isPayToSupplier}">
+				<hbox>通关产品：</hbox>
+				<hbox>
+				
+				<groupbox>
+				<caption label="包含的销售产品-详情" />
+				<listbox model="@{saction.orderItemMetas}">
+							<listhead>
+								<listheader label="产品名称" width="40%" />
+								<listheader label="产品包含" width="15%"/>
+								<listheader label="订购数量" width="15%"/>
+								<listheader label="订购量" />
+							</listhead>
+							<listitem height="25px" self="@{each='ord'}">
+								<listcell label="@{ord.productName}" />
+								<listcell >
+									<label value="成人"></label>
+									<label value="@{ord.totalAdultProductQuantity}"></label>
+									<label value="儿童"></label>
+									<label value="@{ord.totalChildProductQuantity}"></label>
+								</listcell>
+								<listcell ><label value="@{ord.quantity}"></label>份
+								</listcell>
+								<listcell >
+									<longbox value="@{ord.quantity}" constraint="no negative" width="150px" />
+								</listcell>
+							</listitem>
+				</listbox>
+			</groupbox>
+			</hbox>
+			</row>
+			<row spans="1,3,2" visible="@{saction.passPortInfo.isPayToSupplier}">
+				<hbox></hbox>
+				<hbox>实际通关人数：<label style="color:red" id="showTotalQuantity"/></hbox>
+				<hbox><button label="修改人数"  onClick="saction.showTotalQuantity(saction.orderItemMetas)"/></hbox>
+			</row>
+			<row spans="1,1,4">
+				<hbox>共需要支付：</hbox>
+				<hbox><label style="color:red" id="showTotalPrice" value="@{saction.passPortInfo.priceYuan}" />元</hbox>
+				<hbox>
+				 	<button label="通关" width="60px"  onClick="saction.pass(saction.passPortInfo)"/>
+				</hbox>
+			</row>
+		</rows>
+		<zscript>
+			
+		</zscript>
+</grid>
+</window>
+</zk>

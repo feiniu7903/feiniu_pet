@@ -1,0 +1,129 @@
+<#import "sh_holiday_base.xml" as base>
+<@base.layout "TourBookRQ">
+		<OrderBaseInfo>
+			<ReceiptHead><#--发票头--></ReceiptHead>
+			<ExternalOrderNo>${body.orderBaseInfo.externalOrderNo}</ExternalOrderNo>
+			<TempOrderPackageId><#-- TempOrderPackageId:自由行临时订单号（只自由行订单才要传） --></TempOrderPackageId>
+			<OrderTotalAmount>${body.orderBaseInfo.orderTotalAmount}<#--订单总价:实际应收金额，优惠后的金额 Double(2位小数) ★--></OrderTotalAmount>
+			<OrderFavorAmount>${body.orderBaseInfo.orderFavorAmount}<#-- 订单优惠金额  Double(2位小数) 有优惠信息则必传,累积优惠原则--></OrderFavorAmount>
+			<GuestRequest><#--特殊要求(附加信息保存到此)String(4000)--></GuestRequest>
+			<Remark><#--备注 String(4000):
+			{销售总金额：金额（保留2位小数）}；
+			合同信息格式：合同信息{签约人名字，签约人手机，签约类型，签约人邮箱，签约人传真}
+			,预订人的常旅客信息格式如下：常旅客信息{卡号：12323}；
+			--></Remark>
+			<IsReserved><#-- PR：表示预留 PRC：预留转正常报名 N：不是预留 如:PR--></IsReserved>
+			<ReservedTime><#--预留时间 String YYYYMMDD 如:20110404(预留时间不能超过最后出团日期)--></ReservedTime>
+			<InfantSalePrice>${body.orderBaseInfo.infantSalePrice}<#--★婴儿产品预订价（代理用代理价，散客用散客价） 有婴儿必须传入   Double  --></InfantSalePrice>
+			<ChildrenSalePrice>${body.orderBaseInfo.childrenSalePrice}<#--★儿童产品预订价 有儿童必须传入    Double --></ChildrenSalePrice>
+			<AdultSaleProxyPrice>${body.orderBaseInfo.adultSaleProxyPrice}<#--★成人产品预订价 有成人必须传入 Double --></AdultSaleProxyPrice>
+			<BookAccompanyPrice>${body.orderBaseInfo.bookAccompanyPrice}<#-- 全陪预订价 有全陪时必须传入 Double --></BookAccompanyPrice>
+			<PriceArithmetic>${body.orderBaseInfo.priceArithmetic}<#--价格具体计算方式：产品价格(￥599.0*2成人+￥599.0*1儿童)+订单附加产品总价格(￥40.0)+接机总价格(￥267.0)+个人附加产品总价格(￥1193.0)=订单总价(￥) 建议传入--></PriceArithmetic>
+			<NeedReceipt><#-- 是否邮寄或配送发票:Y-需要，N-不需要 --></NeedReceipt>
+			<ReceiptType><#-- 发票类型代码 --></ReceiptType>
+			<ReceiptRemark><#-- 发票备注 --></ReceiptRemark>
+			<OrderState>${body.orderBaseInfo.orderState}<#-- 预订状态： 申请单（自由行产品）：NN,正常预订：HK--></OrderState>
+		</OrderBaseInfo>
+		<ProductInfos><#-- 产品信息 -->
+			<ProductInfo>
+				<Product UniqueID="${body.productInfo.uniqueId}"><#--UniqueID:"产品ID String类型 ★"-->
+					<Team UniqueID="${body.productInfo.teamUniqueId}"><#--UniqueID:"团号ID String ★"-->
+						<TeamNoName>${body.productInfo.teamName}<#--团号别名(显示给用户的编号) String--></TeamNoName>
+						<TakeoffDate>${body.productInfo.takeoffDate}</TakeoffDate>
+					</Team>
+				</Product>
+				<ProductAdditions><#--团队附加产品信息  -->
+					
+				</ProductAdditions>
+			</ProductInfo>
+		</ProductInfos>
+		<OrderContactInfo UniqueID=""><#--UniqueID:"联系人信息ID 执行结果返回时使用"-->
+			<Name>${body.contact.name}<#--联系人姓名String(200)--></Name>
+			<Tel>${body.contact.tel}<#--联系人电话String(200)--></Tel>
+			<Mobile>${body.contact.mobile}<#--联系人手机String(200):如果不需要上航假期直接发短信给旅客请不要填写旅客的手机号码--></Mobile>
+			<Fax>${body.contact.fax}<#--联系人传真String(200)--></Fax>
+			<Mail>${body.contact.mail}<#--联系人邮箱String(200)--></Mail>
+			<ContactMethod><#--
+				通知方式,如果需要多种联系方式用竖线分开;
+				MOBILE：手机联系，TEL：电话联系，MAIL：邮件联系，FAX：传真联系
+			--></ContactMethod>
+			<Addr><#--联系人地址String(200)--></Addr>
+			<DeliveryAddr><#--配送地址--></DeliveryAddr>
+			<DeliveryContactName><#--/配送联系人姓名--></DeliveryContactName>
+			<DeliveryContactTel><#--配送联系人电话--></DeliveryContactTel>
+			<DeliveryContactMobile><#--配送联系人手机--></DeliveryContactMobile>
+			<DeliveryRequest><#--配送特殊要求，配送其它信息格式：配送信息{联系人地址邮编:3444234,配送地址邮编:33224455,发票内容:[发票类别名称],是否需要发票:[需要，不需要]}--></DeliveryRequest>
+			<DeliveryWeekFit><#--配送适用周几  SUNDAY = 1;MONDAY = 2; TUESDAY = 3; WEDNESDAY = 4;THURSDAY = 5; FRIDAY = 6; SATURDAY = 7;--></DeliveryWeekFit>
+			<ArriveReqTimeSpan><#--到达时间要求：AM:上午 PM:下午 ALL_DAY:全天--></ArriveReqTimeSpan>
+			<ArriveReqDate><#--到达指定日期YYYYMMdd--></ArriveReqDate>
+		</OrderContactInfo>
+		<OrderPassengers><#--订单旅客的信息  -->
+			<#list body.orderPassengers as passenger>
+			<OrderPassenger UniqueID=""><#--UniqueID:"订单旅客信息关联ID 执行结果返回时使用"-->
+				<PassengerName>${passenger.name}<#--旅客姓名 String(100)--></PassengerName>
+				<IndentityCardType>${passenger.shholidayCardType}</IndentityCardType>
+				<IndentityCardNumber>${passenger.certNo}</IndentityCardNumber>
+				<PassengerType>${passenger.passengerType}</PassengerType>
+				<Birth>${passenger.passengerBrithday}<#--生日 String，如：YYYYMMDD--></Birth>
+				<SingleRoom>${passenger.singleRoom}</SingleRoom>
+				<Sex>${passenger.sex}<#--性别 String(1):男：M，女：F--></Sex>
+				<InstantlyOutTkt></InstantlyOutTkt>
+				<Mobile>${passenger.mobile}<#--联系人手机String(200)--></Mobile>
+				<IsAccompany>${passenger.accompany}<#-- 是否全陪  Y:是  N:不是 --></IsAccompany>
+				<#if passenger.orderAdditions??>
+				<OrderPassengerOrderAdditions>
+					<#--具体到人的附加产品的信息  -->
+					<OrderPassengerOrderAddition StockAdditionId= "" UniqueID=""><#--StockAdditionId:" 附加产品ID  Long预留字段，系统自动获取" UniqueID:"订单附加产品关联表ID 预留字段 "-->
+						<AdditionName><#--附加产品名称★--></AdditionName>
+						<AdditionUnitsPrice><#--销售价 Double:代理用代理价，散客用散客价★--></AdditionUnitsPrice>
+						<AdditionBuyCount><#--购买数量 Long★--></AdditionBuyCount>
+						<Remark><#--附加产品备注--></Remark>
+						<UseDate><#--使用日期 String YYYYMMDD★--></UseDate>
+						<AdditionCountId><#--附加项目数量ID Long ★--></AdditionCountId>
+						<AdditionPriceId><#--附加项目价格ID Long ★--></AdditionPriceId>
+					</OrderPassengerOrderAddition>
+				</OrderPassengerOrderAdditions>
+				<OrderPassengerAirportPickups>
+					<#--接机信息  -->
+					<OrderPassengerAirportPickup PickAirlineInfoId="" UniqueID=""><#--PickAirlineInfoId:"接送机信息ID★" UniqueID:"订单接机信息关联表ID Long  预留字段"-->
+						<PickAirlineStopDetailId><#--接送机信息停靠地点明细 Long ★--></PickAirlineStopDetailId>
+						<TransportDesc><#--接送机交通工具描述 比如红金龙大巴  车牌XXX--></TransportDesc>
+						<AdultSalePrice><#--接机价格：成人、儿童、婴儿一个价格,给代理的价格 0表示免费 ★该价格就是给代理的价格,代理卖给散客的价格接口不做限定--></AdultSalePrice>
+						<Type><#--接送机类型 接机 ：PICK 送机 ：SEE_OFF--></Type>
+					</OrderPassengerAirportPickup>
+				</OrderPassengerAirportPickups>
+				<FrequentFlyPassengers>
+					<FrequentFlyPassenger><#--是否为常旅客信息 -->
+						<AirlineCode><#--航空公司代码 String (保存常旅信息时 ★ 两位) --></AirlineCode>
+						<CardNumber><#--卡号 String--></CardNumber>
+					</FrequentFlyPassenger>
+				</FrequentFlyPassengers>
+				</#if>
+			</OrderPassenger>
+			</#list>
+		</OrderPassengers>
+		<#if body.businessCoupons??>
+		<FavorInfos><#-- 本订单使用的优惠规则信息 -->
+			<FavorInfo UniqueID=""><#-- UniqueID优惠信息ID -->
+				<FavorCode><#-- 优惠代码 String --></FavorCode>
+				<FavorName><#-- 优惠名称 --></FavorName>
+				<FavorDesc><#-- 优惠描述 --></FavorDesc>
+				<BeginSaleFormatDate><#-- 销售开始日期-适用于从哪天开始查询预订此产品和系统当前时刻比较 精确到分钟 String 格式：YYYY-MM-DD HH:mm --></BeginSaleFormatDate>
+				<EndSaleFormatDate><#-- 销售结束日期-适用于从哪天结束查询预订此产品和系统当前时刻比较  精确到分钟String 格式：YYYY-MM-DD HH:mm --></EndSaleFormatDate>
+				<FavorAgeBegin><#-- 优惠适用年龄开始 -1表示忽略此条件;如果适用年龄都大于等于零那么FitInfant FitChildren FitAdult忽略 --></FavorAgeBegin>
+				<FavorAgeEnd><#-- 优惠适用年龄结束	-1表示忽略此条件;如果适用年龄都大于等于零那么FitInfant FitChildren FitAdult忽略 --></FavorAgeEnd>
+				<FitInfant><#-- 是否适用婴儿 Y：适用,N：不适用 --></FitInfant>
+				<FitChildren><#-- 是否适用儿童 Y：适用,N：不适用 --></FitChildren>
+				<FitAdult><#-- 是否适用成人Y：适用,N：不适用 --></FitAdult>
+				<FitGuestNumMin><#-- 满足BeginSaleFormatDate，EndSaleFormatDate，FavorAgeBegin，FavorAgeEnd，FitInfant，FitChildren，FitAdult条件之后，几个以上的客人报名才能使用此规则 --></FitGuestNumMin>
+				<AgentPercent><#-- 代理价优惠固定比例	正减负加 正表示优惠客户多少钱 Double 保留百分比后2位小数，如：1.01%--></AgentPercent>
+				<AgentFixAmount><#-- 代理价优惠固定金额:正减负加，正表示优惠客户多少钱 Double 保留2位小数--></AgentFixAmount>
+				<Individualpercent><#-- 散客价优惠固定比例 正减负加 Double 保留百分比后2位小数，如：1.01%--></Individualpercent>
+				<IndividualfixAmount><#-- 散客价优惠固定金额	正减负加 Double 保留2位小数--></IndividualfixAmount>
+				<PurchaseOver><#-- 购满多少钱 --></PurchaseOver>
+				<PurchaseOverFavor><#-- 立减多少钱:为PurchaseOver结合使用,计算时，优先级最低 --></PurchaseOverFavor>
+				<Remark><#-- 优惠备注信息 --></Remark>
+			</FavorInfo>
+		</FavorInfos>
+		</#if>
+</@base.layout>

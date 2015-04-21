@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_JOURNEY_GROUP" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductJourneyGroup" >
+    <result column="JOURNEY_GROUP_ID" property="journeyGroupId" />
+    <result column="PROD_JOURNEY_ID" property="prodJourneyId" />
+    <result column="PRODUCT_TYPE" property="productType" />
+    <result column="REQUIRED" property="required" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourneyGroup" >
+    select *
+    from PROD_PRODUCT_JOURNEY_GROUP
+    where JOURNEY_GROUP_ID = #prodJourneyId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourneyGroup" >
+    delete from PROD_PRODUCT_JOURNEY_GROUP
+    where JOURNEY_GROUP_ID = #prodJourneyId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourneyGroup" >
+  <selectKey keyProperty="journeyGroupId" resultClass="java.lang.Long">
+  	select PROD_JOURNEY_GROUP_ID_SEQ.nextval from dual 
+  </selectKey>
+    insert into PROD_PRODUCT_JOURNEY_GROUP (JOURNEY_GROUP_ID, PROD_JOURNEY_ID, PRODUCT_TYPE, REQUIRED)
+    values (#journeyGroupId#, #prodJourneyId#, #productType#,
+      #required#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourneyGroup" >
+    insert into PROD_PRODUCT_JOURNEY_GROUP
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="journeyGroupId" >
+        JOURNEY_GROUP_ID
+      </isNotNull>
+      <isNotNull prepend="," property="prodJourneyId" >
+        PROD_JOURNEY_ID
+      </isNotNull>
+      <isNotNull prepend="," property="productType" >
+        PRODUCT_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="required" >
+        REQUIRED
+      </isNotNull>     
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="journeyGroupId" >
+        #journeyGroupId#
+      </isNotNull>
+      <isNotNull prepend="," property="prodJourneyId" >
+        #prodJourneyId#
+      </isNotNull>
+      <isNotNull prepend="," property="productType" >
+        #productType#
+      </isNotNull>
+      <isNotNull prepend="," property="required" >
+        #required#
+      </isNotNull>      
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourneyGroup" >
+    update PROD_PRODUCT_JOURNEY_GROUP
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="prodJourneyId" >
+        PROD_JOURNEY_ID = #prodJourneyId#
+      </isNotNull>
+      <isNotNull prepend="," property="productType" >
+        PRODUCT_TYPE = #productType#
+      </isNotNull>     
+      <isNotNull prepend="," property="required" >
+        REQUIRED = #required#
+      </isNotNull>
+    </dynamic>
+    where JOURNEY_GROUP_ID = #journeyGroupId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourneyGroup" >
+    update PROD_PRODUCT_JOURNEY_GROUP
+    set PROD_JOURNEY_ID = #prodJourneyId#,
+      PRODUCT_TYPE = #productType#,
+      REQUIRED = #required#
+    where JOURNEY_GROUP_ID = #journeyGroupId#
+  </update>
+  
+  <select id="selectJourneyGroupListByJourneyId" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourneyGroup" resultMap="BaseResultMap">
+  	select * from PROD_PRODUCT_JOURNEY_GROUP where PROD_JOURNEY_ID=#prodJourneyId#
+  </select>
+  
+  <select id="selectByParam" parameterClass="java.util.Map" resultMap="BaseResultMap">
+  	select * from PROD_PRODUCT_JOURNEY_GROUP 
+  	<dynamic prepend="where">
+  		<isNotEmpty prepend="and" property="prodJourneyId">
+  			PROD_JOURNEY_ID = #prodJourneyId#
+  		</isNotEmpty>
+  		<isNotEmpty prepend="and" property="productType">
+  			PRODUCT_TYPE = #productType#
+  		</isNotEmpty>
+  		<isNotEmpty prepend="and" property="required">
+  			REQUIRED = #required#
+  		</isNotEmpty>
+  		<isNotEmpty prepend="and" property="journeyGroupId">
+  			JOURNEY_GROUP_ID = #journeyGroupId#
+  		</isNotEmpty>
+  	</dynamic>
+  </select>
+</sqlMap>

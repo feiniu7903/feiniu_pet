@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>驴妈妈触屏版</title>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/place_search.js"></script>
+<script type="text/javascript">
+$(function(){
+	$(".lv-input-search").click();
+	/*切换tab*/
+	$("ul.lv-tab-ul li").click(function(){
+		$(this).addClass("lv-li-current").siblings("li").removeClass("lv-li-current");
+		$("#stage").val($(".lv-li-current").attr('data-value'));
+		initSearchTip();
+	});
+	
+	/*input 框变色*/
+	$("input.lv-input-search").focus(function(e) {
+		$("input.lv-input-search").parent().parent().addClass("lv-input-focus");
+	});
+	$("input.lv-input-search").blur(function(e) {
+		$("input.lv-input-search").parent().parent().removeClass("lv-input-focus");
+	});
+	
+	$(".lv-clear-icon").click(function(e){
+		$(".lv-input-search").val("");
+	});
+});
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <ul class="lv-tab-ul">
+    <li class="lv-li-current" data-value="2">景点</li>
+    <li data-value="3">度假</li>
+  </ul>
+  <div class="lv-close-div lv-pull-right">
+    <div class="lv-close-sep lv-pull-left"><img src="${prefix_pic_url!}/img/close-sep.png"></div>
+    <div><a class="lv-block-a lv-pull-right" href="http://${hostName}"><img src="${prefix_pic_url!}/img/close.png"></a></div>
+  </div>
+</div>
+<div class="lv-search lv-media-width lv-seach-mheight">
+  <div class="lv-div-search"> <span class="lv-clear-icon"><img src="${prefix_pic_url!}/img/clear.png"></span>
+    <form action="${request.contextPath}/search.htm" method="post" id="searchForm">
+      <input type="hidden" id="stage" value="2" name="stage">
+      <input class="lv-input-search lv-search-pLeft" id="keyWorld" required name="keyWorld" placeholder="请输入搜索的关键字" type="text" autocomplete="off" >
+      <input class="lv-submit-search" type="button" value="" onclick="search();">
+    </form>
+  </div>
+</div>
+<div class="lv-wrapper lv-media-width">
+    <div class="lv-search-success" style="">
+    	<ul class="lv-search-ul" id="search_success">
+        	<!-- <li class="lv-search-li">上海欢乐谷2</li>
+            <div class="lv-seprator-line"></div>
+            <li class="lv-search-li">上海长风公园2</li>
+            <div class="lv-seprator-line"></div>
+            <li class="lv-search-li">上海杜莎夫人蜡像馆2</li>
+            <div class="lv-seprator-line"></div> -->
+        </ul>
+    </div>
+    
+    <div class="lv-search-fail" style="display:none;" id="search_fail">
+    	<div class="lv-sorry-icon">
+        	<img src="img/sorry.png">
+        </div>
+        <p>没有找到适合的景点</p>
+        <p>请试试输入其他关键字吧!</p>
+    </div>
+</div>
+</body>
+</html>

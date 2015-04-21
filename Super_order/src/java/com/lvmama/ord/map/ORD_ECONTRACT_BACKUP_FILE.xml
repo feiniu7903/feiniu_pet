@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ORD_ECONTRACT_BACKUP_FILE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdEcontractBackUpFile" >
+    <result column="FILE_ID" property="fileId" />
+	<result column="ORDER_ID" property="orderId" />
+    <result column="FILE_NAME" property="fileName" />
+	<result column="FILE_DESCRIPTION" property="fileDescription" />
+	<result column="FILE_CONTENT" property="fileContent" />
+	<result column="CREATE_USER" property="createUser" />
+    <result column="CREATE_DATE" property="createDate" />
+  </resultMap>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdEcontractBackUpFile">
+	INSERT INTO ORD_ECONTRACT_BACKUP_FILE
+		(FILE_ID,
+		ORDER_ID,
+		FILE_NAME,
+		FILE_DESCRIPTION,
+		FILE_CONTENT,
+		IS_VALID,
+		CREATE_USER,
+		CREATE_DATE
+	) VALUES (
+		#fileId#,
+		#orderId#,
+		#fileName#,
+		#fileDescription#,
+		#fileContent#,
+		'Y',
+		#createUser#,
+		SYSDATE)
+  </insert>
+
+  <update id="update"  parameterClass="com.lvmama.comm.bee.po.ord.OrdEcontractBackUpFile">
+     UPDATE ORD_ECONTRACT_BACKUP_FILE
+        SET UPDATE_DATE = SYSDATE
+     <dynamic>
+   	 	<isNotEmpty property="fileName" prepend=","> FILE_NAME = #fileName# </isNotEmpty>
+     	<isNotEmpty property="fileDescription" prepend=","> FILE_DESCRIPTION = #fileDescription# </isNotEmpty>
+   	 	<isNotEmpty property="fileContent" prepend=","> FILE_CONTENT = #fileContent# </isNotEmpty>
+   	 	<isNotEmpty property="isValid" prepend=","> IS_VALID = #isValid# </isNotEmpty>
+   	 	<isNotEmpty property="updateUser" prepend=","> UPDATE_USER = #updateUser# </isNotEmpty>
+     </dynamic>
+     WHERE FILE_ID = #fileId#
+  </update>
+  <select id="query" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+	 SELECT FILE_ID,
+			ORDER_ID,
+			FILE_NAME,
+			FILE_DESCRIPTION,
+			FILE_CONTENT,
+			CREATE_USER,
+			CREATE_DATE
+	   FROM ORD_ECONTRACT_BACKUP_FILE
+   <dynamic prepend=" WHERE ">
+   	 	<isNotEmpty property="fileId" prepend=" AND "> FILE_ID = #fileId# </isNotEmpty>
+   	 	<isNotEmpty property="orderId" prepend=" AND "> ORDER_ID = #orderId# </isNotEmpty>
+   	 	<isNotEmpty property="fileName" prepend=" AND "> FILE_NAME = #fileName# </isNotEmpty>
+   	 	<isNotEmpty property="isValid" prepend=" AND "> IS_VALID = #isValid# </isNotEmpty>
+   </dynamic>
+  </select>
+</sqlMap>

@@ -1,0 +1,99 @@
+<?page title="服务商管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./providerList"?>
+
+<zk>
+	<window id="providerList" title="服务商管理" border="normal"
+		apply="com.lvmama.passport.web.pass.ListPassProviderAction">
+		<zscript>
+		<![CDATA[
+			public void checkValues() {
+				if (!providerId.getValue().equals("")) {
+					try {
+						Long.parseLong(providerId.getValue());
+						saction.doQuery();
+					} catch (NumberFormatException nfe) {
+						alert("服务商编号必须为数字！");
+					}
+				} else {
+					saction.doQuery();
+				}
+			}
+		]]>			
+		</zscript>
+		<grid>
+			<columns>
+				<column width="110px"></column>
+				<column></column>
+				<column width="110px"></column>
+				<column></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>服务商编号：</hbox>
+					<hbox>
+						<textbox id="providerId"
+							value="@{saction.queryOption.providerId }" />
+					</hbox>
+					<hbox>服务商名称：</hbox>
+					<hbox>
+						<textbox value="@{saction.queryOption.name }" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>备注：</hbox>
+					<hbox>
+						<textbox value="@{saction.queryOption.memo }" />
+					</hbox>
+					<hbox></hbox>
+					<hbox></hbox>
+					<hbox>
+						<button label="查询" id="search" width="100px"
+							onClick="checkValues();" />
+						<button label="新增" width="100px"
+							onClick='saction.showWindow("/bussiness/edit_provider.zul",self.getAttributes());' />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox
+			model="@{saction.passProviderList,load-after='search.onClick'}">
+			<listhead>
+				<listheader label="服务商编号" />
+				<listheader label="服务商名称" />
+				<listheader label="备注" />
+				<listheader label="处理器类名" width="400px" />
+				<listheader label="独立申码" />
+				<listheader label="由服务商发短信" />
+				<listheader label="凭证短信合并" />
+				<listheader label="自动履行" />
+				<listheader label="多线程申码" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem height="25px" self="@{each='provider'}">
+				<listcell label="@{provider.providerId}" />
+				<listcell label="@{provider.name}" />
+				<listcell label="@{provider.memo}" />
+				<listcell label="@{provider.processor}" />
+				<listcell label="@{provider.separate}" />
+				<listcell label="@{provider.sendSms}" />
+				<listcell label="@{provider.mergeSMS}" />
+				<listcell label="@{provider.autoPerform}" />
+				<listcell label="@{provider.supplierThread}" />
+				<listcell>
+					<a style="color:blue" label="修改"
+						onClick='saction.showWindow("/bussiness/edit_provider.zul",self.getAttributes());'>
+						<custom-attributes provider="@{provider}" />
+					</a>
+					|
+					<a style="color:blue" label="查看通关点"
+						id="providerport"
+						onClick='saction.showWindow("/bussiness/list_providerport.zul",self.getAttributes());'>
+						<custom-attributes
+							providerId="@{provider.providerId}" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+	</window>
+</zk>

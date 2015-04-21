@@ -1,0 +1,33 @@
+<?page title="edit viewPage" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_limitsaletime"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_limitsaletime" title="限制销售设置" closable="true" apply="com.lvmama.back.web.product.LimitSaleTimeAction">
+    <grid>
+    	<rows>
+    		<row>
+    			<hbox>限制销售开始时间：<datebox id="limitSaleDate"/> <timebox id="limitSaleTime"/></hbox>
+    			<hbox>限制销售游玩时间：<datebox id="limitVisitDate"/></hbox>
+    			<hbox>
+    				<button label="确定" id="save" width="100px" onClick='saction.save(limitSaleDate.value,limitSaleTime.value,limitVisitDate.value);'/>
+    			</hbox>
+    		</row>
+    	</rows>
+    </grid>
+    <listbox id="limitSaleTimeListBox" model="@{saction.limitSaleTimeList,load-after='del.onClick'}">
+		<listhead>
+			<listheader label="限制销售开始时间" width="200px"/>
+			<listheader label="限制销售游玩时间" width="200px"/>
+			<listheader label="操作"/>
+		</listhead>
+		<listitem height="25px" self="@{each='list'}" value="@{list}">
+			<listcell label="@{list.limitSaleTime}"/>
+			<listcell label="@{list.limitVisitTime}"/>
+			<listcell>
+				<a style="color:blue" id="del" label="删除" onClick='saction.delete(self);'>
+					<custom-attributes limitSaleTimeId="@{list.limitSaleTimeId}" />
+				</a>
+			</listcell>
+		</listitem>
+	</listbox>
+  </window>
+</zk>

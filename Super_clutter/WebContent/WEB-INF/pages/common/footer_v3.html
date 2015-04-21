@@ -1,0 +1,85 @@
+	<div class="lv-toast lv-toast-success" style="display:none;">
+		<div class="lv-toast-div"><img src="${prefix_pic_url!}/img/smile-grey.png"></div>
+	    <p></p>
+	</div>
+	<div class="lv-toast lv-toast-fail" style="display:none;">
+		<div class="lv-toast-div"><img src="${prefix_pic_url!}/img/sad-big.png"></div>
+	    <p></p>
+	</div>
+	<div class="lv-toast-loading" style="display:none;"><img style="width:32px;" src="${prefix_pic_url!}/img/3.gif"></div>
+	
+	<footer>
+		<#if hostName?? && hostName=="m.lvmama.com">
+		<section class="footer_login">
+		    <#if user??>
+				<a href="http://${hostName}/user/" class='footer_login2'>
+					<#if user.nickName?? && user.nickName !="">
+		              ${user.nickName!}
+		            <#else>
+		              ${user.userName!}
+		            </#if>
+				
+				</a>
+				<a href="javascript:log_out();" >退出</a> 
+			<#else>
+				<span><a href="${request.contextPath!}/reg.htm">免费注册</a></span>
+				<span><a href="${request.contextPath!}/login.htm">登录</a></span> 
+			</#if>
+            <a href="#" class="back_top">TOP</a>
+        </section>
+        </#if>
+        <article>
+            <p><a href="${request.contextPath!}/wap_to_lvmama.htm">电脑版</a><#if hostName?? && hostName=="m.lvmama.com"><a href="http://itunes.apple.com/cn/app/id443926246?mt=8" target="_blank">iPhone版下载</a><a href="http://m.lvmama.com/rewrite/d.php?Ch=1" target="_blank">Android版本下载</a></#if></p>
+            <p><a href="http://${hostName}/channel/about/about_us/">关于我们</a><a href="${request.contextPath!}/aboutus/contact_us.htm">联系我们</a><a href="http://${hostName}/channel/about/suggestion/">意见反馈</a><a href="http://${hostName}">首页</a></p>
+            <p>Copyright ©2014 lvmama.com </p>
+            <p><a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow" hidefocus="false">沪ICP备13011172号-3</a></p>
+        </article>
+	</footer>
+	
+	<!--电话弹出层 end-->
+	<div class='model'></div>
+	<script type="text/javascript" src="http://pic.lvmama.com/js/common/losc.js" charset="utf-8"></script> 
+	<script type="text/javascript">
+	<!--
+	    try {
+	    	$(".lv-toast-loading").hide();
+	    }catch(e){
+	    	
+	    }
+	    
+	  //注销
+		function log_out() {
+			window.localStorage.removeItem("loginMsg");
+			$.getJSON("http://login.lvmama.com/nsso/mobileAjax/logout.do?jsoncallback=?",function(data) {
+				// 微信相关
+	        	var c_url = window.location.href;
+	        	if(null != c_url && c_url.indexOf("wx_auto_login=true") != -1) {
+	        		c_url = c_url.replace("wx_auto_login=true","wx_auto_login=false");
+	        		window.location.href = c_url;
+	        	} else {
+	        		window.location.reload(true);
+	        	}
+			}); 
+		}
+	//-->
+	</script>
+
+	<script src="${request.contextPath!}/js/moudle_v3.js?_version=20130826"></script>
+	
+	<div class="modal" _modal=''></div>
+	<div _popup='' class="popup_wrap">
+	    <section class="popup find_popup">
+	        <header>提示信息</header>
+	        <article>
+	            <p>
+	                提示信息
+	            </p>
+	        </article>
+	        <footer>
+	            <a href="javascript:void(0);" class="ic_yellow" _disappear_cancel="">取消</a><a href="javascript:void(0);" class="ic_roseo" _disappear=''>确定</a>
+	        </footer>
+	    </section>
+	</div>
+	
+	
+	

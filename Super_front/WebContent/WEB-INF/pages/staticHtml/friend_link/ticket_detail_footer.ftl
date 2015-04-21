@@ -1,0 +1,20 @@
+<div class="fl">
+<p><strong>推荐链接：</strong><span> 
+<a href="http://www.lvmama.com/dest/xingqiba" target="_blank">上海星期8小镇</a>	<a href="http://www.lvmama.com/dest/shanghaizhiwuyuan" target="_blank">上海植物园</a>	<a href="http://www.lvmama.com/dest/shaolinsifengjingmingshengqu" target="_blank">少林寺</a>
+<a href="http://www.lvmama.com/dest/shenzhenhuanlegu" target="_blank">深圳欢乐谷</a>	<a href="http://www.lvmama.com/dest/shijiezhichuang" target="_blank">深圳世界之窗</a>	<a href="http://www.lvmama.com/dest/shennongshan" target="_blank">神农山</a>	<a href="http://www.lvmama.com/dest/shengzhou" target="_blank">嵊州</a>
+<a href="http://www.lvmama.com/dest/shijingshan" target="_blank">石景山</a>	<a href="http://www.lvmama.com/dest/shuangxizhuhai" target="_blank">双溪竹海</a>	<a href="http://www.lvmama.com/dest/shuilifang" target="_blank">水立方</a>	<a href="http://www.lvmama.com/dest/shunjing" target="_blank">顺景温泉</a>	<a href="http://www.lvmama.com/dest/songshanfengjingqu" target="_blank">嵩山</a>
+<a href="http://www.lvmama.com/dest/suzhouleyuan" target="_blank">苏州乐园</a>	<a href="http://www.lvmama.com/dest/taihu" target="_blank">太湖</a>	<a href="http://www.lvmama.com/dest/tangchi" target="_blank">汤池温泉</a>
+<a href="http://www.lvmama.com/dest/tiananmen" target="_blank">天安门</a>	<a href="http://www.lvmama.com/dest/tianchi" target="_blank">天池</a>	<a href="http://www.lvmama.com/dest/qinhuandaotianmenshan" target="_blank">天门山</a>	<a href="http://www.lvmama.com/dest/tianmu" target="_blank">天目大峡谷</a>
+<a href="http://www.lvmama.com/dest/bingchuanshizhai" target="_blank">冰川石寨</a>	<a href="http://www.lvmama.com/dest/tianmuxipiaoliu" target="_blank">天目溪漂流</a>	<a href="http://www.lvmama.com/dest/taizhoutiantaishan" target="_blank">天台山</a>	<a href="http://www.lvmama.com/dest/yinkeng" target="_blank">天下银坑</a>
+<a href="http://www.lvmama.com/dest/tongtianfeipu" target="_blank">通天飞瀑</a>	<a href="http://www.lvmama.com/dest/tongliguzhen" target="_blank">同里</a>	<a href="http://www.lvmama.com/dest/wendushuicheng" target="_blank">温都水城</a>	<a href="http://www.lvmama.com/dest/wenzhoudongwuyuan" target="_blank">温州动物园</a>
+<a href="http://www.lvmama.com/dest/wenzhouleyuan" target="_blank">温州乐园</a>	<a href="http://www.lvmama.com/dest/wenzhounanxijiang" target="_blank">楠溪江</a>	<a href="http://www.lvmama.com/dest/xilingxueshan" target="_blank">西岭雪山</a>	<a href="http://www.lvmama.com/dest/xitang" target="_blank">西塘</a>
+<a href="http://www.lvmama.com/dest/linantianmushan" target="_blank">西天目山</a>	<a href="http://www.lvmama.com/dest/xixishidi" target="_blank">西溪湿地</a>	<a href="http://www.lvmama.com/dest/xianningwenquan" target="_blank">咸宁温泉</a>	<a href="http://www.lvmama.com/dest/hkdishini" target="_blank">迪士尼乐园</a>
+<a href="http://www.lvmama.com/dest/xintiandi" target="_blank">新天地</a>	<a href="http://www.lvmama.com/dest/yixingzhuhai" target="_blank">宜兴竹海</a>	<a href="http://www.lvmama.com/dest/yiheyuan" target="_blank">颐和园</a>	<a href="http://www.lvmama.com/dest/yishangwenquan" target="_blank">颐尚温泉</a>
+<a href="http://www.lvmama.com/dest/yinxiangxihu" target="_blank">印象西湖</a>	<a href="http://www.lvmama.com/dest/changfenggongyuan" target="_blank">长风公园</a>	<a href="http://www.lvmama.com/dest/changlongdamaxi" target="_blank">大马戏</a>	<a href="http://www.lvmama.com/dest/changlonghuanleshijie" target="_blank">长隆欢乐世界</a>
+<a href="http://www.lvmama.com/dest/changlongshuishangleyuan" target="_blank">长隆水上乐园</a>	<a href="http://www.lvmama.com/dest/zhedongdaxiagu" target="_blank">浙东大峡谷</a>
+<a href="http://www.lvmama.com/dest/zhexidaxiagu" target="_blank">浙西大峡谷</a>	<a href="http://www.lvmama.com/dest/zhongnanbaicaoyuan" target="_blank">中南百草原</a>	<a href="http://www.lvmama.com/dest/zhujiajian" target="_blank">朱家尖</a>	<a href="http://www.lvmama.com/dest/zhujiajiao" target="_blank">朱家角</a>
+<a href="http://www.lvmama.com/dest/baguacun" target="_blank">诸葛八卦村</a>	<a href="http://www.lvmama.com/dest/zhuozhengyuan" target="_blank">拙政园</a>
+<a href="http://www.lvmama.com/dest/shangougou" target="_blank">山沟沟</a>	<a href="http://www.lvmama.com/dest/shanghaihaiyangshuizuguan" target="_blank">上海海洋水族馆</a>
+</span>
+</p>
+</div>

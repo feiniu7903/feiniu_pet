@@ -1,0 +1,101 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_refundApply_detail"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_refundApply_detail" title="退款处理" border="normal"
+		apply="com.lvmama.back.web.ord.refundMent.OrdRefundApplyDetailAction">
+		
+		<label id="refundmentId" value="@{saction.refundmentId}" visible="false" />
+		<listbox id="ordItemMetaListbox" mold="paging">
+			<listhead>
+				<listheader label="采购产品ID" width="7%" />
+				<listheader label="采购产品名称" width="12%" />
+				<listheader label="供应商" width="11%" />
+				<listheader label="结算单价" width="6%" />
+				<listheader label="结算状态" width="6%" />
+				<listheader label="" width="32%" />
+				<listheader label="备注" width="14%" />
+				<listheader label="" />
+			</listhead>
+			<listitem height="25px" forEach="${saction.ordOrderItemMetaList}">
+				<listcell>
+					<label value="${each.metaProductId}" />
+					<label value="${each.orderItemMetaId}" visible="false" />
+					<label value="${each.refundmentId}" visible="false" />
+				</listcell>
+				<listcell>
+					<label value="${each.productName}" />
+				</listcell>
+				<listcell>
+					<label value="${each.supplierName}" />
+				</listcell>
+				<listcell>
+					<label value="${each.actualSettlementPriceYuan}" />
+				</listcell>
+				<listcell>
+					<label value="${each.settlementStatusStr}" />
+				</listcell>
+				<listcell> 
+					<!-- 补偿时选中供应商承担金额 -->
+					<listbox mold="select" if='${saction.refundType!="ORDER_REFUNDED"}'>
+						<listitem label="供应商承担金额" value="SUPPLIER_BEAR" selected="true"/>
+					</listbox> 
+					<!-- 订单退款 -->
+					<listbox mold="select" if='${saction.refundType=="ORDER_REFUNDED"}' id="${each.orderItemMetaId}" onBlur="showLabel(self)">
+						<listitem label="游客损失" value="VISITOR_LOSS" selected="false" if="${each.amountType=='SUPPLIER_BEAR'}" />
+						<listitem label="游客损失" value="VISITOR_LOSS" selected="true" if="${each.amountType!='SUPPLIER_BEAR'}" />
+						<listitem label="供应商承担金额" value="SUPPLIER_BEAR" selected="true" if="${each.amountType=='SUPPLIER_BEAR'}" />
+						<listitem label="供应商承担金额" value="SUPPLIER_BEAR" selected="false" if="${each.amountType!='SUPPLIER_BEAR'}" />
+					</listbox> 
+					<zscript language="Java">
+						public void showLabel(self){
+							String val = self.getSelectedItem().getValue();
+							String id = self.getId();
+							if(!val.equals("SUPPLIER_BEAR")){
+								win_refundApply_detail.getFellow(id+"id").visible = true;
+								win_refundApply_detail.getFellow(id+"loss").visible = true;
+							}else{
+								win_refundApply_detail.getFellow(id+"id").visible = false;
+								win_refundApply_detail.getFellow(id+"loss").setValue(null);
+								win_refundApply_detail.getFellow(id+"loss").visible = false;
+							}
+						} 
+					</zscript>
+					<textbox width="50px" value="${each.amountValueYuan}" name="${saction.refundType}" id="lossid${each.orderItemMetaId}" onBlur="setLossValue(self)">
+					</textbox> 
+					<zscript language="Java">
+						public void setLossValue(self){
+							if(self.getName().equals("ORDER_REFUNDED")){
+								String id = self.getId().substring(6);
+								String type1 = win_refundApply_detail.getFellow(id).getSelectedItem().getValue();
+								if(!type1.equals("SUPPLIER_BEAR")){
+									if(null != self.value){
+										win_refundApply_detail.getFellow(id+"loss").setValue(self.value);
+									}
+								}
+							}
+						} 
+					</zscript>
+					<label id="${each.orderItemMetaId}id" value="实际损失：" visible="${each.flag}" />
+					<textbox id="${each.orderItemMetaId}loss" visible="${each.flag}" width="50px" value="${each.actualLossYuan}"></textbox> 
+					
+					<label value="${each.actualSettlementPrice}" visible="false" />
+					<label value="${each.productQuantity}" visible="false" />
+					<label value="${each.quantity}" visible="false" />
+				</listcell>
+				<listcell> 
+					<textbox width="120px" value="${each.memo}"></textbox> 
+				</listcell>
+				<listcell> 
+					<button width="50px" label="确认" onClick='saction.doRefundMent(self.getAttributes());'>
+						<custom-attributes orderItemMetaId="${each.orderItemMetaId}" />
+					</button>
+					<a style="color:blue" label="操作日志" onClick='saction.showWindow("/ord/refundMent/refundmentItemLogs.zul",self.getAttributes());'>
+					     <custom-attributes refundmentItemId="${each.refundmentItemId}" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+	</window>
+</zk>

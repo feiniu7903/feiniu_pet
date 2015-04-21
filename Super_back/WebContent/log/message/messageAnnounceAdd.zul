@@ -1,0 +1,47 @@
+<?page title="list PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_message_add"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_message_add" title="新增公告" mode="embedded"
+		apply="com.lvmama.back.web.log.MessageAnnounceAddAction">
+		<grid>
+			<columns>
+				<column width="100px"></column>
+				<column ></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>公告内容：<label width="150px" value="[*]" style="color:red"/></hbox>
+					<hbox>
+						<textbox id="terminalContent" value="@{saction.comAnnouncement.content}" rows="6" width="600px" maxlength="1000" >
+						</textbox>	
+					</hbox>
+				</row>
+				<row>
+					<hbox>通知时间：<label width="150px" value="[*]" style="color:red"/></hbox>
+					<hbox>
+						<datebox id="beginDate"
+							value="@{saction.comAnnouncement.expiredTime}"
+							cols="20" format="yyyy-MM-dd HH:mm">
+						</datebox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>发布对象：<label width="150px" value="[*]" style="color:red"/></hbox>
+					<hbox>
+					<checkbox forEach="${saction.channelList}" name="${each.orgId}" label="${each.departmentName}"  onCheck="saction.checkGroup(self.name, self.checked);"/>
+					</hbox>
+				</row>
+				<row spans="2" align="center">
+					<hbox >
+						<button label="保存" id="search" width="100px"
+							onClick="saction.addMsgReceiver();" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>
+
+
+

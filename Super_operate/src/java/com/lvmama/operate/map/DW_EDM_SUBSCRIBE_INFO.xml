@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EDM_SUBSCRIBE_INFO" >
+	<typeAlias alias="edmInfo" type="com.lvmama.comm.pet.po.edm.EdmSubscribeInfo"/>
+	<resultMap id="baseInfo" class="com.lvmama.comm.pet.po.edm.EdmSubscribeInfo">
+		<result column="ID" 			property="id" />
+		<result column="TYPE" 			property="type" />
+		<result column="CANCEL_DATE" 	property="cancelDate" />
+		<result column="CANCEL_REMARK" 	property="cancelRemark" />
+	</resultMap>
+	<resultMap id="edmSubscribeInfo"
+		class="com.lvmama.comm.pet.po.edm.EdmSubscribeInfo" extends="baseInfo">
+		<result column="EMAIL" 			property="email" />
+	</resultMap>
+	<resultMap id="edmInfo"
+		class="com.lvmama.comm.pet.po.edm.EdmSubscribeInfo" extends="baseInfo">
+		<result column="EDM_USER_ID" 			property="edmUserId" />
+	</resultMap>
+	<sql id="subQueryId">
+	SELECT A.*, ROWNUM RN
+	  FROM (SELECT *
+	          FROM (
+				SELECT I.ID,
+				       E.EMAIL,
+				       C.ITEM_NAME TYPE,
+				       I.CANCEL_DATE,
+				       I.CANCEL_REMARK,
+				       ROW_NUMBER() OVER(PARTITION BY E.EMAIL, I.TYPE ORDER BY I.CANCEL_DATE DESC) ERN
+				  FROM LVMM_LAND.S_EDM_SUBSCRIBE_INFO I,
+				       LVMM_LAND.S_EDM_SUBSCRIBE      E,
+				       LVMM_LAND.S_COM_CODE          C
+				 WHERE I.EDM_USER_ID = E.ID
+				   AND I.TYPE = C.ITEM_CODE
+		 <dynamic>
+		 	<isNotNull prepend=" AND " property="isValid"> I.IS_VALID =#isValid# </isNotNull>
+		 	<isNotNull prepend=" AND " property="type"> I.TYPE = #type# </isNotNull>
+		 	<isNotNull prepend=" AND " property="edmUserId"> I.EDM_USER_ID = #edmUserId# </isNotNull>
+		 	<isNotNull prepend=" AND " property="email"> E.EMAIL LIKE '%$email$%' </isNotNull>
+		 	<isNotNull prepend=" AND " property="beginCancelDate"> I.CANCEL_DATE &gt;= TRUNC(#beginCancelDate#)</isNotNull>
+		 	<isNotNull prepend=" AND " property="endCancelDate">   I.CANCEL_DATE &lt;= TRUNC(#endCancelDate#+1)</isNotNull>
+		 </dynamic>
+		ORDER BY CANCEL_DATE DESC
+		) A
+     WHERE ERN = 1) A
+	</sql>
+	<select id="query"  parameterClass="java.util.Map" resultMap="edmSubscribeInfo">
+		SELECT * 
+		  FROM (<include refid="subQueryId"/>) A
+		 <dynamic prepend=" WHERE ">
+		 	<isNotNull prepend=" AND " property="_endRow">A.RN &lt;= #_endRow# </isNotNull>
+		 	<isNotNull prepend=" AND " property="_startRow">A.RN &gt;= #_startRow# </isNotNull>
+		 </dynamic>
+	</select>
+	<select id="count" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		SELECT COUNT(*) 
+		  FROM (<include refid="subQueryId"/>) A
+	</select>
+	<select id="searchEdmInfo"  parameterClass="java.util.Map" resultMap="edmInfo">
+		SELECT *
+		  FROM LVMM_LAND.S_EDM_SUBSCRIBE_INFO I
+		 WHERE I.IS_VALID = 'Y'
+		 <dynamic>
+		 <isNotNull prepend=" AND " property="edmUserId"> I.EDM_USER_ID = #edmUserId# </isNotNull>
+		 <isNotNull prepend=" AND " property="email"> 
+		   EXISTS (SELECT 1
+		          FROM LVMM_LAND.S_EDM_SUBSCRIBE S
+		         WHERE S.ID = I.EDM_USER_ID
+		           AND S.EMAIL = LOWER(#email#)) 
+		 </isNotNull>
+		 </dynamic>
+	</select>
+</sqlMap>

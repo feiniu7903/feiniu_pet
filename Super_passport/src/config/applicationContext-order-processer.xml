@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="hotelOrderProcessor" class="com.lvmama.message.HotelOrderProcessor">
+		<property name="hotelOrderService">
+			<ref bean="hotelOrderService" />
+		</property>
+	</bean>
+	
+	<bean id="trainOrderProcessor" class="com.lvmama.message.TrainOrderProcessor">
+		<!-- <property name="metaProductBranchService" ref="metaProductBranchService"/>
+		<property name="orderServiceProxy" ref="orderServiceProxy"/>
+		<property name="orderTrafficService" ref="orderTrafficService"/>
+		<property name="prodTrainService" ref="prodTrainService"/> -->
+		<property name="trainOrderService" ref="trainOrderService"/>
+	</bean>
+	
+	<bean id="sHHolidayOrderProcessor" class="com.lvmama.message.SHHolidayOrderProcessor">
+		<property name="sHHolidayOrderService" ref="sHHolidayOrderService"/>
+	</bean>
+	<bean id="jinJiangOrderProcessor" class="com.lvmama.message.JinJiangOrderProcessor">
+		<property name="jinjiangOrderService" ref="jinjiangOrderService"/>
+	</bean>
+	<!-- 消息接收 -->
+	<bean id="orderTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName">
+			<value>ActiveMQ.ORDER.${jms_node}</value>
+		</property>
+		<property name="processerList">
+			<list>
+				<ref bean="hotelOrderProcessor" />
+				<ref bean="trainOrderProcessor" />
+				<ref bean="sHHolidayOrderProcessor" />
+				<ref bean="jinJiangOrderProcessor" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 订阅 -->
+	<bean id="orderMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="orderTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+
+	<!-- 消息监听 TOPIC 模式 -->
+	<bean id="orderTopicListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="ORDER_TOPIC" />
+		<property name="messageListener" ref="orderMessageListener" />
+	</bean>
+</beans>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PASS_PRODUCT">
+	<resultMap id="PassProduct_BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassProduct">
+		<result column="PASS_PROD_ID" property="passProdId" />
+		<result column="OBJECT_ID" property="objectId" />
+		<result column="PRODUCT_ID_SUPPLIER" property="productIdSupplier" />
+		<result column="PRODUCT_TYPE_SUPPLIER" property="productTypeSupplier" />
+		<result column="START_DATE" property="startDate" />
+		<result column="END_DATE" property="endDate" />
+		<result column="PROVIDER" property="provider" />
+		<result column="PROVIDER_NAME" property="providerName" />
+		<result column="IS_WEEKEND" property="isWeekend" />
+		<result column="MERCHANT_TYPE" property="merchantType" />
+		<result column="EXT_ID" property="extId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="SCENIC_NAME" property="scenicName" />
+	</resultMap>
+	
+	<select id="selectPassProduct"
+		resultMap="PassProduct_BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from pass_product p where p.object_id=#objectId# 
+		 <isNotEmpty prepend=" " property="visitDate">
+			and to_date(#visitDate#,'yyyy-mm-dd')<![CDATA[>=]]>  p.start_date 
+			and to_date(#visitDate#,'yyyy-mm-dd')<![CDATA[<=]]> p.end_date 
+		</isNotEmpty>
+		 <isNotEmpty prepend=" AND" property="isWeekend">
+			IS_WEEKEND = #isWeekend#
+		</isNotEmpty>
+		<isNotEmpty prepend=" AND" property="merchantType">
+			MERCHANT_TYPE = #merchantType#	
+		</isNotEmpty>
+		and p.provider=#provider# 
+
+	</select>
+	
+	<select id="queryPassProduct"  parameterClass="java.util.HashMap" resultMap="PassProduct_BaseResultMap">
+		 SELECT * 
+		  FROM (SELECT RID
+		          FROM (SELECT A.RID, ROWNUM RN
+		                  FROM (SELECT ROWID RID FROM pass_product
+		                         <dynamic prepend="WHERE">
+						      	    <isNotEmpty property="objectId" prepend="AND"> OBJECT_ID=#objectId# </isNotEmpty>
+						      	    <isNotEmpty property="productIdSupplier" prepend="AND"> PRODUCT_ID_SUPPLIER=#productIdSupplier# </isNotEmpty>
+						      	    <isNotEmpty property="productTypeSupplier" prepend="AND"> PRODUCT_TYPE_SUPPLIER=#productTypeSupplier# </isNotEmpty>
+						      	    <isNotEmpty prepend=" and" property="startDate"> START_DATE>=#startDate# </isNotEmpty>
+									<isNotEmpty prepend=" and" property="endDate"> END_DATE &lt;#endDate#+1 </isNotEmpty>
+						      	    <isNotEmpty property="providerName" prepend="AND"> PROVIDER_NAME=#providerName# </isNotEmpty>
+						      	    <isNotEmpty property="isWeekend" prepend="AND"> IS_WEEKEND=#isWeekend# </isNotEmpty>
+						      	</dynamic>
+		                         ORDER BY pass_prod_id DESC) A
+		                 WHERE rownum &lt;= #_endRow#)
+		         WHERE RN &gt;= #_startRow#) T,
+		       pass_product V
+		 WHERE V.ROWID = T.RID
+	</select>
+	
+    <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.pass.PassProduct" >
+    <selectKey resultClass="java.lang.Long" keyProperty="passProdId" >
+      select PASS_PRODUCT_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PASS_PRODUCT
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="passProdId" >
+        PASS_PROD_ID
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        OBJECT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="productIdSupplier" >
+        PRODUCT_ID_SUPPLIER
+      </isNotNull>
+      <isNotNull prepend="," property="productTypeSupplier" >
+        PRODUCT_TYPE_SUPPLIER
+      </isNotNull>
+       <isNotNull prepend="," property="startDate" >
+        START_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="endDate" >
+        END_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="provider" >
+        PROVIDER
+      </isNotNull>
+      <isNotNull prepend="," property="providerName" >
+        PROVIDER_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="isWeekend" >
+        IS_WEEKEND
+      </isNotNull>
+      <isNotNull prepend="," property="merchantType" >
+        MERCHANT_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="extId" >
+        EXT_ID
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+       <isNotNull prepend="," property="passProdId" >
+        #passProdId:LONG# 
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        #objectId:LONG# 
+      </isNotNull>
+      <isNotNull prepend="," property="productIdSupplier" >
+       #productIdSupplier:VARCHAR# 
+      </isNotNull>
+      <isNotNull prepend="," property="productTypeSupplier" >
+        #productTypeSupplier:VARCHAR#
+      </isNotNull>
+       <isNotNull prepend="," property="startDate" >
+        #startDate:DATE#
+      </isNotNull>
+      <isNotNull prepend="," property="endDate" >
+         #endDate:DATE#
+      </isNotNull>
+      <isNotNull prepend="," property="provider" >
+         #provider:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="providerName" >
+         #providerName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="isWeekend" >
+         #isWeekend#
+      </isNotNull>
+      <isNotNull prepend="," property="merchantType" >
+         #merchantType#
+      </isNotNull>
+      <isNotNull prepend="," property="extId" >
+         #extId#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.pass.PassProduct" >
+    update PASS_PRODUCT
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="objectId" >
+        OBJECT_ID=#objectId:LONG# 
+      </isNotNull>
+      <isNotNull prepend="," property="productIdSupplier" >
+       PRODUCT_ID_SUPPLIER=#productIdSupplier:VARCHAR# 
+      </isNotNull>
+      <isNotNull prepend="," property="productTypeSupplier" >
+       PRODUCT_TYPE_SUPPLIER=#productTypeSupplier:VARCHAR# 
+      </isNotNull>
+      <isNotNull prepend="," property="startDate" >
+       	START_DATE=#startDate:DATE#
+      </isNotNull>
+       <isNotNull prepend="," property="endDate" >
+        END_DATE=#endDate:DATE#
+      </isNotNull>
+      <isNotNull prepend="," property="provider" >
+        PROVIDER=#provider:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="providerName" >
+        PROVIDER_NAME=#providerName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="isWeekend" >
+        IS_WEEKEND=#isWeekend:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="merchantType" >
+        MERCHANT_TYPE=#merchantType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="extId" >
+        EXT_ID=#extId:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where PASS_PROD_ID = #passProdId:LONG#
+  </update>
+  
+  	<delete id="deletePassProduct" parameterClass="Long">
+	   delete from PASS_Product where PASS_PROD_ID = #passProdId:LONG#
+	</delete>
+
+	<select id="selectRowCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+        select count(*) from PASS_Product  where 1=1
+			<isNotEmpty prepend=" and" property="startDate">
+				START_DATE>=#startDate#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="endDate">
+				END_DATE &lt;#endDate#+1
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="objectId">
+				OBJECT_ID=#objectId#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="productIdSupplier">
+				PRODUCT_ID_SUPPLIER =#productIdSupplier#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="productTypeSupplier">
+				PRODUCT_TYPE_SUPPLIER=#productTypeSupplier#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="providerName">
+				PROVIDER_NAME=#providerName#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="isWeekend">
+				IS_WEEKEND=#isWeekend#
+			</isNotEmpty>
+    </select>
+
+</sqlMap>

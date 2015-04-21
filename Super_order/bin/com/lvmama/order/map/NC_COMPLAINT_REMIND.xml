@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="NC_COMPLAINT_REMIND">
+    <resultMap id="NcComplaintRemindResultMap" class="com.lvmama.comm.bee.po.ord.NcComplaintRemind">
+
+        <result column="REMIND_ID" property="remindId"/>
+        <result column="COMPLAINT_ID" property="complaintId"/>
+        <result column="REMIND_TIME" property="remindTime"/>
+        <result column="PROCESS_INFO" property="processInfo"/>
+        <result column="OPERATOR" property="operator"/>
+
+    </resultMap>
+
+    <insert id="insertNcComplaintRemind" parameterClass="com.lvmama.comm.bee.po.ord.NcComplaintRemind">
+        <selectKey resultClass="java.lang.Long" keyProperty="remindId">
+            select NC_COMPLAINT_REMIND_ID_SEQ.nextval as id from DUAL
+        </selectKey>
+        insert into NC_COMPLAINT_REMIND (REMIND_ID,COMPLAINT_ID ,REMIND_TIME,PROCESS_INFO,OPERATOR)
+        values (
+        #remindId#,#complaintId#,#remindTime#,#processInfo#,#operator#)
+    </insert>
+
+    <delete id="deleteNcComplaintRemind" parameterClass="java.lang.Long">
+        DELETE FROM NC_COMPLAINT_REMIND
+        WHERE REMIND_ID = #remindId#
+    </delete>
+
+    <update id="updateNcComplaintRemind" parameterClass="com.lvmama.comm.bee.po.ord.NcComplaintRemind">
+        update NC_COMPLAINT_REMIND
+        <dynamic prepend="SET">
+            <isNotEmpty prepend="," property="remindTime">REMIND_TIME=#remindTime#</isNotEmpty>
+            <isNotEmpty prepend="," property="processInfo">PROCESS_INFO=#processInfo#</isNotEmpty>
+            <isNotEmpty prepend="," property="operator">OPERATOR=#operator#</isNotEmpty>
+        </dynamic>
+
+        where REMIND_ID = #remindId#
+    </update>
+
+    <select id="selectNcComplaintRemindByRemindId" resultMap="NcComplaintRemindResultMap" parameterClass="java.lang.Long">
+        SELECT
+            REMIND_ID,
+            COMPLAINT_ID,
+            REMIND_TIME,
+            PROCESS_INFO,
+                OPERATOR
+        FROM NC_COMPLAINT_REMIND
+        WHERE REMIND_ID = #remindId#
+
+    </select>
+    <select id="selectNcComplaintRemindByComplaintId" resultMap="NcComplaintRemindResultMap" parameterClass="java.lang.Long">
+        SELECT
+            REMIND_ID,
+            COMPLAINT_ID,
+            REMIND_TIME,
+            PROCESS_INFO,
+                OPERATOR
+        FROM NC_COMPLAINT_REMIND
+        WHERE COMPLAINT_ID = #complaintId#
+		order by REMIND_ID desc
+    </select>
+    <select id="selectNcComplaintRemindList" resultMap="NcComplaintRemindResultMap" parameterClass="java.util.Map">
+        select REMIND_ID,
+        COMPLAINT_ID,
+        REMIND_TIME,
+        PROCESS_INFO,
+        OPERATOR
+        from NC_COMPLAINT_REMIND
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend=" AND " property="category">REMIND_ID = #remindId#</isNotEmpty>
+            <isNotEmpty prepend=" AND " property="complaintId">COMPLAINT_ID = #complaintId#</isNotEmpty>
+        </dynamic>
+    </select>
+
+</sqlMap>

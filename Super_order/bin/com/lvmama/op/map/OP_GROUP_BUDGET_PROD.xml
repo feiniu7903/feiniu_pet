@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="OP_GROUP_BUDGET_PORD" >
+	<resultMap class="com.lvmama.comm.bee.po.op.OpGroupBudgetProd" id="BaseOpGroupBudgetProd">
+		<result property="itemId" column="ITEM_ID"/>
+		<result property="costsItem" column="COSTS_ITEM"/>
+		<result property="prdBranchName" column="branch_type"/>
+		<result property="prdBranchId" column="PRD_BRANCH_ID"/>
+		<result property="bgCosts" column="BG_COSTS"/>
+		<result property="quantity" column="QUANTITY"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="exchangeRate" column="EXCHANGE_RATE"/>
+		<result property="subtotalCosts" column="SUBTOTAL_COSTS"/>
+		<result property="subtotalCostsFc" column="SUBTOTAL_COSTS_FC"/>
+		<result property="supplierId" column="SUPPLIER_ID"/>
+		<result property="supplierName" column="SUPPLIER_NAME"/>
+		<result property="targetId" column="TARGET_ID"/>
+		<result property="targetName" column="TARGET_NAME"/>
+		<result property="paymentType" column="PAYMENT_TYPE"/>
+		<result property="payAmount" column="PAY_AMOUNT"/>
+		<result property="payStatus" column="PAY_STATUS"/>
+		<result property="remark" column="REMARK"/>
+		<result property="status" column="PAY_STATUS"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createtime" column="CREATETIME"/>
+		<result property="travelGroupCode" column="TRAVE_GROUP_CODE"/>
+		<result property="budgetId" column="BUDGET_ID"/>
+	</resultMap>
+	
+	<insert id="insert">
+		<selectKey keyProperty="itemId" resultClass="java.lang.Long">
+			SELECT OP_GROUP_BUDGET_PROD_ID_SEQ.Nextval from dual
+		</selectKey>
+		INSERT INTO OP_GROUP_BUDGET_PORD
+		   (ITEM_ID,
+			COSTS_ITEM,                   
+			branch_type,                  
+			PRD_BRANCH_ID,                
+			BG_COSTS,                     
+			QUANTITY,                     
+			CURRENCY,                     
+			EXCHANGE_RATE,                
+			SUBTOTAL_COSTS,               
+			SUBTOTAL_COSTS_FC,            
+			SUPPLIER_ID,                  
+			SUPPLIER_NAME,                
+			TARGET_ID,                    
+			TARGET_NAME,                  
+			PAYMENT_TYPE,                 
+			PAY_AMOUNT,                   
+			PAY_STATUS,                   
+			REMARK,                       
+			PAY_STATUS,                   
+			CREATOR,                      
+			CREATETIME,                   
+			TRAVE_GROUP_CODE,             
+			BUDGET_ID)
+		VALUES(
+			#itemId#,
+			#costsItem#,
+			#prdBranchName#,
+			#prdBranchId#,
+			#bgCosts#,
+			#quantity#,
+			#currency#,
+			#exchangeRate#,
+			#subtotalCosts#,
+			#subtotalCostsFc#,
+			#supplierId#,
+			#supplierName#,
+			#targetId#,
+			#targetName#,
+			#paymentType#,
+			#payAmount#,
+			#payStatus#,
+			#remark#,
+			#status#,
+			#creator#,
+			#createtime#,
+			#travelGroupCode#,
+			#budgetId#)
+	</insert>
+	
+	<select id="selectGroupBudgetProdListFromOrderByParam" resultMap="BaseOpGroupBudgetProd" parameterClass="java.util.HashMap">
+		select o.product_name,
+		       o.branch_type,
+		       o.settlement_price BG_COSTS,
+		       sum(o.quantity * o.actual_settlement_price) SUBTOTAL_COSTS_FC,
+		       p.supplier_id,
+		       p.supplier_name,
+		       st.target_id,
+		       st.name target_name,
+		       st.payment_type
+		  from ord_order_item_meta   o,
+		       ord_order             d,
+		       SUP_SETTLEMENT_TARGET st,
+		       meta_settlement       s,
+		       sup_supplier          p
+		 where o.order_id = d.order_id
+		   and o.meta_product_id = s.meta_product_id
+		   and s.target_id = st.target_id
+		   and st.supplier_id = p.supplier_id
+		   and d.travel_group_code = #travelGroupCode#
+		 group by o.product_name,
+		          o.branch_type,
+		          o.settlement_price,
+		          p.supplier_id,
+		          p.supplier_name,
+		          st.target_id,
+		          st.name,
+		          st.payment_type;
+	</select>
+</sqlMap>

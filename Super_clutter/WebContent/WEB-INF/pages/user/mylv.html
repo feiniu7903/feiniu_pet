@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>我的驴妈妈</title>
+<#include "../common/define.html">
+<!-- 一下两个JS 百度用 -->
+<script type="text/javascript" name="baidu-tc-cerfication" src="http://apps.bdimg.com/cloudaapi/lightapp.js#70e91d9156558b74286c45bf640cff9e"></script>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/globe.js"></script>
+<script src="${request.contextPath}/js/baidu_login.js"></script>
+</head>
+ 
+<body>
+<input type="hidden" value="http://qing.lvmama.com" id="callUrlBaidu" name="callUrlBaidu">
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_skip('http://${hostName}');"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">我的驴妈妈</div>
+  <#if user??>
+ 	 <div class="lv-position lv-fontsize-15"><a href="javascript:void(0);" onclick="pop();">退出</a></div>
+  <#else>
+  	<#if hostName?? && hostName=="m.lvmama.com">
+	  	 <div class="lv-position lv-fontsize-15"><a href="javascript:void(0);" onclick="union_skip('/clutter/reg.htm');">注册</a></div>
+  	</#if>
+  </#if>
+</div>
+<div class="lv-wrapper lv-media-width lv-banner-mylvbg clear">
+  <div class="lv-wrapper-container clear">
+     
+          <#if user??>
+          <div class="lv-user-photobg lv-pull-left">
+		       <#if  user.imageUrl??>
+		           <#if user.imageUrl?index_of("http")!=-1>
+		                 <#if user.imageUrl?index_of("app.qlogo.cn")!=-1>
+		                     <!-- 腾讯登录  -->
+		                     <img class="lv-user-photo"  src="${user.imageUrl!}/50">
+		                 <#else>
+		                     <img class="lv-user-photo"  src="${user.imageUrl!}">
+		                 </#if>
+		           <#else>
+		                 <img class="lv-user-photo" src="${prefixPic!}${user.imageUrl!}">
+		           </#if>
+		       <#else>
+		            <img class="lv-user-photo" src="${defaultPic!}">
+		       </#if>
+		    </div>
+	       <#else>	       	
+	          <!--<div class="lv-user-photobg lv-pull-left"> <img class="lv-user-photo" src="${defaultPic!}"> </div>-->
+	       </#if>     
+      <#if !user??>
+        <div class="no_login_con">
+		    <div class="no_login1">Hi 欢迎来到驴妈妈！</div>
+		    <#if hostName?? && hostName=="m.lvmama.com">
+		        <div class="no_login"><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/login.htm');">点击登录</a></div>
+		    <#else>
+		    	<div class="no_login"><a href="javascript:void(0);" onclick="baiduMyOrder();">点击登录</a></div>
+		    </#if>
+         </div>
+      </#if>
+     <#if user??>
+      <div class="lv-pull-left lv-fontsize-18 lv-welcome-panel2" style="color:#ffffff; ">
+         <span style="height: 60px; line-height: 30px; display: table-cell; vertical-align: middle; padding-left: 5px; overflow: hidden;">
+      	   <#if user.nickName?? && user.nickName !="">
+              ${user.nickName!}
+          <#else>
+              ${user.userName!}
+          </#if>
+      	</span>
+      </div>
+       <#if user??>
+         <div class="integral"><a href="javascript:void(0);">${userPoint!}积分</a></div>
+       </#if>
+     </#if>
+  </div>
+</div>
+<div class="lv-wrapper lv-media-width">
+  <ul class="my_lv">
+    	<#if hostName?? && hostName=="m.lvmama.com">
+    	<li><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/order/myorder.htm');"><span class="ic_my4"></span><em>我的门票和度假订单</em><img src="${prefix_pic_url!}/img/next.png" /></a></li>
+    	<li><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/order/hotel_order_list.htm?pageIndex=1&pageSize=5');"><span class="ic_my6"></span><em>我的酒店订单</em><img src="${prefix_pic_url!}/img/next.png" /></a></li>
+    	<li><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/user/mycollect.htm');"><span class="ic_my3"></span><em>我的收藏</em><img src="${prefix_pic_url!}/img/next.png" /></a></li>
+    	<li><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/user/envaluate.htm');">
+    	<span class="ic_my2"></span><em>我的点评</em>
+    	 <#if needCmtAmout?? && needCmtAmout &gt; 0>
+    	    <span class="ic_enval"><i>${needCmtAmout! }</i></span>
+    	 </#if>
+    	<img src="${prefix_pic_url!}/img/next.png" /></a></li>
+    	<li><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/user/myconpon.htm');"><span class="ic_my1"></span><em>优惠券</em><img src="${prefix_pic_url!}/img/next.png" /></a></li>
+        <li><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/user/myBonus.htm');"><span class="ic_my5"></span><em>奖金账户</em><img src="http://pic.lvmama.com/img/mobile/touch/img/next.png" /></a></li>
+        <#else>
+    	<li><a href="javascript:void(0);" onclick="baiduMyOrder();"><span class="ic_my4"></span><em>我的门票和度假订单</em><img src="${prefix_pic_url!}/img/next.png" /></a></li>
+        </#if>
+    </ul>
+</div>
+	<script src="${request.contextPath}/jquery.mobile/jquery.cookie.js"></script>
+	<script type="text/javascript">
+	//注销弹框
+	function pop() {
+		popupModal(true, "您是否要退出登录", null, 0,false);
+		$('.ic_roseo').click(function(){
+			//注销事件
+			logout();
+		});
+		$('.ic_yellow').click(function(){
+			//取消事件
+			popupModal(false, '', null, 0,false);
+		});
+	}
+	//注销
+	function logout() {
+			window.localStorage.removeItem("loginMsg");
+			//$.cookie('mb_u', "", {expires:30, path: '/', secure: false}); // 用户名
+			$.cookie('mb_p', "", {expires:30, path: '/', secure: false}); //
+			$.getJSON("${nssoUrl!}/mobileAjax/logout.do?jsoncallback=?",function(data) {
+				if(data.success) {
+					window.location.href="http://${hostName}/user/";
+				} else {
+					lvToast(false,data.errorText,LT_LOADING_CLOSE);
+				}
+			}); 
+			//取消事件
+			popupModal(false, '', null, 0,false);
+	}
+	
+</script>
+<!-- footer -->
+<#include "../common/footer.html"/>
+</body>
+</html>

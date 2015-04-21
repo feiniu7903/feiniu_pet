@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="NC_COMPLAINT">
+    <resultMap id="NcComplaintResultMap" class="com.lvmama.comm.bee.po.ord.NcComplaint">
+        <result column="COMPLAINT_ID" property="complaintId"/>
+        <result column="USER_NAME" property="userName"/>
+        <result column="GENDER" property="gender"/>
+        <result column="COMPLAINT_DATE" property="complaintDate"/>
+        <result column="START_PROCESS_TIME" property="startProcessTime"/>
+        <result column="CLOSE_TIME" property="closeTime"/>
+        <result column="COMPLETION_TIME" property="completionTime"/>
+        <result column="RELATED_COMPLAINT" property="relatedComplaint"/>
+        <result column="REPEATED_COMPLAINT" property="repeatedComplaint"/>
+        <result column="CONTACT" property="contact"/>
+        <result column="CONTACT_MOBILE" property="contactMobile"/>
+        <result column="IDENTITY" property="identity"/>
+        <result column="REPLY_AGING" property="replyAging"/>
+        <result column="URGENT" property="urgent"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="ENTRY_PEOPLE" property="entryPeople"/>
+        <result column="UPGRADE" property="upgrade"/>
+        <result column="SOURCE" property="source"/>
+        <result column="CURRENT_PROCESS_PEOPLE" property="currentProcessPeople"/>
+        <result column="ORDER_ID" property="orderId"/>
+        <result column="PRODUCT_ID" property="productId"/>
+        <result column="NUMBER_PEOPLE" property="numberPeople"/>
+        <result column="BELONGS_CENTER" property="belongsCenter"/>
+        <result column="PROCESS_STATUS" property="processStatus"/>
+        <result column="DETAILS_COMPLAINT" property="detailsComplaint"/>
+        <result column="REMARK" property="remark"/>
+        <result column="COMPLAINT_TYPE" property="complaintType"/>
+        <result column="EMAIL" property="email"/>
+        <result column="RELATED_ORDER" property="relatedOrder"/>
+		<result column="SYS_CODE" property="sysCode"/>
+    </resultMap>
+    <resultMap id="ProdProduct" class="com.lvmama.comm.bee.po.prod.ProdProduct">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+	</resultMap>
+	<resultMap id="complaintResult" class="com.lvmama.comm.bee.po.ord.NcComplaintResult">
+		<result column="RESULT_ID" property="resultId"/>
+        <result column="COMPLAINT_ID" property="complaintId"/>
+        <result column="TREATMENT_TYPE" property="treatmentType"/>
+        <result column="INTEGRAL_COMPENSATION" property="integralCompensation"/>
+        <result column="GIFT_COMPENSATION" property="gifiCompendation"/>
+        <result column="GIFTS_WORTH" property="gifisWorth"/>
+        <result column="CASH_COMPENSATION" property="cashCompensation"/>
+        <result column="REMARK" property="remark"/>
+	</resultMap>
+ <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.NcComplaint">
+        <selectKey resultClass="java.lang.Long" keyProperty="complaintId">
+            select NC_COMPLAINT_ID_SEQ.nextval as id from DUAL
+        </selectKey>
+        insert into NC_COMPLAINT (
+         COMPLAINT_ID ,USER_NAME ,GENDER ,COMPLAINT_DATE ,START_PROCESS_TIME ,CLOSE_TIME ,COMPLETION_TIME ,RELATED_COMPLAINT ,
+        REPEATED_COMPLAINT ,CONTACT ,CONTACT_MOBILE ,IDENTITY ,REPLY_AGING ,URGENT ,CREATE_TIME ,ENTRY_PEOPLE ,UPGRADE ,SOURCE ,
+        CURRENT_PROCESS_PEOPLE ,ORDER_ID ,PRODUCT_ID ,
+        NUMBER_PEOPLE ,BELONGS_CENTER ,PROCESS_STATUS ,DETAILS_COMPLAINT ,REMARK,COMPLAINT_TYPE,EMAIL,RELATED_ORDER,SYS_CODE)
+        values (
+        #complaintId#,#userName#,#gender#,#complaintDate#,#startProcessTime#,#closeTime#,#completionTime#,#relatedComplaint#,
+        #repeatedComplaint#,#contact#,#contactMobile#,#identity#,#replyAging#,#urgent#,#createTime#,#entryPeople#,#upgrade#,#source#,
+        #currentProcessPeople#,#orderId#,#productId#,
+        #numberPeople#,#belongsCenter#,#processStatus#,#detailsComplaint#,#remark#,#complaintType#,#email#,#relatedOrder#,#sysCode#)
+    </insert>
+    <update id="updateNcComplaint" parameterClass="com.lvmama.comm.bee.po.ord.NcComplaint">
+        update NC_COMPLAINT
+        <dynamic prepend="SET">
+            <isNotEmpty prepend="," property="userName">USER_NAME=#userName#</isNotEmpty>
+            <isNotEmpty prepend="," property="gender">GENDER=#gender#</isNotEmpty>
+            <isNotEmpty prepend="," property="complaintDate">COMPLAINT_DATE=#complaintDate#</isNotEmpty>
+            <isNotEmpty prepend="," property="startProcessTime">START_PROCESS_TIME=#startProcessTime#</isNotEmpty>
+            <isNotEmpty prepend="," property="closeTime">CLOSE_TIME=#closeTime#</isNotEmpty>
+            <isNotEmpty prepend="," property="completionTime">COMPLETION_TIME=#completionTime#</isNotEmpty>
+            <isNotEmpty prepend="," property="relatedComplaint">RELATED_COMPLAINT=#relatedComplaint#</isNotEmpty>
+            <isNotEmpty prepend="," property="repeatedComplaint">REPEATED_COMPLAINT=#repeatedComplaint#</isNotEmpty>
+            <isNotEmpty prepend="," property="contact">CONTACT=#contact#</isNotEmpty>
+            <isNotEmpty prepend="," property="contactMobile">CONTACT_MOBILE=#contactMobile#</isNotEmpty>
+            <isNotEmpty prepend="," property="identity">IDENTITY=#identity#</isNotEmpty>
+            <isNotEmpty prepend="," property="replyAging">REPLY_AGING=#replyAging#</isNotEmpty>
+            <isNotEmpty prepend="," property="urgent">URGENT=#urgent#</isNotEmpty>
+            <isNotEmpty prepend="," property="createTime">CREATE_TIME=#createTime#</isNotEmpty>
+            <isNotEmpty prepend="," property="entryPeople">ENTRY_PEOPLE=#entryPeople#</isNotEmpty>
+            <isNotEmpty prepend="," property="upgrade">UPGRADE=#upgrade#</isNotEmpty>
+            <isNotEmpty prepend="," property="source">SOURCE=#source#</isNotEmpty>
+            <isNotEmpty prepend="," property="currentProcessPeople">CURRENT_PROCESS_PEOPLE=#currentProcessPeople#</isNotEmpty>
+            <isNotEmpty prepend="," property="orderId">ORDER_ID=#orderId#</isNotEmpty>
+            <isNotEmpty prepend="," property="productId">PRODUCT_ID=#productId#</isNotEmpty>
+            <isNotEmpty prepend="," property="numberPeople">NUMBER_PEOPLE=#numberPeople#</isNotEmpty>
+            <isNotEmpty prepend="," property="belongsCenter">BELONGS_CENTER=#belongsCenter#</isNotEmpty>
+            <isNotEmpty prepend="," property="processStatus">PROCESS_STATUS=#processStatus#</isNotEmpty>
+            <isNotEmpty prepend="," property="detailsComplaint">DETAILS_COMPLAINT=#detailsComplaint#</isNotEmpty>
+            <isNotEmpty prepend="," property="remark">REMARK=#remark#</isNotEmpty>
+            <isNotEmpty prepend="," property="complaintType">COMPLAINT_TYPE=#complaintType#</isNotEmpty>
+            <isNotEmpty prepend="," property="email">EMAIL=#email#</isNotEmpty>
+            <isNotEmpty prepend="," property="relatedOrder">RELATED_ORDER=#relatedOrder#</isNotEmpty>
+            <isNotEmpty prepend="," property="sysCode">SYS_CODE=#sysCode#</isNotEmpty>
+        </dynamic>
+
+        where COMPLAINT_ID = #complaintId#
+    </update>
+    <update id="updateNcComplaintAll" parameterClass="com.lvmama.comm.bee.po.ord.NcComplaint">
+        update NC_COMPLAINT
+        SET
+        USER_NAME=#userName#,
+        GENDER=#gender#,
+        COMPLAINT_DATE=#complaintDate#,
+        START_PROCESS_TIME=#startProcessTime#,
+        CLOSE_TIME=#closeTime#,
+        COMPLETION_TIME=#completionTime#,
+        RELATED_COMPLAINT=#relatedComplaint#,
+        REPEATED_COMPLAINT=#repeatedComplaint#,
+        CONTACT=#contact#,
+        CONTACT_MOBILE=#contactMobile#,
+        IDENTITY=#identity#,
+        REPLY_AGING=#replyAging#,
+        URGENT=#urgent#,
+        CREATE_TIME=#createTime#,
+        ENTRY_PEOPLE=#entryPeople#,
+        UPGRADE=#upgrade#,
+        SOURCE=#source#,
+        CURRENT_PROCESS_PEOPLE=#currentProcessPeople#,
+        ORDER_ID=#orderId#,
+        PRODUCT_ID=#productId#,
+        NUMBER_PEOPLE=#numberPeople#,
+        BELONGS_CENTER=#belongsCenter#,
+        PROCESS_STATUS=#processStatus#,
+        DETAILS_COMPLAINT=#detailsComplaint#,
+        REMARK=#remark#,
+        COMPLAINT_TYPE=#complaintType#,
+        EMAIL=#email#,
+        RELATED_ORDER=#relatedOrder#,
+        SYS_CODE=#sysCode#
+        where COMPLAINT_ID = #complaintId#
+    </update>
+
+    <select id="selectNcComplaintBycomplaintId" resultMap="NcComplaintResultMap" parameterClass="java.lang.Long">
+        select COMPLAINT_ID,
+            USER_NAME,
+            GENDER,
+            COMPLAINT_DATE,
+            START_PROCESS_TIME,
+            CLOSE_TIME,
+            COMPLETION_TIME,
+            RELATED_COMPLAINT,
+            REPEATED_COMPLAINT,
+            CONTACT,
+            CONTACT_MOBILE,
+            IDENTITY,
+            REPLY_AGING,
+            URGENT,
+            CREATE_TIME,
+            ENTRY_PEOPLE,
+            UPGRADE,
+            SOURCE,
+            CURRENT_PROCESS_PEOPLE,
+            ORDER_ID,
+            PRODUCT_ID,
+            NUMBER_PEOPLE,
+            BELONGS_CENTER,
+            PROCESS_STATUS,
+            DETAILS_COMPLAINT,
+            REMARK,
+            COMPLAINT_TYPE,
+            EMAIL,RELATED_ORDER,SYS_CODE
+        from NC_COMPLAINT
+        where  COMPLAINT_ID=#complaintId#
+    </select>
+    
+    <select id="selectComplaintByCondition" resultMap="NcComplaintResultMap">
+       SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+       select distinct NC.* from NC_COMPLAINT NC 
+        <dynamic prepend="where">
+	        <isNotEmpty prepend="and" property="productId">
+				NC.product_id=#productId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="complaintId">
+				NC.COMPLAINT_ID=#complaintId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="complaintDateStart">
+				NC.COMPLAINT_DATE &gt;= #complaintDateStart#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="complaintDateEnd">
+				NC.COMPLAINT_DATE &lt;=#complaintDateEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="startProcessTimeStart">
+				NC.START_PROCESS_TIME &gt;= #startProcessTimeStart#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="startProcessTimeEnd">
+				NC.START_PROCESS_TIME &lt;=#startProcessTimeEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId">
+				NC.ORDER_ID = #orderId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="closeTimeStart">
+				NC.CLOSE_TIME &gt;= #closeTimeStart#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="closeTimeEnd">
+				NC.CLOSE_TIME &lt;=#closeTimeEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="currentProcessPeople">
+				NC.CURRENT_PROCESS_PEOPLE = #currentProcessPeople#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entryPeople">
+				NC.ENTRY_PEOPLE=#entryPeople#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="completionTimeStart">
+				NC.COMPLETION_TIME &gt;= #completionTimeStart#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="completionTimeEnd">
+				NC.COMPLETION_TIME &lt;=#completionTimeEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="userName">
+				NC.USER_NAME = #userName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="contact">
+				NC.CONTACT = #contact#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="contactMobile">
+				NC.CONTACT_MOBILE = #contactMobile#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="source">
+				NC.SOURCE=#source#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="upgrade">
+				NC.UPGRADE = #upgrade#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="upgent">
+				NC.URGENT = #upgent#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="belongsCenter">
+				NC.BELONGS_CENTER = #belongsCenter#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="replyAging">
+				NC.REPLY_AGING = #replyAging#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="complaintType">
+				NC.COMPLAINT_TYPE = #complaintType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="sysCode">
+				NC.SYS_CODE = #sysCode#
+			</isNotEmpty>
+			<!-- 处理状态 -->
+			<isNotEmpty prepend="and" property="processStatus">
+				<iterate property="processStatus" conjunction="," close=")"
+					open="NC.PROCESS_STATUS in (">
+					#processStatus[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="productType">
+				nc.order_id in (
+                select oo.order_id
+                from ord_order oo
+                where oo.order_type=#productType# and oo.order_id=nc.order_id)
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="treatmentType">
+				nc.complaint_id in 
+				(select ncr.complaint_id from nc_complaint_result ncr where ncr.treatment_type=#treatmentType#)
+			</isNotEmpty>
+		</dynamic>
+		order by NC.COMPLAINT_DATE desc 
+		)T <dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow" prepend=""> ROWNUM &lt;=
+				#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=""> ROWNUM1
+				&gt;=#_startRow# </isNotEmpty>
+		</dynamic>
+    </select>
+     <select id="selectComplaintCount" resultClass="long" parameterClass="map">
+        select count(*) from NC_COMPLAINT NC 
+        <dynamic prepend="where">
+	        <isNotEmpty prepend="and" property="productId">
+				NC.product_id=#productId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="complaintId">
+				NC.COMPLAINT_ID=#complaintId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="complaintDateStart">
+				NC.COMPLAINT_DATE &gt;= #complaintDateStart#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="complaintDateEnd">
+				NC.COMPLAINT_DATE &lt;=#complaintDateEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="startProcessTimeStart">
+				NC.START_PROCESS_TIME &gt;= #startProcessTimeStart#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="startProcessTimeEnd">
+				NC.START_PROCESS_TIME &lt;=#startProcessTimeEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId">
+				NC.ORDER_ID = #orderId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="closeTimeStart">
+				NC.CLOSE_TIME &gt;= #closeTimeStart#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="closeTimeEnd">
+				NC.CLOSE_TIME &lt;=#closeTimeEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="currentProcessPeople">
+				NC.CURRENT_PROCESS_PEOPLE = #currentProcessPeople#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entryPeople">
+				NC.ENTRY_PEOPLE=#entryPeople#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="completionTimeStart">
+				NC.COMPLETION_TIME &gt;= #completionTimeStart#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="completionTimeEnd">
+				NC.COMPLETION_TIME &lt;=#completionTimeEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="userName">
+				NC.USER_NAME = #userName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="contact">
+				NC.CONTACT = #contact#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="contactMobile">
+				NC.CONTACT_MOBILE = #contactMobile#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="source">
+				NC.SOURCE=#source#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="upgrade">
+				NC.UPGRADE = #upgrade#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="upgent">
+				NC.URGENT = #upgent#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="belongsCenter">
+				NC.BELONGS_CENTER = #belongsCenter#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="replyAging">
+				NC.REPLY_AGING = #replyAging#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="complaintType">
+				NC.COMPLAINT_TYPE = #complaintType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="sysCode">
+				NC.SYS_CODE = #sysCode#
+			</isNotEmpty>
+			<!-- 处理状态 -->
+			<isNotEmpty prepend="and" property="processStatus">
+				<iterate property="processStatus" conjunction="," close=")"
+					open="NC.PROCESS_STATUS in (">
+					#processStatus[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="productType">
+				nc.order_id in (
+                select oo.order_id
+                from ord_order oo
+                where oo.order_type=#productType# and oo.order_id=nc.order_id)
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="treatmentType">
+				nc.complaint_id in 
+				(select ncr.complaint_id from nc_complaint_result ncr where ncr.treatment_type=#treatmentType#)
+			</isNotEmpty>
+		</dynamic>
+    </select>
+</sqlMap>

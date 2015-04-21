@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FINCADVANCEDEPOSITS" >
+	<typeAlias alias="FincAdvancedeposits" type="com.lvmama.finance.settlement.ibatis.po.FincAdvancedeposits"/>
+	<typeAlias alias="SimpleSupplier" type="com.lvmama.finance.settlement.ibatis.vo.SimpleSupplier"/>
+	<resultMap id="abatorgenerated_FincAdvancedepositsResult" class="com.lvmama.finance.settlement.ibatis.po.FincAdvancedeposits" >
+	  <result column="ADVANCEDEPOSITS_ID" property="advancedepositsId" jdbcType="DECIMAL" />
+	  <result column="SUPPLIER_ID" property="supplierId" jdbcType="DECIMAL" />
+	  <result column="TYPE" property="type" jdbcType="VARCHAR" />
+	  <result column="DIRECTION" property="direction" jdbcType="VARCHAR" />
+	  <result column="BANK" property="bank" jdbcType="VARCHAR" />
+	  <result column="SERIAL" property="serial" jdbcType="VARCHAR" />
+	  <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+	  <result column="OPERATETIME" property="operatetime" jdbcType="TIMESTAMP" />
+	  <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	  <result column="CREATOR" property="creator" jdbcType="DECIMAL" />
+	  <result column="CREATETIME" property="createtime" jdbcType="TIMESTAMP" />
+	  <result column="CREATORNAME" property="creatorName"  />
+	  <result column="advCurrency" property="advCurrency"  />
+	</resultMap>
+  
+	<resultMap id="SimpleSupplierResultMap" class="com.lvmama.finance.settlement.ibatis.vo.SimpleSupplier" >
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="SUPPLIER_NAME" property="supplierName"  />
+		<result column="ADVANCEDEPOSITS_BAL"  property="advancedepositsBal" />
+		<result column="CURRENCY_NAME"  property="currencyName" />
+		<result column="ADV_CURRENCY"  property="currency" />
+		<result column="foregiftsBal"  property="foregiftsBal" />
+		<result column="foreCurrency"  property="foreCurrency" />
+		<result column="SUPPLIER_ID" property="advancedepositsPay" select="FINCADVANCEDEPOSITS.searchAdvancedepositsPay" />
+		<result column="SUPPLIER_ID" property="advancedepositsAll" select="FINCADVANCEDEPOSITS.searchAdvancedepositsAll" />
+	</resultMap>
+  
+  <!-- 查询预存款结算总额 begin -->
+  <select id="searchAdvancedepositsPay" parameterClass="long" resultClass="java.lang.Double">
+  	SELECT
+  		NVL(SUM(AMOUNT),0)/100
+  	FROM
+  		ORD_SETTLEMENT_PAYMENT A,
+  		SUP_SETTLEMENT_TARGET B
+  	WHERE
+  		A.TARGET_ID = B.TARGET_ID
+  	AND
+		PAYTYPE = 'ADVANCEDEPOSITS'  	
+  	AND
+  		B.SUPPLIER_ID = #supplierId#
+  		
+ 		<!-- 
+  	SELECT 
+  		NVL(SUM(AMOUNT),0)/100
+  	FROM 
+  		FINC_ADVANCEDEPOSITS 
+  	WHERE 
+  		SUPPLIER_ID = #supplierId#
+  	AND 
+  		TYPE = 'PAYMENT' -->
+  </select>
+  <!-- 查询预存款结算总额 end -->
+  
+ 
+  
+  <!-- 查询预存款总额 begin -->
+  <select id="searchAdvancedepositsAll" parameterClass="long" resultClass="java.lang.Double">
+  	SELECT 
+  		NVL(SUM(AMOUNT),0)/100
+  	FROM 
+  		FINC_ADVANCEDEPOSITS 
+  	WHERE 
+  		SUPPLIER_ID = #supplierId#
+  	AND 
+  		TYPE IN ( 'DEPOSIT','SHIFTIN')
+  </select>
+  <!-- 查询预存款总额 end -->
+  
+  <!-- 查询预存款分页信息 begin -->
+	<select id="searchAdvancedeposits" parameterClass="map" resultMap ="SimpleSupplierResultMap" >
+		<include refid="pageSearchHead"/>
+		SELECT 
+			SUPPLIER_ID ,
+			SUPPLIER_NAME ,
+			ADVANCEDEPOSITS_BAL/100 AS ADVANCEDEPOSITS_BAL,
+            CURRENCY_NAME,
+            ADV_CURRENCY,
+            FORE_CURRENCY AS foreCurrency,
+            FOREGIFTS_BAL / 100 AS foregiftsBal
+		FROM 
+			SUP_SUPPLIER,
+			FIN_CURRENCY
+		WHERE 
+			ADVANCEDEPOSITS_BAL IS NOT NULL
+		AND 
+			SUP_SUPPLIER.ADV_CURRENCY = FIN_CURRENCY.CURRENCY
+		<isNotNull property="supplier" prepend="AND">
+			SUPPLIER_ID = #supplier#
+		</isNotNull>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchAdvancedepositsCount"  resultClass="Integer">
+		SELECT  COUNT(*) FROM 
+			SUP_SUPPLIER 
+		WHERE 
+			ADVANCEDEPOSITS_BAL IS NOT NULL
+	</select>
+	<!-- 查询预存款分页信息 end -->
+	
+	<!-- 查询达到预警的预存款分页信息 begin -->
+	<select id="searchAdvancedepositsAlert" parameterClass="map" resultClass="SimpleSupplier" >
+		<include refid="pageSearchHead"/>
+		SELECT 
+			SUPPLIER_ID AS SUPPLIERID,
+			SUPPLIER_NAME  AS SUPPLIERNAME,
+			ADVANCEDEPOSITS_BAL/100 AS ADVANCEDEPOSITSBAL,
+			ADVANCEDEPOSITS_ALERT/100 AS ADVANCEDEPOSITSALERT
+		FROM 
+			SUP_SUPPLIER
+		WHERE 
+			ADVANCEDEPOSITS_BAL IS NOT NULL
+		AND
+			ADVANCEDEPOSITS_BAL &lt;= ADVANCEDEPOSITS_ALERT 
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchAdvancedepositsAlertCount"  resultClass="Integer">
+		SELECT  COUNT(*) FROM 
+			SUP_SUPPLIER 
+		WHERE 
+			ADVANCEDEPOSITS_BAL IS NOT NULL
+		AND
+			ADVANCEDEPOSITS_BAL &lt;= ADVANCEDEPOSITS_ALERT 
+	</select>
+	<!-- 查询达到预警的预存款分页信息 end -->
+	
+	<!-- 查询流水记录begin -->
+	<select id="searchFincAdvancedeposits" resultMap="abatorgenerated_FincAdvancedepositsResult" parameterClass="long">
+		SELECT 
+			ADVANCEDEPOSITS_ID,
+			SUPPLIER_ID,
+			TYPE,
+			DIRECTION,
+			BANK,
+			SERIAL,
+			AMOUNT/100 AS AMOUNT,
+			OPERATETIME,
+			REMARK,
+			CREATOR,
+			CREATETIME,
+			B.REAL_NAME AS CREATORNAME,
+			C.CURRENCY_NAME AS advCurrency
+		FROM
+			FINC_ADVANCEDEPOSITS A,
+			lvmama_pet.PERM_USER B,
+			FIN_CURRENCY C
+		WHERE
+			A.CREATOR = B.USER_ID(+)
+		AND
+			C.CURRENCY = A.CURRENCY
+		AND
+			SUPPLIER_ID = #supplierId#
+		ORDER BY CREATETIME DESC
+	</select>
+	<!-- 查询流水记录end -->
+	
+	<!-- 更新供应商预存款金额begin -->
+	<update id="updateSupplierAdvancedepositsBal" parameterClass="map">
+		UPDATE 
+			SUP_SUPPLIER
+		SET
+			ADVANCEDEPOSITS_BAL = NVL(ADVANCEDEPOSITS_BAL,0)+#amount#*100
+		WHERE
+			SUPPLIER_ID = #supplierId#
+	</update>
+	<!-- 更新供应商预存款金额end -->
+	<!-- 添加流水记录begin -->
+	<insert id="insertFincAdvancedeposits" parameterClass="FincAdvancedeposits">
+		INSERT INTO
+			FINC_ADVANCEDEPOSITS
+		(
+			ADVANCEDEPOSITS_ID,
+			SUPPLIER_ID,
+			TYPE,
+			DIRECTION,
+			BANK,
+			SERIAL,
+			AMOUNT,
+			OPERATETIME,
+			REMARK,
+			CREATOR,
+			CREATETIME,
+			CURRENCY
+		)VALUES(
+			FINC_ADVANCEDEPOSITS_ID_SEQ.NEXTVAL,
+			#supplierId#,
+			#type#,
+			#direction#,
+			#bank#,
+			#serial#,
+			#amount#*100,
+			#operatetime#,
+			#remark#,
+			#creator#,
+			SYSDATE,
+			#advCurrency#
+		)
+	</insert>
+	<!-- 添加流水记录end -->
+	
+	<!-- 查询预存款余额begin -->
+	<select id="searchAmount" parameterClass="map" resultClass="java.lang.Double">
+		SELECT 
+	  		NVL(ADVANCEDEPOSITS_BAL,0)/100
+	  	FROM 
+	  		SUP_SUPPLIER 
+	  	WHERE 
+	  		SUPPLIER_ID = #supplierId#
+	  	AND
+	  		ADV_CURRENCY = #currency#
+	</select>
+	<!-- 查询预存款余额end -->
+	
+	<!-- 查询供应商begin -->
+	<select id="searchSupplier" parameterClass="long" resultMap="SimpleSupplierResultMap">
+		SELECT 
+			SUPPLIER_ID,
+			SUPPLIER_NAME ,
+	  		NVL(ADVANCEDEPOSITS_BAL,0)/100 AS ADVANCEDEPOSITS_BAL,
+            CURRENCY_NAME,
+            ADV_CURRENCY,
+            FOREGIFTS_BAL AS foregiftsBal,
+       		FORE_CURRENCY AS foreCurrency
+	  	FROM 
+	  		SUP_SUPPLIER,
+			FIN_CURRENCY 
+	  	WHERE
+	  		SUPPLIER_ID = #supplierId#
+		AND 
+			SUP_SUPPLIER.ADV_CURRENCY = FIN_CURRENCY.CURRENCY
+	</select>
+	<!-- 查询预存款余额end -->
+	
+	<!-- 更新供应商预存款币种begin -->
+	<update id="updateSupplierCurrency" parameterClass="map">
+		UPDATE 
+			SUP_SUPPLIER
+		SET
+			ADV_CURRENCY = #currency#
+		WHERE
+			SUPPLIER_ID = #supplierId#
+	</update>
+	<!-- 更新供应商押金币种begin -->
+	<update id="updateSupplierForecurrency" parameterClass="map">
+		UPDATE 
+			SUP_SUPPLIER
+		SET
+			FORE_CURRENCY = #currency#
+		WHERE
+			SUPPLIER_ID = #supplierId#
+	</update>
+	
+	<select id="searchAllCurrency" resultClass="com.lvmama.comm.vo.Currency">
+		SELECT 
+			A.CURRENCY AS currency, 
+			A.CURRENCY_NAME AS currencyName 
+		FROM 
+			FIN_CURRENCY A
+	</select>
+</sqlMap>

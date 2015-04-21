@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>Super_report</display-name>
+
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>classpath:log4j.properties</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+		 classpath:applicationContext-report-beans.xml
+		</param-value>
+	</context-param>
+
+	<listener>
+		<description>Used to initialize Spring context and set SpringBeanProxy.</description>
+		<listener-class>com.lvmama.comm.spring.SuperContextLoaderListener</listener-class>
+	</listener>
+
+	<listener>
+		<description>Used to cleanup when a session is destroyed</description>
+		<display-name>ZK Session cleaner</display-name>
+		<listener-class>org.zkoss.zk.ui.http.HttpSessionListener</listener-class>
+	</listener>
+	
+	<!-- Filter 定义  -->
+	<!-- Character Encoding filter -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<!-- 权限控制 -->
+	<filter>
+		<filter-name>permissionFilter</filter-name>
+		<filter-class>com.lvmama.comm.filter.PermissionFilter</filter-class>
+		<init-param>
+			<param-name>excludeUrl</param-name>
+			<param-value>
+				.*\.js,.*\.css,.*\.gif,.*\.jpg,.*\.jpeg,.*\.jpe,.*\.jfif,.*\.bmp,.*\.tif,.*\.png,
+				.*/zkau.*,.*/timeout.zul,.*/call/.*,.*/checkversion.jsp,
+				.*/msg/initMessage.do,.*/msg/.*,.*/remoting/.*,
+				.*/faxStatus.do,.*/faxRecv.do,.*/import.do,
+				.*/prod/searchPlace.do,.*/prod/searchProductJSON.do
+			</param-value>
+		</init-param>
+	</filter>
+	
+	<filter>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+		<init-param>
+			<param-name>logLevel</param-name>
+			<param-value>ERROR</param-value>
+		</init-param>
+	</filter>
+ 
+	<filter>
+		<filter-name>struts2Filter</filter-name>
+		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+	</filter>
+	<!--  struts Filter -->
+
+	<filter>
+		<filter-name>sessionUserFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>sessionUserFilter</param-value>
+		</init-param>
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	
+	<!-- Filter 映射 -->
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- 权限 映射 -->
+	<filter-mapping>
+		<filter-name>permissionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- struts  Filter 映射 -->
+	<filter-mapping>
+		<filter-name>struts2Filter</filter-name>
+		<url-pattern>*.do</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>sessionUserFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- struts  Filter 映射 -->
+	<servlet>
+		<description>The ZK loader for ZUML pages</description>
+		<servlet-name>zkLoader</servlet-name>
+		<servlet-class>org.zkoss.zk.ui.http.DHtmlLayoutServlet</servlet-class>
+		<init-param>
+			<param-name>update-uri</param-name>
+			<param-value>/zkau</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<description>The asynchronous update engine for ZK</description>
+		<servlet-name>auEngine</servlet-name>
+		<servlet-class>org.zkoss.zk.au.http.DHtmlUpdateServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>ExportSettlementExcelServlet</description>
+		<servlet-name>exportSettlement</servlet-name>
+		<servlet-class>com.lvmama.report.servlet.ExportSettlementServlet</servlet-class>
+	</servlet>
+		<servlet>
+		<description>CallCenterQueryExportServlet</description>
+		<servlet-name>CallCenterQueryExportServlet</servlet-name>
+		<servlet-class>com.lvmama.report.servlet.CallCenterQueryExportServlet</servlet-class>
+	</servlet>
+	   <servlet>
+        <servlet-name>service</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>        
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>service</servlet-name>
+        <url-pattern>/remoting/*</url-pattern>
+    </servlet-mapping>  
+	<servlet-mapping>
+		<servlet-name>zkLoader</servlet-name>
+		<url-pattern>*.zul</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>zkLoader</servlet-name>
+		<url-pattern>*.zhtml</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>auEngine</servlet-name>
+		<url-pattern>/zkau/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>exportSettlement</servlet-name>
+		<url-pattern>/exportSettlement.action</url-pattern>
+	</servlet-mapping>
+
+		<servlet-mapping>
+		<servlet-name>CallCenterQueryExportServlet</servlet-name>
+		<url-pattern>/exportCallback.action</url-pattern>
+	</servlet-mapping>
+	
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+		<welcome-file>index.zul</welcome-file>
+	</welcome-file-list>
+</web-app>

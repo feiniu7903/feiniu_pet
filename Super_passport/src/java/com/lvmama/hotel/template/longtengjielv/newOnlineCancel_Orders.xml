@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CNRequest>
+	<ActionName>NewOnlineCancel_Orders</ActionName>
+	<#include "requestHeader.xml">
+	<Data>
+		<MemberNo>${authorization.memberNo}</MemberNo>
+		<BookPassword>${authorization.bookPassword}</BookPassword>
+		<OnlineCancelOrdersList>
+			<OnlineCancelOrder>
+				<OrderID>${orderID}</OrderID>
+				<OperationStates>0</OperationStates>
+				<OperationRemarks>取消订单</OperationRemarks>
+			</OnlineCancelOrder>
+		</OnlineCancelOrdersList>
+	</Data>
+</CNRequest>

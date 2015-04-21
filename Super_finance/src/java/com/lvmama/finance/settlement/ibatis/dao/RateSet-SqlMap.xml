@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="RATESET" >
+	<typeAlias alias="ExchangeRate" type="com.lvmama.finance.settlement.ibatis.po.ExchangeRate"/>
+	<typeAlias alias="FinExchangeRate" type="com.lvmama.finance.group.ibatis.po.FinExchangeRate"/>
+	
+	<resultMap class="ExchangeRate" id="searchMap">
+		<result property="rateId" column="rateId" nullValue="0" />
+		<result property="foreignCurrency" column="foreignCurrency" />
+		<result property="rate" column="rate" nullValue="0" />
+	</resultMap>
+	
+	<!-- 查询所有的外汇币种的汇率 -->
+	<select id="search" parameterClass="map" resultMap="searchMap">
+		SELECT 
+			A.ID AS rateId,
+			A.FOREIGN_CURRENCY AS foreignCurrency,
+			A.Rate AS rate
+  		FROM 
+  			FIN_EXCHANGE_RATE A
+  		WHERE 
+ 			A.FOREIGN_CURRENCY &lt;&gt; 'CNY'
+ 		ORDER BY 
+ 			A.ID
+	</select>
+	
+	<!-- 根据币种查询汇率信息 -->
+	<select id="queryByCurrency" parameterClass="string" resultClass="FinExchangeRate">
+		 SELECT 
+		 	A.ID AS id,
+		 	A.FOREIGN_CURRENCY AS foreignCurrency, 
+		 	A.CREATE_DATE AS createDate, 
+		 	A.RATE AS rate
+		 FROM
+		 	FIN_EXCHANGE_RATE A 
+		 WHERE 
+		 	A.FOREIGN_CURRENCY=#currency#
+	</select>
+	
+	<!-- 新增汇率信息 -->
+	<insert id="insertRate" parameterClass="FinExchangeRate">
+		<selectKey keyProperty="id" resultClass="long">
+  			SELECT 
+  				FIN_EXCHANGE_RATE_ID_SEQ.NEXTVAL AS id
+  			FROM
+  				DUAL
+  		</selectKey>
+		INSERT INTO
+  			FIN_EXCHANGE_RATE
+  			(
+				ID,
+				FOREIGN_CURRENCY,
+				CREATE_DATE,
+				RATE
+  			)
+  		VALUES
+  			(
+  				#id#,
+  				#foreignCurrency#,
+  				#createDate#,
+  				#rate#
+  			)
+	</insert> 
+	
+	<!-- 更新汇率信息 -->
+	<update id="updateRate" parameterClass="FinExchangeRate">
+		UPDATE 
+			FIN_EXCHANGE_RATE 
+		SET 
+			RATE=#rate#
+		WHERE 
+			ID=#id#
+	</update>
+	
+</sqlMap>

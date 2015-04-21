@@ -1,0 +1,129 @@
+<?page title="通关产品管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./passProductList"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.passport.utils.ListboxProviderValNameSet"?>
+
+<zk>
+<window id="passProductList" title="通关产品管理" border="normal" apply="com.lvmama.passport.web.pass.ListPassProductAction">
+<zscript>
+		<![CDATA[
+			public void checkValues() {
+				saction.doQuery();
+			}
+			
+		]]>			
+		</zscript>
+<grid>
+	<columns>
+		<column width="100px"></column>
+		<column></column>
+		<column width="100px"></column>
+		<column></column>
+		<column></column>
+	</columns>
+		<rows>
+			<row >
+				<hbox width="350px">采购产品编号：</hbox>
+				<hbox>
+					<longbox value="@{saction.queryOption.objectId }" />
+				</hbox>
+				<hbox width="350px">代理产品编号：</hbox>
+				<hbox>
+					<longbox value="@{saction.queryOption.productIdSupplier }" />
+				</hbox>
+			</row>
+			<row >
+				<hbox width="350px">代理产品类型：</hbox>
+				<hbox>
+					<textbox value="@{saction.queryOption.productTypeSupplier }" />
+				</hbox>
+				<hbox width="300px">服务商名称：</hbox>
+				<hbox>
+					<!-- <textbox value="@{saction.queryOption.providerName }" />  -->
+					
+					<listbox mold="select"
+							selectedItem="@{saction.queryOption.providerName}" />
+					
+				</hbox>
+			</row>
+			<row>
+				<hbox width="300px">开始日期：</hbox>
+				<hbox>
+					<datebox
+							value="@{saction.queryOption.startDate}" />
+				</hbox>
+				<hbox width="300px">结束日期：</hbox>
+				<hbox>
+					<datebox
+							value="@{saction.queryOption.endDate}" />
+				</hbox>
+				<hbox>
+					<button label="查询" id="search" width="100px"
+							onClick="_paging.activePage=0;checkValues();" />
+					<button label="新增"  width="100px" onClick='saction.showWindow("/bussiness/addPassProduct.zul",self.getAttributes());'/>
+				</hbox>
+			</row>
+			<!-- 
+			<row >
+				<hbox width="300px">周末是否可卖：</hbox>
+				<hbox>
+				       <listbox id="isWeekend" mold="select" rows="1" selectedItem="@{saction.queryOption.isWeekend }">
+						   <listitem label="TRUE" isWeekend="TRUE"/>
+						   <listitem label="FALSE" isWeekend="FALSE"/>
+						</listbox>
+				</hbox>
+			</row>
+			 -->
+		</rows>
+	</grid>
+	<listbox
+			model="@{saction.passProducts,load-after='search.onClick,_paging.onPaging'}">
+		<listhead>
+			<listheader label="采购产品编号" width="100px"/>
+			<listheader label="代理产品编号" width="100px"/>
+			<listheader label="代理产品类型" width="200px"/>
+			<listheader label="开始日期"/>
+			<listheader label="结束日期"/>
+			<listheader label="服务商帐号"/>
+			<listheader label="服务商编码"/>
+			<listheader label="服务商名称"/>
+			<listheader label="周末是否可卖"/>
+			<listheader label="扩展字段" />
+			<listheader label="操作"/>
+		</listhead>
+		<listitem height="25px" self="@{each='passProduct'}">
+			<listcell label="@{passProduct.objectId}" />
+			<listcell label="@{passProduct.productIdSupplier}" />
+			<listcell label="@{passProduct.productTypeSupplier}"/>
+			<listcell label="@{passProduct.startDate}"/>
+			<listcell label="@{passProduct.endDate}"/>
+			<listcell label="@{passProduct.merchantType}"/>
+			<listcell label="@{passProduct.provider}" />
+			<listcell label="@{passProduct.providerName}" />
+			<listcell label="@{passProduct.isWeekend}" />
+			<listcell label="@{passProduct.extId}" />
+			<listcell>
+				<a style="color:blue" label="修改" onClick='saction.showWindow("/bussiness/editPassProduct.zul",self.getAttributes());'>
+					<custom-attributes passProduct="@{passProduct}"/>
+				</a>|
+				<a style="color:blue" label="删除" onClick='saction.doDelete(self.getAttribute("passProdId"));'>
+					<custom-attributes passProdId="@{passProduct.passProdId}"/>
+				</a>
+			</listcell>
+		</listitem>
+	</listbox>
+	<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell width="200px">
+					<paging  id="_paging" pageSize = "20" onPaging='saction.doQuery();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+</window>
+</zk>

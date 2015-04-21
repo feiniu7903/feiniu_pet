@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_ORDER_TRAFFIC" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderTraffic" >
+    <result column="ORDER_TRAFFIC_ID" property="orderTrafficId" />
+    <result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+    <result column="TRAIN_NAME" property="trainName" />
+    <result column="DEPARTURE_STATION_NAME" property="departureStationName" />
+    <result column="ARRIVAL_STATION_NAME" property="arrivalStationName" />
+    <result column="SEAT" property="seat" />
+    <result column="STATUS" property="status" />
+    <result column="REFUMENT_STATUS" property="refumentStatus"/>
+    <result column="FAIL_REASON" property="failReason"/>
+    <result column="SUPPLIER_ORDER_ID" property="supplierOrderId" />
+    <result column="CREATE_TIME" property="createTime" />
+  </resultMap>
+  <select id="selectByPrimaryOrderItemMetaId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTraffic" >
+    select *
+    from ORD_ORDER_TRAFFIC
+    where ORDER_ITEM_META_ID = #orderItemMetaId#
+  </select>
+  <select id="queryOrderTrafficListByOrderId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  	select oot.* from ORD_ORDER_TRAFFIC oot,ord_order_item_meta ooim where oot.ORDER_ITEM_META_ID=ooim.ORDER_ITEM_META_ID
+  	and ooim.ORDER_ID=#orderId#
+  </select>
+  <select id="selectByPrimarySupplierOrderId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTraffic" >
+    select *
+    from ORD_ORDER_TRAFFIC
+    where SUPPLIER_ORDER_ID = #supplierOrderId#
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTraffic" >
+    select *
+    from ORD_ORDER_TRAFFIC
+    where ORDER_TRAFFIC_ID = #orderTrafficId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTraffic" >
+    delete from ORD_ORDER_TRAFFIC
+    where ORDER_TRAFFIC_ID = #orderTrafficId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTraffic" >
+    <selectKey resultClass="java.lang.Long" keyProperty="orderTrafficId" >
+      select ORD_ORDER_TRAFFIC_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_ORDER_TRAFFIC (ORDER_TRAFFIC_ID, ORDER_ITEM_META_ID, TRAIN_NAME,
+      DEPARTURE_STATION_NAME, ARRIVAL_STATION_NAME, SEAT, STATUS,REFUMENT_STATUS,FAIL_REASON, SUPPLIER_ORDER_ID,CREATE_TIME)
+    values (#orderTrafficId#, #orderItemMetaId#, #trainName#,
+      #departureStationName#, #arrivalStationName#, #seat#, #status#,#refumentStatus#,#failReason#,
+      #supplierOrderId#,#createTime#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTraffic" >
+    <selectKey resultClass="java.lang.Long" keyProperty="orderTrafficId" >
+      select ORD_ORDER_TRAFFIC_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_ORDER_TRAFFIC
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="orderTrafficId" >
+        ORDER_TRAFFIC_ID
+      </isNotNull>
+      <isNotNull prepend="," property="orderItemMetaId" >
+        ORDER_ITEM_META_ID
+      </isNotNull>
+      <isNotNull prepend="," property="trainName" >
+        TRAIN_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="departureStationName" >
+        DEPARTURE_STATION_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="arrivalStationName" >
+        ARRIVAL_STATION_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="seat" >
+        SEAT
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS
+      </isNotNull>
+      <isNotNull prepend="," property="failReason" >
+        FAIL_REASON
+      </isNotNull>
+      <isNotNull prepend="," property="refumentStatus" >
+        REFUMENT_STATUS
+      </isNotNull>
+      <isNotNull prepend="," property="supplierOrderId" >
+        SUPPLIER_ORDER_ID
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="orderTrafficId" >
+        #orderTrafficId#
+      </isNotNull>
+      <isNotNull prepend="," property="orderItemMetaId" >
+        #orderItemMetaId#
+      </isNotNull>
+      <isNotNull prepend="," property="trainName" >
+        #trainName#
+      </isNotNull>
+      <isNotNull prepend="," property="departureStationName" >
+        #departureStationName#
+      </isNotNull>
+      <isNotNull prepend="," property="arrivalStationName" >
+        #arrivalStationName#
+      </isNotNull>
+      <isNotNull prepend="," property="seat" >
+        #seat#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        #status#
+      </isNotNull>
+      <isNotNull prepend="," property="failReason" >
+        #failReason#
+      </isNotNull>
+      <isNotNull prepend="," property="refumentStatus" >
+        #refumentStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="supplierOrderId" >
+        #supplierOrderId#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTraffic" >
+    update ORD_ORDER_TRAFFIC
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="orderItemMetaId" >
+        ORDER_ITEM_META_ID = #orderItemMetaId#
+      </isNotNull>
+      <isNotNull prepend="," property="trainName" >
+        TRAIN_NAME = #trainName#
+      </isNotNull>
+      <isNotNull prepend="," property="departureStationName" >
+        DEPARTURE_STATION_NAME = #departureStationName#
+      </isNotNull>
+      <isNotNull prepend="," property="arrivalStationName" >
+        ARRIVAL_STATION_NAME = #arrivalStationName#
+      </isNotNull>
+      <isNotNull prepend="," property="seat" >
+        SEAT = #seat#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS = #status#
+      </isNotNull>
+      <isNotNull prepend="," property="failReason" >
+        FAIL_REASON = #failReason#
+      </isNotNull>
+      <isNotNull prepend="," property="refumentStatus" >
+        REFUMENT_STATUS = #refumentStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="supplierOrderId" >
+        SUPPLIER_ORDER_ID = #supplierOrderId#
+      </isNotNull>
+    </dynamic>
+    where ORDER_TRAFFIC_ID = #orderTrafficId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTraffic" >
+    update ORD_ORDER_TRAFFIC
+    set ORDER_ITEM_META_ID = #orderItemMetaId#,
+      TRAIN_NAME = #trainName#,
+      DEPARTURE_STATION_NAME = #departureStationName#,
+      ARRIVAL_STATION_NAME = #arrivalStationName#,
+      SEAT = #seat#,
+      STATUS = #status#,
+      FAIL_REASON = #failReason#,
+      REFUMENT_STATUS = #refumentStatus#,
+      SUPPLIER_ORDER_ID = #supplierOrderId#
+    where ORDER_TRAFFIC_ID = #orderTrafficId#
+  </update>
+  
+  
+</sqlMap>

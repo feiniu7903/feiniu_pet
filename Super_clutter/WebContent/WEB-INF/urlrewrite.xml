@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd"> 
+<!--
+
+    Configuration file for UrlRewriteFilter
+    http://www.tuckey.org/urlrewrite/
+
+-->
+<urlrewrite>
+	<!-- 自由行 -->
+	<rule match-type="regex">
+		<from>^/route([/]?)$</from>
+		<to>/mobile/freetrip/freetrip.do</to>
+	</rule>
+	<!-- 景点门票 -->
+	<rule match-type="regex">
+		<from>^/place([/]?)$</from>
+		<to>/mobile/spotticket/spotticket.do</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/ticket([/]?)$</from>
+		<to>/mobile/spotticket/spotticket_index.do</to>
+	</rule>
+	<!-- 中国好温泉 -->
+	<rule match-type="regex">
+		<from>^/wenquan([/]?)$</from>
+		<to>/mobile/hotspring/hotspring_index.do</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/placeHotSpring([/]?)$</from>
+		<to>/mobile/hotspring/hotspring.do</to>
+	</rule>
+	<!--限时特卖-->
+	<rule match-type="regex">
+		<from>^/sell([/]?)$</from>
+		<to>/mobile/recommend/sell.do</to>
+	</rule>
+	<!--热销排行-->
+	<rule match-type="regex">
+		<from>^/hot([/]?)$</from>
+		<to>/mobile/recommend/hot.do</to>
+	</rule>
+	<!-- 度假 -->
+	<rule match-type="regex">
+		<from>^/holiday([/]?)$</from>
+		<to>/mobile/holiday/holiday.do</to>
+	</rule>
+    <!-- 酒店 --> 
+	<rule match-type="regex"> 
+		<from>^/hotel([/]?)$</from> 
+		<to>/mobile/hotel/hotel.do</to> 
+	</rule>
+	<!-- 酒店详情(客户端用) -->
+	<rule match-type="regex"> 
+		<from>^/hotel/([0-9]+)([/]?)$</from>
+		<to>/mobile/hotel/hotelDetail.do?hotelId=$1</to>
+	</rule>
+	<!-- 团购 -->
+	<rule match-type="regex">
+		<from>^/groupbuy([/]?)$</from>
+		<to>/mobile/groupbuy/groupbuy.do</to>
+	</rule>
+	<!-- 攻略 -->
+	<rule match-type="regex">
+		<from>^/guide([/]?)$</from>
+		<to>/mobile/guide/guide.do</to>
+	</rule>
+	<!-- 订单 -->
+	<rule match-type="regex">
+		<from>^/order/myorder(.*)\.htm$</from>
+		<to>/mobile/order/myorder.do</to>
+	</rule>
+	
+	<!-- 我的 -->
+	<rule match-type="regex">
+		<from>^/my([/]?)$</from>
+		<to>/mobile/mylv.do</to>
+	</rule>
+	
+	<!-- 自由行列表 -->
+	<rule match-type="regex">
+		<from>^/route/list([/]?)$</from>
+		<to>/mobile/freetrip/freetrip_list.do</to>
+	</rule>
+	<!-- 度假列表 -->
+	<rule match-type="regex">
+		<from>^/holiday/list([/]?)$</from>
+		<to>/mobile/holiday/holiday_list.do</to>
+	</rule>
+	<!-- 5.0周末自驾游 -->
+	<rule match-type="regex">
+		<from>^/drivingtravel([/]?)$</from>
+		<to>/mobile/search/driving_travel.do</to>
+	</rule>
+	
+	<!-- 景点详情 -->
+	<rule match-type="regex">
+		<from>^/place/([0-9]+)([/]?)$</from>
+		<to>/mobile/spotticket/spotticket_detail.do?placeId=$1</to>
+	</rule>
+	<!-- 景点详情百度IOS专用 -->
+	<rule match-type="regex">
+		<from>^/place2/([0-9]+)([/]?)$</from>
+		<to>/mobile/spotticket/spotticket_iosdetail.do?placeId=$1</to>
+	</rule>
+	<!--自由行详情 -->
+	<rule match-type="regex">
+		<from>^/route/([0-9]+)([/]?)$</from>
+		<to>/mobile/freetrip/freetrip_detail.do?productId=$1</to>
+	</rule>
+	<!--团购详情 -->
+	<rule match-type="regex">
+		<from>^/groupbuy/([0-9]+)([/]?)$</from>
+		<to>/mobile/groupbuy/groupby_detail.do?productId=$1</to>
+	</rule>
+	<!-- 攻略 -->
+	<rule match-type="regex">
+		<from>^/guide/([0-9]+)([/]?)$</from>
+		<to>/mobile/guide/guide_detail.do?guideId=$1</to>
+	</rule>
+	<!--订单详情 -->
+	<rule match-type="regex">
+		<from>^/order/([0-9]+)([/]?)$</from>
+		<to>/mobile/order/order_detail.htm?orderId=$1</to>
+	</rule>
+	
+	<!--行程介绍 -->
+	<rule match-type="regex">
+		<from>^/prod_comm/([0-9]+)/([a-zA-Z0-9]+)([/]?)$</from>
+		<to>/mobile/freetrip/prod_comm.do?productId=$1&amp;commType=$2</to>
+	</rule>
+	<!--用户点评 -->
+	<rule match-type="regex">
+		<from>^/comment_comm/([0-9]+)([/]?)$</from>
+		<to>/mobile/freetrip/comment_comm.do?productId=$1</to>
+	</rule>
+	
+	<!--景点点评 ajax查询 -->
+	<rule match-type="regex">
+		<from>^/comment_ajax([/]?)$</from>
+		<to>/mobile/spotticket/spotticket_comment_ajax.do</to>
+	</rule>
+	<!--景点点评 ajax查询 -->
+	<rule match-type="regex">
+		<from>^/search_auto_complete([/]?)$</from>
+		<to>/mobile/search_auto_complete.do</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/(.*)\.htm$</from>
+		<to>/mobile/$1.do</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/zt/([a-zA-Z0-9]+)([/]?)$</from>
+		<to>/router/ztProxy.do?name=$1</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/user/(.*)\.htm$</from>
+		<to>/mobile/user/$1.do</to>
+	</rule>
+</urlrewrite>

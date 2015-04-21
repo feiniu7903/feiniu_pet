@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_PLACE" >
+	 <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.prod.ProdProductPlace" >
+	    <result column="PRODUCT_PLACE_ID" property="productPlaceId" />
+	     <result column="PRODUCT_ID" property="productId" />
+	    <result column="PLACE_ID" property="placeId" />
+	    <result column="FROM" property="from" />
+	    <result column="TO" property="to" />
+	    <result column="DEFAULT_TO" property="defaultTo" />
+	    <result column="DEST_ID" property="destId" />
+	  </resultMap>
+	  
+	<select id="PRODUCT_PLACE_LOAD" parameterClass="java.lang.Long" resultClass="com.lvmama.comm.pet.po.prod.ProdProductPlace">
+		 select 
+     		t1.PRODUCT_PLACE_ID as "productPlaceId", 
+     		t1.product_id as "productId", 
+     		t1.place_id as "placeId", 
+     		t1."FROM" as "from", 
+     		t1."TO" as "to", 
+     		t1.default_to as "defaultTo" ,
+     		t2.name as "placeName"
+     	FROM prod_product_place t1 ,com_place t2
+     	WHERE product_place_id = #productPlaceId#
+     	and t1.place_id=t2.place_id
+	</select>
+	
+	<select id="PRODUCT_PLACE_SELECT" parameterClass="java.lang.Long" resultClass="com.lvmama.comm.pet.po.prod.ProdProductPlace">
+		select 
+     		t1.PRODUCT_PLACE_ID as "productPlaceId", 
+     		t1.product_id as "productId", 
+     		t1.place_id as "placeId", 
+     		t1."FROM" as "from", 
+     		t1."TO" as "to", 
+     		t1.default_to as "defaultTo" ,
+     		t2.name as "placeName"
+     	FROM prod_product_place t1 ,com_place t2
+     	WHERE
+     	 t1.place_id=t2.place_id 
+     	and product_id = #productId#
+	</select>
+	
+	<select id="PRODUCT_PLACE_SELECT_BY_PRODUCTID" parameterClass="java.lang.Long" resultClass="com.lvmama.comm.pet.po.prod.ProdProductPlace">
+	select  p.placeId,
+               (select PRODPP.Place_Id "FROM"
+                                     from prod_product_place prodpp
+                                    where prodpp."FROM" = 'true'
+                                      AND prodpp.product_id = #productId#) "FROM"
+    from 
+    (SELECT distinct pp.place_id placeId
+                   FROM com_PLACE_PLACE_DEST PP, com_place cp
+                   where cp.place_id = pp.place_id
+                     and cp.stage in (1, 2, 3)
+                  CONNECT BY PP.PLACE_ID = PRIOR PP.PARENT_PLACE_ID
+                   START WITH PP.place_id in
+                              (select PRODPP.Place_Id
+                                 from prod_product_place prodpp
+                                where prodpp."FROM" IS NULL
+                                  AND prodpp.product_id = #productId#)
+              union
+              select distinct p.place_id
+                 from com_place p where p.stage=0 and p.place_id in
+                              (select PRODPP.Place_Id
+                                 from prod_product_place prodpp
+                                where prodpp."FROM" IS NULL
+                                  AND prodpp.product_id = #productId#)) p
+	</select>
+	<select id="getProdProductPlaceListByProductId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select * from PROD_PRODUCT_PLACE where product_id=#productId#
+	</select>
+	<select id="selectByProdProductId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+    select ppt.*, spt.NAME from COM_PLACE spt, PROD_PRODUCT_PLACE ppt 
+    where ppt.PLACE_ID=spt.place_id and ppt.PRODUCT_PLACE_ID=#prodProductId#
+  	</select>
+  	
+	<select id="selectDestByProductId" resultClass="java.lang.Long" parameterClass="java.lang.Long">
+	    select PP.PLACE_ID from PROD_PRODUCT_PLACE PP,PROD_PRODUCT p where PP.PRODUCT_ID = p.PRODUCT_ID and PP."TO"='true' and p.PRODUCT_ID=#productId#
+	</select>
+	
+	<insert id="PRODUCT_PLACE_INSERT" parameterClass="com.lvmama.comm.pet.po.prod.ProdProductPlace" >
+    <selectKey keyProperty="productPlaceId" resultClass="Long">
+  		select PROD_PRODUCT_PLACE_ID_SEQ.nextval FROM DUAL
+  	</selectKey> 
+	  insert into prod_product_place
+        (PRODUCT_PLACE_ID, product_id, place_id, "FROM", "TO", default_to)
+      values
+        (#productPlaceId#, #productId#,#placeId#,#from#,#to#,#defaultTo#)
+	</insert>
+	
+	<delete id="PRODUCT_PLACE_DELETE" parameterClass="java.lang.Long" >	
+		DELETE prod_product_place
+		WHERE PRODUCT_PLACE_ID = #productPlaceId#
+	</delete>
+	
+	<delete id="PRODUCT_PLACE_DELETE_BY_PRODUCTID" parameterClass="java.lang.Long" >	
+		DELETE prod_product_place
+		WHERE product_id = #productId#
+	</delete>
+	
+	<update id="clearProductPlaceFT" parameterClass="java.util.HashMap">
+		update prod_product_place
+		<dynamic prepend="set ">
+			<isNotEmpty property="FROM">
+				 "FROM"=''
+			</isNotEmpty>
+			<isNotEmpty property="TO" prepend=",">
+				"TO"=''
+			</isNotEmpty>
+		</dynamic>
+		where product_id = #productId#
+	</update>
+	
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.prod.ProdProductPlace">
+		update prod_product_place
+			<dynamic prepend="set">
+				<isNotNull property="from" prepend=",">
+					 "FROM"=#from#
+				</isNotNull>
+				<isNotNull property="to" prepend=",">
+					"TO"=#to#
+				</isNotNull>			
+			</dynamic>
+		where PRODUCT_PLACE_ID = #productPlaceId#
+	</update>
+</sqlMap>

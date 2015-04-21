@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="GLCOMMENT" >
+    <typeAlias alias="glcomment" type="com.lvmama.comm.businesses.po.review.GlComment"/>
+    <resultMap id="baseMap" class="glcomment" >
+    	<result  column="commentid"  property="commentid"/>
+    	<result column="content" property="content"/>
+    	<result column="reviewstatus" property="reviewstatus"/>
+    	<result  column="status"  property="status"/>
+     </resultMap>
+    <resultMap class="glcomment" id="newbaseMap" extends="baseMap">
+       <result property="url" column="url"/>
+       <result property="createdate" column="createdate"/>
+    </resultMap>
+     <sql id="where_query">
+           where 1=1
+               <isNotEmpty property="reviewstatus"  prepend="and">
+                    reviewstatus=#reviewstatus# 
+                     <isNotEqual prepend="and" property="reviewstatus" compareValue="2">
+                       status=1 
+                     </isNotEqual> 
+               </isNotEmpty>
+               <isNotEmpty property="datebegin" prepend="and">
+                   FROM_UNIXTIME(addtime) &gt; #datebegin# 
+               </isNotEmpty>
+               <isNotEmpty property="dateend" prepend="and">
+                   FROM_UNIXTIME(addtime) &lt; #dateend# 
+               </isNotEmpty>
+    </sql>
+     <select id="queryForGlCommentById" resultMap="baseMap" parameterClass="java.lang.Integer">
+           select commentid,content,status,reviewstatus from gl_comment  where commentid=#commentid#
+           </select>
+    <select id="queryByParam" resultMap="newbaseMap" parameterClass="java.util.Map">
+            select   commentid, content, status, reviewstatus,  FROM_UNIXTIME(addtime) as createdate ,  url from (select s.commentid,s.content,s.status,s.reviewstatus, s.addtime ,g.url from (select commentid,content,status,reviewstatus,addtime,func_get_split_string(keyid,'-',3) as myarticleid from gl_comment ) s
+             LEFT JOIN  gl_article g ON s.myarticleid=g.articleid ) m
+           <include refid="where_query"/>
+            order by FROM_UNIXTIME(addtime) desc 
+             LIMIT #start#,#end#
+     </select>
+      <select id="count" resultClass="java.lang.Long" parameterClass="java.util.Map">
+        select COUNT(*) from gl_comment      
+              <include refid="where_query"/>
+     </select>
+     <update id="update" parameterClass="java.util.Map">
+         update    gl_comment 
+         set reviewstatus=#reviewstatus# 
+         <isNotEmpty  property="status">, status=#status#</isNotEmpty> 
+         where commentid=#commentid# 
+     </update>
+</sqlMap>

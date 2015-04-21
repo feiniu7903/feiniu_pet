@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="DISTRIBUTOR_IP" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributorIp" >
+    <result column="DISTRIBUTOR_IP_ID" property="distributorIpId" />
+    <result column="DISTRIBUTOR_INFO_ID" property="distributorInfoId" />
+    <result column="IP" property="ip" />
+    <result column="CREATE_TIME" property="createTime" />
+  </resultMap>
+  
+  <select id="selectByDistributorInfoId" resultClass="java.lang.String" parameterClass="java.lang.Long">
+  		SELECT DI.IP FROM DISTRIBUTOR_IP DI WHERE DI.DISTRIBUTOR_INFO_ID =#distributorInfoId#
+  </select>
+  
+  <select id="selectByDistributorId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  		SELECT * FROM DISTRIBUTOR_IP DI WHERE DI.DISTRIBUTOR_INFO_ID =#distributorInfoId#
+  </select>
+  
+  <select id="getDistributorIpBydistributorIpId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  		SELECT * FROM DISTRIBUTOR_IP DI WHERE DI.DISTRIBUTOR_IP_ID =#distributorIpId#
+  </select>
+  
+   <insert id="insert" parameterClass="com.lvmama.comm.bee.po.distribution.DistributorIp">
+	  	<selectKey  keyProperty="distributorIpId" resultClass="Long"> SELECT DISTRIBUTOR_IP_ID_SEQ.NEXTVAL FROM DUAL</selectKey>
+		INSERT INTO DISTRIBUTOR_IP VALUES (#distributorIpId#,#distributorInfoId#,#ip#,sysdate)
+  </insert>
+  <update id="updateByDistributorIpId" parameterClass="com.lvmama.comm.bee.po.distribution.DistributorIp" >
+  		UPDATE DISTRIBUTOR_IP DI SET DI.IP = #ip# WHERE DI.DISTRIBUTOR_IP_ID = #distributorIpId#
+  </update>
+  <delete id="deleteByDistributorIpId" parameterClass="java.lang.Long">
+  		DELETE FROM DISTRIBUTOR_IP DI WHERE DI.DISTRIBUTOR_IP_ID=#distributorIpId#
+  </delete>
+</sqlMap>

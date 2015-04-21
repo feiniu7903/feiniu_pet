@@ -1,0 +1,784 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FinGroupSettlement" >
+	 
+	<typeAlias alias="FinGroupSettlement" type="com.lvmama.finance.group.ibatis.po.FinGroupSettlement"/>
+	<typeAlias alias="GroupSettlementInfo" type="com.lvmama.finance.group.ibatis.po.GroupSettlementInfo"/>
+	
+	<resultMap id="searchGroupSettlementMap" class="com.lvmama.finance.group.ibatis.po.GroupSettlementInfo" >
+		<result property="groupSettlementId" column="groupSettlementId"/>
+		<result property="travelGroupCode" column="travelGroupCode"/>
+		<result property="remark" column="remark"/>
+		<result property="payAmount" column="payAmount"/>
+		<result property="payedAmount" column="payedAmount"/>
+		<result property="itemName" column="itemName"/>
+		<result property="currency" column="currency"/>
+		<result property="targetName" column="targetName"/>
+		<result property="settlementPeriod" column="settlementPeriod"/>
+		<result property="bankName" column="bankName"/>
+		<result property="bankAccountName" column="bankAccountName"/>
+		<result property="bankAccount" column="bankAccount"/>
+		<result property="alipayName" column="alipayName"/>
+		<result property="alipayAccount" column="alipayAccount" />
+		<result property="targetId" column="targetId"/>
+	</resultMap>
+ 	
+ 	<!-- 生成抵扣款begin -->
+ 	<insert id="insertDeduction" parameterClass="FinGroupSettlement" >
+ 		INSERT INTO 
+ 			FIN_GROUP_SETTLEMENT
+		(
+			GROUP_SETTLEMENT_ID,
+			TRAVEL_GROUP_CODE,
+			BUDGET_ITEM_ID,
+			BUDGET_ITEM_NAME,
+			BUDGET_ITEM_TYPE,
+			PRD_BRANCH_NAME,
+			SUPPLIER_ID,
+			TARGET_ID,
+			CURRENCY,
+			EXCHANGE_RATE,
+			SUBTOTAL_COSTS,
+			CREATOR,
+			CREATETIME,
+			PAYMENT_STATUS
+ 		)VALUES(
+ 			FIN_GROUP_SETTLEMENT_ID_SEQ.NEXTVAL,
+ 			#travelGroupCode#,
+ 			#budgetItemId#,
+ 			#budgetItemName#,
+ 			#budgetItemType#,
+ 			#prdBranchName#,
+ 			#supplierId#,
+ 			#targetId#,
+ 			#currency#,
+ 			#exchangeRate#,
+ 			#subtotalCosts#*100,
+ 			#creator#,
+ 			#createtime#,
+ 			'NOPAY'
+ 		)
+ 	</insert>
+ 	<!-- 生成抵扣款end -->
+ 	
+ 	<sql id="searchSettlement_sql">
+ 		 FROM 
+	  		FIN_GROUP_SETTLEMENT A, 
+	  		SUP_SUPPLIER B, 
+	  		SUP_SETTLEMENT_TARGET C,
+	  		FIN_CURRENCY D,
+	  		OP_GROUP_BUDGET E,
+       		OP_TRAVEL_GROUP f,
+       		PROD_ROUTE g,
+			PROD_PRODUCT h, 
+			lvmama_pet.PERM_USER i
+		WHERE 
+			A.DEL = 'N'
+ 		AND
+			A.SUPPLIER_ID = B.SUPPLIER_ID
+	   	AND 
+	   		A.TARGET_ID = C.TARGET_ID
+	   	AND
+	   		A.CURRENCY = D.CURRENCY
+	   	AND
+	   		A.TRAVEL_GROUP_CODE = E.TRAVEL_GROUP_CODE
+   		and 
+   			a.travel_group_code = f.travel_group_code
+   		and 
+   			f.product_id = g.product_id
+       	AND 
+       		g.PRODUCT_ID = h.PRODUCT_ID
+       	AND 
+       		h.MANAGER_ID = i.USER_ID
+	   	<isNotNull property="targetId" prepend="AND">
+			A.TARGET_ID = #targetId#
+		</isNotNull>
+		<isNotNull property="supplierId" prepend="AND">
+			A.SUPPLIER_ID = #supplierId#
+		</isNotNull>
+		<isNotEmpty property="travelGroupCode" prepend="AND">
+			A.TRAVEL_GROUP_CODE = #travelGroupCode#
+		</isNotEmpty>
+		<isNotEmpty property="settlementPeriod" prepend="AND">
+			C.SETTLEMENT_PERIOD = #settlementPeriod#
+		</isNotEmpty>
+		<isNotEmpty property="paymentType" prepend="AND">
+			A.PAYMENT_TYPE = #paymentType#
+		</isNotEmpty>
+		<isNotEmpty property="paymentStatus" prepend="AND">
+			A.PAYMENT_STATUS = #paymentStatus#
+		</isNotEmpty>
+		<!-- 销售产品id -->
+		<isNotNull property="product" prepend="AND">
+			f.PRODUCT_ID = #product#
+		</isNotNull>
+		<!-- 出团时间 -->
+		<isNotEmpty property="visitTimeBegin" prepend="AND">
+			f.VISIT_TIME &gt;= TO_DATE(#visitTimeBegin#,'yyyy-mm-dd')
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd" prepend="AND">
+			f.VISIT_TIME  &lt; TRUNC(TO_DATE(#visitTimeEnd#,'YYYY-MM-DD') + 1)
+		</isNotEmpty>
+		<!-- 销售产品子类型 -->
+		<isNotNull property="routeType" prepend="AND">
+			h.sub_product_type IN
+			<iterate property="routeType" open="(" close=")" conjunction=",">
+					#routeType[]#  
+			</iterate>
+		</isNotNull>
+		<isNotEmpty property="orderId" prepend="AND">
+			BUDGET_ITEM_TYPE = 'PRODUCT'
+			AND
+			EXISTS( SELECT * FROM ORD_ORDER OO WHERE OO.TRAVEL_GROUP_CODE = A.TRAVEL_GROUP_CODE AND OO.ORDER_ID = #orderId#)
+		</isNotEmpty>
+ 	</sql>
+ 	<select id="searchSettlement" resultClass="FinGroupSettlement" parameterClass="map">
+		<include refid="pageSearchHead"/>
+		select t2.operatetime AS paymentTime,
+	       t1.GROUPSETTLEMENTID,
+	       t1.TRAVELGROUPCODE,
+	       t1.BUDGETITEMID,
+	       t1.BUDGETITEMNAME,
+	       t1.BUDGETITEMTYPE,
+	       t1.PRDBRANCHNAME,
+	       t1.SUPPLIERNAME,
+	       t1.SUPPLIERID,
+	       t1.TARGETNAME,
+	       t1.SETTLEMENTPERIOD,
+	       t1.PAYMENTTYPE,
+	       t1.CURRENCY,
+	       t1.CURRENCYNAME,
+	       t1.PAYAMOUNT,
+	       t1.SUBTOTALCOSTS,
+	       t1.SETTLEMENTDATE,
+	       t1.PAYMENTSTATUS,
+	       t1.REMARK,
+	       t1.ACTINCOMING,
+	       t1.ACTPROFIT,
+	       t1.ISUSEADVANCEDEPOSITS,
+	       t1.USERNAME,
+	       t1.ROUTETYPE
+	  from (SELECT 
+			A.GROUP_SETTLEMENT_ID AS GROUPSETTLEMENTID,
+			A.TRAVEL_GROUP_CODE AS TRAVELGROUPCODE,
+			A.BUDGET_ITEM_ID AS BUDGETITEMID,
+			A.BUDGET_ITEM_NAME AS BUDGETITEMNAME,
+			A.BUDGET_ITEM_TYPE AS BUDGETITEMTYPE,
+			A.PRD_BRANCH_NAME AS PRDBRANCHNAME,
+			B.SUPPLIER_NAME AS SUPPLIERNAME,
+			A.SUPPLIER_ID AS SUPPLIERID,
+			C.NAME AS TARGETNAME,
+			C.SETTLEMENT_PERIOD AS SETTLEMENTPERIOD,
+			A.PAYMENT_TYPE AS PAYMENTTYPE,
+			A.CURRENCY,
+			D.CURRENCY_NAME AS CURRENCYNAME,
+			NVL(A.PAY_AMOUNT,0)/100 AS PAYAMOUNT,
+			NVL(A.SUBTOTAL_COSTS,0)/100 AS SUBTOTALCOSTS,
+			A.SETTLEMENT_DATE AS SETTLEMENTDATE,
+			A.PAYMENT_STATUS AS PAYMENTSTATUS,
+			A.REMARK,
+			E.ACT_INCOMING/100 AS ACTINCOMING,
+			E.ACT_PROFIT/100 AS ACTPROFIT,
+			A.IS_USE_ADVANCEDEPOSITS AS ISUSEADVANCEDEPOSITS,
+       		i.REAL_NAME AS USERNAME,
+       		h.sub_product_type AS ROUTETYPE
+	    <include refid="searchSettlement_sql"/>
+	    ) t1
+  	left join (select t.group_settlement_id, max(t.operatetime) AS operatetime
+               from LVMAMA_PET.SET_SETTLEMENT_PAYMENT t, fin_group_settlement t1
+              where t.group_settlement_id is not null
+                and t.group_settlement_id = t1.group_settlement_id
+              group by t.group_settlement_id
+              order by t.group_settlement_id) t2 on t1.GROUPSETTLEMENTID =
+                                                    t2.group_settlement_id
+		<include refid="pageSearchFoot"/>
+ 	</select>
+ 	<select id="searchSettlementCount" parameterClass="map" resultClass="Integer">
+		SELECT 	COUNT(*)
+		<include refid="searchSettlement_sql"/>
+ 	</select>
+ 	
+ 	<select id="searchSettlementSumprice" resultClass="FinGroupSettlement" parameterClass="map">
+		SELECT sum(PAYAMOUNT) AS payAmountTotal, sum(SUBTOTALCOSTS) AS subTotalCostsTotal FROM(
+		<include refid="pageSearchHead"/>
+			SELECT 
+				A.GROUP_SETTLEMENT_ID AS GROUPSETTLEMENTID,
+				A.TRAVEL_GROUP_CODE AS TRAVELGROUPCODE,
+				A.BUDGET_ITEM_ID AS BUDGETITEMID,
+				A.BUDGET_ITEM_NAME AS BUDGETITEMNAME,
+				A.BUDGET_ITEM_TYPE AS BUDGETITEMTYPE,
+				A.PRD_BRANCH_NAME AS PRDBRANCHNAME,
+				B.SUPPLIER_NAME AS SUPPLIERNAME,
+				A.SUPPLIER_ID AS SUPPLIERID,
+				C.NAME AS TARGETNAME,
+				C.SETTLEMENT_PERIOD AS SETTLEMENTPERIOD,
+				A.PAYMENT_TYPE AS PAYMENTTYPE,
+				A.CURRENCY,
+				D.CURRENCY_NAME AS CURRENCYNAME,
+				NVL(A.PAY_AMOUNT,0)/100 AS PAYAMOUNT,
+				NVL(A.SUBTOTAL_COSTS,0)/100 AS SUBTOTALCOSTS,
+				A.SETTLEMENT_DATE AS SETTLEMENTDATE,
+				A.PAYMENT_STATUS AS PAYMENTSTATUS,
+				A.REMARK,
+				E.ACT_INCOMING/100 AS ACTINCOMING,
+				E.ACT_PROFIT/100 AS ACTPROFIT,
+				A.IS_USE_ADVANCEDEPOSITS AS ISUSEADVANCEDEPOSITS,
+	       		i.REAL_NAME AS USERNAME,
+	       		h.sub_product_type AS ROUTETYPE
+		    <include refid="searchSettlement_sql"/>
+		<include refid="pageSearchFoot"/>
+		) TT WHERE TT.SUBTOTALCOSTS &gt; 0
+ 	</select>
+ 	<select id="searchSettlementSumpriceCount" resultClass="java.lang.Integer" parameterClass="map">
+		SELECT count(*) FROM(
+		<include refid="pageSearchHead"/>
+			SELECT 
+				A.GROUP_SETTLEMENT_ID AS GROUPSETTLEMENTID,
+				A.TRAVEL_GROUP_CODE AS TRAVELGROUPCODE,
+				A.BUDGET_ITEM_ID AS BUDGETITEMID,
+				A.BUDGET_ITEM_NAME AS BUDGETITEMNAME,
+				A.BUDGET_ITEM_TYPE AS BUDGETITEMTYPE,
+				A.PRD_BRANCH_NAME AS PRDBRANCHNAME,
+				B.SUPPLIER_NAME AS SUPPLIERNAME,
+				A.SUPPLIER_ID AS SUPPLIERID,
+				C.NAME AS TARGETNAME,
+				C.SETTLEMENT_PERIOD AS SETTLEMENTPERIOD,
+				A.PAYMENT_TYPE AS PAYMENTTYPE,
+				A.CURRENCY,
+				D.CURRENCY_NAME AS CURRENCYNAME,
+				NVL(A.PAY_AMOUNT,0)/100 AS PAYAMOUNT,
+				NVL(A.SUBTOTAL_COSTS,0)/100 AS SUBTOTALCOSTS,
+				A.SETTLEMENT_DATE AS SETTLEMENTDATE,
+				A.PAYMENT_STATUS AS PAYMENTSTATUS,
+				A.REMARK,
+				E.ACT_INCOMING/100 AS ACTINCOMING,
+				E.ACT_PROFIT/100 AS ACTPROFIT,
+				A.IS_USE_ADVANCEDEPOSITS AS ISUSEADVANCEDEPOSITS,
+	       		i.REAL_NAME AS USERNAME,
+	       		h.sub_product_type AS ROUTETYPE
+		    <include refid="searchSettlement_sql"/>
+		<include refid="pageSearchFoot"/>
+		)
+ 	</select>
+ 	
+ 	<select id="searchSettlementByIds" resultClass="FinGroupSettlement">
+ 		SELECT 
+ 			GROUP_SETTLEMENT_ID AS GROUPSETTLEMENTID,
+ 			SUBTOTAL_COSTS/100 AS SUBTOTALCOSTS,
+ 			TRAVEL_GROUP_CODE AS TRAVELGROUPCODE,
+ 			TARGET_ID AS TARGETID,
+ 			SUPPLIER_ID AS SUPPLIERID,
+ 			CURRENCY,
+ 			NVL(PAY_AMOUNT,0)/100 AS PAYAMOUNT,
+ 			BUDGET_ITEM_ID AS BUDGETITEMID,
+ 			BUDGET_ITEM_TYPE AS BUDGETITEMTYPE
+ 		FROM 
+ 			FIN_GROUP_SETTLEMENT
+ 		WHERE
+ 			DEL = 'N'
+ 		AND
+ 			GROUP_SETTLEMENT_ID 
+			<iterate prepend="IN" open="(" close=")"  conjunction=",">
+ 				#[]#
+ 			</iterate>
+ 	</select>
+ 	<update id="pay" parameterClass="map">
+ 		UPDATE
+ 			FIN_GROUP_SETTLEMENT
+ 		SET
+ 			PAYMENT_STATUS = #status#,
+ 			<isNotNull property="amount">
+ 				PAY_AMOUNT = NVL(PAY_AMOUNT,0)+#amount#,
+ 			</isNotNull>
+ 			<isNull property="amount">
+ 				PAY_AMOUNT = SUBTOTAL_COSTS,
+ 			</isNull>
+ 			EXCHANGE_RATE = #exchangeRate#,
+ 			REMARK = #remark#
+ 		WHERE
+ 			DEL = 'N'
+ 		AND
+ 			GROUP_SETTLEMENT_ID 
+ 		<iterate prepend="IN" open="(" close=")" property="groupSettlementIds" conjunction=",">
+ 			#groupSettlementIds[]#
+ 		</iterate>
+ 	</update>
+ 	
+ 	<update id="deldk">
+ 		UPDATE 
+ 			FIN_GROUP_SETTLEMENT
+ 		SET
+ 			DEL = 'Y'
+ 		WHERE 
+ 			DEL = 'N'
+ 		AND
+ 			GROUP_SETTLEMENT_ID
+ 		<iterate prepend="IN" open="(" close=")"  conjunction=",">
+ 			#[]#
+ 		</iterate>
+ 	</update>
+ 	
+ 	<update id="updateDkAmount" parameterClass="FinGroupSettlement">
+ 		UPDATE
+ 			FIN_GROUP_SETTLEMENT
+ 		SET
+ 			SUBTOTAL_COSTS = #subtotalCosts#*100,
+ 			PAYMENT_STATUS = #paymentStatus#,
+ 			PAY_AMOUNT = #payAmount#*100
+ 		WHERE
+ 			GROUP_SETTLEMENT_ID = #groupSettlementId#
+ 	</update>
+ 	
+ 	
+	<select id="searchPayedAmount" resultClass="FinGroupSettlement">
+		SELECT 
+			A.BUDGET_ITEM_ID AS budgetItemId, 
+			A.BUDGET_ITEM_TYPE AS budgetItemType, 
+			SUM(B.AMOUNT*B.RATE)/100 AS subtotalCosts, 
+			SUM(B.AMOUNT)/100 AS  subtotalCostsFc
+  		FROM 
+  			FIN_GROUP_SETTLEMENT A, 
+  			LVMAMA_PET.SET_SETTLEMENT_PAYMENT B
+ 		WHERE 
+ 			A.GROUP_SETTLEMENT_ID = B.GROUP_SETTLEMENT_ID
+ 		AND 
+ 			A.GROUP_SETTLEMENT_ID
+ 		<iterate prepend="IN" open="(" close=")"  conjunction=",">
+ 			#[]#
+ 		</iterate>
+ 		GROUP BY 
+ 			A.BUDGET_ITEM_ID,A.BUDGET_ITEM_TYPE
+	</select>
+	 
+	<select id="searchGroupSettlement" parameterClass="long" resultMap="searchGroupSettlementMap">
+		SELECT 
+			   A.GROUP_SETTLEMENT_ID AS groupSettlementId,
+		       A.TRAVEL_GROUP_CODE AS travelGroupCode,
+		       A.REMARK AS remark, 
+		       NVL(A.SUBTOTAL_COSTS, 0) / 100 AS payAmount,
+		       NVL(A.PAY_AMOUNT, 0) / 100 AS payedAmount,
+		       D.ITEM_NAME AS itemName,
+		       F.CURRENCY_NAME AS currency, 
+		       C.NAME AS targetName,
+		       E.ITEM_NAME AS settlementPeriod,
+		       C.BANK_NAME AS bankName, 
+		       C.BANK_ACCOUNT_NAME AS bankAccountName,
+		       C.BANK_ACCOUNT AS bankAccount, 
+		       C.ALIPAY_NAME AS alipayName, 
+		       C.ALIPAY_ACCOUNT AS alipayAccount,
+       			A.TARGET_ID AS targetId
+		  FROM 
+		  	   FIN_GROUP_SETTLEMENT  A,
+		       SUP_SUPPLIER          B,
+		       SUP_SETTLEMENT_TARGET C,
+		       COM_CODE              D,
+		       COM_CODE              E,
+		       FIN_CURRENCY          F
+		 WHERE 
+		 	A.DEL = 'N'
+		   AND A.SUPPLIER_ID = B.SUPPLIER_ID
+		   AND A.CURRENCY = F.CURRENCY
+		   AND A.TARGET_ID = C.TARGET_ID
+		   AND B.COMPANY_ID = D.ITEM_CODE
+		   AND D.SET_CODE = 'SETTLEMENT_COMPANY'
+		   AND C.SETTLEMENT_PERIOD = E.ITEM_CODE
+		   AND E.SET_CODE = 'SETTLEMENT_PERIOD'
+		   AND A.GROUP_SETTLEMENT_ID = #settlementId#
+	</select>
+	
+	<sql id="orderInfoDetail_sql_columns">
+		SELECT 
+			F.REAL_NAME               AS userName,
+      		b.currency				  AS currency,
+	        b.supplier_id             AS supplierId,
+	        C.SUPPLIER_NAME           AS supplierName,
+	        B.Travel_Group_Code       AS travelGroupCode,
+	        a.order_id                AS orderId,
+	        A.VISIT_TIME              AS visitTime,
+	        E.PRODUCT_NAME            AS productName,
+	        E.PRODUCT_ID              AS productId,
+	        B.BUDGET_ITEM_NAME        AS productName1,
+	        g.meta_product_id         AS metaProductId,
+	        J.SETTLEMENT_PERIOD       AS settlementPeriod,
+	        DECODE(A.ORDER_STATUS,'CANCEL',DECODE(O3.TYPE,NULL,G.QUANTITY,0),G.QUANTITY) AS quantity,
+	        G.PRODUCT_QUANTITY AS productQuantity,
+	        tbl.price/100          	  AS sellPrice,
+	        G.SETTLEMENT_PRICE / 100 AS settlementPrice,
+	        G.ACTUAL_SETTLEMENT_PRICE/100                                  	AS actualSettlementPrice,
+	        NVL(G.TOTAL_SETTLEMENT_PRICE,G.ACTUAL_SETTLEMENT_PRICE*G.QUANTITY*G.PRODUCT_QUANTITY)/100 AS totalSettlementPrice,
+	        DECODE(
+       			O3.TYPE,NULL,G.TOTAL_SETTLEMENT_PRICE / 100 ,
+       			'VISITOR_LOSS',O3.ACTUAL_LOSS /100 ,
+       			(G.TOTAL_SETTLEMENT_PRICE   - O3.AMOUNT)/ 100) AS oughtPay,
+	        K.NAME                      									AS name,
+	        J.BANK_NAME               										AS bankName,
+	        J.BANK_ACCOUNT_NAME       										AS bankAccountName,
+	        J.BANK_ACCOUNT            										AS bankAccount,
+   			NVL(b.PAY_AMOUNT, 0) / 100 										AS payAmount,
+   			NVL(b.SUBTOTAL_COSTS, 0) / 100 									AS subTotalCosts,
+   			NVL(b.SUBTOTAL_COSTS, 0)/100 - NVL(b.PAY_AMOUNT, 0)/100 		AS surplusAmount,
+   			G.PAYED_AMOUNT / 100 											AS actualPay,
+   			A.CREATE_TIME AS ORDERCREATETIME,
+   			A.PAYMENT_TIME AS ORDERPAYMENTTIME,
+   			E.FILIALE_NAME AS FILIALENAME,
+   			J.NAME AS TARGETNAME,
+   			C.COMPANY_ID AS COMPANYID,
+   			tbl.SUB_PRODUCT_TYPE AS subProductType
+	</sql>
+	<sql id="orderInfoDetail_sql">
+		<include refid="orderInfoDetail_sql_columns"/>
+		FROM ORD_ORDER A,
+		       FIN_GROUP_SETTLEMENT B,
+		       lvmama_pet.SUP_SUPPLIER C,
+		       OP_TRAVEL_GROUP D,
+		       PROD_PRODUCT E,
+		       lvmama_pet.PERM_USER F,
+		       ORD_ORDER_ITEM_META G,
+		      lvmama_pet.sup_settlement_target J,
+		       (SELECT OBJECT_ID, NAME
+		          FROM ORD_PERSON DT
+		         WHERE OBJECT_TYPE = 'ORD_ORDER'
+		           AND PERSON_TYPE = 'CONTACT') K,
+       		   op_group_budget_prod aa,
+			   ord_order_item_prod tbl,
+				(SELECT O4.ORDER_ITEM_META_ID,
+		               O4.TYPE,
+		               SUM(O4.AMOUNT) AMOUNT,
+		               SUM(ACTUAL_LOSS) ACTUAL_LOSS
+		          FROM ORD_REFUNDMENT_ITEM O4, ORD_REFUNDMENT O5
+		         WHERE O4.REFUNDMENT_ID = O5.REFUNDMENT_ID
+		           AND O5.STATUS = 'REFUNDED'
+		           AND (O4.MEMO != '自动生成退款单' OR O4.MEMO IS NULL)
+		         GROUP BY O4.ORDER_ITEM_META_ID, O4.TYPE) O3
+		 WHERE A.TRAVEL_GROUP_CODE = B.TRAVEL_GROUP_CODE
+		   AND B.SUPPLIER_ID = C.SUPPLIER_ID
+		   AND B.TRAVEL_GROUP_CODE = D.TRAVEL_GROUP_CODE
+		   AND D.PRODUCT_ID = E.PRODUCT_ID
+		   AND E.MANAGER_ID = F.USER_ID
+		   AND A.ORDER_ID = G.ORDER_ID
+		   AND B.TARGET_ID = J.TARGET_ID
+		   AND A.ORDER_ID = K.OBJECT_ID
+		   AND G.ORDER_ITEM_META_ID = O3.ORDER_ITEM_META_ID(+)
+		   and a.order_id = tbl.order_id
+   		   AND a.payment_status = 'PAYED'
+   		   AND (a.ORDER_STATUS = 'NORMAL' OR a.ORDER_STATUS = 'FINISHED' OR (a.ORDER_STATUS = 'CANCEL' AND O3.ORDER_ITEM_META_ID IS NOT NULL))
+		   and g.meta_branch_id = aa.prod_branch_id
+		   and b.budget_item_id = aa.item_id
+		   and (g.sub_product_type &lt;&gt; 'INSURANCE' or g.sub_product_type is null)
+ 		   and g.order_item_id = tbl.order_item_prod_id
+		   AND B.Group_Settlement_Id = #groupSettlementId#
+	</sql>
+	
+	<sql id="orderInfoDetail_sql2">
+		SELECT 
+			F.REAL_NAME                AS userName,
+			null				          currency,
+	        G.supplier_id             AS supplierId,
+	        C.SUPPLIER_NAME           AS supplierName,
+	        A.Travel_Group_Code       AS travelGroupCode,
+	        a.order_id                AS orderId,
+	        A.VISIT_TIME              AS visitTime,
+	        E.PRODUCT_NAME            AS productName,
+	        E.PRODUCT_ID              AS productId,
+	        G.PRODUCT_NAME            AS productName1,
+	        g.meta_product_id         AS metaProductId,
+	        J.SETTLEMENT_PERIOD       AS settlementPeriod,
+	        DECODE(A.ORDER_STATUS,'CANCEL',DECODE(O3.TYPE,NULL,G.QUANTITY,0),G.QUANTITY) AS quantity,
+	        G.PRODUCT_QUANTITY AS productQuantity,
+	        tbl.price/100          	  AS sellPrice,
+	        G.SETTLEMENT_PRICE / 100 AS settlementPrice,
+	        G.ACTUAL_SETTLEMENT_PRICE/100                                  	AS actualSettlementPrice,
+	        NVL(G.TOTAL_SETTLEMENT_PRICE,G.ACTUAL_SETTLEMENT_PRICE*G.QUANTITY*G.PRODUCT_QUANTITY)/100 AS totalSettlementPrice,
+	        DECODE(
+       			O3.TYPE,NULL,G.TOTAL_SETTLEMENT_PRICE / 100 ,
+       			'VISITOR_LOSS',O3.ACTUAL_LOSS /100 ,
+       			(G.TOTAL_SETTLEMENT_PRICE   - O3.AMOUNT)/ 100) AS oughtPay,
+	        K.NAME                      									AS name,
+	        J.BANK_NAME               										AS bankName,
+	        J.BANK_ACCOUNT_NAME       										AS bankAccountName,
+	        J.BANK_ACCOUNT            										AS bankAccount,
+   			G.PAYED_AMOUNT / 100 											AS actualPay,
+   			NVL(G.PAYED_AMOUNT, 0) / 100                     				AS payAmount,
+   			A.CREATE_TIME AS ORDERCREATETIME,
+   			A.PAYMENT_TIME AS ORDERPAYMENTTIME,
+   			E.FILIALE_NAME AS FILIALENAME,
+   			J.NAME AS TARGETNAME,
+   			C.COMPANY_ID AS COMPANYID,
+   			tbl.SUB_PRODUCT_TYPE AS subProductType,
+   			null  AS subTotalCosts,
+         	null AS surplusAmount
+		FROM 
+			ORD_ORDER A,
+	        lvmama_pet.SUP_SUPPLIER C,
+			OP_TRAVEL_GROUP D,
+			PROD_PRODUCT E,
+			lvmama_pet.PERM_USER F,
+			ORD_ORDER_ITEM_META G,
+			lvmama_pet.sup_settlement_target J,
+			meta_settlement i,
+     		(SELECT OBJECT_ID, NAME
+		        FROM ORD_PERSON DT
+		       WHERE OBJECT_TYPE = 'ORD_ORDER'
+		         AND PERSON_TYPE = 'CONTACT') K,
+			(SELECT O4.ORDER_ITEM_META_ID,
+	               O4.TYPE,
+	               SUM(O4.AMOUNT) AMOUNT,
+	               SUM(ACTUAL_LOSS) ACTUAL_LOSS
+	          FROM ORD_REFUNDMENT_ITEM O4, ORD_REFUNDMENT O5
+	         WHERE O4.REFUNDMENT_ID = O5.REFUNDMENT_ID
+	           AND O5.STATUS = 'REFUNDED'
+	           AND (O4.MEMO != '自动生成退款单' OR O4.MEMO IS NULL)
+	         GROUP BY O4.ORDER_ITEM_META_ID, O4.TYPE) O3 ,
+ 			ord_order_item_prod tbl
+		 WHERE A.TRAVEL_GROUP_CODE = D.TRAVEL_GROUP_CODE
+		   AND g.SUPPLIER_ID = C.SUPPLIER_ID
+		   AND D.TRAVEL_GROUP_CODE = #travelGroupCode#
+		   AND D.PRODUCT_ID = E.PRODUCT_ID
+		   AND E.MANAGER_ID = F.USER_ID
+		   AND A.ORDER_ID = G.ORDER_ID
+		   and i.meta_product_id = g.meta_product_id
+		   AND I.TARGET_ID = J.TARGET_ID
+		   AND A.ORDER_ID = K.OBJECT_ID
+		   AND G.ORDER_ITEM_META_ID = O3.ORDER_ITEM_META_ID(+)
+   		   AND a.payment_status = 'PAYED'
+   		   AND (a.ORDER_STATUS = 'NORMAL' OR a.ORDER_STATUS = 'FINISHED' OR (a.ORDER_STATUS = 'CANCEL' AND O3.ORDER_ITEM_META_ID IS NOT NULL))
+		   and (g.sub_product_type &lt;&gt; 'INSURANCE' or g.sub_product_type is null)
+		   and g.order_item_id = tbl.order_item_prod_id
+	</sql>
+	<!-- 查询订单详细信息 -->
+	<select id="searchOrderInfoDetail" parameterClass="map" resultClass="com.lvmama.finance.group.ibatis.po.OrderInfoDetail">
+		<include refid="pageSearchHead"/>
+		<isNotEqual property="type" compareValue="FIXED">
+			<include refid="orderInfoDetail_sql"/>  
+		</isNotEqual>
+		<isEqual property="type" compareValue="FIXED">
+			<include refid="orderInfoDetail_sql2"/>  
+		</isEqual>
+	    <include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchOrderInfoDetailCount" parameterClass="map" resultClass="Integer">
+		SELECT count(*) FROM (
+		<isNotEqual property="type" compareValue="FIXED">
+			<include refid="orderInfoDetail_sql"/>  
+		</isNotEqual>
+		<isEqual property="type" compareValue="FIXED">
+			<include refid="orderInfoDetail_sql2"/>  
+		</isEqual> )
+	</select>
+	
+	<select id="exportOrderInfoDetail" parameterClass="map" resultClass="com.lvmama.finance.group.ibatis.po.OrderInfoDetail">
+		 <isNotEqual property="type" compareValue="FIXED">
+			<include refid="orderInfoDetail_sql"/>  
+		</isNotEqual>
+		<isEqual property="type" compareValue="FIXED">
+			<include refid="orderInfoDetail_sql2"/>  
+		</isEqual> 
+	</select>
+	
+	<select id="searchOrderDetailSumprice" resultClass="com.lvmama.finance.group.ibatis.po.OrderInfoDetail" parameterClass="map">
+		SELECT 
+			SUM(TBL.oughtPay)  AS sumOughtPay,
+			SUM(TBL.actualPay) AS sumActualPay
+		FROM (
+			<isNotEqual property="type" compareValue="FIXED">
+				<include refid="orderInfoDetail_sql"/>  
+			</isNotEqual>
+			<isEqual property="type" compareValue="FIXED">
+				<include refid="orderInfoDetail_sql2"/>  
+			</isEqual> 
+		) TBL
+	</select>
+	
+	<select id="searchSettlementById" parameterClass="long" resultClass="FinGroupSettlement">
+		SELECT 
+			T.GROUP_SETTLEMENT_ID AS groupSettlementId, 
+			T.TRAVEL_GROUP_CODE AS travelGroupCode, 
+			T.SUBTOTAL_COSTS/100 AS subtotalCosts, 
+			T.Pay_Amount/100 AS payAmount,
+       		TT.unit AS unit ,
+       		T.BUDGET_ITEM_TYPE AS BUDGETITEMTYPE
+		FROM 
+			FIN_GROUP_SETTLEMENT T,
+			FIN_CURRENCY         TT 
+		WHERE 
+			T.CURRENCY = TT.CURRENCY
+		AND
+			T.Group_Settlement_Id = #groupSettlementId#
+	</select>
+	
+	<select id="exportOrderDetail" parameterClass="map" resultClass="com.lvmama.finance.group.ibatis.po.OrderInfoDetail">
+		SELECT F.REAL_NAME            AS userName,
+			null				          currency,
+	        G.supplier_id             AS supplierId,
+	        C.SUPPLIER_NAME           AS supplierName,
+	        A.Travel_Group_Code       AS travelGroupCode,
+	        A.order_id                AS orderId,
+	        A.VISIT_TIME              AS visitTime,
+	        E.PRODUCT_NAME            AS productName,
+	        E.PRODUCT_ID              AS productId,
+	        G.PRODUCT_NAME            AS productName1,
+	        g.meta_product_id         AS metaProductId,
+	        J.SETTLEMENT_PERIOD       AS settlementPeriod,
+	        G.QUANTITY AS quantity,
+	        G.PRODUCT_QUANTITY AS productQuantity,
+	        tbl.price/100          	  AS sellPrice,
+	        G.SETTLEMENT_PRICE / 100 AS settlementPrice,
+	        G.ACTUAL_SETTLEMENT_PRICE/100                                  	AS actualSettlementPrice,
+	        NVL(G.TOTAL_SETTLEMENT_PRICE,G.TOTAL_SETTLEMENT_PRICE)/100 AS totalSettlementPrice,
+	        K.NAME                      									AS name,
+	        J.BANK_NAME               										AS bankName,
+	        J.BANK_ACCOUNT_NAME       										AS bankAccountName,
+	        J.BANK_ACCOUNT            										AS bankAccount,
+   			G.PAYED_AMOUNT / 100 											AS actualPay,
+   			A.CREATE_TIME AS ORDERCREATETIME,
+   			A.PAYMENT_TIME AS ORDERPAYMENTTIME,
+   			E.FILIALE_NAME AS FILIALENAME,
+   			J.NAME AS TARGETNAME,
+   			C.COMPANY_ID AS COMPANYID,
+   			tbl.SUB_PRODUCT_TYPE AS subProductType
+		  FROM ORD_ORDER A,
+		       FIN_GROUP_SETTLEMENT B,
+		       LVMAMA_PET.SUP_SUPPLIER C,
+		       OP_TRAVEL_GROUP D,
+		       PROD_PRODUCT E,
+		       lvmama_pet.PERM_USER F,
+		       ORD_ORDER_ITEM_META G,
+		       META_PRODUCT H,
+		       LVMAMA_PET.SUP_SETTLEMENT_TARGET J,
+		       (SELECT OBJECT_ID, NAME
+		          FROM ORD_PERSON DT
+		         WHERE OBJECT_TYPE = 'ORD_ORDER'
+		           AND PERSON_TYPE = 'CONTACT') K,
+		       (SELECT A.GROUP_SETTLEMENT_ID, A.BUDGET_ITEM_TYPE, A.BUDGET_ITEM_NAME
+			    FROM 
+			  		FIN_GROUP_SETTLEMENT A, 
+			  		SUP_SUPPLIER B, 
+			  		SUP_SETTLEMENT_TARGET C,
+			  		FIN_CURRENCY D,
+		       		OP_TRAVEL_GROUP f,
+		       		PROD_ROUTE g,
+					PROD_PRODUCT h, 
+					lvmama_pet.PERM_USER i
+				WHERE 
+					A.DEL = 'N'
+                AND 
+                	A.BUDGET_ITEM_TYPE &lt;&gt; 'FIXED'
+		 		AND
+					A.SUPPLIER_ID = B.SUPPLIER_ID
+			   	AND 
+			   		A.TARGET_ID = C.TARGET_ID
+			   	AND
+			   		A.CURRENCY = D.CURRENCY
+		   		and 
+		   			A.travel_group_code = f.travel_group_code
+		   		and 
+		   			f.product_id = g.product_id
+		       	AND 
+		       		g.PRODUCT_ID = h.PRODUCT_ID
+		       	AND 
+		       		h.MANAGER_ID = i.USER_ID
+			   	<isNotNull property="targetId" prepend="AND">
+					A.TARGET_ID = #targetId#
+				</isNotNull>
+				<isNotNull property="supplierId" prepend="AND">
+					A.SUPPLIER_ID = #supplierId#
+				</isNotNull>
+				<isNotEmpty property="travelGroupCode" prepend="AND">
+					A.TRAVEL_GROUP_CODE = #travelGroupCode#
+				</isNotEmpty>
+				<isNotEmpty property="settlementPeriod" prepend="AND">
+					C.SETTLEMENT_PERIOD = #settlementPeriod#
+				</isNotEmpty>
+				<isNotEmpty property="paymentType" prepend="AND">
+					A.PAYMENT_TYPE = #paymentType#
+				</isNotEmpty>
+				<isNotEmpty property="paymentStatus" prepend="AND">
+					A.PAYMENT_STATUS = #paymentStatus#
+				</isNotEmpty>
+				<!-- 销售产品id -->
+				<isNotNull property="product" prepend="AND">
+					f.PRODUCT_ID = #product#
+				</isNotNull>
+				<!-- 出团时间 -->
+				<isNotEmpty property="visitTimeBegin" prepend="AND">
+					f.VISIT_TIME &gt;= TO_DATE(#visitTimeBegin#,'yyyy-mm-dd')
+				</isNotEmpty>
+				<isNotEmpty property="visitTimeEnd" prepend="AND">
+					f.VISIT_TIME  &lt; TRUNC(TO_DATE(#visitTimeEnd#,'YYYY-MM-DD') + 1)
+				</isNotEmpty>
+				<!-- 销售产品子类型 -->
+				<isNotNull property="routeType" prepend="AND">
+					h.sub_product_type IN
+					<iterate property="routeType" open="(" close=")" conjunction=",">
+							#routeType[]#  
+					</iterate>
+				</isNotNull>
+				<isNotEmpty property="orderId" prepend="AND">
+					BUDGET_ITEM_TYPE = 'PRODUCT'
+					AND
+					EXISTS( SELECT * FROM ORD_ORDER OO WHERE OO.TRAVEL_GROUP_CODE = A.TRAVEL_GROUP_CODE AND OO.ORDER_ID = #orderId#)
+				</isNotEmpty>
+				) T,
+				ord_order_item_prod tbl
+		 WHERE A.TRAVEL_GROUP_CODE = B.TRAVEL_GROUP_CODE
+		   AND B.SUPPLIER_ID = C.SUPPLIER_ID
+		   AND B.TRAVEL_GROUP_CODE = D.TRAVEL_GROUP_CODE
+		   AND D.PRODUCT_ID = E.PRODUCT_ID
+		   AND E.MANAGER_ID = F.USER_ID
+		   AND A.ORDER_ID = G.ORDER_ID
+		   AND G.META_PRODUCT_ID = H.META_PRODUCT_ID
+		   AND B.TARGET_ID = J.TARGET_ID
+		   AND A.ORDER_ID = K.OBJECT_ID
+           and a.payment_status = 'PAYED'
+           and a.order_status in ('NORMAL', 'FINISHED')
+           AND B.Group_Settlement_Id = T.GROUP_SETTLEMENT_ID
+   		   and h.product_name = t.BUDGET_ITEM_NAME
+   		   and a.order_id = tbl.order_id
+		   and (g.sub_product_type &lt;&gt; 'INSURANCE' or g.sub_product_type is null)
+ 		   and g.order_item_id = tbl.order_item_prod_id
+		order by b.createtime desc
+	</select>
+	<select id="queryOrdRefundmentItemByOrdItemMetaId" parameterClass="Long" resultClass="com.lvmama.comm.bee.po.ord.OrdRefundMentItem">
+		SELECT 
+	      B.REFUNDMENT_ITEM_ID AS REFUNDMENTITEMID,
+	      B.REFUNDMENT_ID AS REFUNDMENTID,
+	      B.ORDER_ITEM_META_ID AS ORDERITEMMETAID,
+	      B.TYPE,
+	      B.AMOUNT,
+	      B.MEMO
+	      FROM 
+	        ORD_REFUNDMENT A, ORD_REFUNDMENT_ITEM B
+	     WHERE 
+	       A.REFUNDMENT_ID = B.REFUNDMENT_ID
+	     AND 
+	         A.STATUS = 'REFUNDED'
+	     AND 
+	         B.ORDER_ITEM_META_ID = #orderItemMetaId#
+	     ORDER BY 
+	       B.ORDER_ITEM_META_ID,A.CREATE_TIME
+	</select>
+	
+	<select id="searchById" resultClass="FinGroupSettlement">
+		SELECT 
+			B.SUPPLIER_ID AS supplierId,
+       		B.SUPPLIER_NAME AS supplierName,
+       		D.CURRENCY_NAME AS currency,
+       		A.Payment_Type AS paymentType,
+       		NVL(A.SUBTOTAL_COSTS, 0)/100 AS SUBTOTALCOSTS,
+       		A.IS_USE_ADVANCEDEPOSITS AS isUseAdvancedeposits,
+       		NVL(A.PAY_AMOUNT, 0)/100 AS payAmount
+  		FROM 
+  			FIN_GROUP_SETTLEMENT A, 
+  			SUP_SUPPLIER B, 
+  			FIN_CURRENCY D
+ 		WHERE 
+ 			A.SUPPLIER_ID = B.SUPPLIER_ID
+   		AND 
+   			D.CURRENCY = A.CURRENCY
+   		AND 
+   			A.GROUP_SETTLEMENT_ID
+		<iterate prepend="IN" open="(" close=")" conjunction=",">
+			#[]#  
+		</iterate>
+	</select>
+</sqlMap>

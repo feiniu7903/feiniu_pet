@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="passportProcesser" class="com.lvmama.message.PassportProcesser">
+		<property name="passBusinessService" ref="passBusinessService"></property>
+		<property name="passportMessageProducer" ref="passportMessageProducer"></property>
+		<property name="passCodeService" ref="passCodeService"></property>
+		<property name="passportMessageService" ref="passportMessageService"></property>
+		
+		<property name="hostname" value="${passport.hostname}"/>
+	</bean>
+	
+	
+	<bean id="passportProcesserChimelong" class="com.lvmama.message.PassportProcesser">
+		<property name="passBusinessService" ref="passBusinessService"></property>
+		<property name="passportMessageProducer" ref="passportMessageProducer"></property>
+		<property name="passCodeService" ref="passCodeService"></property>
+	</bean>
+	
+	<!-- 消息接收 -->
+	<bean id="passportTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName">
+			<value>ActiveMQ.PASSPORT.${jms_node}</value>
+		</property>
+		<property name="processerList">
+			<list>
+				<ref bean="passportProcesser" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 长隆服务商消息接收 -->
+	<bean id="passportChimelongTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName">
+			<value>ActiveMQ.PASSPORT.CHIMELONG.${jms_node}</value>
+		</property>
+		<property name="processerList">
+			<list>
+				<ref bean="passportProcesserChimelong" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 订阅 -->
+	<bean id="passportMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="passportTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+	
+	<!-- 长隆 - 订阅 -->
+	<bean id="passportChimelongMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="passportChimelongTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+
+	<!-- 消息监听 TOPIC 模式 -->
+	<bean id="passportTopicListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="PASSPORT_TOPIC" />
+		<property name="messageListener" ref="passportMessageListener" />
+	</bean>
+	
+	<!-- 长隆-消息监听 TOPIC 模式 -->
+	<bean id="passportChimelongTopicListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="PASSPORT_CHIMELONG_TOPIC" />
+		<property name="messageListener" ref="passportChimelongMessageListener" />
+	</bean>
+</beans>

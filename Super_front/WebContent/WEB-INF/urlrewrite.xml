@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
+
+	Configuration file for UrlRewriteFilter
+	http://tuckey.org/urlrewrite/
+-->
+<urlrewrite>
+   <!-- 游轮 -->
+    <rule match-type="regex">
+        <from>^/youlun([/]?)$</from>
+        <to>/home/youlun.do</to>
+    </rule>
+	<rule match-type="regex">
+		<from>^/userCenter/user\\!(\\w+)$</from>
+		<to>/userCenter/user_$1</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/route/([0-9]+)$</from>
+		<to>/product/detail.do?id=$1</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/product/([0-9]+)$</from>
+		<to>/product/detail.do?id=$1</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/purse/product/([0-9]+)$</from>
+		<to>/purse/product.do?id=$1</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/purse/route/([0-9]+)$</from>
+		<to>/purse/product.do?id=$1</to>
+	</rule>
+	<rule>
+		<from>^/product/getTravelTips/([0-9]+)$</from>
+		<to>/product/getTravelTips.do?travelTips.travelTipsId=$1</to>
+	</rule>
+	
+     <rule match-type="regex">
+		<from>^/tuangou/([A-Za-z0-9]+)/([A-Za-z0-9]+)-([A-Za-z0-9]+)-([A-Za-z0-9]+)-([0-9]+)$</from>
+		<to>/homePage/tuangouList.do?city=$1&amp;type=$2&amp;sort=$3&amp;tgType=$4&amp;page=$5</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/tuangou/([A-Za-z0-9]+)-([A-Za-z0-9]+)-([A-Za-z0-9]+)-([0-9]+)$</from>
+		<to>/homePage/tuangou301.do?type=$1&amp;city=$2&amp;sort=$3&amp;page=$4</to>
+	</rule>
+<!-- 
+	<rule match-type="regex">
+		<from>^/tuangou([/]?)$</from>
+		<to>/homePage/tuangou.do</to>
+	</rule>-->
+
+	<!-- 秒杀 -->
+	<rule match-type="regex">
+		<from>^/tuangou/seckill-([0-9]+)$</from>
+		<to>/seckill/prodProductDetail.do?branchId=$1</to>
+	</rule>
+
+	<!-- 新团购2014-3 -->
+	<rule match-type="regex">
+		<from>^/tuangou([/]?)$</from>
+		<to>/homePage/tuangouIndex.do</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/tuangou/([^-]+)\/$</from>
+		<to>/homePage/tuangouList.do?city=$1</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/tuangou/([^-]*)$</from>
+		<to>/homePage/tuangouList.do?city=$1</to>
+	</rule>
+	
+
+
+	<rule match-type="regex">
+       <from>^/tuangou/detail-([0-9]+)$</from>
+        <to>/homePage/prodProductDetail.do?productId=$1</to>
+    </rule>
+	
+	<rule match-type="regex">
+		<from>^/tuangou/fengqiang([/]?)$</from>
+		<to>/group/index.do</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/tuangou/fengqiang_([0-9]+)([/]?)$</from>
+		<to>/group/record.do?pageSize=10&amp;page=$1</to>
+	</rule>
+    <rule match-type="regex">
+        <from>^/account/checkcode\.htm</from>
+        <to>/WEB-INF/pages/img.jsp</to>
+    </rule>
+	<rule match-type="regex">
+		<from>^/account/checknewcode\.htm</from>
+		<to>/WEB-INF/pages/pinkcode.jsp</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/account/chinesecode\.htm</from>
+		<to>/WEB-INF/pages/chinesecode.jsp</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/points/coupon([/]?)$</from>
+		<to>/shop/moreProductByType.do?productType=COUPON</to>
+	</rule>	
+	<rule match-type="regex">
+		<from>^/points/prod([/]?)$</from>
+		<to>/shop/moreProductByType.do?productType=PRODUCT</to>
+	</rule>		
+	<rule match-type="regex">
+		<from>^/points/prod/([0-9]+)([/]?)$</from>
+		<to>/shop/showProductDetail.do?productId=$1</to>
+	</rule>	
+	<rule match-type="regex">
+		<from>^/points/help([/]?)$</from>
+		<to>/shop/toHelpCenter.do</to>
+	</rule>		
+    <rule match-type="regex">
+		<from>^/points([/]?)$</from>
+        <to>/shop/index.do</to>
+    </rule>
+    <rule match-type="regex">
+		<from>^/cards([/]?)$</from>
+        <to>/login/loginBindCard.do</to>
+    </rule>
+    <rule match-type="regex">
+		<from>^/public/help([/]?)$</from>
+		<to>/help/index.do</to>
+	</rule>
+    
+    <rule match-type="regex">
+		<from>^/public/help_center_chazuo([/]?)$</from>
+		<to>/help/goToChaZuo.do</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/public/help_center_time([/]?)$</from>
+		<to>/help/goToTime.do</to>
+	</rule>
+	
+	<rule match-type="regex">
+		<from>^/public/help_passport_visa([/]?)$</from>
+		<to>/help/goToPassportVisa.do</to>
+	</rule>
+	
+    <rule match-type="regex">
+		<from>^/public/help_([0-9]+)([/]?)$</from>
+		<to>/help/goToContentTypePage.do?contentTypeId=$1</to>
+	</rule>
+	
+    <rule match-type="regex">
+		<from>^/public/help_center_([0-9]+)([/]?)$</from>
+		<to>/help/goToContentDetailPage.do?contentId=$1</to>
+	</rule>
+	
+	<!--我的驴妈妈 我的积分与级别-->
+	<rule match-type="regex">
+		<from>^/myspace/account/points([/]?)$</from>
+		<to>/point/myPoint.do</to>
+	</rule>
+ 
+	  <!--我的驴妈妈 我的点评-->
+	<rule match-type="regex">
+		<from>^/myspace/share/comment([/]?)$</from>
+		<to>/comment/myComment.do</to>
+	</rule>
+	<rule match-type="regex">
+		<from>^/myspace/shop/orderdetail/([0-9]+)([/]?)$</from>
+		<to>/myspace/shop/orderdetail.do?orderId=$1</to>
+	</rule>
+	<rule match-type="regex">
+        <from>^/account/checkcode\.htm</from>
+        <to>/WEB-INF/pages/img.jsp</to>
+    </rule>	
+    <rule match-type="regex">
+        <from>^/changeLocation/t=([a-z]+)$</from>
+        <to>/change/changeLocation.do?t=$1</to>
+    </rule>	
+    
+    <rule match-type="regex">
+		<condition name="host">www.lvmama.com</condition>
+        <from>^([/]?)$</from>
+        <to>/homePage/lvmamaHome.do</to>
+  	</rule>
+  
+    <rule match-type="regex">
+        <from>^/ticket([/]?)$</from>
+        <to>/homePage/channelTicketAction.do</to>
+    </rule>
+    <rule match-type="regex">
+        <from>^/train([/]?)$</from>
+        <to>/homePage/trainAction.do</to>
+    </rule>	
+    <rule match-type="regex">
+        <from>^/freetour([/]?)$</from>
+        <to>/homePage/channelFreetourAction.do</to>
+    </rule>	
+    <rule match-type="regex">
+        <from>^/destroute([/]?)$</from>
+        <to>/homePage/channelDestrouteAction.do</to>
+    </rule>	
+    <rule match-type="regex">
+        <from>^/abroad([/]?)$</from>
+        <to>/homePage/channelAbroadAction.do</to>
+    </rule>	
+    <rule match-type="regex">
+        <from>^/hotel([/]?)$</from>
+        <to>/homePage/channelHotelAction.do</to>
+    </rule>	
+	
+	<!--兼容EDM订阅邮件中的URL 3个月后删除-->
+    <rule match-type="regex">
+        <from>^/super/public/help([/]?)$</from>
+        <to>/help/index.do</to>
+    </rule>	
+    <rule match-type="regex">
+        <from>^/main/userCenter/user!transItfeedBack.do(.*)$</from>
+        <to>/userCenter/user/transItfeedBack.do$1</to>
+    </rule>	
+	<rule match-type="regex">
+        <from>^/main/edm/edmSubscribe!showUpdateSubscribeEmail.do(.*)$</from>
+        <to>/edm/edmSubscribe/showUpdateSubscribeEmail.do$1</to>
+    </rule>
+	<rule match-type="regex">
+        <from>^/main/edm/edmSubscribe!showUnSubscribeEmail.do(.*)$</from>
+        <to>/edm/edmSubscribe/showUnSubscribeEmail.do$1</to>
+    </rule>
+	<!--企业专区首页-->
+  <rule match-type="regex">
+   <from>^/company([/]?)$</from>
+   <to>/homePage/customizedClientNewAction.do</to>
+ </rule>
+ 	<!--企业专区子页 城市列表-->
+  <rule match-type="regex">
+   <from>^/company/city/([0-9]+)$</from>
+   <to>/homePage/company/city.do?blockId=$1</to>
+  </rule>
+ 
+ <!--驴妈妈首页企业专区静态页 -->
+	<rule match-type="regex">
+        <from>^/company/wqy-1\.html</from>
+        <to>/WEB-INF/pages/www/company/wqy-1.html</to>
+    </rule>
+	<rule match-type="regex">
+        <from>^/company/wqy-2\.html</from>
+        <to>/WEB-INF/pages/www/company/wqy-2.html</to>
+    </rule>
+	<rule match-type="regex">
+        <from>^/company/gddz-1\.html</from>
+        <to>/WEB-INF/pages/www/company/gddz-1.html</to>
+    </rule>
+	<rule match-type="regex">
+        <from>^/company/gddz-2\.html</from>
+        <to>/WEB-INF/pages/www/company/gddz-2.html</to>
+    </rule>
+	<rule match-type="regex">
+        <from>^/company/ggy-1\.html</from>
+        <to>/WEB-INF/pages/www/company/ggy-1.html</to>
+    </rule>
+	<rule match-type="regex">
+        <from>^/company/ggy-2\.html</from>
+        <to>/WEB-INF/pages/www/company/ggy-2.html</to>
+    </rule>
+	<rule match-type="regex">
+        <from>^/company/swkc-1\.html</from>
+        <to>/WEB-INF/pages/www/company/swkc-1.html</to>
+    </rule>
+	<rule match-type="regex">
+        <from>^/company/swkc-2\.html</from>
+        <to>/WEB-INF/pages/www/company/swkc-2.html</to>
+    </rule>
+	<rule match-type="regex">
+        <from>^/company/tdtz-1\.html</from>
+        <to>/WEB-INF/pages/www/company/tdtz-1.html</to>
+    </rule>
+	<rule match-type="regex">
+        <from>^/company/tdtz-2\.html</from>
+        <to>/WEB-INF/pages/www/company/tdtz-2.html</to>
+    </rule>
+	<rule match-type="regex">
+        <from>^/company/gef\.html</from>
+        <to>/WEB-INF/pages/www/company/gef.html</to>
+    </rule>
+	<rule match-type="regex">
+        <from>^/company/team\.html</from>
+        <to>/WEB-INF/pages/www/company/team.html</to>
+    </rule>
+
+
+
+<!--   点评业务部分的跳转 开始          -->
+	 <!--点评 点评首页-->
+    <rule match-type="regex">
+        <from>^/comment[/]*$</from>
+        <to>/comment/comment.do</to>
+    </rule>
+
+	<rule match-type="regex">
+		<from>^/comment/([0-9]+)/*$</from>
+        <to>/comment/detailCmt.do?commentId=$1</to>
+	</rule>
+	
+		<!-- 点评（产品点评列表页） -->
+	<rule match-type="regex">
+		<from>^/product/([a-zA-Z0-9]+)/comment[/]*$</from>
+		<to>/comment/listCmtsOfProduct.do?productId=$1</to>
+	</rule>
+	
+	
+	<!-- 点评景点排行首页-->
+    <rule match-type="regex">
+        <from>^/comment/top[/]*$</from>
+        <to >/comment/paiHangBang.do?blockId=8827&amp;station=INFO</to>
+    </rule>
+    
+    
+    <!-- 景点/目的地点评列表页-->
+    <rule match-type="regex">
+		<from>^/comment/([0-9]+)-([0-9]+)[/]*$</from>
+		<to>/comment/listCmtsOfDestBasic.do?id=$1&amp;page=$2</to>
+	</rule>
+	
+	
+	<!-- 点评错误兼容 -->
+	<rule match-type="regex">
+		<from>^/comment/generalNewComment!getComment.do$</from>
+		<to>/comment/generalNewComment/getComment.do</to>
+	</rule>
+	
+    <rule match-type="regex">
+		<from>^/comment/generalNewComment!queryPlaceCmtLatitudeStatis.do$</from>
+		<to>/comment/generalNewComment/queryPlaceCmtLatitudeStatis.do</to>
+	</rule>
+	<!-- 点评错误兼容 -->
+<!--   点评业务部分的跳转 结束          -->
+
+
+
+
+<!--  内容相关，临时放点评里保存 开始 -->
+	<!-- 住宿（景点） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]+)/hotel[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$1&amp;type=11&amp;currentTab=hotel</to>
+	</rule>
+	 
+	<!-- 住宿（目的地） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/hotel[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$2&amp;type=11&amp;currentTab=hotel</to>
+	</rule>
+
+	<!-- 美食（景点） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]+)/dish[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$1&amp;type=11&amp;currentTab=dish</to>
+	</rule>
+
+	<!-- 美食（目的地） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/dish[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$2&amp;type=11&amp;currentTab=dish</to>
+	</rule>
+
+	<!-- 交通（景点） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]+)/traffic[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$1&amp;type=11&amp;currentTab=traffic</to>
+	</rule>
+
+	<!-- 交通（目的地） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/traffic[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$2&amp;type=11&amp;currentTab=traffic</to>
+	</rule>
+
+	<!-- 娱乐（景点） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]+)/entertainment[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$1&amp;type=11&amp;currentTab=entertainment</to>
+	</rule>
+
+	<!-- 娱乐（目的地） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/entertainment[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$2&amp;type=11&amp;currentTab=entertainment</to>
+	</rule>
+
+	<!-- 购物（景点） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]+)/shop[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$1&amp;type=11&amp;currentTab=shop</to>
+	</rule>
+
+	<!-- 购物（目的地） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/shop[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$2&amp;type=11&amp;currentTab=shop</to>
+	</rule>
+	
+	<!-- 行程（景点） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]+)/weekendtravel[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$1&amp;type=11&amp;currentTab=weekendtravel</to>
+	</rule>
+
+	<!-- 行程（目的地） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/weekendtravel[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$2&amp;type=11&amp;currentTab=weekendtravel</to>
+	</rule>
+	
+	<!-- 景点（景点） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]+)/place[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$1&amp;type=11&amp;currentTab=place</to>
+	</rule>
+
+	<!-- 景点（目的地） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/scenery[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$2&amp;type=11&amp;currentTab=scenery</to>
+	</rule>
+	
+	<!-- 摄影（景点） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]+)/photo[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$1&amp;type=11&amp;currentTab=photo</to>
+	</rule>
+
+	<!-- 摄影（目的地） -->
+	<rule match-type="regex">
+		<from>^/travel/([a-zA-Z0-9]*)_([a-zA-Z0-9]+)/photo[/]*$</from>
+		<to>/comment/listCmtsOfDestBasicTravel.do?pinyin=$2&amp;type=11&amp;currentTab=photo</to>
+	</rule>
+
+<!--  内容相关，临时放点评里保存 结束 -->
+
+<!--  空电子合同预览 开始 -->
+	<rule match-type="regex">
+		<from>^/econtract/([a-zA-Z0-9_]+)[/]*$</from>
+		<to>/ord/emptyContract.do?productId=$1</to>
+	</rule>
+<!--  空电子合同预览 结束 -->
+    <!-- 新门票 orderFill/ticket-111 -->
+	<rule match-type="regex">
+		<from>^/orderFill/ticket-([0-9]+)$</from>
+		<to>/fill/ticket.do?productId=$1</to>
+	</rule>
+	<!-- 新订单详情页   -->
+	<rule match-type="regex">
+		<from>^/pay/ticket-([0-9]+)-([0-9]+)$</from>
+		<to>/view/viewNew.do?id=$1&amp;orderId=$2</to>
+	</rule>
+	<!-- 团购分销 之 产品详情页-->
+	<rule match-type="regex">
+		<from>^/product/distribution-([0-9]+)-([0-9]+)-([0-9]+)$</from>
+		<to>/tuanProduct/details.do?prodBranchId=$1&amp;channelId=$2&amp;batchId=$3</to>
+	</rule>
+	<!-- 团购分销 之 产品详情页-->
+	<rule match-type="regex">
+		<from>^/tuangouyuyue$</from>
+		<to>/distribution/yuyue.do</to>
+	</rule>
+	<!-- 火车时刻表 -->
+	<rule match-type="regex">
+        <from>^/train/shikebiao([/]?)$</from>
+        <to>/train/trainSchedule.do</to>
+    </rule>
+    <rule match-type="regex">
+        <from>^/train/shikebiao/([a-zA-Z0-9]*)$</from>
+        <to>/train/trainScheduleQuery.do?stationPinyin=$1</to>
+    </rule>	
+    <rule match-type="regex">
+        <from>^/train/shikebiao/([a-zA-Z0-9]*\-[a-zA-Z0-9]*).html$</from>
+        <to>/train/trainStationStation.do?stationPinyin=$1</to>
+    </rule>	
+    <!-- 车次查询 -->
+    <rule match-type="regex">
+        <from>^/train/checi([/]?)$</from>
+        <to>/train/trainCheci.do</to>
+    </rule>		
+    <rule match-type="regex">
+        <from>^/train/checi/(gaotie|dongche|tekuai|kuaiche|qita){1}$</from>
+        <to>/train/trainCheci.do?category=$1</to>
+    </rule>
+    <rule match-type="regex">
+        <from>^/train/checi/([a-zA-Z0-9\/]*)$</from>
+        <to>/train/trainCheciQuery.do?fullName=$1</to>
+    </rule>
+    
+     <rule match-type="regex">
+        <from>^/519dacun/index.html$</from>
+        <to>/519dacun/index.do</to>
+    </rule>	
+ </urlrewrite>

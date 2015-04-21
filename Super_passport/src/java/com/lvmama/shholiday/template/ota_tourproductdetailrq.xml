@@ -1,0 +1,15 @@
+<#import "sh_holiday_base.xml" as base>
+<@base.layout "ProductDetail">
+	<Products>
+		<Product UniqueID="${body.productId}" />
+	</Products>
+	<ShowDateRange>
+		<BeginDate>${body.beginDate}</BeginDate>
+		<EndDate>${body.endDate}</EndDate>
+	</ShowDateRange>
+	<MinTakeoffDate></MinTakeoffDate>
+	<FilterNoTeamDate>false</FilterNoTeamDate>
+	<DataTypes>
+		<DataType Code="${body.dateType}"></DataType>
+	</DataTypes>
+</@base.layout>

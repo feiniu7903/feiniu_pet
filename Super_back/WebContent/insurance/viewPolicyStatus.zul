@@ -1,0 +1,25 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./viewPolicyStatusWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="viewPolicyStatusWin" title="查看保单信息" closable="true" sizable="false" border="normal" mode="embedded" apply="com.lvmama.back.web.insurance.ViewPolicyStatusAction">
+		<grid>
+			<columns>
+			    <column width="100px">类型</column>
+				<column width="100px">姓名</column>
+				<column>联系电话</column>
+				<column>证件类型</column>
+				<column>证件号码</column>
+				<column>保单号</column>
+			</columns>
+			<rows>
+				<row forEach="${saction.insInsurants}">
+					<hbox>${each.chPersonType }</hbox>
+					<hbox>${each.name }</hbox>
+					<hbox>${each.mobileNumber }</hbox>
+					<hbox>${each.chCertType }</hbox>
+					<hbox>${each.certNo }</hbox>
+					<hbox>${saction.policy.policyNo}</hbox>					
+				</row>																								
+			</rows>
+		</grid>			
+	</window>
+</zk>

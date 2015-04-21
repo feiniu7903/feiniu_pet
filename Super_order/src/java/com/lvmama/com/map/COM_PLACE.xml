@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="COM_PLACE">
+
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.pet.po.place.Place">
+		 		<result column="PLACE_ID" property="placeId" />
+			    <result column="NAME" property="name" />
+			    <result property="province" column="province" />
+			 	<result property="city" column="city" />
+			    <result column="PIN_YIN" property="pinYin" />
+			    <result column="PIN_YIN_URL" property="pinYinUrl" />
+			    <result column="SEO_NAME" property="seoName" />
+			    <result column="SEO_TITLE" property="seoTitle" />
+			    <result column="SEO_CONTENT" property="seoContent" />
+			    <result column="SEO_KEYWORD" property="seoKeyword" />
+			    <result column="SEO_DESCRIPTION" property="seoDescription" />
+			    <result column="TEMPLATE" property="template" />
+			    <result column="HFKW" property="hfkw" />
+			    <result column="PLACE_TYPE" property="placeType" />
+			    <result column="REMARKES" property="remarkes" />
+			    <result column="PARENT_PLACE_ID" property="parentPlaceId" />
+			    <result column="SEQ" property="seq" />
+			    <result column="SEQ_ACTIVITY" property="seqActivity" />
+			    <result column="IS_BOTTOM" property="isBottom" />
+			    <result column="PROD_ENABLE" property="prodEnable" />
+			    <result column="STAGE" property="stage" />
+			    <result column="IS_VALID" property="isValid" />
+			    <result column="ADDRESS" property="address" />
+			    <result column="SCENIC_OPEN_TIME" property="scenicOpenTime" />
+			    <result column="SCENIC_RECOMMEND_TIME" property="scenicRecommendTime" />
+			    <result column="SCENIC_GRADE" property="scenicGrade" />
+			    <result column="SCENIC_SECOND_TOPIC" property="scenicSecondTopic" />
+			    <result column="FIRST_TOPIC" property="firstTopic" />
+			    <result column="FEATURE" property="feature" />
+			    <result column="ORDER_NOTICE" property="orderNotice" />
+			    <result column="IMPORTANT_TIPS" property="importantTips" />
+			    <result column="DESCRIPTION" property="description" />
+			    <result column="CREATE_TIME"  property="createTime" />
+			    <result column="UPDATE_TIME"  property="updateTime" />
+			    <result column="DEFAULT_URL" property="defaultUrl" />
+			    <result column="IS_HAS_ACTIVITY" property="isHasActivity" />
+	</resultMap>
+	
+	<resultMap class="com.lvmama.comm.pet.po.place.Place" id="pppResultMap" extends="BaseResultMap">
+	  	<result column="FROM" property="from" />
+	    <result column="TO" property="to" />
+	    <result column="PPNAME" property="parentPlaceName" />
+	    <result column="PARENTPINYIN" property="parentPinYin" />
+	</resultMap>
+	
+	<resultMap id="SimpleResultMap"
+		class="com.lvmama.comm.pet.po.place.Place">
+ 		<result column="PLACE_ID" property="placeId" />
+	    <result column="NAME" property="name" />
+	    <result column="PIN_YIN" property="pinYin" />
+	    <result column="PIN_YIN_URL" property="pinYinUrl" />
+	    <result column="DEFAULT_URL" property="defaultUrl" />
+	</resultMap>
+	
+	<sql id="SimpleFields">
+		PLACE_ID,NAME,PIN_YIN,PIN_YIN_URL,DEFAULT_URL
+	</sql>
+
+	<select id="getBaiduCityNameByPlaceIds" resultClass="java.lang.String"
+		parameterClass="java.util.Map">
+		SELECT CITY_NAME FROM DISTRIBUTION_BAIDU_CITY WHERE PLACE_ID IN 
+			<iterate property="placeIdList" conjunction="," open="(" close=")">
+					#placeIdList[]# 
+			</iterate>
+	</select>
+
+	<select id="selectAllClientPlace" resultMap="BaseResultMap">
+		select * from COM_PLACE where is_client='Y' and stage!='1' and is_valid='Y'
+	</select>
+	
+	<update id="autoUpdatePrice" parameterClass="java.util.HashMap">
+		update COM_PLACE set MARKET_PRICE=#marketPrice#,SELL_PRICE=#sellPrice# where PLACE_ID=#placeId#
+	</update>
+ 
+
+	<select id="selectRootDest" resultMap="BaseResultMap">
+		select * from com_place where parent_Place_Id is null and stage=1
+	</select>
+ 
+
+	<select id="selectSuggestPlace" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+		select * from (select * from com_place where IS_VALID='Y' and (NAME like
+		'%$name$%'
+		<isNotEmpty property="placeId">
+			OR PLACE_ID=#placeId#
+		</isNotEmpty>
+		)
+		) where rownum<![CDATA[<=20]]>
+	</select>
+	<select id="getComPlaceByPlaceIds" resultMap="BaseResultMap"
+		parameterClass="java.lang.String">
+		SELECT * FROM COM_PLACE CP WHERE CP.PLACE_TYPE IN ('ZXS','CITY') AND CP.PLACE_ID IN (#placeIdStr#);
+	</select>
+
+	
+	<select id="getFromDestByProductId" resultMap="BaseResultMap">
+		SELECT CP.* FROM COM_PLACE CP,PROD_PRODUCT_PLACE PPP WHERE
+		CP.PLACE_ID=PPP.PLACE_ID AND PPP."FROM"='true' AND
+		PPP.PRODUCT_ID=#productId#
+	</select>
+	<select id="getToDestByProductId" resultMap="BaseResultMap">
+		SELECT CP.* FROM COM_PLACE CP,PROD_PRODUCT_PLACE PPP WHERE
+		CP.PLACE_ID=PPP.PLACE_ID AND PPP."TO"='true' AND
+		PPP.PRODUCT_ID=#productId#
+	</select>
+	
+	<select id="getComPlaceByProductId" resultMap="BaseResultMap">
+		SELECT  cp.*
+		  FROM prod_product pp,prod_product_channel ppc, PROD_PRODUCT_PLACE PPP,com_place cp
+		 WHERE pp.product_id = ppp.product_id
+	       and ppc.product_id = pp.product_id
+	       and ppp.place_id =cp.place_id
+	       and cp.is_valid = 'Y'
+	       and pp.valid = 'Y'
+	       and cp.place_type in ('ZXS','TBXZQ','CITY','FOREIGN')
+	       and ppc.product_channel ='TUANGOU'
+		   and PPP.product_id=#productId#
+	</select>
+	
+	<select id="getNewComPlaceByProductId" resultMap="pppResultMap">
+		SELECT  cp.*,"TO","FROM",cpe.name as PPNAME,cpe.pin_yin PARENTPINYIN     
+		  FROM prod_product pp,(select distinct product_id ,product_channel from prod_product_channel) ppc, PROD_PRODUCT_PLACE PPP,com_place cp,com_place cpe
+		 WHERE pp.product_id = ppp.product_id
+	       and ppc.product_id = pp.product_id 
+	       and cp.parent_Place_Id = cpe.place_id 
+	       and ppp.place_id =cp.place_id
+	       and cp.is_valid = 'Y'
+	       and pp.valid = 'Y'
+	       and ppc.product_channel ='TUANGOU'
+		   and PPP.product_id=#productId#
+	</select>
+
+	<select id="getComPlaceByDestName" resultMap="BaseResultMap">
+		select * from COM_PLACE where NAME = #destName#
+	</select>
+
+	<select id="getComPlaceByDestId" resultMap="BaseResultMap">
+		select * from COM_PLACE where PLACE_ID = #placeId#
+	</select>
+	<select id="getComPlace" resultMap="BaseResultMap">
+		select * from VIEW_JOURNEY_PLACE vjt,COM_PLACE spt where
+		vjt.PLACE_ID=spt.PLACE_ID and JOURNEY_ID=#journeyId#
+	</select>
+
+	<sql id="condition">
+		where IS_VALID='Y'
+		<isNotEmpty prepend="and" property="idList">
+			<iterate property="idList" open="(" close=")"
+				conjunction="or">
+				PLACE_ID = #idList[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="name">
+			<![CDATA[
+  			NAME like '%$name$%'
+  			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="stage">
+			STAGE = #stage#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="destId">
+			PARENT_PLACE_ID = #destId#
+		</isNotEmpty>
+	</sql>
+
+	<sql id="maxResults">
+		<dynamic prepend="where">
+			<isNotEmpty property="maxResults">
+				<![CDATA[
+  			rownum<= #maxResults#
+  		]]>
+			</isNotEmpty>
+			<isNotPropertyAvailable property="maxResults">
+				<![CDATA[
+  			rownum<= 50
+  		]]>
+			</isNotPropertyAvailable>
+		</dynamic>
+	</sql>
+
+	<select id="countByParams" resultClass="java.lang.Integer"
+		parameterClass="java.util.HashMap">
+		select count(*) from COM_PLACE
+		<include refid="condition" />
+	</select>
+
+	<select id="selectByParams" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from (select * from COM_PLACE
+		<include refid="condition" />
+		order by PLACE_ID )
+		<include refid="maxResults" />
+	</select>
+	
+	<select id="selectSimpleByParams" resultMap="SimpleResultMap"
+		parameterClass="java.util.HashMap">
+		select * from (select <include refid="SimpleFields"/> from COM_PLACE
+		<include refid="condition" />
+		order by PLACE_ID )
+		<include refid="maxResults" />
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		select * from COM_PLACE where PLACE_ID = #placeId#
+	</select>
+	
+	
+	<select id="selectByPlaceIds" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		SELECT * FROM COM_PLACE WHERE PLACE_ID IN 
+			<iterate property="placeIdList" conjunction="," open="(" close=")">
+					#placeIdList[]# 
+			</iterate>
+	</select>
+	
+ 
+	
+	<sql id="queryPlaceByTagAndPlaceTypeSql">
+		select * from COM_PLACE
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="placeIds">
+				PLACE_ID in ($placeIds$)
+		     </isNotEmpty>
+			<isNotEmpty prepend="and" property="placeStage">
+				STAGE in ($placeStage$)
+		     </isNotEmpty>
+			<isNotEmpty prepend="and" property="placeName">
+				NAME like
+				'%'||#placeName#||'%'
+		     </isNotEmpty>
+			<isNotEmpty prepend="and" property="tagId">
+				PLACE_ID IN(
+					SELECT PLACE_ID FROM PROD_PLACE_TAG PPT WHERE PPT.TAG_ID=#tagId#
+				)
+		     </isNotEmpty>
+		     <isEmpty  property="tagId">
+		     	<isNotEmpty prepend="and" property="tagGroupId">
+		     		PLACE_ID IN(
+					SELECT
+						PPT.PLACE_ID FROM PROD_PLACE_TAG PPT,PROD_TAG PT WHERE
+						PPT.TAG_ID=PT.TAG_ID AND PT.TAG_GROUP_ID=#tagGroupId#
+					)
+		     	</isNotEmpty>
+		     </isEmpty>
+		</dynamic>
+	</sql>
+
+	<select id="queryPlaceByTagAndPlaceTypeCount" resultClass="java.lang.Integer"
+		parameterClass="java.util.HashMap">
+		select count(*) from (
+		<include refid="queryPlaceByTagAndPlaceTypeSql" />
+		)
+	</select>
+
+	<select id="queryPlaceByTagAndPlaceType" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from (
+		select t.*, ROWNUM ROWNUM1 from (
+		<include refid="queryPlaceByTagAndPlaceTypeSql" />
+		) t
+		<isNotNull prepend="where" property="_endRow">
+			ROWNUM &lt;= #_endRow#
+		</isNotNull>
+		)
+		<isNotNull prepend="where" property="_startRow">
+			ROWNUM1 &gt;=
+			#_startRow#
+		</isNotNull>
+	</select>
+ 
+	
+	<select id="getDistributionProductPlace" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		select * from (
+			select TS.*, ROWNUM ROWNUM1 from (
+				SELECT *
+			  FROM COM_PLACE CP WHERE CP.PLACE_ID IN 
+			  (      SELECT DISTINCT (P.PLACE_ID)            
+			          FROM PROD_PRODUCT_PLACE   PPP,
+			               PROD_PRODUCT         PP,
+			               COM_PLACE            P,
+			               DISTRIBUTION_PRODUCT DP
+			         WHERE PP.PRODUCT_ID = PPP.PRODUCT_ID
+			           AND PPP.PLACE_ID = P.PLACE_ID
+			           AND PP.PRODUCT_ID = DP.PRODUCT_ID
+			           AND DP.DISTRIBUTOR_INFO_ID = #distributorId#
+			           AND PPP."TO" = 'true')
+			)TS
+			WHERE ROWNUM &lt;= #_endRow#)
+			WHERE ROWNUM1 &gt;=#_startRow#
+	</select>
+	
+	<select id="getDistributionProductPlaceCount" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		SELECT COUNT(DISTINCT(P.place_id)) FROM PROD_PRODUCT_PLACE PPP, PROD_PRODUCT PP , COM_PLACE P ,DISTRIBUTION_PRODUCT DP
+		WHERE PP.PRODUCT_ID=PPP.PRODUCT_ID
+		AND   PPP.PLACE_ID = P.PLACE_ID
+		AND   PP.PRODUCT_ID = DP.PRODUCT_ID
+		AND   DP.DISTRIBUTOR_INFO_ID=#distributorId#
+		AND   PPP."TO" = 'true'
+	</select>
+	
+	<select id="getFeaturesForDistribution" resultClass="java.lang.String" parameterClass="java.util.Map">
+		SELECT VC.CONTENT FROM DISTRIBUTION_PRODUCT DP ,PROD_PRODUCT_PLACE PPP,VIEW_PAGE VP , VIEW_CONTENT VC
+		WHERE DP.PRODUCT_ID = PPP.PRODUCT_ID
+		AND   PPP."TO"='true'
+		AND   PPP.PRODUCT_ID = VP.PRODUCT_ID
+		AND   VP.PAGE_ID = VC.PAGE_ID
+		AND   VC.CONTENT_TYPE='FEATURES'
+		AND   PPP.PLACE_ID = #placeId#
+		AND   DP.DISTRIBUTOR_INFO_ID=#distributorId#
+	</select>
+</sqlMap>

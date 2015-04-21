@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CALL_CENTER_BASIC">
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.CCStaffsSales">
+		<result column="POSITION" property="staffGroup" />
+		<result column="USER_NAME" property="staffId" />
+		<result column="REAL_NAME" property="staffName" />
+		<result column="ORDER_SALES" property="staffSales" />
+	</resultMap>
+	
+	<sql id="query_CCStaffsSales_sql">
+		SELECT CC.POSITION,CC.USER_NAME,CC.REAL_NAME,SUM(CC.ORDER_SALES) as ORDER_SALES
+		FROM lvmama_report.CALL_CENTER_BASIC CC
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty prepend=" AND " property="staffId">CC.USER_NAME = #staffId#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="staffGroupList">
+				CC.POSITION IN 
+				<iterate open="(" close=")" property="staffGroupList" conjunction=",">
+					#staffGroupList[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="startDate">CC.PAYMENT_TIME &gt;= #startDate#</isNotEmpty>
+			<isNotEmpty prepend=" AND " property="endDate">CC.PAYMENT_TIME &lt;= #endDate#</isNotEmpty>
+		</dynamic>
+		 GROUP BY CC.POSITION, CC.USER_NAME, CC.REAL_NAME 
+		 <isEqual property="orderByPosition" compareValue="CC.POSITION DESC">
+			ORDER BY CC.POSITION DESC
+		</isEqual>
+		<isEqual property="orderByPosition" compareValue="CC.POSITION ASC">
+			ORDER BY CC.POSITION ASC
+		</isEqual>
+		<isEqual property="orderBy" compareValue="CC.USER_NAME DESC">
+			ORDER BY CC.USER_NAME DESC
+		</isEqual>
+		<isEqual property="orderBy" compareValue="CC.USER_NAME ASC">
+			ORDER BY CC.USER_NAME ASC
+		</isEqual>
+		<isEqual property="orderBy" compareValue="ORDER_SALES DESC">
+			ORDER BY ORDER_SALES DESC
+		</isEqual>
+		<isEqual property="orderBy" compareValue="ORDER_SALES ASC">
+			ORDER BY ORDER_SALES ASC
+		</isEqual>
+	</sql>
+	
+	<select id="queryCCStaffsSalesCount" parameterClass="java.util.Map" resultClass="Long">
+		SELECT COUNT(*)
+		FROM ( <include refid="query_CCStaffsSales_sql"/> ) PO
+	</select>
+	
+	<select id="queryCCStaffsSales" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		SELECT PO1.* 
+		FROM (	
+			SELECT PO.*, ROWNUM AS RN 
+			FROM ( 
+				<include refid="query_CCStaffsSales_sql"/> 
+				) PO
+			<dynamic prepend=" WHERE ">
+				<isNotEmpty property="_endRow" >ROWNUM &lt;= #_endRow# </isNotEmpty> 
+			</dynamic>
+			) PO1
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> RN &gt;= #_startRow# </isNotEmpty>
+		</dynamic>	
+	</select>
+</sqlMap>

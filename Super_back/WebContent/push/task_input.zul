@@ -1,0 +1,37 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_task_add"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_task_add" title="制定任务" apply="com.lvmama.back.web.log.ToolsMessageAddAction">
+<grid>
+			<columns>
+				<column width="100px"></column>
+				<column ></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>任务内容：<label width="150px" value="[*]" style="color:red"/></hbox>
+					<hbox>
+						<textbox id="msgContent" value="@{saction.comMessage.content}" rows="4" width="560px" maxlength="1000" >
+						</textbox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>显示时间：<label width="150px" value="[*]" style="color:red"/></hbox>
+					<hbox>
+						<datebox id="beginDate"
+							value="@{saction.comMessage.beginTime}"
+							cols="20" format="yyyy-MM-dd HH:mm">
+						</datebox><label width="150px" value="提示：" style="color:red"/>会在指定时间5分钟左右通知到您!
+					</hbox>
+				</row>
+				<row spans="2" align="center">
+					<hbox > 
+					<button label="保存" id="search" width="100px"
+							onClick="saction.addMsgReceiver();" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+</window>
+</zk>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_FAX_RECV_LINK" >
+  <resultMap id="LinkResultMap" class="com.lvmama.comm.bee.po.fax.OrdFaxRecvLink" >
+    <result column="ORD_FAX_RECV_LINK_ID" property="ordFaxRecvLinkId" />
+    <result column="ORD_FAX_RECV_ID" property="ordFaxRecvId" />
+    <result column="ORDER_ID" property="orderId" />
+    <result column="OPERATOR" property="operator" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="EBK_CERTIFICATE_ID" property="ebkCertificateId" />
+  </resultMap>
+  <resultMap id="LinkAndCertificateMap" class="com.lvmama.comm.bee.po.fax.OrdFaxRecvLink" extends="LinkResultMap">
+    <result column="MEMO" property="memo" />
+    <result column="RESULT_STATUS" property="resultStatus" />   
+  </resultMap>
+  
+  	<insert id="insertLink" parameterClass="com.lvmama.comm.bee.po.fax.OrdFaxRecvLink" >
+		<selectKey resultClass="java.lang.Long" keyProperty="ordFaxRecvLinkId" >
+      		select ORD_FAX_RECV_ID_SEQ.nextval as id from DUAL  
+		</selectKey>
+   			insert into ORD_FAX_RECV_LINK (ORD_FAX_RECV_LINK_ID, ORD_FAX_RECV_ID, ORDER_ID,OPERATOR,CREATE_TIME,EBK_CERTIFICATE_ID,RESULT_STATUS)
+    		values (#ordFaxRecvLinkId#, #ordFaxRecvId#, #orderId#, #operator#, #createTime#,#ebkCertificateId#,#resultStatus#)
+  	</insert>
+  	
+  	<select id="selectLinkByRecvId" resultMap="LinkResultMap" parameterClass="com.lvmama.comm.bee.po.fax.OrdFaxRecvLink" >
+  		select * from ORD_FAX_RECV_LINK where ORD_FAX_RECV_ID = #ordFaxRecvId#
+  	</select>
+  	
+  	<select id="queryLinkByEbkCertificateId" resultMap="LinkResultMap" parameterClass="com.lvmama.comm.bee.po.fax.OrdFaxRecvLink" >
+  		select * from ORD_FAX_RECV_LINK where EBK_CERTIFICATE_ID = #ebkCertificateId#
+  	</select>
+  	
+  	<select id="selectLinksByOrderId" resultMap="LinkResultMap" parameterClass="com.lvmama.comm.bee.po.fax.OrdFaxRecvLink" >
+    select *
+    from ORD_FAX_RECV_LINK
+    where ORDER_ID = #orderId#
+  </select>
+  
+  <select id="selectLinksByOperator" resultMap="LinkResultMap" parameterClass="com.lvmama.comm.bee.po.fax.OrdFaxRecvLink" >
+    select *
+    from ORD_FAX_RECV_LINK
+    where OPERATOR = #operator#
+    order by CREATE_TIME desc
+  </select>
+  <sql id="selectLinksSql">
+	 select lin.*,ec.memo as MEMO,eft.send_status 
+	  from ORD_FAX_RECV_LINK lin, ebk_certificate ec, ebk_fax_task eft
+	 where lin.ebk_certificate_id = ec.ebk_certificate_id
+	   and ec.ebk_certificate_id = eft.ebk_certificate_id
+	   and OPERATOR = #operator#
+	    <isNotEmpty prepend=" and" property="maxOperateTime">
+			lin.CREATE_TIME &lt; = #maxOperateTime#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="minOperateTime">
+			lin.CREATE_TIME &gt; = #minOperateTime#
+		</isNotEmpty>
+	    order by lin.CREATE_TIME desc
+  </sql>
+  <select id="selectLinksByParams" resultMap="LinkAndCertificateMap" parameterClass="java.util.Map">
+    SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+			<include refid="selectLinksSql"/>
+		) T WHERE ROWNUM &lt;= #maxResults#
+		)
+		WHERE ROWNUM1 &gt;=#skipResults#
+  </select>
+  <select id="selectLinksCountByParams" resultClass="java.lang.Long" parameterClass="java.util.Map">
+      select count(*) from (
+      	<include refid="selectLinksSql"/>
+      )
+  </select>
+    
+    <delete id="deleteByOrdFaxRecvLinkId" parameterClass="com.lvmama.comm.bee.po.fax.OrdFaxRecvLink" >
+    delete from ORD_FAX_RECV_LINK
+    where ORD_FAX_RECV_LINK_ID = #ordFaxRecvLinkId#
+  </delete>
+  
+    <update id="updateOrdFaxRecvLinkResultStatus" parameterClass="com.lvmama.comm.bee.po.fax.OrdFaxRecvLink" >
+       update ORD_FAX_RECV_LINK 
+       <dynamic prepend="set" >
+        <isNotNull prepend="," property="resultStatus" >
+        	result_status = #resultStatus#
+        </isNotNull>
+       </dynamic>
+         where ord_fax_recv_link_id=#ordFaxRecvLinkId#
+  </update >
+  
+  
+  <select id="selectLinkCertificateIdsByRecvId" parameterClass="java.lang.Long" resultClass="java.lang.Long">
+      select EBK_CERTIFICATE_ID from ORD_FAX_RECV_LINK where ORD_FAX_RECV_ID = #ordFaxRecvId#
+  </select>
+  <select id="selectLinkAndCertificateByRecvId" parameterClass="java.lang.Long" resultMap="LinkAndCertificateMap">
+      select lin.*,ec.memo as MEMO,eft.send_status as RESULT_STATUS
+	  from ORD_FAX_RECV_LINK lin, ebk_certificate ec, ebk_fax_task eft
+	 where lin.ebk_certificate_id = ec.ebk_certificate_id
+	   and ec.ebk_certificate_id = eft.ebk_certificate_id
+	   and lin.ORD_FAX_RECV_ID = #ordFaxRecvId#
+  </select>
+  
+</sqlMap>

@@ -1,0 +1,42 @@
+<?page title="list PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_message_add"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_message_add" title="消息分类展示" mode="embedded"
+		apply="com.lvmama.back.web.log.MessageReceiversAddAction">
+		<grid>
+			<columns>
+				<column width="80px"></column>
+				<column ></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>账号ID：</hbox>
+					<hbox >
+						<textbox id="ordOrderId" rows="5"
+								maxlength="200" width="680px"
+							value="@{saction.comMessageReceivers.messageReceivers}">
+						</textbox>
+						<space />
+					</hbox>
+				</row>
+				<row align="left">
+					<hbox></hbox>
+					<hbox >
+						<label value="[*]" style="color:red;" />
+						<label value="多项账号ID请以逗号分隔,例如:cs0801,cs0802,cs0803"></label>
+					</hbox>
+				</row>
+				<row spans="2" align="center">
+					<hbox >
+						<button label="保存" id="search" width="100px"
+							onClick="saction.updateMsgReceiver(saction.comMessageReceivers);" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>
+
+
+

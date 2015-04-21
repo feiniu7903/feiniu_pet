@@ -1,0 +1,26 @@
+<?page title="list PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./wind_message_detail"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="wind_message_detail" title="查询接收消息" 
+		apply="com.lvmama.back.web.log.ComMessaDetailAction" width="100px">
+		<grid >
+			<columns>
+					<column width="10%" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label  value="内容:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.comMessage.content}" />
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+	</window>
+</zk>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EBK_ORDER_DATA_REV" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ebooking.EbkOrderDataRev" >
+    <result column="DATA_ID" property="dataId" />
+    <result column="EBK_CERTIFICATE_ITEM_ID" property="ebkCertificateItemId" />
+    <result column="EBK_CERTIFICATE_ID" property="ebkCertificateId" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="DATA_TYPE" property="dataType" />
+    <result column="VALUE" property="value" />
+  </resultMap>
+  
+  <select id="queryEbkOrderDataRevList" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  	select * from EBK_ORDER_DATA_REV
+  	<dynamic prepend="where ">
+  		<isNotEmpty prepend="AND" property="ebkCertificateId">
+  			EBK_CERTIFICATE_ID = #ebkCertificateId#
+  		</isNotEmpty>
+  		<isNotEmpty prepend="AND" property="ebkCertificateItemId">
+  			EBK_CERTIFICATE_ITEM_ID = #ebkCertificateItemId#
+  		</isNotEmpty>
+  	</dynamic>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkOrderDataRev" >
+    select *
+    from EBK_ORDER_DATA_REV
+    where DATA_ID = #dataId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkOrderDataRev" >
+    delete from EBK_ORDER_DATA_REV
+    where DATA_ID = #dataId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkOrderDataRev" >
+    <selectKey resultClass="java.lang.Long" keyProperty="dataId" >
+      select EBK_ORDER_DATA_REV_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into EBK_ORDER_DATA_REV (DATA_ID, EBK_CERTIFICATE_ITEM_ID, EBK_CERTIFICATE_ID,
+      CREATE_TIME,DATA_TYPE, VALUE)
+    values (#dataId#, #ebkCertificateItemId#, #ebkCertificateId#,
+      sysdate,#dataType#, #value#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkOrderDataRev" >
+    <selectKey resultClass="java.lang.Long" keyProperty="dataId" >
+      select EBK_ORDER_DATA_REV_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into EBK_ORDER_DATA_REV
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="dataId" >
+        DATA_ID
+      </isNotNull>
+      <isNotNull prepend="," property="ebkCertificateItemId" >
+        EBK_CERTIFICATE_ITEM_ID
+      </isNotNull>
+      <isNotNull prepend="," property="ebkCertificateId" >
+        EBK_CERTIFICATE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="value" >
+        VALUE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="dataId" >
+        #dataId#
+      </isNotNull>
+      <isNotNull prepend="," property="ebkCertificateItemId" >
+        #ebkCertificateItemId#
+      </isNotNull>
+      <isNotNull prepend="," property="ebkCertificateId" >
+        #ebkCertificateId#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="value" >
+        #value#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkOrderDataRev" >
+    update EBK_ORDER_DATA_REV
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="ebkCertificateItemId" >
+        EBK_CERTIFICATE_ITEM_ID = #ebkCertificateItemId#
+      </isNotNull>
+      <isNotNull prepend="," property="ebkCertificateId" >
+        EBK_CERTIFICATE_ID = #ebkCertificateId#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="value" >
+        VALUE = #value#
+      </isNotNull>
+    </dynamic>
+    where DATA_ID = #dataId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkOrderDataRev" >
+    update EBK_ORDER_DATA_REV
+    set EBK_CERTIFICATE_ITEM_ID = #ebkCertificateItemId#,
+      EBK_CERTIFICATE_ID = #ebkCertificateId#,
+      CREATE_TIME = #createTime#,
+      VALUE = #value#
+    where DATA_ID = #dataId#
+  </update>
+  <delete id="deleteAllByEbkCertificateId">
+  	delete from EBK_ORDER_DATA_REV where EBK_CERTIFICATE_ID = #ebkCertificateId#
+  </delete>
+  <delete id="deleteTicketAllByEbkCertificateId">
+  delete EBK_ORDER_DATA_REV where data_id in (
+  select data_id  from EBK_ORDER_DATA_REV eodr,ebk_certificate_item cci where
+  eodr.ebk_certificate_item_id = cci.ebk_certificate_item_id
+  and cci.order_id=#orderId#
+  and cci.EBK_CERTIFICATE_ID = #ebkCertificateId#)
+  </delete>
+</sqlMap>

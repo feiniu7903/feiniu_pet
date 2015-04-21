@@ -1,0 +1,100 @@
+<?page title="积分统计" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<zscript>
+   <![CDATA[
+         
+	]]>
+</zscript>
+	<window title="积分统计" border="normal"
+		apply="com.lvmama.report.web.point.ReportPointStatisticsAction"
+		id="win">
+		<grid>
+			<rows id="rows_id">
+				<row>
+					<hbox>
+						<label value="查询时间: " />
+						<datebox id="startDate"
+							value="@{saction.searchConds.startDate}" />
+						至
+						<datebox id="endDate"
+							value="@{saction.searchConds.endDate}" />
+						<checkbox id="all_checkbox" name="All"
+							label="全选" onCheck="saction.checkAll(self.checked);" />
+					</hbox>
+				</row>
+				<row forEach="${saction.poinRuleList}">
+					<hbox>
+						<checkbox forEach="${each}"
+							name="${each.ruleId}" label="${each.ruleDescription}"
+							checked="${each.isChecked }"
+							onCheck="saction.checkRule(self.name, self.checked);" />
+					</hbox>
+				</row>
+				<row>
+					<hbox spacing="2">
+						<button label="查询" onClick="saction.search();"
+							id="searchBtn" width="100px" />
+							<button label="导出" id="export" width="100px"
+							onClick="saction.doExport()" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+
+		<label value="积分统计" />
+		<listbox id="box0" fixedLayout="true"
+			model="@{saction.shopPointVoList,load-after='searchBtn.onClick'}">
+			<listhead>
+				<listheader align="left" label="渠道" />
+				<listheader align="right" label="积分总量" />
+				<listheader align="right" label="所占比例" />
+				<listheader align="right" label="会员数量" />
+				<listheader align="right" label="所占比例" />
+			</listhead>
+			<listitem self="@{each='point'}" value="@{point}">
+				<listcell label="@{point.name}" />
+				<listcell label="@{point.sumPoint}" />
+				<listcell label="@{point.pointProportion}" />
+				<listcell label="@{point.membersCount}" />
+				<listcell label="@{point.memProportion}" />
+			</listitem>
+		</listbox>
+		<grid id="all">
+			<columns>
+				<column width="70px"></column>
+				<column></column>
+				<column></column>
+				<column></column>
+				<column></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>统计：</hbox>
+					<hbox>
+						<label value="积分统计:" />
+						<label
+							value="@{saction.pointStatisics,load-after='searchBtn.onClick'}" />
+					</hbox>
+					<hbox>
+						<label value="会员数量统计:" />
+						<label
+							value="@{saction.memStatisics,load-after='searchBtn.onClick'}" />
+					</hbox>
+					<hbox>
+						可用积分统计:
+						<label
+							value="@{saction.sumUsePoint,load-after='searchBtn.onClick'}" />
+					</hbox>
+					<hbox>
+						年末到期积分统计:
+						<label
+							value="@{saction.expiredPoint,load-after='searchBtn.onClick'}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

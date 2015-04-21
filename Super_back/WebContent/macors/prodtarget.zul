@@ -1,0 +1,26 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./mc_prodTargetBandbox"?>
+<bandbox id="mc_prodTargetBandbox" apply="com.lvmama.back.utils.MacroChooseProdTarget" onChanging="mc_prodTargetBandbox$composer.changecomPlace(event)"
+	 onBlur='if(mc_prodTargetBandbox.getValue().trim().equals("")){placeId.setValue(null);}'
+	 mold="rounded" autodrop="true">
+	<bandpopup>
+		<vbox>
+			<listbox width="300px" id="bandboxListBox"
+				model="@{mc_prodTargetBandbox$composer.targetList, load-after='mc_prodTargetBandbox.onChanging' }"
+				onSelect='mc_prodTargetBandbox.value=self.selectedItem.lastChild.label; 
+							placeId.value=self.selectedItem.value;
+							Events.sendEvent(new Event("onChange", placeId)); 
+							mc_prodTargetBandbox.close();'>
+				<listhead>
+					<listheader width="50px" label="编号" />
+					<listheader label="省份" />
+					<listheader label="标的名称" />
+				</listhead>
+				<listitem self="@{each='prodTarget'}" value="@{prodTarget.placeId}" height="25px">
+					<listcell label="@{prodTarget.placeId}" />
+					<listcell label="@{prodTarget.provice}" />
+					<listcell label="@{prodTarget.name}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

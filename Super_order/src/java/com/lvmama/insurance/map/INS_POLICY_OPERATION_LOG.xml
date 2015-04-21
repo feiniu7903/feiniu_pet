@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="INS_POLICY_OPERATION_LOG" >
+	<resultMap id="InsPolicyOperationLogMap" class="com.lvmama.comm.pet.po.ins.InsPolicyOperationLog" >
+		<result column="operation_id" property="operationId"/>
+		<result column="policy_id" property="policyId"/>
+		<result column="operator" property="operator"/>
+		<result column="type" property="type"/>
+		<result column="content" property="content"/>
+		<result column="created_date" property="createdDate"/>
+	</resultMap>
+
+	<select id="query" parameterClass="java.util.Map" resultMap="InsPolicyOperationLogMap">
+		SELECT * FROM ins_policy_operation_log 
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="policyId" prepend=" AND ">policy_id = #policyId#</isNotEmpty>
+		</dynamic>
+		ORDER BY created_date desc
+	</select>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.pet.po.ins.InsPolicyOperationLog">
+		<selectKey resultClass="java.lang.Long" keyProperty="operationId" >
+			select ins_policy_log_id_seq.nextval as operationId from DUAL
+		</selectKey>
+		INSERT INTO ins_policy_operation_log
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="operationId" >operation_id</isNotNull>
+			<isNotNull prepend="," property="policyId" >policy_id</isNotNull>
+			<isNotNull prepend="," property="operator" >operator</isNotNull>
+			<isNotNull prepend="," property="type" >type</isNotNull>
+			<isNotNull prepend="," property="content" >content</isNotNull>
+			,created_date
+		</dynamic>
+		) VALUES 
+		<dynamic prepend=" (">
+			<isNotNull prepend="," property="operationId" >#operationId#</isNotNull>
+			<isNotNull prepend="," property="policyId" >#policyId#</isNotNull>
+			<isNotNull prepend="," property="operator" >#operator#</isNotNull>
+			<isNotNull prepend="," property="type" >#type#</isNotNull>
+			<isNotNull prepend="," property="content" >#content#</isNotNull>
+			,sysdate)
+		</dynamic>
+	</insert>
+	
+	<delete id="delete" parameterClass="long">
+		DELETE FROM ins_policy_operation_log WHERE  policy_id = #policyId#
+	</delete>
+</sqlMap>

@@ -1,0 +1,108 @@
+<?page title="订单维护" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_edit"?>
+<?component name="lvmama_product" macroURI="/macors/product.zul"?>
+<?component name="lvmama_user" macroURI="/macors/user.zul"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<zk>
+<tabbox width="99%" tabscroll="false">
+		<tabs>
+			<tab id="listmeta" label="后台下单"/>
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+<window id="win_edit" title="订单维护" border="none" apply="com.lvmama.back.web.ord.placeorder.OrderEditAction">
+
+<groupbox style="border: none;">
+		<caption label="用户信息" />
+		<grid >
+			<rows>
+				<row>	
+					<cell width="80px">用户</cell>
+					<cell>
+						<textbox if="${saction.type=='insert' }" value="@{saction.order.userId}" id="userId" visible="false"/> 
+						<lvmama_user />
+						<label if="${saction.type=='update' }" value="@{saction.order.orderNo}" />
+					</cell>
+					<cell width="80px">游玩时间</cell>
+					<cell><datebox value="@{saction.order.visitTime }" /></cell>
+					<cell width="80px">联系人姓名</cell>
+					<cell><textbox value="@{saction.contact.name }" /></cell>
+					<cell width="80px">手机号</cell>
+					<cell><textbox value="@{saction.contact.mobile }" /></cell>
+				</row>
+				
+				<row>	
+					<cell width="80px">支付对象</cell>
+					<cell>
+						<listbox id="type" codeset="PAYMENT_TARGET"
+							mold="select" selectedItem="@{saction.order.paymentTarget}" />
+					</cell>
+					<cell width="80px">支付等待时间</cell>
+					<cell>
+						<listbox  mold="select" selectedItem="@{saction.order.waitPayment}">
+							<listitem label="30分钟" value="${30}"/>
+							<listitem label="1小时" value="${60}"/>
+							<listitem label="24小时" value="${1440}"/>
+							<listitem label="2天" value="${2880}"/>
+						</listbox>
+					</cell>
+					<cell width="80px">立刻电话支付</cell>
+					<cell><checkbox id="phonePay" checked="false" onClick='saction.changePhone(self)'></checkbox></cell>
+					<cell width="80px"></cell>
+					<cell></cell>
+				</row>
+			</rows>
+		</grid>
+</groupbox>
+<button id="editRefreshButton" visible="false" />
+<listbox model="@{saction.order.ordOrderItemProds,load-after='editRefreshButton.onClick'}">
+			<listhead>
+						<listheader label="销售产品" width="10%"/>
+						<listheader label="单价" width="5%"/>
+						<listheader label="数量" width="5%"/>
+						<listheader label="操作" width="25%"/>
+					</listhead>
+					<listitem height="25px" self="@{each='row'}">
+						<listcell label="@{row.productName }" />
+						<listcell label="@{row.priceYuan }" />
+						<listcell label="@{row.quantity }" />						
+						<listcell>
+							<a style="color:blue" label="删除" onClick='saction.doDelete(self)'>
+								<custom-attributes ordOrderItemProd="@{row}"/>
+							</a>
+						</listcell>
+					</listitem>
+</listbox>
+<label value="总额 ：" />
+<label value="@{saction.totalAmount,load-after='doAdd.onClick' }" />
+<space />
+<grid>
+	<rows>
+		<row>
+			<cell width="100px">选择销售产品</cell>
+			<cell width="250px">
+				<label value="@{ordOrderItemProd.productName }" />
+				<longbox id="productId" visible="false" value="@{saction.ordOrderItemProd.productId }"/>
+				<lvmama_product />
+			</cell>
+			<cell width="50px">数量</cell>
+			<cell><longbox value="@{saction.ordOrderItemProd.quantity }" constraint="no empty:数量不能为空" /></cell>
+			<cell width="100px"></cell>
+			<cell width="100px"></cell>
+			<cell>
+				 <button id="doAdd" label="新增"  onClick="saction.doAdd()"/>
+			</cell>
+		</row>
+	</rows>
+</grid>
+ 
+<toolbar id="bottomTool" align="center">
+  <button label="提交"  onClick='saction.doSubmit()'/>
+</toolbar>
+ 
+</window>
+
+</tabpanel>
+</tabpanels>
+</tabbox>
+</zk>

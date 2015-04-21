@@ -1,0 +1,47 @@
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=ABQIAAAAneOf_UjYOrowp_44MUrKThT3d7ZCT8FDBIk6SZTO35J3Sa6C0xQ2jxoAtu9Ka5s5SixPg3myZo7MKA"></script>
+<script type="text/javascript">
+  function initialize() {
+    var latlng = new google.maps.LatLng(31.1430, 121.2943);
+    var myOptions = {
+       zoom: 12,
+	center: latlng,
+	mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+
+    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+	
+	var contentString = '<div id="content">'+
+    '<div id="siteNotice">'+
+    '</div>'+
+    '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
+    '<div id="bodyContent">'+
+    '<p><b>Uluru</b>, �������������</p>'+
+    '</div>'+
+    '</div>';
+	
+	var infowindow = new google.maps.InfoWindow({
+    content: contentString
+});
+
+var marker = new google.maps.Marker({
+    position: latlng,
+    map: map,
+    title:"Uluru (Ayers Rock)"
+});
+
+google.maps.event.addListener(marker, 'click', function() {
+  infowindow.open(map,marker);
+});
+
+  }
+
+</script>
+</head>
+<body onload="initialize()">
+  <div id="map_canvas" style="width:100%; height:100%"></div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_PRODUCT_OTHER" >
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.meta.MetaProductOther">
+		<result column="META_OTHER_ID" property="metaOtherId" />
+		<result column="META_PRODUCT_ID" property="metaProductId" />
+		<result column="INSURANCE_DAY" property="insuranceDay" />
+	</resultMap>
+	<select id="selectByProductId" resultMap="BaseResultMap">
+	  select *
+	    from META_PRODUCT_OTHER
+	    where META_PRODUCT_ID = #productId#  
+  	</select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductOther" >
+    delete from META_PRODUCT_OTHER where META_OTHER_ID = #metaOtherId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductOther" >
+    <selectKey resultClass="java.lang.Long" keyProperty="metaOtherId" >
+         select META_PRODUCT_OTHER_ID_SEQ.nextval  as id  from  DUAL 
+    </selectKey>
+    insert into META_PRODUCT_OTHER (META_OTHER_ID, META_PRODUCT_ID, INSURANCE_DAY)values (#metaOtherId#, #metaProductId#, #insuranceDay#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductOther" >
+    update META_PRODUCT_OTHER
+    set META_PRODUCT_ID = #metaProductId#, INSURANCE_DAY = #insuranceDay#
+    where META_OTHER_ID = #metaOtherId#
+  </update>
+</sqlMap>

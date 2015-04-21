@@ -1,0 +1,93 @@
+<?page title="二维码数据同步" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./myWin"?>
+<zk>
+<window id="myWin" title="二维码数据同步" border="normal" apply="com.lvmama.passport.web.pass.SyncPassCodeAction">
+<zscript>
+		<![CDATA[
+			public void SyncValues() {
+				saction.doSync();
+			}
+			public void udpateByCodeId(){
+				saction.updateByCodeId();
+			}
+			public void udpateBySer(){
+				saction.updateBySer();
+			}
+			
+		]]>			
+		</zscript>
+<grid>
+	<columns>
+		<column width="100px"></column>
+		<column></column>
+		<column width="100px"></column>
+		<column></column>
+		<column></column>
+	</columns>
+		<rows>
+			<row>
+				<hbox width="300px">内容：</hbox>
+				<hbox>
+					<textbox value="@{saction.queryOption.termContent}" />
+				</hbox>
+				<hbox width="300px">日期：</hbox>
+				<hbox>
+					<datebox
+							value="@{saction.queryOption.validTime}" />
+				</hbox>
+				<hbox>
+					<button label="同步二维码数据"  id="sync" width="100px" onClick='_paging.activePage=0;SyncValues();'/>
+				</hbox>
+			</row>
+			
+		</rows>
+	</grid>
+	<hbox>
+		更新条数：共<label id="_totalRowCountLabel" />条
+	</hbox>
+	
+	<grid>
+	<columns>
+		<column width="100px"></column>
+		<column width="600px"></column>
+	</columns>
+		<rows>
+			<row>
+				<hbox width="300px">二维码编号：</hbox>
+				<hbox>
+					<textbox value="@{saction.queryOption.codeIds}" rows="6" width="400px" maxlength="1000"/>
+					<span>注：各个编号之间请用英文逗号分割</span>
+				</hbox >
+				<hbox width="300px" >
+					<button label="更新二维码数据"  id="updateByCodeId" width="100px" onClick='_paging.activePage=0;udpateByCodeId();'/>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+	<hbox>
+		更新条数：共<label id="updateByCodeIdLabel" />条
+	</hbox>
+	<grid>
+	<columns>
+		<column width="100px"></column>
+		<column width="600px"></column>
+	</columns>
+		<rows>
+			<row>
+				<hbox width="300px">二维码序列号：</hbox>
+				<hbox>
+					<textbox value="@{saction.queryOption.serialNo}" rows="6" width="400px" maxlength="1000"/>
+					<span>注：各个编号之间请用英文逗号分割</span>
+				</hbox >
+				<hbox>
+					<button label="更新二维码数据"  id="updateBySer" width="100px" onClick='_paging.activePage=0;udpateBySer();'/>
+				</hbox>
+			</row>
+			
+		</rows>
+	</grid>
+	<hbox>
+		更新条数：共<label id="updateBySerLabel" />条
+	</hbox>
+</window>
+</zk>

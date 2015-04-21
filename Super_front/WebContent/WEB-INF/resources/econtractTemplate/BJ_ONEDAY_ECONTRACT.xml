@@ -1,0 +1,176 @@
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+ <head> 
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+ <title> 北京“一日游”合同 </title> 
+ <style type="text/css"> 
+   * {margin:0;padding:0;}table{empty-cells:show;}
+	body{font-family: SimSun;padding:0 40px;}
+	.txt-hetong {color:#666;width:635px;margin:10px auto;text-align:center;font:12px/1.5 arial,SimSun;}
+	.txt-hetong h1,.st2 {font:700 18px/2 SimSun;color:#333;}
+	.txt-hetong .st2 {display:block;}
+	.txt-hetong h1.h1-title {font:700 24px/2 SimSun;}
+	.txt-hetong strong.st1 {font:14px/1.5 SimSun;color:#333;display:block;}
+	.txt-hetong b {color:#333;font-weight:700;}
+	.txt-hetong p {text-align:left;overflow:hidden; zoom:1;}
+	.txt-hetong h2 {text-align:left;font:700 14px/2 SimSun;color:#333;margin-top:10px;}
+	.txt-hetong .txt-right {float:right;}
+	.txt-hetong .txt-right2 {float:right;color:#333;font:16px/2 SimSun; clear:both;}
+	.txt-hetong .all-line {font-style:normal;display:inline-block;border-bottom:1px solid #666;padding:0 5px;margin:0 5px;}
+	.txt-hetong .all-line1 {}
+	.txt-hetong .all-line2 {width:255px;}
+	.txt-hetong .all-line3 {width:80%;}
+	.txt-hetong .b1 {font-family:SimSun;font-size:15px;}
+	.txt-hetong .kaiti {font-family:stkaiti;font-size:16px;}
+	.txt-hetong .kaiti1 {font-family:stkaiti;font-size:18px;}
+	table {font-size:12px;color:#666}
+	.tab1,.tab2{font-size:12px;empty-cells:show;}
+	.tab1 {background-color:#ccc;width:90%;margin:10px auto;}
+	.tab1 td,.tab1 th {text-align:left;vertical-align:middle;background-color:#fff;}
+	.ul1 {width:90%;border-left:1px solid #ccc;border-top:1px solid #ccc;margin:10px auto;}
+	.ul1 li {border-right:1px solid #ccc;border-bottom:1px solid #ccc;height:18px;font:14px/18px SimSun;text-align:left;text-indent:3em;}
+	.tab1 table {width:100%;height:100%}
+	.tab1 tr td {height:40px;word-wrap:break-word}
+	.tab2 tr td {border-right:1px solid #ccc;border-bottom:1px solid #ccc;padding-left:3px;vertical-align:middle}
+	.tab1 tr td.notop {border-top:none;}
+	.tab1 tr td.noleft {border-left:none;}
+	.tab1 tr td.noright {border-right:none;}
+	.tab1 tr td.nobottom,.tab2 tr td.nobottom {border-bottom:none;}
+	.div1 {background-color: #FFFFFF;width:15px; height:15px;display:block; border: #000000 inset 1px;}
+	.tab1,.tab2{font-size:12px;empty-cells:show;border-collapse:collapse;}
+   	.tab1 td,.tab2 td{border:1px solid #ccc; padding:3px;}
+	.B{font-weight:bold}
+	.xh-table,.xh-dingwei{position:relative;zoom:1;}
+	.xh-table tr td{height:auto;padding:6px 3px;}
+	.orderlist table{border-top:1px solid #000;border-left:1px solid #000;}
+	.orderlist table td,table th{border-right:1px solid #000;border-bottom:1px solid #000;text-align:center; height:32px;}
+ </style> 
+ </head> 
+
+ <body> 
+ <div class="txt-hetong"> 
+ <p>  <strong class="st1"> BF——2007——2709 </strong>  <br />  <span class="txt-right2"> 合同编号：  <em class="all-line" style="width:140px;">${contractNo}</em></span>  
+  <span class="txt-right2"> 订单编号： <em class="all-line" style="width:140px;"> ${orderId}     </em></span> 
+</p> 
+ <h1 class="h1-title"> 北京市“一日游”合同 </h1> 
+ <div class="xh-table">
+ <table border="0" cellspacing="0" cellpadding="0" class="tab1" style="width:635px;table-layout:fixed;text-align:left;">
+ 	<tr>
+ 		<td rowspan="3">旅游者姓名
+      共（${orderPersonCount}   ）人 </td>
+		<td rowspan="3" colspan="2">${traveller}</td>
+        <td>团号</td>
+		<td colspan="2">${groupNo}</td>
+		<td>出发时间 </td>
+		<td>${visitTime}</td>
+ 	</tr>
+	<tr>
+ 		<td>出发地点</td>
+		<td colspan="4">${fromAddress}</td>
+ 	</tr>
+	<tr>
+ 		<td>返回地点 </td>
+		<td colspan="4">${toAddress}</td>
+ 	</tr>
+	<tr>
+ 		<td rowspan="3">行程安排 </td>
+		<td>空调车安排</td>
+		<td colspan="2">详见附件行程单与本合同具有同等效力 </td>
+		<td>座位号 </td>
+		<td>详见附件行程单与本合同具有同等效力</td>
+		<td>行程景点及线路 </td>
+		<td>详见附件行程单与本合同具有同等效力 </td>
+ 	</tr>
+	<tr>
+ 		<td colspan="2">午（晚）餐标准 </td>
+		<td colspan="5">详见附件行程单与本合同具有同等效力 </td>
+ 	</tr>
+	<tr>
+ 		<td colspan="2">其他 </td>
+		<td colspan="5" class="B">无指定购物安排、无自费项目、医疗咨询</td>
+ 	</tr>
+	<tr>
+ 		<td>旅游费用 </td>
+		<td colspan="3">  <p> 总金额： <u> ${oughtPay} </u> 元  <br/> 
+            成人 <u>   /   </u> 人× <u>   /   </u> 元/人+儿童 <u>    /   </u> 人× <u>    /    </u> 元/人＝ <u>     /    </u> 元；  </p> 
+             <p> 费用包含:<u>详见附件旅游行程单           </u>  <br/> 
+            费用不含:<u>详见附件旅游行程单           </u>  </p>  </td>
+		<td>保险</td>
+		<td colspan="3"> 自愿购买保险总金额： <u> ${policyMoneyCount} </u> 元  </td>
+ 	</tr>
+	<tr>
+		<td>补充约定 </td>
+		<td colspan="7">${complement}</td>
+ 	</tr>
+	<tr>
+ 		<td colspan="8" class="B">请在签字前充分了解本次旅游有关事宜，认真填写表格内容，仔细阅读并认可背书合同条款。 </td>
+ 	</tr>
+	 </table>
+	 <div class="xh-dingwei">
+	  <table border="0" cellspacing="0" cellpadding="0" class="tab1" style="width:100%;margin-top:-8px;table-layout:fixed;text-align:left;">
+	<tr>
+ 		<td class="B">旅游者（签约代表）签章:</td>
+		<td colspan="3">${traveller} </td>
+		<td class="B">旅行社签章：</td>
+		<td colspan="3">上海驴妈妈兴旅国际旅行社有限公司 </td>
+ 	</tr>
+	<tr>
+ 		<td>身份证号: </td>
+		<td colspan="3"></td>
+		<td>北京分社地址： </td>
+		<td colspan="3">北京市朝阳区曙光西里甲6号时间国际大厦1号楼2707-2709室 </td>
+ 	</tr>
+	<tr>
+ 		<td>住所: </td>
+		<td colspan="3">/</td>
+		<td>法定代表人： </td>
+		<td colspan="3">李丹 </td>
+ 	</tr>
+	<tr>
+ 		<td>电话:  </td>
+		<td colspan="3"></td>
+		<td>经办人: </td>
+		<td colspan="3"></td>
+ 	</tr>
+	<tr>
+ 		<td>签约时间: </td>
+		<td>${signDate} </td>
+		<td>电话：</td>
+		<td colspan="2">1010-6060；<br/>010-59762904*800</td>
+		<td>传真：</td>
+		<td colspan="2">010-59762904*801 </td>
+ 	</tr>
+ </table>
+ <div style="position:relative; right:-160px;bottom:260px;"><img src="${imageUrl}" id="stamp_img" template="${template}"/></div>  
+</div></div>
+ <h1 class="h1-title"> 北京市“一日游”合同条款 </h1> 
+ <p> 
+ <strong class="st3"> 1、旅行社义务 </strong>  <br /> 
+ <strong class="st3"> （1）应当在签约前向旅游者出示《营业执照》和《旅行社业务经营许可证》，如实告知有关旅游行程、餐饮、车辆、购物等方面安排的真实情况。 </strong>  <br /> 
+(2）应当按照约定为旅游者提供旅游服务，保证服务不低于《旅行社国内旅游服务质量要求》确定的标准，并 <strong class="st3"> 不得指定购物、安排自费项目或医疗咨询；除约定费用或为满足旅游者特殊需要外，不得另行收取其他任何费用。未经旅游者书面同意，不得将旅游者转至其他旅行社合并组团。 </strong>  <br /> 
+（3）应当保证所提供的服务符合旅游者人身、财产安全的要求；对可能危及旅游者人身、财产安全的事宜，向旅游者做出真实的说明和明确的警示，并积极采取防止危害发生的措施。 <br /> 
+ <strong class="st3"> 2、旅游者义务 </strong>  <br /> 
+ <strong class="st3"> （1）应当确保自身身体条件能够完成旅游活动，并全额支付旅游费用。 </strong>  <br /> 
+ <strong class="st3"> （2）应当与旅行社互相协助共同完成旅游活动，不得因个人原因强迫旅行社改变约定的团队行程或擅自离团活动，并应当遵守国家和北京的法律及有关规定，遵守公共秩序，尊重社会公德。 </strong>  <br /> 
+ <strong class="st3"> （3）应当妥善保管自己的行李物品，贵重物品应当随身携带或采取其他保护措施。 </strong>  <br /> 
+ <strong class="st3"> 3、旅游者退团：旅游者在出发日前一日16：00前通知旅行社解除合同的，旅行社应当全额返还旅游费用；旅游者在上述时间之后通知解除合同的，或未能按照约定时间、地点集合出发又未能中途加入的，旅行社可以在扣除20％的违约金后返还剩余旅游费用。 </strong>  <br /> 
+ <strong class="st3"> 4、旅行社取消： </strong> 旅行社可以在出发日前一日16：00前通知旅游者解除合同，并应当全额返还旅游费用。旅行社在上述时间之后通知解除合同的，除全额返还旅游费用外，还应当按照20％的标准支付违约金。 <br /> 
+ <strong class="st3"> 5、旅行社责任： </strong>  <br /> 
+（1）提供的旅游服务未达到约定或《旅行社国内旅游服务质量要求》确定的标准的，按照《旅行社质量保证金赔偿试行标准》或旅行社责任保险的有关规定进行赔偿。 <br /> 
+（2）擅自指定购物、安排自费项目或医疗咨询的，应当按照旅游费用的50%向旅游者支付违约金。 <br /> 
+（3）强迫或者变相强迫旅游者购物、参加自费项目或接受医疗咨询的，应当按照旅游费用的100%向旅游者支付违约金。 <br /> 
+（4）在行程中单方解除合同的，应当承担由此给旅游者造成的滞留期间食宿费、返回出发点交通费等实际损失，并按照旅游费用的100%向旅游者支付违约金。 <br /> 
+ <strong class="st3"> 6、旅游者责任： </strong>  <br /> 
+ <strong class="st3"> （1）因自身过错、自由活动期间内的行为或自身疾病引起的人身、财产损失应当自行承担；由此给旅行社或第三方造成损失的，旅游者应当承担赔偿责任。 </strong>  <br /> 
+ <strong class="st3"> （2）在行程中因自身原因单方要求解除合同或自愿放弃某项旅游项目的，旅行社可以不退还相应旅游费用。未按照约定及时参加旅游项目或搭乘交通工具的，视为自愿放弃。 </strong>  <br /> 
+ <strong class="st3"> 7、意外事件及第三方过错： </strong>  <br /> 
+对由于交通阻塞等意外事件以及第三方侵害等不可归责于旅行社的原因导致旅游者人身、财产权益受到损害的，旅行社不承担责任，但应当积极协助旅游者解决与责任方之间的纠纷。 <br /> 
+ <strong class="st3"> 8、争议解决： </strong> 本合同项下发生争议，双方应当协商解决或向旅游质监所、消费者协会等有关部门投诉；协商、投诉解决不成的，可以向乙方所在地有管辖权的人民法院提起诉讼，或按照另行达成的仲裁协议申请仲裁。 <br/> 
+ </p> 
+ 	<span style="font-size: x-large; align:center;"> 游玩人信息 </span> <br/>
+    <p> ${allTraveller} </p>
+    <span style="font-size: x-large; align:center;"> 订购清单 </span> <br/>
+    <p class="orderlist"> ${allProductItem} </p>
+ </div> 
+
+ </body> 
+ </html>

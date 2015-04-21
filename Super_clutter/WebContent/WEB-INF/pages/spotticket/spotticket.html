@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>景点门票_旅游门票手机预订-驴妈妈手机站</title>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/comm.js"></script>
+<script src="${request.contextPath}/js/spotTicket.js?_version=20130812"></script>
+<script type="text/javascript">
+$(function(){
+	/*input 框变色*/
+	$("input.lv-input-search").focus(function(e) {
+		$("input.lv-input-search").parent().parent().addClass("lv-input-focus");
+	});
+	$("input.lv-input-search").blur(function(e) {
+		$("input.lv-input-search").parent().parent().removeClass("lv-input-focus");
+	});
+	
+	$(".lv-excurtion-postion").click(function(){
+		if(longitude==""||longitude==null ||typeof(longitude) == "undefined"){
+			lvToast(false,"无法获取当前地理位置,获不到周边景点",3000);
+		}else{
+			window.location.href = "${request.contextPath}/spotticket/stnearby.htm?windage=100000&mobilePlace.baiduLatitude="+latitude+"&mobilePlace.baiduLongitude="+longitude;
+		}
+	});
+	
+	
+	/********   定位 相关 ************/
+	latitude = getLocalStorage(LOCAL_STORAGE_LAT);
+	longitude = getLocalStorage(LOCAL_STORAGE_LON);
+	currentCity = getLocalStorage(LOCAL_STRTORAGE_CURRENT_CITY);
+	if(null == latitude || "" == latitude  || latitude == "undefined" || null == longitude) {
+		if(navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(function(e){
+				latitude = e.coords.latitude;
+				longitude = e.coords.longitude;
+				setLocalStorage(LOCAL_STORAGE_LAT,latitude);
+				setLocalStorage(LOCAL_STORAGE_LON,longitude);
+				initCity(latitude,longitude,LOCAL_STRTORAGE_CURRENT_CITY); // 定位成功. 
+			},function(e){
+				initDatas(currentCity); // 如果定位失败 ! 
+			},{enableHighAccuracy:true,timeout:3000,maximumAge:3000});
+	    } else {
+	    	initDatas(currentCity); // 如果浏览器不支持定位  
+	    }
+	} else {
+		initDatas(currentCity);;// 如果已经定位过.  
+	}
+	
+});
+
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="window.history.go(-1);"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">景点门票</div>
+  <div class="lv-position lv-position-e"><a class="lv-excurtion-postion" href="javascript:void(0);"><!-- <img src="${prefix_pic_url!}/img/excurtion-position.png"> -->周边</a></div>
+</div>
+<div class="lv-search search">
+  <div class="lv-div-search">
+    <form method="get" action="${request.contextPath}/place"  id="key_search" >
+     <span class="lv-clear-icon01" onclick="union_clear_context('keyword');"  style="display:none" id="clear_password">
+      <img src="${prefix_pic_url!}/img/clear.png"></span>
+	  <input class="lv-input-search" id="keyword" type="text" value="${keyword!}" placeholder="请输入景点目的地/关键词" autocomplete="off">
+      <input type="hidden" name="keyword" id="hidden_keyword" value="${keyword!}" data-name="">
+      <input type="button" class="btn_sub" value="" onclick="btnClick()" />
+    </form>
+    
+      <input type="hidden" name="toDest" id="toDest" value="${toDest!}" data-name="">
+      <input type="hidden" name="subjects" id="subjects" value="${subjects!}" data-name="">
+      <input type="hidden" name="sort" id="sort" value="${sort!}" data-name="">
+      <input type="hidden" name="stage" id="stage" value="2" data-name="">
+      <input type="hidden" name="page" id="page" value="0" data-name="">
+  </div>
+        <div  id="search_autocomplete" style="display:none;">
+           <ul class="search_auto_complete" id="search_success"> </ul>
+        </div>
+ </div>
+<div class="lv-search lv-media-width lv-seach-mheight">
+  <ul class="lv-cascade-search sele_tab">
+    <li class="lv-li-row3">
+      <a href="javascript:void(0);">
+	      <div class="lv-cascade-icon" style="display:none;"></div>
+	      <span id="spanCities">${toDest!}</span>
+	      <img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png">
+	      <img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png">
+      </a>
+      </li>
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span id="spanSubjects">全部主题</span><img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png">
+      <img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a></li>
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span id="spanSort">驴妈妈推荐</span><img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png"></a></li>
+  </ul>
+</div>
+
+<div class="lv-wrapper lv-min-height lv-media-width">
+   <div class="lv-cascade-div lv-media-width">
+	   <!-- 内容搜索 列表  -->
+	   <div id="wrapper" class="lv_add">
+          <div class="lv-tab" id="scroller"  style="display:none;">
+            <ul class="lv-cascade-list lv-cascade-area bindmouse" id="thelist">
+	             <!-- 遍历省份 -->
+		         <#if province?? && province?size&gt;0>
+	                 <#list province as c>
+			         <li data-type="cities"  data-value="${c.name!}" >${c.name!}
+				        <!-- 遍历二级地市 -->
+				        <#if c.cities?? &&c.cities?size&gt;0>
+				           <div class="lv-cascade-childrendiv" style="display:none;">
+				            <ul class="lv-cascade-childrenlist">
+					           <#list c.cities as subcity>
+					           	  <li data-type="cities" data-value="${subcity.name!}" data-subjects="${subcity.subjects!}"> <span>${subcity.name!} </span></li>
+					           </#list>
+				            </ul>
+				           </div>
+				        </#if>
+		             </li>
+			       </#list>
+			    </#if>
+          </ul>
+          </div>
+       </div>  
+         <div class="lv-tab" style="display:none;">
+		      <ul class="lv-cascade-list bindclick" id="tab_subjects">
+		        <li data-type="subjects" data-value=" ">全部主题</li>
+		        <#if sublist?? && sublist?size&gt;0>
+			        <#list sublist as subList>
+			             <#if subList != '0'>
+		        		  <li data-type="subjects" data-value="${subList!}">${subList!}</li>
+		        		 </#if>
+			        </#list>
+			    </#if>
+		      </ul>
+         </div>
+         <!-- 排序 -->
+         <div class="lv-tab" style="display:none;">
+	          <ul class="lv-cascade-list bindclick">
+	          <#if sortTypes?? && sortTypes?size&gt;0 >
+	             <#list sortTypes as sort>
+	               <li data-type="sort" data-value="${sort.value!}" id="li${sort.value!}" >${sort.title}</li>
+	             </#list>
+	           </#if>
+	          </ul>
+         </div>
+  </div>
+  <div class="lv-wrapper-container">
+  	<ul class="lv-spotticket-list jd_wrap" id="data_list">
+  	    <!-- 列表 -->
+	  	
+    </ul>
+   <!-- 如果不是最后一页  -->
+   <div class="lv-nav-li lv-btn-03" id="show_more" style="display:none">
+        <a href="javascript:void(0);" onclick="getPlaceListData('0')">
+           <span>查看更多</span>
+        </a>
+    </div>
+  </div>
+</div>
+
+
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+  <div class="lv-transparent-div lv-transparent" style="display:none;" data-value="99999"></div>
+</body>
+</html>

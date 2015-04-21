@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- ShiHui -->
+<sqlMap namespace="PASS_PROVIDER">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassProvider">
+		<result column="PROVIDER_ID" property="providerId" />
+		<result column="NAME" property="name" />
+		<result column="MEMO" property="memo" />
+		<result column="SEPARATE" property="separate" />
+		<result column="SEND_SMS" property="sendSms" />
+		<result column="AUTO_PERFORM" property="autoPerform" />
+		<result column="PROCESSOR" property="processor" />
+		<result column="MERGESMS" property="mergeSMS" />
+		<result column="Suppler_Thread" property="supplierThread" />
+		<result column="RE_APPLY_WAY" property="reApplayWay" />
+	</resultMap>
+	
+	<insert id="insertPassProvider"
+		parameterClass="com.lvmama.comm.bee.po.pass.PassProvider">
+		<selectKey keyProperty="providerId"
+			resultClass="java.lang.Long">
+			select PASS_PROVIDER_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into PASS_PROVIDER (PROVIDER_ID , NAME, MEMO, SEPARATE,SEND_SMS, AUTO_PERFORM, PROCESSOR,MERGESMS,Suppler_Thread,RE_APPLY_WAY)
+		values(#providerId#, #name#, #memo#, #separate#,#sendSms#, #autoPerform#, #processor#,#mergeSMS#,#supplierThread#,#reApplayWay#)
+	</insert>
+	<delete id="deletePassProvider"
+		parameterClass="com.lvmama.comm.bee.po.pass.PassProvider">
+		delete PASS_PROVIDER where PROVIDER_ID = #providerId#
+	</delete>
+
+	<update id="updatePassProvider"
+		parameterClass="com.lvmama.comm.bee.po.pass.PassProvider">
+		update PASS_PROVIDER set NAME = #name#, MEMO = #memo#, SEPARATE = #separate# ,SEND_SMS=#sendSms#, AUTO_PERFORM=#autoPerform#, PROCESSOR=#processor#, MERGESMS=#mergeSMS#,Suppler_Thread=#supplierThread#,RE_APPLY_WAY=#reApplayWay# where
+		PROVIDER_ID = #providerId#
+	</update>
+
+	<select id="selectByPerformTargetId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+		select p.* from PASS_PROVIDER p, PASS_DEVICE d 
+		where p.PROVIDER_ID=d.PROVIDER_ID and d.TARGET_ID=#targetId#
+	</select>
+
+	<select id="selectByParams" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+		select * from PASS_PROVIDER where 1=1
+		<isNotEmpty prepend=" and" property="providerId">
+			PROVIDER_ID=#providerId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="name">
+			NAME=#name#
+		</isNotEmpty>
+		order by PROVIDER_ID
+	</select>
+	<select id="selectByOrderId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+		select distinct pdtmp.*
+		  from META_PERFORM mp,
+		       ord_order_item_meta mi,
+		       (select distinct pp.*, pd.target_id
+		          from pass_device pd, PASS_PROVIDER pp
+		         where pd.provider_id = pp.provider_id) pdtmp
+		 where mp.meta_product_id = mi.meta_product_id
+		   and mp.target_id = pdtmp.target_id
+		   and mi.order_id = #orderId#
+	</select>
+	
+	<select id="selectByDeviceNo" resultMap="BaseResultMap" parameterClass="java.lang.String">
+	    select provider.* from pass_provider provider, pass_device device where provider.provider_id = device.provider_id and device.device_no = #deviceNO#
+	</select>
+</sqlMap>

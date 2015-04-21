@@ -1,0 +1,29 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./manualPolicyWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="manualPolicyWin" title="人工投保" closable="true" sizable="false" border="normal" mode="embedded" apply="com.lvmama.back.web.insurance.ManualPolicyAction">
+		<label value="@{saction.policyId}" visible="false"/>
+		<grid>
+			<columns>
+				<column width="30%"></column>
+				<column width="70%"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>保单流水号：</hbox>
+					<hbox><textbox value="@{saction.policySerial}" constraint="no empty:保单流水号不能为空"/></hbox>
+				</row>
+				<row>
+					<hbox>保单号：</hbox>
+					<hbox><textbox value="@{saction.policyNo}" constraint="no empty:保单号不能为空"/></hbox>
+				</row>	
+				<row>
+					<hbox>验证码：</hbox>
+					<hbox><textbox value="@{saction.policyValidateCode}" constraint="no empty:保单验证码不能为空"/></hbox>
+				</row>								
+			</rows>						
+		</grid>
+		<toolbar align="end">
+		    <button label="保存" width="100px" onClick="saction.submit()" />
+        </toolbar>
+	</window>
+</zk>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_OTHER" >
+	<resultMap class="com.lvmama.comm.bee.po.prod.ProdOther" id="BaseResultMap">
+	    <result column="OTHER_ID" property="otherId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="VISA_TYPE" property="visaType"/>
+		<result column="VISA_SELF_SIGN" property="visaSelfSign"/>
+		<result column="VISA_MATERIAL_AHEAD_DAY" property="visaMaterialAheadDay"/>
+		<result column="VISA_VALID_TIME" property="visaValidTime"/>
+		<result column="COUNTRY" property="country"/>
+		<result column="CITY" property="city"/>
+	</resultMap>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdOther" >
+    delete from PROD_OTHER
+    where OTHER_ID = #otherId:DECIMAL#
+  </delete>
+    <select id="selectByProductId" resultMap="BaseResultMap">
+    select *
+    from PROD_OTHER
+    where PRODUCT_ID = #productId#  
+  </select>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdOther" >
+    <selectKey resultClass="java.lang.Long" keyProperty="otherId" >
+      select PROD_OTHER_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+     insert into PROD_OTHER (OTHER_ID, PRODUCT_ID,VISA_TYPE,VISA_SELF_SIGN,VISA_MATERIAL_AHEAD_DAY,VISA_VALID_TIME,COUNTRY,CITY)
+    values (#otherId#, #productId#,#visaType#,#visaSelfSign#,#visaMaterialAheadDay#,#visaValidTime#,#country#,#city#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdOther" >
+    update PROD_OTHER
+    set PRODUCT_ID = #productId:DECIMAL#,VISA_TYPE=#visaType#,VISA_SELF_SIGN=#visaSelfSign#,VISA_MATERIAL_AHEAD_DAY=#visaMaterialAheadDay#,
+    VISA_VALID_TIME=#visaValidTime#,COUNTRY=#country#,CITY=#city#
+    where OTHER_ID = #otherId:DECIMAL#
+  </update>
+</sqlMap>

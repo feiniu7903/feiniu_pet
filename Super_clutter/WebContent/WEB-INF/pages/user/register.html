@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>注册</title>
+<#include "../common/define.html">
+<script>
+$(function(){
+	/*input 框变色*/
+	$("input.lv-input-01").focus(function(e) {
+		$(this).addClass("lv-input01-focus");
+	});
+	$("input.lv-input-01").blur(function(e) {
+		$(this).removeClass("lv-input01-focus");
+	});	
+	
+});
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:history.back();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">注册</div>
+</div>
+<div class="lv-search lv-media-width lv-seach-mheight" style="height:44px">
+  <ul class="lv-progress-list">
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-progress lv-progress-active" style="padding-left:1px;" id="c_step1">1</div>
+      <span>输入手机号</span></a></li>
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-progress lv-progress-node" style="padding-left:1px;" id="c_step2">2</div>
+      <span>输入验证码</span></a></li>
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-progress lv-progress-node" style="padding-left:1px;"id="c_step3">3</div>
+      <span>设置密码</span></a></li>
+  </ul>
+</div>
+
+
+<div class="lv-wrapper lv-media-width" style="min-height:300px;">
+  <!-- 第一步 -->
+  <div class="lv-tab regis" id="step1">
+	    <div class="lv-tab-div">
+	      <span class="lv-clear-icon01 clear_password" onclick="union_clear_context('mobile');step1change();"><img src="${prefix_pic_url!}/img/clear.png"></span>
+	      <input name="mobile" id="mobile" placeholder="请输入手机号码" class="lv-input-01" type="tel" onblur="step1change();" onkeyup="step1change();">
+	    </div>
+	    <div class="lv-nav-li lv-btn-01" id="step1_show" style="display:none;"> 
+	      <a class="lv-progress-next" href="javascript:void(0);" onclick="getAuthCode();" ><span style="color:#ffffff;">获取验证码</span></a>
+	    </div>
+	    <div class="lv-nav-li lv-btn-white"  id="step1_hide"> 
+	     	<a class="lv-progress-next" href="javascript:void(0);"> <span>获取验证码</span></a>
+	    </div>
+	    <div style="height:40px; line-height:40px; font-size:1.2em; text-align:center; margin-top:-10px;">
+	      <input type="checkbox" name="checkbox1" id="checkbox" checked>
+	      <span style="padding:0 10px;">我同意驴妈妈会员服务条款</span>
+	      <a style="color:#0066cc;" href="javascript:void(0);" onclick="union_skip('${request.contextPath}/xieyi.htm?xieyiType=xieyi_reg');">查看协议</a> </div>
+  </div>
+  <!-- 第二步 -->
+  <div class="lv-tab regis" style="display:none;" id="step2">
+    <div class="lv-tab-div">
+      <span class="lv-clear-icon01 clear_password" onclick="union_clear_context('authenticationCode');step2change();"><img src="${prefix_pic_url!}/img/clear.png"></span>
+      <input name="authenticationCode" id="authenticationCode" placeholder="请输手机验证码" class="lv-input-01" type="tel" onblur="step2change();" onkeyup="step2change();">
+    </div>
+    <div class="lv-nav-li lv-btn-01" id="step2_show" style="display:none"> <a href="javascript:void(0);" onclick="nextStep(2,3);"> <span style="color:#ffffff;">输入验证码</span> </a> </div>
+    <div class="lv-nav-li lv-btn-white"  id="step2_hide"> <a href="javascript:void(0);"> <span style="color:#000000;">输入验证码</span></a>
+    </div>
+  </div>
+   <!-- 第三步 -->
+   <div class="lv-tab regis" style="display:none;" id="step3">
+    <div class="lv-tab-div">
+      <span class="lv-clear-icon01 clear_password" onclick="union_clear_context('password');step3change();"><img src="${prefix_pic_url!}/img/clear.png"></span>
+      <input name="password" id="password" placeholder="请输入用户密码" class="lv-input-01" type="text" onblur="step3change();" onkeyup="step3change();">
+    </div>
+    <div class="lv-nav-li lv-btn-01" id="step3_show" style="display:none"> <a href="javascript:void(0);" onclick="reg('${activityChannel!}');"> <span style="color:#ffffff;">注册完成</span> </a> </div>
+    <div class="lv-nav-li lv-btn-white"  id="step3_hide"> <a href="javascript:void(0);"> <span style="color:#000000;">注册完成</span></a>
+    </div>
+  </div>
+  
+  
+</div>
+
+ <script >
+   var _nssoUrl = "${nssoUrl!}" +"/";
+ </script>
+ <script src="${request.contextPath}/js/login.js?version=20131017"></script>
+ <!-- footer -->
+ <#if !(activityChannel?? && activityChannel !="")>
+     <#include "../common/footer.html"/>
+ <#else>
+    <#include "../common/common_toast.html"/>
+ </#if>
+</body>
+</html>

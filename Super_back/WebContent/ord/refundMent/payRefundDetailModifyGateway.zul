@@ -1,0 +1,48 @@
+<?page title="list PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?> 
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="wind_pay_refund_detail_query_modify_refund_gateway" mode="embedded"
+		apply="com.lvmama.back.web.ord.refundMent.PayRefundDetailQueryAction">
+		
+						<groupbox style="border: none">
+						<caption label="更改退款网关" />
+						<grid>
+						<columns>
+					<column width="100px" align="right"></column>
+					<column></column>
+					<column width="100px"></column>
+					<column></column>
+					<column width="100px"></column>
+					<column></column>
+				</columns>
+				<rows>
+				<row>
+						<hbox>
+							<label width="150px" value="退款网关:" />
+						</hbox>
+						<hbox>
+							<listbox mold="select" if='${saction.refundBank!="CASH_ACCOUNT"}' onSelect="saction.setRefundBank(self.selectedItem.value)">
+								<listitem label="${saction.payPaymentGateway.refundGatewayZh}" value="${saction.payPaymentGateway.refundGateway}" selected="true"/>
+								<listitem label="现金账户" value="CASH_ACCOUNT" />
+							</listbox> 
+							<listbox mold="select" if='${saction.refundBank=="CASH_ACCOUNT"}' onSelect="saction.setRefundBank(self.selectedItem.value)">
+								<listitem label="${saction.payPaymentGateway.refundGatewayZh}" value="${saction.payPaymentGateway.refundGateway}"/>
+								<listitem label="现金账户" value="CASH_ACCOUNT" selected="true"/>
+							</listbox>
+						</hbox>
+					</row>
+					</rows>
+					</grid>
+					</groupbox>
+					
+					
+					
+				<button id="s" width="100px" label="修改" onClick='saction.modifyRefundGateway()'>
+				<custom-attributes refundmentId="@{refundmentId}" />
+				</button>
+				<button label="关闭" width="100px" onClick="wind_pay_refund_detail_query_modify_refund_gateway.detach()" id="wind_pay_refund_detail_query_modify_refund_gateway_colse"> </button>
+	</window>
+</zk>

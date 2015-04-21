@@ -1,0 +1,40 @@
+<!-- 优惠券,优惠活动,积分兑换  -->
+<input id="emptyRadio" type="radio" hidden="yes"   id="couponCode" name="couponCode" value=""  style="display:none" >
+<span id="tempCouponCode" data-value="" style="display:none"></span>
+<#if (productItems.couponAble?? && productItems.couponAble) ||  (productItems.couponList?? && productItems.couponList?size&gt;0)>
+<section id="couponActivity" class="reward reward3">
+ 	<div class="reward_ti1">优惠活动</div>
+     <ul>
+     <#if productItems.couponAble?? && productItems.couponAble>
+	      <li id="point2coupon" >
+	         	<span class="reward_ti3">优惠券</span>
+	         	<span class="reward_ti2" onclick="point2coupon();" id="point2coupon_header"><em>点击输入使用优惠券</em>
+	        	<#if productItems.couponPoint?? && productItems.couponPoint.couponYuan &gt; 0>
+	        	          积分抵扣-您的积分可换<br/><span >&yen;${productItems.couponPoint.couponYuan!}</span>元优惠券
+	        	 </#if> 
+	        	</span>
+	        	<span style="display:none" id="point2coupon_hidden_context"><em>点击输入使用优惠券</em>
+		        	<#if productItems.couponPoint?? && productItems.couponPoint.couponYuan &gt; 0>
+		        	          积分抵扣-您的积分可换<br/><span >&yen;${productItems.couponPoint.couponYuan!}</span>元优惠券
+		        	 </#if> 
+	        	</span>
+	        	<span class="reward_ti2"  id="point2coupon_footer" style="display:none"></span>
+	            <span name="couponRadios" id="ic_radio_right_id" class="ic_radio2_right" _check='ic_radio_right' _curClass='ic_radio2_right'><i></i></span>
+	            <input type="radio"  id="couponRadio_id" hidden="yes" name="couponCode" value="${couponCode!}" style="display:none" >
+	        </li>	
+      </#if>	            
+      <#if productItems.couponList?size&gt;0 >
+	      <#list productItems.couponList as item>
+	     	<li>
+	         	<span class="reward_ti3">${item.title}</span><span class="reward_ti2">${item.desc}</span>
+	              <span class="ic_radio2_right" couponCode="${item.code!}" name="couponRadios" _check='ic_radio_right' _curClass='ic_radio2_right'><i></i></span>
+	              <input type="radio"  name="couponCode" hidden="yes"  value="${item.code!}" style="display:none" >
+	         </li>
+	       </#list>
+      </#if>
+    </ul>
+</section>  
+</#if>
+<!-- 多顶多惠，早定早恵 -->
+<section class="reward reward4" id="businessCouponContent">
+</section>  

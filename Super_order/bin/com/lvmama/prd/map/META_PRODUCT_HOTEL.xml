@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_PRODUCT_HOTEL" >
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductHotel" >
+    delete from META_PRODUCT_HOTEL
+    where META_HOTEL_ID = #metaHotelId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductHotel" >
+    <selectKey resultClass="java.lang.Long" keyProperty="metaHotelId" >
+              select META_PRODUCT_HOTEL_ID_SEQ.nextval  as id  from  DUAL 
+    </selectKey>
+    insert into META_PRODUCT_HOTEL (META_HOTEL_ID, META_PRODUCT_ID,NIGHTS)
+    values (#metaHotelId#, #metaProductId#,#nights#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductHotel" >
+    update META_PRODUCT_HOTEL
+    set META_PRODUCT_ID = #metaProductId#,NIGHTS=#nights#
+    where META_HOTEL_ID = #metaHotelId#
+  </update>
+</sqlMap>

@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>选择日期</title>
+<#include "../common/define.html">
+</head>
+<script>
+
+	function choseDays(obj,price,date,week) {
+		$('td').removeClass('date_active');
+		$(obj).addClass('date_active');
+		var status="${status!}";
+		if(status!=null && status=="baidu"){
+			window.location.href=contextPath+"/bdorder/baidu_order_fill.htm?canOrderToday=false&branchId=${branchId!}&productId=${productId!}&qingPlaceUrl=${qingPlaceUrl!}&visitTime="+date;
+		}else{
+			window.location.href=contextPath+"/ticketorder/order_fill.htm?canOrderToday=false&branchId=${branchId!}&productId=${productId!}&visitTime="+date;
+		}
+		/* // 更新父页面
+		try {
+			//timeHolder  日期中文 
+			opener.$("#timeHolder").html(week);
+			//scroller   
+			opener.$("#scroller").val(date);
+		    // 价格 sell_Price_0  价格
+			opener.$("#sell_Price_0").html("&yen; " + 1);
+			opener.$("#sell_Price_0").attr("data-value",1);
+			// 修改总价
+			opener.totalPrice();
+			// 
+			opener.$(".lv-toast-loading").hide(); // 隐藏遮罩层
+		}catch( e){
+			
+		}
+		
+		window.close(); */
+	}
+</script>
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a onclick="union_back();" href="javascript:void(0);"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">选择日期</div>
+</div>
+
+<div class="lv-wrapper lv-min-height lv-media-width calendar_con">
+	<#if resultTimePrice?? && resultTimePrice?size&gt;0>
+		<#list resultTimePrice as price>
+		        <#if price?? && price?size&gt;0>
+					<div class="calendar">
+			        <div class="date_month">${price[price_index].year}年${price[price_index].month}月</div>
+			        <table id="datePicker">
+			            <thead>
+			                <tr>
+			                    <th>周日</th>
+			                    <th>周一</th>
+			                    <th>周二</th>
+			                    <th>周三</th>
+			                    <th>周四</th>
+			                    <th class="date_da_week">周五</th>
+			                    <th class="date_da_week">周六</th>
+			               </tr>
+			            </thead>
+			            <tbody>
+			               <tr>
+			               <#list price as p>
+			                     <#assign t_status = "2"/>
+			                     <#assign weekEnd = ""/>
+			                     <#if p.day?? && p.day !="">
+			                    	<#assign t_status = "3"/>
+			                        <#if p.isSellable?? && p.isSellable?string=="true" >
+			                                <#assign t_status = "4"/>
+			                            <#if p.dayStock?? && p.dayStock=="-2">
+			                                 <#assign t_status = "5"/>
+			                            </#if>
+			                        </#if>
+			                        
+			                        <#if p.week?? && p.week?number&gt;5>
+			                            <#assign weekEnd = "date_da_week"/>
+			                        </#if>
+			                    </#if>
+			               
+			                    <td <#if t_status=="5"> onclick="choseDays(this,'${p.sellPriceYuan!}','${p.date!}','${p.zHweek}','${productId!}','${branchId!}');" </#if>  class="date_da${t_status} ${weekEnd!}">
+				                     <div class="date_da">
+				                         <#if p.istoday><span style='font-size:14px'>今天</span><#else>${p.day!}</#if>
+				                     </div>
+				                     <div class="lv-price">
+				                         <#if p.sellPriceYuan=="">
+				                             &nbsp;
+				                         <#else>
+				                             &yen;${p.sellPriceYuan!}
+				                         </#if>
+				                     </div>
+			                    </td>
+				                 <#assign pIndex = p_index + 1/> 
+					             <#if p_has_next && pIndex%7 ==0 >
+					                    </tr>
+					                    <tr>
+				                 </#if>
+			                </#list>
+			                 </tr>
+			            </tbody>
+			        </table>
+			    </div>
+			 </#if>
+		</#list>
+	</#if>
+ <script >
+     $(function() {
+    	 $(".lv-price").each(function(){ 
+    		 var num=parseInt($(this).html().replace(/\W/g, "")); 
+    		 if((num/10000)<1){ 
+    		 $(this).css("font-size","12px"); 
+    		 } 
+    		 }); 
+
+     });
+  </script>
+</body>
+</html>

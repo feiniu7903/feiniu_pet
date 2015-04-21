@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>选择城市</title>
+	<#include "../common/define_v4.html">
+	<script src="${request.contextPath}/js/hotel.js"></script>
+	<script src="${request.contextPath}/js/comm.js"></script>
+    <link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/order.css">
+<script type="text/javascript">
+	//搜索城市加载用到
+	var cityListJson = ${cityListJson!};
+	//自动加载方法
+	$(function(){
+		// 自动补全查询
+		$("#citykeyword").keyup(function() {
+			initCityAutoCompleteDatas();
+		});
+		
+	});
+	//定位城市
+	$(function() {
+		    /********   定位 相关 ************/
+			latitude = getLocalStorage(LOCAL_STORAGE_ROUTE_LAT);
+			longitude = getLocalStorage(LOCAL_STORAGE_ROUTE_LON);
+			var locationCity = getLocalStorage("location_city_loc");
+			if(null == locationCity || "" == locationCity ) {
+				if(navigator.geolocation) {
+			        navigator.geolocation.getCurrentPosition(function(e){
+						latitude = e.coords.latitude;
+						longitude = e.coords.longitude;
+						setLocalStorage(LOCAL_STORAGE_ROUTE_LAT,latitude);
+						setLocalStorage(LOCAL_STORAGE_ROUTE_LON,longitude);
+						initCity(latitude,longitude,"location_city_loc"); // 定位成功. 
+					},function(e){
+						initDatas(DEFAULT_CITY); // 如果定位失败 ! 
+					},{enableHighAccuracy:true,timeout:3000,maximumAge:3000});
+			    } else {
+			    	initDatas(DEFAULT_CITY); // 如果浏览器不支持定位  
+			    }
+			} else {
+				initDatas(locationCity);;// 如果已经定位过.  
+			}
+	});
+	//定位城市并赋值ID等
+	function initDatas(locationCity){
+		var locationCityObj=locationCityFun(locationCity);
+		if(locationCityObj!=null){
+			$("#locationCityName").text(locationCityObj.name);
+			$("#locationCityId").val(locationCityObj.id);
+			$("#locationCityPinYin").val(locationCityObj.pinyin);
+		}
+	}
+	//在已有的城市搜索定位对应的城市,获取ID,PINYIN
+	function locationCityFun(cityName){
+		var locationCityObj=null;
+		var j = 0;
+		if(null != cityListJson) {
+			for(var i = 0; i < cityListJson.length;i++) {
+				if(cityListJson[i].name==cityName) {
+					locationCityObj= cityListJson[i];
+					return locationCityObj;
+				}
+			}
+		}
+	}
+	//点击定位城市
+	function clickLocationCity(){
+		var locationCityName=$("#locationCityName").text();
+		var locationCityId=$("#locationCityId").val();
+		var locationCityPinYin=$("#locationCityPinYin").val();
+		chooseCity(locationCityId,locationCityName,locationCityPinYin);
+	}
+</script>
+</head>
+<body>
+	<div class="wrap">
+		<header class="header">
+		    <a href="javascript:union_back();" class="back"><span class="ic_back"></span></a>
+		
+		    <h1>请选择入住城市</h1>
+		    <section class="header_alice">
+		        <a href="javascript:defaultCity();" class="btn1">恢复默认</a>
+		    </section>
+		</header>
+		<div id="content">
+            <div class="lv-search-bar">
+                <div class="lv-search">
+                        <span class="clear-icon" onclick="union_clear_context('keyword');" id="clear_password"></span>
+                        <input class="lv-search-input" id="citykeyword" type="text" value="${toDest!}"
+                               placeholder="请输入城市名或拼音" autocomplete="off">
+                        <input type="button" class="btn_sub" value="" onclick="initCityAutoCompleteDatas();" />
+                </div>
+                <div id="search_autocomplete" style="display:none;">
+                    <ul class="search_auto_complete" id="search_success"></ul>
+                </div>
+            </div>
+			<div class="position-list">
+				<h3>当前定位城市</h3>
+				<ul>
+				    <li onclick="clickLocationCity();"><span class="value" id="locationCityName">正在定位...</span></li>
+				    <input  value=""  type="hidden" name="locationCityId" id="locationCityId"><!--定位城市ID -->
+				    <input  value=""  type="hidden" name="locationCityPinyin" id="locationCitypinYin"><!--定位城市pinyin-->
+				</ul>
+				<#if cityList?? && cityList?size&gt;0>
+					<h3>热门城市</h3>
+					<ul>
+						<#list cityList as city>
+				             <#if city.isHot?? && city.isHot>
+					        	 <li onclick="chooseCity('${city.id!}','${city.name!}','${city.pinyin!}');"><span class="value">${city.name!}</span></li>
+				            </#if>
+				         </#list>
+					</ul>
+				 	<#if charList?? && charList?size&gt;0>
+			           <#list charList as char>
+					    	    <a class="tabSwitch"><h3>${char!}</h3></a>
+								<ul class="tabChange">
+							        <#list cityList as city>
+							            <#if city.pinyin[0..0] == "${char!}">
+							            	<li onclick="chooseCity('${city.id!}','${city.name!}','${city.pinyin!}')"><span class="value">${city.name!}</span></li>
+								        </#if>
+							        </#list>
+						        </ul>
+				    	</#list>
+				    </#if>
+				</#if>
+			</div>
+		</div>
+	<#include "../common/footer_v4.html"/>
+	</div>
+	<script type="text/javascript">
+	    $(".position-list").positionTab({tabSwitch: ".tabSwitch"});
+	</script>
+</body>
+</html>

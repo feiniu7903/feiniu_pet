@@ -1,0 +1,70 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<zk>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit"?>
+<window  title="退订邮件信息查询" border="normal" apply="com.lvmama.operate.web.statistics.EdmUnSubscribeAction">
+<grid>
+			<columns>
+				<column width="80px"></column>
+				<column width="220px"></column>
+				<column width="80px"></column>
+				<column width="120px"></column>
+				<column width="80px"></column>
+				<column width="120px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>退订时间：</hbox>
+					<hbox>
+						<datebox value="@{saction.searchConds.beginCancelDate}"/> -- <datebox value="@{saction.searchConds.endCancelDate}"/>
+					</hbox>
+					<hbox>邮箱:</hbox>
+					<hbox> <textbox value="@{saction.searchConds.email}"></textbox>  </hbox>
+					<hbox>邮件类型：</hbox>
+					<hbox>
+						<listbox mold="select"
+							model="@{saction.codeItemList}"
+							onSelect='saction.searchConds.put("type",self.selectedItem.value);'>
+							<listitem self="@{each='item'}"
+								label="@{item.name }" value="@{item.code}"
+								selected="@{item.checked}" />
+						</listbox>
+					</hbox>
+					<hbox>
+					<button  label="查询"  id="search" width="100px" onClick="_paging.activePage=0;saction.query()"></button>
+					<button  label="导出列表"  id="exportUser" width="100px" onClick="saction.download();"></button>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		
+		<listbox model="@{saction.result, load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader label="邮箱"/>
+				<listheader label="邮件类型" />
+				<listheader label="退订时间" />
+				<listheader label="退订原因" />
+			</listhead>
+			<listitem self="@{each='edm'}">
+				<listcell label="@{edm.email}"></listcell>
+				<listcell label="@{edm.type}"></listcell>
+				<listcell label="@{edm.cancelDate}"></listcell>
+				<listcell label="@{edm.cancelRemark}"></listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell>
+					<paging  id="_paging" pageSize = "20" onPaging='saction.query();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+</window>
+</zk>

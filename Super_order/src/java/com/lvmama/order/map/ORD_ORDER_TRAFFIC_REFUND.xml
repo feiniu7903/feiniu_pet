@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_ORDER_TRAFFIC_REFUND" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderTrafficRefund" >
+    <result column="ORDER_TRAFFIC_REFUND_ID" property="orderTrafficRefundId" />
+    <result column="ORDER_TRAFFIC_ID" property="orderTrafficId" />
+    <result column="AMOUNT" property="amount" />
+    <result column="BILL_NO" property="billNo" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="TICKET_CHARGE" property="ticketCharge" />
+    <result column="REFUND_TYPE" property="refundType" />
+    <result column="TICKET_NUM" property="ticketNum" />
+  </resultMap>
+  
+  <select id="selectCountByBillNo" resultClass="java.lang.Long" parameterClass="java.util.Map" >
+    select count(*) 
+    from ORD_ORDER_TRAFFIC_REFUND
+    where BILL_NO = #billNo#
+  </select>
+  
+  <select id="selectSumRefundByTraffic" resultClass="java.lang.Long" parameterClass="java.util.Map" >
+    select sum(AMOUNT) 
+    from ORD_ORDER_TRAFFIC_REFUND
+    where ORDER_TRAFFIC_ID = #orderTrafficId#
+  </select>
+   <select id="selectByParam" resultMap="BaseResultMap" parameterClass="java.util.Map" >
+    select *
+    from ORD_ORDER_TRAFFIC_REFUND
+    where ORDER_TRAFFIC_ID = #orderTrafficId#
+    and BILL_NO = #billNo#
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTrafficRefund" >
+    select *
+    from ORD_ORDER_TRAFFIC_REFUND
+    where ORDER_TRAFFIC_REFUND_ID = #orderTrafficRefundId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTrafficRefund" >
+    delete from ORD_ORDER_TRAFFIC_REFUND
+    where ORDER_TRAFFIC_REFUND_ID = #orderTrafficRefundId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTrafficRefund" >
+    <selectKey resultClass="java.lang.Long" keyProperty="orderTrafficRefundId" >
+      select ORD_ORDER_TRAFFIC_REFUND_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_ORDER_TRAFFIC_REFUND (ORDER_TRAFFIC_REFUND_ID, ORDER_TRAFFIC_ID, AMOUNT,
+      BILL_NO, CREATE_TIME, TICKET_CHARGE, REFUND_TYPE, TICKET_NUM)
+    values (#orderTrafficRefundId#, #orderTrafficId#, #amount#,
+      #billNo#, #createTime#, #ticketCharge#, #refundType#, #ticketNum#)
+  </insert>
+ 
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTrafficRefund" >
+    update ORD_ORDER_TRAFFIC_REFUND
+    set ORDER_TRAFFIC_ID = #orderTrafficId#,
+      AMOUNT = #amount#,
+      BILL_NO = #billNo#,
+      CREATE_TIME = #createTime#
+    where ORDER_TRAFFIC_REFUND_ID = #orderTrafficRefundId#
+  </update>
+  
+  <select id="getTrafficRefundByRefundId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+  	select * from ord_order_traffic_refund ootr where ootr.order_traffic_refund_id = #refundId#
+  </select>
+</sqlMap>

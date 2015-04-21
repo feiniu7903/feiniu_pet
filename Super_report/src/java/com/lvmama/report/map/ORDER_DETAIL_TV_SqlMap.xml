@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_DETAIL_TV" >
+	<insert id="insert" parameterClass="java.lang.Long">
+	   INSERT INTO lvmama_report.report_detail_tv
+       select
+       ooim.PRODUCT_TYPE,
+        (select item_name
+            from lvmama_super.com_code
+           where set_code = 'PRODUCT_TYPE'
+             and item_code = ooim.PRODUCT_TYPE) as PRODUCT_TYPE_zh,
+         oo.order_id as order_id,
+         ooip.order_item_prod_id as order_item_prod_id,
+        oo.create_time as create_time,
+     oo.deal_time as deal_time,
+        oo.visit_time as visit_time,
+         (select max(eft.send_time) from lvmama_super.EBK_CERTIFICATE_ITEM ect,lvmama_super.EBK_CERTIFICATE ec ,lvmama_super.EBK_FAX_TASK eft where ect.EBK_CERTIFICATE_id=ec.EBK_CERTIFICATE_id
+and ec.EBK_CERTIFICATE_id=eft.EBK_CERTIFICATE_id
+and ect.ORDER_ITEM_META_ID= ooim.order_item_meta_id) as max_send_time,
+           oo.order_status,
+          (select item_name
+            from lvmama_super.com_code
+           where set_code = 'ORDER_STATUS'
+             and item_code = oo.order_status) as ORDER_STATUS_ZH,
+             oo.payment_status,
+           (select item_name
+            from lvmama_super.com_code
+           where set_code = 'PAYMENT_STATUS'
+             and item_code = oo.payment_status) as payment_status_zh ,
+         oo.payment_time  as payment_time,
+         (select wmsys.WM_CONCAT(pp.payment_gateway) from lvmama_pet.pay_payment pp where pp.object_type in ('ORD_ORDER','SUPER_ORDER') and 
+            pp.STATUS in('SUCCESS','TRANSFERRED') and pp.object_id=oo.order_id) as payment_gateway,
+         (select wmsys.WM_CONCAT(distinct p.GATEWAY_NAME) from LVMAMA_PET.PAY_PAYMENT_GATEWAY P,lvmama_pet.pay_payment pp where pp.object_type in ('ORD_ORDER','SUPER_ORDER') and 
+            pp.STATUS in('SUCCESS','TRANSFERRED') and pp.object_id=oo.order_id and P.GATEWAY=pp.PAYMENT_GATEWAY) as PAYMENT_GATEWAY_zh,
+           ot.serial as serial,
+         ot.GATEWAY_TRADE_NO as GATEWAY_TRADE_NO,
+         ooip.product_name as product_name,
+         ooim.product_name as meta_product_name,
+         (  select wmsys.WM_CONCAT(sst.name) from lvmama_super.meta_settlement ms,lvmama_pet.SUP_SETTLEMENT_TARGET sst where
+ms.meta_product_id=ooim.meta_product_id
+   and ms.target_id = sst.target_id) as settlement_name,
+          actual_settlement_price/100 as actual_settlement_price,
+          (select sum(actual_settlement_price*product_quantity) from lvmama_super.ord_order_item_meta where order_item_id =ooip.order_item_prod_id)/100 as
+product_settlement_price,
+         ( select supplier_name from lvmama_pet.sup_supplier where  supplier_id = ooim.supplier_id) as supplier_name,
+         ooim.supplier_id,
+         ( select item_name from lvmama_pet.sup_supplier, lvmama_super.com_code where  set_code = 'SETTLEMENT_COMPANY'
+   and company_id=item_code and supplier_id = ooim.supplier_id) as supplier_id_zh,
+         ooip.quantity as quantity,
+         ooip.quantity*ooim.product_quantity as product_quantity,
+         ooim.adult_quantity*ooip.quantity*ooim.product_quantity as adult_quantity,
+         ooim.child_quantity*ooip.quantity*ooim.product_quantity as child_quantity,
+         ooip.price/100 as price_unit ,
+         ooip.price * ooip.quantity/100 as item_pay,
+         actual_pay/100 as actual_pay,
+         (select case
+                                 when oo.payment_status = 'UNPAY' and
+                                      oo.payment_target = 'TOLVMAMA' then
+                                  0
+                                 else
+                                  (select (oo.actual_pay - nvl(sum(amount),0))/100
+                                      from lvmama_super.ord_refundment orf
+                                     where status = 'REFUNDED' and orf.refund_type ='ORDER_REFUNDED'
+                                       and orf.order_id = oo.order_id)
+
+                               end
+                          from dual) as last_price ,
+                          oo.payment_target,
+         (select item_name from lvmama_super.com_code where set_code = 'PAYMENT_TARGET' and item_code = oo.payment_target) as PAYMENT_TARGET_zh,
+        oo.channel,
+        (select pc.channel_name 
+			from lvmama_super.PROD_CHANNEL pc 
+			where pc.channel_code = oo.channel) as channel_zh ,
+                 (select uu.user_name  from  lvmama_pet.user_user uu where oo.user_id = uu.USER_NO) as user_name,
+         1111 as order_count,
+  a.zs  final_operator_name,
+    (select wmsys.WM_CONCAT(operator_name)
+from lvmama_super.com_log cl 
+where object_type = 'ORD_ORDER_ITEM_META' 
+and cl.log_type='updateOrderItemMeta' and cl.content like '%set resourceStatus =%' 
+and object_id = ooim.order_item_meta_id) audit_operator_name,
+            op.name as concat_name,
+         op.mobile as mobile,
+         op.address as address,
+         (select wmsys.WM_CONCAT(content) from lvmama_super.ord_order_memo where order_id=oo.order_id and rownum<![CDATA[<]]>10) as order_memo,
+  a.ht backorder_operator_name,
+              (select address from lvmama_super.ord_person where person_Type='ADDRESS' and object_type='ORD_ORDER' and object_id=oo.order_id and rownum=1)  as receivers_address,
+      sst.settlement_period as settlement_period,
+      sst.bank_name as bank_name,
+      sst.bank_account_name as bank_account_name,
+      sst.bank_account as bank_account,
+      sst.alipay_name as alipay_name,
+      sst.alipay_account as alipay_account,
+      (select wmsys.WM_CONCAT(sbt.name) from lvmama_super.SUP_B_CERTIFICATE_TARGET sbt,lvmama_super.META_B_CERTIFICATE mbc where mbc.target_id=sbt.target_id and mbc.meta_product_id=ooim.meta_product_id)as certificat_ename,
+      oo.cancel_reason as ORDER_CANCEL_REASON,
+         (select item_name
+            from lvmama_super.com_code
+           where set_code = 'SUB_PRODUCT_TYPE'
+             and item_code = ooip.SUB_PRODUCT_TYPE) as SUB_PRODUCT_TYPE_zh,
+          ooip.product_id as product_id,
+         ooim.meta_product_id as meta_product_id,
+     oo.taken_operator  info_operator_name,
+          oo.taken_operator  as SUB_OPERATOR_NAME,
+      oo.travel_group_code,
+      oo.filiale_name,
+      (select item_name from lvmama_super.com_code where item_code = oo.filiale_name and set_code = 'FILIALE_NAME') filiale_name_zh,
+      decode(ooim.product_type,'TICKET', (select item_name from lvmama_super.com_code where item_code = ooim.branch_type and set_code='TICKET_BRANCH' ),
+'HOTEL',(select item_name from lvmama_super.com_code where item_code = ooim.branch_type and set_code='HOTEL_BRANCH' ),
+'ROUTE',(select item_name from lvmama_super.com_code where item_code = ooim.branch_type and set_code='ROUTE_BRANCH' ),
+'OTHER',(select item_name from lvmama_super.com_code where item_code = ooim.branch_type and set_code='OTHER_BRANCH' )) meta_branch_type_name_zh,
+     ooim.payed_amount/100 as item_payed_amount,
+    oo.physical,
+    ot.ori_object_id,
+    ossi.real_item_price/100 as real_item_price,
+    ossi.pay_amount/100 as total_pay_amount,
+    oo.order_pay/100 as order_pay,
+    oo.ought_pay/100 as ought_pay,
+    (select sum(ooaa.amount)/100 from lvmama_super.ord_order_amount_apply ooaa where ooaa.order_id = oo.order_id and ooaa.apply_status='PASS') as adjustment_amount,
+    (SELECT sum(ooai.item_amount)/100 FROM lvmama_super.ORD_ORDER_AMOUNT_ITEM ooai
+     WHERE ooai.ORDER_ID = oo.order_id and ooai.oder_amount_type='ORDER_COUPON_AMOUNT') as sum_youhui_amount,      
+    order_refunded.total_amount/100 as sum_order_refunded_amount,
+    (select wmsys.WM_CONCAT(ppg.gateway_name)  from lvmama_pet.pay_payment_gateway    ppg,lvmama_pet.pay_payment_refundment ppr
+ 		where ppg.gateway = ppr.refund_gateway and ppr.order_id=oo.order_id and ppr.status='SUCCESS' and ppr.refund_type='ORDER_REFUNDED') as refund_channel,
+    order_refunded.refund_time as refund_time,
+    orc.total_amount/100 as sum_compensation_amount,
+    (select wmsys.WM_CONCAT(ppg.gateway_name)  from lvmama_pet.pay_payment_gateway    ppg,lvmama_pet.pay_payment_refundment ppr
+ 		where ppg.gateway = ppr.refund_gateway and ppr.order_id=oo.order_id and ppr.status='SUCCESS' and ppr.refund_type='COMPENSATION') as compensation_channel,
+    (select max(pp.object_id) from lvmama_pet.pay_payment pp where pp.object_type in ('ORD_ORDER','SUPER_ORDER') and 
+            pp.STATUS in('SUCCESS','TRANSFERRED') and pp.ori_object_id=oo.order_id) as transfer_new_order_id,    
+    (select wmsys.WM_CONCAT(distinct decode(ppp.status,'PRE_PAY','预授权支付成功','CREATE','新建','PRE_SUCC','预授权完成(确认扣款)','PRE_SUCC_CANCEL','预授权完成撤销','PRE_CANCEL','预授权撤销','PRE_REFUND','预授权退款')) from lvmama_pet.pay_pre_payment ppp,lvmama_pet.pay_payment pp where ppp.payment_id = pp.payment_id and pp.object_type in ('ORD_ORDER','SUPER_ORDER') and 
+            pp.STATUS in('SUCCESS','TRANSFERRED') and payment_type='PRE_PAY' and pp.object_id=oo.order_id) as pay_pre_status,
+    (select wmsys.WM_CONCAT(distinct ppc.commercial_name) from lvmama_pet.pay_pos pops,lvmama_pet.pay_payment pp,lvmama_pet.pay_pos_commercial ppc where pp.object_type in ('ORD_ORDER','SUPER_ORDER') and 
+            pp.STATUS in('SUCCESS','TRANSFERRED') and pp.object_id=oo.order_id and pp.payment_gateway in('COMM_POS','COMM_POS_CASH')
+            and pp.callback_info=pops.terminal_no and pops.commercial_id = ppc.commercial_id) as commercial_name,
+     ooim.order_item_meta_id,
+     (select wmsys.WM_CONCAT(pp.payment_trade_no) from lvmama_pet.pay_payment pp where pp.object_type in ('ORD_ORDER','SUPER_ORDER') and 
+            pp.STATUS in('SUCCESS','TRANSFERRED') and pp.object_id=oo.order_id) as payment_trade_no,
+    0 as rake_back_rate,
+    0 as rake_back_price
+    from lvmama_super.ord_order oo,
+     (select CALLBACK_TIME,CREATE_TIME, object_id,gateway_trade_no,serial,payment_gateway,ori_object_id
+     from (select ot.CALLBACK_TIME,ot.CREATE_TIME,
+    ot.object_id,gateway_trade_no,serial,payment_gateway,ori_object_id,
+    row_number() over(partition by object_id order by create_time desc) rn
+    from LVMAMA_PET.PAY_PAYMENT ot
+    where ot.object_type in ('ORD_ORDER','SUPER_ORDER') and ot.STATUS in('SUCCESS','TRANSFERRED'))
+    where rn = 1) ot,
+   lvmama_super.ord_order_item_prod ooip,
+   lvmama_super.ord_order_item_meta ooim,
+    (select * from   lvmama_super.ord_person op  where  op.object_type = 'ORD_ORDER'
+     and op.person_type = 'CONTACT')op,
+    (select distinct ms.meta_product_id, sst.settlement_period as settlement_period, 
+sst.bank_name as bank_name, 
+sst.bank_account_name as bank_account_name, 
+sst.bank_account as bank_account, 
+sst.alipay_name as alipay_name, 
+sst.alipay_account as alipay_account from lvmama_super.meta_settlement ms, 
+lvmama_pet.sup_settlement_target sst where ms.target_id=sst.target_id) sst,
+ (select wmsys.WM_CONCAT(zs)zs,wmsys.WM_CONCAT(ht)ht,object_id from (
+select object_id, (case when log_type= 'approvePass' and object_type = 'ORD_ORDER' then operator_name else null end) zs,
+             (case when log_type = 'placeOrder'
+             and object_type = 'ORD_ORDER' then operator_name else null end )ht
+               from lvmama_super.com_log cl)
+               group by object_id)a,
+  (SELECT it.actual_settlement_price as real_item_price,it.total_settlement_price as pay_amount,it.order_item_meta_id FROM LVMAMA_PET.SET_SETTLEMENT_ITEM it) ossi,
+  (select orf.order_id, sum(orf.amount) as total_amount,max(orf.refund_time) as refund_time
+          from lvmama_super.ord_refundment orf where orf.refund_type ='ORDER_REFUNDED' and orf.status='REFUNDED' group by orf.order_id) order_refunded,
+    (select orf.order_id, sum(orf.amount) as total_amount 
+            from lvmama_super.ord_refundment orf where orf.refund_type ='COMPENSATION' and orf.status='REFUNDED' group by orf.order_id) orc
+  where oo.order_id = ooip.order_id
+     and ooip.order_item_prod_id = ooim.order_item_id(+)
+     and oo.order_id = op.object_id(+)
+     and oo.order_id=ot.object_id(+)
+     and ooim.meta_product_id=sst.meta_product_id(+)
+     and oo.order_id=a.object_id(+)
+     and ooim.order_item_meta_id = ossi.order_item_meta_id(+)
+     and oo.order_id = order_refunded.order_id(+)
+     and oo.order_id = orc.order_id(+)
+     and oo.order_id=#order_id#
+	</insert>
+	
+	<delete id="deleteByOrderId" parameterClass="java.lang.Long">
+		delete from lvmama_report.report_detail_tv
+		where ORDER_ID=#order_id#
+	</delete>
+	
+	<delete id="deleteAfterSpecTime" parameterClass="java.util.Date">
+		delete from lvmama_report.report_detail_tv
+		where create_time>=#theTime#
+	</delete>
+	
+	<select id="selectForNew" parameterClass="java.util.Date" resultClass="java.lang.Long">
+		select order_id from lvmama_super.ord_order oo
+		where oo.create_time>=#theTime# order by order_id
+	</select>
+	
+	<select id="selectForOld" parameterClass="java.util.Date" resultClass="java.lang.Long">
+	    select * from (
+	    select oo.order_id 
+	    from lvmama_super.ord_order oo
+	    where oo.create_time<![CDATA[<]]>#theTime#
+	    and ((oo.order_status='CANCEL' and oo.cancel_time<![CDATA[>=]]>#theTime#) or oo.deal_time>=#theTime#)
+		union
+	    select oo.order_id
+	    from lvmama_super.ord_order oo, lvmama_pet.pay_payment op
+	    where oo.create_time<![CDATA[<]]>#theTime#
+	    and oo.payment_status='PAYED'
+	    and oo.order_id=op.object_id
+	    and op.object_type in ('ORD_ORDER','SUPER_ORDER')
+	    and op.status='SUCCESS'
+	    and op.CALLBACK_TIME>=#theTime#
+	    union
+	    select distinct(oo.order_id)
+	    from lvmama_super.ord_order_memo oom, lvmama_super.ord_order oo
+	    where oo.order_id=oom.order_id
+	    and oo.create_time<![CDATA[<]]>#theTime# 
+	    and oom.CREATE_TIME>=#theTime#
+	    union 
+		select distinct(ssi.order_id) from LVMAMA_PET.SET_SETTLEMENT_ITEM ssi 
+		where ssi.UPDATE_TIME<![CDATA[>=]]>#theTime# 
+		union
+	    select distinct (oo.order_id)
+	    from lvmama_super.ord_order oo, lvmama_super.ord_refundment orr
+	    where oo.create_time<![CDATA[<]]>#theTime# 
+			and oo.order_id = orr.order_id
+			and orr.amount > 0
+			and orr.status = 'REFUNDED'
+			and orr.create_time>=#theTime#
+	    ) order by order_id
+	</select>
+	
+	<!-- 查询订单报表中订单ID -->
+	<select id="getHistoryOrderId" parameterClass="map" resultClass="long">
+		SELECT DISTINCT(O.ORDER_ID)
+		  FROM LVMAMA_REPORT.REPORT_DETAIL_TV O
+		  WHERE
+		  	   O.ORDER_STATUS != 'CANCEL'
+		  	   <isNotEmpty property="startDate">
+			   AND O.PAYMENT_TIME &gt;= #startDate#
+			   </isNotEmpty>
+			   <isNotEmpty property="endDate">
+			   AND O.PAYMENT_TIME &lt;= #endDate#+1
+			   </isNotEmpty>
+	</select>
+	
+	<update id="updateRakeBack" parameterClass="java.util.HashMap">
+	update lvmama_report.report_detail_tv 
+	set 
+		rake_back_rate=#rakeBackRate#,
+		rake_back_price=actual_pay * #rakeBackRate# / 100
+	where 
+		order_id=#orderId#
+	</update>
+</sqlMap>

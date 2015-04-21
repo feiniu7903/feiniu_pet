@@ -1,0 +1,85 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_sale_add"?>
+	<window id="win_sale_add" title="售后服务处理" border="normal"
+		apply="com.lvmama.back.web.abroadhotel.sale.AhotelOrdSaleAddAction">
+		<space />
+		<groupbox style="border: none;">
+			<caption label="售后服务对象"></caption>
+			<listbox id="ordSaleListbox"
+				model="@{saction.ordSaleServiceList,load-after='ordSaleSave.onClick'}">
+				<listhead>
+					<listheader label="申请售后服务"></listheader>
+					<listheader label="申请内容"></listheader>
+					<listheader label="申请人"></listheader>
+					<listheader label="申请时间"></listheader>
+				</listhead>
+				<listitem self="@{each='pf'}">
+					<listcell label="@{pf.serviceTypeName}"></listcell>
+					<listcell>
+						<label value="@{pf.applyContent}" />
+					</listcell>
+					<listcell>
+						<label value="@{pf.operatorName}" />
+					</listcell>
+					<listcell label="@{pf.createTime}"></listcell>
+				</listitem>
+			</listbox>
+		</groupbox>
+		<groupbox style="border: none">
+			<caption label="添加售后服务内容" />
+			<grid>
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label width="150px" value="申请售后服务类型:" />
+						</hbox>
+						<hbox>
+							<listbox id="serviceTypeListbox" mold="select" 
+								model="@{saction.serviceTypes}" >
+								<listitem self="@{each='item'}" label="@{item.name }" value="@{item.code}"/>
+							</listbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="申请内容:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox id="ordSale_applyContent" rows="5"
+								maxlength="200" value="@{saction.ordSalePo.applyContent}"
+								constraint="no empty:申请内容不能为空" width="680px">
+							</textbox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<toolbar align="center">
+			<button id="ordSaleSave" width="100px" label="提交"
+				onClick="chk_value();" />
+			<button label="关闭窗口" width="100px"
+				onClick="win_sale_add.detach()">
+			</button>
+		</toolbar>
+		<zscript>
+		public void chk_value(){
+			if(serviceTypeListbox.getSelectedItem()==null || serviceTypeListbox.getSelectedItem().getValue()==""){
+				alert("请选择售后服务申请服务类型!");
+				return;
+			}
+			if(ordSale_applyContent.getValue()==""){
+				alert("请填写售后服务申请内容!");
+				return;
+			}
+			saction.addOrderSale();
+		}
+		</zscript>
+	</window>
+</zk>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_INVOICE">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdInvoice">
+		<result column="INVOICE_ID" property="invoiceId" />		
+		<result column="TITLE" property="title" />
+		<result column="DETAIL" property="detail" />
+		<result column="MEMO" property="memo" />
+		<result column="AMOUNT" property="amount" />
+		<result column="INVOICE_NO" property="invoiceNo" />
+		<result column="BILL_DATE" property="billDate" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="STATUS" property="status" />
+		<result column="DELIVERY_TYPE" property="deliveryType"/>	
+		<result column="COMPANY" property="company"/>	
+		<result column="USER_ID" property="userId"/>
+		<result column="EXPRESS_NO" property="expressNo"/>
+		<result column="RED_FLAG" property="redFlag"/>
+		<result column="RED_REQ_TIME" property="redReqTime"/>
+		<result column="LOGISTICS_STATUS" property="logisticsStatus"/>
+	</resultMap>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.bee.po.ord.OrdInvoice">
+		select * from ORD_INVOICE
+		where
+		INVOICE_ID = #invoiceId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdInvoice">
+		delete from
+		ORD_INVOICE
+		where INVOICE_ID = #invoiceId#
+  </delete>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdInvoice">
+		<selectKey resultClass="java.lang.Long" keyProperty="invoiceId">
+			select ORD_INVOICE_ID_SEQ.nextval as id from DUAL
+    	</selectKey>
+		insert into ORD_INVOICE (INVOICE_ID, TITLE, DETAIL, MEMO, AMOUNT, STATUS, CREATE_TIME,DELIVERY_TYPE,COMPANY,USER_ID,EXPRESS_NO,RED_FLAG,RED_REQ_TIME,LOGISTICS_STATUS)
+		values (#invoiceId#, #title#, #detail#, #memo#, #amount#, #status#, sysdate,#deliveryType#,#company#,#userId#,#expressNo#,#redFlag#,#redReqTime#,#logisticsStatus#)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdInvoice">
+		update ORD_INVOICE
+		set		
+		TITLE = #title#,
+		DETAIL = #detail#,
+		MEMO = #memo#,
+		AMOUNT = #amount#,
+		INVOICE_NO = #invoiceNo#,
+		BILL_DATE = #billDate#,
+		STATUS = #status#,
+		DELIVERY_TYPE = #deliveryType#,	
+		COMPANY = #company#,
+		USER_ID = #userId#,
+		EXPRESS_NO = #expressNo#,
+		RED_FLAG = #redFlag#,
+		RED_REQ_TIME = #redReqTime#,
+		LOGISTICS_STATUS = #logisticsStatus#
+		where INVOICE_ID = #invoiceId#
+	</update>
+	
+	<update id="updateByParamMap" parameterClass="java.util.Map">
+		update ORD_INVOICE
+		set
+		INVOICE_ID = #invoiceId#
+		<isNotEmpty prepend=" ," property="amount">
+		AMOUNT = #amount#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="detail">
+		DETAIL = #detail#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="memo">
+		MEMO = #memo#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="title">
+		TITLE = #title#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="invoiceNo">
+		INVOICE_NO = #invoiceNo#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="billDate">
+		BILL_DATE = #billDate#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="status">
+		STATUS = #status#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="company">
+		COMPANY = #company#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="deliveryType">
+		DELIVERY_TYPE = #deliveryType#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="userId">
+		USER_ID = #userId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="expressNo">
+		EXPRESS_NO = #expressNo#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="redFlag">
+		RED_FLAG = #redFlag#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="redReqTime">
+		RED_REQ_TIME = #redReqTime#
+		</isNotEmpty>
+		<isNotEmpty prepend=" ," property="logisticsStatus">
+		LOGISTICS_STATUS = #logisticsStatus#
+		</isNotEmpty>
+		where INVOICE_ID = #invoiceId#
+	</update>
+
+	<select id="queryInvoiceByOrderId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+	SELECT ORD_INVOICE.* FROM ORD_INVOICE 
+		inner join ORD_INVOICE_RELATION ON ORD_INVOICE.INVOICE_ID = ORD_INVOICE_RELATION.INVOICE_ID 
+		WHERE ORD_INVOICE_RELATION.ORDER_ID = #orderId#
+	</select>
+
+	<select id="queryInvoiceByStatus" resultMap="BaseResultMap" parameterClass="java.lang.String">
+		SELECT * FROM ORD_INVOICE WHERE STATUS = #status#
+	</select>
+	
+	<select id="selectNotCancelInvoiceCountByOrderId">
+		select count(*) from ORD_INVOICE o WHERE EXISTS (SELECT 1 FROM
+		ORD_INVOICE_RELATION r where r.INVOICE_ID = o.INVOICE_ID AND
+		r.ORDER_ID= #orderId#) and o.STATUS!=#status# 
+	</select>
+
+	<!-- 不考虑订单废单导致的发票无效的数据 -->
+	<select id="getInvoiceAmountSum" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select sum(oi.amount) from ORD_INVOICE oi,ORD_INVOICE_RELATION ir where
+			oi.INVOICE_ID = ir.INVOICE_ID
+		and ir.order_id = #orderId#
+		<isNotEmpty property="excludeInvoiceId">
+		and oi.INVOICE_ID !=#excludeInvoiceId#
+		</isNotEmpty>
+		and oi.status not in('CANCEL','RED')	
+	</select>
+
+	<select id="queryOrdInvoiceList" resultMap="BaseResultMap"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+	<select id="queryOrdInvoiceCount" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryOrdInvoice" resultMap="BaseResultMap"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			$completeSQL$
+		]]>
+	</select>
+	
+</sqlMap>

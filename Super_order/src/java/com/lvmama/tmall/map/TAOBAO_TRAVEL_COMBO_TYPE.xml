@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TAOBAO_TRAVEL_COMBO_TYPE">
+	<!-- 别名 -->
+	<typeAlias alias="taobaoTravelComboType" type="com.lvmama.comm.bee.po.tmall.TaobaoTravelComboType" />
+
+	<resultMap id="taobaoTravelComboTypeResultMap" class="taobaoTravelComboType">
+		<result column="ID" property="id" />
+		<result column="TRAVEL_COMBO_ID" property="travelComboId" />
+		<result column="COMBO_TYPE" property="comboType" />
+		<result column="PROD_BRANCH_ID" property="prodBranchId" />
+	</resultMap>
+	
+	<resultMap id="taobaoTravelComboTypeResultMap2" class="taobaoTravelComboType">
+		<result column="ID" property="id" />
+		<result column="TRAVEL_COMBO_ID" property="travelComboId" />
+		<result column="COMBO_TYPE" property="comboType" />
+		<result column="PROD_BRANCH_ID" property="prodBranchId" />
+		<result column="BRANCH_NAME" property="branchName" />
+	</resultMap>
+	
+	<select id="selectSeq" resultClass="java.lang.Long">
+		select taobao_travel_combo_type_seq.nextval from dual
+	</select>
+	
+	<select id="byId" resultMap="taobaoTravelComboTypeResultMap" parameterClass="java.lang.Long">
+		select * from taobao_travel_combo_type a where a.id = #value#
+	</select>
+	
+	<select id="byMap" resultMap="taobaoTravelComboTypeResultMap2" parameterClass="java.util.Map">
+		select a.*, b.branch_name from taobao_travel_combo_type a, prod_product_branch b
+			where a.prod_branch_id = b.prod_branch_id(+)
+			<isNotEmpty property="id">
+				and a.id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="travelComboId">
+				and a.travel_combo_id = #travelComboId#
+			</isNotEmpty>
+			<isNotEmpty property="comboType">
+				and a.combo_type = #comboType#
+			</isNotEmpty>
+			<isNotEmpty property="prodBranchId">
+				and a.prod_branch_id = #prodBranchId#
+			</isNotEmpty>
+			<isNotEmpty property="prodBranchIds">
+				and a.prod_branch_id in ($prodBranchIds$)
+			</isNotEmpty>
+			<isNotEmpty property="not_travelComboId">
+				and a.prod_branch_id not in ($not_travelComboId$)
+			</isNotEmpty>
+	</select>
+	
+	<select id="countByMap" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		select count(*) from taobao_travel_combo_type a 
+			where 1=1
+			<isNotEmpty property="id">
+				and a.id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="travelComboId">
+				and a.travel_combo_id = #travelComboId#
+			</isNotEmpty>
+			<isNotEmpty property="comboType">
+				and a.combo_type = #comboType#
+			</isNotEmpty>
+			<isNotEmpty property="prodBranchId">
+				and a.prod_branch_id = #prodBranchId#
+			</isNotEmpty>
+			<isNotEmpty property="prodBranchIds">
+				and a.prod_branch_id in ($prodBranchIds$)
+			</isNotEmpty>
+			<isNotEmpty property="not_travelComboId">
+				and a.travel_combo_id not in ($not_travelComboId$)
+			</isNotEmpty>
+	</select>
+	
+	<insert id="insert" parameterClass="taobaoTravelComboType">
+		insert into taobao_travel_combo_type
+		  (id, travel_combo_id, combo_type, prod_branch_id)
+		values
+		  (#id#, #travelComboId#, #comboType#, #prodBranchId#)
+	</insert>
+	
+	<update id="update" parameterClass="taobaoTravelComboType">
+		update taobao_travel_combo_type
+		   set id = #id#,
+		       travel_combo_id = #travelComboId#,
+		       combo_type = #comboType#,
+		       prod_branch_id = #prodBranchId#
+		 where id = #id#
+	</update>
+	
+	<update id="updateByMap" parameterClass="java.util.Map">
+		update taobao_travel_combo_type
+		   set id = #id#
+			<isNotEmpty property="travelComboId">
+				, travel_combo_id = #travelComboId#
+			</isNotEmpty>
+			<isNotEmpty property="comboType">
+				, combo_type = #comboType#
+			</isNotEmpty>
+			<isNotEmpty property="prodBranchId">
+				, prod_branch_id = #prodBranchId#
+			</isNotEmpty>
+		 where id = #id#
+	</update>
+	
+	<delete id="delete" parameterClass="java.lang.Long">
+		delete from taobao_travel_combo_type where id = #value#
+	</delete>
+	
+	<delete id="deleteByTravelComboId" parameterClass="java.lang.Long">
+		delete from taobao_travel_combo_type where travel_combo_id = #value#
+	</delete>
+	
+	<delete id="deleteByMap" parameterClass="java.util.Map">
+		delete from taobao_travel_combo_type
+			where 1=1
+			<isNotEmpty property="id">
+				and id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="travelComboId">
+				and travel_combo_id = #travelComboId#
+			</isNotEmpty>
+			<isNotEmpty property="comboType">
+				and combo_type = #comboType#
+			</isNotEmpty>
+			<isNotEmpty property="prodBranchId">
+				and prod_branch_id = #prodBranchId#
+			</isNotEmpty>
+	</delete>
+</sqlMap>

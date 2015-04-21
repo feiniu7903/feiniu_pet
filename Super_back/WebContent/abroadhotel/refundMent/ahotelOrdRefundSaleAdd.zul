@@ -1,0 +1,95 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_refund_add"?>
+<?component name="ordRefundAddComponent" macroURI="/abroadhotel/sale/ahotelOrdSaleDealAdd.zul" ?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_refund_add" title="售后服务处理" border="normal"
+		apply="com.lvmama.back.web.abroadhotel.refundMent.AhotelOrdRefundSaleAddAction">
+		<grid>
+			<columns>
+				<column width="100px" align="right"></column>
+				<column></column>
+				<column width="100px"></column>
+				<column></column>
+				<column width="100px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label width="150px" value="订单号:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.orderNo}" />
+					</hbox>
+					<hbox>
+						<label width="150px" value="下单时间:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.createdTime}" />
+					</hbox>
+					<hbox>
+						<label width="150px" value="订单状态:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.orderStatusZH}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>
+						<label width="150px" value="应付金额:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.oughtPayFloat}" />
+					</hbox>
+					<hbox>
+						<label width="150px" value="实付金额:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.actualPayFloat}" />
+					</hbox>
+					<hbox>
+						<label width="150px" value="支付状态:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.paymentStatusZH}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>
+						<label width="150px" value="支付等待时间:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.waitPayment}" />
+					</hbox>
+					
+					<hbox>
+						<label width="150px" value="订单来源渠道:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.channel}" />
+					</hbox>
+					<hbox>
+						<label width="150px" value="用户备注:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.userMemo}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<ordRefundAddComponent saleServiceId="${saction.saleServiceId}"
+			serviceType="${saction.serviceType}" editabled="${saction.editabled}">
+		</ordRefundAddComponent>
+	</window>
+</zk>

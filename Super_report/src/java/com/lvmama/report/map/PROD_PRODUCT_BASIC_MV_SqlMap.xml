@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_BASIC_MV">
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.ProdProductBasicMV">
+		<result column="PROD_PRODUCT_ID" property="prodProductId" />
+		<result column="PROD_PRODUCT_NAME" property="prodProductName" />
+		<result column="PAY_TIME" property="payTime" />
+		<result column="START_FROM" property="startFrom" />
+		<result column="DEST" property="dest" />
+		<result column="ORDER_QUANTITY" property="orderQuantity"/>
+		<result column="QUANTITY" property="quantity" />
+		<result column="PRODUCT_AMOUNT" property="productAmount" />
+		<result column="AMOUNT" property="amount" />
+		<result column="PROFIT" property="profit" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="CHANNEL_NAME" property="channelName" />
+		<result column="SUPPLIER_NAME" property="supplierName" />
+		<result column="FILIALE_NAME" property="filialeName"/>
+	</resultMap>
+	
+	<resultMap id="SaleResultMap" class="com.lvmama.report.po.ProdProductBasicMV">
+		<result column="PROD_PRODUCT_ID" property="prodProductId" />
+		<result column="PROD_PRODUCT_NAME" property="prodProductName" />
+		<result column="START_FROM" property="startFrom" />
+		<result column="DEST" property="dest" />
+		<result column="ORDER_QUANTITY" property="orderQuantity"/>
+		<result column="QUANTITY" property="quantity" />
+		<result column="AMOUNT" property="amount" />
+		<result column="PROFIT" property="profit" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="FILIALE_NAME" property="filialeName"/>
+		<result column="REAL_NAME" property="realName"/>
+	</resultMap>
+	
+	<sql id="queryProdProductBasicMVByTimeSql">
+		from (select prod_product_id,prod_product_name,START_FROM,dest,sum(amount) as amount,sum(ORDER_QUANTITY) as ORDER_QUANTITY, sum(quantity) as quantity,sum(profit) as profit,sub_product_type,filiale_name,real_name from $tableName$ where 1=1
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotEmpty prepend="and" property="managerIds">
+			<iterate property="managerIds" conjunction="," close=")" open=" manager_id in (">
+				#managerIds[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotNull prepend="and" property="startDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[<]]>#endDate#+1
+		</isNotNull>	
+		<isNotNull prepend="and" property="prodName">
+			PROD_PRODUCT_NAME like '%$prodName$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="dest">
+			DEST like '%$dest$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="birthland">
+			START_FROM like '%$birthland$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="filialeName">
+			FILIALE_NAME = #filialeName#
+		</isNotNull>
+		<isNotNull prepend="and" property="prod_product_id">
+			prod_product_id = #prod_product_id#
+		</isNotNull>
+		<isNotNull prepend="and" property="realName">
+			real_name like '%$realName$%'
+		</isNotNull>	
+		group by PROD_PRODUCT_NAME,prod_product_id,START_FROM,dest,sub_product_type,filiale_name,real_name
+		<dynamic prepend=" order by ">
+			<isNotNull prepend="" property="sortTypeName">
+				$sortTypeName$ $sortAscOrDesc$
+			</isNotNull>
+		</dynamic> 
+		 ) info
+	</sql>
+	
+	<select id="countProdProductBasicMVByTime" resultClass="java.lang.Long" parameterClass="java.util.Map" >
+		select count(quantity) 
+		<include refid="queryProdProductBasicMVByTimeSql"/>
+	</select>
+	
+	<select id="sumAmountQuantityProdProductBasicMV" resultClass="java.lang.Long" parameterClass="java.util.Map" >
+		select sum(QUANTITY) 
+		<include refid="queryProdProductBasicMVByTimeSql"/>
+	</select>	
+	
+	<select id="sumOrderQuantityProdProductBasicMV" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		select sum(ORDER_QUANTITY) 
+		<include refid="queryProdProductBasicMVByTimeSql"/>
+	</select>
+	
+	<select id="sumAmountProdProductBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select sum(AMOUNT) 
+		<include refid="queryProdProductBasicMVByTimeSql"/>
+	</select>
+	
+	<select id="sumdestProdProductBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(distinct TO_DEST) from lvmama_pet.PRODUCT_SEARCH_INFO
+	</select>
+	
+	<select id="sumdestAmountProdProductBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(distinct dest) from PROD_PRODUCT_BASIC_MV where quantity>0
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="startDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[<]]>#endDate#+1
+		</isNotNull>	
+		<isNotNull prepend="and" property="prodName">
+			PROD_PRODUCT_NAME like '%$prodName$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="dest">
+			DEST like '%$dest$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="birthland">
+			START_FROM like '%$birthland$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="filialeName">
+			FILIALE_NAME = #filialeName#
+		</isNotNull>		
+	</select>
+	
+	<select id="sumProdProductBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(distinct PRODUCT_ID) from lvmama_super.PROD_PRODUCT
+	</select>
+	
+	<select id="sumProdProductOnlineBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(distinct PRODUCT_ID) from lvmama_super.PROD_PRODUCT pp
+		where pp.online_time<![CDATA[<]]>sysdate and pp.offline_time<![CDATA[>]]>sysdate
+	</select>
+	
+	<select id="sumProdAmountProdProductBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(distinct PROD_PRODUCT_ID) from PROD_PRODUCT_BASIC_MV where quantity>0
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="startDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[<]]>#endDate#+1
+		</isNotNull>	
+		<isNotNull prepend="and" property="prodName">
+			PROD_PRODUCT_NAME like '%$prodName$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="dest">
+			DEST like '%$dest$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="birthland">
+			START_FROM like '%$birthland$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="filialeName">
+			FILIALE_NAME = #filialeName#
+		</isNotNull>		
+	</select>
+	
+	<select id="sumPerfitProdProductBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select sum(PROFIT) 
+		<include refid="queryProdProductBasicMVByTimeSql"/>
+	</select>
+	
+	<select id="queryProdProductBasicMVByTime" parameterClass="java.util.Map" resultMap="SaleResultMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT 
+			rownum r,
+			info.*
+		<include refid="queryProdProductBasicMVByTimeSql"/>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;= #_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+</sqlMap>

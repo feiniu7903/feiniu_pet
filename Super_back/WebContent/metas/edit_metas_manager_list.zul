@@ -1,0 +1,194 @@
+<?page title="采购产品列表" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_listmetas"?>
+<?component name="lvmama_supplier" macroURI="/macors/supplier.zul"?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="label" extends="label" class="com.lvmama.back.utils.perm.PermLabel" ?>
+<?component name="perm_mangerUser" macroURI="/permission/mangerUser.zul"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+
+	<window id="win_listmetas" mode="embedded"
+		apply="com.lvmama.back.web.metas.ListMetaProductAction">
+		<grid>
+			<columns>
+				<column width="80px"></column>
+				<column></column>
+				<column width="80px"></column>
+				<column></column>
+				<column width="80px"></column>
+				<column></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>采购经理：</hbox>
+					<hbox>
+						<longbox id="managerId" visible="false" />
+						<perm_mangerUser id="permUser_component">
+						</perm_mangerUser>
+					</hbox>
+					<hbox>供应商名称：</hbox>
+					<hbox>
+						<longbox id="supplierId" visible="false" />
+						<lvmama_supplier id="supplier_component"></lvmama_supplier>
+					</hbox>
+					<hbox>产品名称：</hbox>
+					<hbox>
+						<textbox id="productName"
+							value="@{saction.searchConds.productName}" />
+					</hbox>
+					<hbox>
+						产品ID：
+						<longbox
+							value="@{saction.searchConds.metaProductId }">
+						</longbox>
+					</hbox>
+				</row>
+				<row spans="1,4,1,1">
+					<hbox>产品类型：</hbox>
+					<hbox>
+						<checkbox id="ticket" name="TICKET"
+							checked="@{saction.searchConds.sTicket}" label="门票"
+							onCheck="ticketList.disabled = !self.checked;" />
+						<listbox mold="select" disabled="true"
+							id="ticketList"
+							onSelect="saction.changeSubTicket(self.selectedItem.value)">
+							<listitem label="全部" value="" />
+							<listitem label="单门票" value="SINGLE" />
+							<listitem label="通票" value="WHOLE" />
+							<listitem label="联票" value="UNION" />
+							<listitem label="套票" value="SUIT" />
+						</listbox>
+						<checkbox id="hotel" name="HOTEL"
+							checked="@{saction.searchConds.sHotel}" label="酒店"
+							onCheck="hotelList.disabled = !self.checked;" />
+						<listbox mold="select" disabled="true"
+							id="hotelList"
+							onSelect="saction.changeSubHotel(self.selectedItem.value)">
+							<listitem label="全部" value="" />
+							<listitem label="酒店" value="HOTEL" />
+						</listbox>
+						<checkbox id="route" name="ROUTE"
+							checked="@{saction.searchConds.sRoute}" label="线路"
+							onCheck="routeList.disabled = !self.checked;" />
+						<listbox width="100px" mold="select"
+							disabled="true" id="routeList"
+							onSelect="saction.changeSubRoute(self.selectedItem.value)">
+							<listitem label="全部" value="" />
+							<listitem label="自由行" value="FREENESS" />
+							<listitem label="境内跟团游" value="GROUP" />
+							<listitem label="境外跟团游"
+								value="GROUP_FOREIGN" />
+							<listitem label="境外自由行"
+								value="FREENESS_FOREIGN" />
+						</listbox>
+						<checkbox id="other" name="OTHER"
+							checked="@{saction.searchConds.sOther}" label="其它"
+							onCheck="otherList.disabled = !self.checked;" />
+						<listbox mold="select" disabled="true"
+							id="otherList"
+							onSelect="saction.changeSubOther(self.selectedItem.value)">
+							<listitem label="全部" value="" />
+							<listitem label="保险" value="INSURANCE" />
+							<listitem label="房差" value="FANGCHA" />
+							<listitem label="其它" value="OTHER" />
+						</listbox>
+					</hbox>
+					<hbox>状态:</hbox>
+					<hbox>
+						<listbox mold="select"
+							selectedItem="@{saction.searchConds.validY}">
+							<listitem label="全部" />
+							<listitem label="开启" value="true" />
+							<listitem label="关闭" value="false" />
+						</listbox>
+					</hbox>
+					
+				</row>
+				<row spans="1,6" >
+					<hbox>所属部门：</hbox>
+					<hbox>
+						<listbox mold="select" id="departmentsListBox"
+							model="@{saction.departmentsList}">
+							<listitem self="@{each='department' }"
+								label="@{department.zhDepartmentName}"
+								value="@{department.orgId}" />
+						</listbox>
+					</hbox>
+				</row>
+				<row spans="7" align="center">
+					<hbox>
+						<button label="查询" id="search" width="100px"
+							onClick='saction.setAllData("yes");_paging.activePage=0;saction.doSearch();' />
+						<button id="btn_addPermUserRole"
+							label="批量修改采购产品经理" onClick='saction.doOpenDialog();' />
+						
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox id="metaProductListBox"
+			model="@{saction.productList,load-after='search.onClick,_paging.onPaging,metasCheckbox.onCheck'}">
+			<listhead>
+				<listheader width="50px">
+					<checkbox id="metasCheckbox"
+						onCheck="saction.selectAllCheckbox(self.checked);" />
+				</listheader>
+				<listheader width="10%" label="采购产品ID" />
+				<listheader width="30%" label="采购产品名称" />
+				<listheader width="10%" label="部门编号" />
+				<listheader width="10%" label="所属部门" />
+				<listheader width="10%" label="原采购经理名" />
+				<listheader width="20%" label="供应商名称" />
+				<listheader label="产品类型" />
+			</listhead>
+			<listitem id="mysearch" height="25px"
+				self="@{each='metaProduct'}">
+				<listcell>
+					<checkbox checked="@{metaProduct.checked }"
+						onCheck='saction.onCheckboxEvent(self.getAttribute("metaId"), self.checked);'>
+						<custom-attributes
+							metaId="@{metaProduct.metaProductId }" />
+					</checkbox>
+				</listcell>
+				<listcell label="@{metaProduct.metaProductId}" />
+				<listcell>
+					<a label="@{metaProduct.productName}"
+						onClick="saction.doPreview(self.getAttributes());"
+						style="color:blue">
+						<custom-attributes
+							metaProductId="@{metaProduct.metaProductId}" />
+						<custom-attributes
+							productType="@{metaProduct.productType}" />
+					</a>
+				</listcell>
+				<listcell label="@{metaProduct.departmentId}" />
+				<listcell label="@{metaProduct.departmentName }" />
+				<listcell label="@{metaProduct.managerName}" />
+				<listcell>
+					<label value="@{metaProduct.supplierName}" />
+				</listcell>
+				<listcell label="@{metaProduct.zhProductType }" />
+			</listitem>
+		</listbox>
+
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell width="200px">
+							<paging id="_paging" pageSize="15"
+								onPaging='saction.doSearch();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	</window>
+</zk>

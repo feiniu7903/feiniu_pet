@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="GLARTICLE" >
+    <typeAlias alias="glarticle" type="com.lvmama.comm.businesses.po.review.GlArticle"/>
+    <resultMap id="baseMap" class="glarticle" >
+    	<result  column="articleid"  property="articleid"/>
+    	<result column="title" property="title"/>
+    	<result column="description" property="description"/>
+    	<result column="content" property="content"/>
+    	<result column="reviewstatus" property="reviewstatus"/>
+    	<result  column="status"  property="status"/>
+    	<result property="url" column="url"/>
+    </resultMap>
+    <resultMap class="glarticle" id="newBaseMap" extends="baseMap">
+    <result property="createdate" column="createdate"/>
+    </resultMap>
+     <sql id="where_query">
+          where 1=1
+               <isNotEmpty property="reviewstatus"  prepend="and">
+                    reviewstatus=#reviewstatus# 
+                   <isNotEqual prepend="and" property="reviewstatus" compareValue="2">
+                       status=99
+                     </isNotEqual> 
+               </isNotEmpty>
+               <isNotEmpty property="datebegin" prepend="and">
+                    FROM_UNIXTIME(inputtime) &gt; #datebegin# 
+               </isNotEmpty>
+               <isNotEmpty property="dateend" prepend="and">
+                    FROM_UNIXTIME(inputtime) &lt; #dateend# 
+               </isNotEmpty>
+    </sql>
+     <select id="queryForBbsGlArticleById" resultMap="baseMap" parameterClass="java.lang.Integer">
+         select articleid,title,description,content,status,reviewstatus,url from gl_article where articleid=#articleid#
+         </select>
+    <select id="queryByParam" resultMap="newBaseMap" parameterClass="java.util.Map">
+         select articleid,title,description,content,status,reviewstatus,url,FROM_UNIXTIME(inputtime) as createdate from gl_article  
+        <include refid="where_query"/>
+        order by FROM_UNIXTIME(inputtime) desc
+          LIMIT #start#,#end#
+     </select>
+      <select id="count" resultClass="java.lang.Long" parameterClass="java.util.Map">
+        select COUNT(*) from gl_article        <include refid="where_query"/>
+     </select>
+     <update id="update" parameterClass="java.util.Map">
+         update    gl_article 
+         set reviewstatus=#reviewstatus# 
+         <isNotEmpty  property="status">, status=#status#</isNotEmpty> 
+         where articleid=#articleid# 
+     </update>
+</sqlMap>

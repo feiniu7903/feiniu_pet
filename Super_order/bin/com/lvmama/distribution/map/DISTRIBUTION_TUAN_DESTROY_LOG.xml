@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="DISTRIBUTION_TUAN_DESTROY_LOG">
+   <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributionTuanDestroyLog">
+        <result property="logId" column="LOG_ID"/>
+        <result property="fileName" column="FILENAME"/>
+        <result property="creator" column="CREATOR"/>
+        <result property="uploadTime" column="UPLOAD_TIME"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="sumNum" column="SUM_NUM"/>
+        <result property="successNum" column="SUCCESS_NUM"/>
+        <result property="pristineId" column="pristine_Id"/>
+        <result property="errorId" column="error_Id"/>
+        <result property="distType" column="DIST_TYPE"/>
+        <result property="status" column="STATUS"/>
+    </resultMap>
+
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.bee.po.distribution.DistributionTuanDestroyLog">
+		<selectKey keyProperty="logId" resultClass="Long">
+		SELECT DISTRIBUTION_DESTROY_LOG_SEQ.NEXTVAL FROM DUAL</selectKey>
+		INSERT INTO DISTRIBUTION_TUAN_DESTROY_LOG (
+				LOG_ID ,
+				FILENAME ,
+				CREATOR ,
+				UPLOAD_TIME ,
+				START_TIME,
+				END_TIME,
+				SUM_NUM,
+				DIST_TYPE,
+				STATUS,
+				SUCCESS_NUM
+			) VALUES (
+				#logId# ,
+				#fileName# ,
+				#creator# ,
+				#uploadTime# ,
+				#startTime#,
+				#endTime#,
+				#sumNum#,
+				#distType#,
+				#status#,
+				#successNum#
+			)
+	</insert>
+	<update id="update" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionTuanDestroyLog">
+		update DISTRIBUTION_TUAN_DESTROY_LOG set 
+		<dynamic>
+			<isNotEmpty property="startTime" >
+				START_TIME=#startTime# ,
+			</isNotEmpty>
+			<isNotEmpty property="endTime">
+				END_TIME=#endTime# ,
+			</isNotEmpty>
+			<isNotEmpty property="successNum">
+				SUCCESS_NUM=#successNum# ,
+			</isNotEmpty>
+			<isNotEmpty property="status">
+				STATUS=#status# 
+			</isNotEmpty>
+		</dynamic>
+	   where LOG_ID= #logId#
+	</update>
+	
+	<update id="updateFileId" parameterClass="java.util.Map">
+		update DISTRIBUTION_TUAN_DESTROY_LOG set 
+		<dynamic>
+			<isNotEmpty property="pristineId" >
+				pristine_Id=#pristineId#
+			</isNotEmpty>
+			<isNotEmpty property="errorId">
+				error_Id=#errorId#
+			</isNotEmpty>
+		</dynamic>
+	   where LOG_ID= #logId#
+	</update>
+	<select id="find" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+			SELECT * FROM DISTRIBUTION_TUAN_DESTROY_LOG t where t.LOG_ID=#logId#
+	</select>
+	
+	<sql id="listDestroyCouponCodeSQL">
+	SELECT * FROM DISTRIBUTION_TUAN_DESTROY_LOG t where t.dist_Type=#distType#
+		<dynamic>
+			<isNotEmpty property="fileName" prepend=" and ">
+				t.filename like '%'|| #fileName# ||'%'
+			</isNotEmpty>
+			<isNotEmpty property="creator" prepend=" and ">
+				t.creator=#creator#
+			</isNotEmpty>
+			<isNotEmpty property="up_createtimeStart" prepend=" and ">
+				t.upload_time &gt;=#up_createtimeStart#
+			</isNotEmpty>
+			<isNotEmpty property="up_createtimeEnd" prepend=" and ">
+				t.upload_time &lt;=#up_createtimeEnd#
+			</isNotEmpty>
+			<isNotEmpty property="createtimeStart" prepend=" and ">
+				t.START_TIME &gt;=#createtimeStart#
+			</isNotEmpty>
+			<isNotEmpty property="createtimeEnd" prepend=" and ">
+				t.START_TIME &lt;=#createtimeEnd#
+			</isNotEmpty>
+			<isNotEmpty property="status" prepend=" and ">
+				t.STATUS =#status#
+			</isNotEmpty>
+			order by t.upload_time DESC
+		</dynamic>
+	</sql>
+	<select id="queryDestroyCouponCodeByParam" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+			SELECT * FROM (
+			select rownum rownums,b.* from(
+			<include refid="listDestroyCouponCodeSQL"/>
+		) b )
+		where rownums &gt;=#start# and rownums &lt;=#end#
+	</select>
+	
+	<select id="selectByParamsCount" resultClass="long" parameterClass="java.util.Map">
+		SELECT count(1) FROM (
+		<include refid="listDestroyCouponCodeSQL"/>
+		)
+	</select>
+    
+</sqlMap>
+

@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>自由行（景点+酒店）_周边/主题游-驴妈妈手机站</title>
+<#include "../common/define.html">
+<script type="text/javascript">
+$(function(){
+	/*input 框变色*/
+	$("input.lv-input-search").focus(function(e) {
+		$("input.lv-input-search").parent().parent().addClass("lv-input-focus");
+	});
+	$("input.lv-input-search").blur(function(e) {
+		$("input.lv-input-search").parent().parent().removeClass("lv-input-focus");
+	});	
+});
+function freeTripSearch(){
+	var toDest = $("#keyword").val();
+	if (toDest!=null && typeof(toDest)!="undefined"&&toDest!=0){
+		$("input[name='toDest']").val(encodeURI(toDest));
+		$("#freetrip_search").submit();
+		$("input[name='toDest']").val("");
+	}else{
+		lvToast(false,"请输入目的地",1000);
+	}
+	
+}
+document.onkeydown=function(event){
+    var e = event || window.event;      
+    if(e && e.keyCode==13){
+    	freeTripSearch();
+    }
+}
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_skip('http://${hostName}');"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">自由行</div>
+  <div class="lv-position lv-position-e"><a href="javascript:void(0);" class='home' onclick="union_skip('http://${hostName}');"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png' /></a></div>
+</div>
+<div class="lv-search search">
+   <div class="lv-div-search">
+    <form method="get" action="${request.contextPath}/route/list"  id="freetrip_search" >
+    <span class="lv-clear-icon01" onclick="union_clear_context('keyword');"  style="display:none" id="clear_password">
+               <img src="${prefix_pic_url!}/img/clear.png"></span>
+	  <input class="lv-input-search" id="keyword" type="text" value="${toDest!}" placeholder="请输入自由行目的地/关键词" autocomplete="off">
+      <input type="hidden" name="toDest" id="toDest" value="${toDest!}" >
+      <input type="hidden" name="subject" id="subject" value="" >
+      <input type="button" class="btn_sub" value="" onclick="freeTripSearch()" />
+    </form>
+  </div>
+
+</div>
+        <div  id="search_autocomplete" style="display:none;">
+           <ul class="search_auto_complete" id="search_success"> </ul>
+        </div>
+<div class="lv-wrapper lv-min-height lv-media-width">
+  <div class="lv-biz-title">${name122} </div>
+  <div class="lv-seprator-super"><img src="${prefix_pic_url!}/img/seprator-line-super.png"></div>
+  <ul class="lv-biz-list">
+    	 <#if list122?? && list122?size&gt;0>
+    	      <li>
+				<#list list122 as ls122>
+				     <a class="lv-ticket" href="javascript:void(0);" onclick="keySearch('${ls122.recommendTitle!}');">
+				       <img class="lv-radius-10"  src="${ls122.absoluteRecommendImageUrl!}">
+				       <span>${ls122.recommendTitle!}</span>
+				     </a>
+				    
+		     	</#list>  
+	     	 </li>
+	     </#if>
+  </ul>
+  <div class="lv-seprator-line"></div>
+<div class="lv-biz-title"> ${name144} </div>
+  <div class="lv-seprator-super"><img src="${prefix_pic_url!}/img/seprator-line-super.png"></div>
+  <ul class="lv-biz-list">
+     <#if list144?? && list144?size&gt;0>
+       <li>
+		<#list list144 as ls144>
+		    <a class="lv-ticket" href="javascript:void(0);" onclick="keySearch('${ls144.recommendTitle}');">
+		       <img class="lv-radius-10"  src="${ls144.absoluteRecommendImageUrl!}">
+		       <span>${ls144.recommendTitle}</span></a>
+     	</#list>  
+	   </li>
+     </#if>
+  </ul>
+  <div class="lv-seprator-line"></div>
+<div class="lv-biz-title"> ${name181}  </div>
+  <div class="lv-seprator-super"><img src="${prefix_pic_url!}/img/seprator-line-super.png"></div>
+  <ul class="lv-biz-list">
+     <#if list181?? && list181?size&gt;0>
+       <li>
+		<#list list181 as ls181>
+		      <a class="lv-ticket" href="javascript:void(0);" onclick="keySearch('${ls181.recommendTitle}');">
+		      <img class="lv-radius-10"  src="${ls181.absoluteRecommendImageUrl!}">
+		      <span>${ls181.recommendTitle}</span></a>
+     	</#list>  
+     </li>
+     </#if>
+  </ul>
+  <div class="lv-seprator-line"></div>
+  <div class="lv-biz-title"> ${name182}  </div>
+  <div class="lv-seprator-super"><img src="${prefix_pic_url!}/img/seprator-line-super.png"></div>
+  <ul class="lv-biz-list">
+     <#if list182?? && list182?size&gt;0>
+     <li>
+		<#list list182 as ls182>
+		      <a class="lv-ticket" href="javascript:void(0);" onclick="keySearch('${ls182.recommendTitle}');">
+		       <img class="lv-radius-10"  src="${ls182.absoluteRecommendImageUrl!}">
+		      <span>${ls182.recommendTitle}</span></a>
+     	</#list>  
+      </li>
+     </#if>
+  </ul>
+  <div class="lv-seprator-line"></div>
+</div>
+ <script src="${request.contextPath}/js/freetrip.js"></script>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+</body>
+</html>

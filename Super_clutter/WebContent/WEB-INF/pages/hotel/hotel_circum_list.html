@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   	<title>酒店预订_宾馆住宿推荐_价格查询【驴妈妈酒店】</title>
+	<meta name="Keywords" content="{北京}酒店预订，{北京}酒店价格"/>
+	<meta name="Description" content="驴妈妈提供{北京}酒店预订及酒店价格查询,{北京}商务酒店、快捷酒店、宾馆住宿推荐，让您最快速找到满意的酒店。网上订酒店，就到驴妈妈酒店网。"/>
+    <#include "../common/define_v4.html">
+    <script src="${request.contextPath}/js/hotel.js"></script>
+</head>
+
+<body>
+<div id="container">
+    <header class="header" id="hotel_search_title">
+        <a href="javascript:union_skip('${request.contextPath}/hotel/hotel.htm');" class="back"><span class="ic_back"></span></a>
+        <h1>周边酒店</h1>
+        <div class="header_btn">
+            <a href="javascript:union_skip('http://${hostName}');" class="header-icon-home"></a>
+        </div>
+    </header>
+    <div id="content">
+        <!-- 酒店搜索表单 -->
+        <form method="get" action="${request.contextPath}/hotel/hotelCircumLlist.htm"  id="hotel_search_list" >
+            <input  value="${cityId!}"  type="hidden" name="cityId" id="cityId"><!--cityid  -->
+            <input  value=""  type="hidden" name="cityName" id="cityName"><!-- 城市名 -->
+            <input  value="${arrivalDate!}"  type="hidden" name="arrivalDate" id="arrivalDate"><!--入住日期 -->
+            <input  value="${departureDate!}"  type="hidden" name="departureDate" id="departureDate"><!--离开日期 -->
+            <input  value="1"  type="hidden" name="pageIndex" id="pageIndex"><!--分页第几页  -->
+            <input  value="10"  type="hidden" name="pageSize" id="pageSize"><!--分页大小  -->
+            <input  value="true"  type="hidden" name="ajax" id="ajax"><!--是否是AJAX查询  -->
+            <input  value="${latitude!}"  type="hidden" name="latitude" id="latitude"><!--当前位置纬度  -->
+            <input  value="${longitude!}"  type="hidden" name="longitude" id="longitude"><!--当前位置经度  -->
+            <input  value="${radius!}"  type="hidden" name="radius" id="radius"><!--半径10KM -->
+        </form>
+
+        <!-- 周边酒店列表 -->
+        <#if hotelList?? && hotelList?size&gt;0>
+            <div class="lv-project-list">
+                <div id="data_list">
+                    <#list hotelList as hotel>
+                        <article>
+                            <a href="${request.contextPath!}/hotel/hotelDetail.htm?arrivalDate=${arrivalDate!}&departureDate=${departureDate!}&hotelId=${hotel.placeId!}" class="block">
+                                <div style="background-image: url(${hotel.images!})" class="pro-pic" title="${hotel.name!}">
+                                </div>
+                                <div class="pro-info">
+                                    <h2>${hotel.name!}</h2>
+                                    <p>
+                                        <span class="fr value f-color-1">&yen;${hotel.sellPrice!}<span>起</span></span>
+                                        <span class="f-color-5">${hotel.placeType!}</span>
+                                    </p>
+                                    <p>
+                                    	<span class="fr f-color-1 rebate">
+	                                        <i class="ic_fan"></i>
+	                                        <em>&yen;${hotel.cashBack!}</em>
+                                		</span>
+                                        <#if hotel.commentGoodRate?? && hotel.commentGoodRate !="">
+                                        	<span class="t_per">好评率${hotel.commentGoodRate!}</span>
+                                        <#else>
+                                        	<span class="t_per">暂无点评</span>
+                                        </#if>
+                                    </p>
+                                    <p><span class="fr">&nbsp;&nbsp;<#if hotel.distance?? && hotel.distance gt 0><em class="hotel_distance">${hotel.distance!}</em>m</#if></span><span class="address">${hotel.address!}</span></p>
+                                </div>
+                            </a>
+                        </article>
+                    </#list>
+                </div>
+                <!-- 如果不是最后一页  -->
+                <#if hasNext?? && hasNext>
+                    <div class="view_more" id="show_more"><a href="javascript:void(0)" onclick="circumHotelShowMoreDate();">查看更多</a></div>
+                </#if>
+            </div>
+        <#else>
+	       	 <#if msg?? && msg!="">
+	       	 	<#assign no_data_msg="${msg!}">
+	       	 <#else>
+	       	 	<#assign no_data_msg="没有找到相应的酒店">
+	       	 </#if>
+			<#include "../common/no_data_list.html">
+        </#if>
+    </div>
+    <#include "../common/footer_v4.html"/>
+</div>
+<script type="text/javascript">
+		$(function(){
+			$("#pageIndex").val(1);
+			//酒店距离处理大于1000--KM，小于1000--M
+			distanceJudge();
+		});
+	</script>
+</body>
+</html>

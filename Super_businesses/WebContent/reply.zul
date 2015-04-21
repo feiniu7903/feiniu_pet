@@ -1,0 +1,22 @@
+<?page title="回复" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./userEdit"?>
+<window id="userEdit" title="回复" border="normal" apply="com.lvmama.businessreply.web.ReplyAction">
+    	<grid>
+			<columns>
+				<column></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>回复内容：</hbox>
+					<hbox><textbox rows="8" cols="150" id="cmtContent" value="@{saction.cmtReply.content}"/></hbox>
+				</row>
+				
+				<row>
+					<hbox>
+					  <button label="提交" width="100px" onClick="saction.doSaveReply()" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+</window>

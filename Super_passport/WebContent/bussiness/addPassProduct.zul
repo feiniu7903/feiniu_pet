@@ -1,0 +1,67 @@
+<?page title="新增通关产品" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./addPassProduct"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.passport.utils.ListboxProviderValNameSet"?>
+
+<zk>
+<window id = "addPassProduct" title="新增通关产品" border="normal" apply="com.lvmama.passport.web.pass.AddPassProductAction">
+<grid>
+	<rows>
+		<row>
+			<hbox width="100px">采购产品编号：</hbox>
+			<hbox>
+				<textbox maxlength="50" value="@{saction.passProduct.objectId}" constraint="/[0-9]*/:产品编号必须是数字!"/>
+			</hbox>
+			<hbox width="100px">代理产品编号：</hbox>
+			<hbox>
+				<textbox maxlength="50" value="@{saction.passProduct.productIdSupplier}" />
+			</hbox>
+		</row>
+		<row>
+			<hbox>服务商帐号：</hbox>
+			<hbox>
+				<textbox  maxlength="100" value="@{saction.passProduct.merchantType}" />
+			</hbox>	
+			<hbox>代理产品类型：</hbox>
+			<hbox>
+				<textbox value="@{saction.passProduct.productTypeSupplier}" />
+			</hbox>
+		</row>
+		<row>
+			<hbox>服务商编码：</hbox>
+			<hbox>
+				<textbox   value="@{saction.passProduct.provider}" />
+			</hbox>	
+			<hbox>服务商名称：</hbox>
+			<hbox>
+				<listbox mold="select"
+							selectedItem="@{saction.passProduct.providerName}" />
+			</hbox>	
+		</row>
+		<row>
+			<hbox>开始日期：</hbox>
+			<datebox	
+					value="@{saction.passProduct.startDate}" />
+			<hbox>结束日期：</hbox>
+			<datebox
+					value="@{saction.passProduct.endDate}" />
+		</row>
+		<row>
+			<hbox>周末是否可卖：</hbox>
+			<hbox>
+				<combobox id="isWeekend" selectedItem="@{saction.passProduct.isWeekend }" >
+				   <comboitem label="是" value="TRUE"/>
+				   <comboitem label="否" value="FALSE"/>
+				</combobox>
+			</hbox>	
+			<hbox>扩展字段：</hbox>
+			<hbox>
+				<textbox value="@{saction.passProduct.extId}" />
+			</hbox>
+		</row>
+	</rows>
+</grid>
+		<toolbar align="center">
+	        <button label="保存" width="100px" onClick="saction.doSave()"/>
+	    </toolbar>
+</window>
+</zk>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>意见反馈</title>
+    <meta name="description" content="">
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/font-icons.css">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/global.css">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/order.css">
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/lib/zepto.min.js"></script>
+    <script type="text/javascript" name="baidu-tc-cerfication" src="http://apps.bdimg.com/cloudaapi/lightapp.js#70e91d9156558b74286c45bf640cff9e"></script>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/globe.js"></script>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/base.js"></script>
+</head>
+<#assign hostName = reauestHostName/>
+<script type="text/javascript">
+	var hostName=window.location.host;
+	if(hostName!=null && hostName=="qing.lvmama.com"){
+		hostName="qing.lvmama.com";
+	}
+</script>
+<body>
+
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/header.js"></script>
+
+<div id="wrapper">
+    <div id="content">
+
+        <div class="common-order">
+            <article class="box-sp-1">
+                <div class="common-order-pan">
+                    对手机驴妈妈旅游网有任何意见或建议，请提交给我们，让手机驴妈妈不断进步！ <br>
+                    对于驴妈妈订购的产品有任何疑问请拨打<br>
+                    客服电话 <a href="tel:4001-570-570">4001-570-570</a>
+                </div>
+            </article>
+        </div>
+
+        <div style="padding:10px;" class="lv-box">
+            <textarea id="sugg_text" placeholder="请输入您的宝贵意见和建议" class="text_content"></textarea>
+        </div>
+        <div style="padding:10px;" class="lv-box">
+            <input type="email" id="sugg_email" value="" placeholder="您的Email" class="lv-input-text"/>
+        </div>
+        <a class="view_more btn rose" id="sugg_submit"  href="javascript:void(0);">提 交</a>
+    </div>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+</div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+<script>
+    $(function(){
+        $(".lv-item-sprite01 a").click(function(e){
+            $(this).parent().removeClass().addClass("lv-item-scroe"+($(this).index()+1)).addClass("lv-item-sprite01").addClass("fl");
+            $(this).siblings("input:first").val($(this).index()+1);
+        });
+        $("textarea").focus(function(e) {
+            $(this).addClass("lv-input01-focus");
+        });
+        $("textarea").blur(function(e) {
+            $(this).removeClass("lv-input01-focus");
+        });
+    });
+</script>
+<script type="text/javascript">
+	$(function(){
+		$("#sugg_submit").click(function(){
+			var content = $("#sugg_text").val();
+			var email = $("#sugg_email").val();
+			var param = {"method":"api.com.other.subSuggest","format":"json","content":content,"email":email,"firstChannel":"TOUCH"};
+			$.ajax({
+			   type: "POST",
+			   url: "${request.contextPath}/router/rest.do",
+			   data: param,
+			   beforeSend:function(){
+				   if(content!=null && content.length < 20){
+					   //globe.lvToast(false,"意见反馈不能少于20个字");
+					   globe.createDialog("意见反馈不能少于20个字",1);
+					   return false;
+				   }
+				   if(email==null || email==""){
+					   //globe.lvToast(false,"请输入您的Email地址");
+					   globe.createDialog("请输入您的Email地址",1);
+					   return false;
+				   }
+				   if(!emailVerify(email)){
+					   //globe.lvToast(false,"请输入正确的Email地址");
+					   globe.createDialog("请输入正确的Email地址",1);
+					   return false;
+				   }
+				},
+			   success: function(msg){
+				   //globe.lvToast(true,"提交意见反馈成功");
+				   globe.createDialog("驴妈妈旅游网感谢您的支持！",1,function(){window.location.href='http://${hostName}';});
+			   }
+			});
+		});
+	});
+   //对电子邮件的验证
+	function emailVerify(email){
+	   var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+	   if(!myreg.test(email)){
+	        return false;
+	   }else{
+		   return true;
+	   }
+	}
+</script>
+</body>
+</html>

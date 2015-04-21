@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+    <!-- 论坛 -->
+ 	<bean id="bbsService" class="com.lvmama.businesses.review.service.BbsServiceImpl"/>
+ 	<!-- 攻略 -->
+ 	<bean id="guideService" class="com.lvmama.businesses.review.service.GuideServiceImpl"/>
+ 	<!-- 资讯 -->
+    <bean id="infonewsService" class="com.lvmama.businesses.review.service.InfonewsServiceImpl"/>
+</beans>
+

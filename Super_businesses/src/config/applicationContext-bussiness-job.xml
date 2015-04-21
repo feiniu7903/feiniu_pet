@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+
+	<bean id="etaoAutoBuildXmlJob" class="com.lvmama.businessreply.job.EtaoAutoBuildXmlJob">
+		<property name="ProductSearchInfoService" ref="productSearchInfoService"/>
+		<property name="prodProductPlaceService" ref="prodProductPlaceService"/>
+		<property name="prodProductTagService" ref="prodProductTagService"/>
+		<property name="pageService" ref="pageService"/>
+		<property name="comPictureService" ref="comPictureService"/>
+	</bean>
+	
+	<bean id="etaoAutoBuildXmlJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="etaoAutoBuildXmlJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="etaoAutoBuildXmlJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="etaoAutoBuildXmlJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 2 * * ? *</value>
+		</property>
+	</bean>
+	<bean id="etaoAutoBuildXmlJobTimesFirst"
+		class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail">
+			<ref bean="etaoAutoBuildXmlJobFactory" />
+		</property>
+		<property name="startDelay" value="60000"/> 
+		<property name="repeatInterval" value="8640000000"/>  
+	</bean>	
+	<!-- 百度SEM的 闪投 start -->
+	<bean id="semBaiduShantouJob" class="com.lvmama.businessreply.job.SemBaiduShantouJob">
+	</bean>
+
+	<bean id="semBaiduShantouJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="semBaiduShantouJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="semBaiduShantouJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="semBaiduShantouJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 5 * * ? *</value>
+		</property>
+	</bean>
+	<!-- 百度SEM的闪投 end -->
+	
+	
+	<!-- 旅游频道 -->
+	<bean id="ruichuangBuildXmlJob" class="com.lvmama.businessreply.job.RuichuangBuildXmlJob">
+		<property name="productSearchInfoService" ref="productSearchInfoService"/>
+	</bean>
+	<bean id="ruichuangBuildJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="ruichuangBuildXmlJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="ruichuangBuildJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="ruichuangBuildJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 30 1 * * ? *</value>
+		</property>
+	</bean>
+	<!-- /旅游频道 -->
+	
+	<!-- 旅游频道 -->
+	<bean id="vipShopBuildXmlJob" class="com.lvmama.businessreply.job.VipShop123Job">
+		<property name="productSearchInfoService" ref="productSearchInfoService"/>
+	</bean>
+	<bean id="vipShopBuildJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="vipShopBuildXmlJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="vipShopBuildJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="vipShopBuildJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 30 1 * * ? *</value>
+		</property>
+	</bean>
+	<!-- /旅游频道 -->	
+		
+	<!-- 2345 -->
+	<bean id="ruichuangTicketsXmlJob" class="com.lvmama.businessreply.job.RuichuangTicketsXmlJob">
+		<property name="productSearchInfoService" ref="productSearchInfoService"/>
+	</bean>
+	<bean id="ruichuangTicketsJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="ruichuangTicketsXmlJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="ruichuangTicketsJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="ruichuangTicketsJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 2 * * ? *</value>
+		</property>
+	</bean>
+	<!-- end 2345 -->
+	
+	<bean id="startQuertz" 	class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+			    <ref bean="etaoAutoBuildXmlJobTimes" />
+				<ref bean="etaoAutoBuildXmlJobTimesFirst" /> 
+				<ref bean="semBaiduShantouJobTimes" />
+				<ref bean="ruichuangBuildJobTimes" />
+				<ref bean="ruichuangTicketsJobTimes" />
+				<ref bean="vipShopBuildJobTimes" />
+			</list>
+		</property>
+	</bean>
+</beans>

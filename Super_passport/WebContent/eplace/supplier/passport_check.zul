@@ -1,0 +1,52 @@
+<?page title="ShowMemo" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_checkPassport"?>
+<zk>
+<window id="win_checkPassport" border="normal" title="通关信息查询"  apply="com.lvmama.eplace.web.supplier.CheckPassPortAction">
+		<zscript>
+		<![CDATA[
+			public void checkValues() {
+				String msg = "";
+				if (codeNo.getValue().equals("")) {
+					msg += "请输入辅助码/订单号！\n";
+				}
+				if (msg.trim().length() > 0) {
+					alert(msg);
+				} else {
+					saction.doCheck(win_checkPassport);
+				}
+			}
+		]]> 
+		</zscript>
+ 	<grid>
+		<columns>
+			<column width="160px"></column>
+			<column></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>
+					<label value="请输入辅助码" visible="@{saction.isDimension}"></label>
+					<label value="请输入订单号" visible="@{saction.isShow}"></label>
+						</hbox>
+				<hbox>
+				<textbox id="codeNo" value="@{saction.codeNo}"></textbox>
+				</hbox>
+				<hbox>  
+					<button label="查询通关信息" width="100px" onClick="checkValues()"/>
+				</hbox>
+			</row>
+			<row spans="1,2">
+				<hbox>通关产品：</hbox>
+				<hbox >
+				<listbox model="@{saction.userRelateSupplierProducts}">
+					<listitem  height="20px" self="@{each='userSupplierProducts'}">
+						<listcell label="@{userSupplierProducts.metaProduct.productName}" />
+					</listitem>
+				</listbox>
+				</hbox>
+			</row>
+		</rows>
+</grid>
+</window>
+</zk>

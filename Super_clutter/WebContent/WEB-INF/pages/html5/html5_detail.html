@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<title>重要提示-驴妈妈手机站</title>
+<meta name="keywords" content="" > 
+<meta name="description" content="驴妈妈旅游网在线手机预订服务，为您提供更多景点门票预订,自由行,自助游,旅游团购,攻略,旅游度假和酒店预订等旅游信息,优质,个性,自由,尊贵服务只为您！" >
+<link rel="apple-touch-icon" href="lvmama_v1_png.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="lvmama_v1_png.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="lvmama_v1_png.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="lvmama_v1_png.png" />
+<link rel="shortcut icon" href="http://www.lvmama.com/favicon.ico" type="image/x-icon" >
+<link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/ipad_v3.css"/>
+<style type="text/css">
+   img{
+      max-width:100%;
+   }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <section class="coupon_main">
+		<article class="images_info">
+           <!-- 景点详情  -->
+		   <#if place??>
+				${place.description!}
+		   <#else>
+	            <#if type??> 
+	              <!-- 行程介绍  -->
+			      <#if type=="JOURNEY">
+				      <#if viewJourneyList?? && viewJourneyList?size &gt; 0>
+				         <#list viewJourneyList as vjl>
+				            <section class="journey">
+				            	<dl>
+				                	<dt><b>DAY${vjl.seq!}</b><em>${vjl.title?if_exists}</em></dt>
+				                    <dd><i>${vjl.contentBr?default("")}</i></dd>
+				                    
+						            <#if vjl.journeyPictureList?? && vjl.journeyPictureList?size &gt; 0> 
+						               <#list vjl.journeyPictureList as jp>
+						                 <#if jp_index == 0>
+						                     <img title="${jp.pictureName?if_exists}"  style="width:124px; height:92px;" src="${jp.absoluteUrl?if_exists}">
+						                 <#elseif jp_index == 1>
+						                    <img title="${jp.pictureName?if_exists}" style="width:124px; height:92px;margin-left:10px;" src="${jp.absoluteUrl?if_exists}">
+						                 </#if>
+						               </#list>
+							       </#if>
+							       
+				                    <#if vjl.dinner??> 
+							          <dd><span class="ic_dinner"></span>${vjl.dinner?default("")}</dd>
+							        </#if>
+							       <#if vjl.hotel??>
+							         <dd><span class="ic_wineshop"></span>${vjl.hotel?default("")}</dd>
+								   </#if>
+				                </dl>
+				            </section>
+					      </#list>
+				      </#if>
+	               <!-- 交通信息 -->    
+			       <#elseif type=="TRAFFICINFO">
+				      <dd class="images_info_note">
+				      <#if  viewPage?? && viewPage.hasContent('TRAFFICINFO') >
+				           ${viewPage.contents.get('TRAFFICINFO').content!}
+				      </#if>
+				      </dd>
+				      <!-- 签证说明 -->    
+			       <#elseif type=="VISA">
+				      <dd class="images_info_note">
+				      <#if  viewPage?? && viewPage.hasContent('VISA') >
+				           ${viewPage.contents.get('VISA').content!}
+				      </#if>
+				      </dd>
+				      <!-- 特色 -->    
+			       <#elseif type=="FEATURES">
+				      <dd class="images_info_note">
+				      <#if  viewPage?? && viewPage.hasContent('FEATURES') >
+				           ${viewPage.contents.get('FEATURES').content!}
+				      </#if>
+				      </dd>
+				   <!-- 费用 -->    
+				   <#elseif  type=="COSTCONTAIN">
+					 <#if viewPage?? &&  viewPage.hasContent('COSTCONTAIN')>	
+					        <dt>费用包含</dt>
+						    <dd class="images_info_note">
+						         ${viewPage.contents.get('COSTCONTAIN').content?if_exists?replace("\n","</br>")}
+						    </dd>
+				      </#if>
+				      <#if viewPage?? &&  viewPage.hasContent('NOCOSTCONTAIN')>
+						   <dt>费用不包含</dt>
+						   <dd class="images_info_note">
+						        ${viewPage.contents.get('NOCOSTCONTAIN').content?if_exists?replace("\n","</br>")}
+						   </dd>
+						 
+					   </#if>
+					  <#if viewPage?? && viewPage.hasContent('RECOMMENDPROJECT')>
+						     <dt>推荐项目</dt>
+						    <dd class="images_info_note">
+						        ${viewPage.contents.get('RECOMMENDPROJECT').content?if_exists?replace("\n","</br>")}
+						    </dd>
+					  </#if>
+					   <#if viewPage?? && viewPage.hasContent('SHOPPINGEXPLAIN')>
+					    <dt>购物说明</dt>
+						   <dd class="images_info_note">
+						        ${viewPage.contents.get('SHOPPINGEXPLAIN').content?if_exists?replace("\n","</br>")}
+						    </dd>
+				      </#if>
+				   <!-- 重要提示 -->    
+				   <#elseif type=="ORDERTOKNOWN">
+				        <#if viewPage?? && viewPage.hasContent('ACITONTOKNOW')>
+						      <dt>行前须知</dt>
+						      <dd class="images_info_note">
+						         ${viewPage.contents.get('ACITONTOKNOW').content?if_exists?replace("\n","</br>")}
+						      </dd>
+					  </#if>
+					  <#if viewPage?? && viewPage.hasContent('ORDERTOKNOWN')>		 	  
+						    <dt>预订须知</dt>
+						    <dd class="images_info_note">
+						        ${viewPage.contents.get('ORDERTOKNOWN').content?if_exists?replace("\n","</br>")}
+						     </dd>
+					   </#if>
+					  <#if viewPage?? && viewPage.hasContent('REFUNDSEXPLANATION')>
+						     <dt>退款须知</dt>
+						    <dd class="images_info_note">
+						          ${viewPage.contents.get('REFUNDSEXPLANATION').content?if_exists?replace("\n","</br>")}
+						     </dd>
+					   </#if>
+					   <#if viewPage?? && viewPage.hasContent('SERVICEGUARANTEE')>
+						      <dt>旅游服务保障</dt>
+						    <dd class="images_info_note">
+						       ${viewPage.contents.get('SERVICEGUARANTEE').content?if_exists?replace("\n","</br>")}
+						    </dd>
+				       </#if>
+				      <#if viewPage?? && viewPage.hasContent('PLAYPOINTOUT')>
+						    <dt>游玩提示</dt>
+						     <dd class="images_info_note">
+						       ${viewPage.contents.get('PLAYPOINTOUT').content?if_exists?replace("\n","</br>")}
+						   </dd>
+				       </#if>
+				   </#if>
+	            </#if>
+	         </#if>
+         </article>
+     </section>
+</div>
+</body>
+</html>

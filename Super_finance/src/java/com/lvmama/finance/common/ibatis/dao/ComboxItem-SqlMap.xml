@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COMBOX_DATA_SOURCE" >
+	
+	<typeAlias alias="ComboxItem" type="com.lvmama.finance.common.ibatis.po.ComboxItem"/>
+	
+	<!-- 查询我方结算主体 -->
+	<select id="getSettlementCompany" resultClass="ComboxItem" parameterClass="Map">
+		SELECT
+			ITEM_CODE AS VALUE,
+			ITEM_NAME AS LABEL
+		FROM
+			COM_CODE
+		WHERE
+			SET_CODE = 'SETTLEMENT_COMPANY'		
+		AND
+			VALID_FLAG = 'Y' 
+	</select>
+
+</sqlMap>

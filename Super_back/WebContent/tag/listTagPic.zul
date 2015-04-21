@@ -1,0 +1,19 @@
+<?page title="addTag" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./listTagPic"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="listTagPic" title="图标预览" border="normal" closable="true" apply="com.lvmama.back.web.tag.TagPictureAction">
+		<grid width="150px;" height="150px">
+			<columns>
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<image src="@{saction.picUrl}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

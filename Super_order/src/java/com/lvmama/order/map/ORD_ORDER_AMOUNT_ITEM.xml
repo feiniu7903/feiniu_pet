@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_AMOUNT_ITEM" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderAmountItem" >
+    <result column="ORDER_AMOUNT_ITEM_ID" property="orderAmountItemId" />
+    <result column="ITEM_NAME" property="itemName" />
+    <result column="ITEM_AMOUNT" property="itemAmount" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="ORDER_ID" property="orderId" />
+    <result column="ODER_AMOUNT_TYPE" property="oderAmountType" />
+  </resultMap>
+
+  <delete id="deleteByOrderId" parameterClass="Long" >
+    delete from ORD_ORDER_AMOUNT_ITEM
+    where ORDER_ID = #orderId#
+  </delete>
+
+    <select id="querOrderAmountItemByOrderId" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+			SELECT * FROM ORD_ORDER_AMOUNT_ITEM WHERE ORDER_ID = #orderId#
+		]]>
+	</select>
+
+
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderAmountItem" >
+    delete from ORD_ORDER_AMOUNT_ITEM
+    where ORDER_AMOUNT_ITEM_ID = #orderAmountItemId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderAmountItem" >
+    <selectKey resultClass="java.lang.Long" keyProperty="orderAmountItemId" >
+      select ORD_ORDER_AMOUNT_ITEM_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_ORDER_AMOUNT_ITEM (ORDER_AMOUNT_ITEM_ID, ITEM_NAME, ITEM_AMOUNT, 
+      ORDER_ID, ODER_AMOUNT_TYPE, CREATE_TIME)
+    values (#orderAmountItemId#, #itemName#, #itemAmount#,
+      #orderId#, #oderAmountType#, sysdate)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderAmountItem" >
+    update ORD_ORDER_AMOUNT_ITEM
+    set ITEM_NAME = #itemName#,
+      ITEM_AMOUNT = #itemAmount#,
+      CREATE_TIME = #createTime#,
+      ORDER_ID = #orderId#,
+      ODER_AMOUNT_TYPE = #oderAmountType#
+    where ORDER_AMOUNT_ITEM_ID = #orderAmountItemId#
+  </update>
+
+<select id="queryOrdOrderAmountItem" resultMap="BaseResultMap"
+	parameterClass="java.util.Map">
+		SELECT * FROM ORD_ORDER_AMOUNT_ITEM
+		 WHERE ORDER_ID = #orderId#
+ 		<isNotEmpty property="oderAmountType" prepend=" and ">
+			ODER_AMOUNT_TYPE = #oderAmountType#
+		</isNotEmpty>
+</select>
+</sqlMap>

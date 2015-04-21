@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EPLACE_SUPPLIER">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.EplaceSupplier">
+		<result column="EPLACE_SUPPLIER_ID" property="eplaceSupplierId" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="STATUS" property="status" />
+		<result column="PRODUCT_MANAGER" property="productManager" />
+		<result column="CUSTOMER_VISIBLE" property="customerVisible" />
+		<result column="MOBILE" property="mobile" />
+		<result column="CREATE_DATE" property="createDate" />
+	</resultMap>
+  
+  <delete id="deleteByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.pass.EplaceSupplier">
+		delete from EPLACE_SUPPLIER where EPLACE_SUPPLIER_ID = #eplaceSupplierId#
+  </delete>
+	
+  <select id="findEplaceSupplierBySupplierId" resultMap="BaseResultMap" parameterClass="java.util.List" >
+  	 select * from eplace_supplier where supplier_id in 
+  	 <iterate conjunction="," open="(" close=")">
+  	 	#[]#
+  	 </iterate>
+  </select>
+  
+   <select id="getEplaceSupplierByPk" resultMap="BaseResultMap" >
+  	 select * from eplace_supplier where EPLACE_SUPPLIER_ID= #eplaceSupplierId#
+  </select>
+  
+  <update id="updateByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.pass.EplaceSupplier">
+		update EPLACE_SUPPLIER set SUPPLIER_ID = #supplierId#,
+		STATUS = #status#,
+		PRODUCT_MANAGER = #productManager#,
+		CUSTOMER_VISIBLE = '$customerVisible$',
+		MOBILE = #mobile#,
+		CREATE_DATE = #createDate# 
+		where EPLACE_SUPPLIER_ID= #eplaceSupplierId#
+	</update>
+	
+  <insert id="insert"
+		parameterClass="com.lvmama.comm.bee.po.pass.EplaceSupplier">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="eplaceSupplierId">
+			select EPLACE_SUPPLIER_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into EPLACE_SUPPLIER (EPLACE_SUPPLIER_ID,SUPPLIER_ID,STATUS,PRODUCT_MANAGER,CUSTOMER_VISIBLE,MOBILE,CREATE_DATE) 
+		values (#eplaceSupplierId#,#supplierId#,#status#,#productManager#,#customerVisible#,#mobile#,#createDate#)
+	</insert>
+</sqlMap>

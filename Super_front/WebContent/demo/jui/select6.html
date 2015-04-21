@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<title>jQuery UI Autocomplete - Combobox</title>
+<link href="lmmcomplete.css" rel="stylesheet" type="text/css">
+<script src="jquery-1.6.2.min.js"></script>
+<script src="jquery.ui.core.js"></script>
+<script src="jquery.ui.widget.js"></script>
+<script src="jquery.ui.button.js"></script>
+<script src="jquery.ui.position.js"></script>
+<script src="jquery.ui.autocomplete.js"></script>
+<script src="jy.ui.lmmcomplete.js"></script>
+<script src="jy.ui.recommend.js"></script>
+<style type="text/css">
+@charset "utf-8";
+body {
+	font: 12px/1.5 tahoma,arial;
+}
+
+
+</style>
+<script type="text/javascript">	
+
+	$(document).ready(function(){	
+		$('#search').recommend();
+		$('#search').lmmcomplete();
+	});
+</script>
+</head>
+<body id="bod">
+<label for="search">Search: </label><input id="search" class="search1" page="1" value="中文/拼音" />
+ <div class="address_hot" id="address_hot" style="display:none;">
+    <div class="address_hotcity"><strong>热门城市</strong> （可直接输入城市或城市拼音）</div>
+    <div class="address_hotlist">
+      <ol class="address_hot_abb" style="">
+        <li class="hot_selected">城市</li>
+        <li>景点</li>
+      </ol>
+      <ul class="address_hot_adress layoutfix" type="城市">
+        <li><a  href="javascript:void(0);" data="BJS|北京">九寨沟黄龙</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+      </ul>
+      <ul class="address_hot_adress layoutfix" style="display:none" type="景点">
+      <li><a  href="javascript:void(0);" data="BJS|北京">九寨沟黄龙</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">111</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">222</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">333</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

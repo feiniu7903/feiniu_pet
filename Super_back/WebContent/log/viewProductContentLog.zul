@@ -1,0 +1,17 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?component name="viewSuperLog" macroURI="/log/viewSuperLog.zul" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_view_super_log"?>
+	<window id="win_view_super_log" title="展示" border="normal"
+		apply="com.lvmama.back.web.log.ViewJumpProductContentAction">
+		<groupbox>
+			<caption label="包含的采购产品-日志" />
+			<viewSuperLog objectType="PROD_PRODUCT_ITEM" parentType='PROD_PRODUCT' parentId="${saction.comLog.parentId}"/>
+		</groupbox><space/>
+		<groupbox>
+			<caption label="关联的销售产品-日志" />
+			<viewSuperLog objectType="PROD_RELATION" parentType='PROD_PRODUCT' parentId="${saction.comLog.parentId}"/>
+		</groupbox>
+	</window>
+</zk>

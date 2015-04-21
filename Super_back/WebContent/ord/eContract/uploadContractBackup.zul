@@ -1,0 +1,63 @@
+<?page title="上传合同签约文件" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./newImportDataWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="newImportDataWin" title="上传合同签约文件" closable="true" sizable="false" border="normal"  mode="embedded" apply="com.lvmama.back.web.ord.eContract.UploadContractBackupAction">
+		<grid>
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>上传文件：</hbox>
+					<hbox>
+						<textbox id="furl" maxlength="100" value="@{saction.furl,load-after='uploadBtn.onClick'}" readonly="true" width="420px" visible = "false"/>
+						<textbox id="fileName" maxlength="100" width="500px" readonly="true"/>
+						<button id="upBtn" label="上传文件" upload="true" apply="com.lvmama.back.web.upload.UploadContractCtrl" onUpload='upBtn$composer.onUpload(event, furl, fileName);Events.postEvent("onChange",furl,fileName);saction.fileName=fileName.value;saction.backupFile.fileName=fileName.value;'></button>
+					</hbox>
+				</row>
+				<row>
+					<hbox>文件名称:</hbox>
+					<hbox><textbox maxlength="50" value="@{saction.backupFile.fileName,load-after='upBtn.onUpload,uploadBtn.onClick'}" width="420px" id="backup_file_name"/></hbox>
+				</row>
+				<row>
+					<hbox>文件描述:</hbox>
+					<hbox><textbox rows="10" maxlength="300" width="480px" value="@{saction.backupFile.fileDescription,load-after='uploadBtn.onClick'}"/></hbox>
+				</row>	
+				<row spans="2">
+					<toolbar>
+			 			<button label="提交" width="100px" onClick="saction.upload();" id="uploadBtn" />
+					</toolbar>
+				</row>				
+			</rows>							
+		</grid>
+		<grid>
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row spans="2,0">
+					<hbox>已存在的文件列表</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox model="@{saction.fileList,load-after='uploadBtn.onClick,deleteFileBtn.onClick'}" width="100%" id="uploadFileListId">
+		<listitem  self="@{each='file'}" >
+			<listcell><label value="@{file.fileName}"/>
+			<image width="15px" height="15px" src="/img/qm.gif" tooltip="@{file.fileId+''}"/>
+					<popup id="@{file.fileId+''}" width="400px"> 
+						<label value="@{file.fileDescription }"/> 
+					</popup></listcell>
+			<listcell>
+				<a label="删除" style="color:blue" onClick='saction.deleteFile(self.getAttribute("fileId"),self.getAttribute("fileName"));' id="deleteFileBtn">
+					<custom-attributes fileId="@{file.fileId}" />
+					<custom-attributes fileName="@{file.fileName}" />
+				</a>
+				|
+				<a label="下载" style="color:blue" onClick='saction.downFile(self.getAttribute("fileId"));'>
+					<custom-attributes fileId="@{file.fileId}" />
+				</a>
+			</listcell>
+		</listitem>
+	</listbox>
+	</window>
+</zk>

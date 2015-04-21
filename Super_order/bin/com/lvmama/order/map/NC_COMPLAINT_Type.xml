@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="NC_COMPLAINT_TYPE">
+	<typeAlias alias="complaintType" type="com.lvmama.comm.bee.po.ord.NcComplaintType"/>
+	<resultMap id="TypeMap" class="complaintType">
+		<result column="Type_ID" property="typeId" />
+		<result column="TYPE_NAME" property="typeName" />
+		<result column="TYPE_DESCRIPTION" property="typeDescription" />
+		<result column="SORT" property="sort"/>
+	</resultMap>
+
+	<select id="selectAllTypeByPage" resultMap="TypeMap">
+		SELECT * FROM (SELECT T.*,ROWNUM RN FROM ( 
+		SELECT * FROM NC_COMPLAINT_TYPE 
+	    ORDER BY SORT
+		)T )TT WHERE 1=1
+		<isNotEmpty prepend="AND" property="start">
+	    	TT.RN &gt;=#start#
+	    </isNotEmpty>
+	    <isNotEmpty prepend="AND" property="end">
+	    	TT.RN &lt;=#end#
+	    </isNotEmpty>
+ 	</select>
+ 	<select id="getTypePageCount" parameterClass="map" resultClass="long">
+    	select count(*) from NC_COMPLAINT_TYPE
+    </select>
+    <select id="getTypeById" resultMap="TypeMap">
+	    select *  from NC_COMPLAINT_TYPE 
+	    <dynamic prepend="where">
+		    <isNotEmpty prepend="AND" property="typeId">
+		    	TYPE_ID = #typeId#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="typeName">
+		    	TYPE_NAME = #typeName#
+		    </isNotEmpty>
+	    </dynamic>
+    </select>
+    <!-- 修改记录 -->
+    <update id="updateTypeById" parameterClass="complaintType">
+		UPDATE NC_COMPLAINT_TYPE set
+			TYPE_NAME = #typeName#,
+			TYPE_DESCRIPTION = #typeDescription#,
+			SORT=#sort#
+		WHERE TYPE_ID = #typeId#
+	</update>
+	<!-- 添加信息 -->
+	<insert id="insertType" parameterClass="complaintType">
+		<selectKey keyProperty="typeId" resultClass="java.lang.Long">
+			SELECT NC_COMPLAINT_TYPE_ID_SEQ.nextval FROM DUAL
+		</selectKey>
+  		insert into NC_COMPLAINT_TYPE
+  		(TYPE_ID,TYPE_NAME,TYPE_DESCRIPTION,SORT) 
+  		VALUES(#typeId#,#typeName#,#typeDescription#,#sort#)
+	</insert>
+</sqlMap>

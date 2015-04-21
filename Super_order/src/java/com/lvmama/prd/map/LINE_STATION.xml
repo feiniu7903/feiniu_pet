@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="LINE_STATION" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.LineStation" >
+    <result column="STATION_ID" property="stationId" />
+    <result column="STATION_NAME" property="stationName" />
+    <result column="STATION_PINYIN" property="stationPinyin" />
+    <result column="STATION_PY" property="stationPy" />
+    <result column="CITY_NAME" property="cityName" />
+    <result column="CITY_PINYIN" property="cityPinyin" />
+    <result column="PLACE_ID" property="placeId" />
+    <result property="oldStationPinyin" column="OLD_STATION_PINYIN" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap2" class="com.lvmama.comm.bee.po.prod.LineStation" >
+    <result column="STATION_NAME" property="stationName" />
+    <result column="STATION_PINYIN" property="stationPinyin" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.LineStation" >
+    select *
+    from LINE_STATION
+    where STATION_ID = #stationId#
+   </select> 
+  <select id="getLineStationByStationPinyin" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.LineStation" >
+    select *
+    from LINE_STATION
+    where STATION_PINYIN = #stationPinyin# and rownum=1
+   </select> 
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select t.* from LINE_STATION t order by t.station_pinyin
+  </select>
+  <select id="selectLineStationByLineInfoId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+
+		select ls.* from LINE_STATION ls,LINE_STOPS stop
+	    where ls.STATION_ID = stop.STATION_ID and stop.LINE_INFO_ID = #lineInfoId#
+   
+  </select>
+  <select id="selectLineStationByParam" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+  	select * from LINE_STATION
+  	<dynamic prepend="where">
+  		<isNotEmpty prepend="and" property="stationSearch">
+  		(STATION_NAME like '%$stationSearch$%' or STATION_PINYIN like '%$stationSearch$%')
+  		</isNotEmpty>
+  		<isNotEmpty prepend="and" property="cityPinyin">
+  			city_pinyin = #cityPinyin#
+  		</isNotEmpty>
+  		<isNotEmpty prepend="and" property="_endRow">
+  		ROWNUM &lt;=#_endRow#
+  		</isNotEmpty>
+  	</dynamic>
+  </select>
+  <select id="selectStationByParam" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+  	select * from LINE_STATION
+  	<dynamic prepend="where">
+  		<isNotEmpty prepend="and" property="citySearch">
+  		(STATION_NAME like '%$citySearch$%' or STATION_PINYIN like '%$citySearch$%')
+  		</isNotEmpty>
+  		<isNotEmpty prepend="and" property="_endRow">
+  		ROWNUM &lt;=#_endRow#
+  		</isNotEmpty>
+  	</dynamic> 
+  	order by station_name asc 
+  </select>
+  
+  <select id="selectByNameAndPinyin" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.LineStation" >
+    select *
+    from LINE_STATION
+    <dynamic prepend="where">
+    	<isNotEmpty prepend="and" property="stationName">
+    		STATION_NAME=#stationName#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="stationPinyin">
+    		STATION_PINYIN = #stationPinyin#
+    	</isNotEmpty>
+    </dynamic>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.LineStation" >
+    delete from LINE_STATION
+    where STATION_ID = #stationId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.LineStation" >
+    <selectKey resultClass="java.lang.Long" keyProperty="stationId" >
+      select LINE_STATION_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into LINE_STATION (STATION_ID, STATION_NAME, STATION_PINYIN, STATION_PY, PLACE_ID,CITY_NAME,CITY_PINYIN)
+    values (#stationId#, #stationName#, #stationPinyin#,
+      #stationPy#, #placeId#,#cityName#,#cityPinyin#)
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.LineStation" >
+    update LINE_STATION
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="stationName" >
+        STATION_NAME = #stationName#
+      </isNotNull>
+      <isNotNull prepend="," property="stationPinyin" >
+        STATION_PINYIN = #stationPinyin#
+      </isNotNull>
+      <isNotNull prepend="," property="stationPy" >
+        STATION_PY = #stationPy#
+      </isNotNull>
+      <isNotNull prepend="," property="placeId" >
+        PLACE_ID = #placeId#
+      </isNotNull>
+    </dynamic>
+    where STATION_ID = #stationId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.LineStation" >
+    update LINE_STATION
+    set STATION_NAME = #stationName#,
+      STATION_PINYIN = #stationPinyin#,
+      STATION_PY = #stationPy#,
+      PLACE_ID = #placeId#,
+      CITY_NAME = #cityName#,
+      CITY_PINYIN = #cityPinyin#
+    where STATION_ID = #stationId#
+  </update>
+  <select id="getLineStationByNames" parameterClass="java.lang.String" resultMap="BaseResultMap">
+  	select * from line_station ls where ls.station_name in ($name$)
+  </select>
+  <select id="selectCountByPinyin" resultClass="java.lang.Integer" parameterClass="com.lvmama.comm.bee.po.prod.LineStation" >
+    select count(*)
+    from LINE_STATION
+    <dynamic prepend="where">
+    	<isNotEmpty prepend="and" property="oldStationPinyin">
+    		OLD_STATION_PINYIN=#oldStationPinyin#
+    	</isNotEmpty>
+    </dynamic>
+  </select>
+  
+  <select id="selectLineStationByChezhan" resultMap="BaseResultMap2">
+   select  station_pinyin,station_name  from (select distinct b.station_pinyin,station_name from line_stops a,line_station b where a.station_id = b.station_id and a.line_info_id in
+  (select line_info_id from line_stops where station_id = #stationId#) and a.station_id != #stationId#)t  where rownum &lt;=30       
+ </select>
+</sqlMap>

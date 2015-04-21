@@ -1,0 +1,36 @@
+<?page title="筛选导出日志" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win"?>
+<zk>
+<window title="筛选导出日志" border="normal" apply="com.lvmama.operate.web.statistics.EdmLogAction" id="win">
+<grid>
+	<rows>
+		<row>
+			<hbox>
+				<label value="导出时间:"/>
+				<datebox value="@{saction.searchCons.startTime}"/>
+				<label value="到"/>
+				<datebox value="@{saction.searchCons.endTime}"/>
+				<button label="查询" onClick="saction.search()" id="searchBtn"/>
+			</hbox>
+		</row>
+	</rows>
+</grid>
+<space>
+</space>
+<listbox model="@{saction.logLists,load-after='searchBtn.onClick,_paging.onPaging'}">
+	<listhead>
+		<!-- <listheader label="用户名"/> -->
+		<listheader label="导出时间"/>
+		<listheader label="导出数量"/>
+	</listhead>
+	<listitem self="@{each='log'}">
+		<!-- <listcell label="@{log.loginName}"/> -->
+		<listcell label="@{log.date}"/>
+		<listcell label="@{log.count}"/>
+	</listitem>
+</listbox>
+<span>
+	<paging id="_paging" pageSize="20" onPaging="saction.search()"/>
+</span>
+</window>
+</zk>

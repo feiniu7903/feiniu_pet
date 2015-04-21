@@ -1,0 +1,813 @@
+body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,code,del,dfn,em,img,q,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,input
+	{
+	border: none;
+	margin: 0;
+	padding: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	vertical-align: baseline;
+	list-style: none;
+	font-size: 12px;
+	color: #454545;
+	font-family: \5b8b\4f53;
+}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+.clearfix {
+	display: inline-block;
+}
+
+.clearfix {
+	display: block;
+}
+
+a:link,a:visited {
+	text-decoration: none;
+}
+
+a:hover,a:active {
+	text-decoration: none;
+}
+
+a {
+	outline: none; *
+	hide-focus: expression(this.hideFocus =   true);
+	color: #3972BE;
+}
+
+.text1,.text2,.text3,.text4,.button,.button02,.reduce,.plus {
+	background: url(../../images/bg.gif) no-repeat;
+	display: inline-block;
+	padding: 3px;
+	height: 19px;
+	line-height: 19px;
+	margin: 0 2px;
+}
+
+.text1 {
+	width: 192px;
+	background-position: 0 -27px;
+}
+
+.text2 {
+	width: 89px;
+	background-position: 0 -52px;
+}
+
+.text3 {
+	width: 58px;
+	background-position: -95px -52px;
+}
+
+.text4 {
+	width: 137px;
+	background-position: 0 -77px;
+}
+
+.button {
+	height: 27px;
+	line-height: 27px;
+	text-align: center;
+	color: #fff;
+	width: 71px;
+	padding: 0;
+	cursor: pointer;
+}
+
+.button02 {
+	height: 27px;
+	line-height: 27px;
+	text-align: center;
+	color: #fff;
+	width: 94px;
+	padding: 0;
+	background-position: -102px 0;
+}
+.button_new{background:none;color:#36c;cursor:pointer;}
+
+.reduce,.plus {
+	width: 15px;
+	height: 15px;
+	padding: 0;
+	position: relative;
+	top: 4px;
+	cursor: pointer;
+}
+
+.reduce {
+	background-position: -71px 0;
+}
+
+.plus {
+	background-position: -87px 0;
+}
+
+.tableHeader {
+	background: #EAF7FF;
+	padding: 10px;
+	height: 95px;
+	margin: 10px 0;
+	display: none;
+	position: relative;
+}
+
+.tableHeader3 {
+	height: 165px;
+}
+
+.tableHeader3 p.Pcheckbox {
+	padding-left: 30px;
+}
+
+.tableHeader3 p.Pcheckbox span {
+	margin: 0 20px 0 5px;
+}
+
+.tableHeader3 p.Pcheckbox input {
+	position: relative;
+	top: 3px;
+}
+
+.tableHeader .buttonP {
+	text-align: right;
+}
+
+.tableHeader dl {
+	overflow: hidden;
+	zoom: 1;
+	padding: 5px 0;
+}
+
+.tableHeader dt,.tableHeader dd {
+	float: left;
+	width: 290px;
+}
+
+.tableHeader dt {
+	position: relative;
+}
+
+.tableHeader dt em,.tableHeader dd em {
+	width: 80px;
+	display: inline-block;
+	text-align: right;
+}
+
+.clickShow {
+	border: 1px solid #7F9DB9;
+	display: inline-block;
+	width: 120px;
+	background: url(../../images/select.gif) no-repeat 120px 1px #fff;
+	padding: 1px 15px 1px 1px;
+	height: 16px;
+	line-height: 16px;
+}
+
+.tableHeader dd .selectText {
+	width: 62px;
+}
+
+.tableHeader dd .selectText2 {
+	width: 132px;
+}
+
+.selectShow {
+	display: none;
+	position: absolute;
+	top: 35px;
+	left: 90px;
+	_left: 80px;
+	width: 116px;
+	border: 1px solid #7F9DB9;
+	background: #fff;
+	padding: 5px 10px;
+	line-height: 25px;
+}
+
+.tableInquiry {
+	padding: 10px;
+	display: none;
+}
+
+.tableInquiry table {
+	border-right: 1px solid #ADADAD;
+	border-bottom: 1px solid #ADADAD;
+}
+
+.tableInquiry table td {
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	border-top: 1px solid #ADADAD;
+	border-left: 1px solid #ADADAD;
+}
+
+.tableInquiry table .tableTit td {
+	background: #EAEAEA;
+	height: 20px;
+}
+
+.tableInquiry table td a {
+	color: #3972BE;
+	margin: 0 5px;
+}
+
+.row {
+	margin: 10px 0;
+	border: 1px solid #B7E1FB;
+	padding: 10px;
+}
+
+.rowTIt {
+	line-height: 30px;
+	padding: 0 30px;
+	overflow: hidden;
+	zoom: 1;
+}
+
+.rowTIt em {
+	float: right;
+}
+
+.rowTIt span {
+	margin-right: 30px;
+}
+
+.rowTIt a {
+	color: #3972BE;
+	font-weight: 700;
+}
+
+.rowTIt em a {
+	font-weight: 500;
+}
+
+.row table {
+	line-height: 30px;
+	text-align: center;
+}
+
+.row td {
+	border-top: 1px solid #E5E5E5;
+	padding: 5px 0;
+}
+
+.row .tableTit td {
+	background: #F4F4F4;
+	border-top: none;
+	color: #454545;
+	font-weight: 700;
+	padding: 0;
+}
+
+.hotelIntroduction,.roomIntroduction,.hotelScheduled,.usrReceiverAdd,.addInvoice,.addAddress,.toubaoDiv
+	{
+	background: #fff;
+	border: 1px solid #A6A6A6;
+	display: none;
+}
+
+.hotelIntroduction {
+	width: 335px;
+	left: 300px;
+}
+
+.roomIntroduction {
+	width: 485px;
+	left: 500px;
+}
+
+.hotelScheduled {
+	width: 585px;
+	left: 40%;
+}
+
+.usrReceiverAdd {
+	width: 600px;
+	right: 0px;
+}
+
+.toubaoDiv {
+	width: 600px;
+	right: 0px;
+}
+
+.addInvoice,.addAddress {
+	width: 585px;
+}
+
+h3.tit {
+	height: 30px;
+	line-height: 30px;
+	padding: 0 10px;
+	color: #fff;
+	overflow: hidden;
+	zoom: 1;
+	background: #7CA3D6;
+}
+
+.tit .close {
+	float: right;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.popUpText {
+	line-height: 30px;
+}
+
+.popUpText,.scheduledMid {
+	padding: 10px;
+	color: #454545;
+}
+
+.scheduledMid p .text2 {
+	margin-right: 50px;
+}
+
+.scheduledMid p span {
+	color: #454545;
+	font-weight: 700;
+}
+
+.CalendarTop {
+	overflow: hidden;
+	zoom: 1;
+	text-align: center;
+	color: #000000;
+	margin: 30px 0 5px 0;
+}
+
+.CalendarTop em {
+	cursor: pointer;
+}
+
+.calendarRight {
+	float: right;
+}
+
+.calendarLeft {
+	float: left;
+}
+
+.Calendar table {
+	border-top: 1px solid #C6C6C6;
+	border-right: 1px solid #C6C6C6;
+	text-align: right;
+	width: 565px;
+}
+
+.Calendar td {
+	border-bottom: 1px solid #C6C6C6;
+	border-left: 1px solid #C6C6C6;
+	padding: 0 2px;
+	height: 50px;
+	width: 90px;
+}
+
+.Calendar .tableTit td {
+	height: 20px;
+	line-height: 20px;
+	font-weight: 700;
+}
+
+.Calendar td i {
+	color: #2D9000;
+}
+
+.Calendar td b {
+	color: #FF0000;
+	font-weight: 500;
+	font-size: 14px;
+}
+
+/*main03*/
+.main03 {
+	border: 1px solid #B7E1FB;
+	margin: 10px;
+	padding: 0;
+}
+
+.main03 .tit03 {
+	background: #EAF7FF;
+	font-weight: 700;
+	color: #000;
+	height: 30px;
+	line-height: 30px;
+}
+
+.main03 .row {
+	border: none;
+	margin: 0;
+}
+
+.main03 .time {
+	height: 30px;
+	line-height: 30px;
+	padding: 15px;
+}
+
+.countInput {
+	display: inline-block;
+	border: 1px solid #D4D4D4;
+	padding: 0 6px;
+	height: 18px;
+	line-height: 18px;
+	width: 15px;
+}
+
+.tableIntroduction strong {
+	float: right;
+}
+
+.tableIntroduction strong b {
+	color: #EB0000;
+}
+
+.preferential,.paymentObject {
+	background: #EAF7FF;
+	padding: 15px 10px;
+	color: #000;
+}
+
+.preferential p {
+	padding: 20px 0 0 10px;
+}
+
+.preferential input {
+	position: relative; *
+	top: 3px;
+	margin-right: 5px;
+}
+
+.total {
+	overflow: hidden;
+	zoom: 1;
+	background: #E6E6E6;
+	color: #000;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 10px;
+	margin: 10px 0;
+}
+
+.total strong {
+	font-size: 14px;
+	float: right;
+}
+
+.total strong b,.total span {
+	color: #F30000;
+}
+
+.paymentObject {
+	margin: 10px 0;
+}
+
+.paymentObject input {
+	position: relative;
+	top: 2px;
+}
+
+.paymentObject span {
+	margin: 0 50px 0 3px;
+}
+
+.userInformation {
+	position: relative;
+	z-index: 10;
+}
+
+.userInformation .tit {
+	overflow: hidden;
+	zoom: 1;
+	padding: 5px;
+}
+
+.userInformation .tit em {
+	float: right;
+	font-weight: 500;
+	margin-right: 5px;
+	display: block;
+	height: 30px;
+	overflow: hidden;
+	zoom: 1;
+	font-size: 12px;
+}
+
+.userInformation .tit .button {
+	float: right;
+}
+
+.userInformation h4 {
+	line-height: 30px;
+	font-weight: 700;
+	padding: 0 10px;
+}
+
+.userInformation table,.invoiceInformation table,.addressInformation table,.orderRemarks table
+	{
+	border-bottom: 1px solid #ADADAD;
+}
+
+.userInformation td,.invoiceInformation td,.addressInformation td,.orderRemarks td
+	{
+	border-top: 1px solid #ADADAD;
+	border-right: 1px solid #ADADAD;
+	height: 30px;
+	line-height: 30px;
+	padding: 0 3px;
+}
+
+.userInformation .tableTit td,.invoiceInformation .tableTit td,.addressInformation .tableTit td,.orderRemarks .tableTit td
+	{
+	background: #F4F4F4;
+	font-weight: 700;
+}
+
+.userInformation td input {
+	margin: 0 3px 0 30px;
+	position: relative;
+	top: 2px;
+}
+
+.invoiceInformation,.addressInformation {
+	margin: 10px 0;
+	position: relative;
+	z-index: 9;
+}
+
+.invoiceInformationText,.addressInformationText {
+	display: none;
+}
+
+.invoiceInformation .tit span,.addressInformation .tit span {
+	font-weight: 500;
+}
+
+.invoiceInformation .tit input,.addressInformation .tit input {
+	position: relative;
+	top: 2px;
+	margin: 0 5px;
+}
+
+.invoiceInformation h4,.addressInformation h4 {
+	padding: 15px 0 0 10px;
+}
+
+.invoiceInformation td a,.addressInformation td a {
+	margin: 0 5px;
+}
+
+.remarks {
+	overflow: hidden;
+	zoom: 1;
+	padding: 10px;
+}
+
+.remarks b {
+	float: left;
+	font-weight: 500;
+}
+
+.remarks textarea {
+	width: 500px;
+	height: 100px;
+	margin-right: 10px;
+}
+
+.orderRemarks ul {
+	padding: 10px 10px 40px 10px;
+}
+
+.orderRemarks ul li {
+	height: 30px;
+	color: #3972BE;
+}
+
+.orderRemarks li input {
+	margin: 0 5px;
+	position: relative;
+	top: 2px;
+}
+
+.orderRemarks li b {
+	color: #E40000;
+}
+
+.usrReceiverAdd td {
+	text-align: right;
+	padding: 0;
+	border: none;
+	line-height: 20px;
+}
+
+.toubaoDiv td {
+	text-align: right;
+	padding: 10px 0 0 0;
+	border: none;
+	line-height: 20px;
+}
+
+td.anniu {
+	text-align: center;
+	padding: 10px;
+}
+
+.usrReceiverAdd td input {
+	float: left;
+	position: relative;
+	top: 3px;
+}
+
+.usrReceiverAdd td label {
+	float: left;
+}
+
+.toubaoDiv td input {
+	float: left;
+	position: relative;
+	top: 3px;
+}
+
+.usrReceiverAdd td select {
+	width: 120px;
+	float: left;
+}
+
+.toubaoDiv td select {
+	width: 120px;
+	float: left;
+}
+
+.addInvoice table {
+	margin: 10px;
+	border: none;
+}
+
+.addInvoice textarea {
+	width: 400px;
+	height: 50px;
+}
+
+.addInvoice td {
+	padding-top: 10px;
+	border: none;
+}
+
+.addAddress table {
+	margin: 10px;
+	border: none;
+}
+
+.addAddress textarea {
+	width: 400px;
+	height: 50px;
+}
+
+.addAddress td {
+	padding-top: 10px;
+	border: none;
+}
+
+/*main04*/
+.row3 {
+	border: 1px solid #ADADAD;
+	padding-bottom: 40px;
+	margin: 10px 0;
+}
+
+.row3,.row4 {
+	position: relative;
+}
+
+.row3 .rowTable {
+	text-align: center;
+}
+
+.row3 .rowTable td,.row4 .rowTable td {
+	height: 30px;
+	line-height: 30px;
+	border-bottom: 1px solid #adadad;
+	padding: 5px;
+}
+
+.row3 .tableTit td,.row4 .tableTit td {
+	background: #EFEFEF;
+	font-weight: 700;
+	height: 20px;
+	line-height: 20px;
+}
+
+/*main05*/
+.row4 {
+	border: 1px solid #adadad;
+	padding-bottom: 100px;
+}
+
+.row4 td {
+	vertical-align: middle;
+}
+
+.row4 td p a {
+	float: right;
+	margin-right: 30px;
+}
+
+table .lineTime span {
+	background: #E0ECFF;
+	border: 1px solid #99BBE8;
+	margin: 3px 5px;
+	font-weight: 500;
+	display: inline-block;
+	height: 20px;
+	line-height: 20px;
+	padding: 0 5px;
+}
+
+table .lineTime {
+	width: 420px;
+}
+
+table .lineTime .lineTimeHide s {
+	padding-right: 10px;
+	background: url(../../images/bg.gif) no-repeat -198px 0;
+	display: inline-block;
+	height: 5px;
+	width: 9px;
+	position: relative;
+	top: 5px;
+	cursor: pointer;
+}
+
+table .lineTime .lineTimeHide span,table .lineTime .lineTimeShow s {
+	display: none;
+}
+
+table .lineTime .lineTimeShow span {
+	display: inline-block;
+}
+
+.scheduledMid b {
+	color: #EC0101;
+	margin-left: 30px;
+}
+
+/*main07*/
+.pormptTop {
+	background: #EAF7FF;
+	padding: 10px;
+	line-height: 30px;
+}
+
+.pormptTop dt {
+	font-size: 14px;
+	color: #3972BE;
+	font-weight: 700;
+}
+
+.pormptTop dd {
+	background: #fff;
+}
+
+.pormptTop dd a {
+	color: #454545;
+	margin: 0 10px;
+}
+
+.pormpt {
+	color: #454545;
+	line-height: 28px;
+}
+
+.pormpt h3 {
+	background: url(../../images/bg.gif) no-repeat 10px -102px; *
+	background-position: 10px -104px;
+	height: 28px;
+	line-height: 28px;
+	border-bottom: 1px solid #959595;
+	padding: 0 20px;
+	font-weight: 700;
+}
+
+.pormpt ul {
+	margin: 0 10px 20px 10px;
+}
+
+.pormpt h5 {
+	color: #E60000;
+	padding: 0 10px;
+}
+
+.pormpt h4 {
+	font-weight: 700;
+	padding: 0 10px;
+}
+.btn_disabled{background-position:0 -140px !important;}

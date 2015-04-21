@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+
+	<settings enhancementEnabled="true" maxTransactions="40"
+		maxRequests="32" maxSessions="10" cacheModelsEnabled="false"
+		classInfoCacheEnabled="false" useStatementNamespaces="true" />
+	<!-- EDM -->
+	<sqlMap resource="com/lvmama/operate/map/ONLINE_MARKETING.xml"/>
+	<sqlMap resource="com/lvmama/operate/map/DW_EDM_SUBSCRIBE.xml" />
+	<sqlMap resource="com/lvmama/operate/map/DW_EDM_SUBSCRIBE_INFO.xml" />
+	<sqlMap resource="com/lvmama/operate/map/EDM_EXPORT.xml"/>
+	<sqlMap resource="com/lvmama/operate/map/EDM_USR_USERS.xml"/>
+	<sqlMap resource="com/lvmama/operate/map/COM_PLACE.xml"/>
+</sqlMapConfig>

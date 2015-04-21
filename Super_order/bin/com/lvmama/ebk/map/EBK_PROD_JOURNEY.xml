@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="EBK_PROD_JOURNEY" >
+
+  <typeAlias alias="ebkProdJourneyDO" type="com.lvmama.comm.bee.po.ebooking.EbkProdJourney" />
+
+  <resultMap id="ebkProdJourneyDOResultMap" class="ebkProdJourneyDO" >
+    <result property="journeyId" column="JOURNEY_ID" />
+    <result property="productId" column="PRODUCT_ID" />
+    <result property="dayNumber" column="DAY_NUMBER" />
+    <result property="title" column="TITLE" />
+    <result property="content" column="CONTENT" />
+    <result property="dinner" column="DINNER" />
+    <result property="hotel" column="HOTEL" />
+    <result property="traffic" column="TRAFFIC" />
+    <result property="multiJourneyId" column="MULTI_JOURNEY_ID" />
+  </resultMap>
+
+  <sql id="ebkProdJourney_columns" >
+    a1.JOURNEY_ID, a1.PRODUCT_ID, a1.DAY_NUMBER, a1.TITLE, a1.CONTENT, a1.DINNER, a1.HOTEL,
+      a1.TRAFFIC,a1.MULTI_JOURNEY_ID
+  </sql>
+
+  <sql id="ebkProdJourney_do_columns" >
+    a1.JOURNEY_ID, a1.PRODUCT_ID, a1.DAY_NUMBER, a1.TITLE, a1.CONTENT, a1.DINNER, a1.HOTEL,
+      a1.TRAFFIC,a1.MULTI_JOURNEY_ID
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="journeyId" prepend="AND" >
+        <![CDATA[  
+        JOURNEY_ID = #journeyId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="dayNumber" prepend="AND" >
+        <![CDATA[  
+        DAY_NUMBER = #dayNumber#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="title" prepend="AND" >
+        <![CDATA[  
+        TITLE = #title#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="content" prepend="AND" >
+        <![CDATA[  
+        CONTENT = #content#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="dinner" prepend="AND" >
+        <![CDATA[  
+        DINNER = #dinner#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="hotel" prepend="AND" >
+        <![CDATA[  
+        HOTEL = #hotel#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="traffic" prepend="AND" >
+        <![CDATA[  
+        TRAFFIC = #traffic#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="multiJourneyId" prepend="AND" >
+        <![CDATA[  
+        MULTI_JOURNEY_ID = #multiJourneyId#  
+        ]]> 
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <sql id="doQueryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="journeyId" prepend="AND" >
+        <![CDATA[  
+        JOURNEY_ID = #journeyId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="dayNumber" prepend="AND" >
+        <![CDATA[  
+        DAY_NUMBER = #dayNumber#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="title" prepend="AND" >
+        <![CDATA[  
+        TITLE = #title#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="content" prepend="AND" >
+        <![CDATA[  
+        CONTENT = #content#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="dinner" prepend="AND" >
+        <![CDATA[  
+        DINNER = #dinner#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="hotel" prepend="AND" >
+        <![CDATA[  
+        HOTEL = #hotel#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="traffic" prepend="AND" >
+        <![CDATA[  
+        TRAFFIC = #traffic#  
+        ]]>  
+      </isNotNull>
+       <isNotNull property="multiJourneyId" prepend="AND" >
+        <![CDATA[  
+        MULTI_JOURNEY_ID = #multiJourneyId#  
+        ]]> 
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <insert id="insert" parameterClass="ebkProdJourneyDO" >
+  	<selectKey keyProperty="journeyId" resultClass="java.lang.Long" >
+       SELECT EBK_PROD_JOURNEY_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO EBK_PROD_JOURNEY( JOURNEY_ID, PRODUCT_ID, DAY_NUMBER, TITLE, CONTENT, DINNER, HOTEL, 
+      TRAFFIC,MULTI_JOURNEY_ID)
+     VALUES ( #journeyId#, #productId#, #dayNumber#, #title#, #content#, #dinner#, #hotel#, 
+      #traffic#,#multiJourneyId#)
+  </insert>
+
+  <update id="update" parameterClass="ebkProdJourneyDO" >
+    UPDATE EBK_PROD_JOURNEY   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="journeyId" prepend="," >
+        <![CDATA[  
+        JOURNEY_ID = #journeyId#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="productId" prepend="," >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="dayNumber" prepend="," >
+        <![CDATA[  
+        DAY_NUMBER = #dayNumber#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="title" prepend="," >
+        <![CDATA[  
+        TITLE = #title#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="content" prepend="," >
+        <![CDATA[  
+        CONTENT = #content#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="dinner" prepend="," >
+        <![CDATA[  
+        DINNER = #dinner#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="hotel" prepend="," >
+        <![CDATA[  
+        HOTEL = #hotel#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="traffic" prepend="," >
+        <![CDATA[  
+        TRAFFIC = #traffic#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="multiJourneyId" prepend="," >
+        <![CDATA[  
+        MULTI_JOURNEY_ID = #multiJourneyId#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE JOURNEY_ID = #journeyId#  
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="ebkProdJourneyDOResultMap" >
+     SELECT 
+    <include refid="ebkProdJourney_do_columns" />
+    <![CDATA[  
+     FROM EBK_PROD_JOURNEY a1 WHERE JOURNEY_ID = #journeyId#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_JOURNEY WHERE JOURNEY_ID = #journeyId#
+    ]]>  
+  </delete>
+
+  <select id="countByDOTerm" parameterClass="ebkProdJourneyDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(JOURNEY_ID) AS num FROM EBK_PROD_JOURNEY 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="ebkProdJourneyDOResultMap" parameterClass="ebkProdJourneyDO" >
+     SELECT 
+    <include refid="ebkProdJourney_do_columns" />
+     FROM EBK_PROD_JOURNEY a1 
+    <include refid="doQueryParams" />
+  </select>
+  <select id="findListOrderDayNumberByDO" resultMap="ebkProdJourneyDOResultMap" parameterClass="ebkProdJourneyDO" >
+     SELECT 
+    <include refid="ebkProdJourney_do_columns" />
+     FROM EBK_PROD_JOURNEY a1 
+    <include refid="doQueryParams" />
+    ORDER BY DAY_NUMBER
+  </select>
+  
+   <select id="getEbkProdJourneyByMultiJourneyId" resultMap="ebkProdJourneyDOResultMap" parameterClass="java.lang.Long">
+  	select * from EBK_PROD_JOURNEY where MULTI_JOURNEY_ID=#multiJourneyId# order by DAY_NUMBER
+  </select>
+  
+</sqlMap>

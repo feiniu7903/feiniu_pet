@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>线路详情</title>
+<#include "../common/define.html">
+<script type="text/javascript">
+$(function(){
+	/*其他渠道推过产品(如:微博,微信),返回上一页功能改成返回首页*/
+	var refer = document.referrer ;
+	if (refer != null &&!(refer.startWith("http://${hostName}") || refer.startWith("http://api3g.lvmama.com")) ){
+		$(".lv-operate-icon a").attr("onclick","union_skip('http://${hostName}');");
+		if(getcookie("isShowDownload") == ''){
+			$(".down_push").show();
+		}
+	}
+});
+</script>
+</head>
+
+<body>
+    
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_back();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <section class="header_alice">
+       <a href="#" class="btn1" id="favoritor_in" onclick="addFavoritor('${mpr.productId!}','PRODUCT','${mpr.smallImage!}','${mpr.productName!}');">
+           <img src="${prefix_pic_url!}/img/holiday/ic_shoucang.png" />
+       </a>
+       <a href="#" class="btn1" id="favoritor_out"onclick="cancelFavoritor('${mpr.productId!}','PRODUCT');">
+	  <img src="${prefix_pic_url!}/img/holiday/ic_shoucang2.png" />
+	</a>
+	<a class="btn1 home" href="http://${hostName}"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a>	
+	
+   </section>
+  <div class="lv-title">线路</div>
+</div>
+<!-- 线路详情 -->
+<#include "/WEB-INF/pages/holiday/holiday_detail_temp.html">
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+</body>
+</html>

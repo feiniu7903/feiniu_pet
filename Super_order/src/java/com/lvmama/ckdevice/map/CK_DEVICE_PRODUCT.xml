@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="CK_DEVICE_PRODUCT" >
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ckdevice.CkDeviceProduct" >
+	  <result column="Device_Product_Id" property="deviceProductId" />
+	  <result column="PRODUCT_ID" property="productId" />
+	  <result column="PRODUCT_BRANCH_ID" property="productBranchId" />
+	   <result column="META_PRODUCT_ID" property="metaProductId" />
+	  <result column="META_BRANCH_ID" property="metaBranchId" />
+	  <result column="DEVICE_INFO_ID" property="deviceInfoId" />
+	  <result column="CREATE_TIME" property="createTime" />
+	  <result column="VOLID" property="volid" />
+	  <result column="PRINT_VOLID" property="printVolid" />
+	</resultMap>
+	
+	<resultMap id="deviceProductMap" class="com.lvmama.comm.bee.po.prod.ProdProduct">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="ON_LINE" property="onLine" />
+		<result column="ONLINE_TIME" property="onlineTime" />
+		<result column="OFFLINE_TIME" property="offlineTime" />
+		<result column="TRAVELLER_INFO_OPTIONS" property="travellerInfoOptions" />
+		<result column="VALID" property="valid" />
+	</resultMap>
+	
+	
+	<resultMap id="branchForDeviceMap" class="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		<result column="PROD_BRANCH_ID" property="prodBranchId" />
+		<result column="PRODUCT_ID" property="prodProduct.productId" />
+		<result column="PRODUCT_NAME" property="prodProduct.productName" />
+		<result column="BRANCH_NAME" property="branchName" />
+		<result column="BRANCH_TYPE" property="branchType" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="PRODUCT_TYPE" property="prodProduct.productType" />
+		<result column="ON_LINE" property="online" />
+		<result column="MINIMUM" property="minimum" />
+		<result column="MAXIMUM" property="maximum" />
+		<result column="ADULT_QUANTITY" property="adultQuantity" />
+		<result column="CHILD_QUANTITY" property="childQuantity" />
+		<result column="VALID" property="valid" />
+	</resultMap>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ckdevice.CkDeviceProduct" >
+    	<selectKey  keyProperty="deviceProductId" resultClass="Long"> SELECT ck_device_product_id_seq.NEXTVAL FROM DUAL</selectKey>
+			INSERT INTO ck_device_product (
+			Device_Product_Id , PRODUCT_ID , PRODUCT_BRANCH_ID , META_PRODUCT_ID,META_BRANCH_ID,DEVICE_INFO_ID,CREATE_TIME,VOLID,PRINT_VOLID
+			) VALUES (
+			#deviceProductId# ,
+			#productId# ,
+			#productBranchId# ,
+			#metaProductId# ,
+			#metaBranchId# ,
+			#deviceInfoId# ,
+			sysdate,
+			#volid# ,
+			#printVolid#
+			)
+    </insert>
+    <update id="update" parameterClass="com.lvmama.comm.bee.po.ckdevice.CkDeviceProduct" >
+			update ck_device_product set VOLID= #volid# , PRINT_VOLID = #printVolid#  where Device_Product_Id=#deviceProductId#
+    </update>
+    <delete id="del" parameterClass="Long" >
+			delete from ck_device_product  where Device_Product_Id=#deviceProductId#
+    </delete>
+	<sql id="selectByDeviceSql">
+		FROM PROD_PRODUCT PP , PROD_PRODUCT_BRANCH PPB, CK_DEVICE_PRODUCT DP
+		<isNotEmpty prepend="," property="placeId">
+				PROD_PRODUCT_PLACE PPP
+		</isNotEmpty>
+		WHERE PP.PRODUCT_ID = PPB.PRODUCT_ID
+		AND PPB.PROD_BRANCH_ID = DP.PRODUCT_BRANCH_ID(+)
+		AND PPB.VALID = 'Y'
+    	AND PP.VALID = 'Y'
+		 <isNotNull property="productType" prepend="AND">
+			PP.PRODUCT_TYPE = #productType#
+		</isNotNull>
+		<isNotEmpty prepend="AND" property="productName">
+				PP.PRODUCT_NAME like '%$productName$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="productId">
+				PP.PRODUCT_ID = #productId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="prodBranchId">
+				PPB.PROD_BRANCH_ID = #prodBranchId#
+		</isNotEmpty>
+		<isNotNull property="deviceInfoId" prepend="AND">
+			 DP.DEVICE_INFO_ID = #deviceInfoId#
+		 </isNotNull>
+		<isNotEmpty prepend="AND" property="volid">
+				DP.VOLID = #volid#
+		</isNotEmpty>
+	</sql>
+	
+	<select id="selectProdBranchIdByCondition" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		SELECT PRODUCT_BRANCH_ID 
+		FROM CK_DEVICE_PRODUCT
+		WHERE DEVICE_INFO_ID = #deviceInfoId#
+	       <isNotEmpty prepend="AND" property="productId">
+				PRODUCT_ID = #productId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="prodBranchId">
+				PROD_BRANCH_ID = #prodBranchId#
+			</isNotEmpty>
+	       <isNotEmpty prepend="AND" property="volid">
+				VOLID = #volid#
+	       </isNotEmpty>
+	</select>
+	
+	<select id="selectDeviceProductInfo" resultMap="deviceProductMap"
+		parameterClass="java.util.Map">
+		 <include refid="pageSearchHead"/>
+			SELECT DISTINCT(PP.PRODUCT_ID), PP.VALID , PP.PRODUCT_NAME,
+			PP.PRODUCT_TYPE ,
+			PP.ON_LINE,PP.ONLINE_TIME,PP.OFFLINE_TIME,PP.TRAVELLER_INFO_OPTIONS
+			FROM PROD_PRODUCT PP, CK_DEVICE_PRODUCT DP
+			WHERE DP.PRODUCT_ID = PP.PRODUCT_ID
+			AND DP.VOLID = 'true'
+		 <isNotNull property="deviceInfoId" prepend="AND">
+			 DP.DEVICE_INFO_ID = #deviceInfoId#
+		 </isNotNull>
+		 <isNotNull property="productType" prepend="AND">
+			PP.PRODUCT_TYPE = #productType#
+		</isNotNull>
+		 <include refid="pageSearchFoot"/>
+	</select>
+	
+	
+	<select id="selectDeviceProductInfoCount" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		SELECT COUNT( PP.PRODUCT_ID)
+		FROM PROD_PRODUCT PP, CK_DEVICE_PRODUCT DP
+		WHERE DP.PRODUCT_ID = PP.PRODUCT_ID
+		AND DP.VOLID = 'true'
+		<isNotNull property="deviceInfoId" prepend="AND">
+			 DP.DEVICE_INFO_ID = #deviceInfoId#
+		</isNotNull>
+		<isNotNull property="productType" prepend="AND">
+			PP.PRODUCT_TYPE = #productType#
+		</isNotNull>
+	</select>
+	
+ 	<select id="selectProdProductBranchInfo" resultMap="branchForDeviceMap" parameterClass="java.util.HashMap">
+		 <include refid="pageSearchHead"/>
+		SELECT DISTINCT(PPB.PROD_BRANCH_ID) ,PP.PRODUCT_ID , PPB.MINIMUM ,
+		PPB.MAXIMUM ,PPB.VALID, PP.PRODUCT_NAME, PPB.BRANCH_NAME,
+		PPB.BRANCH_TYPE ,PPB.DESCRIPTION ,PP.PRODUCT_TYPE , PPB.ON_LINE ,
+		PPB.ADULT_QUANTITY , PPB.CHILD_QUANTITY
+		 <include refid="CK_DEVICE_PRODUCT.selectByDeviceSql"/>
+		 order by PPB.PROD_BRANCH_ID desc
+		 <include refid="pageSearchFoot"/>
+		 
+	</select>
+  
+  
+  <select id="queryDeviceProductInfo" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		 <include refid="pageSearchHead"/>
+			SELECT * FROM  CK_DEVICE_PRODUCT DP
+			WHERE  DP.PRINT_VOLID='true'
+		 <isNotNull property="deviceInfoId" prepend="AND">
+			 DP.DEVICE_INFO_ID = #deviceInfoId#
+		 </isNotNull>
+		 <isNotNull property="metaProductId" prepend="AND">
+			 DP.META_PRODUCT_ID = #metaProductId#
+		</isNotNull>
+		 <include refid="pageSearchFoot"/>
+	</select>
+	
+	<select id="query" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		<include refid="pageSearchHead"/>
+			SELECT * FROM  CK_DEVICE_PRODUCT DP WHERE  1=1
+		<isNotNull property="deviceInfoId" prepend="AND">
+			 DP.DEVICE_INFO_ID = #deviceInfoId#
+		</isNotNull>
+		<isNotNull property="deviceProductId" prepend="AND">
+			 DP.Device_Product_Id = #deviceProductId#
+		</isNotNull>
+		<isNotNull property="productId" prepend="AND">
+			 DP.PRODUCT_ID = #productId#
+		</isNotNull>
+		<isNotNull property="productBranchId" prepend="AND">
+			 DP.PRODUCT_BRANCH_ID = #productBranchId#
+		</isNotNull>
+		<isNotNull property="metaProductId" prepend="AND">
+			 DP.META_PRODUCT_ID = #metaProductId#
+		</isNotNull>
+		<isNotNull property="metaBranchId" prepend="AND">
+			 DP.META_BRANCH_ID = #metaBranchId#
+	   </isNotNull>
+		 <include refid="pageSearchFoot"/>
+	</select>
+</sqlMap>

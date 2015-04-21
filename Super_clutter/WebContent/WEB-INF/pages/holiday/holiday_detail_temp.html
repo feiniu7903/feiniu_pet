@@ -1,0 +1,144 @@
+<!-- 线路详情页面 -->
+<#if mpr??>
+<div class="lv-banner lv-media-width">
+   <ul>
+      <#if mpr.imageList?? && mpr.imageList?size&gt;0 >
+          <#list mpr.imageList as i>
+            <#if i_index == 0 >
+            	<li class="on">
+            <#else>
+          		<li>
+            </#if>
+          	${i_index+1}</li>
+	      </#list>
+	   </#if>
+  </ul>
+  <div class="lv-banner-list"> 
+      <#if mpr.imageList?? &&  mpr.imageList?size&gt;0>
+			<#list  mpr.imageList as img>
+			     <a href="javascript:void(0);" target="_blank"><img src="${prefixPic!}${img}" title="" alt=""/></a> 
+	     	</#list>  
+     </#if>
+  </div>
+</div>
+<div class="lv-wrapper lv-media-width">
+  <div class="lv-wrapper-container clear">
+    <p class="lv-spot-desc holiday_dis">${mpr.productName!}</p>
+    <!-- 活动标签 -->
+    <#if mpr.tagList?? && mpr.tagList?size&gt;0>
+        <i class="flag">${mpr.tagList[0].tagName!}</i>
+  	</#if>
+  	<!--手机独享  -->
+  	<#if mpr.mobileAlone?? && mpr.mobileAlone>
+  		<span class="flag">手机独享</span>
+  	</#if>
+    <div class="lv-spot-addinfo"> <span class="lv-pull-left lv-ellipsis" style="max-width:200px">出发/目的地：${mpr.fromDest!}—${mpr.toDest!}</span> <span class="lv-pull-right">产品编号：${mpr.productId!}</span> </div>
+    <ul class="lv-book-list">
+      <li class="lv-book-liFirst">
+        <span class="lv-color-01">&yen;${mpr.sellPriceYuan!}</span>
+        <span class="lv-proto-price">&yen;${mpr.marketPriceYuan!}</span>
+      </li>
+      <!-- <li><a class="lv-btn-02" href="javascript:void(0);" _tel="咨询预订的产品ID为${mpr.productId!}" style="margin-right: -10px;">电话预订</a> </li>-->
+      <#if mpr.subProductType?? &&  (mpr.subProductType=="FREENESS" 
+	      || mpr.subProductType=="GROUP_LONG" 
+	      || mpr.subProductType=="FREENESS_LONG" 
+	      || mpr.subProductType=="GROUP_FOREIGN" 
+	      || mpr.subProductType=="FREENESS_FOREIGN" 
+	      || mpr.subProductType=="GROUP" 
+	      || mpr.subProductType=="SELFHELP_BUS" )>
+      		<li><a class="lv-btn-booking lv-btn-01 lv-pull-right" href="javascript:void(0);" onclick="order_skip('${request.contextPath!}',${mpr.productId!},${mpr.branchId!},'false');">在线预订</a></li>
+      <#else>
+      	<li><a class="lv-btn-booking lv-btn-01 lv-pull-right" href="tel:4001-570-570">电话预订</a></li>
+      </#if>
+    </ul>
+  </div>
+</div>
+
+<div class="lv-wrapper lv-media-width">
+     <div class="lv-seprator-line01"></div>
+    <#if  mpr.preferentialInfo !="" || mpr.cashRefund>
+    <a href="${request.contextPath!}${mpr.preferentUrl!}&firstChannel=CLIENT" class="v1_1_hui_a">
+     <ul class="v1_1_hui">
+         <#if mpr.preferentialInfo?? && mpr.preferentialInfo !="">
+      	  <li><span class="ic_hui"></span><em>${mpr.preferentialInfo!}</em></li>
+         </#if>
+     	<#if mpr.cashRefund>
+          <li><span class="ic_fan"></span><em>返<i class="f_e70685">¥${mpr.cashRefundY!}</i>奖金<i class="f_e70685">(比网站多返¥${mpr.mobileCashRefund!}）</i></em><span class="nor_ri"><img src="http://pic.lvmama.com/img/mobile/touch/img/next.png" /></span></li>
+     	</#if>
+     </ul>
+    </a>
+    </#if>
+   
+    <!-- 推荐理由 -->
+    <#if mpr.managerRecommend?? && mpr.managerRecommend !="">
+	<div class="lv-wrapper-container clear">      
+        <p class="lv-recommend-icon">推荐理由</p>
+        <ul class="lv-recommend-list e">
+            ${mpr.managerRecommend!?if_exists?replace("\n","</br>")}
+        </ul>
+    </div>
+    
+    </#if>
+    <!-- 公告 -->
+    <#if mpr.announcement?? && mpr.announcement !="">
+    <div class="lv-seprator-line line_pad"></div>
+    <div class="lv-wrapper-container clear">       
+        <p class="lv-recommend-icon">公告</p>
+        <ul class="lv-recommend-list e">
+            ${mpr.announcement!?if_exists?replace("\n","</br>")}
+        </ul>
+    </div>
+   </#if>
+</div>
+<div class="lv-wrapper lv-media-width">
+	<ul class="lv-normal-list">
+	    <!-- 点评数为0 ，则不显示  -->
+	    <#if mpr?? && mpr.cmtNum &gt; 0 >
+	    	<div class="lv-seprator-line"></div>
+	    	<li><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/comment_comm/${mpr.productId!}');">用户点评<p class="lv-pull-right"><#if mpr.avgScore?? && mpr.avgScore != 0 ><span>${mpr.avgScore!}</span>分</#if></p></a></li>
+	    </#if>
+       
+        <div class="lv-seprator-line"></div>
+    	<li><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/prod_comm/${mpr.productId!}/JOURNEY');">行程介绍</a></li>
+        <div class="lv-seprator-line"></div>
+    	<li><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/prod_comm/${mpr.productId!}/FEATURES');">产品特色</a></li>
+        <div class="lv-seprator-line"></div>
+    	<li><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/prod_comm/${mpr.productId!}/COSTCONTAIN');">费用说明</a></li>
+        <div class="lv-seprator-line"></div> 
+        <li><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/prod_comm/${mpr.productId!}/IMPORTANTNOTES');">重要提示</a></li>
+        <div class="lv-seprator-line"></div>
+        <#if mpr.visa >
+	        <li><a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/${mpr.visaUrl!}&firstChannel=CLIENT');">签注/签证</a></li>
+	        <div class="lv-seprator-line"></div>
+        </#if>
+    </ul>
+</div>
+<#else>
+   <#assign no_data_msg="没有找到合适的度假线路</br>请试试搜索其他关键词">
+   <#include "../common/no_data_list.html">
+</#if>
+    <!--电话弹出层 st-->
+	<div class="telBox">
+    	<div class="telBox_con"></div>
+        <div class="p">
+            <span>咨询预订的产品ID为3629</span>
+            <p>4001-570-570</p>
+            <a href="javascript:void(0);" class="ic_ret" _dele=""></a>
+            <a href="tel:4001-570-570" class="ic_tel"></a>
+        </div>
+    </div>
+    
+    <#if mpr ?? >
+        <#if mpr.hasIn>
+		   <script>
+		       $("#favoritor_in").hide();
+		       $("#favoritor_out").show();
+		   </script>
+	   <#else>
+		    <script>
+		       $("#favoritor_out").hide();
+		       $("#favoritor_in").show();
+		   </script>
+       </#if>
+    </#if>
+<script src="${request.contextPath}/js/order_back.js"></script>	

@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>登录</title>
+<#include "../common/define_v5.html">
+</head>
+
+<body>
+ <script name="baidu-tc-cerfication" src="http://apps.bdimg.com/cloudaapi/lightapp.js"></script>
+ <script>
+	 var loginStatus = false;
+	 $(function(){
+		 clouda.lightapp("4tjhI1dx8WPmCIKtl365x7Xg",function(){
+		     //加载完api js后，立即执行读取本地相机图片
+		     loginStatus = true;
+			 baidu_login();
+		 }); 
+	 });
+	
+	 function baidu_login(){
+		 var options = 
+	      { 
+	      'redirect_uri': "http://qing.lvmama.com/static/baidulogin.html", 
+	      'scope': 'basic',
+	      'login_mode': 0, 
+	      'mobile': 1, 
+	      'state': encodeURIComponent('${service!}'),
+	      'display':'mobile', 
+	      'onsuccess': function(){window.location.href='${service!}'}, 
+	      'onfail': function(){} 
+	      }; 
+	      clouda.mbaas.account.login(options) 
+	 }
+ </script>
+</body>
+</html>

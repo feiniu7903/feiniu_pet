@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="EBK_PROD_PRODUCT" >
+
+  <typeAlias alias="ebkProdProductDO" type="com.lvmama.comm.bee.po.ebooking.EbkProdProduct" />
+
+  <resultMap id="ebkProdProductDOResultMap" class="ebkProdProductDO" >
+    <result property="ebkProdProductId" column="EBK_PROD_PRODUCT_ID" />
+    <result property="metaName" column="META_NAME" />
+    <result property="prodName" column="PROD_NAME" />
+    <result property="productType" column="PRODUCT_TYPE" />
+    <result property="subProductType" column="SUB_PRODUCT_TYPE" />
+    <result property="recommend" column="RECOMMEND" />
+    <result property="fromPlaceId" column="FROM_PLACE_ID" />
+    <result property="toPlaceId" column="TO_PLACE_ID" />
+    <result property="managerId" column="MANAGER_ID" />
+    <result property="orgId" column="ORG_ID" />
+    <result property="supplierId" column="SUPPLIER_ID" />
+    <result property="status" column="STATUS" />
+    <result property="metaProductId" column="META_PRODUCT_ID" />
+    <result property="prodProductId" column="PROD_PRODUCT_ID" />
+    <result property="sumitDate" column="SUMIT_DATE" />
+    <result property="examineDate" column="EXAMINE_DATE" />
+    <result property="createUserId" column="CREATE_USER_ID" />
+    <result property="createDate" column="CREATE_DATE" />
+    <result property="updateUserId" column="UPDATE_USER_ID" />
+    <result property="updateDate" column="UPDATE_DATE" />
+    
+    <result property="initialNum" column="INITIAL_NUM" />
+    <result property="econtractTemplate" column="ECONTRACT_TEMPLATE" />
+    <result property="regionName" column="REGION_NAME" />
+    <result property="country" column="COUNTRY" />
+    <result property="city" column="CITY" />
+    <result property="visaType" column="VISA_TYPE" />
+    <result property="isMultiJourney" column="IS_MULTI_JOURNEY" />
+    <result property="tourDays" column="TOUR_DAYS" />
+  </resultMap>
+  <sql id="ebkProdProduct_columns" >
+    a1.EBK_PROD_PRODUCT_ID, a1.META_NAME, a1.PROD_NAME, a1.PRODUCT_TYPE, a1.SUB_PRODUCT_TYPE, 
+      a1.RECOMMEND, a1.FROM_PLACE_ID, a1.TO_PLACE_ID, a1.MANAGER_ID, a1.ORG_ID, a1.SUPPLIER_ID, 
+      a1.STATUS, a1.META_PRODUCT_ID, a1.PROD_PRODUCT_ID, a1.SUMIT_DATE, a1.EXAMINE_DATE, 
+      a1.CREATE_USER_ID, a1.CREATE_DATE, a1.UPDATE_USER_ID, a1.UPDATE_DATE,a1.INITIAL_NUM,
+	  a1.ECONTRACT_TEMPLATE,a1.REGION_NAME,a1.COUNTRY,a1.CITY,a1.VISA_TYPE,a1.IS_MULTI_JOURNEY,a1.TOUR_DAYS    
+  </sql>
+
+  <sql id="ebkProdProduct_do_columns" >
+    a1.EBK_PROD_PRODUCT_ID, a1.META_NAME, a1.PROD_NAME, a1.PRODUCT_TYPE, a1.SUB_PRODUCT_TYPE, 
+      a1.RECOMMEND, a1.FROM_PLACE_ID, a1.TO_PLACE_ID, a1.MANAGER_ID, a1.ORG_ID, a1.SUPPLIER_ID, 
+      a1.STATUS, a1.META_PRODUCT_ID, a1.PROD_PRODUCT_ID, a1.SUMIT_DATE, a1.EXAMINE_DATE, 
+      a1.CREATE_USER_ID, a1.CREATE_DATE, a1.UPDATE_USER_ID, a1.UPDATE_DATE,a1.INITIAL_NUM,
+	  a1.ECONTRACT_TEMPLATE,a1.REGION_NAME,a1.COUNTRY,a1.CITY,a1.VISA_TYPE,a1.IS_MULTI_JOURNEY,a1.TOUR_DAYS
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="ebkProdProductId" prepend="AND" >
+        <![CDATA[  
+        EBK_PROD_PRODUCT_ID = #ebkProdProductId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="metaName" prepend="AND" >
+        <![CDATA[  
+        META_NAME LIKE  '%'||#metaName#||'%'  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodName" prepend="AND" >
+        <![CDATA[  
+        PROD_NAME LIKE  '%'|| #prodName#||'%'  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productType" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_TYPE = #productType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="subProductType" prepend="AND" >
+        <![CDATA[  
+        SUB_PRODUCT_TYPE = #subProductType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="recommend" prepend="AND" >
+        <![CDATA[  
+        RECOMMEND = #recommend#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="fromPlaceId" prepend="AND" >
+        <![CDATA[  
+        FROM_PLACE_ID = #fromPlaceId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="toPlaceId" prepend="AND" >
+        <![CDATA[  
+        TO_PLACE_ID = #toPlaceId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="managerId" prepend="AND" >
+        <![CDATA[  
+        MANAGER_ID = #managerId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="orgId" prepend="AND" >
+        <![CDATA[  
+        ORG_ID = #orgId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="supplierId" prepend="AND" >
+        <![CDATA[  
+        SUPPLIER_ID = #supplierId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="status" prepend="AND" >
+        <![CDATA[  
+        STATUS = #status#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="metaProductId" prepend="AND" >
+        <![CDATA[  
+        META_PRODUCT_ID = #metaProductId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodProductId" prepend="AND" >
+        <![CDATA[  
+        PROD_PRODUCT_ID = #prodProductId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="sumitDate" prepend="AND" >
+        <![CDATA[  
+        SUMIT_DATE = #sumitDate#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="examineDate" prepend="AND" >
+        <![CDATA[  
+        EXAMINE_DATE = #examineDate#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createUserId" prepend="AND" >
+        <![CDATA[  
+        CREATE_USER_ID = #createUserId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createDate" prepend="AND" >
+        <![CDATA[  
+        CREATE_DATE = #createDate#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="updateUserId" prepend="AND" >
+        <![CDATA[  
+        UPDATE_USER_ID = #updateUserId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="updateDate" prepend="AND" >
+        <![CDATA[  
+        UPDATE_DATE = #updateDate#  
+        ]]>  
+      </isNotNull>
+      
+       <isNotNull property="onLine" prepend="AND" >
+         EXISTS (SELECT 1 FROM PROD_PRODUCT P WHERE P.PRODUCT_ID =PROD_PRODUCT_ID AND P.ON_LINE=#onLine#)
+      </isNotNull>
+       <isNotNull property="commitTimeStart" prepend="AND" >
+        <![CDATA[  
+        SUMIT_DATE >= TO_DATE( #commitTimeStart#,'YYYY-MM-DD')
+        ]]>  
+      </isNotNull>
+       <isNotNull property="commitTimeEnd" prepend="AND" >
+        <![CDATA[  
+        SUMIT_DATE <= TO_DATE( #commitTimeEnd#,'YYYY-MM-DD')+1
+        ]]>  
+      </isNotNull>
+       <isNotNull property="auditTimeStart" prepend="AND" >
+        <![CDATA[  
+        EXAMINE_DATE >= TO_DATE( #auditTimeStart#,'YYYY-MM-DD')
+        ]]>  
+      </isNotNull>
+       <isNotNull property="auditTimeEnd" prepend="AND" >
+        <![CDATA[  
+        EXAMINE_DATE <= TO_DATE( #auditTimeEnd#,'YYYY-MM-DD')+1
+        ]]>  
+      </isNotNull>
+      <isNotNull property="statusIn" prepend="AND" >
+        STATUS in
+        <iterate property="statusIn"  conjunction="," open="(" close=")"  > 
+       		#statusIn[]# 
+   		</iterate>
+      </isNotNull>
+      <isNotNull property="subProductTypeIn" prepend="AND" >
+        SUB_PRODUCT_TYPE in
+        <iterate property="subProductTypeIn"  conjunction="," open="(" close=")"  > 
+       		#subProductTypeIn[]# 
+   		</iterate>
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <sql id="doQueryParams" >
+	<include refid="queryParams"/>
+  </sql>
+  
+   <sql id="doQueryOrderBy" >
+	<include refid="queryParams"/>
+	<isNotNull property="orderBy"><![CDATA[ order by $orderBy$ ]]>
+        <isNotNull property="descOrAsc"><![CDATA[ $descOrAsc$ ]]></isNotNull>
+    </isNotNull>
+  </sql>
+  
+
+  <insert id="insert" parameterClass="ebkProdProductDO" >
+  	<selectKey keyProperty="ebkProdProductId" resultClass="java.lang.Long" >
+       SELECT EBK_PROD_PRODUCT_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO EBK_PROD_PRODUCT( EBK_PROD_PRODUCT_ID, META_NAME, PROD_NAME, PRODUCT_TYPE, SUB_PRODUCT_TYPE, 
+      RECOMMEND, FROM_PLACE_ID, TO_PLACE_ID, MANAGER_ID, ORG_ID, SUPPLIER_ID, STATUS, 
+      META_PRODUCT_ID, PROD_PRODUCT_ID, SUMIT_DATE, EXAMINE_DATE, CREATE_USER_ID, CREATE_DATE, 
+      UPDATE_USER_ID, UPDATE_DATE,INITIAL_NUM, ECONTRACT_TEMPLATE,REGION_NAME,COUNTRY,CITY,VISA_TYPE,IS_MULTI_JOURNEY,TOUR_DAYS )
+     VALUES ( #ebkProdProductId#, #metaName#, #prodName#, #productType#, #subProductType#, 
+      #recommend#, #fromPlaceId#, #toPlaceId#, #managerId#, #orgId#, #supplierId#, #status#, 
+      #metaProductId#, #prodProductId#, #sumitDate#, #examineDate#, #createUserId#, #createDate#, 
+      #updateUserId#, #updateDate#,#initialNum#,#econtractTemplate#,#regionName#,#country#,#city#,#visaType#,#isMultiJourney#,#tourDays#)
+  </insert>
+
+  <update id="update" parameterClass="ebkProdProductDO" >
+    UPDATE EBK_PROD_PRODUCT   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="ebkProdProductId" prepend="," >
+        <![CDATA[  
+        EBK_PROD_PRODUCT_ID = #ebkProdProductId#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="metaName" prepend="," >
+        <![CDATA[  
+        META_NAME = #metaName#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodName" prepend="," >
+        <![CDATA[  
+        PROD_NAME = #prodName#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productType" prepend="," >
+        <![CDATA[  
+        PRODUCT_TYPE = #productType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="subProductType" prepend="," >
+        <![CDATA[  
+        SUB_PRODUCT_TYPE = #subProductType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="recommend" prepend="," >
+        <![CDATA[  
+        RECOMMEND = #recommend#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="fromPlaceId" prepend="," >
+        <![CDATA[  
+        FROM_PLACE_ID = #fromPlaceId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="toPlaceId" prepend="," >
+        <![CDATA[  
+        TO_PLACE_ID = #toPlaceId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="managerId" prepend="," >
+        <![CDATA[  
+        MANAGER_ID = #managerId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="orgId" prepend="," >
+        <![CDATA[  
+        ORG_ID = #orgId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="supplierId" prepend="," >
+        <![CDATA[  
+        SUPPLIER_ID = #supplierId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="status" prepend="," >
+        <![CDATA[  
+        STATUS = #status#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="metaProductId" prepend="," >
+        <![CDATA[  
+        META_PRODUCT_ID = #metaProductId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodProductId" prepend="," >
+        <![CDATA[  
+        PROD_PRODUCT_ID = #prodProductId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="sumitDate" prepend="," >
+        <![CDATA[  
+        SUMIT_DATE = #sumitDate#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="examineDate" prepend="," >
+        <![CDATA[  
+        EXAMINE_DATE = #examineDate#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createUserId" prepend="," >
+        <![CDATA[  
+        CREATE_USER_ID = #createUserId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createDate" prepend="," >
+        <![CDATA[  
+        CREATE_DATE = #createDate#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="updateUserId" prepend="," >
+        <![CDATA[  
+        UPDATE_USER_ID = #updateUserId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="updateDate" prepend="," >
+        <![CDATA[  
+        UPDATE_DATE = SYSDATE
+        ]]>  
+      </isNotNull>
+      <isNotNull property="initialNum" prepend="," >
+        <![CDATA[  
+        INITIAL_NUM = #initialNum#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="econtractTemplate" prepend="," >
+        <![CDATA[  
+        ECONTRACT_TEMPLATE = #econtractTemplate#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="regionName" prepend="," >
+        <![CDATA[  
+        REGION_NAME = #regionName#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="country" prepend="," >
+        <![CDATA[  
+        COUNTRY = #country#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="city" prepend="," >
+        <![CDATA[  
+        CITY = #city#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="visaType" prepend="," >
+        <![CDATA[  
+        VISA_TYPE = #visaType#
+        ]]>  
+      </isNotNull>
+       <isNotNull property="isMultiJourney" prepend="," >
+        <![CDATA[  
+        IS_MULTI_JOURNEY = #isMultiJourney#
+        ]]>  
+      </isNotNull>
+      <isNotNull property="tourDays" prepend="," >
+        <![CDATA[  
+        TOUR_DAYS = #tourDays#
+        ]]>  
+      </isNotNull>
+      
+    </dynamic>
+     WHERE EBK_PROD_PRODUCT_ID = #ebkProdProductId#  
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="ebkProdProductDOResultMap" >
+     SELECT 
+    <include refid="ebkProdProduct_do_columns" />
+    <![CDATA[  
+     FROM EBK_PROD_PRODUCT a1 WHERE EBK_PROD_PRODUCT_ID = #ebkProdProductId#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_PRODUCT WHERE EBK_PROD_PRODUCT_ID = #ebkProdProductId#
+    ]]>  
+  </delete>
+
+  <select id="countByDOExample" parameterClass="ebkProdProductDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(EBK_PROD_PRODUCT_ID) AS num FROM EBK_PROD_PRODUCT 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="ebkProdProductDOResultMap" parameterClass="map" >
+     SELECT 
+    <include refid="ebkProdProduct_do_columns" />
+     FROM EBK_PROD_PRODUCT a1 
+    <include refid="doQueryParams" />
+  </select>
+  
+  <select id="query" resultMap="ebkProdProductDOResultMap" parameterClass="map" >
+     <include refid="pageSearchHead"/>
+     SELECT 
+    <include refid="ebkProdProduct_do_columns" />
+     FROM EBK_PROD_PRODUCT a1 
+    <include refid="doQueryOrderBy" />
+    <include refid="pageSearchFoot"/>
+  </select>
+  <select id="queryCount" parameterClass="map" resultClass="java.lang.Long" >
+    SELECT COUNT(EBK_PROD_PRODUCT_ID) AS num FROM EBK_PROD_PRODUCT 
+    <include refid="doQueryParams" />
+  </select> 
+  <select id="queryAllCount" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    <![CDATA[  
+  	SELECT P.STATUS, TO_CHAR(COUNT(*)) CT
+	  FROM EBK_PROD_PRODUCT P, PROD_PRODUCT T
+	 WHERE P.PROD_PRODUCT_ID = T.PRODUCT_ID(+)
+	 ]]> 
+	 	<isNotEmpty prepend=" AND " property="supplierId"> P.SUPPLIER_ID = #supplierId# </isNotEmpty>
+	 	<isNotEmpty prepend=" AND " property="subProductTypes"> P.SUB_PRODUCT_TYPE IN 
+	 		<iterate property="subProductTypes"  conjunction="," open="(" close=")"  > 
+       			#subProductTypes[]# 
+   			</iterate>
+		</isNotEmpty>
+	 GROUP BY P.STATUS  
+  </select>
+</sqlMap>

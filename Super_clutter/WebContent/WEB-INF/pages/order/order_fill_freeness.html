@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>自由行填写订单</title>
+<#include "../common/define.html">
+<meta content="telephone=no" name="format-detection" />
+<script>
+var jsonData = {}; //{timePriceJson!};
+var canOrderToday = '${canOrderToday?string!}'; 
+var visitTime = '${visitTime!}'; // 当前时间  
+$(function(){
+	var referer = document.referrer;
+	if(referer != null&&referer.indexOf("login")>0){
+		$(".lv-operate-icon a").attr("href","javascript:window.history.go(-2);");
+	}
+});
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight" id="order_fill_header">
+<!-- 用来判断是点击返回还是HOME -->
+<input  value=""  type="hidden" name="backStatus" id="backStatus">
+<!-- 处理弹框混乱跳转 -->
+<input  value=""  type="hidden" name="backButton" id="backButton">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:url_back_now('${location}');"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">填写订单</div>
+  <input  value="${productItems!}"  type="hidden" name="productItems" id="productItems">
+  <!-- <div class="lv-position lv-position-e"><a href="javascript:void(0);" class='home' onclick="home_back();"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png' /></a></div> -->
+</div>
+
+<div class="lv-wrapper lv-media-width stbook" id="order_fill">
+	<!-- 产品是否可售 -->
+    <#if productItems?? && productItems?size&gt;0>
+		<div class="lv-booking-name">
+	  		${productName!}
+	    </div>
+        
+	    <div class="lv-wrapper-container">
+	        <form action="${request.contextPath}/order/order_fill_traveler.htm" method="GET" id="order_submit" >
+		    	<h3 class='ti_02'>产品信息</h3>
+		    	<div class="lv-box" style="margin-top:4px;">
+		          <ul class="lv-proinfo-list">
+		            <li onclick="time_price_skip('${request.contextPath!}/date_price.htm?location=${location!}&productId=${productId!}&branchId=${branchId!}');">
+		              	<span class="lv-span-01">游玩时间</span>
+			                <span class="fill_01" id="timeHolder">${productItems.timeHolder!}</span>
+		              	    <span class="lv-pull-right">
+		              		  <input class="lv-scroller" type="text" id="scroller" name="visitTime" value="${visitTime!}" readonly/>
+		                    </span>
+			              	<img class="lv-next-01" src="${prefix_pic_url!}/img/next.png" style="right:10px;">
+		            </li>
+		            <#if productItems?? && productItems.datas?? && productItems.datas?size&gt;0 >
+		               <input  value="${productItems.needIdCard!?string}"  type="hidden" name="needIdCard" id="needIdCard">
+		               <#list productItems.datas as item>
+		                    <#if !item.additional >
+			                    <li>
+				              	 <span class="lv-span-01">${item.shortName!}</span>
+				              	 <span class="lv-span-01" id="sell_Price_${item_index}" data-value="${item.sellPriceYuan!}" >&yen; ${item.sellPriceYuan!}</span>
+				              	 <input type="hidden" name="orderItemList[${item_index}].branchId"  value="${item.branchId}" id="branchId">
+					             <input type="hidden" name="orderItemList[${item_index}].quantity" value="${item.minimum!}"
+				                    class="lv-input-text" max="${item.maximum!}" min="${item.minimum!}" id="quantity" 
+				                    data-additinal="false" data-adultQuantity="${item.adultQuantity!}" data-childQuantity="${item.childQuantity!}" data-order-quantity="">
+				              	 <div class='order_01'></div>
+				              	 <a class="lv-reduce" href="javascript:void(0);" data-opt="reduce" data-value="${item_index}" data-additinal="false">
+				              	    <#if item.minimum &gt; 0 || item.minimum ==0 >
+				              	 	  <img src="${prefix_pic_url!}/img/reduce.png">
+				              	 	<#else>
+				              	 	  <img src="${prefix_pic_url!}/img/reduce02.png">
+				              	 	</#if>
+				              	 </a>
+				              	 <span class="lv-ticket-num">
+		                             ${item.minimum!}  
+		                         </span>
+				              	 <a class="lv-plus" href="javascript:void(0);" data-opt="plus" data-value="${item_index}" data-additinal="false">
+				              	    <#if item.maximum &gt; item.minimum >
+				              	 	    <img src="${prefix_pic_url!}/img/plus.png">
+				              	 	<#else>
+				              	 	    <img src="${prefix_pic_url!}/img/plus02.png">
+				              	 	</#if>
+				              	 </a>
+					            </li>
+				            </#if>
+		                </#list>
+		            </#if>
+		          </ul>
+		        </div>
+		        <!-- 联系人信息 -->
+                <#include "/WEB-INF/pages/order/order_fill_contact_temp.html">
+		        <!-- 附加产品  -->
+		        <#if hasAddtional?? && hasAddtional>
+		           <h3 class='ti_02'>附加产品信息<span class="ic_question" onclick="additionalPageChange(1);"></span></h3>
+		    	   <div class="lv-box" style="margin-top:4px;">
+		             <ul class="lv-proinfo-list">
+		                <#list productItems.datas as item>
+		                   <#if item.additional >
+			                  <li>
+				              	 <span class="lv-span-01">${item.shortName!}</span>
+				              	 <span class="lv-span-01" id="sell_Price_${item_index}" data-value="${item.sellPriceYuan!}" >&yen; ${item.sellPriceYuan!}</span>
+				              	 <input type="hidden" name="orderItemList[${item_index}].branchId" data-subType='${item.subProductType!}' value="${item.branchId}" id="branchId">
+					             <input type="hidden" name="orderItemList[${item_index}].quantity" data-subType='${item.subProductType!}' value="${item.minimum!}"
+				                    class="lv-input-text" max="${item.maximum!}" min="${item.minimum!}" id="quantity" data-branchType="${item.branchType!}"
+				                    data-additinal="true" data-sellType='${item.saleNumType!}' data-adultQuantity="${item.adultQuantity!}" data-childQuantity="${item.childQuantity!}">
+
+				              	 <div class='order_01'></div>
+				              	 <a class="lv-reduce" href="javascript:void(0);" data-opt="reduce" data-value="${item_index}" data-additinal="true">
+				              	    <#if item.minimum &gt; 0 || item.minimum ==0 >
+				              	 	  <img src="${prefix_pic_url!}/img/reduce.png">
+				              	 	<#else>
+				              	 	  <img src="${prefix_pic_url!}/img/reduce02.png">
+				              	 	</#if>
+				              	 </a>
+				              	 <span class="lv-ticket-num">
+		                             ${item.minimum!}  
+		                         </span>
+				              	 <a class="lv-plus" href="javascript:void(0);" data-opt="plus" data-value="${item_index}" data-additinal="true">
+				              	    <#if item.maximum &gt; item.minimum >
+				              	 	    <img src="${prefix_pic_url!}/img/plus.png">
+				              	 	<#else>
+				              	 	    <img src="${prefix_pic_url!}/img/plus02.png">
+				              	 	</#if>
+				              	 </a>
+					           </li>
+				           </#if>
+		                </#list>
+		             </ul>
+		           </div>
+                </#if>
+                <!-- 优惠券,优惠活动,积分兑换  -->
+                <#include "/WEB-INF/pages/order/order_fill_coupon_activity.html">
+                 <!-- 友情提示，费用说明 ，退款说明-->
+        		<#include "/WEB-INF/pages/order/order_fill_notice_info.html">
+                <!-- 订单协议-协议或者合同协议 -->
+		        <div class='stbook_treate'>
+			        <input type="checkbox" checked name="agreement" id="agreement" style="width:23px; display:inline-bolck;">
+			        <#if productItems.isEContract?? && productItems.isEContract>
+			        	<input  value="1"  type="hidden" name="isEContract" id="isEContract">
+				        <span>
+				        	同意预订须知和<a style="color:#0066cc;" href="javascript:void(0);" onclick="union_skip('${productItems.xieyiUrl!}');">${productItems.xieyiName!}</a>
+				        </span>
+				        <br><span style="display:inline-block; padding-left:28px;">${productItems.econtractDes!}</span> 
+			        <#else>
+			        	<input  value="0"  type="hidden" name="isEContract" id="isEContract">
+				        <span style="padding:0 10px;">我接受驴妈妈委托服务协议</span>
+				        <a style="color:#0066cc;" href="javascript:void(0);" onclick="union_skip('${request.contextPath}/xieyi.htm?xieyiType=xieyi');">查看协议</a>
+			        </#if> 
+		         </div>
+		         <div class='pay_sub01'>
+			        <span class='pay_ti01'>订单总额：<b id="total_price"></b></span>
+			        <input  value="${productId!}"  type="hidden" name="productId" id="productId">
+				    <input  value="${branchId!}"  type="hidden" name="branchId" id="branchId">
+				    <input  value="${canOrderToday?string("true","false")}"  type="hidden"  name="canOrderToday" id="canOrderToday">
+				    <input  value="0"  type="hidden" name="totalPrice" id="t_totalPrice">
+				    <input  value="0"  type="hidden" name="baoxianAmount" id="t_baoxianAmount">
+				    <input  value="0"  type="hidden" name="totalQuantity" id="t_totalQuantity">
+				    <input  value="ROUTE"  type="hidden" name="productType" id="t_productType">
+				    <input  value="0"  type="hidden" name="baoxianSelect" id="t_baoxianSelect">
+				    <input  value="CONTACT"  type="hidden"  name="personType" id="personType">
+			        <a class="lv-btn-booking lv-btn-01 lv-pull-right pay_submit" id="order_fill_freenees_next_show" href="javascript:void(0)" onclick="orderTravelerSubmit();">提交订单</a>
+			        <a class="lv-btn-booking lv-btn-01 lv-pull-right pay_submit" id="order_fill_freenees_next_hide" href="javascript:void(0)" style="display:none" >提交订单</a>
+		         </div>
+	        </form>
+	    </div>
+    <#else>
+        <#assign no_data_msg="${msg!}">
+	    <#include "/WEB-INF/pages/common/no_data_list.html">
+    </#if>
+</div>
+<!-- 优惠券相关 -->
+<#include "/WEB-INF/pages/order/order_fill_couponcode_list.html">
+
+<!-- 附加产品说明 -->
+<#include "/WEB-INF/pages/order/order_fill_addition_des.html">
+<!-- footer -->
+<#include "../common/order_footer.html"/>
+<script src="${request.contextPath}/js/validate.js?version=20131023" type="text/javascript"></script>
+<script src="${request.contextPath}/js/order.js?version=20131023" type="text/javascript"></script>
+ <script>
+	$(function(){
+		$('.lv-cascade-icongrey').hide();
+		$('.order_tab li').eq(0).find('.lv-cascade-icongrey').show();
+		$('.order_tab li').bind('click', function(){
+			var _this = $(this);
+			var _i = _this.index();
+			$('.lv-cascade-icongrey').hide();
+			_this.find('.lv-cascade-icongrey').show();
+			$('.tab_box').hide();
+			$('.tab_box').eq(_i).show();
+			$('.order_tab li').removeClass('order_tab_cur');
+			_this.addClass('order_tab_cur')
+		});
+	});
+</script>
+<script src="${request.contextPath}/js/order_back.js"></script>
+<script src="${request.contextPath!}/js/moudle_v3.js?_version=20130826"></script>
+</body>
+</html>

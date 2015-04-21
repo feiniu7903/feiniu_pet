@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ORD_CONTRACT_TEMP" >
+  <resultMap class="com.lvmama.operate.OrdEContract" id="baseResult">
+  	<result property="orderId" column="ORDER_ID"/>
+  	<result property="complementXml" column="ROUTE_TRAVEL"/>
+  </resultMap>
+  <update id="updateOrderTravel" parameterClass="com.lvmama.operate.OrdEContract">
+  	UPDATE ORD_ORDER_ROUTE_TRAVEL T SET T.FILE_ID = #fileId# WHERE ORDER_ID = #orderId#
+  </update>
+  <select id="selectTravel"  resultMap="baseResult"  parameterClass="java.util.HashMap">
+  	SELECT ORDER_ID,
+	       ROUTE_TRAVEL 
+	  FROM ORD_ORDER_ROUTE_TRAVEL T
+	 WHERE T.ROUTE_TRAVEL IS NOT NULL 
+	   AND T.FILE_ID IS NULL
+       AND ROWNUM &lt;=#rn#
+  </select>
+</sqlMap>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="NC_COMPLAINT_DUTY_DETAILS">
+    <resultMap id="NcComplaintDutyDetailsResultMap" class="com.lvmama.comm.bee.po.ord.NcComplaintDutyDetails">
+
+        <result column="DUTY_DETAILS_ID" property="dutyDetailsId"/>
+        <result column="DUTY_ID" property="dutyId"/>
+        <result column="DUTY_MAIN" property="dutyMain"/>
+        <result column="MAIN_NAME" property="mainName"/>
+        <result column="AMOUNT" property="amount"/>
+
+    </resultMap>
+
+    <insert id="insertNcComplaintDutyDetails" parameterClass="com.lvmama.comm.bee.po.ord.NcComplaintDutyDetails">
+        <selectKey resultClass="java.lang.Long" keyProperty="dutyDetailsId">
+            select NC_COMPLAINT_DUTY_DET_ID_SEQ.nextval as id from DUAL
+        </selectKey>
+        insert into NC_COMPLAINT_DUTY_DETAILS (DUTY_DETAILS_ID,DUTY_ID,DUTY_MAIN,MAIN_NAME, AMOUNT)
+        values (
+        #dutyDetailsId#,#dutyId#,#dutyMain#,#mainName#,#amount#)
+    </insert>
+
+    <delete id="deleteNcComplaintDutyDetails" parameterClass="java.lang.Long">
+        DELETE FROM NC_COMPLAINT_DUTY_DETAILS
+        WHERE DUTY_ID = #dutyId#
+    </delete>
+
+    <select id="selectNcComplaintDutyDetailsList" resultMap="NcComplaintDutyDetailsResultMap" parameterClass="java.lang.Long">
+        SELECT
+            DUTY_DETAILS_ID,DUTY_ID,DUTY_MAIN,MAIN_NAME, AMOUNT
+        FROM NC_COMPLAINT_DUTY_DETAILS
+        WHERE DUTY_ID = #dutyId#
+        order by DUTY_DETAILS_ID
+    </select>
+
+
+</sqlMap>

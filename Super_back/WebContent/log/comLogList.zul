@@ -1,0 +1,71 @@
+<?page title="list com log" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_com_log"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_com_log" title="操作日志列表"
+		apply="com.lvmama.back.web.log.ComLogAction">
+	<grid>
+		<rows>
+			<row>
+				
+					<hbox>对象ID:
+					 <textbox id="bankName" value="@{saction.params.objectId}"/>
+				</hbox>
+				<hbox>日志类型:
+					<listbox mold="select" model="@{saction.objectTypes}" selectedItem="@{saction.params.objectType}">
+						<listitem self="@{each=type}" label="@{type.name}" value="@{type.code}">						
+						</listitem>
+					</listbox>
+				</hbox>
+				
+				
+				<hbox>创建时间[*]
+					<datebox value="@{saction.params.beginTime}"></datebox>
+					-
+					<datebox value="@{saction.params.endTime}"></datebox>
+				</hbox>
+				<hbox><button id="searchBtn" label="查询" onClick="_paging.activePage=0;saction.search()"/></hbox>
+			</row>
+		</rows>
+	</grid>
+		<listbox model="@{saction.logList,load-after='searchBtn.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader label="序号" width="80px"/>
+				<listheader label="名称" width="100px"/>
+				<listheader label="对象类型" width="100px"/>
+				<listheader label="对象ID" width="50px"/>				
+				<listheader label="内容"/>
+				
+				<listheader label="创建时间" width="100px"/>
+				<listheader label="操作人" width="100px"/>
+			</listhead>
+			<listitem self="@{each='log'}">
+				<listcell label="@{log.logId}"/>
+				<listcell label="@{log.logName}"/>
+				<listcell label="@{log.objectType,converter='com.lvmama.back.web.log.ObjectTypeConverter'}"/>
+				<listcell label="@{log.objectId }"/>
+				<listcell label="@{log.content}"/>
+				<listcell label="@{log.createTime}"/>
+				<listcell label="@{log.operatorName}"/>
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="10"
+								onPaging='saction.search();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	
+</window>
+</zk>

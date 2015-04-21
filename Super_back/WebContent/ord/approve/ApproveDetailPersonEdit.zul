@@ -1,0 +1,41 @@
+<?page title="订单审核" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./approveDetailPersonEdit"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<zk>
+<window id="approveDetailPersonEdit" title="旅客维护" border="none" apply="com.lvmama.back.web.ord.approve.ApproveDetailPersonEditAction">
+<groupbox style="border: none;">
+		<caption label="订单备注信息" />
+		<grid >
+			<rows>
+				<row>	
+					<cell width="150px">旅客姓名</cell>
+					<cell><textbox maxlength="40" value="@{saction.traveller.name}" /> </cell>
+					<cell width="150px">旅客联系方式</cell>
+					<cell><textbox maxlength="30" value="@{ saction.traveller.mobile}" /> </cell>
+				</row>
+				<row>	
+					<cell>证件类型</cell>
+					<cell>
+						<listbox codeset="CERT_TYPE" mold="select" selectedItem="@{saction.traveller.certType}" />
+					</cell>
+					<cell>证件号码</cell>
+					<cell><textbox maxlength="30" value="@{saction.traveller.certNo}" /> </cell>
+				</row>
+				<row>	
+					<cell>旅客邮编</cell>
+					<cell><textbox maxlength="20" value="@{saction.traveller.postcode}" /> </cell>
+					<cell>旅客地址</cell>
+					<cell><textbox maxlength="200" value="@{saction.traveller.address}" /> </cell>
+				</row>
+			
+			<row spans="4">
+				<cell>
+					<button id="doInsert" label="保存" width="100px" onClick="saction.doInsert()"/>
+					<button id="doUpdate" label="保存" width="100px" onClick="saction.doUpdate()"/>
+				</cell>
+			</row>
+			</rows>
+		</grid>
+</groupbox>
+</window>
+</zk>

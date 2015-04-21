@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="OpGroupBudgetFixed" >
+	 
+	<typeAlias alias="GroupBudgetFixed" type="com.lvmama.finance.group.ibatis.vo.GroupBudgetFixed"/>
+	<!-- 查询团预算信息begin -->
+ 	<select id="searchBudgetFixed" parameterClass="map" resultClass="GroupBudgetFixed">
+		SELECT 
+		  A.ITEM_ID AS ITEMID,
+		  A.COSTS_ITEM_ID AS COSTSITEMID,
+	      G.NAME AS COSTSITEMNAME,
+	      A.BG_COSTS/100 AS BGCOSTS,
+	      A.QUANTITY,
+	      A.CURRENCY,
+	      F.SYMBOL AS CURRENCYSYMBOL,
+	      A.EXCHANGE_RATE AS EXCHANGERATE,
+	      A.SUBTOTAL_COSTS/100 AS SUBTOTALCOSTS,
+	      A.SUBTOTAL_COSTS_FC/100 AS SUBTOTALCOSTSFC,
+	      A.SUPPLIER_ID AS SUPPLIERID,
+	      E.SUPPLIER_NAME AS SUPPLIERNAME,
+	      A.TARGET_ID AS TARGETID,
+	      A.PAYMENT_TYPE AS PAYMENTTYPE,
+	      A.PAY_AMOUNT/100 AS PAYAMOUNT,
+	      A.PAY_STATUS AS PAYSTATUS,
+	      D.NAME AS TARGETNAME,
+	      A.REMARK
+	    FROM 
+	      OP_GROUP_BUDGET_FIXED A,
+	      SUP_SETTLEMENT_TARGET D,
+	      SUP_SUPPLIER E,
+	      FIN_CURRENCY F,
+	      OP_COSTS_ITEM G
+	    WHERE  
+	      A.TARGET_ID = D.TARGET_ID
+	    AND 
+	      A.SUPPLIER_ID = E.SUPPLIER_ID
+      	AND
+		  A.CURRENCY = F.CURRENCY
+		AND
+		  G.ID = A.COSTS_ITEM_ID
+	    AND 
+	      A.TYPE = #type#
+	    AND
+		  A.TRAVEL_GROUP_CODE = #code#
+ 	</select>
+ 	<!-- 查询团预算信息end -->
+ 	
+ 	<update id="pay" parameterClass="map" >
+ 		UPDATE 
+ 			OP_GROUP_BUDGET_FIXED A
+   		SET 
+   			<isNotNull property="amount">
+   				PAY_AMOUNT = #amount#*100,
+   			</isNotNull>
+   			<isNull property="amount">
+   				PAY_AMOUNT = SUBTOTAL_COSTS_FC,
+   			</isNull>
+   			PAY_STATUS = #status#
+ 		WHERE 
+ 			ITEM_ID = #itemId#
+ 	</update>
+ 	
+ 	<select id="searchBudgetFixedById" resultClass="GroupBudgetFixed">
+ 		SELECT
+ 			ITEM_ID AS ITEMID,
+ 			SUBTOTAL_COSTS_FC/100 AS SUBTOTALCOSTSFC,
+ 			NVL(PAY_AMOUNT,0)/100 AS PAYAMOUNT,
+ 			TYPE
+ 		FROM 
+ 			OP_GROUP_BUDGET_FIXED
+ 		WHERE
+ 			ITEM_ID = #id#
+ 	</select>
+ 	
+ 	<update id="updateSubTotalCosts" parameterClass="GroupBudgetFixed">
+ 		UPDATE
+ 			OP_GROUP_BUDGET_FIXED
+ 		SET
+ 			SUBTOTAL_COSTS = #subTotalCosts#*100,
+ 			EXCHANGE_RATE = #exchangeRate#
+ 		WHERE
+ 			ITEM_ID = #itemId#
+ 	</update>
+ 	
+ 	<!-- 查询附加收入 -->
+ 	<select id="searchOtherIncoming" parameterClass="string" resultClass="com.lvmama.comm.bee.po.op.OpOtherIncoming">
+ 		select 
+ 			 o.name as costsItemName, 
+ 			 t.amount/100 as amount, 
+ 			 t.remark as remark, 
+ 			 t.creator as creator, 
+ 			 t.createtime as createTime
+ 		from 
+ 			OP_OTHER_INCOMING t, 
+ 			op_costs_item o 
+ 		where 
+ 			t.costs_item_id=o.id 
+ 		and 
+ 			t.travel_group_code =  #groupCode#
+ 	</select>
+</sqlMap>

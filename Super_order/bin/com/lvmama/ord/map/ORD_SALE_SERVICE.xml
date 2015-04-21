@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_SALE_SERVICE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdSaleService" >
+    <result column="SALE_SERVICE_ID" property="saleServiceId" />
+    <result column="ORDER_ID" property="orderId" />
+    <result column="SERVICE_TYPE" property="serviceType" />
+    <result column="APPLY_CONTENT" property="applyContent" />
+    <result column="OPERATOR_NAME" property="operatorName" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="STATUS" property="status" />
+    <result column="REASON" property="reason" />
+    <result column="TAKEN_OPERATOR" property="takenOperator" />
+    <result column="TAKEN_TIME" property="takenTime" />
+    <result column="FINISH_TIME" property="finishTime" />
+    <result column="SYS_CODE" property="sysCode" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMapFull" extends="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdSaleService" >
+   <!--  <result column="ORDER_OPERATORNAME" property="operatorUsers.userName" />
+    <result column="ORDER_USRE_NAME" property="ordOrder.userName" />
+ 	<result column="ORDER_MOBILENUMBER" property="ordOrder.mobileNumber" />
+ 	<result column="ORDER_VISIT" property="ordOrder.visitTime" />
+    <result column="PROD_TYPE" property="orderItemProd.productType" />
+    <result column="PROD_NAME" property="orderItemProd.productName" />
+     -->
+  </resultMap>
+  <select id="queryOrdSaleServiceList" resultMap="BaseResultMap"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+	<select id="queryOrdSaleServiceCount" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+    <select id="selectSaleFull" resultMap="BaseResultMapFull" parameterClass="java.util.HashMap" >
+     SELECT ord_sale.* FROM ORD_SALE_SERVICE ord_sale
+     where 1=1 
+     <isNotEmpty prepend=" and" property="orderId">
+    	ord_sale.ORDER_ID= #orderId#
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="saleServiceId">
+    	ord_sale.SALE_SERVICE_ID= #saleServiceId#
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="sysCode">
+    	ord_sale.SYS_CODE= #sysCode#
+    </isNotEmpty>
+     order by ord_sale.sale_service_id desc
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdSaleService" >
+    select *
+    from ORD_SALE_SERVICE
+    where SALE_SERVICE_ID = #saleServiceId#
+  </select>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdSaleService" >
+    <selectKey resultClass="java.lang.Long" keyProperty="saleServiceId" >
+      select ORD_SALE_SERVICE_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_SALE_SERVICE (SALE_SERVICE_ID, ORDER_ID, SERVICE_TYPE, APPLY_CONTENT, OPERATOR_NAME, CREATE_TIME,STATUS,REASON,TAKEN_OPERATOR,TAKEN_TIME,FINISH_TIME,SYS_CODE)
+    values (#saleServiceId#, #orderId#, #serviceType#, #applyContent#,
+      #operatorName#, #createTime#,#status#,#reason#,#takenOperator#,#takenTime#,#finishTime#,#sysCode#)
+  </insert>
+  
+   <select id="selectByOrderId" resultMap="BaseResultMap" parameterClass="Long" >
+    select *
+    from ORD_SALE_SERVICE
+    where ORDER_ID = #orderId#
+  </select>
+ 
+ <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdSaleService">
+		update ORD_SALE_SERVICE
+		set
+		SALE_SERVICE_ID = #saleServiceId#
+		<isNotNull prepend=" ," property="reason">
+			REASON = #reason#
+  	 	</isNotNull>
+  	 	<isNotNull prepend=" ," property="status">
+			STATUS = #status#
+  	 	</isNotNull>
+  	 	<isNotNull prepend=" ," property="serviceType">
+			SERVICE_TYPE = #serviceType#
+  	 	</isNotNull>
+  	 	<isNotNull prepend=" ," property="finishTime">
+			FINISH_TIME = #finishTime#
+  	 	</isNotNull>
+		where SALE_SERVICE_ID = #saleServiceId#
+	</update>
+	<update id="takeOrdSaleServiceByIds" parameterClass="java.util.HashMap">
+		update ORD_SALE_SERVICE
+		set TAKEN_TIME = sysdate
+		<isNotEmpty property="takenOperator" prepend=",">
+			TAKEN_OPERATOR = #takenOperator#
+		</isNotEmpty>
+		where 1=1
+		<isNotEmpty prepend="and" property="saleServiceIds">
+			<iterate property="saleServiceIds" open="(" close=")"
+				conjunction="OR">
+				SALE_SERVICE_ID = #saleServiceIds[]#
+			</iterate>
+	  </isNotEmpty>
+	</update>
+	<delete id="delete" parameterClass="java.util.HashMap" >
+		delete From ORD_SALE_SERVICE where SALE_SERVICE_ID=#saleServiceId#
+	</delete>
+</sqlMap>

@@ -1,0 +1,64 @@
+<?page title="用户账号添加编辑" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./userEdit"?>
+<window id="userEdit" title="用户账号添加编辑" border="normal" apply="com.lvmama.businessreply.web.EditUserAction">
+
+    	<grid>
+			<columns>
+				<column width="110px"></column>
+				<column></column>
+				<column width="110px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>用户登录名：</hbox>
+					<hbox>
+						<textbox value="@{saction.businessUser.userID}"/>
+					</hbox>
+					<hbox>用户名称：</hbox>
+					<hbox>
+						<textbox value="@{saction.businessUser.userName}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>用户类型：</hbox>
+					<hbox>
+						<radiogroup onCheck='saction.changeValue("userType",self.selectedItem.value);'>
+						
+						
+						<zk choose="">
+						   <zk when="${saction.businessUser.userType=='LVMAMA'}">
+						   	<radio value="MERCHANT" label="普通商家用户"></radio>
+							<radio  value="LVMAMA" label="驴妈妈用户" checked="true"></radio>
+						   </zk>
+						  <zk when="${saction.businessUser.userType=='MERCHANT'}">
+						   <radio value="MERCHANT" label="普通商家用户" checked="true"></radio>
+							<radio  value="LVMAMA" label="驴妈妈用户"></radio>
+						   </zk>
+						   <zk>
+						   	<radio value="MERCHANT" label="普通商家用户"></radio>
+							<radio  value="LVMAMA" label="驴妈妈用户"></radio>
+						   </zk>
+						</zk>
+
+
+						</radiogroup>
+					</hbox>
+					<hbox>用户密码：</hbox>
+					<hbox>
+						<textbox value="@{saction.businessUser.password}" type="password"/>
+					</hbox>
+				</row>
+				
+				<row>
+					<hbox>普通商家用户需关联关联景点，酒店，目的地ID。多个内容之间用中英文”逗号“分隔（不要使用中文逗号）：</hbox>
+					<hbox>
+					   <textbox value="@{saction.businessUser.placeIDListString}" />
+					</hbox>
+					<hbox>
+					<button label="保存" width="100px" onClick="saction.doSaveUser()" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+</window>

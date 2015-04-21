@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_ASSEMBLY_POINT" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.prod.ProdAssemblyPoint" >
+    <result column="ASSEMBLY_POINT_ID" property="assemblyPointId" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="ASSEMBLY_POINT" property="assemblyPoint" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.prod.ProdAssemblyPoint" >
+    select ASSEMBLY_POINT_ID, PRODUCT_ID, ASSEMBLY_POINT
+    from PROD_ASSEMBLY_POINT
+    where ASSEMBLY_POINT_ID = #assemblyPointId:DECIMAL#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.prod.ProdAssemblyPoint" >
+    delete from PROD_ASSEMBLY_POINT
+    where ASSEMBLY_POINT_ID = #assemblyPointId:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.prod.ProdAssemblyPoint" >
+    insert into PROD_ASSEMBLY_POINT (ASSEMBLY_POINT_ID, PRODUCT_ID, ASSEMBLY_POINT)
+    values (#assemblyPointId:DECIMAL#, #productId:DECIMAL#, #assemblyPoint:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.pet.po.prod.ProdAssemblyPoint" >
+    insert into PROD_ASSEMBLY_POINT
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="assemblyPointId" >
+        ASSEMBLY_POINT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="assemblyPoint" >
+        ASSEMBLY_POINT
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="assemblyPointId" >
+        #assemblyPointId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        #productId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="assemblyPoint" >
+        #assemblyPoint:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.pet.po.prod.ProdAssemblyPoint" >
+    update PROD_ASSEMBLY_POINT
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID = #productId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="assemblyPoint" >
+        ASSEMBLY_POINT = #assemblyPoint:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where ASSEMBLY_POINT_ID = #assemblyPointId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.prod.ProdAssemblyPoint" >
+    update PROD_ASSEMBLY_POINT
+    set PRODUCT_ID = #productId:DECIMAL#,
+      ASSEMBLY_POINT = #assemblyPoint:VARCHAR#
+    where ASSEMBLY_POINT_ID = #assemblyPointId:DECIMAL#
+  </update>
+</sqlMap>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+
+	<!-- 分销 -->
+	<bean id="distributionCommonService" class="com.lvmama.distribution.service.impl.DistributionCommonServiceImpl"/>
+	<bean id="distributionForQunarCommonService" class="com.lvmama.distribution.service.impl.DistributionForQunarCommonServiceImpl"/>
+	
+	<bean id="distributionForJingdongService" class="com.lvmama.distribution.service.impl.DistributionForJingdongServiceImpl"/>
+	<bean id="distributionForQiHooService" class="com.lvmama.distribution.service.impl.DistributionForQiHooServiceImpl"/>	
+	<bean id="distributionRefundRemoteBean" class="com.lvmama.distribution.remote.DistributionRefundRemoteImpl" />
+	<bean id="distributionForCKDeviceService" class="com.lvmama.distribution.service.impl.DistributionForCKDeviceServiceImpl"/>
+	
+	
+	<bean id="clientForJsonServiceImpl" class="com.lvmama.clutter.service.impl.ClientForJsonServiceImpl"/>
+	<bean id="appService" class="com.lvmama.clutter.service.impl.AppServiceImpl"/>
+	
+	<!-- 客户端 wap专用 -->
+	<bean id="mobileUserService" class="com.lvmama.clutter.service.client.v5_0.ClientUserServiceV50" />
+	<bean id="mobileOtherService" class="com.lvmama.clutter.service.impl.ClientOtherServiceImpl" />
+	<bean id="mobileSearchService" class="com.lvmama.clutter.service.client.v5_0.ClientSearchServiceV50" />
+	<bean id="mobilePlaceService" class="com.lvmama.clutter.service.client.v4_0_1.ClientPlaceServiceImplV401" />
+	<bean id="mobileProductService" class="com.lvmama.clutter.service.client.v5_0.ClientProductServiceV50" />
+	<bean id="mobileCommentService" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl" />
+	<bean id="mobileOrderService" class="com.lvmama.clutter.service.client.v5_0.ClientOrderServiceV50" />
+	<bean id="mobileRecommendService" class="com.lvmama.clutter.service.client.v3_1.ClientRecommendServiceV31" />
+	<bean id="mobileOfflineCacheService" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl" />
+	<bean id="clientHotelService" class="com.lvmama.clutter.service.impl.ClientHotelServiceImpl"/>
+	<bean id="clientTrainService" class="com.lvmama.clutter.service.impl.ClientTrainServiceImpl" />
+
+	<bean id="api_com_user" class="com.lvmama.clutter.service.impl.ClientUserServiceImpl" />
+	<bean id="api_com_other" class="com.lvmama.clutter.service.impl.ClientOtherServiceImpl" />
+	<bean id="api_com_search" class="com.lvmama.clutter.service.impl.ClientSearchServiceImpl" />
+	<bean id="api_com_place" class="com.lvmama.clutter.service.impl.ClientPlaceServiceImpl" />
+	<bean id="api_com_product" class="com.lvmama.clutter.service.impl.ClientProductServiceImpl" />
+	<bean id="api_com_comment" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl" />
+	<bean id="api_com_order" class="com.lvmama.clutter.service.impl.ClientOrderServiceImpl" />
+	<bean id="api_com_recommend" class="com.lvmama.clutter.service.impl.ClientRecommendServiceImpl" />
+	<bean id="api_com_cache" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl" />
+	<bean id="api_com_hotel" class="com.lvmama.clutter.service.impl.ClientHotelServiceImpl" />
+	<bean id="api_com_train" class="com.lvmama.clutter.service.impl.ClientTrainServiceImpl" />
+
+	<bean id="api_com_user_3_0_0" class="com.lvmama.clutter.service.impl.ClientUserServiceImpl" />
+	<bean id="api_com_other_3_0_0" class="com.lvmama.clutter.service.impl.ClientOtherServiceImpl" />
+	<bean id="api_com_search_3_0_0" class="com.lvmama.clutter.service.impl.ClientSearchServiceImpl" />
+	<bean id="api_com_place_3_0_0" class="com.lvmama.clutter.service.impl.ClientPlaceServiceImpl" />
+	<bean id="api_com_product_3_0_0" class="com.lvmama.clutter.service.impl.ClientProductServiceImpl" />
+	<bean id="api_com_comment_3_0_0" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl" />
+	<bean id="api_com_order_3_0_0" class="com.lvmama.clutter.service.impl.ClientOrderServiceImpl" />
+	<bean id="api_com_recommend_3_0_0" class="com.lvmama.clutter.service.impl.ClientRecommendServiceImpl" />
+	<bean id="api_com_cache_3_0_0" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl" />
+
+	<!-- 客户端3.0.1版本 -->
+	<bean id="api_com_user_3_0_1" class="com.lvmama.clutter.service.impl.ClientUserServiceImpl" />
+	<bean id="api_com_other_3_0_1" class="com.lvmama.clutter.service.impl.ClientOtherServiceImpl" />
+	<bean id="api_com_search_3_0_1" class="com.lvmama.clutter.service.impl.ClientSearchServiceImpl" />
+	<bean id="api_com_place_3_0_1" class="com.lvmama.clutter.service.impl.ClientPlaceServiceImpl" />
+	<bean id="api_com_product_3_0_1" class="com.lvmama.clutter.service.impl.ClientProductServiceImpl" />
+	<bean id="api_com_comment_3_0_1" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl" />
+	<bean id="api_com_order_3_0_1" class="com.lvmama.clutter.service.impl.ClientOrderServiceImpl" />
+	<bean id="api_com_recommend_3_0_1" class="com.lvmama.clutter.service.impl.ClientRecommendServiceImpl" />
+	<bean id="api_com_cache_3_0_1" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl" />
+
+	<!-- 客户端3.1.0版本 -->
+	<bean id="api_com_user_3_1_0" class="com.lvmama.clutter.service.client.v3_1.ClientUserServiceV31" />
+	<bean id="api_com_other_3_1_0" class="com.lvmama.clutter.service.impl.ClientOtherServiceImpl" />
+	<bean id="api_com_search_3_1_0" class="com.lvmama.clutter.service.client.v3_1.ClientSearchSeviceForV31" />
+	<bean id="api_com_place_3_1_0" class="com.lvmama.clutter.service.impl.ClientPlaceServiceImpl" />
+	<bean id="api_com_product_3_1_0" class="com.lvmama.clutter.service.impl.ClientProductServiceImpl" />
+	<bean id="api_com_comment_3_1_0" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl" />
+	<bean id="api_com_order_3_1_0" class="com.lvmama.clutter.service.client.v3_1.ClientOrderServiceV31" />
+	<bean id="api_com_recommend_3_1_0" class="com.lvmama.clutter.service.client.v3_1.ClientRecommendServiceV31" />
+	<bean id="api_com_cache_3_1_0" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl" />
+
+	<!-- 客户端3.2.0版本 -->
+	<bean id="api_com_user_3_2_0" class="com.lvmama.clutter.service.client.v3_2.ClientUserServiceV32" />
+	<bean id="api_com_other_3_2_0" class="com.lvmama.clutter.service.impl.ClientOtherServiceImpl" />
+	<bean id="api_com_search_3_2_0" class="com.lvmama.clutter.service.client.v3_1.ClientSearchSeviceForV31" />
+	<bean id="api_com_place_3_2_0" class="com.lvmama.clutter.service.impl.ClientPlaceServiceImpl" />
+	<bean id="api_com_product_3_2_0" class="com.lvmama.clutter.service.impl.ClientProductServiceImpl" />
+	<bean id="api_com_comment_3_2_0" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl" />
+	<bean id="api_com_order_3_2_0" class="com.lvmama.clutter.service.client.v3_1.ClientOrderServiceV31" />
+	<bean id="api_com_recommend_3_2_0" class="com.lvmama.clutter.service.client.v3_1.ClientRecommendServiceV31" />
+	<bean id="api_com_cache_3_2_0" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl" />
+
+
+	<!-- 客户端4.0版本 -->
+	<bean id="api_com_user_4_0_0" class="com.lvmama.clutter.service.client.v3_2.ClientUserServiceV321" />
+	<bean id="api_com_other_4_0_0" class="com.lvmama.clutter.service.impl.ClientOtherServiceImpl" />
+	<bean id="api_com_search_4_0_0" class="com.lvmama.clutter.service.client.v4_0.ClientSearchServiceV40" />
+	<bean id="api_com_place_4_0_0" class="com.lvmama.clutter.service.impl.ClientPlaceServiceImpl" />
+	<bean id="api_com_product_4_0_0" class="com.lvmama.clutter.service.client.v4_0.ClientProductServiceV40" />
+	<bean id="api_com_comment_4_0_0" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl" />
+	<bean id="api_com_order_4_0_0" class="com.lvmama.clutter.service.client.v4_0.ClientOrderServiceV40" />
+	<bean id="api_com_recommend_4_0_0" class="com.lvmama.clutter.service.client.v4_0.ClientRecommendServiceV40" />
+	<bean id="api_com_cache_4_0_0" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl" />
+	<bean id="api_com_hotel_4_0_0" class="com.lvmama.clutter.service.impl.ClientHotelServiceImpl" />
+	
+
+	<bean id="api_com_user_1_0_0_pad" class="com.lvmama.clutter.service.client.v3_2.ClientUserServiceV321"/>
+	<bean id="api_com_other_1_0_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientOtherServicePadV10"/>
+	<bean id="api_com_search_1_0_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientSearchServicePadV10"/>
+	<bean id="api_com_place_1_0_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientPlaceServicePadV10"/>
+	<bean id="api_com_product_1_0_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientProductServicePadV10"/>
+	<bean id="api_com_comment_1_0_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientCommentServicePadV10"/>
+	<bean id="api_com_order_1_0_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientOrderServicePadV10"/>
+	<bean id="api_com_recommend_1_0_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientRecommendServicePadV10"/>
+	<bean id="api_com_cache_1_0_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientOfflineCacheServicePadV10"/>
+	
+	
+	<!-- 客户端3.2.1版本 -->
+	<bean id="api_com_user_3_2_1" class="com.lvmama.clutter.service.client.v3_2.ClientUserServiceV321"/>
+	<bean id="api_com_other_3_2_1" class="com.lvmama.clutter.service.impl.ClientOtherServiceImpl"/>
+	<bean id="api_com_search_3_2_1" class="com.lvmama.clutter.service.client.v3_1.ClientSearchSeviceForV31"/>
+	<bean id="api_com_place_3_2_1" class="com.lvmama.clutter.service.impl.ClientPlaceServiceImpl"/>
+	<bean id="api_com_product_3_2_1" class="com.lvmama.clutter.service.client.v3_2.ClientProductServiceV321"/>
+	<bean id="api_com_comment_3_2_1" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl"/>
+	<bean id="api_com_order_3_2_1" class="com.lvmama.clutter.service.client.v3_1.ClientOrderServiceV31"/>
+	<bean id="api_com_recommend_3_2_1" class="com.lvmama.clutter.service.client.v3_1.ClientRecommendServiceV31"/>
+	<bean id="api_com_cache_3_2_1" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl"/>
+	
+	<!-- 客户端3.2.2版本 -->
+	<bean id="api_com_user_3_2_2" class="com.lvmama.clutter.service.client.v3_2.ClientUserServiceV321"/>
+	<bean id="api_com_other_3_2_2" class="com.lvmama.clutter.service.impl.ClientOtherServiceImpl"/>
+	<bean id="api_com_search_3_2_2" class="com.lvmama.clutter.service.client.v3_1.ClientSearchSeviceForV31"/>
+	<bean id="api_com_place_3_2_2" class="com.lvmama.clutter.service.impl.ClientPlaceServiceImpl"/>
+	<bean id="api_com_product_3_2_2" class="com.lvmama.clutter.service.client.v3_2.ClientProductServiceV321"/>
+	<bean id="api_com_comment_3_2_2" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl"/>
+	<bean id="api_com_order_3_2_2" class="com.lvmama.clutter.service.client.v3_1.ClientOrderServiceV31"/>
+	<bean id="api_com_recommend_3_2_2" class="com.lvmama.clutter.service.client.v3_1.ClientRecommendServiceV31"/>
+	<bean id="api_com_cache_3_2_2" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl"/>
+	
+	
+	<bean id="baiduTuangouService" class="com.lvmama.fenxiao.service.tuangou.impl.BaiduTuangouServiceImpl" />
+
+	
+	
+	<!-- 客户端4.0版本 -->
+	<bean id="api_com_user_4_1_0" class="com.lvmama.clutter.service.client.v4_0_1.ClientUserServiceV401" />
+	<bean id="api_com_other_4_1_0" class="com.lvmama.clutter.service.impl.ClientOtherServiceImpl" />
+	<bean id="api_com_search_4_1_0" class="com.lvmama.clutter.service.client.v4_0_1.ClientSearchServiceV401" />
+	<bean id="api_com_place_4_1_0" class="com.lvmama.clutter.service.client.v4_0_1.ClientPlaceServiceImplV401" />
+	<bean id="api_com_product_4_1_0" class="com.lvmama.clutter.service.client.v4_0.ClientProductServiceV40" />
+	<bean id="api_com_comment_4_1_0" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl" />
+	<bean id="api_com_order_4_1_0" class="com.lvmama.clutter.service.client.v4_0.ClientOrderServiceV40" />
+	<bean id="api_com_recommend_4_1_0" class="com.lvmama.clutter.service.client.v4_0.ClientRecommendServiceV40" />
+	<bean id="api_com_cache_4_1_0" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl" />
+	<bean id="api_com_hotel_4_1_0" class="com.lvmama.clutter.service.impl.ClientHotelServiceImpl" />
+	
+	<bean id="api_com_product_train_4_1_0" class="com.lvmama.clutter.service.impl.ClientTrainProductServiceImpl" />
+	<bean id="api_com_order_train_4_1_0" class="com.lvmama.clutter.service.impl.ClientTrainOrderServiceImpl" />
+	<bean id="api_com_train_4_1_0" class="com.lvmama.clutter.service.impl.ClientTrainServiceImpl" />
+	
+	<!-- 客户端5.0版本 -->
+	<bean id="api_com_user_5_0_0" class="com.lvmama.clutter.service.client.v5_0.ClientUserServiceV50" />
+	<bean id="api_com_other_5_0_0" class="com.lvmama.clutter.service.client.v5_0.ClientOtherServiceV50" />
+	<bean id="api_com_search_5_0_0" class="com.lvmama.clutter.service.client.v5_0.ClientSearchServiceV50" />
+	<bean id="api_com_place_5_0_0" class="com.lvmama.clutter.service.client.v5_0.ClientPlaceServiceV50" />
+	<bean id="api_com_product_5_0_0" class="com.lvmama.clutter.service.client.v5_0.ClientProductServiceV50" />
+	<bean id="api_com_comment_5_0_0" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl" />
+	<bean id="api_com_order_5_0_0" class="com.lvmama.clutter.service.client.v5_0.ClientOrderServiceV50" />
+	<bean id="api_com_recommend_5_0_0" class="com.lvmama.clutter.service.client.v4_0.ClientRecommendServiceV40" />
+	<bean id="api_com_cache_5_0_0" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl" />
+	<bean id="api_com_hotel_5_0_0" class="com.lvmama.clutter.service.impl.ClientHotelServiceImpl" />
+	
+	<bean id="api_com_product_train_5_0_0" class="com.lvmama.clutter.service.impl.ClientTrainProductServiceImpl" />
+	<bean id="api_com_order_train_5_0_0" class="com.lvmama.clutter.service.impl.ClientTrainOrderServiceImpl" />
+	<bean id="api_com_train_5_0_0" class="com.lvmama.clutter.service.impl.ClientTrainServiceImpl" />
+	
+	
+	<!-- 客户端4.1.0版本 -->
+	<bean id="api_com_user_1_1_0_pad" class="com.lvmama.clutter.service.client.v3_2.ClientUserServiceV321"/>
+	<bean id="api_com_other_1_1_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientOtherServicePadV10"/>
+	<bean id="api_com_search_1_1_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientSearchServicePadV10"/>
+	<bean id="api_com_place_1_1_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientPlaceServicePadV10"/>
+	<bean id="api_com_product_1_1_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientProductServicePadV110"/>
+	<bean id="api_com_comment_1_1_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientCommentServicePadV10"/>
+	<bean id="api_com_order_1_1_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientOrderServicePadV10"/>
+	<bean id="api_com_recommend_1_1_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientRecommendServicePadV10"/>
+	<bean id="api_com_cache_1_1_0_pad" class="com.lvmama.clutter.service.impl.pad.v1_0.ClientOfflineCacheServicePadV10"/>
+	<bean id="api_com_hotel_1_1_0_pad" class="com.lvmama.clutter.service.impl.ClientHotelServiceImpl" />
+	
+	<!-- ipad2.0.0 对应客户端5.0.0-->
+	<bean id="api_com_user_2_0_0_pad" class="com.lvmama.clutter.service.client.v5_0.ClientUserServiceV50"/>
+	<bean id="api_com_other_2_0_0_pad" class="com.lvmama.clutter.service.client.v5_0.ClientOtherServiceV50"/>
+	<bean id="api_com_search_2_0_0_pad" class="com.lvmama.clutter.service.client.v5_0.ClientSearchServiceV50"/>
+	<bean id="api_com_place_2_0_0_pad" class="com.lvmama.clutter.service.client.v5_0.ClientPlaceServiceV50"/>
+	<bean id="api_com_product_2_0_0_pad" class="com.lvmama.clutter.service.client.v5_0.ClientProductServiceV50"/>
+	<bean id="api_com_comment_2_0_0_pad" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl"/>
+	<bean id="api_com_order_2_0_0_pad" class="com.lvmama.clutter.service.client.v5_0.ClientOrderServiceV50"/>
+	<bean id="api_com_recommend_2_0_0_pad" class="com.lvmama.clutter.service.client.v4_0.ClientRecommendServiceV40"/>
+	<bean id="api_com_cache_2_0_0_pad" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl"/>
+	<bean id="api_com_hotel_2_0_0_pad" class="com.lvmama.clutter.service.impl.ClientHotelServiceImpl" />
+	
+	<!-- 客户端wp8 1.0.0版本 -->
+	<bean id="api_com_user_1_0_0_wp8" class="com.lvmama.clutter.service.client.v4_0_1.ClientUserServiceV401" />
+	<bean id="api_com_other_1_0_0_wp8" class="com.lvmama.clutter.service.impl.ClientOtherServiceImpl" />
+	<bean id="api_com_search_1_0_0_wp8" class="com.lvmama.clutter.service.client.v4_0.ClientSearchServiceV40" />
+	<bean id="api_com_place_1_0_0_wp8" class="com.lvmama.clutter.service.client.v4_0_1.ClientPlaceServiceImplV401" />
+	<bean id="api_com_product_1_0_0_wp8" class="com.lvmama.clutter.service.client.v5_0.ClientProductServiceV50" />
+	<bean id="api_com_comment_1_0_0_wp8" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl" />
+	<bean id="api_com_order_1_0_0_wp8" class="com.lvmama.clutter.service.client.v5_0.ClientOrderServiceV50" />
+	<bean id="api_com_recommend_1_0_0_wp8" class="com.lvmama.clutter.service.client.v4_0.ClientRecommendServiceV40" />
+	<bean id="api_com_cache_1_0_0_wp8" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl" />
+	<bean id="api_com_hotel_1_0_0_wp8" class="com.lvmama.clutter.service.impl.ClientHotelServiceImpl" />
+	
+	
+	<!-- 客户端5.0.1版本 -->
+	<bean id="api_com_user_5_0_1" class="com.lvmama.clutter.service.client.v5_0.ClientUserServiceV50" />
+	<bean id="api_com_other_5_0_1" class="com.lvmama.clutter.service.client.v5_0.ClientOtherServiceV50" />
+	<bean id="api_com_search_5_0_1" class="com.lvmama.clutter.service.client.v5_0.ClientSearchServiceV50" />
+	<bean id="api_com_place_5_0_1" class="com.lvmama.clutter.service.client.v5_0.ClientPlaceServiceV50" />
+	<bean id="api_com_product_5_0_1" class="com.lvmama.clutter.service.client.v5_0.ClientProductServiceV50" />
+	<bean id="api_com_comment_5_0_1" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl" />
+	<bean id="api_com_order_5_0_1" class="com.lvmama.clutter.service.client.v5_0.ClientOrderServiceV50" />
+	<bean id="api_com_recommend_5_0_1" class="com.lvmama.clutter.service.client.v4_0.ClientRecommendServiceV40" />
+	<bean id="api_com_cache_5_0_1" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl" />
+	<bean id="api_com_hotel_5_0_1" class="com.lvmama.clutter.service.impl.ClientHotelServiceImpl" />
+	
+	<bean id="api_com_product_train_5_0_1" class="com.lvmama.clutter.service.impl.ClientTrainProductServiceImpl" />
+	<bean id="api_com_order_train_5_0_1" class="com.lvmama.clutter.service.impl.ClientTrainOrderServiceImpl" />
+	<bean id="api_com_train_5_0_1" class="com.lvmama.clutter.service.impl.ClientTrainServiceImpl" />
+	
+	<!-- 客户端5.1.0版本 -->
+	<bean id="api_com_user_5_1_0" class="com.lvmama.clutter.service.client.v5_1_0.ClientUserServiceV510" />
+	<bean id="api_com_other_5_1_0" class="com.lvmama.clutter.service.client.v5_0.ClientOtherServiceV50" />
+	<bean id="api_com_search_5_1_0" class="com.lvmama.clutter.service.client.v5_0.ClientSearchServiceV50" />
+	<bean id="api_com_place_5_1_0" class="com.lvmama.clutter.service.client.v5_0.ClientPlaceServiceV50" />
+	<bean id="api_com_product_5_1_0" class="com.lvmama.clutter.service.client.v5_0.ClientProductServiceV50" />
+	<bean id="api_com_comment_5_1_0" class="com.lvmama.clutter.service.impl.ClientCommentServiceImpl" />
+	<bean id="api_com_order_5_1_0" class="com.lvmama.clutter.service.client.v5_0.ClientOrderServiceV50" />
+	<bean id="api_com_recommend_5_1_0" class="com.lvmama.clutter.service.client.v4_0.ClientRecommendServiceV40" />
+	<bean id="api_com_cache_5_1_0" class="com.lvmama.clutter.service.impl.ClientOfflineCacheServiceImpl" />
+	<bean id="api_com_hotel_5_1_0" class="com.lvmama.clutter.service.impl.ClientHotelServiceImpl" />
+	
+	<bean id="api_com_product_train_5_1_0" class="com.lvmama.clutter.service.impl.ClientTrainProductServiceImpl" />
+	<bean id="api_com_order_train_5_1_0" class="com.lvmama.clutter.service.impl.ClientTrainOrderServiceImpl" />
+	<bean id="api_com_train_5_1_0" class="com.lvmama.clutter.service.impl.ClientTrainServiceImpl" />
+	
+	<bean id="baiduActivityService" class="com.lvmama.clutter.service.client.BaiduActivityServiceImpl"/>
+
+</beans>

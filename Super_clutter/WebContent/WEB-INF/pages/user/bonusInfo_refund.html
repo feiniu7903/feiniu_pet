@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>退款记录-驴妈妈手机站</title>
+<meta name="description" content="驴妈妈旅游网在线手机预订服务，为您提供更多景点门票预订,自由行,自助游,旅游团购,攻略,旅游度假和酒店预订等旅游信息,优质,个性,自由,尊贵服务只为您！" >
+<#include "../common/define_v3.html">
+<script src="${request.contextPath!}/js/my.js"></script>
+</head>
+
+<body>
+<div class="wrap">
+	<header class="header">
+    	<a href="javascript:history.back();"  class="back"><span class="ic_back"></span></a>
+        <h1>退款记录</h1>
+         <section class="header_alice">
+   			<a href="http://${hostName}" class="btn1"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a>
+   		</section>
+    </header>
+    <section class="coupon_main">
+    <input type="hidden" name="page" id="page" value="1">
+    	<article class="inconme_main" id="data_list">
+    	     <#if bonusList?? && bonusList?size&gt;0>
+        	    <#list bonusList as bonus >
+		            <dl class="inconme_li">
+		            	<dt><em>奖金退款余额</em><b>￥${bonus.bonusYuan!}</b></dt>
+		                <dd>
+		                	<ul class="inconme_info">
+		                    	<li>
+		                        	<span class="income_ti1">时 间</span><em>${bonus.createDate!}</em>
+		                        </li>
+		                    	<li>
+		                        	<span class="income_ti1">订 单 号</span><em>${bonus.orderId!}</em>
+		                        </li>
+		                    	<li>
+		                        	<span class="income_ti1">产品名称</span><em>${bonus.productName!}</em>
+		                        </li>
+		                    </ul>
+		                </dd>
+		            </dl>
+        	    </#list>
+        	<#else>
+        	<!-- 无退款记录 -->
+            	<section class="no_record">
+                	<span class="record_note">
+                    	<i class="ic_glad"></i>
+                        <em>恭喜您，还没有任何退款哦！</em>
+                    </span>
+                </section>
+        	<!-- /无退款记录 -->
+        	</#if>
+        </article> 
+    </section>
+    
+       <!-- 如果不是最后一页  -->
+	   <#if isLastPage?? && !isLastPage>
+		   <div id="show_more">
+		        <a href="javascript:void(0);" onclick="getBonusData('refund')" class="more">
+		                                 查看更多
+		        </a>
+		    </div>
+	    </#if>
+   <!-- footer -->
+   <#include "../common/footer_v3.html"/>
+</div>
+</body>
+</html>

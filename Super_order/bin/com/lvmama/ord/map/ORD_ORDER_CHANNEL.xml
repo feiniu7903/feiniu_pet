@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ORD_ORDER_CHANNEL" >
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderChannel" >
+		<result column="ORDER_ID" property="orderId" />
+	    <result column="CHANNEL" property="channel" />
+	    <result column="ARG1" property="arg1" />
+	    <result column="ARG2" property="arg2" />
+	    <result column="CREATE_DATE" property="createDate" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMap2" class="com.lvmama.comm.bee.vo.ord.OrderChannelInfo" extends="BaseResultMap">
+	</resultMap>	
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderChannel">
+		INSERT INTO ORD_ORDER_CHANNEL(ord_order_channel_id,order_id,channel,create_date,arg1,arg2) VALUES (ord_order_channel_id_seq.nextval, #orderId#,#channel#,sysdate,#arg1#,#arg2#)
+	</insert>
+	
+	<select id="queryByOrderId" parameterClass="Long" resultMap="BaseResultMap2">
+		SELECT * FROM ORD_ORDER_CHANNEL WHERE ORDER_ID = #orderId#		
+	</select>
+	
+	<select id="queryByOrderIdAndChannel" parameterClass="java.util.Map" resultMap="BaseResultMap2">
+		SELECT * FROM ORD_ORDER_CHANNEL WHERE ORDER_ID = #orderId# and CHANNEL = #channel#
+	</select>
+	
+	<select id="queryOrderChannel" parameterClass="java.util.Map" resultMap="BaseResultMap2">
+		SELECT 
+			*
+		FROM 
+			ORD_ORDER_CHANNEL
+		WHERE rownum &lt; 1000
+			<isNotEmpty prepend=" and" property="channel">
+				CHANNEL = #channel#
+			</isNotEmpty>		
+			<isNotEmpty prepend=" and" property="createDate">
+				CREATE_DATE &gt;= #createDate#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="endDate">
+				CREATE_DATE &lt;= #endDate#
+			</isNotEmpty>			
+	</select>
+	
+
+
+<select id="countOrderChannelWhereOrderFinish" parameterClass="java.util.Map" resultClass="Long">
+select count(*)
+  from ord_order_channel t, ord_order o
+ where o.order_id = t.order_id
+   and (o.ORDER_STATUS = 'NORMAL' or o.ORDER_STATUS = 'FINISH')
+   and o.payment_target = 'TOLVMAMA'
+   and trunc(sysdate-14) <![CDATA[<=]]> o.VISIT_TIME 
+   and o.VISIT_TIME  <![CDATA[<=]]> trunc(sysdate-14)+1-1/86400
+</select>
+	
+	
+<select id="queryOrderChannelWhereOrderFinish" parameterClass="java.util.Map" resultMap="BaseResultMap2">
+   	  select CC.*
+	  from	(SELECT 
+				T1.*, rownum as rn 
+			 FROM (
+					select t.*
+					  from ord_order_channel t, ord_order o
+					 where o.order_id = t.order_id
+					   and (o.ORDER_STATUS = 'NORMAL' or o.ORDER_STATUS = 'FINISH')
+					   and o.payment_target = 'TOLVMAMA'
+					   and trunc(sysdate-14) <![CDATA[<=]]> o.VISIT_TIME 
+                       and o.VISIT_TIME  <![CDATA[<=]]> trunc(sysdate-14)+1-1/86400
+					    order by t.create_date desc
+			 ) T1
+			 <dynamic prepend=" WHERE ">
+				 <isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+			 </dynamic>
+	   )CC
+	<dynamic prepend=" WHERE ">
+		<isNotEmpty property="_startRow"> rn &gt;= #_startRow# </isNotEmpty>
+	</dynamic>
+</select>
+	
+</sqlMap>

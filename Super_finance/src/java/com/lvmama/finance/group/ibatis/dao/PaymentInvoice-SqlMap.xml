@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PaymentInvoiceManage" >
+	 
+	<typeAlias alias="PaymentInvoice" type="com.lvmama.finance.group.ibatis.po.PaymentInvoice"/>
+	<typeAlias alias="InvoiceAlert" type="com.lvmama.finance.group.ibatis.po.InvoiceAlert"/>
+	<typeAlias alias="FinInvoice" type="com.lvmama.finance.group.ibatis.po.FinInvoice"/>
+	<typeAlias alias="FinInvoiceLink" type="com.lvmama.finance.group.ibatis.po.FinInvoiceLink"/>
+	<typeAlias alias="FinInvoiceAmount" type="com.lvmama.finance.group.ibatis.po.FinInvoiceAmount"/>
+	
+	<!-- 查询付款发票分页信息 (当团号或结算单号、发票号为空时)-->
+	<select id="searchInvoice" resultClass="PaymentInvoice" parameterClass="map">
+		<include refid="pageSearchHead"/>
+		SELECT  
+			A.ID AS invoiceId,
+            S.SUPPLIER_ID     AS supplierId,
+            S.SUPPLIER_NAME   AS supplierName,
+            A.PAY_AMOUNT/100      AS payAmount,
+            A.INVOICE_AMOUNT/100  AS invoiceAmount,
+            (A.PAY_AMOUNT - A.INVOICE_AMOUNT)/100 AS invoiceBalance
+  		FROM 
+  			SUP_SUPPLIER S,
+  			FIN_INVOICE_AMOUNT A
+ 		WHERE 
+ 			A.SUPPLIER_ID = S.SUPPLIER_ID
+ 		<isNotEmpty property="supplierId" prepend="AND">
+ 			S.SUPPLIER_ID = #supplierId#
+ 		</isNotEmpty>
+		<include refid="pageSearchFoot"/>
+ 	</select>
+ 	<select id="searchInvoiceCount" parameterClass="map" resultClass="Integer">
+		SELECT 	
+			COUNT(*)
+		FROM 
+  			SUP_SUPPLIER S,
+  			FIN_INVOICE_AMOUNT A
+ 		WHERE 
+ 			A.SUPPLIER_ID = S.SUPPLIER_ID
+ 		<isNotEmpty property="supplierId" prepend="AND">
+ 			S.SUPPLIER_ID = #supplierId#
+ 		</isNotEmpty>
+ 	</select>
+ 	
+ 	<!-- 查询付款发票分页信息 (当团号或结算单号、发票号不为空时) -->
+	<select id="searchInvoiceByNum" resultClass="PaymentInvoice" parameterClass="map">
+		<include refid="pageSearchHead"/>
+		SELECT 
+			C.ID AS invoiceId,
+           	A.INVOICE_CODE AS invoiceCode,
+	       	B.SUPPLIER_ID AS supplierId,
+	       	B.SUPPLIER_NAME AS supplierName,
+	       	C.CODE AS code,
+           	A.INVOICE_AMOUNT/100 AS invoiceAmount,
+           	A.INVOICE_TITLE AS invoiceTitle
+  		FROM 
+  			FIN_INVOICE A, 
+  			SUP_SUPPLIER B, 
+  			FIN_INVOICE_LINK C
+ 		WHERE 
+ 			A.SUPPLIER_ID = B.SUPPLIER_ID
+   		AND 
+   			A.INVOICE_ID = C.INVOICE_ID
+ 		<isNotEmpty property="supplierId" prepend="AND">
+ 			B.SUPPLIER_ID = #supplierId#
+ 		</isNotEmpty>
+ 		<isNotEmpty property="id" prepend="AND">
+ 			C.CODE = #id# AND C.TYPE = #type#
+ 		</isNotEmpty>
+ 		<isNotEmpty property="invoiceId" prepend="AND">
+ 			A.INVOICE_CODE = #invoiceId#
+ 		</isNotEmpty>
+		<include refid="pageSearchFoot"/>
+ 	</select>
+ 	<select id="searchInvoiceByNumCount" parameterClass="map" resultClass="Integer">
+		SELECT 	
+			COUNT(*)
+  		FROM 
+  			FIN_INVOICE A, 
+  			SUP_SUPPLIER B, 
+  			FIN_INVOICE_LINK C
+ 		WHERE 
+ 			A.SUPPLIER_ID = B.SUPPLIER_ID
+   		AND 
+   			A.INVOICE_ID = C.INVOICE_ID
+ 		<isNotEmpty property="supplierId" prepend="AND">
+ 			B.SUPPLIER_ID = #supplierId#
+ 		</isNotEmpty>
+ 		<isNotEmpty property="id" prepend="AND">
+ 			C.CODE = #id# AND C.TYPE = #type#
+ 		</isNotEmpty>
+ 		<isNotEmpty property="invoiceId" prepend="AND">
+ 			A.INVOICE_CODE = #invoiceId#
+ 		</isNotEmpty>
+ 	</select>
+ 	
+ 	<!-- 根据供应商ID 查询发票金额信息  -->
+ 	<select id="queryAmountBySupplierId" parameterClass="long" resultClass="FinInvoiceAmount">
+ 		SELECT 
+ 			A.ID AS id,
+ 			A.SUPPLIER_ID AS supplierId,
+ 			A.PAY_AMOUNT/100 AS payAmount,
+ 			A.INVOICE_AMOUNT/100 AS invoiceAmount 
+ 		FROM 
+ 			FIN_INVOICE_AMOUNT A 
+ 		WHERE 
+ 			A.SUPPLIER_ID = #supplierId#
+ 	</select>
+ 	
+ 	<!-- 添加发票信息 -->
+ 	<insert id="insertInvoice" parameterClass="FinInvoice">
+ 		<selectKey keyProperty="invoiceId" resultClass="long">
+  			SELECT 
+  				FIN_INVOICE_ID_SEQ.NEXTVAL AS invoiceId
+  			FROM
+  				DUAL
+  		</selectKey>
+  		INSERT INTO 
+  			FIN_INVOICE
+  			(
+  				INVOICE_ID,
+  				INVOICE_CODE,
+  				SUPPLIER_ID,
+  				REMARK,
+  				CREATOR,
+  				CREATE_TIME,
+  				INVOICE_AMOUNT,
+  				INVOICE_TITLE
+  			) 
+  		VALUES 
+  			(
+  				#invoiceId#,
+  				#invoiceCode#,
+  				#supplierId#,
+  				#remark#,
+  				#creator#,
+  				#createTime#,
+  				#invoiceAmount#*100,
+  				#invoiceTitle#
+  			)
+ 	</insert>
+ 	<!-- 添加发票关联信息 -->
+ 	<insert id="insertInvoiceLink" parameterClass="FinInvoiceLink">
+ 		<selectKey keyProperty="id" resultClass="long">
+  			SELECT 
+  				FIN_INVOICE_LINK_ID_SEQ.NEXTVAL AS id
+  			FROM
+  				DUAL
+  		</selectKey>
+  		INSERT INTO
+  			FIN_INVOICE_LINK
+  			(
+  				ID,
+  				CODE,
+  				TYPE,
+  				INVOICE_ID
+  			)
+  		VALUES
+  			(
+  				#id#,
+  				#code#,
+  				#type#,
+  				#invoiceId#
+  			)
+ 	</insert>
+ 	
+ 	<!-- 更新发票金额信息 -->
+ 	<update id="updateAmount" parameterClass="FinInvoiceAmount">
+ 		UPDATE 
+ 			FIN_INVOICE_AMOUNT 
+ 		SET 
+ 			INVOICE_AMOUNT = INVOICE_AMOUNT + #invoiceAmount# * 100
+ 		WHERE 
+ 			ID = #id#
+ 	</update>
+ 	
+ 	<!-- 修改发票回收状态为：已回收 -->
+ 	<update id="updateRecoveryStatusByGroupId" parameterClass="string">
+ 		UPDATE 
+ 			LVMAMA_PET.SET_SETTLEMENT_PAYMENT
+ 		SET
+ 			RECOVERY_STATUS = 'Y'
+ 		WHERE
+ 			TRAVEL_GROUP_CODE = #code#
+ 	</update>
+ 	<!-- 修改发票回收状态为：已回收 -->
+ 	<update id="updateRecoveryStatusBySettlementId" parameterClass="string">
+ 		UPDATE 
+ 			LVMAMA_PET.SET_SETTLEMENT_PAYMENT
+ 		SET
+ 			RECOVERY_STATUS = 'Y'
+ 		WHERE
+ 			SETTLEMENT_ID = #code#
+ 	</update>
+ 	
+ 	<!-- 发票预警 -->
+ 	<select id="searchAlert" resultClass="InvoiceAlert" parameterClass="map">
+ 		<include refid="pageSearchHead"/>
+		SELECT 
+			A.TRAVEL_GROUP_CODE AS code,
+       		A.SETTLEMENT_ID AS settlementId,
+       		B.PRODUCT_NAME AS productName,
+       		A.AMOUNT/100 AS payAmount,
+       		D.SUPPLIER_NAME AS supplierName
+  		FROM 
+  			LVMAMA_PET.SET_SETTLEMENT_PAYMENT A,
+       		OP_TRAVEL_GROUP        B,
+       		SUP_SETTLEMENT_TARGET  C,
+       		SUP_SUPPLIER D
+ 		WHERE 
+ 			A.RECOVERY_STATUS = 'N'
+   		AND 
+   			A.INVOICE_RETDATE &lt;= TRUNC(SYSDATE)
+   		AND 
+   			A.TRAVEL_GROUP_CODE = B.TRAVEL_GROUP_CODE
+   		AND 
+   			C.TARGET_ID = A.TARGET_ID
+   		AND 
+   			C.SUPPLIER_ID = D.SUPPLIER_ID
+ 		<isNotEmpty property="supplierId" prepend="AND">
+ 			C.SUPPLIER_ID = #supplierId#
+ 		</isNotEmpty>
+	   	<isNotEmpty property="groupId" prepend="AND">
+	   		A.TRAVEL_GROUP_CODE = #groupId#
+	   	</isNotEmpty>
+	   	<isNotEmpty property="beginTime" prepend="AND">
+	   		A.CREATETIME &gt;= TO_DATE(#beginTime#, 'yyyy-mm-dd')
+	   	</isNotEmpty>
+	   	<isNotEmpty property="endTime" prepend="AND">
+	   		A.CREATETIME &lt; TO_DATE(#endTime#, 'yyyy-mm-dd')+1
+	   	</isNotEmpty>
+		<include refid="pageSearchFoot"/>
+ 	</select>
+ 	<select id="searchAlertCount" parameterClass="map" resultClass="Integer">
+		SELECT 
+			COUNT(*)
+  		FROM 
+  			LVMAMA_PET.SET_SETTLEMENT_PAYMENT A,
+       		OP_TRAVEL_GROUP        B,
+       		SUP_SETTLEMENT_TARGET  C
+ 		WHERE 
+ 			A.RECOVERY_STATUS = 'N'
+   		AND 
+   			A.INVOICE_RETDATE &lt;=
+       			TO_DATE(to_char(SYSDATE, 'yyyy-mm-dd'), 'yyyy-mm-dd')
+   		AND 
+   			A.TRAVEL_GROUP_CODE = B.TRAVEL_GROUP_CODE
+   		AND 
+   			C.TARGET_ID = A.TARGET_ID
+ 		<isNotEmpty property="supplierId" prepend="AND">
+ 			A.TARGET_ID = #supplierId#
+ 		</isNotEmpty>
+	   	<isNotEmpty property="groupId" prepend="AND">
+	   		A.TRAVEL_GROUP_CODE = #groupId#
+	   	</isNotEmpty>
+	   	<isNotEmpty property="beginTime" prepend="AND">
+	   		A.CREATETIME &gt;= TO_DATE(#beginTime#, 'yyyy-mm-dd')
+	   	</isNotEmpty>
+	   	<isNotEmpty property="endTime" prepend="AND">
+	   		A.CREATETIME &lt;= TO_DATE(#endTime#, 'yyyy-mm-dd')
+	   	</isNotEmpty>
+ 	</select>
+ 	
+ 	<insert id="insertInvoiceAmount" parameterClass="FinInvoiceAmount">
+ 		INSERT INTO 
+ 			FIN_INVOICE_AMOUNT(
+	 			ID,
+	 			SUPPLIER_ID,
+	 			PAY_AMOUNT,
+	 			INVOICE_AMOUNT
+ 			)VALUES(
+ 				FIN_INVOICE_AMOUNT_ID_SEQ.NEXTVAL,
+ 				#supplierId#,
+ 				#payAmount#,
+ 				#invoiceAmount#
+ 			)
+ 	</insert>
+ 	<update id="updateInvoiceAmount" parameterClass="FinInvoiceAmount">
+ 		UPDATE
+ 			FIN_INVOICE_AMOUNT
+ 		SET
+ 			PAY_AMOUNT = #payAmount#
+ 		WHERE
+ 			supplier_id = #supplierId#
+ 	</update>
+</sqlMap>

@@ -1,0 +1,47 @@
+<?page title="发票信息维护" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_edit_invoice"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_edit_invoice" title="填写发票号" closable="true" apply="com.lvmama.back.web.ord.invoice.EditInvoiceAction">
+    <space />
+   <grid>
+		<columns>
+			<column width="160px"></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>发票抬头：</hbox>
+				<hbox><label  value="@{saction.ordInvoice.title }"/></hbox>
+			</row>
+			
+			<row>
+				<hbox>发票内容：</hbox>
+				<hbox>
+					<label  value="@{saction.ordInvoice.detail }"/>
+				</hbox>
+			</row>
+			
+			<row>
+				<hbox>发票金额：</hbox>
+				<hbox><label  value="@{saction.ordInvoice.amountYuan }"/></hbox>
+			</row>
+			
+			<row>
+				<hbox>发票寄送地址：</hbox>
+				<hbox><label  value="@{saction.ordInvoice.address}"/></hbox>
+			</row>
+			
+			<row>
+				<hbox>发票单号：</hbox>
+				<hbox><textbox  value="@{saction.ordInvoice.invoiceNo}" width="300px"/></hbox>
+			</row>
+			
+			<row spans="2" align="center">
+				<hbox width="100px" ><button label="保存" width="100px" onClick="saction.save();"/></hbox>
+			</row>
+	
+		</rows>
+	</grid>
+	
+  </window>
+</zk>

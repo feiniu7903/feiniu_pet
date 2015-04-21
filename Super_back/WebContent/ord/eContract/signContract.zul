@@ -1,0 +1,33 @@
+<?page title="更改合同签约状态" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_signContract"?>
+<zk>
+<window title="更改合同签约状态" border="normal" closable="true" sizable="true" id="win_signContract" apply="com.lvmama.back.web.ord.eContract.UpdateContractStatusAction">
+	<grid>
+		<rows>
+			<row>
+				<hbox>更改合同签约状态为：</hbox>
+				<hbox>已签约</hbox>
+			</row>
+				<row>
+					<hbox>签约方式:</hbox>
+					<hbox><radiogroup  selectedItem="@{saction.signLog.signMode}" >
+					      <listbox model="@{saction.signModeList}">
+					<listitem self="@{each='sign'}">
+						<listcell>
+							<radio label="@{sign.name}" value="@{sign.code}" checked="@{sign.checked }"/><separator/>
+						</listcell>
+					</listitem>
+				</listbox>
+					      </radiogroup></hbox>
+				</row>
+			<row spans="2">
+				<hbox><button label="提 交" onClick="saction.signContract();" id="saveBtn">
+					<custom-attributes econtractId="@{action.econtractId}"/>
+					<custom-attributes econtractNo="@{action.econtractNo}"/>
+				</button></hbox>
+			</row>
+		</rows>
+	</grid>
+	<span/>
+</window>
+</zk>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ORD_ECONTRACT_COMMENT" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdEContractComment" >
+    <result column="ID" property="id" />
+	<result column="ECONTRACT_ID" property="eContractId" />
+    <result column="CONTRACT_COMMENT" property="contractComment" />
+	<result column="CREATED_USER" property="createdUser" />
+	<result column="CREATED_DATE" property="createdDate" />
+  </resultMap>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdEContractComment">
+  	<selectKey  keyProperty="id" resultClass="Long"> SELECT SEQ_ORD_ECONTRACT_COMMENT_ID.NEXTVAL FROM DUAL</selectKey>
+	INSERT INTO ORD_ECONTRACT_COMMENT VALUES (#id#,#eContractId#,#contractComment#,#createdUser#,#createdDate#)
+  </insert>
+  <select id="queryByEContractId" parameterClass="java.lang.String" resultMap="BaseResultMap">
+	SELECT * FROM ORD_ECONTRACT_COMMENT WHERE ECONTRACT_ID = #eContractId#  ORDER BY CREATED_DATE
+  </select>
+</sqlMap>

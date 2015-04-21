@@ -1,0 +1,60 @@
+<?page title="联系人列表" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./listcontacts"?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?> 
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<zk>
+	<window id="listcontacts" mode="embedded" title="渠道管理"
+		apply="com.lvmama.back.web.channel.ListChannelAction">
+		<grid>
+			<columns>
+				<column width="280px"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<button  id="search" label="查询"
+							onClick="saction.search();" width="100px">
+						</button>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox id="box" fixedLayout="true"
+			model="@{saction.prodChannelList,load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader label="编号" width="5%"
+					sort="auto(channelId)" />
+				<listheader label="代码" sort="auto(channelCode)" />
+				<listheader label="名称" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem self="@{each='channel'}" value="@{channel}"
+				height="25px">
+				<listcell label="@{channel.channelId}" />
+				<listcell label="@{channel.channelCode}"/>
+				<listcell label="@{channel.channelName}"/>
+				<listcell>
+					<a permCode="1491" onClick='saction.showWindow("/channel/channel_sms.zul", self.getAttributes());'  style="color:blue" label="渠道短信 ">
+						<custom-attributes channelId="@{channel.channelId}"/>
+					</a>
+				</listcell>
+			</listitem>
+
+		</listbox>
+		
+		<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell width="200px">
+					<paging  id="_paging" pageSize = "15" onPaging='saction.search();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+	</window>
+</zk>

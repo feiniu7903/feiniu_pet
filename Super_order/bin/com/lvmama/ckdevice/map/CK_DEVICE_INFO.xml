@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CK_DEVICE_INFO">
+   <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ckdevice.CkDeviceInfo">
+        <result property="ckDeviceInfoId" column="CK_DEVICE_INFO_ID"/>
+        <result property="ckDeviceCode" column="DEVICE_CODE"/>
+        <result property="ckDeviceName" column="DEVICE_NAME"/>
+        <result property="memo" column="MEMO"/>
+    </resultMap>
+   
+	<sql id="columns">
+		CK_DEVICE_INFO_ID , DEVICE_CODE , DEVICE_NAME , MEMO 
+	</sql>
+	
+    <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ckdevice.CkDeviceInfo" >
+    	<selectKey  keyProperty="ckDeviceInfoId" resultClass="Long"> SELECT CK_DEVICE_INFO_ID_SEQ.NEXTVAL FROM DUAL</selectKey>
+			INSERT INTO CK_DEVICE_INFO (
+			CK_DEVICE_INFO_ID , DEVICE_CODE , DEVICE_NAME , MEMO
+			) VALUES (
+			#ckDeviceInfoId# ,
+			#ckDeviceCode# ,
+			#ckDeviceName# ,
+			#memo#
+			)
+    </insert>
+
+    <update id="update" parameterClass="com.lvmama.comm.bee.po.ckdevice.CkDeviceInfo">
+        UPDATE CK_DEVICE_INFO SET
+        	MEMO = #memo# 
+       	  <isNotEmpty property="ckDeviceCode">
+	           ,  DEVICE_CODE = #ckDeviceCode#
+	       </isNotEmpty>
+	      	 <isNotEmpty property="ckDeviceName">
+	        ,DEVICE_NAME = #ckDeviceName#
+	         </isNotEmpty>
+        WHERE 
+	        CK_DEVICE_INFO_ID = #ckDeviceInfoId# 
+    </update>
+
+    <delete id="delete" parameterClass="Long">
+        DELETE FROM CK_DEVICE_INFO WHERE
+        CK_DEVICE_INFO_ID = #ckDeviceInfoId# 
+    </delete>
+    
+    <select id="selectByDeviceId" resultMap="BaseResultMap" parameterClass="Long">
+	    SELECT <include refid="columns"/>
+	        FROM CK_DEVICE_INFO 
+	        WHERE 
+		        CK_DEVICE_INFO_ID = #ckDeviceInfoId# 
+    </select>
+
+    <select id="findPageCount" resultClass="long" parameterClass="java.util.Map">
+        SELECT count(*) FROM CK_DEVICE_INFO 
+        <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="ckDeviceCode">
+		             DEVICE_CODE = #ckDeviceCode#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="ckDeviceName">
+		             DEVICE_NAME LIKE '%'|| #ckDeviceName# ||'%'
+		       </isNotEmpty>
+	    </dynamic>
+	    order by CK_DEVICE_INFO_ID desc	
+    </select>
+    
+    <select id="findPage" resultMap="BaseResultMap" parameterClass="java.util.Map">
+    	SELECT * FROM (SELECT T.*,ROWNUM RN FROM (
+	    	SELECT <include refid="columns"/> FROM CK_DEVICE_INFO 
+			 <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="ckDeviceCode">
+		             DEVICE_CODE = #ckDeviceCode#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="ckDeviceName">
+		             DEVICE_NAME LIKE '%'|| #ckDeviceName# ||'%'
+		       </isNotEmpty>
+	    </dynamic>
+	    order by CK_DEVICE_INFO_ID desc	
+			<dynamic prepend="ORDER BY">
+				<isNotEmpty property="sortColumns">$sortColumns$</isNotEmpty>
+			</dynamic>
+		)T )TT WHERE TT.RN &gt;=#start# and TT.RN &lt;=#end#
+    </select>
+
+    <select id="getByDeviceCode" resultMap="BaseResultMap" parameterClass="java.lang.String">
+	    SELECT <include refid="columns"/>
+	        FROM CK_DEVICE_INFO WHERE DEVICE_CODE = #ckDeviceCode#
+    </select>
+    
+</sqlMap>
+

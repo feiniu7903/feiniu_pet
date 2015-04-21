@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<response>
+	<#include "responseHeader.xml">
+	<#if order??>
+	<body>
+		<order>
+			<orderId>${order.orderId}</orderId>
+			<orderDesc>${order.orderDesc}</orderDesc>
+			<status>${order.status}</status>
+			<paymentStatus>${order.paymentStatus}</paymentStatus>
+			<credenctStatus>${order.credenctStatus}</credenctStatus>
+			<performStatus>${order.performStatus}</performStatus>
+			<totalAmount>${order.totalAmount}</totalAmount>
+			<totalQuantity>${order.metaTotalQuantity}</totalQuantity>
+			<phoneNo>${order.phoneNo}</phoneNo>
+			<#if order.productList?? > 
+			<productList>
+				<#list order.productList as product>
+					<product>
+						<productId>${product.productId}</productId>
+						<placeId>${product.placeId}</placeId>
+						<isLocal>${product.isLocal}</isLocal>
+						<productName>${product.productName}</productName>
+						<productType>${product.productType}</productType>
+						<productPrice>${product.productPrice}</productPrice>
+						<validDate>${product.validDate}</validDate>
+						<amount>${product.amount}</amount>
+					</product>
+				</#list>					
+			</productList>
+			</#if>
+		</order>
+	</body>
+	</#if>
+</response>

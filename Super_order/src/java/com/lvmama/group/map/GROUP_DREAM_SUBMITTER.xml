@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="GROUP_DREAM_SUBMITTER" >
+ 
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.group.GroupDreamSubmitter" >
+		<selectKey keyProperty="dreamSubmitterId" resultClass="Long">
+			select GROUP_DREAM_SUBMITTER_ID_SEQ.nextVal FROM DUAL
+		</selectKey>
+		 insert into group_dream_submitter ( 
+				 dream_submitter_id,
+		         dream_id,
+		         is_enjoy,
+		         email,
+		         ip_addr,
+		         create_time
+            )
+		   values(
+			   	#dreamSubmitterId#,
+				#dreamId#,
+				#isEnjoy#,
+				#email#,
+				#ipAddr#,
+				sysdate
+		   )
+  </insert>
+  <!-- 统计某一团梦想产品的喜欢与不喜欢人数 -->
+  <resultMap class="java.util.HashMap" id="countDreamSubmitNumsByDreamIdMap">
+  		<result column="ENJOY_COUNT" property="ENJOY_COUNT" javaType="java.lang.Long"  />
+  		<result column="NOT_ENJOY_COUNT" property="NOT_ENJOY_COUNT" javaType="java.lang.Long"  />
+  		<result column="TOTAL_JOIN_COUNT" property="TOTAL_JOIN_COUNT" javaType="java.lang.Long"  />
+  </resultMap>
+  <!-- 统计团梦想参与投票人数 -->
+  <select id="countDreamSubmitNumsByDreamId" resultMap="countDreamSubmitNumsByDreamIdMap" parameterClass="java.lang.Long">
+  	 SELECT COUNT(CASE
+                  WHEN GDS.IS_ENJOY = 'Y' THEN
+                   1
+                  ELSE
+                   NULL
+                END) AS ENJOY_COUNT,
+          COUNT(CASE
+                  WHEN GDS.IS_ENJOY = 'N' THEN
+                   1
+                  ELSE
+                   NULL
+                END) AS NOT_ENJOY_COUNT,
+           COUNT(1) as TOTAL_JOIN_COUNT
+     FROM GROUP_DREAM_SUBMITTER GDS
+    WHERE GDS.DREAM_ID = #dreamId#
+  </select>
+  
+  <resultMap class="com.lvmama.comm.bee.po.group.GroupDreamSubmitter" id="groupDreamSubmitterMap">
+  		<result column="DREAM_SUBMITTER_ID" property="dreamSubmitterId"   />
+  		<result column="DREAM_ID" property="dreamId"   />
+  		<result column="IS_ENJOY" property="isEnjoy"   />
+  		<result column="EMAIL" property="email"   />
+  		<result column="IP_ADDR" property="ipAddr"   />
+  		<result column="CREATE_TIME" property="createTime" />
+  </resultMap>
+  <!-- 查询团购梦想喜欢的提交者-->
+ <select id="queryEnjoyDreamSubmitters"  parameterClass="java.util.Map"  resultMap="groupDreamSubmitterMap">
+	   select rr.* from (  
+       	select r.*,rownum as rn from (
+             select gds.*
+               from group_dream_submitter gds
+              where gds.dream_id = #dreamId#
+              and gds.is_enjoy='Y'
+              order by gds.create_time desc
+          ) r
+        where rownum&lt;=#endIndex#
+        ) rr
+        where rr.rn&gt;=#beginIndex# 
+	</select>
+	<!-- 查询团购梦想喜欢的  -->
+	<select id="countEnjoyDreamSubmitters"  parameterClass="java.util.Map"  resultClass="java.lang.Long">
+		select count(1) from group_dream_submitter  gds where gds.dream_id=#dreamId#  and gds.is_enjoy='Y'
+	</select>
+</sqlMap>

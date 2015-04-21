@@ -1,0 +1,44 @@
+<#assign prefix_pic_url="http://pic.lvmama.com/img/mobile/touch">
+<#assign hostName = reauestHostName/>
+<#setting number_format="#.##">
+<#if datas?? && datas?size&gt;0>
+	<#list datas as product>
+          <article onclick="union_skip('http://${hostName}/product/${product.productId}/');">
+           <a href="javascript:void(0);" class="block">
+               <div style="background-image: url(${prefixPic!}${product.smallImage!})"
+                    class="pro-pic"></div>
+               <div class="pro-info">
+                   <h2>${product.productName?default("")} </h2>
+                   <p>
+                       <span class="fr pro-value"><small>&yen;</small>${product.sellPriceYuan!}  <i>起</i></span>
+                       <span>${product.zhSubProductType!}${product.visitDay!}天</span>
+                   </p>
+                   <p>
+                   	<#if product.tagList?? && product.tagList?size&gt;0>
+                         <span class="flag">${product.tagList[0].tagName!}</span>
+                   	</#if>
+                   	<#if product.mobileAlone?? && product.mobileAlone>
+                   		<span class="flag">手机独享</span>
+                   	</#if>
+                       <#if product.cashRefundY?? && product.cashRefundY &gt; 0>
+                        <span class="privilege rose">返&yen;${product.cashRefundY!}</span>
+                       </#if>
+                       <#if product.canDeduction>
+                        <span class="privilege">抵</span>
+                       </#if>
+                       <#if product.hasBusinessCoupon>
+                       	<span class="privilege">惠</span>
+                       </#if>
+                   </p>
+               </div>
+           </a>
+       </article>
+    </#list>
+ <#else>	
+ 	<#assign no_data_msg="没有找到符合条件的结果">
+  		<#include "../common/no_data_list.html">	
+</#if>
+<input id = "tmp_p" type ="hidden" value = "${page!}"/>
+<#if isLastPage>
+	<input id = "lastPage_flag" type ="hidden" value = "1"/>
+</#if>

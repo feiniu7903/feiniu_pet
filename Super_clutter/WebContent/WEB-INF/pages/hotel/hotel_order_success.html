@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>提交成功</title>
+    <#include "../common/define_v4.html">
+	<link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/order.css">
+	<script src="${request.contextPath}/js/hotel.js"></script>
+</head>
+
+<body>
+<div id="container">
+    <header class="header">
+        <!-- <a href="javascript:union_back();" class="back"><span class="ic_back"></span></a> -->
+        <h1>提交成功</h1>
+        <div class="header_btn">
+            <a href="javascript:union_skip('http://${hostName}');" class="header-icon-home"></a>
+        </div>
+    </header>
+	<div id="content">
+    <section class="common-order">
+        <article>
+            <div class="common-order-line">
+                <div class="common-order-sp-tips"><span class="icon-lv-01"></span>恭喜你，酒店订单提交成功！</div>
+                <div class="line f-color-2">驴妈妈将尽快处理，稍后通知你预订结果。</div>
+            </div>
+        </article>
+        <#if orderDetailResult??>
+        	<a href="${request.contextPath}/order/hotel_order_detail.htm?orderId=${orderDetailResult.orderId!}">
+	        <article>
+	            <div class="common-order-line">
+	                <div class="line"><div class="fl">　订单号：</div><div class="f-color-2">${orderDetailResult.orderId!}</div></div>
+	                <div class="line"><div class="fl">产品名称：</div><div class="f-color-2">${orderDetailResult.name!}</div></div>
+	                <span class="ic_ri"></span>
+	            </div>
+	            <div class="common-order-line">
+					总　　额：<span class="r-value">&yen;${orderDetailResult.totalPrice!}</span><br>
+	            </div>
+	        </article>
+	        </a>
+        </#if>
+        <div class="view_more rose"><a href="javascript:void(0);" onclick="union_skip('http://${hostName}');">返回首页</a></div>
+    </section>
+	</div>
+    <#include "../common/order_footer.html"/>
+</div>
+</body>
+</html>

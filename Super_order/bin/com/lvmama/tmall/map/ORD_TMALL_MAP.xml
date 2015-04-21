@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_TMALL_MAP" >
+  <resultMap id="OrdTmallMapResult" class="com.lvmama.comm.bee.po.tmall.OrdTmallMap" >
+    <result column="TMALL_MAP_ID" property="tmallMapId" jdbcType="DECIMAL" />
+    <result column="TMALL_ORDER_NO" property="tmallOrderNo" jdbcType="VARCHAR" />
+    <result column="BUYER_NICK" property="buyerNick" jdbcType="VARCHAR" />
+    <result column="BUYER_MOBILE" property="buyerMobile" jdbcType="VARCHAR" />
+    <result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+    <result column="PRODUCT_ID" property="productId" jdbcType="DECIMAL" />
+    <result column="CATEGORY_ID" property="categoryId" jdbcType="DECIMAL" />
+    <result column="PRODUCT_TMALL_PRICE" property="productTmallPrice" jdbcType="DECIMAL" />
+    <result column="LV_ORDER_ID" property="lvOrderId" jdbcType="DECIMAL" />
+    <result column="SYSTEM_ORDER" property="systemOrder" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="TMALL_MEMO" property="tmallMemo" jdbcType="VARCHAR" />
+    <result column="SELLER" property="seller" jdbcType="VARCHAR" />
+    <result column="FAILED_REASON" property="failedReason" jdbcType="VARCHAR" />
+    <result column="OPERATOR_NAME" property="operatorName" jdbcType="VARCHAR" />
+    <result column="PROCESS_TIME" property="processTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="PROCESS_STATUS" property="processStatus" jdbcType="VARCHAR" />
+    
+    <result column="PRODUCT_TYPE" property="productType" jdbcType="VARCHAR" />
+    <result column="CERTIFICATE" property="certificate" jdbcType="VARCHAR" />
+    <result column="RESOURCE_CONFIRM_STATUS" property="resourceConfirmStatus" jdbcType="VARCHAR" />
+    <result column="GT_MAXNUM" property="gtMaxNum" jdbcType="VARCHAR" />
+    <result column="TOKEN" property="token" jdbcType="VARCHAR" />
+    <result column="BUY_NUM" property="buyNum" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <select id="selectByPrimaryKey" resultMap="OrdTmallMapResult" parameterClass="com.lvmama.comm.bee.po.tmall.OrdTmallMap" >
+    select TMALL_MAP_ID, TMALL_ORDER_NO, BUYER_NICK, BUYER_MOBILE, PRODUCT_NAME, PRODUCT_ID,CATEGORY_ID,
+      PRODUCT_TMALL_PRICE, LV_ORDER_ID, SYSTEM_ORDER, STATUS, TMALL_MEMO, SELLER, FAILED_REASON,
+      OPERATOR_NAME, PROCESS_TIME, CREATE_TIME,PROCESS_STATUS,PRODUCT_TYPE,CERTIFICATE,RESOURCE_CONFIRM_STATUS,GT_MAXNUM,TOKEN,BUY_NUM
+    from LVMAMA_SUPER.ORD_TMALL_MAP
+    where TMALL_MAP_ID = #tmallMapId#
+  </select>
+  
+  <select id="selectByTmallNo" resultMap="OrdTmallMapResult" parameterClass="com.lvmama.comm.bee.po.tmall.OrdTmallMap" >
+    select TMALL_MAP_ID, TMALL_ORDER_NO, BUYER_NICK, BUYER_MOBILE, PRODUCT_NAME, PRODUCT_ID,CATEGORY_ID,
+      PRODUCT_TMALL_PRICE, LV_ORDER_ID, SYSTEM_ORDER, STATUS, TMALL_MEMO, SELLER, FAILED_REASON,
+      OPERATOR_NAME, PROCESS_TIME, CREATE_TIME,PROCESS_STATUS,PRODUCT_TYPE,CERTIFICATE,RESOURCE_CONFIRM_STATUS,GT_MAXNUM,TOKEN,BUY_NUM
+    from LVMAMA_SUPER.ORD_TMALL_MAP
+    where TMALL_ORDER_NO = #tmallOrderNo#
+  </select>
+  
+   <select id="selectByLvOrderId" resultMap="OrdTmallMapResult" parameterClass="com.lvmama.comm.bee.po.tmall.OrdTmallMap" >
+    select TMALL_MAP_ID, TMALL_ORDER_NO, BUYER_NICK, BUYER_MOBILE, PRODUCT_NAME, PRODUCT_ID,CATEGORY_ID,
+      PRODUCT_TMALL_PRICE, LV_ORDER_ID, SYSTEM_ORDER, STATUS, TMALL_MEMO, SELLER, FAILED_REASON,
+      OPERATOR_NAME, PROCESS_TIME, CREATE_TIME,PROCESS_STATUS,PRODUCT_TYPE,CERTIFICATE,RESOURCE_CONFIRM_STATUS,GT_MAXNUM,TOKEN,BUY_NUM
+    from LVMAMA_SUPER.ORD_TMALL_MAP
+    where LV_ORDER_ID = #lvOrderId#
+  </select>
+  
+  <select id="selectOrderByUK" resultMap="OrdTmallMapResult" parameterClass="com.lvmama.comm.bee.po.tmall.OrdTmallMap" >
+    select TMALL_MAP_ID, TMALL_ORDER_NO, BUYER_NICK, BUYER_MOBILE, PRODUCT_NAME, PRODUCT_ID,CATEGORY_ID,
+      PRODUCT_TMALL_PRICE, LV_ORDER_ID, SYSTEM_ORDER, STATUS, TMALL_MEMO, SELLER, FAILED_REASON,
+      OPERATOR_NAME, PROCESS_TIME, CREATE_TIME,PROCESS_STATUS,PRODUCT_TYPE,CERTIFICATE,RESOURCE_CONFIRM_STATUS,GT_MAXNUM,TOKEN,BUY_NUM
+    from LVMAMA_SUPER.ORD_TMALL_MAP
+    where TMALL_ORDER_NO = #tmallOrderNo# and PRODUCT_ID=#productId# and CATEGORY_ID=#categoryId# and rownum &lt; 2
+  </select>
+  
+  <!-- 分页 -->
+	<sql id="pageSelectHead" >
+		SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM ( 
+	</sql>
+	<sql id="pageSelectFoot" >
+		) P_T ) WHERE RN BETWEEN #startRow# AND #endRow#
+	</sql>
+  
+   <sql id="FailedOrderListSql"  >
+    select TMALL_MAP_ID as TMALLMAPID, TMALL_ORDER_NO as TMALLORDERNO, BUYER_NICK as BUYERNICK,  PRODUCT_NAME as PRODUCTNAME, FAILED_REASON as FAILEDREASON,STATUS as STATUS
+    from ORD_TMALL_MAP  T
+    where T.STATUS in ('failure','unpay')
+       <isNotEmpty property="buyerNick">
+	     AND T.BUYER_NICK = #buyerNick#
+	   </isNotEmpty>
+	   <isNotEmpty property="productId">
+	     AND T.PRODUCT_ID = #productId#
+	   </isNotEmpty>
+	   <isNotEmpty property="tmallId">
+	     AND T.TMALL_ORDER_NO = #tmallId#
+	   </isNotEmpty>
+	   <isNotEmpty property="buyerMobile">
+	     AND T.BUYER_MOBILE = #buyerMobile#
+	   </isNotEmpty>
+  </sql>
+  
+  <select id="selectFailedOrderList" resultClass="com.lvmama.comm.bee.po.tmall.OrdTmallMap" parameterClass="java.util.Map">
+     <include refid="pageSelectHead"/>
+     <include refid="FailedOrderListSql"/>
+     <include refid="pageSelectFoot"/>
+  </select>
+  
+  <select id="getFailedOrderListCount" parameterClass="map" resultClass="long">
+		SELECT
+			COUNT(*)
+		FROM
+		(
+			<include refid="FailedOrderListSql"/>
+		)
+	</select>
+	
+     <sql id="orderListSql"  >
+    select T.TMALL_MAP_ID as TMALLMAPID, T.TMALL_ORDER_NO as TMALLORDERNO, T.BUYER_NICK as BUYERNICK,  T.PRODUCT_NAME as PRODUCTNAME, T.LV_ORDER_ID as LVORDERID,T.SYSTEM_ORDER as SYSTEMORDER,T.STATUS as STATUS,T.CREATE_TIME as CREATETIME,
+    T.PRODUCT_TYPE as PRODUCTTYPE,T.CERTIFICATE as CERTIFICATE,T.RESOURCE_CONFIRM_STATUS as RESOURCECONFIRMSTATUS,T.GT_MAXNUM as GTMAXNUM,O.ORDER_STATUS as ORDERSTATUS,PAYMENT_TARGET as PAYMENTTARGET        
+    from ORD_TMALL_MAP  T LEFT JOIN ORD_ORDER O ON T.LV_ORDER_ID=O.ORDER_ID
+    where 1=1
+       <isNotEmpty property="buyerNick">
+	     AND  T.BUYER_NICK = #buyerNick#
+	   </isNotEmpty>
+	   <isNotEmpty property="productId">
+	     AND T.PRODUCT_ID = #productId#
+	   </isNotEmpty>
+	   <isNotEmpty property="tmallId">
+	     AND T.TMALL_ORDER_NO = #tmallId#
+	   </isNotEmpty>
+	   <isNotEmpty property="systemOrder">
+	     AND T.SYSTEM_ORDER = #systemOrder#
+	   </isNotEmpty>
+	   
+	   <isNotEmpty property="status">
+	     AND T.STATUS = #status#
+	   </isNotEmpty>
+	   <isNotEmpty property="productType">
+	     AND T.PRODUCT_TYPE = #productType#
+	   </isNotEmpty>
+	    <isNotEmpty property="createTimeStart">
+	     AND TRUNC(T.CREATE_TIME)= TO_DATE(#createTimeStart#,'yyyy-mm-dd')
+	   </isNotEmpty>
+	   order by T.CREATE_TIME desc
+  </sql>
+   <select id="selectOrderList" resultClass="com.lvmama.comm.bee.po.tmall.OrdTmallMap" parameterClass="java.util.Map">
+     <include refid="pageSelectHead"/>
+     <include refid="orderListSql"/>
+     <include refid="pageSelectFoot"/>
+  </select>
+  
+  <select id="getOrderListCount" parameterClass="map" resultClass="long">
+		SELECT
+			COUNT(*)
+		FROM
+		(
+			<include refid="orderListSql"/>
+		)
+	</select>
+	
+   <select id="selectOrdOfCreate" resultClass="java.lang.String">
+    <![CDATA[select distinct TMALL_ORDER_NO from  ORD_TMALL_MAP T where  T.STATUS = 'create']]>
+  </select>
+  
+  <select id="selectTmallNo" resultClass="java.lang.Integer"  parameterClass="java.lang.String">
+       SELECT count(TMALL_MAP_ID) from ORD_TMALL_MAP T where T.TMALL_ORDER_NO=#tmallOrderNo#
+  </select>
+  
+  <select id="selectCertificateType" resultClass="java.lang.Long"  parameterClass="java.lang.Long">
+       SELECT count(1) from ord_order_item_meta o LEFT JOIN meta_product m ON o.meta_product_id=m.meta_product_id LEFT JOIN meta_perform me ON m.meta_product_id=me.meta_product_id
+       LEFT JOIN sup_perform_target su ON me.target_id=su.target_id WHERE o.order_id=#orderId#  and su.certificate_type = 'ENTITY'
+  </select>
+  
+ 
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.tmall.OrdTmallMap" >
+    delete from LVMAMA_SUPER.ORD_TMALL_MAP
+    where TMALL_MAP_ID = #tmallMapId#
+  </delete>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.tmall.OrdTmallMap" >
+  
+  <selectKey keyProperty="tmallMapId" resultClass="java.lang.Long">
+			SELECT ORD_TMALL_MAP__ID_SEQ.nextval from dual
+		</selectKey> 
+    insert into LVMAMA_SUPER.ORD_TMALL_MAP (TMALL_MAP_ID, TMALL_ORDER_NO, BUYER_NICK, BUYER_MOBILE,
+      PRODUCT_NAME, PRODUCT_ID, CATEGORY_ID,PRODUCT_TMALL_PRICE, LV_ORDER_ID, SYSTEM_ORDER, STATUS, TMALL_MEMO,
+      SELLER, FAILED_REASON, OPERATOR_NAME, PROCESS_TIME, CREATE_TIME,PRODUCT_TYPE,TOKEN,BUY_NUM)
+    values (#tmallMapId#, #tmallOrderNo#, #buyerNick#,
+      #buyerMobile#, #productName#, #productId#,#categoryId#,
+      #productTmallPrice#, #lvOrderId#, #systemOrder#, #status#,
+      #tmallMemo#, #seller#, #failedReason#, #operatorName#,
+      #processTime#, #createTime#,#productType#,#token#,#buyNum#) 
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.tmall.OrdTmallMap" >
+    update LVMAMA_SUPER.ORD_TMALL_MAP
+    set TMALL_ORDER_NO = #tmallOrderNo#,
+      BUYER_NICK = #buyerNick#,
+      BUYER_MOBILE = #buyerMobile#,
+      PRODUCT_NAME = #productName#,
+      PRODUCT_ID = #productId#,
+      CATEGORY_ID=#categoryId#,
+      PRODUCT_TMALL_PRICE = #productTmallPrice#,
+      LV_ORDER_ID = #lvOrderId#,
+      SYSTEM_ORDER = #systemOrder#,
+      STATUS = #status#,
+      TMALL_MEMO = #tmallMemo#,
+      SELLER = #seller#,
+      FAILED_REASON = #failedReason#,
+      OPERATOR_NAME = #operatorName#,
+      PROCESS_TIME = #processTime#,
+      CREATE_TIME = #createTime#,
+      PRODUCT_TYPE=#productType#,
+      CERTIFICATE=#certificate#,
+      RESOURCE_CONFIRM_STATUS=#resourceConfirmStatus#,
+      GT_MAXNUM=#gtMaxNum#
+    where TMALL_MAP_ID = #tmallMapId#
+  </update>
+  
+  <update id="updateByOrdSelective" parameterClass="com.lvmama.comm.bee.po.tmall.OrdTmallMap" >
+    update LVMAMA_SUPER.ORD_TMALL_MAP
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="tmallOrderNo" >
+        TMALL_ORDER_NO = #tmallOrderNo#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerNick" >
+        BUYER_NICK = #buyerNick#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerMobile" >
+        BUYER_MOBILE = #buyerMobile#
+      </isNotNull>
+      <isNotNull prepend="," property="productName" >
+        PRODUCT_NAME = #productName#
+      </isNotNull>
+      <isNotNull prepend="," property="productTmallPrice" >
+        PRODUCT_TMALL_PRICE = #productTmallPrice#
+      </isNotNull>
+      <isNotNull prepend="," property="lvOrderId" >
+        LV_ORDER_ID = #lvOrderId#
+      </isNotNull>
+      <isNotNull prepend="," property="systemOrder" >
+        SYSTEM_ORDER = #systemOrder#
+      </isNotNull>
+       <isNotNull prepend="," property="processStatus">
+        PROCESS_STATUS=#processStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS = #status#
+      </isNotNull>
+      <isNotNull prepend="," property="tmallMemo" >
+        TMALL_MEMO = #tmallMemo#
+      </isNotNull>
+      <isNotNull prepend="," property="seller" >
+        SELLER = #seller#
+      </isNotNull>
+      <isNotNull prepend="," property="failedReason" >
+        FAILED_REASON = #failedReason#
+      </isNotNull>
+      <isNotNull prepend="," property="operatorName" >
+        OPERATOR_NAME = #operatorName#
+      </isNotNull>
+      <isNotNull prepend="," property="processTime" >
+        PROCESS_TIME = #processTime#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="productType" >
+        PRODUCT_TYPE=#productType#
+      </isNotNull>
+      <isNotNull prepend="," property="certificate" >
+        CERTIFICATE=#certificate#
+      </isNotNull>
+      <isNotNull prepend="," property="resourceConfirmStatus" >
+        RESOURCE_CONFIRM_STATUS=#resourceConfirmStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="gtMaxNum" >
+        GT_MAXNUM=#gtMaxNum#
+      </isNotNull>
+    </dynamic>
+    where  1=1
+	    AND  TMALL_ORDER_NO = #tmallOrderNo#
+	 <isNotEmpty property="productId">
+	     AND  PRODUCT_ID = #productId#
+	 </isNotEmpty>
+	 <isNotEmpty property="categoryId">
+	     AND  CATEGORY_ID = #categoryId#
+	 </isNotEmpty>
+    
+     <!-- TMALL_ORDER_NO = #tmallOrderNo# and PRODUCT_ID=#productId# and CATEGORY_ID=#categoryId# -->
+  </update>
+  
+    <update id="updateByTmallOrderNoSelective" parameterClass="com.lvmama.comm.bee.po.tmall.OrdTmallMap" >
+    update LVMAMA_SUPER.ORD_TMALL_MAP
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="tmallOrderNo" >
+        TMALL_ORDER_NO = #tmallOrderNo#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerNick" >
+        BUYER_NICK = #buyerNick#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerMobile" >
+        BUYER_MOBILE = #buyerMobile#
+      </isNotNull>
+      <isNotNull prepend="," property="productName" >
+        PRODUCT_NAME = #productName#
+      </isNotNull>
+      <isNotNull prepend="," property="processStatus">
+        PROCESS_STATUS=#processStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID = #productId#
+      </isNotNull>
+      <isNotNull prepend="," property="categoryId" >
+        CATEGORY_ID = #categoryId#
+      </isNotNull>
+      <isNotNull prepend="," property="productTmallPrice" >
+        PRODUCT_TMALL_PRICE = #productTmallPrice#
+      </isNotNull>
+      <isNotNull prepend="," property="lvOrderId" >
+        LV_ORDER_ID = #lvOrderId#
+      </isNotNull>
+      <isNotNull prepend="," property="systemOrder" >
+        SYSTEM_ORDER = #systemOrder#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS = #status#
+      </isNotNull>
+      <isNotNull prepend="," property="tmallMemo" >
+        TMALL_MEMO = #tmallMemo#
+      </isNotNull>
+      <isNotNull prepend="," property="seller" >
+        SELLER = #seller#
+      </isNotNull>
+      <isNotNull prepend="," property="failedReason" >
+        FAILED_REASON = #failedReason#
+      </isNotNull>
+      <isNotNull prepend="," property="operatorName" >
+        OPERATOR_NAME = #operatorName#
+      </isNotNull>
+      <isNotNull prepend="," property="processTime" >
+        PROCESS_TIME = #processTime#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="productType" >
+        PRODUCT_TYPE=#productType#
+      </isNotNull>
+      <isNotNull prepend="," property="certificate" >
+        CERTIFICATE=#certificate#
+      </isNotNull>
+      <isNotNull prepend="," property="resourceConfirmStatus" >
+        RESOURCE_CONFIRM_STATUS=#resourceConfirmStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="gtMaxNum" >
+        GT_MAXNUM=#gtMaxNum#
+      </isNotNull>
+    </dynamic>
+    where TMALL_ORDER_NO = #tmallOrderNo# 
+  </update>
+  
+    <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.tmall.OrdTmallMap" >
+    update ORD_TMALL_MAP
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="tmallOrderNo" >
+        TMALL_ORDER_NO = #tmallOrderNo#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerNick" >
+        BUYER_NICK = #buyerNick#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerMobile" >
+        BUYER_MOBILE = #buyerMobile#
+      </isNotNull>
+      <isNotNull prepend="," property="productName" >
+        PRODUCT_NAME = #productName#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID = #productId#
+      </isNotNull>
+      <isNotNull prepend="," property="categoryId" >
+        CATEGORY_ID = #categoryId#
+      </isNotNull>
+      <isNotNull prepend="," property="productTmallPrice" >
+        PRODUCT_TMALL_PRICE = #productTmallPrice#
+      </isNotNull>
+      <isNotNull prepend="," property="lvOrderId" >
+        LV_ORDER_ID = #lvOrderId#
+      </isNotNull>
+      <isNotNull prepend="," property="systemOrder" >
+        SYSTEM_ORDER = #systemOrder#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS = #status#
+      </isNotNull>
+      <isNotNull prepend="," property="tmallMemo" >
+        TMALL_MEMO = #tmallMemo#
+      </isNotNull>
+      <isNotNull prepend="," property="seller" >
+        SELLER = #seller#
+      </isNotNull>
+       <isNotNull prepend="," property="processStatus">
+        PROCESS_STATUS=#processStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="failedReason" >
+        FAILED_REASON = #failedReason#
+      </isNotNull>
+      <isNotNull prepend="," property="operatorName" >
+        OPERATOR_NAME = #operatorName#
+      </isNotNull>
+      <isNotNull prepend="," property="processTime" >
+        PROCESS_TIME = #processTime#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="productType" >
+        PRODUCT_TYPE=#productType#
+      </isNotNull>
+      <isNotNull prepend="," property="certificate" >
+        CERTIFICATE=#certificate#
+      </isNotNull>
+      <isNotNull prepend="," property="resourceConfirmStatus" >
+        RESOURCE_CONFIRM_STATUS=#resourceConfirmStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="gtMaxNum" >
+        GT_MAXNUM=#gtMaxNum#
+      </isNotNull>
+    </dynamic>
+    where TMALL_MAP_ID = #tmallMapId# 
+  </update>
+</sqlMap>

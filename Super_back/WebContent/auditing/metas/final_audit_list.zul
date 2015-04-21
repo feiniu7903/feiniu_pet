@@ -1,0 +1,127 @@
+<?page title="final_audit" contentType="text/html;charset=UTF-8"?>
+
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./final_audit"?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="label" extends="label" class="com.lvmama.back.utils.perm.PermLabel" ?>
+<zk>
+	<window id="final_audit" title="采购产品终审" border="normal"
+		closable="false"
+		apply="com.lvmama.back.web.audit.PermFinalAuditTaskAction">
+		<grid width="100%">
+			<columns>
+				<column width="8%"></column>
+				<column width="20%"></column>
+				<column width="8%"></column>
+				<column width="20%"></column>
+				<column width="8%"></column>
+				<column width="20%"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>采购产品名称：</hbox>
+					<hbox>
+						<textbox value="@{saction.params.productName }" />
+					</hbox>
+					<hbox>录入/修改人登陆名：</hbox>
+					<hbox>
+						<textbox
+							value="@{saction.params.operateUserName }" />
+					</hbox>
+					<hbox>一审人登陆名：</hbox>
+					<hbox>
+						<textbox
+							value="@{saction.params.firstAuditUserName }" />
+					</hbox>
+					<hbox>
+						<button label="查询" id="search"
+							onClick="saction.doQuery();" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox
+			model="@{saction.finalAuditTaskList,load-after='search.onClick' }"
+			width="100%">
+			<listhead>
+				<listheader label="采购产品ID" width="5%" />
+				<listheader label="采购产品名称" width="20%" />
+				<listheader label="一审人" width="8%" />
+				<listheader label="一审时间" width="10%" />
+				<listheader label="消息" />
+				<listheader label="状态" width="8%" />
+				<listheader label="关联初审任务" width="8%" />
+				<listheader label="关联销售产品" width="8%" />
+				<listheader label="操作" width="8%" />
+			</listhead>
+			<listitem height="25px" self="@{each='finalAuditTask' }">
+				<listcell label="@{finalAuditTask.objectId }" />
+				<listcell>
+					<a label="@{finalAuditTask.productName}" onClick="saction.doPreview(self.getAttributes());" style="color:blue">
+						<custom-attributes metaProductId="@{finalAuditTask.objectId}"/>
+					</a>
+				</listcell>
+				<listcell label="@{finalAuditTask.firstAuditUserName }" />
+				<listcell label="@{finalAuditTask.createTime }" />
+				<listcell label="@{finalAuditTask.description }" />
+				<listcell label="@{finalAuditTask.zhTaskLevel }" />
+				<listcell>
+					<a style="color:blue" label="查看初审列表"
+						onClick='saction.showWindow("/auditing/metas/relate_firt_aud.zul", self.getAttributes());'>
+						<custom-attributes finalTaskId="@{finalAuditTask.finalTaskId }" />
+					</a>
+				</listcell>
+				<listcell>
+					<a style="color:blue" label="关联销售产品"
+						onClick='saction.showWindow("/auditing/metas/relate_prod.zul", self.getAttributes());'>
+						<custom-attributes metaProductId="@{finalAuditTask.objectId }" />
+					</a>
+				</listcell>
+				<listcell>
+					<a style="color:blue" label="生效" permCode="1919"
+						onClick='saction.takeEffected(self.getAttribute("finalTaskId"));'>
+						<custom-attributes
+							finalTaskId="@{finalAuditTask.finalTaskId }" />
+					</a>
+					<label isShow="@{perm.urlEditVisible}" value="|"/>
+					<a style="color:blue" label="不生效" permCode="2006"
+						onClick='saction.takeUnEffected(self.getAttribute("finalTaskId"));'>
+						<custom-attributes
+							finalTaskId="@{finalAuditTask.finalTaskId }" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+	</window>
+</zk>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

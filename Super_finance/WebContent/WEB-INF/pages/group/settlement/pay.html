@@ -1,0 +1,79 @@
+<form id="bank_pay_form" method="post" action="/finance/group/settlement/doPay.json"> 
+	<ul class="cash_tan">
+		<li <#if (!supplierMoney.isUseAdvancedeposits?? && settlement.isUseAdvancedeposits == "N") || readOnlyFlag == true  >style = "display:none;" </#if> id="advancedepositsBal_pay_isUseAdv" style="font-weight: bold;color: red;padding-left:90px;">
+			使用预存款打款
+		</li>
+		<li>
+	   		<input type="hidden" id="settlementAmount" value="${oughtPayAmount?string("##0.00")}"/>
+	   		<input type="hidden" id="deductionAmount" value="${supplierMoney.deductionAmountYuan?string("##0.00")}"/>
+	   		<input type="hidden" id="advanceDepositAmount" value="${supplierMoney.advanceDepositAmountYuan?string("##0.00")}"/>
+	   		<input type="hidden" name="groupSettlementIds" value="${groupSettlementIds}"/>
+			<label class="cash_name">供应商：</label>
+			<div class="tan_text" width="300px">${settlement.supplierName}</div>
+		</li>
+		<li>
+			<label class="cash_name">付款方式：</label>
+			<div class="tan_text">${settlement.zhPaymentType!""}</div>
+		</li>
+		<li>
+			<label class="cash_name">币种：</label>
+			<div class="tan_text">${settlement.currency}</div>
+		</li>
+		<li>
+			<label class="cash_name">应打款金额：</label>
+			<div class="tan_text">${oughtPayAmount?string(",##0.00")}</div>
+		</li>
+		<li <#if (!supplierMoney.deductionAmount?? || supplierMoney.deductionAmount &lt;= 0) || readOnlyFlag == true >style = "display:none;" </#if>>
+   			<label class="cash_name">抵扣款余额(元)：</label> 
+			<div class="tan_text" style = "float:left;">${supplierMoney.deductionAmountYuan?string(",##0.00")}</div>
+			<label class="cash_name" style ="text-align:left;padding-left:10px;">
+			<input id="deductionPay"  type="checkbox" name="deductionPay" value = "1" class="check_box_style" /> 使用 </label>
+		</li>
+		<li id = "deductionPay_li" style = "display:none;">
+			<label class="cash_name">使用金额：</label> 
+			<input id="deduction_pay_amount" name="deductionPayAmountYuan"  maxlength="8"  type="text" class="input_text02" value="0"/>
+		</li>
+		<li <#if (!supplierMoney.advanceDepositAmount?? || supplierMoney.advanceDepositAmount &lt;= 0) || readOnlyFlag == true  >style = "display:none;" </#if>>
+   			<label class="cash_name">预存款余额(元)：</label> 
+			<div  class="tan_text"  style = "float:left;">${supplierMoney.advanceDepositAmountYuan?string(",##0.00")}</div>
+			<label class="cash_name" style ="text-align:left;padding-left:10px;">
+			<input id="advanceDepositsPay" type="checkbox" name="advanceDepositsPay" value = "1" class="check_box_style" /> 使用 </label>
+		</li>
+		<li id="advanceDepositsPay_li" style = "display:none;">
+			<label class="cash_name">使用金额：</label> 
+			 <input id="advanceDeposits_pay_amount" name="advanceDepositsPayAmountYuan"  maxlength="8"  type="text" class="input_text02"  value="0"/>
+		</li>
+		<li>
+			<label class="cash_name">打款银行：</label>
+			<select name="bank" class="cash_select">
+				<option value="中国银行">中国银行</option>
+				<option value="交通银行">交通银行</option>
+				<option value="建设银行" selected="selected">建设银行</option>
+				<option value="招商银行">招商银行</option>
+				<option value="现金">现金</option>
+			</select>
+		</li>
+		<li>
+			<label class="cash_name">打款金额：</label>
+		 	<div id="bank_pay_currency" class="tan_text"></div>
+		 	<input <#if readOnlyFlag>readonly="true"</#if> id="bank_pay_amount" name="amountYuan" type="text" class="input_text02" value="${oughtPayAmount?string(".00")}" />
+		</li>
+		<li><label class="cash_name">汇&nbsp;&nbsp;&nbsp;&nbsp;率：</label>
+			<input type="text" name="rate" class="input_text02"/>
+		</li>
+		<li>
+			<label class="cash_name">打款日期：</label>
+			<input type="text" name="operatetimes" class="input_text02 Wdate" onclick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm'})" value="${currentDate}" />
+		</li>
+		<li>
+			<label class="cash_name">发票回收时间：</label>
+			<input type="text" name="invoiceRetdates" class="input_text02 Wdate"  onclick="WdatePicker({isShowClear:true,readOnly:true,dateFmt:'yyyy-MM-dd'})"/></li>
+		<li>
+			<label class="cash_name">备&nbsp;&nbsp;&nbsp;&nbsp;注：</label>
+			<textarea name="remark" class="Textarea_txt" cols="25" rows="3"></textarea>
+		</li>
+	</ul>
+	<div class="popups_button" >
+		<input type="submit" class="left_bt" value="确 定" />
+	</div>
+</form>

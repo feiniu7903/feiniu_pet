@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CMT_STATISTICS">
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.CmtStatisticsModel">
+		<result column="STATICSTICS_NAME" property="name" />
+		<result column="CT" property="count" />
+	</resultMap>
+	
+	<sql id="statisticsSql">
+		<dynamic>
+			<isEqual property="statistics" compareValue="place"> S.TITLE_NAME</isEqual>
+			<isNotEqual property="statistics" compareValue="place"> C.USER_ID,C.USER_NAME</isNotEqual>
+		</dynamic>
+	</sql>
+	<sql id="queryCmtByParamSql">
+		SELECT <include refid="statisticsSql"/> STATICSTICS_NAME, COUNT(C.CMT_COMMENT_ID) CT
+	  	  FROM LVMAMA_PET.CMT_TITLE_STATISTICS S, LVMAMA_PET.CMT_COMMENT C
+	  	 WHERE S.PLACE_ID = C.PLACE_ID
+	  	<dynamic>
+	  		<isNotEmpty prepend=" AND " property="stage"> S.STAGE = #stage# </isNotEmpty>
+	  		<isNotEmpty prepend=" AND " property="startDate"> C.CREATED_TIME &gt;= #startDate# </isNotEmpty>
+	  		<isNotEmpty prepend=" AND " property="endDate"> C.CREATED_TIME &lt;= #endDate# </isNotEmpty>
+	  		<isNotEmpty prepend=" AND " property="cmtType"> C.CMT_TYPE = #cmtType# </isNotEmpty>
+	  		<isNotEmpty prepend=" AND " property="isBest"> C.IS_BEST = #isBest# </isNotEmpty>
+	  		<isNotEmpty prepend=" AND " property="isAudit"> C.IS_AUDIT = #isAudit# </isNotEmpty>
+	  	</dynamic>
+	  	 GROUP BY <include refid="statisticsSql"/>
+ 		 <dynamic>
+ 		 	<isNotEmpty property="region">
+ 		 		<isNotEmpty property="queryNum"> 
+ 		 			HAVING COUNT(C.CMT_COMMENT_ID) <![CDATA[$region$]]> #queryNum#
+ 		 		</isNotEmpty>
+ 		 	</isNotEmpty>
+ 		 </dynamic>
+	</sql>
+
+	<select id="query" parameterClass="java.util.Map"
+		resultMap="BaseResultMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT
+		rownum r,
+		info.*
+		from (
+		SELECT * FROM (
+			<include refid="queryCmtByParamSql" />
+		) A 
+		<dynamic>
+			<isNotEmpty property="orderBy"> ORDER BY  A.CT  $orderBy$</isNotEmpty>
+		</dynamic>
+		) info
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow">rownum &lt;= #_endRow#
+			</isNotEmpty>
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+			</isNotEmpty>
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;=
+				#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="count" parameterClass="java.util.Map"
+		resultClass="java.lang.Long">
+		select count(*) from (
+		<include refid="queryCmtByParamSql" />
+		)
+	</select>
+</sqlMap>

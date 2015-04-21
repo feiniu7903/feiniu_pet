@@ -1,0 +1,30 @@
+<?page title="编辑备注" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_editComment"?>
+<zk>
+<window title="编辑备注" border="normal" closable="true" sizable="true" id="win_editComment" apply="com.lvmama.back.web.ord.eContract.OrdEContractCommentAction">
+	<listbox model="@{saction.list,load-after='saveBtn.onClick'}">
+		<listitem self="@{each='comment'}">
+			<listcell>
+				<grid>
+					<rows>
+						<row>
+							<label value="@{comment.contractComment}"/>
+						</row>
+						<row>
+							<hbox>
+								<label value="@{comment.createdUser}"/>							
+								<label value="@{comment.createdDate}" left="false"/>
+							</hbox>
+						</row>
+					</rows>
+				</grid>				
+			</listcell>
+		</listitem>
+	</listbox>
+	<groupbox>
+		<caption>备注信息:</caption>		
+		<textbox multiline="true" width="100%" rows="5" id="commentContent" value="@{saction.comment.contractComment,load-after='saveBtn.onClick'}"/>
+		<button label="保存" onClick="saction.save();" id="saveBtn"/>		
+	</groupbox>
+</window>
+</zk>

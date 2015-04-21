@@ -1,0 +1,22 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./mc_bandproduct"?>
+<bandbox id="mc_bandproduct" apply="com.lvmama.back.utils.MacroProductSelect" onChanging="mc_bandproduct$composer.changeProduct(event);"
+	mold="rounded" autodrop="true">
+	<bandpopup>
+		<vbox>
+			<listbox width="300px" id="bandboxListBox" mold="paging" pageSize="20"
+				model="@{mc_bandproduct$composer.productList, load-after='mc_bandproduct.onChanging' }"
+				onSelect='mc_bandproduct.value=self.selectedItem.lastChild.label; productId.value=self.selectedItem.value; Events.sendEvent(new Event("onChange", productId));mc_bandproduct.close();'>
+				<listhead>
+					<listheader width="50px" label="编号" />
+					<listheader width="80px" label="商品编号" />
+					<listheader label="产品名称" />
+				</listhead>
+				<listitem self="@{each='prod'}" value="@{prod.productId}" height="25px">
+					<listcell label="@{prod.productId}" />
+					<listcell label="@{prod.bizcode}" />
+					<listcell label="@{prod.productName}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

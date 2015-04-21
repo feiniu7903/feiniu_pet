@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>	
+	<bean id="orderAutoPerformJob" class="com.lvmama.job.OrderAutoPerformJob">
+    	 <property name="orderAutoPerformService" ref="orderAutoPerformService" />
+	</bean>
+	
+	<bean id="updateTrainJob" class="com.lvmama.job.UpdateTrainJob">
+    	 <property name="prodTrainService" ref="prodTrainService"/>
+    	 <property name="trainDataSyncService" ref="trainDataSyncService"/>
+    	 <property name="prodTrainCacheService" ref="prodTrainCacheService"/>
+	</bean>
+	
+	<bean id="trainReconnectSupplierJob" class="com.lvmama.job.TrainCreateFailReconnectSupplierJob">
+    	 <property name="comJobContentService" ref="comJobContentService"/>
+    	 <property name="trainOrderService" ref="trainOrderService"/>
+    	 <property name="orderTrafficService" ref="orderTrafficService"/>
+    	 <property name="orderServiceProxy" ref="orderServiceProxy"/>
+	</bean>
+	
+	<bean id="orderAutoPerformJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="orderAutoPerformJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="updateTrainJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="updateTrainJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="copyTrainCacheJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="updateTrainJob" />
+		</property>
+		<property name="targetMethod">
+			<value>runCopy</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="trainReconnectSupplierFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="trainReconnectSupplierJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="orderAutoPerformJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="orderAutoPerformJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 */1 * * ? *</value> 
+		</property>
+	</bean> 
+	
+	<bean id="updateTrainJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="updateTrainJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/10 * * * ? *</value> 
+		</property>
+	</bean>
+	
+	<bean id="copyTrainCacheJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="copyTrainCacheJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 1 * * ? *</value> 
+		</property>
+	</bean>
+	
+	<bean id="trainReconnectSupplierTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="trainReconnectSupplierFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>10 */3 8-23 * * ? *</value> 
+		</property>
+	</bean>
+	
+	<!-- 更新酒店订单状态Job -->
+	<bean id="updateHotelOrderStatusJob" class="com.lvmama.job.UpdateHotelOrderStatusJob">
+		<property name="updateOrderStatusServices">
+			<list>
+				<ref bean="longtengjielvUpdateHotelOrderStatusService" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="updateHotelOrderStatusJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="updateHotelOrderStatusJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="updateHotelOrderStatusJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="updateHotelOrderStatusJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/30 * * * ? *</value>
+		</property>
+	</bean>
+	
+	<!-- 上航假期产品更新job -->
+	<bean id="shholidayProductUpdateJob" class="com.lvmama.job.ShHolidayProductUpdateJob">
+		<property name="shholidayProductService">
+			<ref bean="shholidayProductService" />
+		</property>
+	</bean>
+	
+	<bean id="shholidayProductUpdateJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="shholidayProductUpdateJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="shholidayProductUpdateJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="shholidayProductUpdateJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 23 ? * *</value>
+		</property>
+	</bean>
+	
+	<!-- 锦江之星 产品价格同步 job
+	<bean id="jinjiangProductUpdateJob" class="com.lvmama.job.JinjiangProductUpdateJob">
+		<property name="jinjiangProductService">
+			<ref bean="jinjiangProductService" />
+		</property>
+	</bean>
+
+	<bean id="jinjiangProductUpdateJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="jinjiangProductUpdateJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="jinjiangProductUpdateJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="jinjiangProductUpdateJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 */1 * * ? *</value>
+		</property>
+	</bean>
+	-->
+	
+	<!--  锦江之星 保存临时存储产品表 Job
+	<bean id="jinjiangProductTempStockJob" class="com.lvmama.job.JinjiangProductTempStockJob">
+		<property name="jinjiangProductService">
+			<ref bean="jinjiangProductService" />
+		</property>
+	</bean>
+	
+	<bean id="jinjiangProductTempStockJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="jinjiangProductTempStockJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="jinjiangProductTempStockJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="jinjiangProductTempStockJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 30 23 * * ? *</value>
+		</property>
+	</bean>
+	-->
+	
+	
+	
+	<!-- 上航假期价格更新job -->
+	<bean id="shHolidayPriceUpdateJob" class="com.lvmama.job.ShHolidayPriceUpdateJob">
+		<property name="shholidayProductService">
+			<ref bean="shholidayProductService" />
+		</property>
+	</bean>
+	
+	<bean id="shholidayPriceUpdateJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="shHolidayPriceUpdateJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="shholidayPriceUpdateJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="shholidayPriceUpdateJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 */1 * * ? *</value>
+		</property>
+	</bean>
+	
+	<!-- 星海假期job -->
+	<!-- <bean id="xinghaiProductUpdateJob" class="com.lvmama.job.XinghaiProductUpdateJob">
+		<property name="xinghaiHolidayProductService">
+			<ref bean="xinghaiHolidayProductService" />
+		</property>
+	</bean>
+	
+	<bean id="xinghaiProductUpdateJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="xinghaiProductUpdateJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="xinghaiProductUpdateJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="xinghaiProductUpdateJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 23 ? * *</value>
+		</property>
+	</bean> -->
+	
+	<!-- 故宫对接，时间价格job -->
+	<bean id="gugongTimePriceJob" class="com.lvmama.job.GugongTimePricesJob">
+		<property name="workOrderService" ref="workOrderService"/>
+		<property name="metaProductBranchService" ref="metaProductBranchService"/>
+		<property name="metaProductService" ref="metaProductService"/>
+		<property name="prodProductService" ref="prodProductService"/>
+		<property name="prodProductBranchService" ref="prodProductBranchService"/>
+		<property name="publicWorkOrderService" ref="publicWorkOrderService"/>
+	</bean>
+	
+	<bean id="GugongTimePricesJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="gugongTimePriceJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="gugongTimePriceJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="GugongTimePricesJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 2 0 ? * *</value>
+		</property>
+	</bean>
+	
+ 
+	<bean id="updateOrderStatusJob" class="com.lvmama.job.UpdateOrderStatusJob">
+		<property name="updateOrderStatusService" ref="updateOrderStatusService"/>
+	</bean>
+	
+	<bean id="UpdateOrderStatusJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="updateOrderStatusJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="updateOrderStatusJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="UpdateOrderStatusJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/30 * * * ? *</value>
+		</property>
+	</bean>
+	
+	<bean id="ShanghuTimePricesJob" class="com.lvmama.job.ShanghuTimePricesJob">
+		<property name="shanghuProductService" ref="shanghuProductService"/>
+	</bean>
+	
+	<bean id="ShanghuTimePricesJobFactory" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="ShanghuTimePricesJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="shanghuTimePricesJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="ShanghuTimePricesJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 23 * * ?</value>
+		</property>
+	</bean>
+	
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref local="orderAutoPerformJobTimes" />
+				<ref local="updateHotelOrderStatusJobTimes" />
+				<ref local="shanghuTimePricesJobTimes" />
+				<!--<ref local="updateTrainJobTimes"/>-->
+				<ref local="updateOrderStatusJobTimes"/>
+				<ref local="shholidayProductUpdateJobTimes"/>
+<!--				<ref local="jinjiangProductUpdateJobTimes"/>
+				<ref local="jinjiangProductTempStockJobTimes"/>-->
+				<ref local="shholidayPriceUpdateJobTimes"/>
+				<!--<ref local="copyTrainCacheJobTimes"/>
+				<ref local="trainReconnectSupplierTimes" />-->
+			</list>
+		</property>
+	</bean>
+</beans>

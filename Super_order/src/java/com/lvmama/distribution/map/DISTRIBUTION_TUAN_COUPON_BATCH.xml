@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="DISTRIBUTION_TUAN_COUPON_BATCH">
+   <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributionTuanCouponBatch">
+        <result property="distributionBatchId" column="DISTRIBUTION_BATCH_ID"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="ordBatchCount" column="ORD_BATCH_COUNT"/>
+        <result property="distributorTuanInfoId" column="DISTRIBUTOR_TUAN_INFO_ID"/>
+        <result property="validEndTime" column="VALID_END_TIME"/>
+        <result property="orderBatchCreator" column="ORDER_BATCH_CREATOR"/>
+        <result property="orderBatchCreatetime" column="ORDER_BATCH_CREATETIME"/>
+        <result property="operatorName" column="operator_Name"/>
+    </resultMap>
+    
+     <resultMap id="exBaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributionTuanCouponBatch" extends="BaseResultMap">
+        <result property="productName" column="product_name"/>
+        <result property="branchName" column="branch_name"/>
+        <result property="distributorTuanInfoName" column="distributor_name"/>
+    </resultMap>
+    
+    <resultMap id="codeExBaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributionTuanCouponBatch" extends="exBaseResultMap">
+        <result property="tuanCode" column="distribution_coupon_code"/>
+    </resultMap>
+    
+    <insert id="insert" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionTuanCouponBatch" >
+    	<selectKey  keyProperty="distributionBatchId" resultClass="Long"> SELECT DISTRIBUTION_TUAN_BATCH_ID.NEXTVAL FROM DUAL</selectKey>
+        INSERT INTO DISTRIBUTION_TUAN_COUPON_BATCH (
+        	DISTRIBUTION_BATCH_ID ,
+        	PRODUCT_ID ,
+        	BRANCH_ID ,
+        	ORD_BATCH_COUNT ,
+        	DISTRIBUTOR_TUAN_INFO_ID ,
+        	VALID_END_TIME ,
+        	operator_Name ,
+        	ORDER_BATCH_CREATOR ,
+        	ORDER_BATCH_CREATETIME 
+        ) VALUES (
+        	#distributionBatchId# ,
+        	#productId# ,
+        	#branchId# ,
+        	#ordBatchCount# ,
+        	#distributorTuanInfoId# ,
+        	#validEndTime# ,
+        	#operatorName# ,
+        	#orderBatchCreator# ,
+        	#orderBatchCreatetime# 
+        )
+    </insert>
+
+    <update id="update" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionTuanCouponBatch">
+        UPDATE DISTRIBUTION_TUAN_COUPON_BATCH SET
+	        VALID_END_TIME = #validEndTime# 
+        WHERE 
+	        DISTRIBUTION_BATCH_ID = #distributionBatchId# 
+    </update>
+
+    <delete id="delete" parameterClass="Long">
+        DELETE FROM DISTRIBUTION_TUAN_COUPON_BATCH WHERE
+        DISTRIBUTION_BATCH_ID = #distributionBatchId# 
+    </delete>
+    
+    <select id="find" resultMap="BaseResultMap" parameterClass="Long">
+	    SELECT *
+	        FROM DISTRIBUTION_TUAN_COUPON_BATCH 
+	        WHERE 
+		        DISTRIBUTION_BATCH_ID = #distributionBatchId# 
+    </select>
+    
+	<sql id="findParam">
+	    		<isNotEmpty prepend="AND" property="productId">
+		             b.product_id = #productId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="productName">
+		             PP.product_Name LIKE '%'|| #productName# ||'%'
+		       </isNotEmpty> 
+		       <isNotEmpty prepend="AND" property="branchId">
+		             b.BRANCH_ID = #branchId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="distributionId">
+		             b.DISTRIBUTOR_TUAN_INFO_ID = #distributionId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="startTime">
+		             b.ORDER_BATCH_CREATETIME &gt;= #startTime#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="endTime">
+		             b.ORDER_BATCH_CREATETIME &lt;= #endTime#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="operatorName">
+		             b.operator_Name LIKE '%'|| #operatorName# ||'%'
+		       </isNotEmpty>
+	</sql>
+	 
+    <select id="queryCount" resultClass="long" parameterClass="java.util.Map">
+         	SELECT count(B.DISTRIBUTION_BATCH_ID)
+	        		
+			FROM 
+			       	DISTRIBUTION_TUAN_COUPON_BATCH B,
+			       	PROD_PRODUCT PP,
+			       	PROD_PRODUCT_BRANCH PB,
+			       	distributor_tuan_info dti
+			WHERE
+			       	B.PRODUCT_ID = PP.PRODUCT_ID
+			AND
+			       	B.BRANCH_ID = PB.PROD_BRANCH_ID 
+			AND    
+					B.DISTRIBUTOR_TUAN_INFO_ID = DTI.DISTRIBUTOR_TUAN_INFO_ID 
+	<include refid="findParam"/>					
+    </select>
+    
+    <select id="query" resultMap="exBaseResultMap" parameterClass="java.util.Map">
+    	<include refid="pageSearchHead"/> 
+		    SELECT 
+	        		B.*,PP.PRODUCT_NAME,PB.BRANCH_NAME,DTI.DISTRIBUTOR_NAME
+			FROM 
+			       	DISTRIBUTION_TUAN_COUPON_BATCH B,
+			       	PROD_PRODUCT PP,
+			       	PROD_PRODUCT_BRANCH PB,
+			       	distributor_tuan_info dti
+			WHERE
+			       	B.PRODUCT_ID = PP.PRODUCT_ID
+			AND
+			       	B.BRANCH_ID = PB.PROD_BRANCH_ID 
+			AND    
+					B.DISTRIBUTOR_TUAN_INFO_ID = DTI.DISTRIBUTOR_TUAN_INFO_ID 
+		<include refid="findParam"/>
+		order by b.DISTRIBUTION_BATCH_ID DESC
+		<include refid="pageSearchFoot"/> 
+    </select>
+
+	
+	<select id="queryTuanCodeByBatchId" resultMap="codeExBaseResultMap" parameterClass="Long">
+		    SELECT 
+	        		B.*,PP.PRODUCT_NAME,PB.BRANCH_NAME,DTI.DISTRIBUTOR_NAME,DTC.DISTRIBUTION_COUPON_CODE
+			FROM 
+			       	DISTRIBUTION_TUAN_COUPON_BATCH B,
+			       	PROD_PRODUCT PP,
+			       	PROD_PRODUCT_BRANCH PB,
+			       	DISTRIBUTION_TUAN_COUPON DTC,
+			       	DISTRIBUTOR_TUAN_INFO DTI
+			WHERE
+			       	B.PRODUCT_ID = PP.PRODUCT_ID
+			AND
+			       	B.BRANCH_ID = PB.PROD_BRANCH_ID 
+			AND    
+					B.DISTRIBUTOR_TUAN_INFO_ID = DTI.DISTRIBUTOR_TUAN_INFO_ID 
+			AND
+					DTC.BATCH_ID = B.DISTRIBUTION_BATCH_ID 					
+			AND
+					B.DISTRIBUTION_BATCH_ID = #distributionBatchId#		
+		ORDER BY DTC.DISTRIBUTION_COUPON_ID DESC
+    </select>
+    
+    <select id="queryTuanCouponByCode" resultMap="codeExBaseResultMap" parameterClass="String">
+		    SELECT 
+	        		B.*,PP.PRODUCT_NAME,PB.BRANCH_NAME,DTI.DISTRIBUTOR_NAME,DTC.DISTRIBUTION_COUPON_CODE
+			FROM 
+			       	DISTRIBUTION_TUAN_COUPON_BATCH B,
+			       	PROD_PRODUCT PP,
+			       	PROD_PRODUCT_BRANCH PB,
+			       	DISTRIBUTION_TUAN_COUPON DTC,
+			       	DISTRIBUTOR_TUAN_INFO DTI
+			WHERE
+			       	B.PRODUCT_ID = PP.PRODUCT_ID
+			AND
+			       	B.BRANCH_ID = PB.PROD_BRANCH_ID 
+			AND    
+					B.DISTRIBUTOR_TUAN_INFO_ID = DTI.DISTRIBUTOR_TUAN_INFO_ID 
+			AND
+					DTC.BATCH_ID = B.DISTRIBUTION_BATCH_ID 					
+			AND
+					DTC.DISTRIBUTION_COUPON_CODE = #tuanCode#		
+		ORDER BY DTC.DISTRIBUTION_COUPON_ID DESC
+    </select>
+</sqlMap>
+

@@ -1,0 +1,60 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="usertoolbar" title="" border="normal"
+		apply="com.lvmama.eplace.web.supplier.ToolbarAction">
+<panel border="normal">
+	<toolbar align="center">
+		<grid>
+			<columns>
+				<column width="30%" height="30px"></column>
+				<column width="35%" height="30px"></column>
+				<column width="35%" height="30px"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox >
+						当前用户:
+						<label id="eplace_userId" value=""></label>
+					</hbox>
+					<hbox >
+						客户经理：
+							<label id="eplace_manager" value=""></label>
+						
+					</hbox>
+					<hbox >
+						通关口:
+						
+						<label id="eplace_TargetId" value="@{saction.showSuplierTarget}"></label>
+					</hbox>
+				</row>
+				<row>
+					<hbox>
+						真实姓名:
+						<label id="eplace_realName" value=""></label>
+					</hbox>
+					<hbox >
+						电话：
+						<label id="eplace_phone" value=""></label>
+					</hbox>
+					<hbox>
+						<zscript>
+							com.lvmama.comm.bee.po.pass.PassPortUser passPortUser = (com.lvmama.comm.bee.po.pass.PassPortUser) Sessions.getCurrent().getAttribute("SESSION_USER");
+							eplace_userId.setValue(passPortUser.getUserId() != null ? passPortUser.getUserId() : "");
+							eplace_realName.setValue(passPortUser.getName() != null ? passPortUser.getName() : "");
+							com.lvmama.comm.bee.po.pass.EplaceSupplier eplaceSupplier = (com.lvmama.comm.bee.po.pass.EplaceSupplier) Sessions.getCurrent().getAttribute("SESSION_EPLACE_SUPPLIER");
+							if (eplaceSupplier != null) {
+								eplace_manager.setValue(eplaceSupplier.getProductManager() !=null? eplaceSupplier.getProductManager() : "");
+								eplace_phone.setValue(eplaceSupplier.getMobile() !=null? eplaceSupplier.getMobile() : "");
+							}
+						</zscript>
+						<a style="color:blue" label="修改密码"
+							onClick='saction.showWindow("/eplace/supplier/userPasswordEdit.zul",self.getAttributes());'>
+						</a>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</toolbar>
+</panel>
+</window>
+</zk>

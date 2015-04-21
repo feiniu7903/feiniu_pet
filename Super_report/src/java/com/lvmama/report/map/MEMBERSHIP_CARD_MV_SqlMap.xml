@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_MEMBERSHIP_CARD_MV" >
+
+   <resultMap id="BaseResultMap" class="com.lvmama.report.po.MembershipCardDetailsMV" >
+    <result column="CARD_ID"            property="cardId" />
+	<result column="CHANNEL_NAME" 		property="channelName" />
+	<result column="CHANNEL_CODE" 		property="channelCode" />
+	<result column="CARD_PREFIX_NUMBER" property="cardPrefixNumber" />
+	<result column="AMOUNT" 			property="amount"/>
+    <result column="CREATE_TIME" 		property="createTime" />
+    <result column="ACTIVED_COUNT" 		property="activedCount" />
+	<result column="UNACTIVE_COUNT" 	property="unactiveCount" />
+	<result column="PERCENT" 			property="activePercent" />
+	<result column="PERSON_COUNT" 		property="buyCount"/>
+    <result column="ACTUAL_SUM" 		property="actualSum" />
+    <result column="ACTIVED_CARD_SUM" 		property="activedCardSum" />
+    <result column="PERSON_ACTUAL" 		property="actualPerson" />
+  </resultMap>
+  <sql id="reuseSQL">
+	SELECT CARD.CARD_ID,
+	       CHANNEL.CHANNEL_NAME,
+	       CHANNEL.CHANNEL_CODE,
+	       CARD.CARD_PREFIX_NUMBER,
+	       CARD.AMOUNT,
+	       CARD.CREATE_TIME,
+	       A.ACTIVED_COUNT,
+	       A.UNACTIVE_COUNT,
+	       TRUNC((A.ACTIVED_COUNT * 100 /
+	             DECODE((A.UNACTIVE_COUNT + A.ACTIVED_COUNT),
+	                     0,
+	                     1,
+	                     (A.UNACTIVE_COUNT + A.ACTIVED_COUNT))),
+	             2) || '%' PERCENT,
+	       NVL(B.ACTUAL_SUM, 0) / 100 ACTUAL_SUM,
+	       NVL(B.ACTIVED_CARD_SUM, 0) / 100 ACTIVED_CARD_SUM,
+	       NVL(B.PERSON_COUNT, 0) PERSON_COUNT,
+	       NVL(B.PERSON_ACTUAL, 0) PERSON_ACTUAL
+	  FROM LVMAMA_PET.MARK_MEMBERSHIP_CARD CARD,
+	       LVMAMA_PET.MARK_CHANNEL CHANNEL,
+	        (SELECT C.CARD_ID,
+	               COUNT(CASE
+	                       WHEN C.USED != 'FALSE' THEN
+	                        1
+	                       ELSE
+	                        NULL
+	                     END) ACTIVED_COUNT,
+	               COUNT(CASE
+	                       WHEN C.USED = 'FALSE' THEN
+	                        1
+	                       ELSE
+	                        NULL
+	                     END) UNACTIVE_COUNT
+	          FROM LVMAMA_PET.MARK_MEMBERSHIP_CARD_CODE C
+	         GROUP BY C.CARD_ID) A,
+	       (SELECT C.CARD_ID,
+	               SUM(NVL((SELECT SUM(NVL(O.ACTUAL_PAY, 0))
+	                         FROM LVMAMA_SUPER.ORD_ORDER O
+	                        WHERE O.USER_ID = U.USER_NO AND O.PAYMENT_STATUS = 'PAYED' AND O.ORDER_STATUS != 'CANCEL'),
+	                       0)) ACTUAL_SUM,
+	               SUM(NVL((SELECT SUM(NVL(O.ACTUAL_PAY, 0))
+			                 FROM LVMAMA_SUPER.ORD_ORDER O
+			                WHERE O.USER_ID = U.USER_NO
+			                  AND O.PAYMENT_STATUS = 'PAYED'
+			                  AND O.ORDER_STATUS != 'CANCEL'
+			                  AND U.ACTIVE_MSCARD_DATE&lt;=O.CREATE_TIME),
+			               0)) ACTIVED_CARD_SUM,
+	               COUNT(DECODE((SELECT COUNT(O.ORDER_ID)
+	                              FROM LVMAMA_SUPER.ORD_ORDER O
+	                             WHERE O.USER_ID = U.USER_NO AND O.PAYMENT_STATUS = 'PAYED' AND O.ORDER_STATUS != 'CANCEL'),
+	                            0,
+	                            NULL,
+	                            1)) PERSON_COUNT,
+	               COUNT((SELECT SUM(NVL(O.ACTUAL_PAY, 0))
+	                       FROM LVMAMA_SUPER.ORD_ORDER O
+	                      WHERE O.USER_ID = U.USER_NO
+	                        AND O.ACTUAL_PAY > 0 AND O.PAYMENT_STATUS = 'PAYED' AND O.ORDER_STATUS != 'CANCEL')) PERSON_ACTUAL
+	          FROM LVMAMA_PET.USER_USER U, LVMAMA_PET.MARK_MEMBERSHIP_CARD_CODE C
+	         WHERE U.MEMBERSHIP_CARD = C.CARD_CODE
+	         GROUP BY C.CARD_ID) B
+	 WHERE CARD.CHANNEL_ID = CHANNEL.CHANNEL_ID(+)
+	   AND CARD.CARD_ID = A.CARD_ID(+)
+	   AND CARD.CARD_ID = B.CARD_ID(+)
+	<dynamic>		
+	    <isNotEmpty prepend=" AND " property="channelName">channel.CHANNEL_NAME = #channelName#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="channelCode">channel.CHANNEL_CODE = #channelCode#</isNotEmpty>
+		
+		<isNotEmpty prepend=" AND " property="cardPrefixNumber">CARD.CARD_PREFIX_NUMBER = #cardPrefixNumber#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="beginAmount">card.AMOUNT &gt;= #beginAmount#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="endAmount">  card.AMOUNT &lt;= #endAmount#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="status">     card.IS_ACTIVATE = #status#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="beginCreateTime">card.CREATE_TIME &gt;= #beginCreateTime#</isNotEmpty>
+	    <isNotEmpty prepend=" AND " property="endCreateTime">card.CREATE_TIME &lt;= #endCreateTime#+1</isNotEmpty>
+	</dynamic>
+	<dynamic prepend=" ORDER BY ">
+		<isNotEmpty prepend=" , " property="activePercent"> TO_NUMBER(REPLACE(PERCENT,'%','')) $activePercent$</isNotEmpty>
+		<isNotEmpty prepend=" , " property="sales"> TO_NUMBER(REPLACE(ACTUAL_SUM,'%','')) $sales$</isNotEmpty>
+	</dynamic>	
+  </sql>
+ 
+  <!-- 查询 -->
+  <select id="query" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		<include refid="reuseSQL"/>
+  </select>
+  
+  <!-- 查询总数 -->
+  <select id="count" resultClass="long" parameterClass="java.util.Map">
+  	    SELECT COUNT(1) CT 
+  	      FROM  (
+  	      	<include refid="reuseSQL"/>
+  	      ) A
+  </select>
+</sqlMap>

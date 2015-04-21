@@ -1,0 +1,59 @@
+<?page title="设备编号管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./passDeviceWind"?>
+<?component name="listboxProvider" extends="listbox" class="com.lvmama.passport.utils.ListboxProviderSet"?>
+<?component name="lvmama_passPort" macroURI="passport.zul"?>
+<zk>
+	<window id="passDeviceWind" title="设备编号管理" border="normal" apply="com.lvmama.passport.web.pass.PassDeviceEditAction">
+		<zscript>
+		<![CDATA[
+			public void checkValues() {
+					saction.doSave();
+			}
+		]]> 
+		</zscript>
+		<grid>
+			<columns>
+				<column width="110px"></column>
+				<column></column>
+				<column width="110px"></column>
+				<column></column>
+				<column></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>通关点编号：</hbox>
+					<hbox>
+					<longbox id="targetId" value="@{saction.passDevice.targetId}"/>
+					</hbox>
+					<hbox>设备编号：</hbox>
+					<hbox>
+						<textbox id="deviceNo" value="@{saction.passDevice.deviceNo}"/>
+					</hbox>
+					<hbox>服务商名称：</hbox>
+					<hbox>
+						<listboxProvider mold="select" selectedItem="@{saction.passDevice.providerId}" />
+					</hbox>
+				</row>
+				<row>
+				<hbox>设备类型:</hbox>
+					<hbox>
+						<listbox id="deviceType" mold="select" selectedItem="@{saction.passDevice.deviceType}">
+						<listitem label="--请选择--" value="NO_TYPE" selected="true"/>
+				        <listitem label="新设备" value="NEW_DEVICE"/>
+				        <listitem label="老设备" value="OLD_DEVICE"/>
+				       </listbox>
+					</hbox>
+					<hbox>备注：</hbox>
+					<hbox>
+						<textbox id="memo" value="@{saction.passDevice.memo}"/>
+					</hbox>
+					<hbox>
+						<button label="保存" width="100px"
+							onClick="checkValues();" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

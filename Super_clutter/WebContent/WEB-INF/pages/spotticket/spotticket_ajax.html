@@ -1,0 +1,51 @@
+ <#assign prefix_pic_url="http://pic.lvmama.com/img/mobile/touch">
+ <#assign hostName = reauestHostName/>
+  <#setting number_format="#.##">
+  <#if placelist?? && placelist?size&gt;0 >
+	  <#list placelist as place>
+	     <li class="lv-spotticket-li clear"><a href="javascript:void(0);" onclick="union_skip('http://${hostName}/ticket/piao-${place.id}/');">
+	      	<div class="lv-spotticket-img lv-pull-left">
+	      	        <#if place.canOrderToday>
+	        			<img class="lv-today-book" src="${prefix_pic_url!}/img/today-book.png">
+	        		</#if>
+	      	  <img src="${prefixPic!}${place.middleImage!}">
+	      	</div>
+	          <div class="lv-spotticket-info lv-pull-right">
+	          	<ul>
+	              	<li class="lv-spotticket-title">
+				  	<div class="jd_title">
+						${place.name?default("")}
+					</div>
+	                 </li>
+	                  <li><span class="lv-color">&yen; ${place.sellPriceYuan!}</span><i>起</i> <span class="lv-proto-price">&yen; ${place.marketPriceYuan!}</span>
+	                  <span class="lv-pull-right"><#if place.cmtStarts?? &&  place.cmtStarts!="" >${place.cmtStarts!}分</#if></span></li>
+	                  <li>
+	                  	<span class="scenic_info_3">${place.subject!}</span>
+	                  	<span class="scenic_info_2">
+	                  		<#if place.hasBusinessCoupon?? &&  place.hasBusinessCoupon >
+	                  		<i class="ic_hui"></i>
+	                  		</#if>
+	                  		<!-- <i class="ic_xiang"></i> -->
+	                  		<#if place.cashRefund?? &&  place.cashRefund >
+	                  		<i class="ic_fan"></i></#if>
+	                  		<#if place.cashRefund>
+	                  		<em>&yen;${place.cashRefundY!}</em>
+	                  		</#if>
+	                  	</span>
+	                  </li>
+	                  <li class="lv-ellipsis jd_info">${place.address!}</li>
+	              </ul>
+	          </div>
+	          </a>
+	      </li>
+	      <div class="lv-seprator-line"></div>
+	   </#list>
+   <#else>
+         <#assign no_data_msg="没有找到合适的景点</br>请试试搜索其他关键词">
+		 <#include "../common/no_data_list.html">
+   </#if>
+   
+<input id = "tmp_p" type ="hidden" value = "${page}"/>
+<#if isLastPage?? && isLastPage  >
+	<input id = "lastPage_flag" type ="hidden" value = "1"/>
+</#if>

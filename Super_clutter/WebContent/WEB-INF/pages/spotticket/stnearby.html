@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>周边景点大全_周边好玩景点推荐-驴妈妈手机预订</title>
+<meta name="Keywords" content="周边景点,景点大全"/>
+<meta name="Description" content="驴妈妈无线官网:提供周边旅游景点门票手机预订,快速入园服务,同时推送周边好玩景点推荐,手机预订,方便您随时随地出游准备!"/>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/comm.js"></script>
+<script src="${request.contextPath}/js/spotTicket.js"></script>
+<script type="text/javascript">
+
+var latitude;
+var longitude;
+
+$(function(){
+	/*input 框变色*/
+	$("input.lv-input-search").focus(function(e) {
+		$("input.lv-input-search").parent().parent().addClass("lv-input-focus");
+	});
+	$("input.lv-input-search").blur(function(e) {
+		$("input.lv-input-search").parent().parent().removeClass("lv-input-focus");
+	});
+	
+	
+	/********   定位 相关 ************/
+	latitude = getLocalStorage(LOCAL_STORAGE_LAT);
+	longitude = getLocalStorage(LOCAL_STORAGE_LON);
+	/*currentCity = getLocalStorage(LOCAL_STRTORAGE_CURRENT_CITY);
+	if(null == latitude || "" == latitude  || latitude == "undefined" || null == longitude) {
+		if(navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(function(e){
+				latitude = e.coords.latitude;
+				longitude = e.coords.longitude;
+				setLocalStorage(LOCAL_STORAGE_LAT,latitude);
+				setLocalStorage(LOCAL_STORAGE_LON,longitude);
+				initCity(latitude,longitude,LOCAL_STRTORAGE_CURRENT_CITY); // 定位成功. 
+			},function(e){
+				initDatas(currentCity); // 如果定位失败 ! 
+			},{enableHighAccuracy:true,timeout:3000,maximumAge:3000});
+	    } else {
+	    	initDatas(currentCity); // 如果浏览器不支持定位  
+	    }
+	} else {
+		initDatas(currentCity);;// 如果已经定位过.  
+	}*/
+	
+	
+	$(".lv-excurtion-postion").click(function(){
+		if(longitude==""||longitude==null ||typeof(longitude) == "undefined"){
+			lvToast(false,"无法获取当前地理位置,获不到周边景点",3000);
+		}else{
+			window.location.href = "${request.contextPath}/position.htm?latitude="+latitude+"&longitude="+longitude;
+		}
+	});
+		
+});
+
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:history.back();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">周边景点</div>
+  <div class="lv-position lv-position-e"><a class="lv-excurtion-postion" href="javascript:void(0);">地图</a></div>
+  <!-- <div class="lv-position"><a class="lv-excurtion-postion" href="javascript:void(0);"><img src="${prefix_pic_url!}/img/position.png"></a></div> -->
+</div>
+
+<div class="lv-wrapper lv-min-height lv-media-width">
+<input type="hidden" name="page" id="page" value="1" data-name="">
+  <div class="lv-wrapper-container">
+  	<ul class="lv-spotticket-list jd_wrap" id="data_list">
+  	    <!-- 列表 -->
+	  	<#if placelist?? && placelist?size&gt;0>
+			<#list placelist as place>
+			  <li class="lv-spotticket-li clear"><a href="javascript:void(0);" onclick="union_skip('http://${hostName}/ticket/piao-${place.id}/');">
+	        	<div class="lv-spotticket-img lv-pull-left">
+	        	    <#if place.canOrderToday>
+	        			<img class="lv-today-book" src="${prefix_pic_url!}/img/today-book.png">
+	        		</#if>
+		        	<img src="${place.absoluteMiddleImage!}">
+	        	</div>
+	            <div class="lv-spotticket-info lv-pull-right">
+	            	<ul>
+	                	<li class="lv-spotticket-title">
+						<div class="jd_title">
+								${place.name?default("")}
+						</div>
+	                   </li>
+	                    <li><span class="lv-color">&yen; ${place.sellPriceYuan!}</span><i>起</i> <span class="lv-proto-price">&yen; ${place.marketPriceYuan!}</span>
+		                  <span class="lv-pull-right"><#if place.cmtStarts?? &&  place.cmtStarts!="" >${place.cmtStarts!}分</#if></span></li>
+		                  <li>
+		                  	<span class="scenic_info_3">${place.subject!}</span>
+		                  	<span class="scenic_info_2">
+		                  		<#if place.hasBusinessCoupon?? &&  place.hasBusinessCoupon >
+		                  		<i class="ic_hui"></i>
+		                  		</#if>
+		                  		<!-- <i class="ic_xiang"></i> -->
+		                  		<#if place.cashRefund?? &&  place.cashRefund >
+		                  		<i class="ic_fan"></i>
+		                  		</#if>
+		                  		<#if place.cashRefund>
+		                  		<em>&yen;${place.cashRefundY!}</em>
+		                  		</#if>
+		                  	</span>
+	                    </li>
+	                  
+	                    <li class="lv-ellipsis jd_info">${place.address!}</li>
+	                </ul>
+	            </div>
+	            </a>
+	        </li>
+	        <div class="lv-seprator-line"></div>
+	     </#list>
+	    <#else>
+	    		<div class="lv-search-fail" style="">
+    	<div class="lv-sorry-icon">
+        	<img src="${prefix_pic_url!}/img/sorry.png">
+        </div>
+        <p>没有找到适合的景点</p>
+        <p>请试试输入其他关键字吧!</p>
+    </div>
+	    </#if>
+    </ul>
+   <!-- 如果不是最后一页  -->
+   <#if isLastPage?? && !isLastPage>
+	   <div class="lv-nav-li lv-btn-03" id="show_more">
+	        <a href="javascript:void(0);" onclick="getMoreData()">
+	          <span>查看更多</span>
+	        </a>
+	    </div>
+    </#if>
+  </div>
+</div>
+
+
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+ <script type="text/javascript">
+	var firstPost = '${firstPost!}'; 
+	var latitude="";
+	var longitude="";
+	$(function() {
+		if(getLocalStorage("CMSSTNEARBACK")!=null && getLocalStorage("CMSSTNEARBACK")=="BACK2"){
+			$(".lv-operate-icon a").attr("href","javascript:history.go(-2);");
+			setLocalStorage("CMSSTNEARBACK","");
+		}
+	    /********   定位 相关 ************/
+	    if(firstPost==null || firstPost=='' ){
+	    	$(".lv-search-fail").html("");
+	    	$("#loadingP").show();
+	    }
+		if(navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(function(e){
+				latitude = e.coords.latitude;
+				longitude = e.coords.longitude;
+				initCity(latitude,longitude,"location_city_loc"); // 定位成功. 
+			},function(e){
+				initDatas(DEFAULT_CITY); // 如果定位失败 ! 
+			},{enableHighAccuracy:true,timeout:3000,maximumAge:3000});
+	    } else {
+	    	initDatas(DEFAULT_CITY); // 如果浏览器不支持定位  
+	    }
+	});
+	//定位城市并赋值
+	function initDatas(locationCity){
+		//获取经纬度之后再次请求获取数据
+		if(firstPost==null || firstPost=='' ){
+			setLocalStorage("CMSSTNEARBACK","BACK2");
+			window.location.href = "${request.contextPath}/spotticket/stnearby.htm?windage=100000&mobilePlace.baiduLatitude="+latitude+"&mobilePlace.baiduLongitude="+longitude+"&sort=juli";
+		}
+	}
+	
+	//设置localStroage
+	function setLocalStorage(key,value){
+		try {
+		window.localStorage.setItem(key,value);
+		} catch(err){
+			
+		}
+	}
+	//根据key获取值.
+	function getLocalStorage(key) {
+		try {
+			return null == window.localStorage.getItem(key)?"":window.localStorage.getItem(key);
+		} catch(err){
+			
+		}
+	}
+</script>
+</body>
+</html>

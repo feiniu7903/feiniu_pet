@@ -1,0 +1,10 @@
+<#macro layout RQTag  tagAttr1=""  tagAttr2="">
+<?xml version="1.0" encoding="UTF-8"?>
+<OTRequest Version=""><#--Version:1.0-->
+	<#include "header.xml"/>
+	<${RQTag} ${tagAttr1} ${tagAttr2}>
+		<#include "external_user_info.xml"/>
+		<#nested>
+	</${RQTag}>
+</OTRequest>
+</#macro>

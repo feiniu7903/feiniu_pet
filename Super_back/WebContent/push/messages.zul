@@ -1,0 +1,31 @@
+<?page title="list PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_tasks"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_tasks" mode="embedded" apply="com.lvmama.back.web.log.ToolsMessageQueryAction">
+<button visible="false" id="refreshDataBtn" onClick="saction.doBefore()"/>
+		<listbox mold="paging" pageSize="20"
+			model="@{saction.comMessageList,load-after='refreshDataBtn.onClick'}" >
+			<listitem height="25px" self="@{each='msg'}">
+				<listcell>
+						<label value="@{msg.sub20Content}" popup="@{msg.messageId}"/>
+					<popup id="@{msg.messageId}" width="350px">
+						<label value="@{msg.content}"/>
+					</popup>
+				</listcell>
+				<listcell>
+					<label value="@{msg.createTime}"/>
+				</listcell>
+				<listcell >
+					<a style="color:blue" label="完成"
+						onClick='saction.updateMsgRecreiver(self.getAttribute("msgId"))'>
+						<custom-attributes
+							msgId="@{msg.messageId}" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+
+
+</window>
+</zk>

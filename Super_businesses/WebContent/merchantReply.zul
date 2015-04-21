@@ -1,0 +1,160 @@
+<?page title="商家用户回复管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./lvmamaReply"?>
+<?component name="userstatuslistbox" extends="listbox" class="com.lvmama.businessreply.utils.ListBoxUserStatusSet"?>
+<?component name="usertypelistbox" extends="listbox" class="com.lvmama.businessreply.utils.ListboxUserTypeSet"?>
+<window id="lvmamaReply" title="商家用户回复管理" border="normal" apply="com.lvmama.businessreply.web.ReplyManagementAction">
+		<zscript>
+		<![CDATA[
+			public void checkValues() {
+				saction.doQuery();
+			}
+			
+		]]>			
+		</zscript>
+
+		<grid>
+			<columns>
+				<column width="110px"></column>
+				<column></column>
+				<column width="110px"></column>
+				<column></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>点评编号：</hbox>
+					<hbox>
+						<textbox id="commentId" value="@{saction.queryOption.commentId}" />
+					</hbox>
+					<hbox>用户名：</hbox>
+					<hbox>
+						<textbox id="userName" value="@{saction.queryOption.userName}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>主题名称：</hbox>
+					<hbox>
+						<textbox value="@{saction.queryOption.placeName}" />
+					</hbox>
+					<hbox>发表时间：</hbox>
+					<hbox>
+						<datebox
+							value="@{saction.queryOption.startDate}" />到
+						<datebox
+							value="@{saction.queryOption.endDate}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>排序规则：</hbox>
+					<hbox>
+						<listbox id="orderRule" mold="select" onSelect='saction.changeValue("orderRule",self.selectedItem.value);'>
+							<listitem label="1 时间新>>旧" value="createTime321"  selected="true"/>
+							<listitem label="2 时间旧>>新 " value="createTime123"/>
+							<listitem label="3 回复多>>少" value="replyCount321"/>
+							<listitem label="4 回复少>>多" value="replyCount123"/>						
+						</listbox>
+					</hbox>
+					
+				  	<hbox>精华状态：</hbox>
+					<hbox>
+						<listbox id="isBest" mold="select" onSelect='saction.changeValue("isBest",self.selectedItem.value);'>
+							<listitem label="全部" value=""  selected="true"/>
+							<listitem label="精华" value="Y"/>
+							<listitem label="非精华" value="N"/>					
+						</listbox>
+					</hbox>
+				</row>
+				<row>
+
+					<hbox>点评回复状态：</hbox>
+					<hbox>
+						<listbox id="replyStatus" mold="select" onSelect='saction.changeValue("replyStatus",self.selectedItem.value);'>
+							<listitem label="全部" value="all"/>
+							<listitem label="商家已回复" value="hasReply"/>
+							<listitem label="待关注" value="needAttention"  selected="true"/>
+							<listitem label="无需关注"  value="noNeedAttention"/>						
+						</listbox>
+					</hbox>
+					
+					<hbox>
+						<button label="查询" id="search" width="100px" onClick="saction.doQuery();" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+
+
+		<listbox
+			model="@{saction.commentList,load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader  width="5%" style="text-align:center;" label="点评编号" />
+				<listheader  width="6%" style="text-align:center;" label="用户名" />
+				<listheader  width="5%" style="text-align:center;" label="主题类型" />
+				<listheader  width="10%" style="text-align:center;" label="主题名称" />
+				<listheader  width="30%" style="text-align:center;" label="内容" />
+				<listheader  width="4%" style="text-align:center;" label="是否精华" />
+				<listheader  width="7%" style="text-align:center;" label="lvmama回复数" />
+				<listheader  width="5%" style="text-align:center;" label="商家回复数" />
+				<listheader  width="5%" style="text-align:center;" label="用户回复数" />
+				<listheader  width="3%" style="text-align:center;" label="图片" />
+				<listheader  width="6%" style="text-align:center;" label="发表时间" />
+				<listheader  width="4%" style="text-align:center;" label="是否关注" />
+				<listheader  width="10%" style="text-align:center;" label="操作" />
+			</listhead>
+			<listitem height="25px" self="@{each='cmtCommentVO'}">
+				<listcell style="text-align:center;">
+				<a label="@{cmtCommentVO.commentId}" style="color:blue">
+					<attribute name="onClick">		<![CDATA[
+						Clients.evalJavaScript("window.open('http://www.lvmama.com/comment/"+self.getLabel()+"');");   
+						]]>			
+					</attribute>
+				</a>
+				</listcell>
+				<listcell  style="text-align:center;" label="@{cmtCommentVO.userNameExp}" />
+				<listcell  style="text-align:center;" label="@{cmtCommentVO.subjectType}" />
+				<listcell  style="text-align:center;" label="@{cmtCommentVO.subjectName}" />
+				<listcell style="text-align:center;" label="@{cmtCommentVO.content}" />				
+				<listcell style="text-align:center;" label="@{cmtCommentVO.chIsBest}" />
+				<listcell style="text-align:center;" label="@{cmtCommentVO.lvmamaReplyCount}" />
+				<listcell style="text-align:center;" label="@{cmtCommentVO.merchantReplyCount}" />
+				<listcell style="text-align:center;" label="@{cmtCommentVO.replyCount}" />
+				<listcell style="text-align:center;" label="@{cmtCommentVO.pictureCount}" />
+				<listcell style="text-align:center;" label="@{cmtCommentVO.formatterCreatedTime}"/>
+				<listcell style="text-align:center;" label="@{cmtCommentVO.needManageAttention}"/>
+				<listcell style="text-align:center;" >
+					<a style="color:blue" label="回复"
+						onClick='saction.showWindow("/reply.zul",self.getAttributes());' >
+						<custom-attributes provider="@{cmtCommentVO}" />
+					</a>
+					
+					<a style="color:blue" label="关注"
+						onClick='saction.enableAttentionReply(self.getAttribute("commentId"));'>
+						<custom-attributes commentId="@{cmtCommentVO.commentId}" />
+					</a>
+					
+					<a style="color:blue" label="不关注"
+						onClick='saction.disableAttentionReply(self.getAttribute("commentId"));'>
+						<custom-attributes commentId="@{cmtCommentVO.commentId}" />
+					</a>
+
+				</listcell>
+			</listitem>
+		</listbox>
+		
+		
+	<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell width="200px">
+					<paging  id="_paging" pageSize = "10" onPaging='saction.doQuery();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+
+</window>

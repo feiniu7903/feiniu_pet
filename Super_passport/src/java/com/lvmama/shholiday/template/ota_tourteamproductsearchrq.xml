@@ -1,0 +1,40 @@
+<#import "sh_holiday_base.xml" as base>
+<@base.layout "ProductSearchRQ">
+		<Product UniqueID="${productId}">
+			<ProductName>${body.productName}</ProductName>
+			<ProductType>${body.productType}</ProductType>
+			<TravellineType></TravellineType>
+			<IgnoreTravellineType></IgnoreTravellineType>
+		</Product>
+		<SearchDateRange>
+			<StartDate>${body.startDate}</StartDate>
+			<EndDate>${body.endDate}</EndDate>
+		</SearchDateRange>
+		<DepartureCode>${body.departureCode}</DepartureCode>
+		<DestinationCode>${body.destinationCode}</DestinationCode>
+		<TripDayCountRange>
+			<MinDayCount></MinDayCount>
+			<MaxDayCount></MaxDayCount>
+		</TripDayCountRange>
+		<SearchPriceRange>
+			<MinPrice></MinPrice>
+			<MaxPrice></MaxPrice>
+		</SearchPriceRange>
+		<KeyWords></KeyWords>
+		<TakeoffDayWeek></TakeoffDayWeek>
+		<RecommandLevel></RecommandLevel>
+		<SortRules>
+			<SortRule FieldName="RecommandLevel">
+				<Sort>desc</Sort>
+			</SortRule>
+            <SortRule FieldName="TakeoffDate"/>
+		</SortRules>
+		<SearchType>product</SearchType>
+		<DataTypes>
+			<DataType Code="ALL"></DataType>
+		</DataTypes>
+		<ReqPageInfo>
+			<ReqNumOfEachPage>${body.reqNumOfEachPage}</ReqNumOfEachPage>
+			<ReqPageNo>${body.reqPageNo}</ReqPageNo>
+		</ReqPageInfo>
+</@base.layout>

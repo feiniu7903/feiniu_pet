@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="OPERATE_PLACE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComCity" >
+    <result column="CITY_ID" property="cityId" />
+    <result column="CITY_NAME" property="cityName" />
+    <result column="PROVINCE_ID" property="provinceId" />
+  </resultMap>
+  <resultMap id="provinceMap" class="com.lvmama.comm.pet.po.pub.ComProvince" >
+  	<result column="PROVINCEID" property="provinceId" />
+    <result column="PROVINCENAME" property="provinceName" />
+  </resultMap>
+  <select id="selectByCityKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComCity" >
+    SELECT DISTINCT G.GEOGRAPHY_KEY CITY_ID, 
+    	   G.CITY CITY_NAME,
+    	   G.PROVINCE PROVINCE_ID
+	  FROM LVMM_DW.GEOGRAPHY G
+	 WHERE G.GEOGRAPHY_KEY = #cityId#
+  </select>
+  <select id="selectByProvinceId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComCity">
+   SELECT DISTINCT G.GEOGRAPHY_KEY CITY_ID, 
+    	   G.CITY CITY_NAME,
+    	   G.PROVINCE PROVINCE_ID
+	  FROM LVMM_DW.GEOGRAPHY G
+	 WHERE G.PROVINCE = #provinceId#
+	 ORDER BY nlssort(G.CITY,'NLS_SORT=SCHINESE_PINYIN_M')
+  </select>
+  <select id="selectProvinceAll" resultMap="provinceMap" parameterClass="com.lvmama.comm.pet.po.pub.ComProvince">
+    SELECT DISTINCT G.PROVINCE provinceId,G.PROVINCE provinceName
+	  FROM LVMM_DW.GEOGRAPHY G
+	 WHERE G.DOMESTIC_FLAG = 1
+	 ORDER BY nlssort(G.PROVINCE,'NLS_SORT=SCHINESE_PINYIN_M')
+  </select>
+  <select id="selectByProvinceKey" resultMap="provinceMap" parameterClass="com.lvmama.comm.pet.po.pub.ComProvince" >
+    SELECT DISTINCT G.PROVINCE provinceId,G.PROVINCE provinceName
+	  FROM LVMM_DW.GEOGRAPHY G
+	 WHERE G.DOMESTIC_FLAG = 1
+	   AND G.PROVINCE = #provinceId#
+  </select>
+</sqlMap>

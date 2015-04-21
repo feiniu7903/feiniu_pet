@@ -1,0 +1,48 @@
+<?page title="编辑银行信息" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_editbank"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_editbank" title="编辑银行信息" border="embedded" apply="com.lvmama.back.web.bank.EditBankAciton">
+
+	<grid>
+		<columns>
+			<column ></column>
+			<column width="160px"></column>
+			<column ></column>
+			<column width="160px"></column>
+			<column ></column>
+			<column width="160px"></column>
+			<column ></column>
+			<column width="160px"></column>
+		</columns>
+		
+		<rows>
+			<row>
+				<hbox>银行名称</hbox>
+				<hbox>
+					<textbox id="bankName" value="@{saction.searchParams.bankName}"/>
+				</hbox>
+				<hbox>省</hbox>
+				<hbox>
+					<textbox id="province" value="@{saction.searchParams.province}"/>
+				</hbox>
+				<hbox>市</hbox>
+				<hbox>
+					<textbox id="city" value="@{saction.searchParams.city}"/>
+				</hbox>
+				<hbox>支行</hbox>
+				<hbox>
+					<textbox id="road" value="@{saction.searchParams.road}"/>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+	<panel border="normal">
+        <toolbar align="center">
+        <button label="提交" width="100px" onClick="saction.submit()"/>
+        <space />
+        <button label="取消" width="100px" onClick="win_cancelorder.detach()"/>
+        </toolbar>
+    </panel>
+
+</window>
+</zk>

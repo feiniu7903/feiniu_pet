@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>jQuery UI Autocomplete - Combobox</title>
+<link href="jquery.ui.autocomplete.css" rel="stylesheet" type="text/css">
+<script src="jquery-1.6.2.min.js"></script>
+<script src="jquery.ui.core.js"></script>
+<script src="jquery.ui.widget.js"></script>
+<script src="jquery.ui.button.js"></script>
+<script src="jquery.ui.position.js"></script>
+<script src="jquery.ui.autocomplete.js"></script>
+<!--<link href="demos.css" rel="stylesheet" type="text/css">-->
+<style>
+@charset "utf-8";
+body {font:12px/1.5 "Microsoft Yahei","\5b8b\4f53";}
+.ui-autocomplete {
+	font-size:14px;
+	border: 1px solid #CBCBCB;
+}
+.ul-title{
+	background-color:#5B5B5B;
+	padding:5px;
+	color:#fff;
+	font-weight:600;
+	font-size:12px;
+	}
+.ui-autocomplete .py_right {
+	font: 10px/22px verdana;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+	text-align: right;
+	white-space: nowrap;
+	width: 110px;
+	float:right;
+}
+.ui-autocomplete li{
+	padding: 1px 5px 0;
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #FFF;
+	cursor: pointer;
+	display: block;
+	height: 22px;
+	line-height: 22px;
+	min-height: 22px;
+}
+.ui-autocomplete .ui-state-hover {
+	color:#C06;
+	background-color:#999999;/*	font-weight:600;*/
+}
+.ui-autocomplete li.ui-paging {
+	text-align:center;
+	}
+.ui-autocomplete li.ui-paging a {
+	float:left;
+	display:block; 
+	padding: 0px 5px;
+	margin: 0 5px;
+	color:#C06;
+	border: 1px solid #5B5B5B;
+	background-color:#FFF;
+	height: 20px;
+	line-height: 20px;
+	min-height: 20px;
+}
+.ui-autocomplete li.ui-paging a:hover {
+	background-color:#C06;	
+	color:#FFF;
+	}
+#address_hot{
+width: 280px;
+border: 2px solid #5b5b5b;
+}	
+.address_hotlist {
+border-color: #999;
+border-style: solid;
+border-width: 0 1px 1px;
+overflow: hidden;
+/*padding: 5px;*/
+}
+.address_hot_abb {
+border-bottom: 1px dashed #ccc;
+padding-bottom: 24px;
+margin: 5px 0; 
+padding-left: 20px; 
+}
+.address_hot_abb li {
+	color: #C06;
+	cursor: pointer;
+	float: left;
+	list-style-type: none;
+	text-align: center;
+	margin: 0 2px;
+}
+.address_hot_abb li span:hover {
+	background-color: #C06;
+	color: white;
+	}
+.address_hot_abb li span {
+	padding: 1px 5px;
+	height: 18px;
+	line-height: 20px;
+}
+.address_hot_abb li .hot_selected {
+display: block;
+background-color: #C06;
+color: white;
+}
+.address_hot_adress {
+padding-top: 4px;
+width: 268;
+margin-top: 5px; 
+padding-left: 10px;
+}
+.layoutfix {
+display: block;
+overflow: hidden;
+}
+.address_hot_adress li {
+float: left;
+height: 24px;
+overflow: hidden;
+/*width: 67px;*/
+/*padding: 0 5px;*/
+}
+.address_hot_adress li a {
+border: 1px solid white;
+color: black;
+display: block;
+height: 22px;
+line-height: 22px;
+padding-left: 5px;
+border-image: initial;
+margin: 0 5px;
+}	
+.address_hot_adress li a:hover {
+background-color: #F8B3D0;
+border: 1px solid #C06;
+text-decoration: none;
+border-image: initial;
+
+}
+.address_hot_adress a {
+text-decoration: none;
+}
+.address_hotcity {
+background-color:#5B5B5B;
+border-color: #999999;
+border-style: solid;
+border-width: 1px 1px 0;
+color: #FFF;
+height: 24px;
+line-height: 24px;
+padding-left: 10px;
+font-size:14px;
+}
+.address_hotcity strong {
+	color: white;
+}
+</style>
+</head>
+<body>
+<div class="demo">
+  <label for="search">Search: </label>
+  <input id="search111" value="中文/拼音" />
+  <input type="hidden" id="search111-id"/>
+
+<div class="address_hot" id="address_hot">
+<div class="address_hotcity"><strong>热门城市</strong> （可直接输入城市或城市拼音）</div>
+<div class="address_hotlist">
+	<ol class="address_hot_abb" style=""><li><span class="hot_selected">推荐</span></li><li><span>A-F</span></li><li><span>G-J</span></li><li><span>K-N</span></li><li><span>P-W</span></li><li><span>X-Z</span></li></ol>
+	<ul class="address_hot_adress layoutfix" type="推荐">
+    <li><a href="###" data="BJS|北京">九寨沟黄龙</a></li>
+    <li><a href="###" data="BJS|北京">北京</a></li>
+    <li><a href="###" data="BJS|北京">北京</a></li>
+    <li><a href="###" data="BJS|北京">北京</a></li>
+    <li><a href="###" data="BJS|北京">北京</a></li>
+    <li><a href="###" data="BJS|北京">北京</a></li>
+    <li><a href="###" data="BJS|北京">北京</a></li>
+    <li><a href="###" data="BJS|北京">北京</a></li>
+    </ul>
+	<ul class="address_hot_adress layoutfix" style="display:none" type="A-F"></ul>
+	<ul class="address_hot_adress layoutfix" style="display:none" type="G-J"></ul>
+	<ul class="address_hot_adress layoutfix" style="display:none" type="K-N"></ul>
+	<ul class="address_hot_adress layoutfix" style="display:none" type="P-W"></ul>
+	<ul class="address_hot_adress layoutfix" style="display:none" type="X-Z"></ul>
+</div>
+</div>
+</div>
+<!-- End demo --> 
+<script>
+	(function( $ ) {
+$('#address_hot').find('span').bind('click',function(){
+		var val = $(this).text();
+		var $ul = $('.address_hotlist');
+		$ul.find('ul').hide();
+		$ul.find('ul[type="'+val+'"]').show();
+	});
+$('#address_hot').find('a').bind('click',function(){
+		$('#search111').val($(this).text());
+		$('#address_hot').hide();
+	});
+		$.widget( "ui.lmmcomplete", $.ui.autocomplete, {
+				options: {
+					appendTo: "body",
+					autoFocus: false,
+					delay: 100,
+					minLength: 0,
+					position: {
+						my: "left top",
+						at: "left bottom",
+						collision: "none"
+					},
+				source: function( request, response ) {
+						var self = this;
+						$.ajax({
+							url:"http://www.lvmama.com/search/placeSearch!searchCity.do",
+							dataType: "jsonp",
+							data: {
+								keyword:request.term,
+								page:1
+							},
+							success: function( data ) {
+								var p = data.page,t=data.totalResultSize;
+									$.data(document.body,'pageObj',{page:p,total:t});
+								if(data.totalResultSize>0){
+									response($.map( data.placeListJson, function( item ) {
+										//alert(item.name+','+item.pinYin);
+										return {
+											label: item.pinYin,
+											value: item.name
+										}
+									}));
+								}else{
+									response([]);	
+									//this._renderMenu();
+								}
+							},
+							error:function(x,e,c){
+								alert(e);
+							}
+						});
+					},
+				},
+				_response: function( content ) {
+					if ( !this.options.disabled && content && content.length ) {
+						content = this._normalize( content );
+						this._suggest( content );
+						this._trigger( "open" );
+					} else {
+						content = this._normalize( content );
+						this._suggest( content );
+						this._trigger( "open" );
+						//this.close();
+					}
+					this.pending--;
+					if ( !this.pending ) {
+						this.element.removeClass( "ui-autocomplete-loading" );
+					}
+				},
+			_renderMenu: function( ul, items ) {
+				var self = this;
+				var val = this.element.val();
+				if(items&&items.length){
+					ul.append( "<li class='ui-autocomplete-category ul-title'>"+val+"&nbsp;,(可以输入酒店名称或全拼)</li>" );
+				}else{
+					if(val&&val.length>0){
+						ul.append( "<li class='ui-autocomplete-category ul-title'>对不起，没有找到:&nbsp;"+val+"</li>" );
+					}
+				}
+				$.each( items, function( index, item ) {
+					self._renderItem( ul, item );
+				});
+				if(items&&items.length){
+					var $pageObj = $.data(document.body,'pageObj');
+					$( "<li class='ui-paging'></li>")
+					.append( $( "<a href='###' page='1'>1</a>" ))
+					.append( $( "<a href='###' page='2'>2</a>" ))
+					.append( $( "<a href='###' page='3'>3</a>" ))
+					.appendTo(ul);
+				}
+			},
+			_renderItem: function( ul, item ) {
+				return $( "<li></li>" )
+				.data( "item.autocomplete", item )
+				.append("<a>"+item.value+"<span class='py_right'>"+item.label + "</span></a>" )
+				.appendTo( ul );
+			},
+			_otherMenu: function() {
+					return;		
+			}
+		});
+	})( jQuery );
+
+	$('#search111').lmmcomplete();
+	</script>
+</body>
+</html>

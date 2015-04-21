@@ -1,0 +1,49 @@
+<!--流水记录-->
+<div id='dariy_win' class="jiesuan" style="width: 700px;">
+	<table width="100%" border="0">
+		<tr class="title_table cash_titie">
+			<td>用户名</td>
+			<td>操作</td>
+			<td>订单号</td>
+			<td>采购产品ID</td>
+			<td>操作前金额(元)</td>
+			<td>操作后金额(元)</td>
+			<td>时间</td>
+			<td>备注</td>
+		</tr>
+		<#if result?size =0 >
+		<tr class="list_contant list_contant01">
+			<td colspan="6">
+				没有流水记录
+			</td>
+		</tr>
+		<#else>
+		<#list result as var>
+			<tr class="list_contant list_contant0<#if var_index%2 ==0>1<#else>2</#if>">
+				<td class="list_contant_border">${var.creatorName!""}</td>
+				<td class="list_contant_border">
+					<#if var.changetype == 'ADD'>
+						新增
+					<#elseif var.changetype == 'MODIFY'>
+						修改实际结算价
+					<#elseif var.changetype == 'DEL'>
+						删除
+					<#elseif var.changetype == 'CANCEL_ORDER_DEL'>
+						订单取消(删除)
+					<#elseif var.changetype == 'DEL_QUEUE_ITEM_FOR_CHARGE'>
+						删除抵扣款
+					<#elseif var.changetype == 'CREATE_SETTLEMENT_FOR_PAYED_ITEM'>
+						新增（已打款项）
+					</#if>
+				</td>
+				<td class="list_contant_border">${var.orderId!""}</td>
+				<td class="list_contant_border">${var.metaProductId!""}</td>
+				<td class="list_contant_border">${var.amountBeforeChange?string(",##0.00")}</td>
+				<td class="list_contant_border">${var.amountAfterChange?string(",##0.00")}</td>
+				<td class="list_contant_border">${var.createtime?string('yyyy-MM-dd HH:mm')}</td>
+				<td class="list_contant_border">${var.remark!""}</td>
+			</tr>
+		</#list>
+		</#if>
+	</table>
+</div>

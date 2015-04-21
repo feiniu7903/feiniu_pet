@@ -1,0 +1,201 @@
+﻿<?page title="list PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./wind_pay_refund_detail_query"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?> 
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="wind_pay_refund_detail_query" mode="embedded"
+		apply="com.lvmama.back.web.ord.refundMent.PayRefundDetailQueryAction">
+		<grid>
+			<columns>
+				<column width="10%"></column>
+				<column width="20%"></column>
+				<column width="10%"></column>
+				<column width="20%"></column>
+				<column width="10%"></column>
+				<column width="30%"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>订单号：</hbox>
+					<hbox>
+						<textbox id="orderId"
+							value="@{saction.searchRefundMentMap.orderId}" constraint="/[0-9]*/: 请输入数字">
+						</textbox>
+					</hbox>
+					<hbox>退款单号：</hbox>
+					<hbox>
+						<textbox id="refundmentObjectId"
+							value="@{saction.searchRefundMentMap.refundmentObjectId}" constraint="/[0-9]*/: 请输入数字">
+						</textbox>
+					</hbox>
+					<hbox>支付ID：</hbox>
+					<hbox>
+						<textbox id="paymentId"
+							value="@{saction.searchRefundMentMap.paymentId}" constraint="/[0-9]*/: 请输入数字">
+						</textbox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>交易流水号：</hbox>
+					<hbox>
+						<textbox id="tradeNo"
+							value="@{saction.searchRefundMentMap.tradeNo}">
+						</textbox>
+					</hbox>
+					<hbox>支付网关</hbox>
+					<hbox>
+						<listbox mold="select" multiple="false" model="@{saction.payPaymentGatewayList}"
+							onSelect="saction.selectPaymentGateway(self.selectedItem.value)">
+							<listitem self="@{each=payPaymentGateway}" label="@{payPaymentGateway.gatewayName}" value="@{payPaymentGateway.gateway}"/>						</listbox>
+					</hbox>
+					<hbox>退款网关</hbox>
+					<hbox>
+						<listbox mold="select" multiple="false" model="@{saction.payPaymentGatewayList}"
+							onSelect="saction.selectRefundGateway(self.selectedItem.value)">
+							<listitem self="@{each=payPaymentGateway}" label="@{payPaymentGateway.gatewayName}" value="@{payPaymentGateway.gateway}"/>
+						</listbox>
+					</hbox>
+				</row>
+				<row spans="1,1,1,2">
+					<hbox>退款状态</hbox>
+					<hbox>
+						<listbox mold="select" onSelect="saction.selectRefundStatus(self.selectedItem.value)">
+						    <listitem label="全部" value="" selected = "true"/>
+						   	<listitem label="新建" value="CREATE"/>
+							<listitem label="成功" value="SUCCESS"/>
+							<listitem label="失败" value="FAIL"/>
+							<listitem label="处理中" value="PROCESSING"/>
+						</listbox>
+					</hbox>
+					<hbox>退款时间：</hbox>
+					<hbox>
+						<datebox id="beginDate"
+							value="@{saction.searchRefundMentMap.refundBeginDate }"
+							cols="20" format="yyyy-MM-dd HH:mm:ss">
+						</datebox>
+						~
+						<datebox id="endDate"
+							value="@{saction.searchRefundMentMap.refundEndDate}"
+							cols="20" format="yyyy-MM-dd HH:mm:ss">
+						</datebox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>是否允许退款</hbox>
+					<hbox>
+						<listbox mold="select" onSelect="saction.selectIsAllowRefund(self.selectedItem.value)">
+						    <listitem label="全部" value="" selected = "true"/>
+						   	<listitem label="允许" value="TRUE"/>
+						   	<listitem label="不允许" value="FALSE"/>
+						</listbox>
+					</hbox>
+					<hbox>支付类型：</hbox>
+					<hbox>
+						<listbox codeset="bizType" mold="select" selectedItem="@{saction.searchRefundMentMap.bizType}" />
+					</hbox>
+					<hbox></hbox>
+					<button label="查询" id="search" width="100px" onClick="saction.queryPayRefundDetail();" />
+				</row>
+			</rows>
+		</grid>
+		<button visible="false" id="refreshDataBtn"/>
+		<listbox mold="paging" pageSize="20"
+			model="@{saction.payRefundDetailList,load-after='search.onClick,_paging.onPaging,refreshDataBtn.onClick'}">
+			<listhead>
+				<!-- 退款字段 -->
+				<listheader label="订单号"/>
+				<listheader label="退款单号"/>
+				<listheader label="支付ID"/>
+				<listheader label="支付对象类型"/>
+				<listheader label="退款单类型"/>
+				<listheader label="支付网关"/>
+				<listheader label="退款网关"/>
+
+				<listheader label="是否允许退款"/>
+				<listheader label="退款金额" width="10%"/>
+				<listheader label="退款时间" />
+				<listheader label="退款状态" />
+				<listheader label="回调信息" width="auto"/>
+				<listheader label="操作员" />
+				<!-- 预授权字段 -->
+				<listheader label="预授权状态" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem height="25px" self="@{each='payRefundDetail'}">
+				<!-- 退款字段 -->
+				<listcell label="@{payRefundDetail.orderId}" />
+				<listcell label="@{payRefundDetail.refundmentObjectId}" />
+				<listcell label="@{payRefundDetail.paymentId}" />
+
+				<listcell label="@{payRefundDetail.objectTypeName}" />
+				<listcell label="@{payRefundDetail.refundTypeName}" />
+
+				<listcell label="@{payRefundDetail.paymentGatewayName}" />
+				<listcell label="@{payRefundDetail.refundGatewayName}" />
+
+				<listcell label="@{payRefundDetail.isAllowRefundName}" />
+				<listcell label="@{payRefundDetail.amountYuan}" />
+				<listcell label="@{payRefundDetail.callbackTime}" />
+				<listcell label="@{payRefundDetail.refundStatusName}" />
+				<listcell label="@{payRefundDetail.callbackInfo}" />
+				<listcell label="@{payRefundDetail.operator}" />
+				<!-- 预授权字段 -->
+				<listcell label="@{payRefundDetail.preStatusName}" />
+				<listcell>
+					<a style="color:blue" label="查看" permCode="1025"
+						onClick='saction.showWindow("/ord/refundMent/payRefundDetailView.zul",self.getAttributes());'>
+						<custom-attributes paymentRefundmentId="@{payRefundDetail.payRefundmentId}" />
+					</a>
+					
+					<a style="color:blue" label="手动成功"  permCode="1022" 
+					    onClick="saction.manualRefundmentSucc(self.getAttributes())" visible="@{payRefundDetail.canToManualSucc}">
+						<custom-attributes payPaymentRefundmentId="@{payRefundDetail.payRefundmentId}" />
+					</a>
+
+					<a style="color:blue" label="手动失败"  permCode="1022" 
+					    onClick="saction.manualRefundmentFail(self.getAttributes())" visible="@{payRefundDetail.canToManualFail}">
+						<custom-attributes payPaymentRefundmentId="@{payRefundDetail.payRefundmentId}" />
+					</a>
+					
+					<a style="color:blue" label="重新退款"  permCode="1022" 
+					    onClick="saction.manualRefundmentRefund(self.getAttributes())" visible="@{payRefundDetail.canToTryAgainRefund}">
+						<custom-attributes payPaymentRefundmentId="@{payRefundDetail.payRefundmentId}" />
+					</a>
+					
+				    <a style="color:blue" label="操作日志"
+						onClick='saction.showWindow("/log/viewSuperLog.zul", self.getAttributes());'>
+						<custom-attributes objectType="PAY_PAYMENT_REFUNDMENT" />
+						<custom-attributes objectId="@{payRefundDetail.payRefundmentId}" />
+					</a>
+				  	<a style="color:blue" label="退款分拆" permCode="1022"
+						onClick='saction.splitRefundment(self.getAttributes())'  visible="@{payRefundDetail.refunded}">
+						<custom-attributes	refundmentId="@{payRefundDetail.refundmentObjectId}" />
+					</a>
+				    <a style="color:blue" label="更改退款网关" permCode="1022"
+						onClick='saction.showWindow("/ord/refundMent/payRefundDetailModifyGateway.zul",self.getAttributes());'>
+						<custom-attributes paymentRefundmentId="@{payRefundDetail.payRefundmentId}" />
+						<custom-attributes paymentGateway="@{payRefundDetail.paymentGateway}" />
+					</a>
+					
+				</listcell>
+			</listitem>
+		</listbox>
+		<button label="导出Excel" id="export" width="100px" onClick="saction.doExport();"/>
+		<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="250px">
+					本页共计退款<label value="@{saction.countPageAmountYuan,load-after='search.onClick,_paging.onPaging,refreshDataBtn.onClick'}"/>元，共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell>
+					<paging  id="_paging" pageSize = "20" onPaging='saction.queryPayRefundDetail();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+	</window>
+</zk>

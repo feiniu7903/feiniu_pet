@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>度假列表_${keyword!}度假列表</title>
+    <meta name="description" content="">
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/font-icons.css">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/global.css">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/list.css">
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/lib/zepto.min.js"></script>
+    <script type="text/javascript" name="baidu-tc-cerfication" src="http://apps.bdimg.com/cloudaapi/lightapp.js#70e91d9156558b74286c45bf640cff9e"></script>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/globe.js"></script>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/base.js"></script>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/ui/filtrateTab.js"></script>
+    <script src="${request.contextPath}/js/search_v5.js" type="text/javascript"></script>
+    <#setting number_format="#.##">
+    <script type="text/javascript">
+		var contextPath = '${request.contextPath}';		
+		$(function(){
+		});
+	</script>
+		<#assign hostName = reauestHostName/>
+<script type="text/javascript">
+	var hostName=window.location.host;
+	if(hostName!=null && hostName=="qing.lvmama.com"){
+		hostName="qing.lvmama.com";
+	}
+</script>
+</head>
+<body>
+
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/header.js"></script>
+
+<div id="wrapper">
+    <div id="content"> 
+    	<!-- 度假5.0搜索 -->
+        <form method="get" action="${request.contextPath}/search/rote_search_list.htm"  id="rote_search_list" >
+            <input  value="${fromDest!}"  type="hidden" name="fromDest" id="fromDest"><!--  -->
+            <input  value="${toDest!}"  type="hidden" name="toDest" id="toDest"><!-- -->
+            <input  value="${keyword!}"  type="hidden" name="keyword" id="keyword"><!--  -->
+            <input  value="${subject!}"  type="hidden" name="subject" id="subject"><!--  -->
+            <input  value="${day!}"  type="hidden" name="day" id="day"><!-- -->
+            <input  value="${visitDay!}"  type="hidden" name="visitDay" id="visitDay"><!-- -->
+            <input  value="${traffic!}"  type="hidden" name="traffic" id="traffic"><!--  -->
+            <input  value="${playLine!}"  type="hidden" name="playLine" id="playLine"><!-- -->
+            <input  value="${playFeature!}"  type="hidden" name="playFeature" id="playFeature"><!-- -->
+            <input  value="${hotelType!}"  type="hidden" name="hotelType" id="hotelType"><!-- -->
+            <input  value="${hotelLocation!}"  type="hidden" name="hotelLocation" id="hotelLocation"><!--  -->
+            <input  value="${playBrand!}"  type="hidden" name="playBrand" id="playBrand"><!--  -->
+            <input  value="${playNum!}"  type="hidden" name="playNum" id="playNum"><!-- -->
+            <input  value="${scenicPlace!}"  type="hidden" name="scenicPlace" id="scenicPlace"><!---->
+            <input  value="${landTraffic!}"  type="hidden" name="landTraffic" id="landTraffic"><!-- -->
+            <input  value="${landFeature!}"  type="hidden" name="landFeature" id="landFeature"><!---->
+            <input  value="${city!}"  type="hidden" name="city" id="city"><!---->
+            <input  value="${sort!}"  type="hidden" name="sort" id="sort"><!-- -->
+            <input  value="${page!}"  type="hidden" name="page" id="page"><!-- -->
+            <input  value="${subProductType!}"  type="hidden" name="subProductType" id="subProductType"><!-- -->
+            <input  value="${ajax?string!}"  type="hidden" name="ajax" id="ajax"><!---->
+            <input  value="${subProductTypeTitle!}"  type="hidden" name="subProductTypeTitle" id="subProductTypeTitle"><!--类型TITLE -->
+            <input  value="${sortTitle!}"  type="hidden" name="sortTitle" id="sortTitle"><!-- 排序TITLE-->
+        </form>       
+       <div class="lv-search-bar">
+            <div class="lv-search" onclick="union_skip('${request.contextPath}/search/keyword_search.htm?searchStatus=ROUTE');">
+                <div class="lv-search-submit"><span class="icon-search"></span></div>
+                <div class="clear-icon" id="clear_password"></div>
+                <div class="lv-search-input">
+                	<input type="search" value="${keyword!}" placeholder="输入目的地/关键词/主题" autocomplete="off" id="keyword" disabled="disabled">
+                </div>
+            </div>
+        </div>
+        <div class="lv-filtrate-bar">
+            <div class="tab_select">
+                <ul>
+                    <li>
+                        <span id="span_subProductType">综合筛选</span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    </li>
+                    <li>
+                        <span id="span_subject"><#if subProductTypeTitle?? && subProductTypeTitle!="">${subProductTypeTitle!}<#else>全部类型</#if></span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    </li>
+                    <li>
+                        <span id="span_sort"><#if sortTitle?? && sortTitle!="">${sortTitle!}<#else>驴妈妈推荐</#if></span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="lv-mask"></div>
+            <div class="lv-cascade-div">
+                <!--综合刷选数据  -->
+                <div class="filtrate-wrap tabChange">
+                    <div class="filtrate-list-l1">
+                    	<#if filterDatas?? && filterDatas?size&gt;0>
+		                    <ul>
+					        	<#list filterDatas as filterData>
+					        		<li>${filterData.name!}<span class="ic_radio_a selected"></span></li>
+					        	</#list>
+		                    </ul>
+				        </#if>
+                    </div>
+                    <div class="filtrate-list-l2">
+                    	<!-- 一级搜索个数 -->
+                    	<input  value="${filterDatas?size!}"  type="hidden" name="filterDatasSize" id="filterDatasSize">
+                    	<#if filterDatas?? && filterDatas?size&gt;0>
+                    		<#list filterDatas as filterData>
+                    			<!-- ARGNAME -->
+                           		<input  value="${filterData.argName}"  type="hidden" name="argName_${filterData_index}" id="argName_${filterData_index}">
+                    			<!--综合筛选二级  -->
+	                    		 <div data-index="-1" data-child="f21" class="tabChangeL2">
+		                    		 <#if filterData.datas?? && filterData.datas?size&gt;0>
+			                            <div class="t_list">
+			                            	<#list filterData.datas as filter>
+			                                    <div data-val="${filter.value!},${filterData_index}" class="t_li radioOption">${filter.key!}<#if filter.size1?? && filter.size1?string!=''>(${filter.size1!})</#if><span id="second_${filterData_index}_${filter_index}" class="ic_radio_a" item-index="${filter_index}"><i></i></span></div>
+			                                    
+			                            		<!-- 这里JS 处理二级选中 -->
+												<script type="text/javascript">
+													var argName='${filterData.argName!}';
+													
+													var argNameValue=null;
+													//获取综合筛选值不用argNameValue=$("#"+argName).val()，因为筛选值有null的情况
+													if(argName=="subject"){<#if subject??>argNameValue='${subject!}';<#else>argNameValue=null;</#if>}
+													if(argName=="day"){<#if day??>argNameValue='${day!}';<#else>argNameValue=null;</#if>}
+													if(argName=="visitDay"){<#if visitDay??>argNameValue='${visitDay!}';<#else>argNameValue=null;</#if>}
+													if(argName=="traffic"){<#if traffic??>argNameValue='${traffic!}';<#else>argNameValue=null;</#if>}
+													if(argName=="playLine"){<#if playLine??>argNameValue='${playLine!}';<#else>argNameValue=null;</#if>}
+													if(argName=="playFeature"){<#if playFeature??>argNameValue='${playFeature!}';<#else>argNameValue=null;</#if>}
+													if(argName=="hotelType"){<#if hotelType??>argNameValue='${hotelType!}';<#else>argNameValue=null;</#if>}
+													if(argName=="hotelLocation"){<#if hotelLocation??>argNameValue='${hotelLocation!}';<#else>argNameValue=null;</#if>}
+													if(argName=="playBrand"){<#if playBrand??>argNameValue='${playBrand!}';<#else>argNameValue=null;</#if>}
+													if(argName=="playNum"){<#if playNum??>argNameValue='${playNum!}';<#else>argNameValue=null;</#if>}
+													if(argName=="scenicPlace"){<#if scenicPlace??>argNameValue='${scenicPlace!}';<#else>argNameValue=null;</#if>}
+													if(argName=="landTraffic"){<#if landTraffic??>argNameValue='${landTraffic!}';<#else>argNameValue=null;</#if>}
+													if(argName=="landFeature"){<#if landFeature??>argNameValue='${landFeature!}';<#else>argNameValue=null;</#if>}
+													if(argName=="city"){<#if city??>argNameValue='${city!}';<#else>argNameValue=null;</#if>}
+
+													//筛选值
+													var filterValue='${filter.value!}';
+													
+													if(argNameValue!=null){
+														if(argNameValue!="" && argNameValue==filterValue ){//处理不是全部选中
+															//alert(argName+"-"+argNameValue+"-"+filterValue);
+															$("#second_"+${filterData_index}+"_"+${filter_index}).addClass("selected");
+														}else if(argNameValue=="" && argNameValue==filterValue){//处理全部选中
+															var allTypeSelect=getLocalStorage("ALLTYPE_"+${filterData_index}+"_0");
+															if(allTypeSelect!=null && allTypeSelect=='selected'){
+																$("#second_"+${filterData_index}+"_0").addClass("selected");
+															}
+														}
+													}
+                        						</script>
+		                                    </#list>
+			                            </div>
+			                         </#if>
+		                        </div>
+							</#list>
+                    	</#if>
+                    </div>
+                    <div class="filtrate-btn">
+                        <span id="filtrateReset" class="btn_style_2">重置</span>
+                        <span id="filtrateSubmit" class="btn_style_1">确定</span>
+                    </div>
+                </div>
+                <!-- 类型筛选 -->
+                <div class="tabChange" style="display: none;">
+                	<#if filterSubProductTypeDatas?? && filterSubProductTypeDatas?size&gt;0>
+	                    <ul>
+				        	<#list filterSubProductTypeDatas as filterSubProductType>
+				        		<li data-type="subProductType" data-val="${filterSubProductType.value!}-${filterSubProductType.title!}">${filterSubProductType.title!}</li>
+				        	</#list>
+	                    </ul>
+			        </#if>
+                </div>
+                <!--排序筛选 -->
+                <div class="tabChange" style="display: none;">
+                	<#if sorts?? && sorts?size&gt;0>
+                    <ul>
+                    	<#list sorts as sort>
+		                    <li data-type="sort" data-val="${sort.value!}-${sort.title!}">${sort.title!}</li>
+	                    </#list>
+                    </ul>
+                    </#if>
+                </div>
+            </div>
+        </div>
+        <div class="lv-project-list bg-white">
+        	<ul id="data_list">
+	       		<#if datas?? && datas?size&gt;0>
+					<#list datas as product>
+			            <article onclick="union_skip('http://${hostName}/product/${product.productId}/');">
+			                <a href="javascript:void(0);" class="block">
+			                    <div style="background-image: url(${prefixPic!}${product.smallImage!})"
+			                         class="pro-pic"></div>
+			                    <div class="pro-info">
+			                        <h2>${product.productName?default("")} </h2>
+			                        <p>
+			                            <span class="fr pro-value"><small>&yen;</small>${product.sellPriceYuan!}  <i>起</i></span>
+			                            <span>${product.zhSubProductType!}${product.visitDay!}天</span>
+			                        </p>
+			                        <p>
+			                        	<#if product.tagList?? && product.tagList?size&gt;0>
+					                            <span class="flag">${product.tagList[0].tagName!}</span>
+			                        	</#if>
+			                        	<#if product.mobileAlone?? && product.mobileAlone>
+			                        		<span class="flag">手机独享</span>
+			                        	</#if>
+			                            <#if product.cashRefundY?? && product.cashRefundY &gt; 0>
+				                            <span class="privilege rose">返&yen;${product.cashRefundY!}</span>
+			                            </#if>
+			                            <#if product.canDeduction>
+				                            <span class="privilege">抵</span>
+			                            </#if>
+			                            <#if product.hasBusinessCoupon>
+			                            	<span class="privilege">惠</span>
+			                            </#if>
+			                        </p>
+			                    </div>
+			                </a>
+			            </article>
+			         </#list>
+			     <#else>	
+				 	<#assign no_data_msg="没有找到符合条件的结果">
+				  	<#include "../common/no_data_list.html">	
+			     </#if> 
+			</ul>  
+            <#if isLastPage?? && !isLastPage>
+	            <a href="javascript:void(0);" onclick="getRoteListData()" id="show_more" class="view_more">查看更多产品</a>
+        	</#if>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+</div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+
+<script type="text/javascript">
+    $(function(){
+        $(".lv-filtrate-bar").filtrateTab({
+            submit : function(index){//综合筛选
+            	//alert(this);
+           		allSearch(this,index);
+            }
+            },function(){},function(){
+            if(this.attr("data-type")=="subProductType"){//类型筛选
+            chooseSubProductType(this.attr("data-val"));
+            }else{//排序筛选
+            chooseSortInlist(this.attr("data-val"));
+            }
+        }); 
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title></title>
+<#include "../common/define.html">
+</head>
+<body>
+<div class="lv-wrapper lv-media-width">
+   <!-- 景点详情  -->
+   <#if place??>
+			${place.description}
+   </#if>
+   <!--  -->
+   <!-- 产品特色 -->
+   <!-- 费用说明  -->
+   <!-- 重要提示 -->
+   <#if type??>
+	  <!-- 行程介绍  -->
+      <#if type=="JOURNEY">
+	      <#if viewJourneyList?? && viewJourneyList?size &gt; 0>
+	         <#list viewJourneyList as vjl>
+			  <div class="lv-wrapper-container clear">
+<<<<<<< .working
+			    <div class="lv-title-01 lv-calendar-icon"><span class="lv-color date_pd">DAY ${vjl.seq}</span><span class="lv-padding-x10">${vjl.title?if_exists}</span></div>
+			     <div class="lv-content-01">
+=======
+			    <div class="lv-title-01">
+			      <span class="lv-calendar-icon lv-color" style="padding-left:24px;">DAY ${vjl.seq}</span><span class="lv-padding-x10">${vjl.title?if_exists}</span></div>
+			      <div class="lv-content-01">
+>>>>>>> .merge-right.r60944
+			      <div class="lv-justify">${vjl.contentBr?default("")}</div>
+			      <div class="lv-padding-y10">
+			           <#if vjl.journeyPictureList?? && vjl.journeyPictureList?size &gt; 0> 
+			               <#list vjl.journeyPictureList as jp>
+			                 <#if jp_index == 0>
+			                     <img title="${jp.pictureName?if_exists}"  style="width:124px; height:92px;" src="${jp.absoluteUrl?if_exists}">
+			                 <#elseif jp_index == 1>
+			                    <img title="${jp.pictureName?if_exists}" style="width:124px; height:92px;margin-left:10px;" src="${jp.absoluteUrl?if_exists}">
+			                 </#if>
+			               </#list>
+				      </#if>
+			      </div>
+			      <#if vjl.dinner??> 
+			         <div><img style="width:20px; height:20px;" src="${request.contextPath}/img/restaurant.png">
+			         <span class="lv-padding-x10">${vjl.dinner?default("")}  </span></div>
+			      </#if>
+			      
+				  <#if vjl.hotel??>
+				    <div><img style="width:20px; height:20px;" src="${request.contextPath}/img/lodging.png">
+			        <span class="lv-padding-x10">${vjl.hotel?default("")}</span></div>
+				  </#if>
+			    </div>
+			  </div>
+			  <div class="lv-seprator-lined2" style="margin:8px 0 4px;"></div>
+		  </#list>
+	      </#if>
+	  <!-- 特色 -->    
+	  <#elseif type=="FEATURES">
+	      <#if  viewPage?? && viewPage.hasContent('FEATURES') >
+	           ${viewPage.contents.get('FEATURES').content?if_exists?replace("\n","</br>")}
+	      <#else>
+	                        暂无产品特色数据.
+	      </#if>
+	   <!-- 费用 -->    
+	  <#elseif  type=="COSTCONTAIN">
+		 <#if viewPage?? &&  viewPage.hasContent('COSTCONTAIN')>	
+		   <div class="lv-wrapper-container clear">
+		      <div class="lv-title-01">费用包含</div>
+			    <div class="lv-content-01">
+			         ${viewPage.contents.get('COSTCONTAIN').content?if_exists?replace("\n","</br>")}
+			    </div>
+			  </div>
+		      <div class="lv-seprator-lined2" style="margin:8px 0 4px;"></div>
+	      </#if>
+	      <#if viewPage?? &&  viewPage.hasContent('NOCOSTCONTAIN')>
+			  <div class="lv-wrapper-container clear">
+			    <div class="lv-title-01">费用不包含</div>
+			    <div class="lv-content-01">
+			        ${viewPage.contents.get('NOCOSTCONTAIN').content?if_exists?replace("\n","</br>")}
+			    </div>
+			  </div>
+			  <div class="lv-seprator-lined2" style="margin:8px 0 4px;"></div>
+		   </#if>
+		  
+		  <#if viewPage?? && viewPage.hasContent('RECOMMENDPROJECT')>
+			  <div class="lv-wrapper-container clear">
+			    <div class="lv-title-01">推荐项目</div>
+			    <div class="lv-content-01">
+			      <ul class="lv-content-list">
+			        ${viewPage.contents.get('RECOMMENDPROJECT').content?if_exists?replace("\n","</br>")}
+			      </ul>
+			    </div>
+			  </div>
+		  </#if>
+		   <#if viewPage?? && viewPage.hasContent('SHOPPINGEXPLAIN')>
+			  <div class="lv-seprator-lined2" style="margin:8px 0 4px;"></div>
+			  <div class="lv-wrapper-container clear" style="padding-bottom:4px;">
+			    <div class="lv-title-01">购物说明</div>
+			    <div class="lv-content-01">
+			      <ul class="lv-content-list">
+			        ${viewPage.contents.get('SHOPPINGEXPLAIN').content?if_exists?replace("\n","</br>")}
+			      </ul>
+			    </div>
+			  </div>
+	      </#if>
+	    <!-- 重要提示 -->    
+	  <#elseif type=="ORDERTOKNOWN">
+	        <#if viewPage?? && viewPage.hasContent('ACITONTOKNOW')>
+		        <div class="lv-wrapper-container clear">
+			    <div class="lv-title-01">行前须知</div>
+			    <div class="lv-content-01">
+			      <ul class="lv-content-list">
+			         ${viewPage.contents.get('ACITONTOKNOW').content?if_exists?replace("\n","</br>")}
+			      </ul>
+			    </div>
+			  </div>
+		  </#if>
+		  <#if viewPage?? && viewPage.hasContent('ORDERTOKNOWN')>
+			  <div class="lv-seprator-lined2" style="margin:8px 0 4px;"></div>
+			  <div class="lv-wrapper-container clear">
+			    <div class="lv-title-01">预订须知</div>
+			    <div class="lv-content-01">
+			      <ul class="lv-content-list">
+			        ${viewPage.contents.get('ORDERTOKNOWN').content?if_exists?replace("\n","</br>")}
+			      </ul>
+			    </div>
+			  </div>
+		   </#if>
+		  <#if viewPage?? && viewPage.hasContent('REFUNDSEXPLANATION')>
+			  <div class="lv-seprator-lined2" style="margin:8px 0 4px;"></div>
+			  <div class="lv-wrapper-container clear">
+			    <div class="lv-title-01">退款须知</div>
+			    <div class="lv-content-01">
+			      <ul class="lv-content-list">
+			          ${viewPage.contents.get('REFUNDSEXPLANATION').content?if_exists?replace("\n","</br>")}
+			      </ul>
+			    </div>
+			  </div>
+		   </#if>
+		   <#if viewPage?? && viewPage.hasContent('SERVICEGUARANTEE')>
+			  <div class="lv-seprator-lined2" style="margin:8px 0 4px;"></div>
+			  <div class="lv-wrapper-container clear" style="padding-bottom:4px;">
+			    <div class="lv-title-01">旅游服务保障</div>
+			    <div class="lv-content-01">
+			      <ul class="lv-content-list">
+			       ${viewPage.contents.get('SERVICEGUARANTEE').content?if_exists?replace("\n","</br>")}
+			      </ul>
+			    </div>
+			  </div>
+	       </#if>
+	      <#if viewPage?? && viewPage.hasContent('PLAYPOINTOUT')>
+			  <div class="lv-seprator-lined2" style="margin:8px 0 4px;"></div>
+			  <div class="lv-wrapper-container clear" style="padding-bottom:4px;">
+			    <div class="lv-title-01">游玩提示</div>
+			    <div class="lv-content-01">
+			      <ul class="lv-content-list">
+			       ${viewPage.contents.get('PLAYPOINTOUT').content?if_exists?replace("\n","</br>")}
+			      </ul>
+			    </div>
+			  </div>
+	       </#if>
+	  </#if>
+  <#else>
+  </#if>
+</div>
+</body>
+</html>

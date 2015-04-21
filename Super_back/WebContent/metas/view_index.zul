@@ -1,0 +1,36 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./tabIndex"?>
+<window id="tabIndex" title="采购产品详情对象" border="normal" mode="embedded" apply="com.lvmama.back.web.metas.ViewTabAction">
+<tabbox width="99%" tabscroll="false">
+		<tabs>
+			<tab  label="元产品详情"/>
+			<tab  label="结算对象"/>
+			<tab  label="履行对象"/>
+			<tab  label="凭证对象"/>
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+				<include  src="@{saction.metaUrl}" >
+				
+				</include>
+			</tabpanel>
+				<tabpanel>
+				<include src="@{saction.tagartUrlSettment}" >
+				
+				</include>
+			</tabpanel>
+			<tabpanel>
+				<include src="@{saction.tagatUrlPerformt}" >
+				
+				</include>
+			</tabpanel>
+			<tabpanel>
+				<include src="@{saction.tagatUrlCertificate}" >
+				
+				</include>
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+</window>
+</zk>

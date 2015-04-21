@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="LINE_INFO" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.LineInfo" >
+    <result column="LINE_INFO_ID" property="lineInfoId" />
+    <result column="START_STATION_ID" property="startStationId" />
+    <result column="END_STATION_ID" property="endStationId" />
+    <result column="FULL_NAME" property="fullName" />
+    <result column="CATEGORY" property="category" />
+    <result column="START_TIME" property="startTime" />
+    <result column="END_TIME" property="endTime" />
+    <result column="TAKE_DAYS" property="takeDays" />
+    <result column="DIRECT" property="direct" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap2" class="com.lvmama.comm.bee.po.prod.LineInfo" >  
+    <result column="LINE_INFO_ID" property="lineInfoId" />
+    <result column="START_STATION_NAME" property="startStationName" />
+    <result column="END_STATION_NAME" property="endStationName" />
+    <result column="FULL_NAME" property="fullName" />
+    <result column="ARRIVAL_TIME" property="arrivalTime" />
+    <result column="START_TIME" property="startTime" />
+    <result column="END_TIME" property="endTime" />
+    <result column="CATEGORY" property="category" />
+    <result column="TAKE_DAYS" property="takeDays" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap3" class="com.lvmama.comm.bee.po.prod.LineInfo" >  
+    <result column="LINE_INFO_ID" property="lineInfoId" />
+    <result column="START_STATION_NAME" property="startStationName" />
+    <result column="END_STATION_NAME" property="endStationName" />
+    <result column="FULL_NAME" property="fullName" />
+    <result column="START_TIME" property="startTime" />
+    <result column="END_TIME" property="endTime" />
+    <result column="TAKE_DAYS" property="takeDays" />
+  </resultMap>
+  
+  <sql id="pageHeader">
+         SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+    </sql>
+    <sql id="pageFooter">
+         ) A
+        <dynamic prepend="where">
+            <isNotEmpty property="endRows" prepend="and">
+                ROWNUM &lt;= #endRows#
+            </isNotEmpty>
+        </dynamic>
+          )
+        <dynamic prepend="where">
+         <isNotEmpty property="startRows" prepend="and">
+            rn &gt;= #startRows#
+         </isNotEmpty>      
+        </dynamic>
+    </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.LineInfo" >
+    select *
+    from LINE_INFO
+    where LINE_INFO_ID = #lineInfoId#
+  </select>
+  
+  <select id="selectByFullName" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.LineInfo" >
+    select *
+    from LINE_INFO
+    where FULL_NAME = #fullName#
+  </select>
+  
+  <select id="selectLineInfoByFullName" resultMap="BaseResultMap3" parameterClass="com.lvmama.comm.bee.po.prod.LineInfo" >
+    SELECT A.LINE_INFO_ID,B.STATION_NAME AS START_STATION_NAME,C.STATION_NAME AS END_STATION_NAME,A.FULL_NAME,A.START_TIME,A.END_TIME,A.TAKE_DAYS
+     	FROM LINE_INFO A,LINE_STATION B,LINE_STATION C 
+     	 WHERE A.START_STATION_ID = B.STATION_ID AND A.END_STATION_ID = C.STATION_ID 
+     	 AND A.FULL_NAME = #fullName#
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.LineInfo" >
+    delete from LINE_INFO
+    where LINE_INFO_ID = #lineInfoId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.LineInfo" >
+    <selectKey resultClass="java.lang.Long" keyProperty="lineInfoId" >
+      select LINE_INFO_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into LINE_INFO (LINE_INFO_ID, START_STATION_ID, END_STATION_ID, FULL_NAME, CATEGORY,
+      START_TIME, END_TIME, TAKE_DAYS, DIRECT)
+    values (#lineInfoId#, #startStationId#, #endStationId#,
+      #fullName#, #category#, #startTime#, #endTime#,
+      #takeDays#, #direct#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.prod.LineInfo" >
+    <selectKey resultClass="java.lang.Long" keyProperty="lineInfoId" >
+      select LINE_INFO_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into LINE_INFO
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="lineInfoId" >
+        LINE_INFO_ID
+      </isNotNull>
+      <isNotNull prepend="," property="startStationId" >
+        START_STATION_ID
+      </isNotNull>
+      <isNotNull prepend="," property="endStationId" >
+        END_STATION_ID
+      </isNotNull>
+      <isNotNull prepend="," property="fullName" >
+        FULL_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="category" >
+        CATEGORY
+      </isNotNull>
+      <isNotNull prepend="," property="startTime" >
+        START_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="endTime" >
+        END_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="takeDays" >
+        TAKE_DAYS
+      </isNotNull>
+      <isNotNull prepend="," property="direct" >
+        DIRECT
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="lineInfoId" >
+        #lineInfoId#
+      </isNotNull>
+      <isNotNull prepend="," property="startStationId" >
+        #startStationId#
+      </isNotNull>
+      <isNotNull prepend="," property="endStationId" >
+        #endStationId#
+      </isNotNull>
+      <isNotNull prepend="," property="fullName" >
+        #fullName#
+      </isNotNull>
+      <isNotNull prepend="," property="category" >
+        #category#
+      </isNotNull>
+      <isNotNull prepend="," property="startTime" >
+        #startTime#
+      </isNotNull>
+      <isNotNull prepend="," property="endTime" >
+        #endTime#
+      </isNotNull>
+      <isNotNull prepend="," property="takeDays" >
+        #takeDays#
+      </isNotNull>
+      <isNotNull prepend="," property="direct" >
+        #direct#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.LineInfo" >
+    update LINE_INFO
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="startStationId" >
+        START_STATION_ID = #startStationId#
+      </isNotNull>
+      <isNotNull prepend="," property="endStationId" >
+        END_STATION_ID = #endStationId#
+      </isNotNull>
+      <isNotNull prepend="," property="fullName" >
+        FULL_NAME = #fullName#
+      </isNotNull>
+      <isNotNull prepend="," property="category" >
+        CATEGORY = #category#
+      </isNotNull>
+      <isNotNull prepend="," property="startTime" >
+        START_TIME = #startTime#
+      </isNotNull>
+      <isNotNull prepend="," property="endTime" >
+        END_TIME = #endTime#
+      </isNotNull>
+      <isNotNull prepend="," property="takeDays" >
+        TAKE_DAYS = #takeDays#
+      </isNotNull>
+      <isNotNull prepend="," property="direct" >
+        DIRECT = #direct#
+      </isNotNull>
+    </dynamic>
+    where LINE_INFO_ID = #lineInfoId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.LineInfo" >
+    update LINE_INFO
+    set START_STATION_ID = #startStationId#,
+      END_STATION_ID = #endStationId#,
+      FULL_NAME = #fullName#,
+      CATEGORY = #category#,
+      START_TIME = #startTime#,
+      END_TIME = #endTime#,
+      TAKE_DAYS = #takeDays#,
+      DIRECT = #direct#
+    where LINE_INFO_ID = #lineInfoId#
+  </update>  
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select * from line_info 
+  	<dynamic prepend=" where " >
+      <isNotNull prepend=" and " property="category" >
+        CATEGORY in ($category$) 
+      </isNotNull>
+  </dynamic>
+  	  order by line_info_id
+  </select>
+  
+  <select id="selectCheZhan" resultMap="BaseResultMap2">
+  	SELECT distinct A.LINE_INFO_ID,A.FULL_NAME,D.STATION_NAME AS START_STATION_NAME,C.STATION_NAME AS END_STATION_NAME ,B.ARRIVAL_TIME,A.START_TIME,A.END_TIME,A.CATEGORY,a.take_days  FROM LINE_INFO A
+ INNER JOIN (SELECT * FROM LINE_STOPS  WHERE STATION_ID=#stationId# ) B ON A.LINE_INFO_ID =B.LINE_INFO_ID 
+ INNER JOIN LINE_STATION C ON C.STATION_ID = A.END_STATION_ID 
+ INNER JOIN LINE_STATION D ON B.STATION_ID = D.STATION_ID 
+  order by A.START_TIME 
+  </select>
+</sqlMap>

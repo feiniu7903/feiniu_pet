@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="OpGroupBudgetProd" >
+	 
+	<typeAlias alias="GroupBudgetProd" type="com.lvmama.finance.group.ibatis.vo.GroupBudgetProd"/>
+	<!-- 查询团预算信息begin -->
+ 	<select id="searchBudgetProd" parameterClass="Map" resultClass="GroupBudgetProd">
+		SELECT 
+		  A.ITEM_ID AS ITEMID,
+		  G.PRODUCT_NAME AS PRODUCTNAME,
+		  B.BRANCH_NAME AS BRANCHNAME,
+		  A.BG_COSTS/100 AS BGCOSTS,
+		  A.QUANTITY,
+		  A.CURRENCY,
+		  F.SYMBOL AS CURRENCYSYMBOL,
+		  A.EXCHANGE_RATE AS EXCHANGERATE,
+		  A.SUBTOTAL_COSTS/100 AS SUBTOTALCOSTS,
+		  A.SUBTOTAL_COSTS_FC/100 AS SUBTOTALCOSTSFC,
+		  A.SUPPLIER_ID AS SUPPLIERID,
+		  E.SUPPLIER_NAME AS SUPPLIERNAME,
+		  A.TARGET_ID AS TARGETID,
+		  A.PAYMENT_TYPE AS PAYMENTTYPE,
+		  A.PAY_AMOUNT/100 AS PAYAMOUNT,
+		  A.PAY_STATUS AS PAYSTATUS,
+		  D.NAME AS TARGETNAME,
+		  A.PROD_BRANCH_ID AS PRODBRANCHID
+		FROM 
+			OP_GROUP_BUDGET_PROD A,
+			META_PRODUCT_BRANCH B ,
+			SUP_SETTLEMENT_TARGET D,
+			SUP_SUPPLIER E,
+			FIN_CURRENCY F,
+			META_PRODUCT G
+		WHERE 
+			A.PROD_BRANCH_ID = B.META_BRANCH_ID 
+		AND 
+			A.TARGET_ID = D.TARGET_ID
+		AND 
+			A.SUPPLIER_ID = E.SUPPLIER_ID
+		AND
+			A.CURRENCY = F.CURRENCY
+		AND 
+			G.META_PRODUCT_ID = B.META_PRODUCT_ID
+		AND
+			A.TYPE = #type#
+		AND
+			A.TRAVEL_GROUP_CODE = #code#
+ 	</select>
+ 	<!-- 查询团预算信息end -->
+ 	
+ 	
+ 	<update id="pay" parameterClass="map" >
+ 		UPDATE 
+ 			OP_GROUP_BUDGET_PROD A
+   		SET 
+   			<isNotNull property="amount">
+   				PAY_AMOUNT = #amount#*100,
+   			</isNotNull>
+   			<isNull property="amount">
+   				PAY_AMOUNT = SUBTOTAL_COSTS_FC,
+   			</isNull>
+   			PAY_STATUS = #status#
+ 		WHERE 
+ 			ITEM_ID = #itemId#
+ 	</update>
+ 	
+ 	<select id="searchBudgetProdById" resultClass="GroupBudgetProd">
+ 		SELECT
+ 			ITEM_ID AS ITEMID,
+ 			SUBTOTAL_COSTS_FC/100 AS SUBTOTALCOSTSFC,
+ 			NVL(PAY_AMOUNT,0)/100 AS PAYAMOUNT,
+ 			TYPE
+ 		FROM 
+ 			OP_GROUP_BUDGET_PROD
+ 		WHERE
+ 			ITEM_ID = #id#
+ 	</select>
+ 	
+ 	<update id="updateSubTotalCosts" parameterClass="GroupBudgetProd">
+ 		UPDATE
+ 			OP_GROUP_BUDGET_PROD
+ 		SET
+ 			SUBTOTAL_COSTS = #subTotalCosts#*100,
+ 			EXCHANGE_RATE = #exchangeRate#
+ 		WHERE
+ 			ITEM_ID = #itemId#
+ 	</update>
+</sqlMap>

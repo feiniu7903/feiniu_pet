@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ORD_ORDER_DISTRIBUTION" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.OrdOrderDistribution" >
+	    <result column="ORD_ORDER_DISTRIBUTION_ID" property="ordOrderDistributionId" />
+	    <result column="ORDER_ID" property="orderId" />
+	    <result column="SERIAL_NO" property="serialNo" />
+	    <result column="DISTRIBUTOR_INFO_ID" property="distributionInfoId" />
+	    <result column="CREATE_TIME" property="createTime" />
+	    <result column="IS_REFUND" property="isRefund" />
+		<result column="PARTNER_ORDER_ID" property="partnerOrderId" />
+		<result column="RESOURCE_CONFIRM" property="resourceConfirm" />    
+  </resultMap>
+  
+  <resultMap id="DistributionAndOrder" class="com.lvmama.comm.bee.po.distribution.OrdOrderDistribution" extends="BaseResultMap">
+  		<result column="ORDER_STATUS" property="ordOrder.orderStatus" />
+  		<result column="PAYMENT_STATUS" property="ordOrder.paymentStatus" />
+  		<result column="VISIT_TIME" property="ordOrder.visitTime" />
+  		<result column="OUGHT_PAY" property="ordOrder.oughtPay" />
+  		<result column="DISTRIBUTOR_NAME" property="distributorName" />
+  		<result column="DISTRIBUTOR_CODE" property="distributorCode" />
+  		<result column="DISTRIBUTOR_KEY" property="distributorKey" />
+  </resultMap>
+  
+  <resultMap id="DistributionOrderApproveStatus" class="com.lvmama.comm.bee.po.distribution.OrdOrderDistribution">
+  		<result column="ORDER_ID" property="ordOrder.orderId" />
+  		<result column="APPROVE_STATUS" property="ordOrder.approveStatus" />
+  		<result column="WAIT_PAYMENT" property="ordOrder.waitPayment" />
+  		<result column="APPROVE_TIME" property="ordOrder.approveTime" />
+  		<result column="LAST_CANCEL_TIME" property="ordOrder.lastCancelTime" />
+  </resultMap>
+  
+  	<select id="selectByOrderIdAndDistributionInfoId" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  		SELECT * FROM ORD_ORDER_DISTRIBUTION OOD WHERE OOD.ORDER_ID =#orderId# AND OOD.DISTRIBUTOR_INFO_ID=#distributionInfoId#
+  	</select>
+  	
+  	<sql id="queryPageByParamsCondition">
+		<isNotEmpty prepend="AND" property="orderId">
+			OOD.ORDER_ID=#orderId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="partnerOrderId">
+			OOD.PARTNER_ORDER_ID=#partnerOrderId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="serialNo">
+			OOD.SERIAL_NO=#serialNo#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="distributorInfoId">
+			DI.DISTRIBUTOR_INFO_ID=#distributorInfoId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="minCreateTime">
+			OO.CREATE_TIME &gt;= TO_DATE(#minCreateTime#,'YYYY-MM-DD HH24:MI:SS')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="maxCreateTime">
+			OO.CREATE_TIME &lt;= TO_DATE(#maxCreateTime#,'YYYY-MM-DD HH24:MI:SS')
+		</isNotEmpty>
+  	</sql>
+  	
+  	<select id="selectByParams" resultMap="DistributionAndOrder" parameterClass="java.util.Map">
+  		<isNotEmpty property="start">
+		SELECT *
+		FROM
+		(SELECT T.*,
+		ROWNUM AS ROWNUM1
+		FROM (	
+		</isNotEmpty>
+			SELECT OOD.*,OO.ORDER_STATUS,OO.PAYMENT_STATUS,OO.VISIT_TIME,OO.OUGHT_PAY,DI.DISTRIBUTOR_NAME , DI.DISTRIBUTOR_CODE,DI.DISTRIBUTOR_KEY
+			FROM ORD_ORDER_DISTRIBUTION OOD,ORD_ORDER OO,DISTRIBUTOR_INFO DI
+			WHERE OOD.ORDER_ID=OO.ORDER_ID
+			AND DI.DISTRIBUTOR_INFO_ID=OOD.DISTRIBUTOR_INFO_ID
+			<include refid="ORD_ORDER_DISTRIBUTION.queryPageByParamsCondition"/>
+			ORDER BY OO.ORDER_ID DESC
+		<isNotEmpty property="start">
+		) T)
+		WHERE ROWNUM1 &lt;=#end#
+		AND ROWNUM1 &gt;=#start#
+		</isNotEmpty>
+  	</select>
+  	
+  	<select id="selectByParamsCount" resultClass="java.lang.Long" parameterClass="java.util.Map">
+			SELECT COUNT(*)
+			FROM ORD_ORDER_DISTRIBUTION OOD,ORD_ORDER OO,DISTRIBUTOR_INFO DI
+			WHERE OOD.ORDER_ID=OO.ORDER_ID
+			AND DI.DISTRIBUTOR_INFO_ID=OOD.DISTRIBUTOR_INFO_ID
+			<include refid="ORD_ORDER_DISTRIBUTION.queryPageByParamsCondition"/>
+  	</select>
+  	
+  	
+  	<select id="selectDistributionOrderApproveStatus" resultMap="DistributionOrderApproveStatus" parameterClass="java.util.Map">
+  		SELECT OO.ORDER_ID,OO.APPROVE_STATUS,OO.WAIT_PAYMENT,OO.APPROVE_TIME,OO.LAST_CANCEL_TIME 
+  		FROM ORD_ORDER_DISTRIBUTION OOD, ORD_ORDER OO
+		WHERE OOD.ORDER_ID = OO.ORDER_ID
+		AND   OOD.DISTRIBUTOR_INFO_ID = #distributorId#
+		AND   OOD.ORDER_ID IN ($orderIds$)
+  	</select>
+  
+    <select id="getSerialNo" resultClass="Long" >
+		select DISTRIBUTION_SERIAL_NO_SEQ.nextval as id from DUAL
+    </select>
+    
+     <select id="isSentFax" resultClass="Long" parameterClass="java.lang.Long" >
+		select count(distinct eft.ebk_fax_task_id) 
+		from EBK_FAX_SEND efs,EBK_FAX_TASK eft ,EBK_CERTIFICATE ec ,EBK_CERTIFICATE_ITEM ect 
+		where efs.ebk_fax_task_id=eft.ebk_fax_task_id
+		and eft.ebk_certificate_id=ec.ebk_certificate_id
+		and ec.ebk_certificate_id=ect.ebk_certificate_id
+		and ect.order_id=#orderId#
+		and eft.send_count &gt;=1
+    </select>
+    
+   <insert id="insert" parameterClass="com.lvmama.comm.bee.po.distribution.OrdOrderDistribution">
+	  	<selectKey  keyProperty="ordOrderDistributionId" resultClass="Long"> SELECT ORD_ORDER_DISTRIBUTION_ID_SEQ.NEXTVAL FROM DUAL</selectKey>
+		INSERT INTO ORD_ORDER_DISTRIBUTION (ORD_ORDER_DISTRIBUTION_ID,ORDER_ID,SERIAL_NO,DISTRIBUTOR_INFO_ID,CREATE_TIME,IS_REFUND,PARTNER_ORDER_ID,RESOURCE_CONFIRM,COMMENTS_CASHBACK)
+		 VALUES (#ordOrderDistributionId#,#orderId#,#serialNo#,#distributionInfoId#,sysdate,#isRefund#,#partnerOrderId#,'false',#commentsCashback#)
+  </insert>
+  
+  <update id="updateResourceStatus" parameterClass="java.util.Map">
+  		UPDATE ORD_ORDER_DISTRIBUTION SET ORD_ORDER_DISTRIBUTION.RESOURCE_CONFIRM = 'true' WHERE ORD_ORDER_DISTRIBUTION.DISTRIBUTOR_INFO_ID = #distributorId# AND ORDER_ID IN ($orderIds$)
+  </update>
+  
+  <update id="updateRefundStatusByPartnerOrdid" parameterClass="java.util.Map">
+  		UPDATE ORD_ORDER_DISTRIBUTION SET IS_REFUND ='true'  WHERE PARTNER_ORDER_ID = #orderId:VARCHER#
+  </update>
+</sqlMap>

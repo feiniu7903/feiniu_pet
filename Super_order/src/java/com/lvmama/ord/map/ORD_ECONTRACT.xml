@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ORD_ECONTRACT" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdEContract" >
+    <result column="ECONTRACT_ID" property="econtractId" />
+	<result column="ECONTRACT_NO" property="econtractNo" />
+    <result column="ORDER_ID" property="orderId" />
+	<result column="ECONTRACT_STATUS" property="econtractStatus" />
+	<result column="CONFIRMED_DATE" property="confirmedDate" />
+	<result column="CONTENT_FILE_ID" property="contentFileId" />
+	<result column="FIXED_FILE_ID" property="fixedFileId" />
+	<result column="CONTRACT_VERSION" property="contractVersion" />
+	<result column="COMPLEMENT_XML" property="complementXml" />
+	<result column="TEMPLATE_NAME"	property="templateName"/>
+  </resultMap>
+	
+  <sql id="subQuery">
+  	SELECT ECONTRACT_ID,
+		   ECONTRACT_NO,
+		   ORDER_ID,
+		   ECONTRACT_STATUS,
+		   CONFIRMED_DATE,
+		   CONTENT_FILE_ID,
+		   FIXED_FILE_ID,
+		   CONTRACT_VERSION,
+		   COMPLEMENT_XML,
+		   TEMPLATE_NAME
+	FROM ORD_ECONTRACT E
+  </sql>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdEContract">
+	INSERT INTO ORD_ECONTRACT
+		(ECONTRACT_ID,
+		ECONTRACT_NO,
+		ORDER_ID,
+		ECONTRACT_STATUS,
+		CONFIRMED_DATE,
+		CONTENT_FILE_ID,
+		FIXED_FILE_ID,
+		CONTRACT_VERSION,
+		COMPLEMENT_XML,
+		TEMPLATE_NAME
+	) VALUES (
+		#econtractId#,
+		#econtractNo#,
+		#orderId#,
+		#econtractStatus#,
+		#confirmedDate#,
+		#contentFileId#,
+		#fixedFileId#,
+		1,
+		#complementXml#,
+		#templateName#)
+  </insert>
+  
+  <update id="update" parameterClass="com.lvmama.comm.bee.po.ord.OrdEContract">
+  	UPDATE 
+  		ORD_ECONTRACT 
+  	<dynamic prepend=" SET ">
+  		<isNotNull prepend="," property="contractVersion"> CONTRACT_VERSION = NVL(CONTRACT_VERSION,1)+1 </isNotNull>
+  		<isNotNull prepend="," property="econtractNo"> ECONTRACT_NO = #econtractNo# </isNotNull>
+  		<isNotNull prepend="," property="orderId"> ORDER_ID = #orderId# </isNotNull>
+  		<isNotNull prepend="," property="econtractStatus"> ECONTRACT_STATUS = #econtractStatus# </isNotNull>
+  		<isNotNull prepend="," property="confirmedDate"> CONFIRMED_DATE = #confirmedDate# </isNotNull>
+  		<isNotNull prepend="," property="contentFileId"> CONTENT_FILE_ID =#contentFileId# </isNotNull>
+  		<isNotNull prepend="," property="fixedFileId"> FIXED_FILE_ID =#fixedFileId# </isNotNull>
+  		<isNotNull prepend="," property="complementXml"> COMPLEMENT_XML =#complementXml# </isNotNull>
+  	</dynamic>
+  	WHERE ORDER_ID = #orderId#
+  </update>
+
+  <select id="queryByPK" parameterClass="java.lang.String" resultMap="BaseResultMap">
+	<include refid="subQuery"/> WHERE ECONTRACT_ID = #id#
+  </select>
+
+  <select id="queryByOrderId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+	<include refid="subQuery"/> WHERE ORDER_ID = #id#
+  </select>
+  <select id="query" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+  	<include refid="subQuery"/> 
+	 <dynamic prepend=" WHERE ">
+	 	<isNotEmpty prepend=" AND " property="contractVersion"> CONTRACT_VERSION = #contractVersion# </isNotEmpty>
+  		<isNotEmpty prepend=" AND " property="econtractNo"> ECONTRACT_NO = #econtractNo# </isNotEmpty>
+  		<isNotEmpty prepend=" AND " property="orderId"> ORDER_ID = #orderId# </isNotEmpty>
+  		<isNotEmpty prepend=" AND " property="orderIds">
+  			 ORDER_ID IN 
+			   <iterate property="orderIds" conjunction="," open="(" close=")">
+						#orderIds[]# 
+			   </iterate>
+  		</isNotEmpty>
+  		<isNotEmpty prepend=" AND " property="econtractStatus"> ECONTRACT_STATUS = #econtractStatus# </isNotEmpty>
+	 </dynamic>
+  </select>
+  <select id="existByOrderId" parameterClass="java.lang.Long" resultClass="java.lang.Long">
+  	SELECT COUNT(*)
+	  FROM ORD_ECONTRACT O, ORD_ECONTRACT_LOG L
+	 WHERE O.ECONTRACT_ID = L.ECONTRACT_ID
+	   AND O.ORDER_ID = #id#
+  </select>
+</sqlMap>

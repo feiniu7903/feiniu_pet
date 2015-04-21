@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VIEW_PAGE">
+	<resultMap class="com.lvmama.comm.bee.po.prod.ViewPage"
+		id="BaseResultMap">
+		<result column="PAGE_ID" property="pageId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="TITLE" property="title" />
+		<result column="BEGIN_SELL_TIME" property="beginSellTime" />
+		<result column="END_SELL_TIME" property="endSellTime" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="STEP" property="step" />
+ 	</resultMap>
+	<resultMap extends="BaseResultMap" id="BaseResultMapExt"
+		class="com.lvmama.comm.bee.po.prod.ViewPage">
+		<result column="BIZ_CODE" property="product.bizcode" />
+		<result column="PRODUCT_NAME" property="product.productName" />
+		<result column="PRODUCT_DESCRIPTION"
+			property="product.description" />
+	</resultMap>
+
+	<sql id="condition">
+		<dynamic>
+			<isNotEmpty prepend="and" property="productId">
+				VIEW_PAGE.PRODUCT_ID = #productId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="bizcode">
+				PROD_PRODUCT.BIZ_CODE like '%$bizcode$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="title">
+				VIEW_PAGE.TITLE like '%$title$%'
+			</isNotEmpty>
+			<isNotNull prepend="and" property="beginSellTime">
+				VIEW_PAGE.BEGIN_SELL_TIME
+				<![CDATA[>=]]>
+				#beginSellTime#
+			</isNotNull>
+			<isNotNull prepend="and" property="endSellTime">
+				VIEW_PAGE.END_SELL_TIME
+				<![CDATA[<]]>
+				#endSellTime#+1
+			</isNotNull>
+			<isNotNull prepend="and" property="beginDate">
+				VIEW_PAGE.CREATE_TIME
+				<![CDATA[>=]]>
+				#beginDate#
+			</isNotNull>
+			<isNotNull prepend="and" property="endDate">
+				VIEW_PAGE.CREATE_TIME
+				<![CDATA[<]]>
+				#endDate#+1
+			</isNotNull>
+		</dynamic>
+	</sql>
+	<sql id="restriction">
+		<dynamic prepend="order by">
+			<isNotEmpty property="orderBy">$orderBy$</isNotEmpty>
+		</dynamic>
+	</sql>
+	<sql id="maxResults">
+		<dynamic prepend="where">
+			<isNotEmpty property="maxResults">
+				<![CDATA[
+  			rownum<= #maxResults#
+  		]]>
+			</isNotEmpty>
+			<!-- 
+			<isNotPropertyAvailable property="maxResults">
+				<![CDATA[
+  			rownum<= 50
+  		]]>
+			</isNotPropertyAvailable>
+			 -->
+		</dynamic>
+	</sql>
+
+	<select id="countByParams" resultClass="java.lang.Integer"
+		parameterClass="java.util.HashMap">
+		select count(*) from VIEW_PAGE,PROD_PRODUCT where VIEW_PAGE.VALID='Y' and
+		VIEW_PAGE.product_Id=PROD_PRODUCT.product_Id
+		
+		<include refid="condition" />
+	</select>
+
+	<select id="selectByParams" resultMap="BaseResultMapExt"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+		select * from (select
+		VIEW_PAGE.*,PROD_PRODUCT.BIZ_CODE,PROD_PRODUCT.PRODUCT_NAME,PROD_PRODUCT.DESCRIPTION
+		as PRODUCT_DESCRIPTION from VIEW_PAGE,PROD_PRODUCT where VIEW_PAGE.VALID='Y' and
+		VIEW_PAGE.product_Id=PROD_PRODUCT.product_Id
+		<include refid="condition" />
+		<include refid="restriction" />
+		order by PAGE_ID DESC )
+		<include refid="maxResults" />
+		) T WHERE ROWNUM &lt;= #_endRow#
+		)
+		WHERE ROWNUM1 &gt;=#_startRow#
+	</select>
+
+	<select id="getViewPageByProductId" resultMap="BaseResultMap">
+		select * from VIEW_PAGE WHERE VALID='Y' and PRODUCT_ID=#productId#
+	</select>
+
+	<select id="selectByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.prod.ViewPage"
+		resultMap="BaseResultMapExt">
+		select
+		VIEW_PAGE.*,PROD_PRODUCT.BIZ_CODE,PROD_PRODUCT.PRODUCT_NAME,PROD_PRODUCT.DESCRIPTION
+		as PRODUCT_DESCRIPTION from VIEW_PAGE left join PROD_PRODUCT on
+		VIEW_PAGE.PRODUCT_ID=PROD_PRODUCT.PRODUCT_ID where VIEW_PAGE.VALID='Y' and PAGE_ID =
+		#pageId#
+	</select>
+
+	<select id="countByProductId" resultClass="java.lang.Integer"
+		parameterClass="com.lvmama.comm.bee.po.prod.ViewPage">
+		select count(*) from VIEW_PAGE where PRODUCT_ID = #productId# and valid='Y'
+	</select>	
+	<select id="countDeleteByProductId" resultClass="java.lang.Integer"
+		parameterClass="com.lvmama.comm.bee.po.prod.ViewPage">
+		select count(*) from VIEW_PAGE where PRODUCT_ID = #productId# and valid='N'
+	</select>
+	
+	<update id="updateValidByProductId" 
+		parameterClass="java.lang.Long">
+		update VIEW_PAGE set VALID='Y' where PRODUCT_ID = #productId#
+	</update>
+
+	<update id="deleteByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.prod.ViewPage">
+		update VIEW_PAGE set VALID='N' where PAGE_ID = #pageId#
+	</update>
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.bee.po.prod.ViewPage">
+		<selectKey keyProperty="pageId" resultClass="java.lang.Long">
+			select #productId# from dual
+		</selectKey>
+		insert into VIEW_PAGE (PAGE_ID, PRODUCT_ID, TITLE,
+		CREATE_TIME,STEP,VALID) values (#pageId#, #productId#,
+		#title#,sysdate,#step#,'Y')
+	</insert>
+	<update id="updateByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.prod.ViewPage">
+		update VIEW_PAGE set TITLE = #title#, STEP = #step# where 
+		PAGE_ID = #pageId#
+	</update>
+
+	<parameterMap class="map" id="swapParameters">
+		<parameter property="srcPageId" javaType="java.lang.Long"
+			jdbcType="VARCHAR" mode="IN" />
+		<parameter property="productId" javaType="java.lang.Long"
+			jdbcType="VARCHAR" mode="IN" />
+		<parameter property="copiedId" javaType="java.lang.Long"
+			jdbcType="VARCHAR" mode="OUT" />
+	</parameterMap>
+
+	<update id="markIsValid" parameterClass="java.util.Map">
+		update VIEW_PAGE set VALID='N' where page_id = #pageId#
+	</update>
+ 	
+	<select id="selectRowCount" resultClass="java.lang.Integer">
+		select count(*) from (select
+		VIEW_PAGE.*,PROD_PRODUCT.BIZ_CODE,PROD_PRODUCT.PRODUCT_NAME,PROD_PRODUCT.DESCRIPTION
+		as PRODUCT_DESCRIPTION from VIEW_PAGE,PROD_PRODUCT where VIEW_PAGE.VALID='Y' and
+		VIEW_PAGE.product_Id=PROD_PRODUCT.product_Id
+		<include refid="condition" />
+		<include refid="restriction" />
+		order by PAGE_ID DESC )
+		<include refid="maxResults" />
+	</select>
+	
+	<select id="selectByProductId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select * from VIEW_PAGE where PRODUCT_ID=#productId#
+	</select>
+</sqlMap>

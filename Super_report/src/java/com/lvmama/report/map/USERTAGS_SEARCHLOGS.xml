@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USERTAGS_SEARCHLOGS" >
+<typeAlias alias="UserTagsSearchLogs" type="com.lvmama.comm.pet.po.usertags.UserTagsSearchLogs" />
+    <resultMap class="UserTagsSearchLogs" id="BaseResultMap">
+        <result property="searchLogsId" column="SEARCHLOGS_ID"/>
+        <result property="searchLogsFrequence" column="SEARCHLOGS_FREQUENCE"/>
+        <result property="searchLogsName" column="SEARCHLOGS_NAME"/>
+        <result property="searchLogsFrom" column="SEARCHLOGS_FROM"/>
+        <result property="searchLogsDate" column="SEARCHLOGS_DATE"/>
+        <result property="isHide" column="IS_HIDE"/>
+    </resultMap>
+    
+    <sql id="pageHeader">
+         SELECT * FROM (
+       SELECT A.*, ROWNUM RN FROM (
+    </sql>
+    <sql id="pageFooter">
+         ) A
+        <dynamic prepend="where">
+            <isNotEmpty property="endRows" prepend="and">
+                ROWNUM &lt;= #endRows#
+            </isNotEmpty>
+        </dynamic>
+          )
+        <dynamic prepend="where">
+         <isNotEmpty property="startRows" prepend="and">
+            rn &gt;= #startRows#
+         </isNotEmpty>      
+        </dynamic>
+    </sql>
+    
+    <sql id="queryTagsTypeLogByParamWhere">
+		<dynamic prepend=" where ">
+		   <isNotEmpty prepend=" and " property="startDate"> SEARCHLOGS_DATE &gt; #startDate#</isNotEmpty>
+		   <isNotEmpty prepend=" and " property="endDate"> SEARCHLOGS_DATE &lt; #endDate# </isNotEmpty>
+		   <isNotEmpty prepend=" and " property="searchLogsName"> SEARCHLOGS_NAME like '%$searchLogsName$%' </isNotEmpty>
+		   <isNotEmpty prepend=" and " property="isHide"> IS_HIDE = #isHide#</isNotEmpty> 
+		   <isNotEmpty prepend=" and " property="searchLogsId"> SEARCHLOGS_ID = #searchLogsId#</isNotEmpty> 
+		</dynamic>
+    </sql>
+ 
+       
+    <select id="queryAllUserTagsLogByParam" parameterClass="java.util.Map" resultMap="BaseResultMap" >
+        <include refid="pageHeader"/>        
+            SELECT SEARCHLOGS_ID,SEARCHLOGS_FREQUENCE,SEARCHLOGS_NAME,SEARCHLOGS_FROM,SEARCHLOGS_DATE,IS_HIDE 
+            FROM lvmama_report.USERTAGS_SEARCHLOGS 
+            <include refid="queryTagsTypeLogByParamWhere"/>
+            ORDER BY SEARCHLOGS_FREQUENCE DESC
+        <include refid="pageFooter"/>
+    </select>
+    
+   
+    <update id="updateUserTagsLog" parameterClass="UserTagsSearchLogs">
+        UPDATE lvmama_report.USERTAGS_SEARCHLOGS 
+     <dynamic prepend=" SET ">
+	      <isNotNull prepend="," property="searchLogsFrequence">
+	        SEARCHLOGS_FREQUENCE = #searchLogsFrequence#
+	      </isNotNull>
+	      <isNotNull prepend="," property="searchLogsName">
+	        SEARCHLOGS_NAME = #searchLogsName#
+	      </isNotNull>
+	      <isNotNull prepend="," property="searchLogsFrom">
+	        SEARCHLOGS_FROM = #searchLogsFrom#
+	      </isNotNull>
+	      <isNotNull prepend="," property="searchLogsDate">
+	       SEARCHLOGS_DATE = #searchLogsDate#
+	      </isNotNull>
+	      <isNotNull prepend="," property="isHide">
+           IS_HIDE = #isHide#
+          </isNotNull>
+    </dynamic>
+        WHERE SEARCHLOGS_ID = #searchLogsId#
+    </update>
+    
+ 
+    <select id="countUserTagsLogByParam" parameterClass="java.util.Map" resultClass="java.lang.Long">
+       SELECT COUNT(*) FROM lvmama_report.USERTAGS_SEARCHLOGS 
+        <include refid="queryTagsTypeLogByParamWhere"/>
+    </select>
+
+    <delete id="deleteSearchLogsByDoTagsSave" parameterClass="java.lang.Long">
+       DELETE FROM lvmama_report.USERTAGS_SEARCHLOGS WHERE SEARCHLOGS_ID = #SEARCHLOGSID#
+    </delete>
+
+    <select id="querySearchLogsByLogsId" parameterClass="java.lang.Long" resultMap="BaseResultMap" >
+           SELECT SEARCHLOGS_ID,SEARCHLOGS_FREQUENCE,SEARCHLOGS_NAME,SEARCHLOGS_FROM,SEARCHLOGS_DATE,IS_HIDE 
+            FROM LVMAMA_REPORT.USERTAGS_SEARCHLOGS 
+            WHERE SEARCHLOGS_ID = #searchLogsId#
+    </select>
+</sqlMap>

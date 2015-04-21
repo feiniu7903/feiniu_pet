@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MONEY_USER_DETAIL_EXPORT">
+	<typeAlias alias="MoneyUserDetailExportRefund" type="com.lvmama.report.po.MoneyUserDetailExportRefund" />
+	
+	<!-- 现金账户支付报表查询结果映射 -->
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.MoneyUserPayDetail" >
+	  <result column="TRAVEL_GROUP_CODE" property="travelGroupCode" />
+	  <result column="ORDER_NO" property="orderNo" />
+	  <result column="VISIT_TIME" property="visitTime" />
+	  <result column="ORDER_CREATE_TIME" property="orderCreateTime" />
+	  <result column="PRODUCT_ID" property="productId" />
+	  <result column="PRODUCT_NAME" property="productName" />
+	  <result column="OUGHT_PAY" property="oughtPay" />
+	  <result column="PAY_AMOUNT" property="payAmount" />
+	  <result column="PAY_TIME" property="payTime" />
+	  <result column="QUANTITY" property="quantity" />
+	  <result column="PRICE" property="price" />
+	  <result column="PRODUCT_TOTAL_AMOUNT" property="productTotalAmount" />
+	  <result column="FILIALE_NAME" property="filialeName" />
+	  <result column="PAY_FROM" property="payFrom" />
+	</resultMap>
+	
+	<!-- 查询时间sql片段 -->
+	<sql id="queryDateSql">
+		<isNotNull prepend=" AND " property="visitStartDate"> 
+			T1.VISIT_TIME &gt;= TRUNC(#visitStartDate#) 
+		</isNotNull>
+		<isNotNull prepend=" AND " property="visitEndDate"> 
+			T1.VISIT_TIME &lt; TRUNC(#visitEndDate# + 1) 
+		</isNotNull>
+		<isNotNull prepend=" AND " property="moneyChangeStartDate"> 
+			TRUNC(T6.CREATE_TIME) &gt;= TRUNC(#moneyChangeStartDate#) 
+		</isNotNull>
+		<isNotNull prepend=" AND " property="moneyChangeEndDate"> 
+			TRUNC(T6.CREATE_TIME) &lt; TRUNC(#moneyChangeEndDate# + 1) 
+		</isNotNull>
+	</sql>
+	
+	<!-- 查询现金账户支付报表 -->
+	<select id="queryMoneyUserPay" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+		SELECT 
+	      T3.*,
+	      T5.ITEM_NAME AS FILIALE_NAME
+	    FROM 
+			(
+				SELECT 
+					T1.ORDER_ID AS ORDER_NO,
+					T1.TRAVEL_GROUP_CODE AS TRAVEL_GROUP_CODE,
+					T1.VISIT_TIME AS VISIT_TIME,
+					T1.CREATE_TIME AS ORDER_CREATE_TIME,
+					T2.PRODUCT_ID AS PRODUCT_ID,
+					T2.PRODUCT_NAME AS PRODUCT_NAME,
+					T1.OUGHT_PAY AS OUGHT_PAY,
+					T2.QUANTITY AS QUANTITY,
+					T2.PRICE * T2.QUANTITY AS PRODUCT_TOTAL_AMOUNT,
+					T2.PRICE AS PRICE,
+					T6.AMOUNT AS PAY_AMOUNT,
+					T6.CREATE_TIME AS PAY_TIME,
+					T6.PAY_FROM as PAY_FROM
+				FROM 
+					LVMAMA_SUPER.ORD_ORDER T1,
+					LVMAMA_PET.CASH_PAY T6,
+					LVMAMA_SUPER.ORD_ORDER_ITEM_PROD T2
+				WHERE
+					T1.ORDER_ID = T6.ORDER_ID
+				AND
+					T1.ORDER_ID = T2.ORDER_ID 
+				<include refid="queryDateSql"/>
+			) T3
+	    LEFT JOIN 
+	    	LVMAMA_SUPER.PROD_PRODUCT T4
+	    ON 
+	    	T3.PRODUCT_ID = T4.PRODUCT_ID
+	    LEFT JOIN 
+	    	LVMAMA_SUPER.COM_CODE T5
+	    ON 
+	    	T4.FILIALE_NAME = T5.ITEM_CODE
+	    WHERE
+	    	T5.SET_CODE = 'FILIALE_NAME'
+	</select>
+	
+	<!-- 查询现金账户退款明细 -->
+	<select id="selectRefundDetail" resultClass="MoneyUserDetailExportRefund"  parameterClass="map">
+		SELECT 
+  			C.TRAVEL_GROUP_CODE AS  TRAVELGROUPCODE,
+  			C.ORDER_ID AS ORDERNO,
+  			C.VISIT_TIME AS VISITTIME,
+  			C.CREATE_TIME AS ORDERCREATETIME,
+  			B.AMOUNT,
+  			B.CREATE_TIME AS REFUNDCREATETIME,
+  			B.BOUNS_REFUNDMENT as bonusRefund,
+  			F.SUPPLIER_ID AS SUPPLIERID,
+  			F.SUPPLIER_NAME AS SUPPLIERNAME,
+  			E.META_PRODUCT_ID AS METAPRODUCTID,
+  			E.PRODUCT_NAME AS METAPRODUCTNAME,
+  			D.QUANTITY,
+  			D.PRODUCT_ID AS productId,
+  			D.PRODUCT_NAME AS productName,
+  			E.PRODUCT_QUANTITY AS PRODUCTQUANTITY,
+  			E.SETTLEMENT_PRICE AS SETTLEMENTPRICE,
+  			H.ITEM_NAME AS FILIALENAME 
+		FROM 
+    		LVMAMA_PET.CASH_REFUNDMENT B,
+      		LVMAMA_SUPER.ORD_ORDER C,
+      		LVMAMA_SUPER.ORD_ORDER_ITEM_PROD D,
+			LVMAMA_SUPER.ORD_ORDER_ITEM_META E,
+			LVMAMA_SUPER.SUP_SUPPLIER F,
+			LVMAMA_SUPER.PROD_PRODUCT G,
+			LVMAMA_SUPER.COM_CODE H
+      	WHERE 
+      		B.ORDER_ID = C.ORDER_ID
+    	AND
+      		C.ORDER_ID = D.ORDER_ID
+	    AND
+	      	D.ORDER_ITEM_PROD_ID = E.ORDER_ITEM_ID
+	    AND
+	      	E.SUPPLIER_ID = F.SUPPLIER_ID
+	    AND
+      		D.PRODUCT_ID = G.PRODUCT_ID
+    	AND
+      		G.FILIALE_NAME = H.ITEM_CODE
+    	AND
+      		H.SET_CODE = 'FILIALE_NAME'
+		<isNotNull property="visitStartDate" prepend="AND">
+      		C.VISIT_TIME &gt;=  #visitStartDate# 
+      	</isNotNull>
+		<isNotNull property="visitEndDate" prepend="AND">
+      		C.VISIT_TIME &lt; #visitEndDate# + 1
+      	</isNotNull>
+      		<isNotNull property="moneyChangeStartDate" prepend="AND">
+      		B.CREATE_TIME &gt;=  #moneyChangeStartDate# 
+      	</isNotNull>
+		<isNotNull property="moneyChangeEndDate" prepend="AND">
+      		B.CREATE_TIME &lt; #moneyChangeEndDate# + 1
+      	</isNotNull>
+	</select>
+</sqlMap>

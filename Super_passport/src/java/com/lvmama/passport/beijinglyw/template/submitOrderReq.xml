@@ -1,0 +1,24 @@
+<request>
+	<#include "head.xml">
+	<body>
+		<order>
+			<orderId>${orderId}</orderId>
+			<agentOrderId>${agentOrderId}</agentOrderId>
+			<count>${count}</count>
+			<settlementPrice>${settlementPrice}</settlementPrice>
+			<isSendSms>${isSendSms}</isSendSms>
+			<productSn>${productSn}</productSn>
+			<payType>${payType}</payType>
+			<validTimeBegin>${validTimeBegin}</validTimeBegin>
+			<validTimeEnd>${validTimeEnd}</validTimeEnd>
+			<inDate>${inDate}</inDate>
+			<user>
+				<name>${name}</name>
+				<mobile>${mobile}</mobile>
+				<sex>${sex}</sex>
+				<idCard>${idCard}</idCard>
+			</user>
+			<feature>${feature}</feature>
+		</order>
+	</body>
+</request>

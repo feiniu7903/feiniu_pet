@@ -1,0 +1,107 @@
+<?page title="设备编号管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./myWin"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.passport.utils.ListboxProviderSet"?>
+<?component name="lvmama_passPort" macroURI="passport.zul"?>
+<zk>
+	<window id="myWin" title="设备编号管理" border="normal"
+		apply="com.lvmama.passport.web.pass.ListPassDeviceAction">
+		<zscript>
+		<![CDATA[
+			public void checkValues() {
+				String msg = "";
+				if (deviceNo.getValue().equals("") && targetId.getValue()==null) {
+					msg = "【通关点编号】或【设备编号】至少填一个";
+				}
+				if (msg.trim().length() > 0) {
+					alert(msg);
+				} else {
+					saction.doQuery();
+				}
+			}
+		]]>			
+		</zscript>
+		<grid>
+			<columns>
+				<column width="110px"></column>
+				<column></column>
+				<column width="110px"></column>
+				<column></column>
+	
+			</columns>
+			<rows>
+				<row>
+					<hbox>通关点编号：</hbox>
+					<hbox>
+					<longbox id="targetId" visible="false" value="@{saction.queryOption.targetId}"/>
+					<lvmama_passPort id="lvmama_passPort"></lvmama_passPort>
+					</hbox>
+				    <hbox>服务商名称：</hbox>
+					<hbox>
+						<listbox mold="select"
+							selectedItem="@{saction.queryOption.providerId}" />
+					</hbox>
+				</row>
+			   <row>
+					<hbox>设备编号：</hbox>
+					<hbox>
+						<textbox id="deviceNo"
+							value="@{saction.queryOption.deviceNo}" />
+					</hbox>
+					<hbox>
+						
+					</hbox>
+					<hbox><button label="查询" id="search" width="100px"
+							onClick="checkValues();" />
+						<button label="新增" width="100px"
+							onClick='saction.showWindow("/bussiness/add_passdevice.zul",self.getAttributes());' /></hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox
+			model="@{saction.passDeviceList,load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader width="35px" label="编号" />
+				<listheader label="通关点名称" />
+				<listheader width="75px"  label="履行对象编号" />
+				<listheader label="供应商" />
+				<listheader label="设备编号" />
+				<listheader label="备注" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem height="25px" self="@{each='passDevice'}">
+				<listcell label="@{passDevice.deviceId}" />
+				<listcell label="@{passDevice.name}" />
+				<listcell label="@{passDevice.targetId}" />
+				<listcell label="@{passDevice.providerName}" />
+				<listcell label="@{passDevice.deviceNo}" />
+				<listcell label="@{passDevice.memo}" />
+				<listcell>
+					<a style="color:blue" label="删除"
+						onClick='saction.delDevice(self.getAttribute("deviceId"));'>
+						<custom-attributes deviceId="@{passDevice.deviceId}" />
+					</a>
+					<a style="color:blue" label="修改"
+						onClick='saction.showWindow("/bussiness/edit_passdevice.zul",self.getAttributes());'>
+						<custom-attributes deviceId="@{passDevice.deviceId}" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="20" onPaging='saction.doQuery();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	</window>
+</zk>

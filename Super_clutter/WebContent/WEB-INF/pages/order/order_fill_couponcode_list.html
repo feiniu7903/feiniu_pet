@@ -1,0 +1,66 @@
+<!-- 使用优惠券列表 -->
+<#if productItems?? && productItems.couponAble?? && productItems.couponAble>
+    <script src="${request.contextPath}/js/order_coupon_code.js?_r=20130709" type="text/javascript"></script>
+	<div class="wrap" id="coupon_fill" style="display:none">
+	    <div class="lv-header lv-media-width lv-header-mheight" id="order_fill_header">
+		  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:orderAndCouponPageChange(2);"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+		  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+		  <div class="lv-title">使用优惠券</div>
+		</div>
+
+	    <section class="coupon_main">
+	    	<header class="coupon_search">
+	        	<em>使用优惠券</em>
+	        	<form action="#" method="post">
+		            <input type="search" placeholder="请输入或者粘贴优惠券代码" value="" name="coupon_se" id="coupon_se_id" />
+		            <input type="button" class="btn_se_sub1" onclick="useCouponCodeById('coupon_se_id');" value="使用" id="use_coupon_code"/>
+               </form>
+	        </header>
+	        <article class="coupon_list">
+	            <#if productItems.couponPoint?? && productItems.couponPoint.couponYuan &gt; 0>
+		            <h3 class="coupon_ti1">我的优惠券</h3>
+		            <!-- 兑换积分前-->
+		            <dl class="coupon_list_con" id="beforChange">
+		                <dt>积分换优惠券 </dt>
+		                <dd>
+		                    <p class="coupon_ti2">${productItems.couponPoint.needPoint!}积分换<span>￥${productItems.couponPoint.couponYuan!}</span>元优惠券</p>
+		                    <p class="coupon_ti3">您当前积分为${productItems.couponPoint.userPoint!}分</p>
+		                </dd>
+		                <dd class="bt_none coupon_li1" >
+		                   <a href="#" onclick="usePoint2CouponCode('${request.contextPath!}/client/pointChangeCoupon.do?branchId=${branchId!}&couponId=${productItems.couponPoint.couponId!}');"><span class="ic_poupon"></span>&nbsp;使用优惠券</a>
+		                </dd>
+		            </dl>
+		            <!-- 兑换积分后-->
+		            <dl class="coupon_list_con" id="afterChange" style="display:none">
+		                <dt>积分换优惠券 </dt>
+		                <dd>
+		                    <p class="coupon_ti2">${productItems.couponPoint.needPoint!}积分换<span>￥${productItems.couponPoint.couponYuan!}</span>元优惠券</p>
+		                    <p class="coupon_ti3" id="changedCouponPriceId"></p>
+		                </dd>
+		                <dd class="bt_none coupon_li1" >
+		                   <a href="#" onclick="usePoint2CouponCode('');"><span class="ic_poupon"></span>&nbsp;使用优惠券</a>
+		                </dd>
+		            </dl>
+		            
+	            </#if>
+	            <#if unusedList?? && unusedList?size&gt;0>
+			        <#list unusedList as uList>
+			            <dl class="coupon_list_con">
+			                <dt>优惠券号：${uList.code!}</dt>
+			                <dd>
+			                	<p class="coupon_ti2">${uList.name!}</p>
+			                    <p class="coupon_ti3"><i>详情&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;</i><span>${uList.price!}</span></p>
+			                    <p class="coupon_ti4">有效期&nbsp;：&nbsp;${uList.expiredDate!}</p>
+			                </dd>
+			                <dd class="bt_none coupon_li1" onclick="useCouponCode('${uList.code!}');" id="use${uList.code!}"><a href="#" ><span class="ic_poupon"></span>&nbsp;使用优惠券</a></dd>
+			            </dl>
+			         </#list>
+			    <#else>
+					 <p class="coupon_none">您的当前账户没有可用的优惠券</p>
+			    </#if>
+	        </article>
+	    </section>
+	</div>
+<#else>
+     <div id="coupon_fill"></div>
+</#if>

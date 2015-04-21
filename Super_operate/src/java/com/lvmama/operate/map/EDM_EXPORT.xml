@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EDM_EXPORT" >
+	<resultMap class="com.lvmama.comm.pet.po.edm.EdmExport" id="EdmExport">
+		<result property="edmId" column="EDM_ID"/>
+		<result property="loginName" column="EDM_LOGIN_NAME"/>
+		<result property="count" column="EDM_EX_COUNT"/>
+		<result property="date" column="EDM_DATE"/>
+	</resultMap>
+	<typeAlias alias="EdmExport" type="com.lvmama.comm.pet.po.edm.EdmExport"/>
+	<sql id="queryEdmExportSql">
+		(select e.*,ROWNUM rn from lvmm_land.S_EDM_EXPORT e 
+		<dynamic prepend="where">
+			<isNotNull property="startTime" prepend=" and ">
+				<isNotNull property="endTime">
+					(e.EDM_DATE between #startTime# and #endTime#)
+				</isNotNull>
+				<isNull property="endTime">
+					e.EDM_DATE &gt;= #startTime#
+				</isNull>
+			</isNotNull>
+			<isNull property="startTime">
+				<isNotNull property="endTime" prepend="and">
+					e.EDM_DATE &lt;= #endTime#
+				</isNotNull>
+			</isNull>
+			<isNotNull property="_endRow" prepend="and">
+				ROWNUM &lt;=#_endRow#
+			</isNotNull>
+		</dynamic>
+			order by EDM_ID DESC		
+		)
+	</sql>
+	<select id="selectAllByDate" resultMap="EdmExport" parameterClass="java.util.HashMap">
+		select * from 
+			<include refid="queryEdmExportSql"/>
+			<dynamic prepend="where">
+				<isNotNull property="_startRow" prepend="and">
+					rn &gt;#_startRow#				
+				</isNotNull>
+			</dynamic>
+		
+	</select>
+	<select id="selectAllByDateCount" resultClass="long" parameterClass="java.util.HashMap">
+		select count(*) from <include refid="queryEdmExportSql"/>
+	</select>
+	
+	<insert id="insert" parameterClass="EdmExport">
+		<selectKey resultClass="Long" keyProperty="edmId">
+			select MAX(NVL(EDM_ID,0))+1 as id from lvmm_land.S_EDM_EXPORT
+		</selectKey>
+		insert into lvmm_land.S_EDM_EXPORT(
+				EDM_ID,
+				EDM_LOGIN_NAME,
+				EDM_EX_COUNT,
+				EDM_DATE
+				) values (
+					#edmId#,
+					#loginName#,
+					#count#,
+					sysdate
+				)
+	</insert>
+</sqlMap>

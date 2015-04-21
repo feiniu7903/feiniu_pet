@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="COM_TASK_LOG">
+
+	<resultMap id="ComTaskLogResultMap" class="com.lvmama.comm.pet.po.pub.ComTaskLog">
+        <result column="LOG_ID" property="logId"/>
+        <result column="TASK_ID" property="taskId"/>
+        <result column="TASK_NAME" property="taskName"/>
+        <result column="RESULT_STATUS" property="resultStatus"/>
+        <result column="RESULT_INFO" property="resultInfo"/>
+        <result column="EXCEPTION_INFO" property="exceptionInfo"/>
+        <result column="START_TIME" property="startTime"/>
+        <result column="END_TIME" property="endTime"/>
+	</resultMap>
+    
+	<typeAlias alias="ComTaskLog" type="com.lvmama.comm.pet.po.pub.ComTaskLog"/>
+
+	<insert id="insertComTaskLog" parameterClass="ComTaskLog">
+		<selectKey keyProperty="logId">
+			SELECT COM_TASK_LOG_ID_SEQ.nextval FROM dual
+		</selectKey>
+        INSERT INTO COM_TASK_LOG(LOG_ID ,TASK_ID ,TASK_NAME ,RESULT_STATUS ,RESULT_INFO ,EXCEPTION_INFO ,START_TIME ,END_TIME)
+			values(#logId#,#taskId#,#taskName#,#resultStatus#,#resultInfo#,#exceptionInfo#,#startTime#,#endTime#)
+    </insert>
+
+    <update id="updateComTaskLog" parameterClass="ComTaskLog">
+        update COM_TASK_LOG
+        <dynamic prepend="set">
+            <isNotEmpty prepend="," property="taskId">TASK_ID = #taskId#</isNotEmpty>
+            <isNotEmpty prepend="," property="taskName">TASK_NAME = #taskName#</isNotEmpty>
+            <isNotEmpty prepend="," property="resultStatus">RESULT_STATUS = #resultStatus#</isNotEmpty>
+            <isNotEmpty prepend="," property="resultInfo">RESULT_INFO = #resultInfo#</isNotEmpty>
+            <isNotEmpty prepend="," property="exceptionInfo">EXCEPTION_INFO = #exceptionInfo#</isNotEmpty>
+            <isNotEmpty prepend="," property="startTime">START_TIME = #startTime#</isNotEmpty>
+            <isNotEmpty prepend="," property="endTime">END_TIME = #endTime#</isNotEmpty>
+        </dynamic>
+        WHERE LOG_ID = #logId#
+    </update>
+
+    <select id="selectLastComTaskLog" parameterClass="java.lang.Long" resultMap="ComTaskLogResultMap">
+        select LOG_ID ,TASK_ID ,TASK_NAME ,RESULT_STATUS ,RESULT_INFO ,EXCEPTION_INFO ,START_TIME ,END_TIME
+        from COM_TASK_LOG
+        where LOG_ID =(select max(LOG_ID) from COM_TASK_LOG where TASK_ID=#taskId#)
+    </select>
+
+    <select id="selectComTaskLog" parameterClass="java.lang.Long" resultMap="ComTaskLogResultMap">
+        select LOG_ID ,TASK_ID ,TASK_NAME ,RESULT_STATUS ,RESULT_INFO ,EXCEPTION_INFO ,START_TIME ,END_TIME
+        from COM_TASK_LOG
+        where LOG_ID = #logId#
+    </select>
+
+    <select id="selectComTaskLogCount" parameterClass="java.util.Map" resultClass="java.lang.Long">
+        SELECT count(1) ct
+        FROM COM_TASK_LOG
+        where TASK_ID = #taskId#
+    </select>
+
+    <select id="selectComTaskLogList" parameterClass="java.util.Map" resultMap="ComTaskLogResultMap">
+        SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+        SELECT LOG_ID ,TASK_ID ,TASK_NAME ,RESULT_STATUS ,RESULT_INFO ,EXCEPTION_INFO ,START_TIME ,END_TIME
+        FROM COM_TASK_LOG
+        WHERE TASK_ID = #taskId#
+        ORDER BY LOG_ID DESC
+        )T
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="_endRow" prepend="">
+                ROWNUM &lt;= #_endRow#
+            </isNotEmpty>
+        </dynamic>
+        )
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="_startRow" prepend="">
+                ROWNUM1 &gt;= #_startRow#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+</sqlMap>

@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>旅游度假_周边游_跟团游_手机预订-驴妈妈手机站</title>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/comm.js"></script>
+ <script src="${request.contextPath}/js/holiday.js?_version=20130812"></script>
+<script >
+  $(function() {
+	  $("#loadingP").show();
+	    /********   定位 相关 ************/
+		latitude = getLocalStorage(LOCAL_STORAGE_ROUTE_LAT);
+		longitude = getLocalStorage(LOCAL_STORAGE_ROUTE_LON);
+		currentCity = getLocalStorage(LOCAL_STRTORAGE_ROUTE_CITY);
+		if(null == currentCity || "" == currentCity ) {
+			if(navigator.geolocation) {
+		        navigator.geolocation.getCurrentPosition(function(e){
+					latitude = e.coords.latitude;
+					longitude = e.coords.longitude;
+					setLocalStorage(LOCAL_STORAGE_ROUTE_LAT,latitude);
+					setLocalStorage(LOCAL_STORAGE_ROUTE_LON,longitude);
+					initCity(latitude,longitude,LOCAL_STRTORAGE_ROUTE_CITY); // 定位成功. 
+				},function(e){
+					initDatas(DEFAULT_CITY); // 如果定位失败 ! 
+				},{enableHighAccuracy:true,timeout:3000,maximumAge:3000});
+		    } else {
+		    	initDatas(DEFAULT_CITY); // 如果浏览器不支持定位  
+		    }
+		} else {
+			initDatas(currentCity);;// 如果已经定位过.  
+		}
+	});
+  
+  function holidayBtnSearch(){
+	  	var keyword = $("#keyword").val();
+		if (keyword!=null && typeof(keyword)!="undefined" && keyword!=0){
+			$("input[name='fromDest']").val(encodeURI($("input[name='fromDest']").val()));
+			$("input[name='toDest']").val(encodeURI(keyword));
+			$("#holiday_search").submit();
+			$("input[name='toDest']").val("");
+		}else{
+			lvToast(false,"请输入目的地",1000);
+		}
+	}
+	document.onkeydown=function(event){
+	    var e = event || window.event;      
+	    if(e && e.keyCode==13){
+	    	holidayBtnSearch();
+	    }
+	}
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_skip('http://${hostName}');"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">度假</div>
+   <div class="lv-narrow-position"> 
+	   <a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/holiday/holiday_choose_city.htm');">
+		   <div class="lv-operate-sep lv-pull-left" style="left: 20px;"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+		   <span id="lv-start" class="lv-ellipsis">${fromDest!}</span> <img class="lv-narrow-icon lv-pull-right" src="${prefix_pic_url!}/img/holiday/narrow-holiday-01.png"> 
+	   </a> 
+   </div>
+</div>
+<div class="lv-search search">
+  <div class="lv-div-search">
+    <form method="get" action="${request.contextPath}/holiday/holiday_search.htm"  id="holiday_search" >
+	 <span class="lv-clear-icon01" onclick="union_clear_context('keyword');" id="clear_password">
+       <img src="${prefix_pic_url!}/img/clear.png"></span>
+	  <input class="lv-input-search" id="keyword" type="text" value="${toDest!}" placeholder="请输入度假目的地/关键词" autocomplete="off">
+	  <input type="hidden" name="keyword" id="hidden_keyword" value="${toDest!}" data-name="">
+	  <input type="hidden" name="fromDest" id="fromDest" value="${fromDest!}" >
+      <input type="hidden" name="toDest" id="toDest" value="${toDest!}" >
+      <input type="hidden" name="subProductType" id="subProductType" value="" >
+      <input type="hidden" name="stage" id="stage" value="1" data-name="">
+     <input type="button" class="btn_sub" value="" onclick="holidayBtnSearch()" />
+    </form>
+  </div>
+</div>
+        <div  id="search_autocomplete" style="display:none;">
+           <ul class="search_auto_complete" id="search_success"> </ul>
+        </div>
+<!-- 数据区域  -->
+<div id="data_list" class="lv-min-height"> 
+         <p class="none_lv"> </p>
+</div>
+
+<!-- footer -->
+<#include "../common/footer.html"/>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<title>jQuery UI Autocomplete - Combobox</title>
+<link href="jquery.ui.autocomplete.css" rel="stylesheet" type="text/css">
+<script src="jquery-1.6.2.min.js"></script>
+<script src="jquery.ui.core.js"></script>
+<script src="jquery.ui.widget.js"></script>
+<script src="jquery.ui.button.js"></script>
+<script src="jquery.ui.position.js"></script>
+<script src="jquery.ui.autocomplete.js"></script>
+<script src="lmmcomplete.js"></script>
+<!--<script src="lvmama.js"></script>-->
+<style type="text/css">
+@charset "utf-8";
+body {
+	font:12px/1.5 "Microsoft Yahei", "\5b8b\4f53";
+}
+.ui-autocomplete {
+	font-size:14px;
+	border: 1px solid #CBCBCB;
+}
+.ul-title {
+	background-color:#5B5B5B;
+	padding:5px;
+	color:#fff;
+	font-weight:600;
+	font-size:12px;
+}
+.ui-autocomplete .py_right {
+	font: 10px/22px verdana;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+	text-align: right;
+	white-space: nowrap;
+	width: 110px;
+	float:right;
+}
+.ui-autocomplete li {
+	padding: 1px 5px 0;
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #FFF;
+	cursor: pointer;
+	display: block;
+	height: 22px;
+	line-height: 22px;
+	min-height: 22px;
+}
+.ui-autocomplete .ui-state-hover {
+	color:#C06;
+	background-color:#999999;/*	font-weight:600;*/
+}
+.ui-autocomplete div.ui-paging {
+	text-align:center;
+}
+.ui-autocomplete div.ui-paging a {
+	float:left;
+	display:block;
+	padding: 0px 5px;
+	margin: 0 5px;
+	color:#C06;
+	border: 1px solid #5B5B5B;
+	background-color:#FFF;
+	height: 20px;
+	line-height: 20px;
+	min-height: 20px;
+}
+.ui-autocomplete div.ui-paging a:hover {
+	background-color:#C06;
+	color:#FFF;
+}
+#address_hot {
+	width: 280px;
+	border: 1px solid #5b5b5b;
+	position: absolute;
+	top:0;
+	left:0;
+}
+.address_hotlist {
+	border-color: #999;
+	border-style: solid;
+	border-width: 0 1px 1px;
+	overflow: hidden;/*padding: 5px;*/
+}
+.address_hot_abb {
+	border-bottom-color: #DDDDDD;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	height: 20px;/*border-bottom: 1px solid #DDDDDD;
+padding-bottom: 18px;
+margin: 5px 0; 
+padding-left: 20px; */
+}
+.address_hot_abb li {
+	list-style-type: none;
+	color: #0066CC;
+	cursor: pointer;
+	float: left;
+	height: 20px;
+	line-height: 20px;
+	padding: 1px 10px 0;
+}
+.address_hot_abb li.hot_selected {
+	background: none repeat scroll 0 0 #FFFFFF;
+	border-color:#DDD #DDD #FFF #DDD;
+	border-style: solid;
+	border-width: 1px;
+	color: #CC0066;
+	font-weight: bold;
+	padding: 0 7px;/*display: block;
+padding: 0 7px;
+background-color: white;
+border-color:  #C06;
+border-style: solid;
+border-width: 1px 1px 0;
+color: black;
+font-weight: bold;*/
+}
+.address_hot_adress {
+	padding-top: 4px;
+	width: 268;
+	margin-top: 5px;
+	padding-left: 10px;
+}
+.layoutfix {
+	display: block;
+	overflow: hidden;
+}
+.address_hot_adress li {
+	float: left;
+	height: 24px;
+	overflow: hidden;/*width: 67px;*/
+/*padding: 0 5px;*/
+}
+.a_hover {
+	/*background-color: #F8B3D0;
+border: 1px solid #C06;*/
+	color:#C06;
+	text-decoration:underline;
+}
+.address_hot_adress li a {
+	border: 1px solid white;
+	color: black;
+	display: block;
+	height: 22px;
+	line-height: 22px;
+	padding-left: 5px;
+	border-image: initial;
+	margin: 0 5px;
+	color: #0066CC;
+}
+.address_hot_adress a {
+	text-decoration: none;
+}
+/*.address_hot_adress li a:hover {
+/*background-color: #F8B3D0;
+border: 1px solid #C06;
+color:#C06;
+text-decoration:underline;
+}*/
+
+
+.address_hotcity {
+	background: none repeat scroll 0 0 #DD4488;
+	color: #FFFFFF;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 0 0 10px;/*background-color:#5B5B5B;
+border-color: #999999;
+border-style: solid;
+border-width: 1px 1px 0;
+color: #FFF;
+height: 24px;
+line-height: 24px;
+padding-left: 10px;
+font-size:14px;*/
+}
+.address_hotcity strong {
+	color: white;
+}
+ol {
+	-webkit-padding-start: 20px;
+}
+.ui-autocomplete-loading {
+	background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
+}
+</style>
+<script type="text/javascript">	
+;(function($){  
+    $.fn.extend({  
+    recommend : function(options){  
+        var defaults = {  
+            input:$(this)||"#search",  
+            appendTo: "#address_hot",  
+            list:".address_hotlist", 
+			paging:".ui-paging", 
+            position: {  
+                my: "left top",  
+                at: "left bottom",  
+                collision: "none"  
+            }          
+        };  
+        var options = $.extend(defaults, options);  
+        this.each(function(){
+			function position( using ) {
+						$(options.appendTo).position( $.extend({
+								of: options.input
+							}, options.position ));
+							/*$(options.appendTo).position({
+								of: '#search111',my:'left top',at:'left bottom',collision:'fit flip'
+							});*/
+			}
+				$(options.paging).find('a').live('click',function(event){
+							$(options.input).attr('page',$(this).text());
+							event.preventDefault();
+					});
+				$(options.input).live('click',function(event){
+						position();
+						var val = $(this).val();
+						if(val==''||val=='中文/拼音'){
+							$(this).val('');
+							setTimeout(function() {
+								$(options.appendTo).show(300);
+							}, 150 );
+						}
+						event.preventDefault();
+				});
+				$(options.appendTo).find('.address_hot_abb li').live('click',function(event){
+						$('li', options.appendTo).removeClass('hot_selected');
+						$(this).addClass('hot_selected');
+						$('.address_hot_adress').hide();
+						$('.address_hot_adress[type="'+$(this).text()+'"]').show();
+						event.preventDefault();
+					});
+				$(options.appendTo).find('.address_hot_adress li a').live('mouseover',function(event){
+							$(this).attr('style','color:#C06;text-decoration:underline;');
+							event.preventDefault();
+					}).live('mouseout',function(event){
+							$(this).attr('style','');
+							event.preventDefault(event);
+					}).live('click',function(){
+							$(options.input).val($(this).text());
+							$(options.appendTo).css({top:'0',left:'0'}).hide();
+							event.preventDefault();
+					});
+					
+        });  
+    }  
+});  
+})(jQuery); 
+	$(document).ready(function(){	
+		$('#search111').recommend();
+		$('#search111').lmmcomplete();
+	});
+</script>
+</head>
+<body id="bod">
+<label for="search">Search: </label><input id="search111" page="1" value="中文/拼音" />
+ <div class="address_hot" id="address_hot" style="display:none;">
+    <div class="address_hotcity"><strong>热门城市</strong> （可直接输入城市或城市拼音）</div>
+    <div class="address_hotlist">
+      <ol class="address_hot_abb" style="">
+        <li class="hot_selected">城市</li>
+        <li>景点</li>
+      </ol>
+      <ul class="address_hot_adress layoutfix" type="城市">
+        <li><a  href="javascript:void(0);" data="BJS|北京">九寨沟黄龙</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+      </ul>
+      <ul class="address_hot_adress layoutfix" style="display:none" type="景点">
+      <li><a  href="javascript:void(0);" data="BJS|北京">九寨沟黄龙</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">111</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">222</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">333</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+        <li><a  href="javascript:void(0);" data="BJS|北京">北京</a></li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

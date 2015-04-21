@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  - Application context definition for JPetStore's business layer.
+	- Contains bean references to the transaction manager and to the DAOs in
+	- dataAccessContext-local/jta.xml (see web.xml's "contextConfigLocation").
+	-->
+<beans>
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:const.properties</value>
+				<value>classpath:mail.properties</value>
+				<value>classpath:jms.properties</value>
+				<value>classpath:distribution.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<import resource="applicationContext-clutter-service.xml"/>
+	<import resource="applicationContext-clutter-xfire.xml"/>
+	<import resource="applicationContext-clutter-log.xml"/>
+	<import resource="applicationContext-clutter-trigger.xml"/>
+	<import resource="applicationContext-lvmama-comm-remote.xml"/>
+	<import resource="applicationContext-lvmama-comm-remote-dest.xml"/>
+	<import resource="applicationContext-lvmama-comm-bee-remote.xml"/>
+	<import resource="applicationContext-clutter-processer.xml"/>	
+	<import resource="applicationContext-lvmama-search.xml"/>
+	<import resource="applicationContext-product-head-remote.xml"/>
+	<import resource="applicationContext-lvmama-comm-client.xml"/>
+	<import resource="applicationContext-lvmama-comm-jms.xml"/>
+	<import resource="applicationContext-lvmama-comm-remote-vst-search.xml"/>
+	
+	
+	<import resource="applicationContext-clutter-elong.xml"/>
+
+	<import resource="applicationContext-lvmama-comm-remote-mobile.xml"/>
+	<bean id="accessFilter" class="com.lvmama.clutter.web.filter.AccessFilter">
+	    <property name="userPersistentSessionService">
+	        <ref bean="userPersistentSessionService"/>
+	    </property>
+	    <property name="userUserProxy">
+	        <ref bean="userUserProxy"/>
+	    </property>
+    </bean>
+    
+    <bean id="weixinOpenIdFilter" class="com.lvmama.clutter.web.filter.WeixinOpenIdFilter">
+	    <property name="userUserProxy">
+	        <ref bean="userUserProxy"/>
+	    </property>
+    </bean>
+    
+     <bean id="qingAccessFilter" class="com.lvmama.clutter.web.filter.QingAccessFilter">
+         	<property name="userCooperationUserService">
+         	    <ref bean="userCooperationUserService"/>
+         	</property>
+         	<property name="baiduActivityService">
+         	    <ref bean="baiduActivityService"/>
+         	</property>
+      </bean>
+     
+
+	<import resource="applicationContext-lvmama-comm-remote-ebk.xml"/>
+
+</beans>

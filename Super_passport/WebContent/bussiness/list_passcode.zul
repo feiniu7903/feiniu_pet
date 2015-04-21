@@ -1,0 +1,114 @@
+<?page title="通关码查询" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./passcodeList"?>
+<?component name="portListbox" extends="listbox" class="com.lvmama.passport.utils.ListboxPassPortSet"?>
+<zk>
+	<window id="passcodeList" title="通关码查询" border="normal"
+		apply="com.lvmama.passport.web.pass.ListPassCodeAction">
+		<zscript>
+		<![CDATA[
+			public void checkValues() {
+					saction.doQuery();
+			}
+		]]>			
+		</zscript>
+		<grid>
+			<columns>
+				<column width="110px"></column>
+				<column></column>
+				<column width="110px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>申请流水号：</hbox>
+					<hbox>
+						<textbox
+							value="@{saction.queryOption.serialNo}" />
+					</hbox>
+					<hbox>创建时间：</hbox>
+					<hbox>
+						<datebox
+							value="@{saction.queryOption.createBeginTime}" />~
+						<datebox
+							value="@{saction.queryOption.createEndTime}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>状态：</hbox>
+					<hbox>
+						<listbox id="status" mold="select" selectedItem="@{saction.queryOption.status}">
+						<listitem label="-请选择-" value="" selected="true"/>
+				        <listitem label="未处理" value="NOHANDL"/>
+				        <listitem label="申请成功" value="SUCCESS"/>
+				        <listitem label="已经处理" value="HANDL"/>
+				        <listitem label="已经作废" value="DESTROYED"/>
+				       </listbox>
+					</hbox>
+					
+					<hbox>辅助码：</hbox>
+					<hbox>
+						<textbox
+							value="@{saction.queryOption.addCode}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>用户手机号：</hbox>
+					<hbox>
+						<textbox value="@{saction.queryOption.mobile}" />
+					</hbox>
+					<hbox></hbox>
+					<hbox>
+						<button label="查询" id="search" width="100px"
+							onClick="_paging.activePage=0;checkValues();" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox
+			model="@{saction.codeList,load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader label="通关码编号" />
+				<listheader label="申请流水号" />
+				<listheader label="服务商" />
+				<listheader label="创建时间" />
+				<listheader label="状态" />
+				<listheader label="通关码" />
+				<listheader label="辅助码" />
+				<listheader label="用户手机号" />
+				<listheader label="短信内容" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem height="25px" self="@{each='code'}">
+				<listcell label="@{code.codeId}" />
+				<listcell label="@{code.serialNo}" />
+				<listcell label="@{code.providerName}" />
+				<listcell label="@{code.createTime}" />
+				<listcell label="@{code.zhStatus}" />
+				<listcell label="@{code.code}" />
+				<listcell label="@{code.addCode}" />
+				<listcell label="@{code.mobile}" />
+				<listcell label="@{code.smsContent}" />
+				<listcell>
+					<a style="color:blue" label="查看通关信息"
+						onClick='saction.showWindow("/bussiness/list_portcode.zul",self.getAttributes());'>
+						<custom-attributes codeId="@{code.codeId}" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+			<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell width="200px">
+					<paging  id="_paging" pageSize = "10" onPaging='saction.doQuery();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+	</window>
+</zk>

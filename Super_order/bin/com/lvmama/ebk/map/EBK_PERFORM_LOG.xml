@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="EBK_PERFORM_LOG">
+	<!-- 别名 -->
+	<typeAlias alias="ebkPerformLog"
+		type="com.lvmama.comm.bee.po.eplace.EbkPerformLog" />
+	<!-- 查询结果集 -->
+	<resultMap id="ebkPerformLogResult" class="ebkPerformLog">
+		<result property="logId" column="LOG_ID" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="ebkUserId" column="EBK_UESR" />
+		<result property="udid" column="UDID" />
+		<result property="addCode" column="ADD_CODE" />
+		<result property="quantity" column="QUANTITY" />
+		<result property="orderItemMetaId" column="ORDER_ITEM_META_ID" />
+		<result property="performTime" column="PERFORM_TIME" />
+		<result property="status" column="STATUS" />
+		<result property="uuid" column="UUID" />
+		<result property="memo" column="MEMO" />
+	</resultMap>
+   	
+	<!-- 增加记录 -->
+	<insert id="insert" parameterClass="ebkPerformLog">
+		<selectKey keyProperty="logId" resultClass="java.lang.Long">
+			select EBK_PERFORM_LOG_SEQ.nextval from dual
+		</selectKey>
+    <![CDATA[
+        INSERT INTO
+        EBK_PERFORM_LOG (
+        	LOG_ID ,
+        	CREATE_TIME ,
+        	EBK_UESR ,
+        	UDID ,
+        	ADD_CODE ,
+        	QUANTITY ,
+        	ORDER_ITEM_META_ID ,
+        	PERFORM_TIME ,
+        	STATUS,
+        	UUID,
+        	MEMO
+        ) VALUES (
+        	#logId# ,
+        	#createTime# ,
+        	#ebkUserId# ,
+        	#udid# ,
+        	#addCode# ,
+        	#quantity# ,
+        	#orderItemMetaId# ,
+        	#performTime# ,
+        	#status#,
+        	#uuid#,
+        	#memo#
+        )
+    ]]>
+	</insert>
+
+	<update id="update" parameterClass="ebkPerformLog">
+    <![CDATA[
+        update EBK_PERFORM_LOG set STATUS=#status#,MEMO=#memo# where UUID=#uuid#
+    ]]>
+	</update>
+	
+	<select id="getEbkPerformLogByUUID" resultMap="ebkPerformLogResult" parameterClass="java.lang.String">
+	 <![CDATA[
+        select * from EBK_PERFORM_LOG where UUID=#uuid#
+    ]]>
+	</select>
+</sqlMap>

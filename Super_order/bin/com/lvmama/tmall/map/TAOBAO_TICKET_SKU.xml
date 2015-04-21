@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TAOBAO_TICKET_SKU">
+    <!-- 别名 -->
+    <typeAlias alias="taobaoTicketSku" type="com.lvmama.comm.bee.po.tmall.TaobaoTicketSku" />
+
+    <resultMap id="taobaoTicketSkuResultMap" class="taobaoTicketSku">
+        <result column="ID" property="id" />
+        <result column="TB_PROD_SYNC_ID" property="tbProdSyncId" />
+        <result column="TB_OUTER_ID" property="tbOuterId" />
+        <result column="TB_PID_VID" property="tbPidVid" />
+        <result column="PROD_BRANCH_ID" property="prodBranchId" />
+        <result column="IS_SYNC" property="isSync" />
+        <result column="PRODUCT_ID" property="productId" />
+        <result column="TB_VID_NAME" property="tbVidName" />
+        <result column="TB_TICKET_TYPE" property="tbTicketType" />
+    </resultMap>
+
+    <select id="selectSeq" resultClass="java.lang.Long">
+        select taobao_ticket_sku_seq.nextval from dual
+    </select>
+
+    <select id="byTbProdSyncId" resultMap="taobaoTicketSkuResultMap" parameterClass="java.lang.Long">
+        select * from taobao_ticket_sku a where a.tb_prod_sync_id = #value#
+    </select>
+
+    <select id="byMap" resultMap="taobaoTicketSkuResultMap" parameterClass="java.util.Map">
+        select * from taobao_ticket_sku a
+        where 1=1
+        <isNotEmpty property="id">
+            and a.id = #id#
+        </isNotEmpty>
+        <isNotEmpty property="tbProdSyncId">
+            and a.tb_prod_sync_id = #tbProdSyncId#
+        </isNotEmpty>
+        <isNotEmpty property="tbOuterId">
+            and a.tb_outer_id = #tbOuterId#
+        </isNotEmpty>
+        <isNotEmpty property="productId">
+            and a.product_id = #productId#
+        </isNotEmpty>
+        <isNotEmpty property="prodBranchId">
+            and a.prod_branch_id = #prodBranchId#
+        </isNotEmpty>
+        <isNotEmpty property="isSync">
+            and a.is_sync = #isSync#
+        </isNotEmpty>
+    </select>
+
+    <select id="toCountbyMap" resultClass="java.lang.Long" parameterClass="java.util.Map">
+        select count(*) from taobao_ticket_sku a
+        where 1=1
+        <isNotEmpty property="id">
+            and a.id = #id#
+        </isNotEmpty>
+        <isNotEmpty property="tbProdSyncId">
+            and a.tb_prod_sync_id = #tbProdSyncId#
+        </isNotEmpty>
+        <isNotEmpty property="tbOuterId">
+            and a.tb_outer_id = #tbOuterId#
+        </isNotEmpty>
+        <isNotEmpty property="productId">
+            and a.product_id = #productId#
+        </isNotEmpty>
+        <isNotEmpty property="prodBranchId">
+            and a.prod_branch_id = #prodBranchId#
+        </isNotEmpty>
+    </select>
+
+    <select id="byId" resultMap="taobaoTicketSkuResultMap" parameterClass="java.lang.Long">
+        select * from taobao_ticket_sku a where a.id = #value#
+    </select>
+
+    <insert id="insert" parameterClass="taobaoTicketSku">
+        insert into taobao_ticket_sku
+        (id, tb_prod_sync_id, tb_outer_id, tb_pid_vid, prod_branch_id, is_sync, product_id, tb_vid_name, tb_ticket_type)
+        values
+        (#id#, #tbProdSyncId#, #tbOuterId#, #tbPidVid#, #prodBranchId#, #isSync#, #productId#, #tbVidName#, #tbTicketType#)
+    </insert>
+
+    <update id="update" parameterClass="taobaoTicketSku">
+		update taobao_ticket_sku
+		   set id = #id#,
+		       tb_prod_sync_id = #tbProdSyncId#,
+		       tb_outer_id = #tbOuterId#,
+		       tb_pid_vid = #tbPidVid#,
+		       prod_branch_id = #prodBranchId#,
+		       is_sync = #isSync#,
+		       product_id = #productId#,
+		       tb_vid_name = #tbVidName#,
+		       tb_ticket_type = #tbTicketType#
+		 where id = #id#
+	</update>
+
+    <delete id="delete" parameterClass="java.lang.Long">
+		delete taobao_ticket_sku where id = #value#
+	</delete>
+
+    <delete id="deleteByTbProdSyncId" parameterClass="java.lang.Long">
+		delete taobao_ticket_sku where tb_prod_sync_id = #value#
+	</delete>
+
+</sqlMap>

@@ -1,0 +1,45 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_eplace_user_add_jump"?>
+	<window id="win_eplace_user_add_jump" title="开通账号" border="normal"
+		apply="com.lvmama.eplace.web.lvmama.supplyUser.EplacePortUserAddJumpAction">
+		<space />
+		<groupbox style="border: none;">
+			<caption label="开通账号"></caption>
+			<button id="btnRefresh" onClick="saction.doBefore()"  visible="false"
+				 label="新增">
+				<custom-attributes
+					eplaceSupplierId="@{passPort.eplaceSupplierId}" />
+			</button>
+			<listbox model="@{saction.passPortUserList,load-after='btnRefresh.onClick'}">
+				<listhead>
+					<listheader label="账户名"></listheader>
+					<listheader label="操作"></listheader>
+				</listhead>
+				<listitem self="@{each='passPort'}">
+					<listcell label="@{passPort.userId}"></listcell>
+					<listcell>
+						<a style="color:blue" label="修改"
+							onClick='saction.showWindow("/eplace/lvmama/supplyUser/eplacePortUserEdit.zul",self.getAttributes());'>
+							<custom-attributes
+								passPortUserId="@{passPort.passPortUserId}" />
+							<custom-attributes
+								supplierId="@{passPort.eplaceSupplierId}" />
+						</a>
+					</listcell>
+				</listitem>
+			</listbox>
+		</groupbox>
+		<toolbar>
+			<button label="新增" width="100px"
+				onClick='saction.showWindow("/eplace/lvmama/supplyUser/eplacePortUserAdd.zul",self.getAttributes());'>
+				<custom-attributes supplierId="@{saction.supplierId}" />
+				<custom-attributes
+					eplaceSupplierId="@{saction.eplaceSupplierId}" />
+			</button>
+			<button id="btnClose" width="100px" label="关闭"
+				onClick="win_eplace_user_add_jump.detach()" />
+		</toolbar>
+	</window>
+</zk>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="BOUNS_RETURN_SCALE">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.BounsReturnScale">
+		<result column="BOUNS_SCALE_ID" property="bounsScaleId" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="PRODUCT_SUB_TYPE" property="productSubType" />
+		<result column="SCALE" property="scale" />
+	</resultMap>
+
+	<select id="getAll" resultMap="BaseResultMap">
+		select * from BOUNS_RETURN_SCALE
+	</select>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.BounsReturnScale">
+		<selectKey resultClass="long" keyProperty="bounsScaleId">
+			select
+			BOUNS_RETURN_SCALE_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		INSERT INTO BOUNS_RETURN_SCALE 
+				(BOUNS_SCALE_ID, PRODUCT_TYPE, PRODUCT_SUB_TYPE, SCALE)
+			VALUES
+				(#bounsScaleId#,#productType#,#productSubType#,#scale#)
+	</insert>
+	
+	<select id="getByType" resultMap="BaseResultMap" parameterClass="Map">
+		SELECT * FROM BOUNS_RETURN_SCALE WHERE PRODUCT_TYPE = #productType# AND PRODUCT_SUB_TYPE = #productSubType#
+	</select>
+
+</sqlMap>

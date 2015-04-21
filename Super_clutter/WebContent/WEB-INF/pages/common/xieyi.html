@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<#assign xiyiName="协议" />
+ <#if xieyiType??>
+     <#if xieyiType=="xieyi_reg">
+          <#assign xiyiName="注册协议" />
+     <#elseif xieyiType=="xieyi_gentuan">
+          <#assign xiyiName="跟团游协议" />
+     <#elseif xieyiType=="xieyi_freeness.">
+          <#assign xiyiName="自由行协议" />
+     <#elseif xieyiType=="xieyi_chujin">
+         <#assign xiyiName="出境游协议" />
+     <#elseif xieyiType=="xieyi_ticket">
+         <#assign xiyiName="门票预订协议" />
+     </#if>
+ </#if>
+ 
+<title>${xiyiName!}</title>
+<#include "./define.html">
+<style type="text/css">
+.lv-title {
+	text-align: center;
+	color: white;
+	font-size:18px;
+	}
+.lv-footer {
+	background: #EEE;
+	margin: 0 auto;
+	text-align: center;
+	padding-bottom: 14px;
+	font-size: 0.9em;
+}
+.lv-footer-copyright {
+	font-size: 0.8em;
+	color: black;
+}
+.lv-footer div span {
+	margin: 0 1%;
+	color: black;
+ }
+.lv-footer div a { font-size:14px;}
+ .main { font-size:14px; line-height: 24px;}
+</style>
+</head>
+<body>
+	<div class="lv-header lv-media-width lv-header-mheight">
+	  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_back();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+	  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+	  <div class="lv-title">${xiyiName!}</div>
+	</div>
+	<div class="lv-wrapper lv-media-width">
+	     <#include "/app/${xieyiType!}.html">
+	</div>
+ <!-- footer -->
+ <#include "./footer.html"/>
+</body>
+</html>

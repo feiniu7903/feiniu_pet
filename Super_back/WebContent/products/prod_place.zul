@@ -1,0 +1,29 @@
+<?component name="lvmama_prodtarget" macroURI="/macors/prodtarget.zul"?>
+<zk>
+	<groupbox style="border: none;">
+		<caption label="关联标的" />
+		<hbox>
+			<longbox id="placeId" visible="false" constraint="no empty:关联标的不能为空"/>
+			<button id="refreshPlaceList" visible="false" />
+			<lvmama_prodtarget id="placeBandbox"/><button label="确定" onClick="saction.addProductPlace(placeId.value);"/>
+		</hbox>
+		<hbox>
+			<listbox id="prodTargetListbox" model="@{saction.placeList,load-after='refreshPlaceList.onClick'}">
+				<listhead>
+					<listheader width="100px">编号：</listheader>
+					<listheader>名称：</listheader>
+					<listheader>操作：</listheader>
+				</listhead>
+				<listitem self="@{each='place'}">
+						<listcell label="@{place.placeId}"/>
+						<listcell label="@{place.placeName}"/>
+						<listcell>
+							<button label="删除" onClick="saction.doDelProdTargetGrid(self.getAttributes());">
+								<custom-attributes placeId="@{place.placeId}"/>
+							</button>
+						</listcell>
+				</listitem>
+			</listbox>
+		</hbox>
+	</groupbox>
+</zk>

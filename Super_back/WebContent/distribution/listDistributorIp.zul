@@ -1,0 +1,34 @@
+<?page title="分销商IP管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./listDistributorIpWin"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset"?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="label" extends="label" class="com.lvmama.back.utils.perm.PermLabel" ?>
+<zk>
+<window id="listDistributorIpWin" title="分销商IP管理" border="normal" closable="false" mode="embedded" apply="com.lvmama.back.web.distribution.ListDistributorIpAction">
+	<button label="新增" onClick='saction.showWindow("/distribution/editDistributorIp.zul",self.getAttributes())'>
+		<custom-attributes distributorId="@{saction.distributorId}" />
+	</button>
+	<listbox id="box" fixedLayout="true" model="@{saction.listDistributorIp,load-after='doSearch.onClick'}">
+		<listhead>
+			<listheader label="IP编号" width="5%"/>
+			<listheader label="IP" width="10%"/>
+			<listheader label="创建时间" width="20%"/>
+			<listheader label="操作" />
+		</listhead>
+		<listitem self="@{each='distributorIp'}" value="@{distributorIp}" height="25px">
+			<listcell label="@{distributorIp.distributorIpId}" />
+			<listcell label="@{distributorIp.ip}" />
+			<listcell label="@{distributorIp.createTime}" />
+			<listcell>
+				<a label="修改" style="color:blue" onClick='saction.showWindow("/distribution/editDistributorIp.zul", self.getAttributes());'>
+					<custom-attributes distributorIp="@{distributorIp}" />
+				</a>
+				<a label="删除" style="color:blue" onClick='saction.removeIp(self.getAttribute("distributorIpId"));'>
+					<custom-attributes distributorIpId = "@{distributorIp.distributorIpId}" />
+				</a>
+			</listcell>
+		</listitem>
+	</listbox>
+	<button id="doSearch" visible="false" onClick="saction.doSearch()" />
+</window>
+</zk>

@@ -1,0 +1,101 @@
+<?page title="订单查询" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./order_approve"?>
+<?component name="lvmama_user" macroURI="/macors/user.zul"?>
+<zk>
+
+			<window id="order_approve" mode="embedded" apply="com.lvmama.back.web.ord.approve.ListOrderAction">
+				<grid id="conditions">
+		<columns>
+			<column width="80px"></column>
+			<column></column>
+			<column width="80px"></column>
+			<column></column>
+			<column width="80px"></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row >
+				<hbox>订单号：</hbox>
+				<hbox>
+					<textbox value="@{saction.queryPars.orderId }"/>
+				</hbox>
+				<hbox>下单人：</hbox>
+				<hbox>
+					<textbox value="@{saction.queryPars.userId }" id="userId" visible="false"/>
+					<lvmama_user />
+				</hbox>
+				<hbox >状态</hbox>
+				<hbox >
+					<listbox mold="select" selectedItem="@{saction.queryPars.status }">
+						<listitem label="信息未审核" value="UNVERIFIED" />
+						<listitem label="需重拨" value="NEEDREDIAL" />
+						<listitem label="待审核" value="PREAPPROVE" />
+					</listbox>
+				</hbox>
+			</row>
+			
+			<row >
+				<hbox>游玩时间：</hbox>
+				<hbox>
+					<datebox value="@{saction.queryPars.visitTimeB}" />
+					至
+					<datebox value="@{saction.queryPars.visitTimeE}" />
+				</hbox>
+				<hbox>下单时间：</hbox>
+				<hbox>
+					<datebox value="@{saction.queryPars.createTimeB}" />
+					至
+					<datebox value="@{saction.queryPars.createTimeE}" />
+				</hbox>
+				<hbox></hbox>
+				<hbox ><button label="查询" id="search" width="100px" onClick="saction.doQuery()"/></hbox>
+			</row>
+		</rows>
+	</grid>
+	
+				<listbox model="@{saction.listOrder,load-after=search.onClick}" >
+					<listhead>
+						<listheader label="订单号" width="7%" sort="auto(orderId)"/>
+						<listheader label="销售产品" width="15%"/>
+						<listheader label="数量" width="5%"/>
+						<listheader label="姓名" width="10%"/>
+						<listheader label="用户名" width="12%"/>
+						<listheader label="下单时间" width="8%"/>
+						<listheader label="首处理时间" width="8%"/>
+						<listheader label="游玩时间" width="8%" sort="auto(visitTime)"/>
+						<listheader label="操作" width="25%"/>
+					</listhead>
+					<listitem height="25px" self="@{each='row'}">
+						<listcell label="@{row.orderId}" />
+						<listcell span="2">
+							<listbox multiple="true" model ="@{row.ordOrderItemProds }" style="border:0">
+								<listhead>
+								<listheader width="75%"/>
+								<listheader width="25%"/>
+							</listhead>
+								<listitem height="25px" self="@{each=item}" >
+									<listcell label="@{item.productName }" />
+									<listcell label="@{item.quantity }" />
+								</listitem>
+							</listbox>
+						</listcell>
+					
+						<listcell label="@{row.realName}" />
+						<listcell >
+								<label value="@{row.userName}" />(
+								<label value="@{row.mobileNumber}" />)
+						</listcell>
+						<listcell label="@{row.createTime}" />
+						<listcell label="@{row.dealTime}" />
+						<listcell label="@{row.visitTime,converter='com.lvmama.back.utils.DateZKConverter' }" />
+						<listcell>
+							<a style="color:blue" label="审核" onClick='saction.showWindow("/ord/approve/ApproveDetail.zul",self.getAttributes());'>
+								<custom-attributes orderId="@{row.orderId}"/>
+								<custom-attributes action="${arg.action}"/>
+							</a>
+						</listcell>
+					</listitem>
+				</listbox>
+			</window>
+
+</zk>

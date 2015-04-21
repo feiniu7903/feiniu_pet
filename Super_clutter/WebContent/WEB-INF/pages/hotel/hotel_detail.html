@@ -1,0 +1,370 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title><#if hotelDetael??>${hotelDetael.name!}</#if>预订电话_价格_地址(图)-驴妈妈手机预订</title>
+	<meta name="Keywords" content="<#if hotelDetael??>${hotelDetael.name!}</#if>预订,电话,价格"/>
+	<meta name="Description" content="驴妈妈无线官网:提供<#if hotelDetael??>${hotelDetael.name!}</#if>手机订房电话,价格及地址查询服务,商务/旅游/休息首选!入住满意度100%!"/>
+    <#include "../common/define_v4.html">
+    <link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/grogshop_v3.css">
+	<script src="${request.contextPath}/js/hotel.js"></script>
+	<script src="${request.contextPath}/js/jquery.event.swipe.js"></script>
+</head>
+
+<body>
+<div id="container">
+    <header class="header" id="hotel_search_title">
+        <a href="javascript:union_back();" class="back"><span class="ic_back"></span></a>
+        <h1>酒店详情</h1>
+        <div class="header_btn">
+            <!-- <a href="" id="favoritor_in" class="header-icon-fav"></a>
+            <a href="" id="favoritor_out" class="header-icon-fav-ed"></a> -->
+            <a href="javascript:union_skip('http://${hostName}');" class="header-icon-home"></a>
+        </div>
+    </header>
+    <#if hotelDetael??>
+	    <div id="content">
+	    	<!-- 隐藏域数据加载更多周边景点用到 -->
+	    	<input  value="${hotelDetael.latitude!}"  type="hidden" name="latitude" id="latitude"><!--酒店纬度  -->
+		    <input  value="${hotelDetael.longitude!}"  type="hidden" name="longitude" id="longitude"><!--酒店经度  -->
+		    <input  value="1"  type="hidden" name="pageIndex" id="pageIndex"><!--分页第几页  -->
+	        <section class="grogshop_info">
+	            <div class="focus_img_swipe">
+	            	<h2>${hotelDetael.name!}</h2>
+	                <#if hotelDetael?? && hotelDetael.largeImages?? && hotelDetael.largeImages?size&gt;0 >
+	                    <#list hotelDetael.largeImages as largeImage>
+	                        <figure class="slide">
+	                            <div class="img" style="background-image:url(${largeImage!})">&nbsp;</div>
+	                        </figure>
+	                    </#list>
+	                    <#else>
+	                        <figure class="slide">
+	                            <figcaption><h2>${hotelDetael.name!}</h2></figcaption>
+	                            <div class="img" style="background-image:url(${hotelDetael.images!})">&nbsp;</div>
+	                        </figure>
+	                </#if>
+	            </div>
+	            <nav class="common-nav">
+	                <ul>
+	                    <li>预订<span class="ic_triangle_up"></span></li>
+	                    <li>酒店介绍<span class="ic_triangle_up"></span></li>
+	                    <li>点评<span class="ic_triangle_up"></span></li><!--  异步加载点评数据-->
+	                    <li>周边景点<span class="ic_triangle_up"></span></li>
+	                </ul>
+	            </nav>
+	            <!--预订-->
+	            <article class="tabChange grogshop_content">
+	                <section class="grog_state">
+	                    <div>
+	                        <span class="ic_good"></span>好评率
+	                        <em><#if hotelDetael.commentGoodRate?? && hotelDetael.commentGoodRate!="">${hotelDetael.commentGoodRate!}<#else>暂无点评</#if></em>
+	                    </div>
+	                    <div>
+	                        <span class="ic_comment"></span>点评数
+	                        <em>${hotelDetael.commentCount!}</em>
+	                    </div>
+	                    <div>
+	                        <span class="ic_price"></span>价格
+	                        <em><i>&yen;</i> ${hotelDetael.sellPrice!}<i>起</i></em>
+	                    </div>
+	                </section>
+	                <div class="grog_info_li">
+	                    <div class="grog_stay_info">
+	                        <div class="grog_date_box">
+	                            <input  value="${arrivalDate!}"  type="hidden" name="arrivalDate" id="arrivalDate"><!--入住日期 -->
+	                            <input  value="${departureDate!}"  type="hidden" name="departureDate" id="departureDate"><!--离开日期 -->
+	                            <input  value="${hotelId!}"  type="hidden" name="hotelId" id="hotelId"><!--酒店ID -->
+	                            <div class="grog_date" onclick="selsctHoteldate(1,'hotel_detail');">
+	                                <span class="grog_date1">入住</span>
+	                                <span class="grog_date2">${arrivalDate!}<br/>${arrivalZhDate!}</span>
+	                                <span class="ic_ri"></span>
+	                            </div>
+	                            <div class="grog_date" onclick="selsctHoteldate(0,'hotel_detail');">
+	                                <span class="grog_date1">离店</span>
+	                                <span class="grog_date2">${departureDate!}<br/>${departureZhDate!}</span>
+	                                <span class="ic_ri"></span>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <#if hotelRooms?? && hotelRooms?size&gt;0 >
+	                        <ul>
+	                            <#list hotelRooms as hotelRoom>
+	                                <li class="set-btn">
+	                                    <article>
+	                                        <div class="grog_product_wrap">
+	                                            <div class="grog_product triggerArea">
+	                                                <h3>${hotelRoom.hotelRoom!}</h3>
+	                                                <em>&yen;${hotelRoom.sellPrice!}</em>
+	                                                <#if hotelRoom.cashBack?? && hotelRoom.cashBack!="" &&  hotelRoom.cashBack!="0">
+	                                                    <i class="ic_fan"></i>
+	                                                    <span class="f-color-1">&yen;${hotelRoom.cashBack!} </span>
+	                                                </#if>
+	                                            </div>
+	                                            <div class="grog_pro_btn">
+	                                            	<#if hostName?? && hostName=="m.lvmama.com">
+		                                                <a href="javascript:void(0)" onclick="hotelOrderFill('${hotelDetael.name!}','${hotelRoom.hotelRoom!}','${arrivalDate!}','${departureDate!}','${hotelRoom.hotelId!}','${hotelRoom.roomTypeId!}',${hotelRoom.ratePlanId!});" class="btn_reserve">预订</a>
+	                                            	<#else>
+	                                            		<a href="javascript:void(0)" class="btn_reserve disable">预订</a>
+	                                            	</#if>
+	                                            </div>
+	                                        </div>
+	                                        <figure class="grog_product_wrap2">
+	                                            <figcaption><h3><img src="${hotelRoom.icon!}" width="70" height="66" alt="${hotelRoom.hotelRoom!}"/></h3></figcaption>
+	                                            <dl class="clearfix">
+	                                                <dd>早餐：${hotelRoom.hasBreakfast!}</dd>
+	                                                <dd>网络：${hotelRoom.broadband!}</dd>
+	                                                <dd>楼层：${hotelRoom.floor!}</dd>
+	                                                <dd>面积：${hotelRoom.roomArea!}</dd>
+	                                                <dd>床型：${hotelRoom.bedType!}</dd>                                                
+	                                            </dl>
+	                                        </figure>
+	                                        <figure class="grog_product_wrap2">
+	                                        	<#if hotelRoom.cashBack?? && hotelRoom.cashBack!="" &&  hotelRoom.cashBack!="0">
+		                                            <figcaption><div class="btn_style_1">返奖金</div></figcaption>
+	                                        	</#if>
+	                                            <dl class="clearfix">
+	                                                <dd class="full">${hotelRoom.cashBackDesc!}</dd>
+	                                            </dl>
+	                                        </figure>
+	                                    </article>
+	                                </li>
+	                            </#list>
+	                        </ul>
+	                    </#if>
+	                </div>
+	                <!-- <div class="view_more"><a href="javascript:void(0)">查看更多</a></div> -->
+	                <div class="lv-box grog_shop">
+	                    <h3>酒店特别提示</h3>
+	                    <div class="t_content">
+	                        <p>
+	                            ${hotelDetael.description!}
+	                        </p>
+	                    </div>
+	                </div>
+	            </article>
+	            <!--/预订-->
+	            <!--酒店介绍-->
+	            <article class="tabChange grogshop_content grog_shop">
+	                <a href="javascript:hotelMap('${hotelDetael.name!}','${hotelDetael.address!}','${hotelDetael.latitude!}','${hotelDetael.longitude!}');" class="lv-box-link">
+	                    <span class="ic_map"></span>
+	                    <span class="lv-box-map">${hotelDetael.address!}</span>
+	                    <span class="ic_ri"></span>
+	                </a>
+	                <div class="lv-box">
+	                    <h3>酒店简介</h3>
+	                    <div class="t_content textOverflow">
+	                        <p>
+	                            ${hotelDetael.introEditor!}
+	                        </p>
+	                        <span class="ic_down"></span>
+	                    </div>
+	                </div>
+	                <div class="lv-box">
+	                    <h3>设施服务</h3>
+	                    <div class="t_content">
+	                        <#if hotelDetael?? && hotelDetael.generalAmenities?? &&  hotelDetael.generalAmenities!="">
+	                            <div class="lv-box-line">
+	                                <h5>综合设施：</h5>
+	                                <span class="pl70">${hotelDetael.generalAmenities!}</span>
+	                            </div>
+	                        </#if>
+	                        <#if hotelDetael?? && hotelDetael.roomAmenities?? &&  hotelDetael.roomAmenities!="">
+	                            <div class="lv-box-line">
+	                                <h5>客房设施：</h5>
+	                                <span class="pl70">${hotelDetael.roomAmenities!}</span>
+	                            </div>
+	                        </#if>
+	                        <#if hotelDetael?? && hotelDetael.recreationAmenities?? &&  hotelDetael.recreationAmenities!="">
+	                            <div class="lv-box-line">
+	                                <h5>娱乐设施：</h5>
+	                                <span class="pl70">${hotelDetael.recreationAmenities!}</span>
+	                            </div>
+	                        </#if>
+	                    </div>
+	                </div>
+	                <div class="lv-box">
+	                    <h3>交通状况</h3>
+	                    <div class="t_content textOverflow">
+	                        <div class="lv-box-line">
+	                            <p>${hotelDetael.traffic!}</p>
+	                            <!-- <span class="tr">40公里</span> -->
+	                        </div>
+	                       	<span class="ic_down"></span>
+	                    </div>
+	                </div>
+	            </article>
+	            <!--/酒店介绍-->
+	            <!--点评-->
+	            <article class="tabChange grogshop_content grop_comment">
+	                <!-- 点评列表 -->
+	                <section class="schedule_top">
+	                    <div class="schedule_top_flex2">
+	                        <em>${goodCommentRate!}</em>
+	                        <b>客户好评</b>
+	                        <small class="f-color-0">艺龙网</small>
+	                    </div>
+	                    <div class="schedule_top_flex">
+	                        <div class="schedule">
+	                            <span>好评</span>
+	                            <span class="schedule_bar"><i style="width:${goodCommentRate!};"></i></span>
+	                            <em>${goodCommentRate!}</em>
+	                        </div>
+	                        <div class="schedule">
+	                            <span>差评</span>
+	                            <span class="schedule_bar"><i style="width:${badCommentRate!};"></i></span>
+	                            <em>${badCommentRate!}</em>
+	                        </div>
+	                    </div>
+	                </section>
+	                <#if hotelComments?? && hotelComments?size&gt;0 >
+	                    <section class="schedule_comment">
+	                        <h5 class="schedule_comment_ti">点评<em>（${totalComment!}条）</em></h5>
+	                        <#list hotelComments as comment>
+	                            <hgroup>
+	                                <em>${comment.MemberName!}</em>
+	                                <#if comment.Recommend?? && comment.Recommend=="Good" >
+	                                    <span class="ic_appraise"></span>
+	                                    <small>好评</small>
+	                                </#if>
+	                                <#if comment.Recommend?? && comment.Recommend=="Middle" >
+	                                    <span class="ic_appraise"></span>
+	                                    <small>中评</small>
+	                                </#if>
+	                                <#if comment.Recommend?? && comment.Recommend=="Bad" >
+	                                    <span class="ic_appraise_bad"></span>
+	                                    <small>差评</small>
+	                                </#if>
+	                                <p>${comment.Content!}
+	                                    <time>${comment.CheckInDate!}</time>
+	                                </p>
+	                            </hgroup>
+	                        </#list>
+	                        <#if hasNext?? && hasNext>
+	                            <div class="view_more"><a href="javascript:void(0)">查看更多</a></div>
+	                        </#if>
+	                    </section>
+	                </#if>
+	            </article>
+	            <!--/点评-->
+	            <!--周边景点-->
+	            <article class="tabChange grogshop_content grop_scenic">
+				  	<div class="lv-project-list" id="data_list">
+				  	    <!-- 列表 -->
+					  	<#if placelist?? && placelist?size&gt;0>
+							<#list placelist as place>
+							  <article onclick="union_skip('http://${hostName}/ticket/piao-${place.id}/');">
+				                    <div class="pro-pic" style="background-image: url(${prefixPic!}${place.middleImage!})">
+				                        <#if place.canOrderToday>
+				                            <img src="${prefix_pic_url!}/img/today-book.png">
+				                        </#if>
+				                    </div>				            
+				                    <div class="pro-info">
+				                        <h2>${place.name?default("")}</h2>
+				                        <p>
+				                            <span class="f-color-1 value fl">&yen; ${place.sellPriceYuan!} <i>起</i></span><del class="fl ml10">&yen; ${place.marketPriceYuan!}</del>
+				                            <span class="fr"><#if place.cmtStarts?? &&  place.cmtStarts!="" >${place.cmtStarts!}分</#if></span>
+				
+				                        </p>
+				                        <p>
+				                            <span class="fl">${place.subject!}</span>
+				                            <span class="fr f-color-1 rebate">
+				                                <#if place.hasBusinessCoupon?? &&  place.hasBusinessCoupon >
+				                                    <i class="ic_hui"></i>
+				                                </#if>
+				                                <#if place.cashRefund?? &&  place.cashRefund >
+				                                    <i class="ic_fan"></i></#if>
+				                                <#if place.cashRefund>
+				                                    <em>&yen;${place.cashRefundY!}</em>
+				                                </#if>
+				                            </span>
+				                        </p>
+				                        <p class="f-size-10">${place.address!}</p>
+				                    </div>
+						        </article>
+						     </#list>
+						    <#else>
+					    		<div class="lv-search-fail" style="">
+				    	<div class="lv-sorry-icon">
+				        	<img src="${prefix_pic_url!}/img/sorry.png">
+				        </div>
+				        <p>没有找到适合的景点</p>
+				    </div>
+					    </#if>
+				    </div>
+				   <!-- 如果不是最后一页  -->
+				   <#if !isLastPage>
+					   <div class="view_more" id="show_more">
+					        <a href="javascript:void(0);" onclick="getHotelSpotticketMoreData()">查看更多</a>
+					    </div>
+				    </#if>
+	            </article>
+	            <!--/周边景点-->
+	        </section>
+	    </div>
+	 <#else>
+         <#assign no_data_msg="${msg!}">
+         <#include "../common/no_data_list.html">
+	</#if>   
+    <#include "../common/footer_v4.html"/>
+</div>
+
+<style type="text/css">
+    .ic_good {
+        background-image: url("data:image/gif;base64,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");
+    }
+    .ic_comment {
+        background-image: url("data:image/gif;base64,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");
+    }
+    .ic_price {
+        height:26px;
+        background-image: url("data:image/gif;base64,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");
+    }
+    .ic_map {
+        background-image: url("data:image/gif;base64,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");
+        background-size: 15px auto;
+        height: 19px;
+        width: 17px;
+    }
+    .ic_appraise {
+        background-image: url("data:image/gif;base64,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");
+        background-size: 17px auto;
+        height: 17px;
+        width: 18px;
+    }
+    .ic_appraise_bad {
+        background-image: url("data:image/gif;base64,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");
+        background-size: 17px auto;
+        height: 17px;
+        width: 18px;
+    }
+
+</style>
+<script type="text/javascript">
+    $(function(){
+        if ($(".focus_img_swipe").length) {
+            $(".focus_img_swipe").swipeImgMove();
+        }
+        $(".grog_info_li").triggerLiAct();
+        $(".common-nav").tabChange({},function(){},function(){
+			if(this.index()=="1"){
+	            $(".textOverflow").each(function(){
+	                var _this=$(this),
+	                    _textthis = $(this).find("p");
+	                if(parseInt(_textthis.height())>60 &&  _this.find('.ic_down').length){
+	                    _this.addClass("overflow");
+	                    _this.find('.ic_down').css("display","block");
+	                    var btn = new MBP.fastButton(_this.get(0), function () {
+	                        if(_this.hasClass("overflow")){
+	                            _this.removeClass("overflow");
+	                        }else{
+	                            _this.addClass("overflow");
+	                        }
+	                    });
+	                }
+	            });
+			}
+
+        });
+    });
+</script>
+</body>
+</html>

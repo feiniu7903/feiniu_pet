@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>我的订单</title>
+<#include "../common/define.html">
+</head>
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_back();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">我的订单</div>
+</div>
+<div class="lv-wrapper lv-min-height lv-media-width  myorder">
+  <div class="lv-wrapper-container"  id="data_list">
+   <input type="hidden" name="page" id="page" value="${page!}">
+    <#if orderList?? && orderList?size&gt;0>
+       <#list orderList as order>
+	        <div class="lv-box clear"> 
+		        <a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/order/order_detail.htm?orderId=${order.orderId!}');">
+			      <div class="lv-order-title lv-padding-x10 lv-fontsize-12">订单号：${order.orderId!} 
+			      <#if order.orderViewStatus?? && order.orderViewStatus == "UNPAY">
+				      <#if order.canToPay>
+				         <#if order.mainProductType=="TICKET" || order.mainProductType=="ROUTE">
+				           <span class="lv-order-status lv-pull-right lv-color-01"  id="order_status${order.orderId!}">待支付</span>
+				         <#else>
+				          <span class="lv-order-status lv-pull-right f_9f9f9f"  id="order_status${order.orderId!}">待支付</span> 
+				         </#if>
+				      <#else>
+				         <span class="lv-order-status lv-pull-right f_9f9f9f"  id="order_status${order.orderId!}">待支付</span>
+				      </#if>
+			      <#else>
+			          <#if order.canToPay>
+			             <#if order.mainProductType=="TICKET" || order.mainProductType=="ROUTE">
+				             <span class="lv-order-status lv-pull-right lv-color-01" id="order_status${order.orderId!}"> ${order.zhOrderViewState!}</span>
+				         <#else>
+				             <span class="lv-order-status lv-pull-right f_9f9f9f" id="order_status${order.orderId!}"> ${order.zhOrderViewState!}</span>
+				         </#if>
+				      <#else>
+				          <span class="lv-order-status lv-pull-right f_9f9f9f" id="order_status${order.orderId!}"> ${order.zhOrderViewState!}</span>
+				      </#if>
+			      </#if>
+			       
+			      </div>
+			      <div class="lv-order-content clear">
+			        <div class="lv-order-icon  lv-pull-left"><img src="${prefixPic!}${order.imgUrl!}"></div>
+			        <div class="lv-order-desc lv-pull-left lv-fontsize-12">
+			          <div style="color:#333333;">${order.productName!}</div>
+			          <div>总额:<span class="lv-color">&yen; ${order.amount!}</span></div>
+			          <div>游玩时间 : ${order.visitTime!}</div>
+			        </div>
+			        <img class="lv-next-01 lv-redirect-next" src="${prefix_pic_url!}/img/next.png"> 
+			     </div>
+		       </a>
+		      
+		      <#if  order.canToPay> 
+			      <div class="lv-order-operate" id="order_pay${order.orderId!}">
+			        <#if order.canCancel> 
+			       		 <a class="lv-btn-booking lv-btn-03 lv-pull-left" href="javascript:popCancelOrder('${order.orderId!}');">取消订单</a> 
+			        </#if>
+			        <!--  门票直接去支付 ，线路现在app支付 ，其它支付按钮灰色 -->
+			        <#if order.mainProductType=="TICKET">
+			           <a class="lv-btn-booking lv-btn-01 lv-pull-left" href="javascript:void(0);" onclick="union_skip('${request.contextPath}/order/order_success.htm?orderId=${order.orderId}');">去支付</a>
+			        <#elseif order.mainProductType=="ROUTE">
+			           <a class="lv-btn-booking lv-btn-01 lv-pull-left" href="javascript:void(0);" onclick="union_skip('http://${hostName}/download?Ch=1');">下载App支付</a>
+			        <#else>
+			           <a class="lv-btn-booking lv-btn-03 lv-pull-left" href="javascript:void(0)');">去支付</a> 
+			        </#if>
+			      </div>
+		      </#if>
+		    </div>
+       </#list>
+    <#else>
+	     <#assign no_data_msg="还没有任何订单">
+         <#include "../common/no_data_list.html">
+    </#if>
+  </div>
+  
+      <!-- 如果不是最后一页  -->
+    <#if isLastPage?? && !isLastPage>
+	   <div class="lv-nav-li lv-btn-03" id="show_more">
+	        <a href="javascript:void(0);" onclick="getData()">
+	           <span>查看更多</span>
+	        </a>
+	    </div>
+     </#if>
+</div>
+<script src="${request.contextPath}/js/order.js?version=20131023"></script>
+<script type="text/javascript">
+  var jsonData = [];
+  var currentOrderId  = '';
+  //取消订单 弹出层 . 
+  function popCancelOrder(orderId) {
+	  currentOrderId = orderId;
+  	var _height = $(document).height();
+  	var _width = $(document).width();
+  	var _top = $(document).scrollTop() + 200;
+  	$(".telBox .p span").html($(this).attr("_tel"));
+  	$(".telBox").fadeIn();
+  	$(".telBox").css({top: _top});
+  	$(".model").css({
+  		width : _width,
+  		height : _height,
+  	}).show();
+  }
+  
+  // 点击确定按钮 
+  function promt_cancel_order(type) {
+	    $(".telBox").fadeOut();
+		$(".model").hide();
+		if(null == currentOrderId || "" == currentOrderId) {
+			lvToast(false,LT_ORDER_CANCLE_ERROR,LT_LOADING_CLOSE);
+		}
+		if(type == '2') {
+			cancelOrder(currentOrderId);
+			currentOrderId = ''; 
+		}
+  }
+</script>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+    <!--取消弹出层 st-->
+	<div class="telBox telBox_logout">
+    	<div class="telBox_con"></div>
+        <div class="p">
+            <span>您确定要取消该订单吗!</span>
+            <a href="javascript:void(0);" class="ic_ret" onclick="promt_cancel_order(1);"></a>
+            <a href="javascript:void(0);" class="ic_logout" onclick="promt_cancel_order(2);"></a>
+        </div>
+    </div>
+    
+</body>
+</html>

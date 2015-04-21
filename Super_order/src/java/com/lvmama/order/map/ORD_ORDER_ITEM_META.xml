@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_ITEM_META" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderItemMeta" >
+    <result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+    <result column="ORDER_ID" property="orderId" />
+    <result column="ORDER_ITEM_ID" property="orderItemId" />
+    <result column="PERFORM_STATUS" property="performStatus" />
+    <result column="RESOURCE_STATUS" property="resourceStatus" />
+    <result column="PRE_PAY_STATUS" property="prePayStatus" />
+    <result column="SETTLEMENT_STATUS" property="settlementStatus" nullValue="UNSETTLEMENTED"/>
+    <result column="META_PRODUCT_ID" property="metaProductId" />
+    <result column="META_BRANCH_ID" property="metaBranchId" />
+    <result column="PRODUCT_NAME" property="productName" />
+    <result column="PRODUCT_TYPE" property="productType" />
+    <result column="SUPPLIER_ID" property="supplierId" />
+    <result column="MARKET_PRICE" property="marketPrice" />
+    <result column="SETTLEMENT_PRICE" property="settlementPrice" />
+    <result column="RESOURCE_CONFIRM" property="resourceConfirm" />
+    <result column="FAX_MEMO" property="faxMemo" />
+    <result column="PRODUCT_QUANTITY" property="productQuantity" />
+    <result column="ADULT_QUANTITY" property="adultQuantity" />
+    <result column="CHILD_QUANTITY" property="childQuantity" />
+    <result column="FAX_SEND_STATUS" property="faxSendStatus" />
+	<result column="VISIT_TIME" property="visitTime" />
+    <result column="TAKEN" property="taken" />
+    <result column="VALID_DAYS" property="validDays" />
+    <result column="SUB_PRODUCT_TYPE" property="subProductType" />
+    <result column="REFUND" property="refund" />
+    <result column="ACTUAL_SETTLEMENT_PRICE" property="actualSettlementPrice" />
+    <result column="QUANTITY" property="quantity" />
+    <result column="PAYMENT_TARGET" property="paymentTarget" />
+    <result column="SELL_PRICE" property="sellPrice" />
+	<result column="PRODUCT_ID_SUPPLIER" property="productIdSupplier" />
+	<result column="PRODUCT_TYPE_SUPPLIER" property="productTypeSupplier" />
+	<result column="SEND_FAX" property="sendFax" />
+	<result column="STOCK_REDUCED" property="stockReduced" />
+	<result column="RETENTION_TIME" property="retentionTime"/>
+	<result column="BRANCH_TYPE" property="branchType"/>
+	<result column="SETTLEMENT_TIME" property="settlementTime"/>
+	<result column="IS_RESOURCESENDFAX" property="isResourceSendFax"/>
+	<result column="NIGHTS" property="nights"/>
+	<result column="BREAKFAST_COUNT" property="breakfastCount"/>
+	<result column="PAYED_AMOUNT" property="payedAmount"/>
+	<result column="TOTAL_SETTLEMENT_PRICE" property="totalSettlementPrice"/>
+	<result column="SUPPLIER_FLAG" property="supplierFlag"/>
+	<result column="VIRTUAL" property="virtual"/>
+	<result column="GO_FLIGHT_TIME" property="goFlightTime"/>
+	<result column="BACK_FLIGHT_TIME" property="backFlightTime"/>
+	<result column="GO_FLIGHT_CODE" property="goFlightCode"/>
+	<result column="BACK_FLIGHT_CODE" property="backFlightCode"/>
+	<result column="DIRECTION" property="direction"/>
+	<result column="PERFORM_TARGET_ID" property="performTargetId"/>
+	<result column="CERTIFICATE_STATUS" property="certificateStatus"/>
+	<result column="CONFIRM_CHANNEL" property="confirmChannel"/>
+	<result column="EBK_CERTIFICATE_TYPE" property="ebkCertificateType"/>
+	<result column="BUY_OUT_QUANTITY" property="buyOutQuantity"/>
+	<result column="FILIALE_NAME" property="filialeName"/>
+  </resultMap>
+  <resultMap class="com.lvmama.comm.bee.po.ord.OrdOrderItemMeta" id="BaseResultMapSett" extends="BaseResultMap">
+	<result column="settlementStatusStr" property="settlementStatusStr" />
+	<result column="TYPE" property="amountType" />
+	<result column="AMOUNT" property="amountValue" />
+	<result column="REFUNDMENT_ITEM_ID" property="refundmentItemId" />
+	<result column="MEMO" property="memo" />
+	<result column="ACTUALLOSS" property="actualLoss" />
+  </resultMap>
+  <resultMap class="com.lvmama.comm.bee.po.ord.OrdOrderItemMeta" id="BaseResultMapStatus" extends="BaseResultMap">
+	<result column="settlementStatusStr" property="settlementStatusStr" />
+  </resultMap>
+  <select id="selectByOrderId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  	select *
+    from ORD_ORDER_ITEM_META
+    where ORDER_ID = #orderId#
+  </select>
+
+  <select id="selectByOrderItemId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  	select *
+    from ORD_ORDER_ITEM_META
+    where ORDER_ITEM_ID = #orderItemId#
+  </select>
+
+  <select id="sumTotalActualSettlementPriceByOrderItemId" resultClass="java.lang.Long" parameterClass="java.lang.Long">
+  	select SUM(ACTUAL_SETTLEMENT_PRICE * QUANTITY)
+    from ORD_ORDER_ITEM_META
+    where ORDER_ITEM_ID = #orderItemId#
+  </select>
+
+  <select id="selectByPerformTargetIdAndOrderId" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+	SELECT M.* FROM META_PERFORM P, ORD_ORDER_ITEM_META M WHERE
+	P.TARGET_ID=#targetId# AND M.ORDER_ID=#orderId# AND P.META_PRODUCT_ID=M.META_PRODUCT_ID
+  </select>
+
+  <!--增加筛选DELETED条件   mod by lijp 20111103 -->
+  <select id="selectWithSettlementQueue" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  	select a.*
+    from ORD_ORDER_ITEM_META a, ORD_SETTLEMENT_QUEUE_ITEM b
+    where a.ORDER_ITEM_META_ID = b.ORDER_ITEM_META_ID
+    and b.SETTLEMENT_QUEUE_ID = #settlementQueueId#
+    <![CDATA[ 
+    and (b.deleted != 'true' OR b.deleted IS NULL)
+    ]]>
+    <isNotNull prepend="and" property="orderId">
+  	 	<![CDATA[ a.ORDER_ID = #orderId# ]]>
+    </isNotNull>
+  </select>
+  <select id="selectWithSettlementQueueId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  	SELECT * FROM ORD_ORDER_ITEM_META T, ORD_SETTLEMENT_QUEUE_ITEM T2 WHERE T.ORDER_ITEM_META_ID = T2.ORDER_ITEM_META_ID AND 
+    T2.SETTLEMENT_QUEUE_ID = #settlementQueueId#
+  </select>
+  
+  
+   <update id="updateSettlementQueueItemDeleted"   parameterClass="java.util.Map">
+  	update (select a.*,b.*  
+    from ORD_ORDER_ITEM_META a, ORD_SETTLEMENT_QUEUE_ITEM b
+    where a.ORDER_ITEM_META_ID = b.ORDER_ITEM_META_ID
+    and b.SETTLEMENT_QUEUE_ID = #settlementQueueId#
+    <![CDATA[ 
+    and b.deleted = 'true'
+    ]]>
+    <isNotNull prepend="and" property="orderId">
+  	 	<![CDATA[ a.ORDER_ID = #orderId# ]]>
+    </isNotNull>
+    ) t set t.deleted = 'false'    
+  </update>
+  
+  <select id="selectWithSubSettlement" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  	select a.*
+    from ORD_ORDER_ITEM_META a, ORD_SUB_SETTLEMENT_ITEM b
+    where a.ORDER_ITEM_META_ID = b.ORDER_ITEM_META_ID
+    and b.SUB_SETTLEMENT_ID = #subSettlementId#
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMeta" >
+    select *
+    from ORD_ORDER_ITEM_META ooim
+    where ORDER_ITEM_META_ID = #orderItemMetaId#
+  </select>
+
+	<select id="selectToAutoPerform" resultMap="BaseResultMap">
+		select ooim.* from 
+		ORD_ORDER oo, ORD_ORDER_ITEM_META ooim
+		where oo.order_id=ooim.order_id  
+		and oo.ORDER_STATUS='NORMAL'
+		and oo.payment_status='PAYED'
+		and oo.payment_target='TOLVMAMA'		
+		and ooim.PERFORM_STATUS='UNPERFORMED'
+		and ooim.VISIT_TIME<![CDATA[<]]>sysdate-7
+		and ooim.order_item_id in
+       (select ooip.order_item_prod_id
+          from ord_order_Item_prod ooip
+         where ooip.order_item_prod_id = ooim.order_item_id
+           and ooip.additional = 'false')
+        and ooim.meta_product_id not in
+	    ( select mp.meta_product_id 
+	      from meta_perform mp, sup_perform_target spt 
+	      where mp.target_id=spt.target_id 
+	      and spt.certificate_type='DIMENSION' )
+	</select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMeta" >
+    delete from ORD_ORDER_ITEM_META
+    where ORDER_ITEM_META_ID = #orderItemMetaId#
+  </delete>
+
+  <delete id="deleteByOrderId" parameterClass="java.lang.Long" >
+   delete from ORD_ORDER_ITEM_META
+   where order_id=#orderId#
+  </delete>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMeta" >
+    insert into ORD_ORDER_ITEM_META (ORDER_ITEM_META_ID, ORDER_ID, ORDER_ITEM_ID, PERFORM_STATUS,
+      RESOURCE_STATUS, PRE_PAY_STATUS, SETTLEMENT_STATUS, META_PRODUCT_ID, PRODUCT_NAME,
+      PRODUCT_TYPE, SUPPLIER_ID, MARKET_PRICE, SETTLEMENT_PRICE,
+      VISIT_TIME ,RESOURCE_CONFIRM , FAX_MEMO, PRODUCT_QUANTITY, ADULT_QUANTITY, CHILD_QUANTITY, FAX_SEND_STATUS, TAKEN, VALID_DAYS,
+      SUB_PRODUCT_TYPE, REFUND, ACTUAL_SETTLEMENT_PRICE, QUANTITY, PAYMENT_TARGET, 
+      SELL_PRICE, PRODUCT_ID_SUPPLIER, PRODUCT_TYPE_SUPPLIER, SEND_FAX,STOCK_REDUCED,
+      BRANCH_TYPE,IS_RESOURCESENDFAX,META_BRANCH_ID,NIGHTS, BREAKFAST_COUNT,TOTAL_SETTLEMENT_PRICE, SUPPLIER_FLAG, VIRTUAL,
+      GO_FLIGHT_TIME,BACK_FLIGHT_TIME,GO_FLIGHT_CODE,BACK_FLIGHT_CODE,DIRECTION,PERFORM_TARGET_ID,CERTIFICATE_STATUS,CONFIRM_CHANNEL,EBK_CERTIFICATE_TYPE,FILIALE_NAME)
+    values (#orderItemMetaId#, #orderId#, #orderItemId#, #performStatus#,
+      #resourceStatus#, #prePayStatus#, #settlementStatus#,
+      #metaProductId#, #productName#, #productType#,
+      #supplierId#, #marketPrice#,
+      #settlementPrice#, #visitTime#, #resourceConfirm#, #faxMemo#,
+      #productQuantity#, #adultQuantity#, #childQuantity#, #faxSendStatus#, #taken#, #validDays#,
+      #subProductType#, #refund#, #actualSettlementPrice#, #quantity#, #paymentTarget#, #sellPrice#,
+	  #productIdSupplier#, #productTypeSupplier#, #sendFax#, #stockReduced#,#branchType#,#isResourceSendFax#,#metaBranchId#,
+  	  #nights#, #breakfastCount#,#totalSettlementPrice#, #supplierFlag#, #virtual#,
+  	  #goFlightTime#,#backFlightTime#,#goFlightCode#,#backFlightCode#,#direction#,
+  	  #performTargetId#,#certificateStatus#,#confirmChannel#,#ebkCertificateType#,#filialeName#
+      )
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMeta" >
+    update ORD_ORDER_ITEM_META
+    set
+      PERFORM_STATUS = #performStatus#,
+      RESOURCE_STATUS = #resourceStatus#,
+      PRE_PAY_STATUS = #prePayStatus#,
+      SETTLEMENT_STATUS = #settlementStatus#,
+      META_PRODUCT_ID = #metaProductId#,
+  	  META_BRANCH_ID = #metaBranchId#,
+      PRODUCT_NAME = #productName#,
+      PRODUCT_TYPE = #productType#,
+      SUPPLIER_ID = #supplierId#,
+      MARKET_PRICE = #marketPrice#,
+      SETTLEMENT_PRICE = #settlementPrice#,
+      VISIT_TIME = #visitTime#,
+      RESOURCE_CONFIRM = #resourceConfirm#,
+      FAX_MEMO = #faxMemo#,
+      PRODUCT_QUANTITY = #productQuantity#,
+      ADULT_QUANTITY = #adultQuantity#,
+      CHILD_QUANTITY = #childQuantity#,
+      FAX_SEND_STATUS = #faxSendStatus#,
+      TAKEN = #taken#,
+      VALID_DAYS = #validDays#,
+      SUB_PRODUCT_TYPE = #subProductType#,
+	  REFUND = #refund#,
+	  ACTUAL_SETTLEMENT_PRICE = #actualSettlementPrice#,
+	  QUANTITY = #quantity#,
+	  PAYMENT_TARGET = #paymentTarget#,
+	  SELL_PRICE = #sellPrice#,
+	  PRODUCT_ID_SUPPLIER = #productIdSupplier#,
+	  PRODUCT_TYPE_SUPPLIER = #productTypeSupplier#,
+	  SEND_FAX = #sendFax#,
+	  STOCK_REDUCED = #stockReduced#,
+	  RETENTION_TIME = #retentionTime#,
+	  BRANCH_TYPE=#branchType#,
+	  SETTLEMENT_TIME=#settlementTime#,
+      NIGHTS = #nights#,
+      BREAKFAST_COUNT = #breakfastCount#,
+      SUPPLIER_FLAG = #supplierFlag#,
+      VIRTUAL = #virtual#,
+      TOTAL_SETTLEMENT_PRICE = #totalSettlementPrice#,
+      GO_FLIGHT_TIME = #goFlightTime#,
+      BACK_FLIGHT_TIME = #backFlightTime#,
+      GO_FLIGHT_CODE = #goFlightCode#,
+      BACK_FLIGHT_CODE = #backFlightCode#,
+      DIRECTION = #direction#,
+      PERFORM_TARGET_ID = #performTargetId#,
+      CERTIFICATE_STATUS = #certificateStatus#,
+      CONFIRM_CHANNEL = #confirmChannel#,
+      FILIALE_NAME = #filialeName#,
+      EBK_CERTIFICATE_TYPE = #ebkCertificateType#
+    where ORDER_ITEM_META_ID = #orderItemMetaId#
+  </update>
+ 
+  <update id="updateByParamMap" parameterClass="java.util.HashMap" >
+    update ORD_ORDER_ITEM_META
+    set
+      ORDER_ITEM_META_ID = #orderItemMetaId#
+      <isNotNull prepend=" ," property="performStatus">
+      PERFORM_STATUS = #performStatus#
+      </isNotNull>
+      <isNotNull prepend=" ," property="resourceStatus">
+      RESOURCE_STATUS = #resourceStatus#
+      </isNotNull>
+      <isNotNull prepend=" ," property="prePayStatus">
+      PRE_PAY_STATUS = #prePayStatus#
+      </isNotNull>
+      <isNotNull prepend=" ," property="settlementStatus">
+      SETTLEMENT_STATUS = #settlementStatus#
+      </isNotNull>
+      <isNotNull prepend=" ," property="metaProductId">
+      META_PRODUCT_ID = #metaProductId#
+      </isNotNull>
+      <isNotNull prepend=" ," property="productName">
+      PRODUCT_NAME = #productName#
+      </isNotNull>
+      <isNotNull prepend=" ," property="productType">
+      PRODUCT_TYPE = #productType#
+      </isNotNull>
+      <isNotNull prepend=" ," property="supplierId">
+      SUPPLIER_ID = #supplierId#
+      </isNotNull>
+      <isNotNull prepend=" ," property="marketPrice">
+      MARKET_PRICE = #marketPrice#
+      </isNotNull>
+      <isNotNull prepend=" ," property="settlementPrice">
+      SETTLEMENT_PRICE = #settlementPrice#
+      </isNotNull>
+      <isNotNull prepend=" ," property="visitTime">
+      VISIT_TIME = #visitTime#
+      </isNotNull>
+      <isNotNull prepend=" ," property="resourceConfirm">
+      RESOURCE_CONFIRM = #resourceConfirm#
+      </isNotNull>
+      <isNotNull prepend=" ," property="faxMemo">
+      FAX_MEMO = #faxMemo#
+      </isNotNull>
+      <isNotNull prepend=" ," property="productQuantity">
+      PRODUCT_QUANTITY = #productQuantity#
+      </isNotNull>
+      <isNotNull prepend=" ," property="adultQuantity">
+      ADULT_QUANTITY = #adultQuantity#
+      </isNotNull>
+      <isNotNull prepend=" ," property="childQuantity">
+      CHILD_QUANTITY = #childQuantity#
+      </isNotNull>
+      <isNotNull prepend=" ," property="faxSendStatus">
+      FAX_SEND_STATUS = #faxSendStatus#
+      </isNotNull>
+      <isNotNull prepend=" ," property="taken">
+      TAKEN = #taken#
+      </isNotNull>
+      <isNotNull prepend=" ," property="validDays">
+      VALID_DAYS = #validDays#
+      </isNotNull>
+      <isNotNull prepend=" ," property="subProductType">
+	  SUB_PRODUCT_TYPE = #subProductType#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="refund">
+	  REFUND = #refund#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="actualSettlementPrice">
+	  ACTUAL_SETTLEMENT_PRICE = #actualSettlementPrice#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="quantity">
+	  QUANTITY = #quantity#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="paymentTarget">
+	  PAYMENT_TARGET = #paymentTarget#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="sellPrice">
+	  SELL_PRICE = #sellPrice#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="productIdSupplier">
+		PRODUCT_ID_SUPPLIER = #productIdSupplier#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="productTypeSupplier">
+		PRODUCT_TYPE_SUPPLIER = #productTypeSupplier#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="sendFax">
+		SEND_FAX = #sendFax#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="stockReduced">
+		STOCK_REDUCED = #stockReduced#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="retentionTime">
+		RETENTION_TIME = #retentionTime#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="branchType">
+		BRANCH_TYPE = #branchType#
+	  </isNotNull>
+	   <isNotNull prepend=" ," property="isResourceSendFax">
+		IS_RESOURCESENDFAX = #isResourceSendFax#
+	  </isNotNull>
+	   <isNotNull prepend=" ," property="nights">
+		NIGHTS = #nights#
+	  </isNotNull>
+	   <isNotNull prepend=" ," property="breakfastCount">
+		BREAKFAST_COUNT = #breakfastCount#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="totalSettlementPrice">
+	  	TOTAL_SETTLEMENT_PRICE = #totalSettlementPrice#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="supplierFlag">
+	  	SUPPLIER_FLAG = #supplierFlag#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="virtual">
+	  	VIRTUAL = #virtual#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="goFlightTime">
+	   	GO_FLIGHT_TIME = #goFlightTime#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="backFlightTime">
+	  	BACK_FLIGHT_TIME = #backFlightTime#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="goFlightCode">
+	  	GO_FLIGHT_CODE = #goFlightCode#
+	  </isNotNull>
+	  <isNotNull prepend=" ," property="backFlightCode">
+	  	 BACK_FLIGHT_CODE = #backFlightCode#
+	  </isNotNull>
+      <isNotNull prepend=" ," property="direction">
+	  	DIRECTION = #direction#
+	  </isNotNull>
+      <isNotNull prepend=" ," property="performTargetId">
+	  	PERFORM_TARGET_ID = #performTargetId#
+	  </isNotNull>
+      <isNotNull prepend=" ," property="performTargetId">
+	  	CERTIFICATE_STATUS = #certificateStatus#
+	  </isNotNull>
+      <isNotNull prepend=" ," property="performTargetId">
+	  	CONFIRM_CHANNEL = #confirmChannel#
+	  </isNotNull>
+      <isNotNull prepend=" ," property="ebkCertificateType">
+	  	EBK_CERTIFICATE_TYPE = #ebkCertificateType#
+	  </isNotNull>
+	   <isNotNull prepend=" ," property="filialeName">
+	  	FILIALE_NAME = #filialeName#
+	  </isNotNull>
+    where ORDER_ITEM_META_ID = #orderItemMetaId#
+  </update>
+
+  <update id="updateActualSettlementPrice" parameterClass="java.util.HashMap" >
+    update ORD_ORDER_ITEM_META
+    set
+      ACTUAL_SETTLEMENT_PRICE = #actualSettlementPrice#
+    where ORDER_ITEM_META_ID = #orderItemMetaId#
+  </update>
+
+  <update id="resetRefundByOrderId" parameterClass="java.lang.Long" >
+    update ORD_ORDER_ITEM_META
+    set
+      REFUND = 'false'
+    where ORDER_ID = #orderId#
+    and REFUND = 'true'
+  </update>
+
+	<update id="minusTotalStock" parameterClass="java.util.Map">
+		update META_PRODUCT_BRANCH
+		set TOTAL_STOCK = TOTAL_STOCK-#decreaseStock#
+		where META_BRANCH_ID = #metaProductBranchId# and TOTAL_STOCK>=#decreaseStock#
+	</update>
+	
+	<update id="minusSpecDateStock" parameterClass="java.util.Map">
+		update META_TIME_PRICE
+		set DAY_STOCK = DAY_STOCK-#decreaseStock#
+		where TIME_PRICE_ID = #timePriceId#  and DAY_STOCK>=#decreaseStock#
+	</update>
+
+	<update id="restoreTotalStock" parameterClass="java.util.Map">
+		update META_PRODUCT_BRANCH
+		set TOTAL_STOCK = TOTAL_STOCK+#decreaseStock#
+		where META_BRANCH_ID = #metaProductBranchId#
+	</update>
+	
+	<update id="restoreSpecDateStock" parameterClass="java.util.Map">
+		update META_TIME_PRICE
+		set DAY_STOCK = DAY_STOCK+#decreaseStock#
+		where TIME_PRICE_ID = #timePriceId#
+	</update>
+
+  <select id="selectForAuditOrderItemMeta" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+		select * from ORD_ORDER_ITEM_META
+		where RESOURCE_CONFIRM = #resourceConfirm#
+		and TAKEN = #taken#
+		and PRODUCT_TYPE = #productType#
+  	 	order by ORDER_ITEM_META_ID
+	</select>
+
+	<select id="queryOrdOrderItemMetaList" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		<![CDATA[
+SELECT *
+  FROM ORD_ORDER_ITEM_META
+ WHERE ORDER_ID = #orderId#
+   AND ORDER_ITEM_ID = #orderItemProdId#
+		]]>
+	</select>
+	<select id="countNoAmpleResource" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		<![CDATA[
+SELECT COUNT(*)
+  FROM ORD_ORDER_ITEM_META
+ WHERE RESOURCE_CONFIRM = #resourceConfirm#
+   AND RESOURCE_STATUS <> #resourceStatus#
+   AND ORDER_ID = #orderId#
+		]]>
+	</select>
+	 
+	<select id="queryOrdOrderItemMetaByOrderId" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+SELECT * FROM ORD_ORDER_ITEM_META WHERE ORDER_ID = #orderId#
+		]]>
+	</select>
+
+	<select id="sumSettlementPriceByOrderItemId" resultClass="java.lang.Long"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+select SUM(SETTLEMENT_PRICE * PRODUCT_QUANTITY) from ORD_ORDER_ITEM_META where ORDER_ITEM_ID = #orderItemId# group by ORDER_ITEM_ID;
+		]]>
+	</select>
+	<select id="queryOrdOrderId" resultClass="java.lang.Long"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+SELECT ORDER_ID FROM ORD_ORDER_ITEM_META WHERE ORDER_ITEM_META_ID = #ordOrderItemMetaId#
+		]]>
+	</select>
+	<select id="querySettlementItemCount" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryOrdOrderItemMeta" resultMap="BaseResultMap"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryOrdOrderItemMetaList1" resultMap="BaseResultMap"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+
+	<select id="queryOrdOrderItemMetaCount" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+	<select id="queryFinishSettlementItemCount" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+
+	<select id="makeOrderItemMetaId" resultClass="java.lang.Long">
+			<![CDATA[
+	SELECT ORD_ORDER_ITEM_META_ID_SEQ.NEXTVAL AS ID FROM DUAL
+	    	]]>
+	</select>	
+	<update id="updateSettlementStatus" parameterClass="java.util.Map">
+		UPDATE 
+			ORD_ORDER_ITEM_META T
+		SET 
+			T.SETTLEMENT_STATUS = #settlementStatus# 
+		<isNotNull prepend=" ," property="settlementTime">
+			T.SETTLEMENT_TIME = #settlementTime#
+		</isNotNull>
+ 		WHERE 
+ 			T.ORDER_ITEM_META_ID
+   		IN
+   			(
+   				<iterate property="orderItemMetaIds" conjunction=","  >
+   					#orderItemMetaIds[]#
+   				</iterate>
+   			)
+	</update>
+	
+	<!-- 更新订单子子项的支付金额 -->
+	<update id="updateOrderItemMetaSaleAmount" parameterClass="map">
+		UPDATE
+			ORD_ORDER_ITEM_META
+		SET
+			PAYED_AMOUNT = #payedAmount#
+		WHERE
+			ORDER_ITEM_META_ID = #orderItemMetaId#
+	</update>
+	
+	<select id="queryRefundmentOrdOrderItemMetaList" resultMap="BaseResultMapSett">
+		<![CDATA[
+		 SELECT t.*,
+				  j.currency_name,
+				  i.item_name AS settlementStatusStr
+				FROM
+				  (
+				  SELECT DISTINCT ORD_ORDER_ITEM_META.*,
+				    ORD_REFUNDMENT_ITEM.REFUNDMENT_ITEM_ID,
+				    ORD_REFUNDMENT_ITEM.AMOUNT AS AMOUNT,
+				    ORD_REFUNDMENT_ITEM.TYPE,
+				    ORD_REFUNDMENT_ITEM.MEMO AS memo,
+				    ORD_REFUNDMENT_ITEM.ACTUAL_LOSS AS actualLoss
+				  FROM ORD_ORDER_ITEM_META ORD_ORDER_ITEM_META,
+				  (select * from ORD_REFUNDMENT_ITEM where REFUNDMENT_ID=#refundmentId#) ORD_REFUNDMENT_ITEM
+				  where ORD_ORDER_ITEM_META.ORDER_ITEM_META_ID=ORD_REFUNDMENT_ITEM.ORDER_ITEM_META_ID (+)
+				    and ORD_ORDER_ITEM_META.order_id = #orderId#
+				  ) t,
+				  meta_product h,
+				  fin_currency j,
+				  com_code i
+				WHERE t.meta_product_id = h.meta_product_id
+				AND h.currency          = j.currency
+				AND i.set_code          = 'SETTLEMENT_STATUS'
+				AND t.settlement_status = i.item_code
+		]]>
+	</select>
+	
+	<select id="queryOrdOrderItemMetaAndStatusList" resultMap="BaseResultMapStatus">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+ 
+	<select id="selectOrderIdByOrderItemMetaId" parameterClass="map" resultClass="long">
+		SELECT 
+			DISTINCT ORDER_ID 
+		FROM 
+			ORD_ORDER_ITEM_META 
+		WHERE 
+			ORDER_ITEM_META_ID IN	(
+   				<iterate property="orderItemMetaIds" conjunction=","  >
+   					#orderItemMetaIds[]#
+   				</iterate>
+   			)
+	</select>
+	
+	 <select id="selectByPerformByMetaBranchIdAndOrderId" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+	SELECT * FROM ORD_ORDER_ITEM_META WHERE meta_branch_id in (
+		<iterate property="metaBranchIds" conjunction=","  >
+   					#metaBranchIds[]#
+   		</iterate>
+	) and order_id=#orderId#
+  </select>
+  <select id="selectOrdOrderItemMetasByEBK" parameterClass="java.util.Map" resultMap="BaseResultMap">
+	select 
+		DISTINCT meta.*
+			
+	from 
+       ord_order_item_meta meta,
+       pass_device device,
+       sup_perform_target target,
+       pass_port_code portCode,
+       pass_code passCode,
+       ord_order ord,
+       meta_perform perform
+	where 
+       target.certificate_type='DIMENSION' 
+       <isNotEmpty property="udid" prepend="AND">
+			device.device_no     = #udid#
+	   </isNotEmpty>
+	   <isNotEmpty property="addId" prepend="AND">
+			passCode.Add_Code = #addId#
+	   </isNotEmpty>
+	   <isNotEmpty property="orderId" prepend="AND">
+			ord.order_id = #orderId#
+	   </isNotEmpty>
+       and ((ord.PAYMENT_TARGET = 'TOLVMAMA' AND ord.PAYMENT_STATUS = 'PAYED' AND ord.ORDER_STATUS IN ('NORMAL'))
+            OR
+            (ord.PAYMENT_TARGET = 'TOSUPPLIER' AND ord.APPROVE_STATUS = 'VERIFIED' AND ord.ORDER_STATUS IN ('NORMAL')))
+       and meta.order_id = ord.order_id
+       and perform.target_id = device.target_id
+   	   and perform.meta_product_id = meta.meta_product_id
+       and device.target_id     = target.target_id 
+       and portCode.Target_Id   = device.target_id
+       and portCode.Code_Id  (+)= passCode.Code_Id
+       and passCode.Order_Id (+)= ord.order_id
+       and passCode.Reapply is null
+  </select>
+  <select id="selectForPerformed" resultClass="java.lang.Long" parameterClass="java.util.Map">
+  	select 
+  		count(meta.order_item_meta_id) 
+  	from 
+		ord_order_item_meta meta,
+		ord_order ord
+	where 
+		ord.order_id=#orderId#
+		and meta.order_id = ord.order_id
+		and meta.order_item_meta_id in 
+		(
+			<iterate property="orderItemMetaIdList" conjunction=","  >
+				#orderItemMetaIdList[]#
+			</iterate>
+		)
+  </select>
+  <update id="clearVisitTime" parameterClass="java.lang.Long">
+	update ord_order_item_prod set visit_time=null where order_id=#orderId#
+	</update>
+ </sqlMap>

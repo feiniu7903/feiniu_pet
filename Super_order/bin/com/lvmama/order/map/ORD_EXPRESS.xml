@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_EXPRESS" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdExpress" >
+    <result column="EXPRESS_ID" property="expressId" />
+    <result column="COMPANY_NAME" property="companyName" />
+    <result column="EXPRESS_NO" property="expressNo" />
+    <result column="SEND_TIME" property="sendTime" />
+    <result column="OBJECT_ID" property="objectId" />
+    <result column="OBJECT_TYPE" property="objectType" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdExpress" >
+    select EXPRESS_ID, COMPANY_NAME, EXPRESS_NO, SEND_TIME, OBJECT_ID, OBJECT_TYPE 
+    from ORD_EXPRESS
+    where EXPRESS_ID = #expressId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdExpress" >
+    delete from ORD_EXPRESS
+    where EXPRESS_ID = #expressId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdExpress" >
+    <selectKey resultClass="java.lang.Long" keyProperty="expressId" >
+      select ORD_EXPRESS_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_EXPRESS (EXPRESS_ID, COMPANY_NAME, EXPRESS_NO, SEND_TIME, OBJECT_ID, OBJECT_TYPE)
+    values (#expressId#, #companyName#, #expressNo#, #sendTime#, #objectId#, #objectType#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdExpress" >
+    update ORD_EXPRESS
+    set COMPANY_NAME = #companyName#,
+      EXPRESS_NO = #expressNo#,
+      SEND_TIME = #sendTime#,
+      OBJECT_ID = #objectId#,
+      OBJECT_TYPE = #objectType#
+    where EXPRESS_ID = #expressId#
+  </update>
+</sqlMap>

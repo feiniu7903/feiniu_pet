@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_CITY" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComCity" >
+    <result column="CITY_ID" property="cityId" />
+    <result column="CITY_NAME" property="cityName" />
+    <result column="PROVINCE_ID" property="provinceId" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComCity" >
+    select CITY_ID, CITY_NAME, PROVINCE_ID
+    from COM_CITY
+    where CITY_ID = #cityId#
+  </select>
+  <select id="selectByProvinceId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComCity">
+   select CITY_ID, CITY_NAME, PROVINCE_ID
+    from COM_CITY  where 1=1
+    <dynamic>
+    <isNotNull prepend="and" property="provinceId">
+    PROVINCE_ID=#provinceId#
+    </isNotNull>
+    </dynamic>
+  </select>
+  
+  <select id="selectCityByNameAndCity" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+  	select CITY_ID, CITY_NAME, PROVINCE_ID from COM_CITY
+  	<dynamic prepend="where">
+  		<isNotEmpty property="provinceId" prepend="and">
+  		PROVINCE_ID=#provinceId#
+  		</isNotEmpty>
+  		<isNotEmpty property="cityName" prepend="and">
+  		CITY_NAME = #cityName#
+  		</isNotEmpty>
+  	</dynamic>
+  </select>
+</sqlMap>

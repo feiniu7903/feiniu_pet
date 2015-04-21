@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_REGISTER_BASIC" >
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.UserRegisterBasic">
+		<result column="CHANNEL_CODE" property="channelId" />
+		<result column="CHANNEL_NAME" property="channelName" />
+		<result column="SUM_OUGHT_PAY" property="sumOughtPay" />
+		<result column="SUM_ACTUAL_PAY" property="sumActualPay" />
+		<result column="NEW_USER_NUM" property="newUsersNum" />
+		<result column="NEW_PAYED_USER_NUM" property="newPayedUsersNum" />
+		<result column="REGISTED_DAY_PAYED_NUM" property="registedDayPayedNum"/>
+		<result column="REGISTED_DAY_ACTUAL_PAY" property="sumRegistedDayActualPay"/>
+		<result column="REGISTED_DAY_PAYED_NUM" property="registedDayPayedNum"/>
+		<result column="ONE_MONTH_PAYED_NUM" property="oneMonthPayedNum"/>
+		<result column="ONE_MONTH_SUM_ACTUAL_PAY" property="sumOneMonthActualPay"/>	
+		<result column="THREE_MONTH_PAYED_NUM" property="threeMonthPayedNum"/>
+		<result column="THREE_MONTH_SUM_ACTUAL_PAY" property="sumThreeMonthActualPay"/>
+		<result column="SIX_MONTH_PAYED_NUM" property="sixMonthPayedNum"/>
+		<result column="SIX_MONTH_SUM_ACTUAL_PAY" property="sumSixMonthActualPay"/>					
+	</resultMap>
+
+	<sql id="queryUserRegisterBasicSql" >
+	SELECT T.CHANNEL_ID CHANNEL_CODE, C.CHANNEL_NAME,
+       SUM(NVL(SUM_OUGHT_PAY/100, 0)) SUM_OUGHT_PAY,
+       SUM(NVL(SUM_ACTUAL_PAY/100, 0)) SUM_ACTUAL_PAY,
+       COUNT(CASE WHEN T.USER_ID IS NOT NULL THEN 1 ELSE NULL END) NEW_USER_NUM,
+       COUNT(CASE WHEN NVL(SUM_ACTUAL_PAY,0)>0 THEN 1 ELSE NULL  END) NEW_PAYED_USER_NUM,
+       COUNT(CASE WHEN NVL(REGISTED_DAY_ACTUAL_PAY,0)>0 THEN 1 ELSE NULL END) REGISTED_DAY_PAYED_NUM,
+       SUM(CASE WHEN REGISTED_DAY_ACTUAL_PAY IS NOT NULL THEN REGISTED_DAY_ACTUAL_PAY/100 ELSE 0 END) REGISTED_DAY_ACTUAL_PAY,
+       COUNT(CASE WHEN NVL(ONE_MONTH_SUM_ACTUAL_PAY,0)>0 THEN 1 ELSE NULL END) ONE_MONTH_PAYED_NUM,
+       SUM(CASE WHEN ONE_MONTH_SUM_ACTUAL_PAY IS NOT NULL THEN ONE_MONTH_SUM_ACTUAL_PAY/100 ELSE 0 END) ONE_MONTH_SUM_ACTUAL_PAY,
+       COUNT(CASE WHEN NVL(THREE_MONTH_SUM_ACTUAL_PAY,0)>0 THEN 1 ELSE NULL END ) THREE_MONTH_PAYED_NUM,
+       SUM(CASE WHEN THREE_MONTH_SUM_ACTUAL_PAY IS NOT NULL THEN THREE_MONTH_SUM_ACTUAL_PAY/100 ELSE 0 END ) THREE_MONTH_SUM_ACTUAL_PAY,
+       COUNT(CASE WHEN NVL(SIX_MONTH_SUM_ACTUAL_PAY,0)>0 THEN 1 ELSE NULL END ) SIX_MONTH_PAYED_NUM,
+       SUM(CASE WHEN SIX_MONTH_SUM_ACTUAL_PAY IS NOT NULL THEN SIX_MONTH_SUM_ACTUAL_PAY/100 ELSE 0 END ) SIX_MONTH_SUM_ACTUAL_PAY
+	FROM LVMAMA_REPORT.USER_CHANNEL_BASIC T,
+	  (SELECT D.CHANNEL_CODE, D.CHANNEL_NAME
+	          FROM LVMAMA_PET.MARK_CHANNEL D
+	         WHERE D.VALID = 'Y'
+	           AND LAYER = 3
+	   <dynamic>
+	         <isNotNull property="channelId">
+	         	START WITH D.CHANNEL_ID = #channelId#
+	        	CONNECT BY D.FATHER_ID = PRIOR D.CHANNEL_ID
+	         </isNotNull>
+	  </dynamic>     
+	   ) C
+	WHERE C.CHANNEL_CODE(+) = T.CHANNEL_ID
+	 <dynamic>
+	      <isNotNull property="startDate" prepend=" AND ">T.CREATED_DATE &gt;=#startDate#</isNotNull>
+	      <isNotNull property="endDate" prepend=" AND ">T.CREATED_DATE &lt;=#endDate#+1</isNotNull>
+		  <isNotNull property="channelName" prepend=" AND ">T.CHANNEL_ID like '%'||#channelName#||'%'</isNotNull>
+	 </dynamic>
+	 GROUP BY T.CHANNEL_ID, C.CHANNEL_NAME
+	</sql>
+
+	<!--sql id="queryUserRegisterBasicSql" > 
+		SELECT CHANNEL_ID,
+			   SUM(SUM_OUGHT_PAY) SUM_OUGHT_PAY,
+			   SUM(SUM_ACTUAL_PAY) SUM_ACTUAL_PAY,
+			   COUNT(*) NEW_USER_NUM,
+			   (SELECT COUNT(*)
+				  FROM USER_CHANNEL_BASIC UCB
+				 WHERE (UCB.SUM_ACTUAL_PAY IS NOT NULL AND UCB.SUM_ACTUAL_PAY > 0)
+				   AND UCB.CHANNEL_ID = T.CHANNEL_ID
+				   <isNotNull prepend="and" property="startDate"> UCB.created_date<![CDATA[>=]]>#startDate# </isNotNull> 
+				   <isNotNull prepend="and" property="endDate"> UCB.created_date<![CDATA[<]]>#endDate#+1 </isNotNull> 
+			   ) NEW_PAYED_USER_NUM,
+			   (SELECT COUNT(*) FROM 
+			   		USER_CHANNEL_BASIC UCB WHERE REGISTED_DAY_ACTUAL_PAY IS NOT NULL
+				   AND UCB.CHANNEL_ID = T.CHANNEL_ID
+				   <isNotNull prepend="and" property="startDate"> UCB.created_date<![CDATA[>=]]>#startDate# </isNotNull> 
+				   <isNotNull prepend="and" property="endDate"> UCB.created_date<![CDATA[<]]>#endDate#+1 </isNotNull> 				   				   
+			   ) REGISTED_DAY_PAYED_NUM,
+			   (SELECT SUM(REGISTED_DAY_ACTUAL_PAY) FROM 
+			   		USER_CHANNEL_BASIC UCB WHERE REGISTED_DAY_ACTUAL_PAY IS NOT NULL
+				   AND UCB.CHANNEL_ID = T.CHANNEL_ID
+				   <isNotNull prepend="and" property="startDate"> UCB.created_date<![CDATA[>=]]>#startDate# </isNotNull> 
+				   <isNotNull prepend="and" property="endDate"> UCB.created_date<![CDATA[<]]>#endDate#+1 </isNotNull> 			   				   
+			   ) REGISTED_DAY_ACTUAL_PAY,	
+			   (SELECT COUNT(*) FROM 
+			   		USER_CHANNEL_BASIC UCB WHERE ONE_MONTH_SUM_ACTUAL_PAY IS NOT NULL
+				   AND UCB.CHANNEL_ID = T.CHANNEL_ID
+				   <isNotNull prepend="and" property="startDate"> UCB.created_date<![CDATA[>=]]>#startDate# </isNotNull> 
+				   <isNotNull prepend="and" property="endDate"> UCB.created_date<![CDATA[<]]>#endDate#+1 </isNotNull> 				   				   
+			   ) ONE_MONTH_PAYED_NUM,
+			   (SELECT SUM(ONE_MONTH_SUM_ACTUAL_PAY) FROM 
+			   		USER_CHANNEL_BASIC UCB WHERE ONE_MONTH_SUM_ACTUAL_PAY IS NOT NULL
+				   AND UCB.CHANNEL_ID = T.CHANNEL_ID
+				   <isNotNull prepend="and" property="startDate"> UCB.created_date<![CDATA[>=]]>#startDate# </isNotNull> 
+				   <isNotNull prepend="and" property="endDate"> UCB.created_date<![CDATA[<]]>#endDate#+1 </isNotNull> 				   				   
+			   ) ONE_MONTH_SUM_ACTUAL_PAY,				   
+			   (SELECT COUNT(*) FROM 
+			   		USER_CHANNEL_BASIC UCB WHERE THREE_MONTH_SUM_ACTUAL_PAY IS NOT NULL
+				   AND UCB.CHANNEL_ID = T.CHANNEL_ID
+				   <isNotNull prepend="and" property="startDate"> UCB.created_date<![CDATA[>=]]>#startDate# </isNotNull> 
+				   <isNotNull prepend="and" property="endDate"> UCB.created_date<![CDATA[<]]>#endDate#+1 </isNotNull> 			   				   
+			   ) THREE_MONTH_PAYED_NUM,
+			   (SELECT SUM(THREE_MONTH_SUM_ACTUAL_PAY) FROM 
+			   		USER_CHANNEL_BASIC UCB WHERE THREE_MONTH_SUM_ACTUAL_PAY IS NOT NULL
+				   AND UCB.CHANNEL_ID = T.CHANNEL_ID
+				   <isNotNull prepend="and" property="startDate"> UCB.created_date<![CDATA[>=]]>#startDate# </isNotNull> 
+				   <isNotNull prepend="and" property="endDate"> UCB.created_date<![CDATA[<]]>#endDate#+1 </isNotNull> 			   				   
+			   ) THREE_MONTH__SUM_ACTUAL_PAY,
+			   (SELECT COUNT(*) FROM 
+			   		USER_CHANNEL_BASIC UCB WHERE SIX_MONTH_SUM_ACTUAL_PAY IS NOT NULL
+				   AND UCB.CHANNEL_ID = T.CHANNEL_ID
+				   <isNotNull prepend="and" property="startDate"> UCB.created_date<![CDATA[>=]]>#startDate# </isNotNull> 
+				   <isNotNull prepend="and" property="endDate"> UCB.created_date<![CDATA[<]]>#endDate#+1 </isNotNull> 				   				   
+			   ) SIX_MONTH_PAYED_NUM,
+			   (SELECT SUM(SIX_MONTH_SUM_ACTUAL_PAY) FROM 
+			   		USER_CHANNEL_BASIC UCB WHERE SIX_MONTH_SUM_ACTUAL_PAY IS NOT NULL
+				   AND UCB.CHANNEL_ID = T.CHANNEL_ID
+				   <isNotNull prepend="and" property="startDate"> UCB.created_date<![CDATA[>=]]>#startDate# </isNotNull> 
+				   <isNotNull prepend="and" property="endDate"> UCB.created_date<![CDATA[<]]>#endDate#+1 </isNotNull> 				   				   
+			   ) SIX_MONTH__SUM_ACTUAL_PAY				   			   		   
+		  FROM USER_CHANNEL_BASIC t
+		<dynamic prepend=" WHERE ">
+			<isNotNull prepend="and" property="startDate"> t.created_date<![CDATA[>=]]>#startDate# </isNotNull> 
+			<isNotNull prepend="and" property="endDate"> t.created_date<![CDATA[<]]>#endDate#+1 </isNotNull> 
+			<isNotNull prepend="and" property="channelId"> t.CHANNEL_ID = #channelId#  </isNotNull>
+			<isNotNull property="channelIdList">
+				<iterate prepend="and" property="channelIdList" open="(" close=")" conjunction=" or ">
+          			t.CHANNEL_ID = #channelIdList[]#
+        		</iterate> 	
+			</isNotNull>
+		</dynamic>
+		group by CHANNEL_ID
+	</sql-->
+
+	<select id="countUserRegisterBasic" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(*) from (
+			<include refid="queryUserRegisterBasicSql"/>
+		)
+	</select>
+
+	<select id="queryUserRegisterBasic" resultMap="BaseResultMap" parameterClass="java.util.Map"> 
+		<isNotEmpty property="_startRow"> 
+			SELECT * FROM ( 
+		</isNotEmpty> 
+		SELECT 
+			rownum r, 
+			info.* from ( 
+			(SELECT 
+			p.* 
+			from ( 
+				<include refid="queryUserRegisterBasicSql" /> 
+			) p 
+		ORDER BY 
+			NEW_USER_NUM DESC, 
+			NEW_PAYED_USER_NUM DESC, 
+			SUM_ACTUAL_PAY 
+			DESC, 
+			REGISTED_DAY_PAYED_NUM DESC, 
+			REGISTED_DAY_ACTUAL_PAY DESC, 
+			ONE_MONTH_PAYED_NUM DESC, 
+			ONE_MONTH_SUM_ACTUAL_PAY DESC, 
+			THREE_MONTH_PAYED_NUM DESC, 
+			THREE_MONTH_SUM_ACTUAL_PAY DESC, 
+			SIX_MONTH_PAYED_NUM DESC, 
+			SIX_MONTH_SUM_ACTUAL_PAY DESC) info) 
+		<dynamic prepend=" WHERE "> 
+			<isNotEmpty property="_endRow">rownum &lt;= #_endRow#</isNotEmpty> 
+		</dynamic> 
+		<isNotEmpty property="_startRow"> )	</isNotEmpty> 
+		<dynamic prepend=" WHERE "> 
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;= #_startRow# </isNotEmpty> 
+		</dynamic> 
+	</select> 
+		
+	<select id="countNewUser" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		select SUM(NEW_USER_NUM) from (
+			<include refid="queryUserRegisterBasicSql"/>
+		) 	
+	</select>	
+</sqlMap>

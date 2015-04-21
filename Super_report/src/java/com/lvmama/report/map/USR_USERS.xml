@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="USR_USERS">
+  
+  <select id="countByChannel" resultClass="java.lang.Long">
+  	select count(*) from LVMAMA_PET.USER_USER where 1=1 
+  	<dynamic>
+  	 <isNotEmpty prepend="and" property="channel">
+  	  group_id=#channel# 
+  	 </isNotEmpty>
+  	 <isNotEmpty prepend="and" property="date">
+  	 	to_char(created_date,'yyyy-MM-dd') = #date#
+  	 </isNotEmpty>
+  	</dynamic>
+  	
+  </select>
+  
+</sqlMap>

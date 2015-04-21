@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>用户点评</title>
+<#include "../common/define_v5.html">
+<link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/detail.css">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/ui/idangerous.swiper.css">
+<!-- 定义freemarker 标签 -->
+<#assign commentScore= "com.lvmama.clutter.utils.CommentScoreMethod"?new()>
+<style>
+.lv-evaluate-title , .lv-evaluate-list{margin:0 10px}
+</style>
+</head>
+
+<body>
+<!--  头部-->
+<#if mobileProduct?? && mobileProduct.productId??>
+ <script type="text/javascript">
+	 var siteFlag=3;
+	 var productId='${mobileProduct.productId!}';
+ </script>
+</#if>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/header.js"></script>
+<div id="wrapper">
+    <div id="content">
+    	<div class="lv-project-detail">
+		    <div class="lv-evaluate">
+	               <!-- 如果总条数为0 ，不显示 -->
+	               <#if mobileProduct?? && mobileProduct.cmtNum??>
+	                <div class="lv-evaluate-sum">
+	                    <div class="t_p1">
+	                        <h3>总评</h3>
+	                        <p><strong class="f-color-1"><#if mobileProduct.avgScore??>${mobileProduct.avgScore}<#else>0.0</#if></strong>分</p>
+	                        <p><#assign avgscore =commentScore("${mobileProduct.avgScore!}")/><span class="lv-score lv-score-${avgscore!}"></span></p>
+	                    </div>
+	                    <div class="t_p2">
+	                        <#if mobileProduct.placeCmtScoreList?? && mobileProduct.placeCmtScoreList?size&gt;0> 
+	                        	<#list mobileProduct.placeCmtScoreList as item>
+	                        		<#if !item.main>
+										<p>${item.name!}
+											<#assign score = commentScore("${item.score!}")/>
+											<span class="lv-score lv-score-${score!}"></span>
+											<span class="v-item-score">${item.score?default("0.0")}分</span>
+										</p>
+									</#if>
+								</#list>
+							</#if>
+	                    </div>
+	                </div>
+	               </#if>
+	               <!-- 点评  -->
+	               <#if commentList?? && commentList?size&gt;0 > 
+	                <div class="lv-evaluate-title">
+	                    <span>驴友点评</span>&nbsp;(${mobileProduct.cmtNum!})
+	                </div>
+	                <ul id="data_list" class="lv-evaluate-list">
+	                    <input type="hidden" value="1" id="page" name="page">
+	                    <input type="hidden" value="${productId!}" id="productId" name="productId">
+	                    <#list commentList as comment>
+		                    <li>
+		                        <div class="lv-user-name">${comment.userName}</div>
+		                        <div class="lv-user-score">
+		                            <div class="fl">
+		                            	<#assign dscore = commentScore("${comment.avgScore!}")/> 
+		                                <span class="lv-score lv-score-${dscore!}"></span>
+		                                <#if comment.avgScore != '' && comment.avgScore != '0'><span class="f-color-1">${comment.avgScore!}</span>分</#if>
+		                                <#if comment.experience><span class="lv-evaluate-state">验</span></#if>
+		                                <#if comment.best><span class="lv-evaluate-state">精</span></#if>
+		                            </div>
+		                            <div class="fr">
+		                            	<#if comment.cashRefundYuan?? && comment.cashRefundYuan !='' && comment.cashRefundYuan !='0'>
+			                               	 奖金:${comment.cashRefundYuan!}
+										</#if>
+										<#if comment.point !=''>
+			                               	 积分:${comment.point!}
+										</#if>
+		                            </div>
+		                        </div>
+		                        <div class="lv-user-content">${comment.content!}</div>
+		                        <div class="lv-user-time">${comment.createdTimeStr!}</div>
+		                    </li>
+	                    </#list>
+	                </ul>
+	             </#if>
+	             <#if !isLastPage>
+	                <a href="javascript:void(0);" id="show_more" onclick="getCommentData()" class="view_more btn">查看更多</a>
+	             </#if>
+	        </div>
+		</div>
+	</div>
+	 <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+</div>
+
+<!--电话弹出层 st-->
+	<div class="telBox">
+    	<div class="telBox_con"></div>
+        <div class="p">
+            <span>咨询预订的产品ID为3629</span>
+            <p>4001-570-570</p>
+            <a href="javascript:void(0);" class="ic_ret" _dele=""></a>
+            <a href="tel:4001-570-570" class="ic_tel"></a>
+        </div>
+    </div>
+<!--电话弹出层 end-->
+<div class='model'></div>
+ <script>
+	 function getCommentData(){
+	 	//lvToast(true,LT_LOADING_MSG,10000);
+	 	var productId = $("#productId").val();
+	 	var page = $("#page").val();
+	 	var param = {"productId":productId,"page":++page,"ajax":true};
+	 	$.get(contextPath+"/freetrip/comment_comm.htm",param,function(data){
+	 		$(".lv-toast-success").hide(); // 隐藏遮罩层
+	 		$("#data_list").append(data);
+	 		$("#page").val($("#tmp_p").val());
+	 		$("#tmp_p").remove();
+	 		if($("#lastPage_flag").length != 0){
+	 			$("#show_more").hide();
+	 		}
+	 	});
+	 };
+ </script>
+</body>
+</html>

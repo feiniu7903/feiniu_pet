@@ -1,0 +1,17 @@
+   <#if mlist?exists>
+          <#list mlist?keys as key> 
+	            <#if mlist.get(key)?? && (key =="cities" || key =="productTypes" || key =="sortTypes")>
+				    <div class="lv-tab" style="display:none;">
+				    <ul class="lv-cascade-list bindclick">
+			          <#list mlist.get(key) as c>
+			               <#if key=="cities">
+						        <li id="li${c.placeId}" data-value="${c.placeId}" data-type="${key}">${c.name}</li>
+			               <#else >
+			               		<li id="li${c.value}" data-value="${c.value}" data-type="${key}">${c.title}</li>
+			               </#if>
+			          </#list>
+			        </ul>
+				    </div>
+	            </#if>
+           </#list>
+       </#if>

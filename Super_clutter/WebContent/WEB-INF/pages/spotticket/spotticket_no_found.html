@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>门票_团购价格_地址-驴妈妈手机预订</title>
+    <meta name="description" content="">
+    <#include "../common/define_v5.html">
+
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/detail.css">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/ui/idangerous.swiper.css">
+    <script src="http://pic.lvmama.com/js/wap/js/ui/swiper.min.js"></script>
+    <script src="${request.contextPath}/js/spotTicket.js"></script>
+	<script src="${request.contextPath}/js/order_back.js"></script>
+</head>
+<!--  头部-->
+<header class="header">景点详情
+	<span class="icon-back"></span>
+	<a style="color:#fff" href="http://${hostName}/"><div class="out_address"><span class="icon-svg14"></span></div></a>
+</header>
+<body>
+	<div id="wrapper">
+		<#assign no_data_msg="没有找到合适的景点">
+   		<#include "../common/no_data_list.html">
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+	</div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+</body>
+</html>

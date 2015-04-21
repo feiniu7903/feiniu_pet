@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_MESSAGE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComMessage" >
+    <result column="MESSAGE_ID" property="messageId" />
+    <result column="SENDER" property="sender" />
+    <result column="RECEIVER" property="receiver" />
+    <result column="CONTENT" property="content" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="BEGIN_TIME" property="beginTime" />
+    <result column="STATUS" property="status" />
+  </resultMap>
+  
+  <sql id="selectParam">
+	  	<isNotEmpty property="messageId" prepend=" AND ">
+			mesage.MESSAGE_ID =#messageId# 
+		</isNotEmpty>
+		<isNotEmpty property="sender" prepend=" AND ">
+			mesage.SENDER =#sender# 
+		</isNotEmpty>
+		<isNotEmpty property="receiver" prepend=" AND ">
+			mesage.RECEIVER =#receiver# 
+		</isNotEmpty>
+		<isNotEmpty property="notSender" prepend=" AND ">
+			mesage.SENDER !=#notSender# 
+		</isNotEmpty>
+		 <isNotEmpty prepend=" and" property="createBeginDate">
+			 mesage.CREATE_TIME &gt; = #createBeginDate#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="createEndDate">
+			mesage.CREATE_TIME &lt; = #createEndDate#
+		</isNotEmpty>
+		 <isNotEmpty prepend=" and" property="beginStartDate">
+			 mesage.BEGIN_TIME &gt; = #beginStartDate#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="beginEndDate">
+			mesage.BEGIN_TIME &lt; = #beginEndDate#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="status">
+			mesage.STATUS = #status#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="nullBeginTime">
+			mesage.BEGIN_TIME is null
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="notNullBeginTime">
+			mesage.BEGIN_TIME is not null
+		</isNotEmpty>
+  </sql>
+  
+  <select id="selectByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+     SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		
+		   select * FROM COM_MESSAGE mesage where 1=1
+		   	<include refid="selectParam"/>
+    		 order by mesage.MESSAGE_ID desc
+    		 
+      )T WHERE ROWNUM &lt;= #maxResults#)
+	  WHERE ROWNUM1 &gt;=#skipResults# 
+  </select>
+  
+  <select id="selectByPk" resultMap="BaseResultMap" resultClass="com.lvmama.comm.pet.po.pub.ComMessage" parameterClass="java.lang.Long" >
+		 select * FROM COM_MESSAGE mesage where MESSAGE_ID=#messageId#
+  </select>
+  
+  <select id="selectByParamBeginTimeDesc" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+     	SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		
+  				 select * FROM COM_MESSAGE mesage where 1=1
+   				<include refid="selectParam"/>
+    	 		order by mesage.BEGIN_TIME desc
+    	 		
+      )T WHERE ROWNUM &lt;= #maxResults#)
+		WHERE ROWNUM1 &gt;=#skipResults# 
+  </select>
+  
+   <select id="selectByParamCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+   	select count(*) FROM COM_MESSAGE mesage where 1=1
+   	<include refid="selectParam"/>
+  </select>
+  
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.pub.ComMessage" >
+    update COM_MESSAGE
+    set
+      SENDER = #sender#,
+      RECEIVER = #receiver#,
+      CONTENT = #content#,
+      CREATE_TIME = #createTime#,
+      BEGIN_TIME = #beginTime#,
+      STATUS = #status#
+    where MESSAGE_ID = #messageId#
+  </update> 
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComMessage" >
+    <selectKey resultClass="java.lang.Long" keyProperty="messageId" >
+      select COM_MESSAGE_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into COM_MESSAGE(MESSAGE_ID, SENDER, RECEIVER, CONTENT,CREATE_TIME,BEGIN_TIME,STATUS)
+	values (#messageId#, #sender#, #receiver#, #content#, #createTime#, #beginTime#, #status#)
+  </insert>
+</sqlMap>

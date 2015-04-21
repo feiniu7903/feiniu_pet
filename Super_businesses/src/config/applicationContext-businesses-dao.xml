@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>  
+  	<bean id="baseIbatisDao" class="com.lvmama.comm.BaseIbatisDAO" abstract="true">
+		<property name="sqlMapClient">
+	      <ref bean="sqlMapClient"/>
+	    </property>
+		<property name="dataSource">
+	      <ref bean="mysqldataSource"/>
+	    </property>
+	</bean>
+	   <bean id="baseIbatisDao2" class="com.lvmama.comm.BaseIbatisDAO" abstract="true">
+        <property name="sqlMapClient">
+          <ref bean="sqlMapClient2"/>
+        </property>
+        <property name="dataSource">
+          <ref bean="mysqldataSource2"/>
+        </property>
+    </bean>
+        <bean id="baseIbatisDao3" class="com.lvmama.comm.BaseIbatisDAO" abstract="true">
+        <property name="sqlMapClient">
+          <ref bean="sqlMapClient3"/>
+        </property>
+        <property name="dataSource">
+          <ref bean="mysqldataSource3"/>
+        </property>
+    </bean>
+    <!--  论坛 -->
+ 	<bean id="bbsPostDao" class="com.lvmama.businesses.review.dao.BbsPostDao" parent="baseIbatisDao"></bean>
+ 	<bean id="bbsThreadDao" class="com.lvmama.businesses.review.dao.BbsThreadDao" parent="baseIbatisDao"></bean>
+ 	<bean id="bbsReviewKeywordDao" class="com.lvmama.businesses.review.dao.BbsReviewKeywordDao" parent="baseIbatisDao"></bean>
+ 	<!-- 攻略 -->
+ 	<bean id="glArticleDao" class="com.lvmama.businesses.review.dao.GlArticleDao" parent="baseIbatisDao2"></bean>
+ 	<bean id="glCommentDao" class="com.lvmama.businesses.review.dao.GlCommentDao" parent="baseIbatisDao2"></bean>
+ 	<bean id="glReviewKeywordDao" class="com.lvmama.businesses.review.dao.GlReviewKeywordDao" parent="baseIbatisDao2"></bean>
+ 	
+ 	<!-- 资讯 -->
+ 	 <bean id="phpcmsCommentDao" class="com.lvmama.businesses.review.dao.PhpcmsCommentDao" parent="baseIbatisDao3"></bean>
+ 	 <bean id="phpcmsContentDao" class="com.lvmama.businesses.review.dao.PhpcmsContentDao" parent="baseIbatisDao3"></bean>
+ 	  <bean id="phpReviewKeywordDao" class="com.lvmama.businesses.review.dao.PhpReviewKeywordDao" parent="baseIbatisDao3"></bean>
+ 	 
+</beans>  

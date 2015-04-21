@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_FOR_PAYMENT_SMS" >
+	<resultMap class="com.lvmama.comm.bee.po.ord.OrdOrderForPaymentSms" id="BaseResultMap">
+		<result property="forPaymentSmsId" column="FOR_PAYMENT_SMS_ID"/>
+		<result property="orderId" column="ORDER_ID"/>
+		<result property="mobile" column="MOBILE"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="endTime" column="END_TIME"/>
+		<result property="smsCode" column="SMS_CODE"/>
+		<result property="status" column="STATUS"/>
+	</resultMap>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderForPaymentSms">
+		<selectKey keyProperty="forPaymentSmsId" resultClass="java.lang.Long">
+			select ORD_ORDER_FOR_PAYMENT_SMS_SEQ.nextval from dual
+		</selectKey>
+		insert into ORD_ORDER_FOR_PAYMENT_SMS(FOR_PAYMENT_SMS_ID,ORDER_ID,MOBILE,CREATE_TIME,END_TIME,SMS_CODE,STATUS)
+		values(#forPaymentSmsId#,#orderId#,#mobile#,sysdate,#endTime#,#smsCode#,#status#) 
+	</insert>
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderForPaymentSms">
+		update ORD_ORDER_FOR_PAYMENT_SMS
+			set STATUS = #status#
+			where FOR_PAYMENT_SMS_ID =#forPaymentSmsId#
+	</update>
+	<select id="selectByMobileAndCode" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderForPaymentSms" resultMap="BaseResultMap">
+		select * from ORD_ORDER_FOR_PAYMENT_SMS 
+			where MOBILE =#mobile#
+			AND SMS_CODE =#smsCode#
+			AND sysdate &lt; END_TIME
+			ORDER BY FOR_PAYMENT_SMS_ID DESC
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>我的点评</title>
+<#include "../common/define.html">
+<script src="${request.contextPath!}/js/my.js"></script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a  href="javascript:history.back();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">我的点评</div>
+  <section class="header_alice">
+   		<a href="http://${hostName}" class="btn1"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a>
+   </section>
+</div>
+<div class="lv-search lv-media-width lv-seach-mheight">
+  <ul class="lv-cascade-search">
+    <li class="lv-li-row2"><a href="javascript:void(0);">
+      <div class="lv-cascade-icongrey"></div>
+      <span class="lv-change-color lv-color-01">待点评</span><img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a></li>
+    <li class="lv-li-row2"><a href="javascript:void(0);">
+      <div class="lv-cascade-icongrey" style="display:none;"></div>
+      <span class="lv-change-color">已点评</span></a></li>
+  </ul>
+</div>
+<div class="lv-wrapper lv-media-width  message"> 
+  
+  <!--未点评-->
+  <div class="lv-tab">
+      <#if unCommentList ?? && unCommentList?size&gt;0>
+          <#list unCommentList as comment>
+		       <div class="lv-box clear">
+				      <div class="lv-order-title lv-padding-x10 lv-fontsize-12">订单号：${comment.orderId!} 
+				      	 <a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/user/add_evaluate.htm?orderId=${comment.orderId!}');">
+				      		<span class="lv-evaluate-icon lv-pull-right">写点评</span>
+				      	</a>
+				      </div>
+				      <div class="lv-order-content clear">
+				      <#if !comment.productType?? >
+				        <a  class="lv-displayblock clear" href="javascript:void(0);">
+			          <#elseif comment.productType=="TICKET">
+			         	<a  class="lv-displayblock clear" href="javascript:void(0);" onclick="union_skip('http://${hostName}/ticket/piao-${comment.placeId!}/');">
+				      <#else>
+				        <a  class="lv-displayblock clear" href="javascript:void(0);" onclick="union_skip('http://${hostName}/product/${comment.productId!}/');">
+				      </#if>
+				        <div class="lv-order-icon  lv-pull-left"><img src="${comment.absoluteImgUrl!}"></div>
+				        <div class="lv-order-desc lv-pull-left lv-fontsize-12">
+				          <div style="color:#333333;">${comment.productName!}</div>
+				          <div class="f_9f9f9f">总额：<span class="lv-color">&yen; ${comment.totalPrice!}</span></div>
+				          <#if comment.cashRefundAble!>
+				             <#if comment.cashRefundYuan?? && comment.cashRefundYuan !="0">
+				                <div class="f_9f9f9f">返现：点评且审核通过后奖<span class="lv-color">￥${comment.cashRefundYuan!}</span>元
+				                   <#if comment.newOrder>
+				                                                        （ <span class="lv-color">比网站多返￥${comment.mobileCashRefund!}元</span>）
+				                   </#if>
+				                </div>
+				             </#if>
+				          <#else>
+				               <div class="f_9f9f9f">返现：<span class="lv-color">该产品无点评返现</span></div>
+				          </#if>
+				          <div class="f_9f9f9f">游玩时间 ：${comment.visitTime!}</div>
+				           <img class="lv-next-01 lv-redirect-next" src="${prefix_pic_url!}/img/next.png" />
+				        </div>
+			            </a>
+				      </div>
+			    </div>
+	        </#list>
+	   <#else>
+	       <#assign no_data_msg="还没有待点评的景点或度假线路">
+		   <#include "../common/no_data_list.html">
+       </#if>
+  </div>
+  <!--已点评-->
+  <div class="lv-tab" style="display:none;">
+    <#if commentList ?? && commentList?size&gt;0>
+         <input type="hidden" name="page" id="page" value="${page!}">
+        <div id="data_list">
+          <#list commentList as comment>
+			     <div class="lv-box clear">
+			      <#if !comment.productType??>
+			          <#if comment.placeId??>
+			          	<a  class="lv-displayblock clear" href="javascript:void(0);" onclick="union_skip('http://${hostName}/ticket/piao-${comment.placeId!}/');">
+			          <#elseif comment.productId??>
+			             <a  class="lv-displayblock clear" href="javascript:void(0);" onclick="union_skip('http://${hostName}/product/${comment.productId!}/');">
+			          <#else>
+			             <a  class="lv-displayblock clear" href="javascript:void(0);">
+			          </#if>
+			      <#elseif comment.productType=="TICKET">
+		         	<a  class="lv-displayblock clear" href="javascript:void(0);" onclick="union_skip('http://${hostName}/ticket/piao-${comment.placeId!}/');">
+			      <#else>
+			        <a  class="lv-displayblock clear" href="javascript:void(0);" onclick="union_skip('http://${hostName}/product/${comment.productId!}/');">
+			      </#if>
+				      <div class="lv-order-title lv-padding-x10 lv-fontsize-12">订单号：${comment.orderId!} 
+				      <span class="lv-evaluate-final lv-pull-right" style="padding-right:4px;">${comment.zhAuditStatu!}</span> </div>
+				      <div class="lv-order-content clear">
+				        <div class="lv-order-icon  lv-pull-left"><img src="${comment.absoluteImgUrl!}"></div>
+				        <div class="lv-order-desc lv-pull-left lv-fontsize-12">
+				         <div style="color:#333333;">${comment.productName!}</div>
+				          <div class="f_9f9f9f">总额：<span class="lv-color">&yen; ${comment.totalPrice!}</span></div>
+				          <#if comment.auditStatu == "AUDIT_GOING">
+				               <div class="f_9f9f9f">返现：点评在审核中，敬请等待</div>
+				          <#elseif comment.auditStatu == "AUDIT_SUCCESS" >  
+				               <#if comment.cashRefundAble!>
+				               <div class="f_9f9f9f">返现：已奖励<span class="lv-color">￥${comment.cashRefundYuan!}</span>元至奖金账户</div>
+				               <#else>
+				                  <div class="f_9f9f9f">返现：该产品无点评返现</div>
+				               </#if>
+				          <#elseif comment.auditStatu == "AUDIT_FAILED" >
+				             <div class="f_9f9f9f">返现：审核未通过，无奖金返现</div>
+				          </#if>
+				          <div class="f_9f9f9f">游玩时间：${comment.visitTime!}</div>
+				           <img class="lv-next-01 lv-redirect-next" src="${prefix_pic_url!}/img/next.png" />
+				        </div>
+				      </div>
+			      </a>
+			    </div>
+	        </#list>
+	      </div>
+	      <!-- 如果不是最后一页  -->
+		   <#if !isLastPage>
+			   <div class="lv-nav-li lv-btn-03" id="show_more">
+			        <a href="javascript:void(0);" onclick="getCommentData();">
+			           <span>查看更多</span>
+			        </a>
+			    </div>
+		    </#if>
+	    <#else>
+	       <#assign no_data_msg="还没有发表过任何点评">
+		   <#include "../common/no_data_list.html">
+       </#if>
+     </div>
+</div>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+</body>
+</html>

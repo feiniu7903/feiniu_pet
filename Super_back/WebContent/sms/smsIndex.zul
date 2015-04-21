@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="短信管理" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="supplier">
+	<tabbox width="99%" tabscroll="false">
+		<tabs>
+			<tab id="waitSendSms" label="待发送短信查询"/>
+			<tab id="sendSms" label="已发送短信查询"/>
+		</tabs>
+		
+		<tabpanels>
+		<tabpanel>
+			<include src="/sms/wait_sms_list.zul"></include>
+			</tabpanel>
+			<tabpanel>
+			<include src="/sms/send_sms_list.zul"></include>
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+</window>
+</zk>

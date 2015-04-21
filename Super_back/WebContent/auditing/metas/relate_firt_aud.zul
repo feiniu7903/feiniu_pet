@@ -1,0 +1,23 @@
+<?page title="meta_first_aud" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./window"?>
+<zk>
+	<window id="window" title="采购产品初审" border="normal" closable="false"
+		apply="com.lvmama.back.web.audit.RelateFirstAudAction">
+		<listbox model="@{saction.auditTaskList}" width="100%">
+			<listhead>
+				<listheader label="初审ID" width="5%" />
+				<listheader label="产品ID" width="5%" />
+				<listheader label="创建时间" width="20%" />
+				<listheader label="操作人" width="8%" />
+				<listheader label="操作内容" />
+			</listhead>
+			<listitem height="25px" self="@{each='permAuditTask' }">
+				<listcell label="@{permAuditTask.taskId }" />
+				<listcell label="@{permAuditTask.objectId }" />
+				<listcell label="@{permAuditTask.createTime }" />
+				<listcell label="@{permAuditTask.createUserName }" />
+				<listcell label="@{permAuditTask.description }" />
+			</listitem>
+		</listbox>
+	</window>
+</zk>

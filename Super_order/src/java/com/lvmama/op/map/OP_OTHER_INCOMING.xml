@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="OP_OTHER_INCOMING" >
+	<resultMap class="com.lvmama.comm.bee.po.op.OpOtherIncoming" id="BaseOpOtherIncoming">
+		<result property="id" column="ID"/>
+		<result property="budgetId" column="BUDGET_ID"/>
+		<result property="travelGroupCode" column="TRAVEL_GROUP_CODE"/>
+		<result property="incomingContent" column="INCOMING_CONTENT"/>
+		<result property="amount" column="AMOUNT"/>
+		<result property="remark" column="REMARK"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createtime" column="CREATETIME"/>
+	</resultMap>
+	
+	<select id="selectOtherIncomingListByParam" resultMap="BaseOpOtherIncoming" parameterClass="java.util.HashMap">
+		select * from OP_OTHER_INCOMING
+		<dynamic prepend="where">
+			<isNotEmpty property="travelGroupCode">
+				TRAVEL_GROUP_CODE = #travelGroupCode#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="selectSumOtherIncomingByParam" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		select sum(AMOUNT) from OP_OTHER_INCOMING
+		<dynamic prepend="where">
+			<isNotEmpty property="travelGroupCode">
+				TRAVEL_GROUP_CODE = #travelGroupCode#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+</sqlMap>

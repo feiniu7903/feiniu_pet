@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_INVOICE_RELATION">
+	<resultMap class="com.lvmama.comm.bee.po.ord.OrdInvoiceRelation" id="BaseResultMap">
+		<result property="relationId" column="ORD_INVOICE_ID"/>
+		<result property="invoiceId" column="INVOICE_ID"/>
+		<result property="orderId" column="ORDER_ID"/>
+	</resultMap>
+	
+	
+	<select id="selectByInvoiceId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+		select * from ORD_INVOICE_RELATION where INVOICE_ID=#invoiceId#
+	</select>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdInvoiceRelation">
+		<selectKey keyProperty="relationId">
+			select ORD_INVOICE_RELATION_ID_SEQ.NEXTVAL from dual
+		</selectKey>
+		INSERT INTO ORD_INVOICE_RELATION(ORD_INVOICE_ID,INVOICE_ID,ORDER_ID)
+			VALUES(#relationId#,#invoiceId#,#orderId#)
+	</insert>
+	
+	<select id="queryRelations" resultMap="BaseResultMap" parameterClass="java.lang.String">
+		<![CDATA[
+			$completeSQL$
+		]]>
+	</select>
+	
+	<select id="selectInvoiceCountByOrderId" parameterClass="com.lvmama.comm.bee.po.ord.OrdInvoiceRelation" resultClass="java.lang.Long">
+		select count(*) from ORD_INVOICE_RELATION ir,ORD_INVOICE invoice
+			where ir.INVOICE_ID = invoice.INVOICE_ID
+			  and ir.ORDER_ID = #orderId#
+			  and invoice.status not in('CANCEL','RED')
+	</select>
+</sqlMap>

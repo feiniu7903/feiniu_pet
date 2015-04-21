@@ -1,0 +1,356 @@
+/* auto complete */
+.iflt_autoCListBox{display:none;position:absolute; z-index:999;  border:1px solid #ddd; background:#fff;}
+.iflt_autoCList li{line-height:20px; border-bottom:1px dotted #ddd; cursor:pointer;}
+.iflt_autoCList  a{display:block; padding:4px;}
+.iflt_autoCList  a:hover,.iflt_autoCrt a{color:#fff; background:#e38}
+.iflt_autoCListBox .auto_pageWrap span{padding:0 5px; margin-right:1px;}
+
+.iflt_autoCListBox .iflt_pageWrap, .iflt_autoCListBox .auto_pageWrap{padding:13px 0; text-align:center; font-size:12px; color:#555;}
+.iflt_autoCListBox .auto_pagePrev i,.auto_pageNext i{display:inline-block; vertical-align:middle; width:0px; height:0px; overflow:hidden;  border-width:4px; border-style:solid; border-color:transparent;}
+.iflt_autoCListBox .auto_pagePrev i{margin:0 4px 0 0; border-left-width:0; border-right-color:#07c;}
+.iflt_autoCListBox .auto_pageNext i{margin:0 0 0 4px; border-right-width:0; border-left-color:#07c;}
+.auto_pageWrap span{display:inline-block; vertical-align:middle;  margin-right:4px; border:1px solid #ddd; cursor:pointer;}
+.iflt_autoCListBox .auto_page_dayBox{display:inline-block; *display:inline;}
+.iflt_autoCListBox .auto_page_dayBox span{color:#07c;}
+.iflt_autoCListBox .auto_page_dayBox span:hover{border:1px solid #f80; color:#f80;}
+.iflt_autoCListBox .auto_page_dayBox span.auto_pageCrt{border:1px solid #f80; color:#fff; background:#f80}
+.iflt_autoCListBox .auto_pageInput{width:30px; padding:2px; margin:0 4px; vertical-align:middle; text-align:center; border:1px solid #abc;}
+.iflt_autoCListBox .auto_pageSure{border-radius:3px; color:#333;}
+
+/* hot city*/
+.hot-city-warp{position:absolute; display:none; width:320px;z-index:9999}
+.hot-city-warp .hot-city{background:#d48;color:#fff;height:25px;line-height:25px;padding:0 0 0 10px}
+.hot-city-warp .hot-city strong{color:#fff}
+.hot-city-warp .hot-city-list{background:#fff;border:1px solid #ddd;border-top:none;overflow:hidden}
+.hot-city-warp .city-list{padding-top:4px;margin-top:0;padding-left:10px;padding:5px 0 7px 10px;list-style-type:none;overflow:hidden;zoom:1}
+.hot-city-warp .city-list li{list-style-type:none;float:left;height:24px;overflow:hidden;display:block;display:list-item;text-align:-webkit-auto;margin-right:6px}
+.hot-city-warp .city-list li a{border:1px solid #fff;display:block;height:22px;line-height:22px;text-align:left;overflow:hidden;width:52px;text-indent:8px;white-space:nowrap;color:#06c}
+.hot-city-warp .city-list li a:hover{background-color:#fef2f9;border:1px solid #fccce7;color:#e08;text-decoration:none;cursor:pointer}
+.layoutfix{display:block;overflow:hidden}
+
+/* calendar */
+.calendar-wrap{position:absolute;z-index:999;overflow:hidden;width:363px;_height:186px;background:#fff;border:1px solid #ccc;box-shadow:0 3px 5px #ccc;font-size:12px;font-family:Verdana,Geneva,sans-serif;padding:5px 5px 0}
+.calendar-month{float:left;padding-bottom:5px;text-align:center}
+.calendar-title{background-color:#d17;color:#fff;font-weight:bold;height:23px;line-height:23px;text-align:center}
+.month-prev{float:left;cursor:pointer;height:18px;width:19px;margin:2px 0 0 5px;background:url(images/prev.png) no-repeat}
+.month-next{float:right;cursor:pointer;height:18px;width:19px;margin:2px 5px 0 0;background:url(images/next.png) no-repeat}
+.calendar-day{margin:0;overflow:hidden;padding-top:5px}
+.calendar-month .weekend{color:#f90;font-weight:bold}
+.calendar-month dt{background-color:#ececec;color:#666;float:left;height:22px;line-height:20px;margin-bottom:2px;width:25px}
+.calendar-day dd{margin:0;padding:0}
+.calendar-day .day-over,.calendar-day .day-no{color:#dbdbdb;cursor:default;font-weight:normal;outline:medium none}
+.calendar-day a{background-color:#fff;color:#005ead;cursor:pointer;float:left;font-size:11px;height:21px;line-height:21px;margin-bottom:1px;padding-right:1px;width:24px;text-decoration:none}
+.calendar-day .day-no:hover{background-color:#fff}
+.calendar-day a:hover{background-color:#629be0;color:#fff}
+.calendar-day .day-selected{background:#d17;color:#fff}
+#calendar0{width:180px}
+#calendar1{width:182px}
+#calendar1 dl{border-left:2px solid #aaa;margin-bottom:-30px;padding-bottom:30px;padding-left:5px}
+.calendar-day .today{background-color:#fff5d1;background-position:0 -82px}
+.calendar-day .day-over,.calendar-day .day-no{color:#dbdbdb;cursor:default;font-weight:normal;outline:medium none}
+.calendar-day .day-over:hover,.calendar-day .day-no:hover{background:#fff;color:#dbdbdb}
+.calendar-day .day-selected:hover{background-color:#629be0;color:#fff}
+
+
+/* search */
+.search_wrap{width:1000px;margin:0 auto; font-family:"����"}
+.searchbox{background:#f6f6f6; border:1px solid #ededed;padding:15px;margin:15px 0;}
+.input_text {margin:0px 5px 0px 5px;border:1px solid #ccc;width:110px;height:23px;padding:0px 0px 0px 5px;line-height:23px; vertical-align: bottom;}
+#searchForm .trainNum{width: 70px;}
+.warning{color:#ff4444; vertical-align:bottom; *vertical-align: middle;}
+.warning-txt{vertical-align: bottom; *vertical-align: middle;}
+.searchBtn{ vertical-align:middle;margin-left:20px;}
+.changeCity{ vertical-align:middle;margin-right:10px;}
+.railway_search_tips{color:#4c4c4c; margin:10px 0 15px;}
+.railway_search_tips b{font-size: 20px; font-family:"Microsoft YaHei",\5FAE\8F6F\96C5\9ED1;}
+.railway_search_tips em{color:#e38; font-size: 14px; font-weight: bold;}
+.train-main{
+    width:785px;
+    float:left;
+}
+
+.search_screen{border:1px solid #ccddee; border-top-color:#9bd; padding:15px 15px 5px; border-top: none;}
+.search_screen_list{ overflow:hidden;zoom:1;}
+.search_screen_list dt{float:left;padding-bottom:5px; display:block; font-weight:700; padding-top: 2px;}
+.search_screen_list dd{float:left;padding-bottom:5px;  display:block; width:688px;}
+.search_screen_list .show_all {float: left;margin: 0 10px 0 0;padding: 2px 4px 0 4px;text-decoration: none;}
+.search_screen_list a.active{background:url(images/activeBg.gif) no-repeat 0 3px; color:#fff;}
+.search_screen_list dd ul {float:left;width:645px;}
+.search_screen_list dd li {float:left;width:110px;}
+.popu-open{ float:right; margin-top: -25px;}
+
+
+.label input{ vertical-align:middle;margin-right:3px;}
+.table_result th{background:#f6f6f6;padding:5px 0 5px 15px; font-weight:normal}
+.table_result td{padding:10px 0 10px 15px; vertical-align:middle; border-bottom:1px solid #ededed;}
+/*.table_result tbody{border-bottom:1px solid #ededed; }*/
+.railway_num{font-size:20px; font-family:Arial;color:#0183b0; display:block;}
+a.railway_station{}
+.icon_down{width:9px;height:5px;background:url(images/icon_railway.gif) no-repeat 0 -44px; display:inline-block;margin-left:2px; vertical-align:middle; _overflow:hidden;}
+.icon_up{width:9px;height:5px;background:url(images/icon_railway.gif) no-repeat 0 -39px; display:inline-block;margin-left:2px; vertical-align:middle; _overflow:hidden; _margin-top:5px;}
+.icon_start,.icon_end,.icon_pass{ background-image:url(images/icon_railway.gif); height:13px; background-repeat:no-repeat; display:inline-block;padding-left:15px; line-height:13px;}
+.icon_srart{ background-position:0 0;}
+.icon_end{ background-position:0 -13px;}
+.icon_pass{ background-position:0 -26px;}
+.railway_time{font-size:16px; font-family:Arial; color:#101010; font-weight:700;}
+ul.railwayBtn{}
+.railwayBtn li{height:26px; overflow:hidden;zoom:1; padding:3px 10px 0 0;}
+.railwayBtn li p{float:left;}
+.railwayBtn li a{float:right;}
+.railwayBtn span{color:#ff6600; font-family:Arial;}
+.railwayBtn span.unable{color: #999;}
+.tbodyShow{background:#f6f6f6;}
+
+.table_result .showBdTd{padding:0;}
+.showBd { margin:0 10px 10px; border:1px solid #dadada; background:#fff; position:absolute; width:384px; color:#333; height: 324px;}
+.showArrow { width:15px; height:8px; display:block; position:absolute; background:url(images/arrow.gif) no-repeat 0 0;top:-8px;left:9px; overflow:hidden; }
+.showListCnTotal { height:31px; background:#f0f0f0; line-height:31px; padding:0 10px; word-spacing:1em; }
+.showList{background:#f8f6f8;padding:5px 10px;}
+.numList .numListTH {border-bottom:1px solid #dadada;}
+.numList { overflow:hidden; zoom:1; clear:both; }
+.numList li { float:left; border-bottom:1px solid #f2f2f2; width:100%; }
+.numList li:hover { background:#f5faff; }
+.numList li span { line-height:26px; float:left; text-align:center }
+.numList li .num_1 { width:35px; padding:0 5px 0 10px; text-align:center;}
+.numList li .num_2 { width:90px; color:#0183b0 }
+.numList li.numListTH .num_2 {color: #000;}
+.numList li.railway_gray  .num_2 { color:#999 }
+.numList li .num_3 { width:80px; }
+.numList li .num_4 { width:70px; }
+.numList li .num_5 { width:80px; }
+.numList li .num_6 { width:65px; }
+.numList li .num_7 { width:65px; }
+.numList li .num_8 { width:65px; }
+.numList li .num_9 { width:105px; }
+.numList li .num_10 { width:105px; }
+.railway_gray { color:#999}
+.page_mini{ text-align:right; padding:2px 0; position: absolute; bottom: 0; right: 0;}
+.page_mini span {display: inline-block;margin: 0 6px;font: 14px/1.5 Arial; cursor:pointer; color:#0183b0;}
+.page_mini .lv_page_dayBox {display: inline-block;}
+span.page_mini_current {color: #e38; cursor: default;  text-decoration:none}
+
+.railwayBtn a{background: url("images/searchBtn2.gif"); width: 52px; height: 22px; display: block;}
+.railwayBtn .nopar{ float:right; background: url("images/searchBtn2_none.gif"); width: 52px; height: 22px; display: block; cursor:default;}
+.railwayBtn .nopar:hover{cursor: default;}
+.pages{margin:30px 0 20px;text-align:right}
+.pages p {display:inline-block;zoom:1;*display:inline;}
+.pages span{display:inline-block;zoom:1;*display:inline;margin-left:5px;padding:0 8px;height:23px;line-height:23px; border:1px solid #cccccc;color:#0183b0;background:#fff}
+.pages .PageSel,.rosestyle .PageSel{font-weight:bold;border:1px solid #df1a7a;color:#fff;background:#df1a7a}
+.pages span:hover,.rosestyle span:hover{border-color:#aabbcc;color:#0183b0;text-decoration:none;background:#f0f5fc; cursor:pointer}
+
+.noResult {border: 1px solid #E3E3E3;color: #555;font-size: 14px;margin: 5px 0;padding: 15px; display:none; overflow: hidden; height: 44px;}
+
+.railway_warning{width:380px;height:26px;background:#fffae4;border:1px solid #ffcc66;color:#ff4444;padding:0px 10px 0px 10px; line-height:26px; overflow:hidden;zoom:1;margin:0 auto 10px;} 
+.railway_warning img{float:right;margin:10px 0 0 0;}
+
+
+
+.train-sidebar{float:right;width:200px;}
+.qa{width:198px;margin-bottom:15px;border:1px solid #ededed}
+.qa h3{height:29px;line-height:29px;padding-left:10px;background:#f6f6f6;border:1px solid #ededed}
+.train-faq h4,.train-faq p b{color:#07c;font-size:12px;font-weight:500;}
+.train-faq p b{color:#f3449d;}
+.train-faq h4{cursor:pointer; line-height: 17px;}
+.train-faq h4 em{white-space: nowrap;overflow: hidden;text-overflow: ellipsis; width: 160px; display: inline-block;}
+.train-faq h4,.train-faq p{padding:0px 0px 0px 20px;}
+.train-faq h4 b,.train-faq p b{float:left;display:inline;margin-left:-20px; font-weight:500; font-family:"arial"}
+.train-faq li p{display:none;line-height:20px; color:#555;}
+.train-faq li.selected p{display:block;}
+.train-faq li{margin:5px;}
+.tabs{position:relative;margin-bottom:10px;border:1px solid #e6e6e6;border-right:none 0;}
+.tabs-nav{position:absolute;top:0;left:0;zoom:1}
+.tabs-nav:after{clear: both;
+    content: " ";
+    display: block;
+    font-size: 0;
+    height: 0;
+    line-height: 0;
+    visibility: hidden;
+    width: 0;}
+.tabs-nav li{float:left;display:inline;*zoom:1; cursor: pointer;}
+.tabs-nav li.selected{border-top: 2px solid #e38;}
+.tabs-nav li{ display:block; float:left; border-right:1px solid #e6e6e6; font-weight:700; font-size:14px; color:#555; text-align:center; width:98px; height:32px; line-height:32px; background:#f6f6f6;}
+.tabs-nav .selected {background:#fff;color:#e38;height:32px; width:99px;}
+.tabs-content{ border-right:1px solid #e6e6e6; border-top:1px solid #e6e6e6; margin-top:32px; padding:10px 10px 5px; }
+.tabcon{display:none}
+.tabs-content .selected{ display:block}
+.tabcon  .list li { overflow:hidden; zoom:1; margin-bottom:10px; }
+.tabcon  .list li img { float:left; }
+.tabcon  .list li p { width:108px; float:right; }
+.con-more{float:right}
+.train-calendar{
+    overflow: hidden;
+}
+.train-calendar ul li{
+    height:50px;
+    text-align:center;
+    border:1px solid #cde;
+    border-top: none;
+    border-bottom:none;
+    zoom: 1;
+    overflow: hidden;
+}
+.cal-left, .cal-right{
+    float:left;
+    width:30px;
+    height:48px;
+    line-height:54px;
+    border-top:1px solid #cde;
+    border-bottom:1px solid #9bd;
+    background:#f3f9ff;
+}
+.cal-left{border-left: 1px solid #cde;}
+.cal-right{border-right: 1px solid #cde; margin-left: -1px; width: 31px;}
+.cal-left i, .cal-right i{ height: 0; width: 0; overflow: hidden; display: inline-block; border-width: 8px;}
+.cal-left i{border-color: transparent #888 transparent transparent; border-style: dashed solid dashed dashed; margin: 15px 0;}
+.cal-right i{border-color: transparent transparent transparent #888; border-style: dashed dashed dashed solid;  margin: 15px 10px; _margin:15px 0 15px 10px;}
+/*.cal-left:hover i{border-color: transparent #e38 transparent transparent; border-style: dashed solid dashed dashed;}*/
+/*.cal-right:hover i{border-color: transparent transparent transparent #e38; border-style: dashed dashed dashed solid;  margin: 0 10px;}*/
+.cal-left i.cal-tri-active{border-color: transparent #08c transparent transparent; border-style: dashed solid dashed dashed;}
+.cal-right i.cal-tri-active{border-color: transparent transparent transparent #08c; border-style: dashed dashed dashed solid;  margin: 15px 10px; _margin:15px 0 15px 10px;}
+.train-calendar a:hover{
+    text-decoration:none;
+}
+/*日期滚动*/
+.cal-days{position: relative; overflow: hidden;width:723px;
+    height:50px; float: left;}
+.cal-days ul{position: absolute;}
+.cal-days ul{
+    width:7280px;
+    height:50px;
+    margin-left: 1px;
+    float: left;
+}
+
+.cal-days ul a{
+    color:#666;
+    font-weight:600;
+    font-size:12px;
+    display: block;
+    width: 104px;
+    height: 50px;
+    background-color: #F3F9FF;
+}
+.cal-days ul a:hover{background-color: #08c; color: #fff;}
+.cal-days ul .cal-active a, .cal-days ul .cal-active a:hover{
+    background-color: #fff;
+    color: #666;
+}
+.cal-days ul em, .cal-days ul i{display: block; font-weight: bold; padding: 0; line-height: 18px;}
+.cal-days ul em{padding-top: 7px; font-family: arial;}
+.cal-days ul i{font-family: microsoft yahei;}
+.cal-days ul li{
+    float:left;
+    display:inline;
+    width:102px;
+    height:48px;
+    margin-left:-1px;
+    border:1px solid #cde;
+    border-bottom-color: #9bd;
+    position: relative;
+    /*border-bottom:none;*/
+    /*border-top:1px solid #cde;;*/
+}
+
+.cal-days ul li span{
+    display:block;
+}
+
+.cal-days ul .cal-active{
+    border-top:2px solid #9bd;
+    border-left-color: #9bd;
+    border-right-color: #9bd;
+    background:#fff;
+    border-bottom: none;
+    z-index: 2;
+}
+
+.train-dailog{
+    width:470px;
+}
+
+.train-dailog-warning{
+    width: 445px;
+    padding: 0 10px;
+    background: none repeat scroll 0 0 #FFFAE4;
+    border: 1px solid #FFCC66;
+    color: #FF4444;
+}
+
+.train-dailog-warning span{
+    color:#e38;
+}
+
+.train-dailog-list{
+    overflow:hidden;
+    width:469px;
+    margin-top:10px;
+    border-left:1px solid #ccc;
+}
+
+.train-dailog-list li{
+    display: inline;
+    float: left;
+    width:92px;
+    border:1px solid #ccc;
+    border-left:none;
+    text-align:center;
+}
+
+.train-dailog-list li a{
+    display:block;
+}
+
+.train-dailog-list li.article{
+    margin-left:-1px;
+    border:1px solid #d17;
+}
+
+.train-dailog .pages{
+    margin:20px 0 0;
+}
+.noResultTxt{
+    float: left;
+    margin-left: 10px;
+}
+.noResultImg{
+    display: block;
+    float: left;
+    margin: 5px 0;
+}
+.noResultCity{font-size: 14px; font-weight: bold;}
+.noResultCity span{color: #e38;}
+/*分页样式*/
+.page_mini{overflow: hidden; text-align: right;}
+.page_mini .lv_pagePrev, .page_mini .lv_pageNext{
+     height: 0; width: 0; overflow: hidden; zoom: 1;  float: right;  display: block; border-width: 4px; margin-top: 8px;
+}
+.page_mini .lv_pagePrev{ border-color:transparent #ccc transparent transparent; border-style: dashed solid dashed dashed;}
+.page_mini .lv_pageNext{ border-color:transparent transparent transparent #ccc; border-style: dashed dashed dashed solid;}
+.showBd .page_mini .lv_pagePrevActive{ border-color:transparent #0183b0 transparent transparent; border-style: dashed solid dashed dashed; width: 0; overflow: hidden;}
+.showBd .page_mini .lv_pageNextActive{border-color:transparent transparent transparent #0183b0; border-style: dashed dashed dashed solid; width: 0; overflow: hidden;}
+.page_mini .lv_page_dayBox{float: right;}
+
+
+dfn i{font-family: arial;}
+.price-load{background: url("http://pic.lvmama.com/img/new_v/ob_yjdy/y_loading.gif") no-repeat; width: 16px; height: 16px; display: inline-block; vertical-align: text-bottom}
+.pop-hot{color: #e38; font-weight: bold; padding: 0 3px;}
+
+.train-tips{color: #999; padding:10px;}
+.activeBody{background-color: #f6f6f6;}
+#js-result tbody:hover{background-color: #f6f6f6;}
+
+/*sort*/
+.sort-tag{cursor:pointer;}
+.sort-tag i{width:8px; height:8px; background:url(images/arrow.png) no-repeat 0 -22px; display:inline-block; overflow:hidden; margin-left: 4px;}
+.sort-tag i.activeUp{background-position:0 -11px;}
+.sort-tag i.activeDown{background-position:0 0;}
+
+th.sort-up i{background-position:0 -11px;}
+th.sort-down i{background-position:0 0;}
+
+/*删选*/
+.search_screen_item a{padding:0 5px 4px 19px; background: url("images/checkbox.png") no-repeat 3px 4px; width: 80px; height: 16px; display: inline-block; vertical-align: bottom;
+overflow: hidden;}
+.search_screen_item a:hover{background-color: #f7b; background-position: 3px -19px; color: #fff; text-decoration: none;}
+.search_screen_item a.inputSelected{background-color: #f7b; background-position: 3px -19px; color: #fff; text-decoration: none;}

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="EBK_PROD_CONTENT" >
+
+  <typeAlias alias="ebkProdContentDO" type="com.lvmama.comm.bee.po.ebooking.EbkProdContent" />
+
+  <resultMap id="ebkProdContentDOResultMap" class="ebkProdContentDO" >
+    <result property="contentId" column="CONTENT_ID" />
+    <result property="productId" column="PRODUCT_ID" />
+    <result property="contentType" column="CONTENT_TYPE" />
+    <result property="content" column="CONTENT" />
+    <result property="productType" column="PRODUCT_TYPE" />
+    <result property="subProductType" column="SUB_PRODUCT_TYPE" />
+    <result property="multiJourneyId" column="MULTI_JOURNEY_ID" />
+  </resultMap>
+
+  <sql id="ebkProdContent_columns" >
+    a1.CONTENT_ID, a1.PRODUCT_ID, a1.CONTENT_TYPE, a1.CONTENT,a1.PRODUCT_TYPE,a1.SUB_PRODUCT_TYPE,a1.MULTI_JOURNEY_ID
+  </sql>
+
+  <sql id="ebkProdContent_do_columns" >
+    a1.CONTENT_ID, a1.PRODUCT_ID, a1.CONTENT_TYPE, a1.CONTENT,a1.PRODUCT_TYPE,a1.SUB_PRODUCT_TYPE,a1.MULTI_JOURNEY_ID
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="contentId" prepend="AND" >
+        <![CDATA[  
+        CONTENT_ID = #contentId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="contentType" prepend="AND" >
+        <![CDATA[  
+        CONTENT_TYPE = #contentType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productType" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_TYPE = #productType#  
+        ]]>  
+      </isNotNull>
+       <isNotNull property="subProductType" prepend="AND" >
+        <![CDATA[  
+        SUB_PRODUCT_TYPE = #subProductType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="multiJourneyId" prepend="AND" >
+        <![CDATA[  
+        MULTI_JOURNEY_ID = #multiJourneyId#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <sql id="doQueryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="contentId" prepend="AND" >
+        <![CDATA[  
+        CONTENT_ID = #contentId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="contentType" prepend="AND" >
+        <![CDATA[  
+        CONTENT_TYPE = #contentType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="content" prepend="AND" >
+        <![CDATA[  
+        CONTENT = #content#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productType" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_TYPE = #productType#  
+        ]]>  
+      </isNotNull>
+       <isNotNull property="subProductType" prepend="AND" >
+        <![CDATA[  
+        SUB_PRODUCT_TYPE = #subProductType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="multiJourneyId" prepend="AND" >
+        <![CDATA[  
+        MULTI_JOURNEY_ID = #multiJourneyId#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <insert id="insert" parameterClass="ebkProdContentDO" >
+  	<selectKey keyProperty="contentId" resultClass="java.lang.Long" >
+       SELECT EBK_PROD_CONTENT_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO EBK_PROD_CONTENT( CONTENT_ID, PRODUCT_ID, CONTENT_TYPE, CONTENT,PRODUCT_TYPE,SUB_PRODUCT_TYPE,MULTI_JOURNEY_ID)
+     VALUES ( #contentId#, #productId#, #contentType#, #content#,#productType#,#subProductType#,#multiJourneyId#)
+  </insert>
+
+	<insert id="insertCopy" parameterClass="ebkProdContentDO" >
+	  	<selectKey keyProperty="multiJourneyId" resultClass="java.lang.Long" >
+	       SELECT EBK_PROD_CONTENT_ID_SEQ.NEXTVAL FROM DUAL
+	    </selectKey>
+	    INSERT INTO EBK_PROD_CONTENT( CONTENT_ID, PRODUCT_ID, CONTENT_TYPE, CONTENT,PRODUCT_TYPE,SUB_PRODUCT_TYPE,MULTI_JOURNEY_ID)
+	     VALUES ( #contentId#, #productId#, #contentType#, #content#,#productType#,#subProductType#,#multiJourneyId#)
+	  </insert>
+
+  <update id="update" parameterClass="ebkProdContentDO" >
+    UPDATE EBK_PROD_CONTENT   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="contentId" prepend="," >
+        <![CDATA[  
+        CONTENT_ID = #contentId#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="productId" prepend="," >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="contentType" prepend="," >
+        <![CDATA[  
+        CONTENT_TYPE = #contentType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="content" prepend="," >
+        <![CDATA[  
+        CONTENT = #content#  
+        ]]>  
+      </isNotNull>
+       <isNotNull property="productType" prepend="," >
+        <![CDATA[  
+        PRODUCT_TYPE = #productType#  
+        ]]>  
+      </isNotNull>
+       <isNotNull property="subProductType" prepend="," >
+        <![CDATA[  
+        SUB_PRODUCT_TYPE = #subProductType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="multiJourneyId" prepend="," >
+        <![CDATA[  
+        MULTI_JOURNEY_ID = #multiJourneyId#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE CONTENT_ID = #contentId#  
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="ebkProdContentDOResultMap" >
+     SELECT 
+    <include refid="ebkProdContent_do_columns" />
+    <![CDATA[  
+     FROM EBK_PROD_CONTENT a1 WHERE CONTENT_ID = #contentId#
+    ]]>  
+  </select>
+
+  <select id="findByByParams" parameterClass="java.util.Map" resultMap="ebkProdContentDOResultMap" >
+     SELECT 
+    <include refid="ebkProdContent_do_columns" />
+     FROM EBK_PROD_CONTENT a1 
+    <include refid="doQueryParams" />
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_CONTENT WHERE CONTENT_ID = #contentId#
+    ]]>  
+  </delete>
+
+  <select id="countByDOExample" parameterClass="ebkProdContentDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(CONTENT_ID) AS num FROM EBK_PROD_CONTENT 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="ebkProdContentDOResultMap" parameterClass="ebkProdContentDO" >
+     SELECT 
+    <include refid="ebkProdContent_do_columns" />
+     FROM EBK_PROD_CONTENT a1 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByProductId" resultMap="ebkProdContentDOResultMap" parameterClass="java.lang.Long" >
+     SELECT 
+    <include refid="ebkProdContent_do_columns" />
+     FROM EBK_PROD_CONTENT a1 WHERE PRODUCT_ID = #productId#
+  </select>
+ 
+</sqlMap>

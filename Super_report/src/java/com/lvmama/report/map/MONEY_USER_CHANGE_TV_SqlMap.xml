@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MONEY_USER_CHANGE_TV">
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.MoneyUserChangeTV">
+		<result column="ID" property="id" />
+		<result column="MONEY_USER_ID" property="moneyUserId" />
+		<result column="AMOUNT" property="amount" />
+		<result column="RECHARGE_BALANCE_BEFORE_CHANGE" property="rechargeBalanceBeforeChange" />
+		<result column="REFUND_BALANCE_BEFORE_CHANGE" property="refundBalanceBeforeChange" />
+		<result column="BONUS_BALANCE_BEFORE_CHANGE" property="bonusBalanceBeforeChange" />
+		<result column="TYPE" property="type" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="BUSINESS_ID" property="businessId" />
+		<result column="ORDER_NO" property="orderNo" />
+		<result column="USER_NAME" property="userName" />
+		<result column="SERIAL" property="serial" />
+		<result column="PAYMENT_GATEWAY" property="paymentGateway" />
+		<result column="MEMO" property="memo" />
+		<result column="DIRECTION" property="direction" />
+		<result column="ACCOUNT_TYPE" property="accountType" />
+	</resultMap>
+	
+	<insert id="insertRefundData" >
+		INSERT INTO 
+			MONEY_USER_CHANGE_TV
+		(
+			ID,
+			MONEY_USER_ID,
+			AMOUNT,
+			DIRECTION,
+			RECHARGE_BALANCE_BEFORE_CHANGE,
+			REFUND_BALANCE_BEFORE_CHANGE,
+			BONUS_BALANCE_BEFORE_CHANGE,
+			TYPE,
+			CREATE_TIME,
+			BUSINESS_ID,
+			ORDER_NO,
+			SERIAL,
+			USER_NAME,
+			ACCOUNT_TYPE
+		)
+		SELECT 
+		  A.CHANGE_ID,
+		  A.CASH_ACCOUNT_ID,
+		  A.AMOUNT,
+	      'DEBIT' AS DIRECTION,
+	      A.RECHARGE_BALANCE_BEFORE_CHANGE,
+	      A.REFUND_BALANCE_BEFORE_CHANGE,
+	      nvl(A.BONUS_BALANCE_BEFORE_CHANGE,0) BONUS_BALANCE_BEFORE_CHANGE,
+	      A.TYPE,
+	      A.CREATE_TIME,
+	      A.BUSINESS_ID,
+	      B.ORDER_ID,
+	      B.SERIAL,
+	      C.USER_NAME,
+	      'CASH' as ACCOUNT_TYPE
+	    FROM 
+	      lvmama_pet.cash_change A,
+	      lvmama_pet.CASH_REFUNDMENT B,
+	      lvmama_super.USER_USER C,
+	      lvmama_pet.cash_account D
+	    WHERE 
+	      A.BUSINESS_ID = B.FINC_REFUNDMENT_ID 
+   		AND C.USER_ID = D.USER_ID
+   		and D.CASH_ACCOUNT_ID = A.CASH_ACCOUNT_ID    
+	    AND TYPE ='REFUND'
+		AND A.CREATE_TIME &gt;= TRUNC(SYSDATE-1)
+		AND A.CREATE_TIME &lt; TRUNC(SYSDATE)
+		AND B.bouns_refundment ='N'
+	</insert>
+	
+	<insert id="insertBonusRefundData" >
+		INSERT INTO 
+			MONEY_USER_CHANGE_TV
+		(
+			ID,
+			MONEY_USER_ID,
+			AMOUNT,
+			DIRECTION,
+			RECHARGE_BALANCE_BEFORE_CHANGE,
+			REFUND_BALANCE_BEFORE_CHANGE,
+			BONUS_BALANCE_BEFORE_CHANGE,
+			TYPE,
+			CREATE_TIME,
+			BUSINESS_ID,
+			ORDER_NO,
+			SERIAL,
+			USER_NAME,
+			ACCOUNT_TYPE
+		)
+		SELECT 
+		  A.CHANGE_ID,
+		  A.CASH_ACCOUNT_ID,
+		  A.AMOUNT,
+	      'DEBIT' AS DIRECTION,
+	      A.RECHARGE_BALANCE_BEFORE_CHANGE,
+	      A.REFUND_BALANCE_BEFORE_CHANGE,
+	      nvl(A.BONUS_BALANCE_BEFORE_CHANGE,0) BONUS_BALANCE_BEFORE_CHANGE,
+	      A.TYPE,
+	      A.CREATE_TIME,
+	      A.BUSINESS_ID,
+	      B.ORDER_ID,
+	      B.SERIAL,
+	      C.USER_NAME,
+	      'BONUS' as ACCOUNT_TYPE
+	    FROM 
+	      lvmama_pet.cash_change A,
+	      lvmama_pet.CASH_REFUNDMENT B,
+	      lvmama_super.USER_USER C,
+	      lvmama_pet.cash_account D
+	    WHERE 
+	      A.BUSINESS_ID = B.FINC_REFUNDMENT_ID 
+   		AND C.USER_ID = D.USER_ID
+   		and D.CASH_ACCOUNT_ID = A.CASH_ACCOUNT_ID    
+	    AND TYPE ='BONUS_REFUND'
+		AND A.CREATE_TIME &gt;= TRUNC(SYSDATE-1)
+		AND A.CREATE_TIME &lt; TRUNC(SYSDATE)
+		AND B.bouns_refundment ='Y'
+	</insert>
+	
+	
+	<insert id="insertPayData" >
+		INSERT INTO 
+			MONEY_USER_CHANGE_TV
+		(
+			ID,
+			MONEY_USER_ID,
+			AMOUNT,
+			DIRECTION,
+			RECHARGE_BALANCE_BEFORE_CHANGE,
+			REFUND_BALANCE_BEFORE_CHANGE,
+			BONUS_BALANCE_BEFORE_CHANGE,
+			TYPE,
+			CREATE_TIME,
+			BUSINESS_ID,
+			ORDER_NO,
+			SERIAL,
+			MEMO,
+			USER_NAME,
+			ACCOUNT_TYPE
+		)
+		SELECT 
+		  A.CHANGE_ID,
+		  A.CASH_ACCOUNT_ID,
+		  A.AMOUNT,
+		  'CREDIT' AS DIRECTION,
+		  A.RECHARGE_BALANCE_BEFORE_CHANGE,
+		  A.REFUND_BALANCE_BEFORE_CHANGE,
+		   nvl(A.BONUS_BALANCE_BEFORE_CHANGE,0) BONUS_BALANCE_BEFORE_CHANGE,
+		  A.TYPE,
+		  A.CREATE_TIME,
+		  A.BUSINESS_ID,
+		  B.ORDER_ID,
+		  B.SERIAL,
+		  DECODE(TYPE,'REFUND_BALANCE_PAY','退款余额支付','充值余额支付') AS MEMO,
+	      C.USER_NAME,
+	       'CASH' as ACCOUNT_TYPE
+		FROM 
+		  lvmama_pet.cash_change A,
+		  lvmama_pet.CASH_PAY B,
+	      lvmama_super.USER_USER C,
+	      lvmama_pet.cash_account D
+		WHERE 
+		  A.BUSINESS_ID = B.CASH_PAY_ID
+   		AND C.USER_ID = D.USER_ID
+   		and D.CASH_ACCOUNT_ID = A.CASH_ACCOUNT_ID
+		AND TYPE in ('REFUND_BALANCE_PAY','RECHARGE_BALANCE_PAY')
+	  	AND A.CREATE_TIME &gt;= TRUNC(SYSDATE-1)
+		AND A.CREATE_TIME &lt; TRUNC(SYSDATE)
+		AND B.pay_from ='MONEY'
+	</insert>
+	
+	
+	<insert id="insertBonusPayData" >
+		INSERT INTO 
+			MONEY_USER_CHANGE_TV
+		(
+			ID,
+			MONEY_USER_ID,
+			AMOUNT,
+			DIRECTION,
+			RECHARGE_BALANCE_BEFORE_CHANGE,
+			REFUND_BALANCE_BEFORE_CHANGE,
+			BONUS_BALANCE_BEFORE_CHANGE,
+			TYPE,
+			CREATE_TIME,
+			BUSINESS_ID,
+			ORDER_NO,
+			SERIAL,
+			MEMO,
+			USER_NAME,
+			ACCOUNT_TYPE
+		)
+		SELECT 
+		  A.CHANGE_ID,
+		  A.CASH_ACCOUNT_ID,
+		  A.AMOUNT,
+		  'CREDIT' AS DIRECTION,
+		  A.RECHARGE_BALANCE_BEFORE_CHANGE,
+	      A.REFUND_BALANCE_BEFORE_CHANGE,
+		  nvl(A.BONUS_BALANCE_BEFORE_CHANGE,0) BONUS_BALANCE_BEFORE_CHANGE,
+		  A.TYPE,
+		  A.CREATE_TIME,
+		  A.BUSINESS_ID,
+		  B.ORDER_ID,
+		  B.SERIAL,
+		  '奖金余额支付' AS MEMO,
+	      C.USER_NAME,
+	      'BONUS' as ACCOUNT_TYPE
+		FROM 
+		  lvmama_pet.cash_change A,
+		  lvmama_pet.CASH_PAY B,
+	      lvmama_super.USER_USER C,
+	      lvmama_pet.cash_account D
+		WHERE 
+		  A.BUSINESS_ID = B.CASH_PAY_ID
+   		AND C.USER_ID = D.USER_ID
+   		and D.CASH_ACCOUNT_ID = A.CASH_ACCOUNT_ID
+		AND TYPE='BONUS_BALANCE_PAY'
+	  	AND A.CREATE_TIME &gt;= TRUNC(SYSDATE-1)
+		AND A.CREATE_TIME &lt; TRUNC(SYSDATE)
+		AND B.pay_from ='BONUS'
+	</insert>
+	
+	
+	<insert id="insertRechargeData">
+		INSERT INTO 
+			MONEY_USER_CHANGE_TV
+		(
+			ID,
+			MONEY_USER_ID,
+			AMOUNT,
+			DIRECTION,
+			RECHARGE_BALANCE_BEFORE_CHANGE,
+			REFUND_BALANCE_BEFORE_CHANGE,
+			BONUS_BALANCE_BEFORE_CHANGE,
+			TYPE,
+			CREATE_TIME,
+			BUSINESS_ID,
+			SERIAL,
+			PAYMENT_GATEWAY,
+	        USER_NAME,
+	        ACCOUNT_TYPE
+		)
+		SELECT 
+		  A.CHANGE_ID,
+		  A.CASH_ACCOUNT_ID,
+		  A.AMOUNT,
+		  'DEBIT' AS DIRECTION,
+		  A.RECHARGE_BALANCE_BEFORE_CHANGE,
+		  A.REFUND_BALANCE_BEFORE_CHANGE,
+		   nvl(A.BONUS_BALANCE_BEFORE_CHANGE,0) BONUS_BALANCE_BEFORE_CHANGE,
+		  A.TYPE,
+		  A.CREATE_TIME,
+		  A.BUSINESS_ID,
+		  B.SERIAL,
+		  D.PAYMENT_GATEWAY,
+	      C.USER_NAME,
+	      'CASH' as ACCOUNT_TYPE
+		FROM 
+		  lvmama_pet.cash_change A,
+		  lvmama_pet.CASH_RECHARGE B,
+	      lvmama_super.USER_USER C,
+	      lvmama_pet.pay_payment D,
+	      lvmama_pet.cash_account E
+		WHERE 
+		  A.BUSINESS_ID = B.CASH_RECHARGE_ID
+	    AND C.USER_ID = E.USER_ID
+	    and E.CASH_ACCOUNT_ID = A.CASH_ACCOUNT_ID   
+		AND TYPE = 'RECHARGE'
+		AND A.CREATE_TIME &gt;= TRUNC(SYSDATE-1)
+		AND A.CREATE_TIME &lt; TRUNC(SYSDATE)
+		AND D.OBJECT_ID = B.CASH_RECHARGE_ID
+		AND D.OBJECT_TYPE = 'CASH_RECHARGE'
+		AND D.STATUS = 'SUCCESS'
+	</insert>
+	
+	<insert id="insertBonusReturnData">
+		INSERT INTO 
+			MONEY_USER_CHANGE_TV
+		(
+			ID,
+			MONEY_USER_ID,
+			AMOUNT,
+			DIRECTION,
+			RECHARGE_BALANCE_BEFORE_CHANGE,
+			REFUND_BALANCE_BEFORE_CHANGE,
+			BONUS_BALANCE_BEFORE_CHANGE,
+			TYPE,
+			CREATE_TIME,
+			BUSINESS_ID,
+			ORDER_NO,
+			MEMO,
+	        USER_NAME,
+	        ACCOUNT_TYPE
+		)
+		SELECT 
+		  A.CHANGE_ID,
+		  A.CASH_ACCOUNT_ID,
+		  A.AMOUNT,
+		  'DEBIT' AS DIRECTION,
+		  A.RECHARGE_BALANCE_BEFORE_CHANGE,
+		  A.REFUND_BALANCE_BEFORE_CHANGE,
+		  nvl(A.BONUS_BALANCE_BEFORE_CHANGE,0) BONUS_BALANCE_BEFORE_CHANGE,
+		  A.TYPE,
+		  A.CREATE_TIME,
+		  A.BUSINESS_ID,
+		  A.BUSINESS_ID as ORDER_NO,
+		  B.COME_FROM,
+	      C.USER_NAME,
+	      'BONUS' as ACCOUNT_TYPE
+		FROM 
+		  lvmama_pet.cash_change A,
+		  lvmama_pet.CASH_BONUS_RETURN B,
+	      lvmama_super.USER_USER C,
+	      lvmama_pet.cash_account E
+		WHERE 
+		  A.BUSINESS_ID = B.RETURN_ID
+	    AND C.USER_ID = E.USER_ID
+	    and E.CASH_ACCOUNT_ID = A.CASH_ACCOUNT_ID   
+		AND TYPE = 'BONUS_RETURN'
+		AND A.CREATE_TIME &gt;= TRUNC(SYSDATE-1)
+		AND A.CREATE_TIME &lt; TRUNC(SYSDATE)
+	</insert>
+	
+	<insert id="insertDrawData">
+		INSERT INTO 
+			MONEY_USER_CHANGE_TV
+		(
+			ID,
+			MONEY_USER_ID,
+			AMOUNT,
+			DIRECTION,
+			RECHARGE_BALANCE_BEFORE_CHANGE,
+			REFUND_BALANCE_BEFORE_CHANGE,
+			BONUS_BALANCE_BEFORE_CHANGE,
+			TYPE,
+			CREATE_TIME,
+			BUSINESS_ID,
+			SERIAL,
+			PAYMENT_GATEWAY,
+	        USER_NAME,
+	        ACCOUNT_TYPE
+		)
+		SELECT 
+		  A.CHANGE_ID,
+		  A.CASH_ACCOUNT_ID,
+		  A.AMOUNT,
+		  'DEBIT' AS DIRECTION,
+		  A.RECHARGE_BALANCE_BEFORE_CHANGE,
+		  A.REFUND_BALANCE_BEFORE_CHANGE,
+		   nvl(A.BONUS_BALANCE_BEFORE_CHANGE,0) BONUS_BALANCE_BEFORE_CHANGE,
+		  A.TYPE,
+		  A.CREATE_TIME,
+		  A.BUSINESS_ID,
+		  B.SERIAL,
+		  B.PAYMENT_GATEWAY,
+	      C.USER_NAME,
+	      'CASH' as ACCOUNT_TYPE
+		FROM 
+		  lvmama_pet.cash_change A,
+		  lvmama_pet.CASH_DRAW B,
+	      lvmama_super.USER_USER C,
+	      lvmama_pet.cash_account D	      
+		WHERE   A.BUSINESS_ID = B.CASH_DRAW_ID
+			AND C.USER_ID = D.USER_ID
+			and D.CASH_ACCOUNT_ID = A.CASH_ACCOUNT_ID   
+			AND TYPE = 'DRAW'
+			AND A.CREATE_TIME &gt;= TRUNC(SYSDATE-1)
+			AND A.CREATE_TIME &lt; TRUNC(SYSDATE)
+	</insert>
+	
+	<!-- 查询条件sql片段 -->
+	<sql id="queryWhereSql">
+		<isNotNull prepend=" AND " property="startDate"> 
+			T1.CREATE_TIME &gt;= TRUNC(#startDate#)
+		</isNotNull>
+		<isNotNull prepend=" AND " property="endDate"> 
+			T1.CREATE_TIME &lt; TRUNC(#endDate# + 1) 
+		</isNotNull>
+		<isNotEmpty property="type" prepend=" AND ">
+			<isEqual property="type" compareValue="PAY">
+				( T1.TYPE = 'REFUND_BALANCE_PAY' OR T1.TYPE = 'RECHARGE_BALANCE_PAY' )
+			</isEqual>
+			<isEqual property="type" compareValue="BONUS_BALANCE_PAY">
+				( T1.TYPE = 'BONUS_BALANCE_PAY' )
+			</isEqual>
+			<isEqual property="type" compareValue="REFUND">
+				( T1.TYPE = 'REFUND')
+			</isEqual>
+			<isEqual property="type" compareValue="BONUS_REFUND">
+				( T1.TYPE = 'BONUS_REFUND')
+			</isEqual>
+			<isEqual property="type" compareValue="RECHARGE">
+				( T1.TYPE = 'RECHARGE' )
+			</isEqual>
+			<isEqual property="type" compareValue="DRAW">
+				( T1.TYPE = 'DRAW' )
+			</isEqual>
+			<isEqual property="type" compareValue="BONUS_RETURN">
+				( T1.TYPE = 'BONUS_RETURN' )
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+	
+	<!-- 分页sql片段 -->
+	<sql id="queryPagingSql">
+		<isNotNull property="_startRow">
+			<isNotNull property="_endRow">
+				T2.RN between #_startRow# AND #_endRow#
+			</isNotNull>
+		</isNotNull>
+	</sql>
+	
+	<!-- 查询总条数 -->
+	<select id="countMoneyUserChangeTV" parameterClass="java.util.Map" resultClass="Long">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			MONEY_USER_CHANGE_TV T1
+		<dynamic prepend=" WHERE ">
+			<include refid="queryWhereSql"/>
+		</dynamic>
+	</select>
+	
+	<!-- 查询列表 -->
+	<select id="queryMoneyUserChangeTV" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		SELECT 
+			T2.* 
+		FROM 
+		(
+			SELECT 
+				T1.*,
+				ROWNUM as RN 
+			FROM 
+				MONEY_USER_CHANGE_TV T1
+			<dynamic prepend=" WHERE ">
+				<include refid="queryWhereSql"/>
+			</dynamic>
+		) T2 
+		<dynamic prepend=" WHERE ">
+			<include refid="queryPagingSql"/>
+		</dynamic>
+	</select>
+	
+	<!-- 查询借款发生总额 -->
+	<select id="sumMoneyUserChangeTVDebitAmount" parameterClass="java.util.Map" resultClass="Long">
+		SELECT 
+			SUM(T1.AMOUNT) 
+		FROM 
+			MONEY_USER_CHANGE_TV T1
+		WHERE 
+			T1.DIRECTION = 'DEBIT'
+			<include refid="queryWhereSql"/>
+	</select>
+	
+	<!-- 查询贷款发生总额 -->
+	<select id="sumMoneyUserChangeTVCreditAmount" parameterClass="java.util.Map" resultClass="Long">
+		SELECT 
+			SUM(T1.AMOUNT) 
+		FROM 
+			MONEY_USER_CHANGE_TV T1
+		WHERE
+			T1.DIRECTION = 'CREDIT'
+		<include refid="queryWhereSql"/>
+	</select>
+	
+	<!-- 查询总余额 -->
+	<select id="sumMoneyUserChangeTVBalanceAmount" parameterClass="java.util.Map" resultClass="Long">
+		SELECT 
+			SUM(T1.RECHARGE_BALANCE_BEFORE_CHANGE) + SUM(T1.REFUND_BALANCE_BEFORE_CHANGE)
+		FROM 
+			MONEY_USER_CHANGE_TV T1
+		<dynamic prepend=" WHERE ">
+			<include refid="queryWhereSql"/>
+		</dynamic>
+	</select>
+</sqlMap>

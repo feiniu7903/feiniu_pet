@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+	<bean id="orderAutoPerformService" class="com.lvmama.passport.service.impl.OrderAutoPerformServiceImpl"/>
+	<!-- commom -->
+	<bean id="usedCodeProcessor" class="com.lvmama.passport.processor.UsedCodeProcessor"/>
+	
+	<!-- 处理完通关码操作之后的回调服务 -->
+	<bean id="processorCallbackService" class="com.lvmama.passport.service.ProcessorCallbackService" abstract="true" />
+	<bean id="applyCodeProcessorCallbackService" class="com.lvmama.passport.service.impl.ApplyCodeProcessorCallbackService" parent="processorCallbackService" />
+	<bean id="destroyCodeProcessorCallbackService" class="com.lvmama.passport.service.impl.DestroyCodeProcessorCallbackService" parent="processorCallbackService" />
+	<bean id="resendCodeProcessorCallbackService" class="com.lvmama.passport.service.impl.ResendCodeProcessorCallbackService" parent="processorCallbackService" />
+	<bean id="updateContactProcessorCallbackService" class="com.lvmama.passport.service.impl.UpdateContactProcessorCallbackService" parent="processorCallbackService" />
+	<bean id="updateContentProcessorCallbackService" class="com.lvmama.passport.service.impl.UpdateContentProcessorCallbackService" parent="processorCallbackService" />
+	<bean id="passBusinessService" class="com.lvmama.passport.service.impl.PassBusinessServiceImpl"/>
+	
+	<!-- 所有专门用来和酒店第三方通信的客户端类写在这里 -->
+	<bean id="longtengjielvClient" class="com.lvmama.hotel.client.longtengjielv.impl.LongtengjielvClientImpl" />
+	<bean id="xinghaiHolidayClient" class="com.lvmama.hotel.client.xinghaiholiday.impl.XinghaiHolidayClientImpl" />
+	
+	<!-- 所有专门用来更新酒店监控里订单状态的服务类写在这里 -->
+	<bean id="longtengjielvUpdateHotelOrderStatusService" class="com.lvmama.hotel.service.longtengjielv.impl.LongtengjielvUpdateHotelOrderStatusService" />
+	<bean id="xinghaiHolidayUpdateHotelOrderStatusService" class="com.lvmama.hotel.service.xinghaiholiday.impl.XinghaiHolidayUpdateHotelOrderStatusServiceImpl" />
+	
+	<!-- 所有专门用来处理酒店产品的服务类写在这里 -->
+	<bean id="baseHotelProductService" class="com.lvmama.hotel.service.BaseHotelProductService" />
+	<bean id="longtengjielvProductService" class="com.lvmama.hotel.service.longtengjielv.impl.LongtengjielvProductServiceImpl" />
+	<bean id="xinghaiHolidayProductService" class="com.lvmama.hotel.service.xinghaiholiday.impl.XinghaiHolidayProductServiceImpl" />
+	<bean id="shholidayProductService" class="com.lvmama.shholiday.service.impl.ShHolidayProductServiceImpl" />
+	<bean id="jinjiangProductService" class="com.lvmama.jinjiang.service.impl.JinjiangProductServiceImpl"/>
+	<bean id="shanghuProductService" class="com.lvmama.shanghu.service.ShanghuProductService"/>
+	<bean id="disneyService" class="com.lvmama.passport.disney.service.impl.DisneyServiceIpml"/>
+	<bean id="updateOrderStatusService" class="com.lvmama.passport.service.impl.UpdateOrderStatusServiceImpl"/>
+	
+	<!-- 所有专门用来处理酒店订单的支持类写在这里 -->
+	<bean id="longtengjielvHotelOrderServiceSupport" class="com.lvmama.hotel.support.longtengjielv.impl.LongtengjielvHotelOrderServiceSupport" />
+	<bean id="xinghaiHolidayHotelOrderServiceSupport" class="com.lvmama.hotel.support.xinghaiholiday.impl.XinghaiHolidayHotelOrderServiceSupport" />
+	
+	<!-- 酒店订单服务类 -->
+	<bean id="hotelOrderService" class="com.lvmama.hotel.service.impl.HotelOrderServiceImpl">
+		<property name="hotelOrderServiceSupportMap">
+			<map>
+				<!-- key填供应商id -->
+				<entry key="${longtengjielv.supplierId}">
+					<ref local="longtengjielvHotelOrderServiceSupport" />
+				</entry>
+				<!-- 
+				<entry key="${xinghaiholiday.supplierId}">
+					<ref local="xinghaiHolidayHotelOrderServiceSupport" />
+				</entry>
+				-->
+			</map>
+		</property>
+	</bean>
+	
+	<!-- Mocks -->
+	<bean id="longtengjielvMock" class="com.lvmama.hotel.mock.LongtengjielvMock" />
+	<bean id="xinghaiHolidayMock" class="com.lvmama.hotel.mock.XinghaiHolidayMock" />
+	
+	
+	<bean id="supplierStockCheckService" class="com.lvmama.service.SupplierStockCheckServiceImpl"/>
+	<bean id="trainDataSyncService" class="com.lvmama.service.TrainDataSyncServiceImpl">
+		<property name="supplierId" value="${train.supplier.id}"/>
+		<property name="bcertificateTargetId" value="${train.supplier.bcertificate_target}"/>
+		<property name="performTargetId" value="${train.supplier.perform_target}"/>
+		<property name="settlmentTargetId"><value>${train.supplier.settlement_target}</value></property>
+		<property name="prodInsuranceId"><value>${train.default.insuranceId.branch_id}</value></property>
+		<property name="userName"><value>${train.super.permuser.username}</value></property>
+	</bean>
+	 <bean id="trainDataSyncServiceImpl" class="com.lvmama.service.TrainDataSyncServiceImpl">
+		<property name="supplierId" value="${train.supplier.id}"/>
+		<property name="bcertificateTargetId" value="${train.supplier.bcertificate_target}"/>
+		<property name="performTargetId" value="${train.supplier.bcertificate_target}"/>
+		<property name="settlmentTargetId"><value>${train.supplier.settlement_target}</value></property>
+		<property name="prodInsuranceId"><value>${train.default.insuranceId.branch_id}</value></property>
+		<property name="userName"><value>${train.super.permuser.username}</value></property>
+	</bean> 
+	
+	<!-- train stock checker -->
+	<bean id="trainCheckStockHandle" class="com.lvmama.service.handle.TrainCheckStockHandle"/>
+	<!-- gugongTicket checker -->
+	<bean id="gugongticketCheckStockHandle" class="com.lvmama.service.handle.GugongTicketCheckHandle"/>
+	<!-- sHhuanleguOrder checker -->
+	<bean id="shhuanleguCheckStockHandle" class="com.lvmama.service.handle.SHhuanleguOrderHandle"/>
+	<bean id="shholidayCheckStockHandle" class="com.lvmama.service.handle.SHHolidayCheckHandle"/>
+	<bean id="jinjiangCheckStockHandle" class="com.lvmama.service.handle.JinjiangCheckHandle"/>
+	<bean id="overseaschinatownCheckStockHandle" class="com.lvmama.service.handle.OverseasChinatownOrderHandle"/>
+	<bean id="renwoyouCheckStockHandle" class="com.lvmama.service.handle.RenwoyouCheckStockHandle"/>
+
+	<!-- linkai 2014-02-25  -->
+	<bean id="yzspringmoonlitCheckStockHandle" class="com.lvmama.service.handle.YzSpringMoonlitCheckStockHandle"/>
+	
+	<bean id="sHHolidayOrderService" class="com.lvmama.shholiday.service.impl.SHHolidayOrderServiceImpl" />
+	<bean id="jinjiangOrderService" class="com.lvmama.jinjiang.service.impl.JinjiangOrderServiceImpl" />
+	
+	<bean id="jinjiangClient" class="com.lvmama.jinjiang.JinjiangClient" />
+	
+	<bean id="shholidayClient" class="com.lvmama.shholiday.ShholidayClient">
+		<property name="userId" value="${shholiday.userid}"/>
+		<property name="password" value="${shholiday.password}"/>
+		<property name="unique" value="${shholiday.source.uniqueID}"/>
+		<property name="externalUserID" value="${shholiday.externalUserInfo.externalUserID}"/>
+		<property name="externalUserName" value="${shholiday.externalUserInfo.ExternalUserName}"/>
+	</bean>
+	<bean id="shholidayNotifyFreeMarkerConfiguration" class="com.lvmama.comm.utils.FreeMarkerConfiguration">
+		<constructor-arg type="java.lang.String" value="com.lvmama.shholiday.action.ShholidayNotifyMessageAction"/>
+		<constructor-arg type="java.lang.String" value="/com/lvmama/shholiday/template/notify"/>
+	</bean>
+	
+	<!-- 所有专门用来处理火车票的支持类写在这里 -->
+	<bean id="notifyMessageService" class="com.lvmama.train.service.ws.NotifyMessageServiceImpl"/>
+	<bean id="trainOrderService" class="com.lvmama.train.service.impl.TrainOrderServiceImpl"/>
+</beans>

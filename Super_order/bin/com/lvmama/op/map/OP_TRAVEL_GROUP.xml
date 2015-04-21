@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="OP_TRAVEL_GROUP" >
+
+	<resultMap class="com.lvmama.comm.bee.po.op.OpTravelGroup" id="BaseOpTravelGroup">
+		<result property="travelGroupId" column="TRAVEL_GROUP_ID"/>
+		<result property="travelGroupCode" column="TRAVEL_GROUP_CODE"/>
+		<result property="productId" column="PRODUCT_ID"/>
+		<result property="productName" column="PRODUCT_NAME"/>
+		<result property="sellPrice" column="SELL_PRICE"/>
+		<result property="settlementPrice" column="SETTLEMENT_PRICE"/>
+		<result property="visitTime" column="VISIT_TIME"/>
+		<result property="initialGroupNum" column="INITIAL_GROUP_NUM" nullValue="0"/>
+		<result property="paySuccessNum" column="PAY_SUCCESS_NUM" nullValue="0"/>
+		<result property="payPartNum" column="PAY_PART_NUM" nullValue="0"/>
+		<result property="payNotNum" column="PAY_NOT_NUM" nullValue="0"/>
+		<result property="initialNum" column="INITIAL_NUM" nullValue="0"/>
+		<result property="makeTime" column="MAKE_TIME"/>
+		<result property="travelGroupStatus" column="TRAVEL_GROUP_STATUS"/>
+		<result property="createTime" column="CREATE_TIME"  nullValue=""/>
+		<result property="groupWordAble" column="GROUP_WORD_ABLE"/>
+		<result property="orgId" column="ORG_ID"/>
+		<result property="memo" column="MEMO" />
+		<result property="days" column="DAYS"/>
+	</resultMap>
+	<resultMap class="com.lvmama.comm.bee.po.op.OpTravelGroup" id="BaseProduct">
+		<result property="productId" column="PRODUCT_ID"/>
+		<result property="productName" column="PRODUCT_NAME"/>
+	</resultMap>
+	<typeAlias type="com.lvmama.comm.bee.po.op.OpTravelGroup" alias="OpTravelGroup"/>
+	<insert id="insert">
+		<selectKey keyProperty="travelGroupId" resultClass="java.lang.Long">
+			SELECT OP_TRAVEL_GROUP_ID_SEQ.nextval from dual
+		</selectKey>
+		INSERT INTO OP_TRAVEL_GROUP
+			(TRAVEL_GROUP_ID,TRAVEL_GROUP_CODE,PRODUCT_ID,PRODUCT_NAME,SELL_PRICE,SETTLEMENT_PRICE,
+				VISIT_TIME,INITIAL_GROUP_NUM,INITIAL_NUM,TRAVEL_GROUP_STATUS,ORG_ID,CREATE_TIME,PAY_SUCCESS_NUM,
+				PAY_PART_NUM,PAY_NOT_NUM, MEMO,DAYS)
+		VALUES(#travelGroupId#,#travelGroupCode#,#productId#,#productName#,#sellPrice#,#settlementPrice#,
+				#visitTime:DATE#,#initialGroupNum#,#initialNum#,#travelGroupStatus#,#orgId#,sysdate,0,0,0,#memo#,#days#)		
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterClass="OpTravelGroup">
+		UPDATE OP_TRAVEL_GROUP SET
+			TRAVEL_GROUP_CODE = #travelGroupCode#,
+			PRODUCT_ID = #productId#,
+			PRODUCT_NAME = #productName#,
+			SELL_PRICE = #sellPrice#,
+			SETTLEMENT_PRICE = #settlementPrice#,
+			VISIT_TIME = #visitTime#,
+			INITIAL_GROUP_NUM = #initialGroupNum#,
+			PAY_SUCCESS_NUM = #paySuccessNum#,
+			PAY_PART_NUM = #payPartNum#,
+			PAY_NOT_NUM = #payNotNum#,
+			INITIAL_NUM = #initialNum#,
+			MAKE_TIME = #makeTime#,
+			TRAVEL_GROUP_STATUS = #travelGroupStatus#,
+			CREATE_TIME = #createTime#,
+			GROUP_WORD_ABLE = #groupWordAble#,
+			DAYS = #days#,
+			MEMO = #memo#
+		WHERE TRAVEL_GROUP_ID=#travelGroupId#
+	</update>
+	
+	
+	<sql id="shareWhereSQL">
+		WHERE TRAVEL_GROUP_ID = #travelGroupId#
+	</sql>
+	<update id="updatePayNot" parameterClass="java.util.HashMap">
+		UPDATE OP_TRAVEL_GROUP SET PAY_NOT_NUM = nvl(PAY_NOT_NUM,0)+#count#
+			<include refid="shareWhereSQL"/>
+	</update>
+	
+	<update id="updatePayNot2Part" parameterClass="java.util.HashMap">
+		UPDATE OP_TRAVEL_GROUP SET PAY_NOT_NUM=nvl(PAY_NOT_NUM,0)-#count#,PAY_PART_NUM=nvl(PAY_PART_NUM,0)+#count#
+			<include refid="shareWhereSQL"/>
+	</update>
+	
+	<update id="updatePayNot2Success" parameterClass="java.util.HashMap">
+		UPDATE OP_TRAVEL_GROUP SET PAY_NOT_NUM=nvl(PAY_NOT_NUM,0)-#count#,PAY_SUCCESS_NUM=nvl(PAY_SUCCESS_NUM,0) + #count#
+			<include refid="shareWhereSQL"/>
+	</update>
+	<update id="updatePayPart2Success" parameterClass="java.util.HashMap">
+		UPDATE OP_TRAVEL_GROUP SET PAY_PART_NUM=nvl(PAY_PART_NUM,0)- #count#,PAY_SUCCESS_NUM=nvl(PAY_SUCCESS_NUM,0) + #count#
+			<include refid="shareWhereSQL"/>
+	</update>
+	<sql id="selectSQL">
+		SELECT o.* FROM OP_TRAVEL_GROUP o
+		<isNotNull property="subProducts">
+		,PROD_PRODUCT p
+		</isNotNull>
+			<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="startVisit">
+				o.VISIT_TIME &gt;= #startVisit#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endVisit">
+				o.VISIT_TIME &lt;= #endVisit#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="travelGroupCode">
+				o.TRAVEL_GROUP_CODE like '%'||#travelGroupCode#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="productId">
+				o.PRODUCT_ID = #productId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="productName">
+				o.PRODUCT_NAME like '%'||#productName#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="travelGroupStatus">
+				o.TRAVEL_GROUP_STATUS = #travelGroupStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="orgId">
+				o.ORG_ID = #orgId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="existsOrder">
+				(nvl(o.PAY_SUCCESS_NUM,0)+nvl(o.PAY_PART_NUM,0)+nvl(o.PAY_SUCCESS_NUM,0))>0
+			</isNotEmpty>
+			<isNotNull property="subProducts" prepend="AND">
+				o.PRODUCT_ID=p.PRODUCT_ID AND p.SUB_PRODUCT_TYPE in
+				<iterate property="subProducts" open="(" close=")" conjunction=",">
+					#subProducts[]#
+				</iterate>
+			</isNotNull>
+			</dynamic>
+	</sql>
+	<select id="selectByPrimary" resultMap="BaseOpTravelGroup" parameterClass="OpTravelGroup">
+		select * from OP_TRAVEL_GROUP 
+		WHERE 1=1  
+		<isNotEmpty property="travelGroupId" prepend="AND">
+			TRAVEL_GROUP_ID = #travelGroupId#
+		</isNotEmpty>				
+		<isNotEmpty property="travelGroupCode" prepend="AND">
+			TRAVEL_GROUP_CODE = #travelGroupCode#
+		</isNotEmpty>
+	</select>
+	<select id="selectByParam" resultMap="BaseOpTravelGroup" parameterClass="java.util.HashMap">
+		SELECT * FROM (SELECT a.*,ROWNUM rn FROM( 
+			<include refid="selectSQL"/>
+			order by o.VISIT_TIME
+			<isNotEmpty property="sort">
+				DESC
+			</isNotEmpty>
+			<isEmpty property="sort">
+				ASC
+			</isEmpty>
+			) a
+			<dynamic prepend="where">
+			<isNotEmpty property="maxResult" prepend="and">
+				ROWNUM &lt;= #maxResult#
+			</isNotEmpty>
+			</dynamic>
+			)<dynamic prepend="where">
+			<isNotEmpty property="skipResult" prepend="and">
+				rn &gt;= #skipResult#
+			</isNotEmpty>		
+			</dynamic>
+	</select>
+	
+	<sql id="selectProductSQL">
+		SELECT op.PRODUCT_ID, op.PRODUCT_NAME
+		  FROM OP_TRAVEL_GROUP op
+		 WHERE op.TRAVEL_GROUP_ID in
+		       (select TRAVEL_GROUP_MAX_ID
+		          from (select PRODUCT_ID, max(TRAVEL_GROUP_ID) as TRAVEL_GROUP_MAX_ID
+		                  from (<include refid="selectSQL"/>) group by PRODUCT_ID))
+	</sql>
+	
+	<select id="selectProductListByParam" resultMap="BaseProduct" parameterClass="java.util.HashMap">
+		select * from (select a.*,ROWNUM rn FROM (<include refid="selectProductSQL"/> ORDER BY PRODUCT_ID DESC) a
+		<dynamic prepend="where">
+			<isNotEmpty property="maxResult" prepend="and">
+				ROWNUM &lt;= #maxResult#
+			</isNotEmpty>
+		</dynamic>)
+		<dynamic prepend="where">
+			<isNotEmpty property="skipResult" prepend="and">
+				rn &gt;= #skipResult#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="selectProductCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		select count(*) from (<include refid="selectProductSQL"/>)
+	</select>
+	
+	<select id="selectByParamCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(*) FROM (
+			<include refid="selectSQL"/>
+		)
+	</select>
+	
+	<select id="selectProductDates" resultMap="BaseOpTravelGroup" parameterClass="java.util.HashMap">
+		select * FROM OP_TRAVEL_GROUP 
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="productId">
+				PRODUCT_ID=#productId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="startVisit">
+				VISIT_TIME &gt;= #startVisit#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="selectGroupTypeByGroupCode" parameterClass="String" resultClass="String">
+		SELECT 
+			B.GROUP_TYPE
+  		FROM 
+  			OP_TRAVEL_GROUP A, PROD_ROUTE B
+ 		WHERE 
+ 			A.PRODUCT_ID = B.PRODUCT_ID
+   		AND 
+   			A.TRAVEL_GROUP_CODE = #groupCode#
+	</select>
+	
+</sqlMap>

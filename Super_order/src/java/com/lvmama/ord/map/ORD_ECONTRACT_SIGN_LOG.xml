@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ORD_ECONTRACT_SIGN_LOG" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdEcontractSignLog" >
+    <result column="SIGN_LOG_ID" property="signLogId" />
+	<result column="ECONTRACT_NO" property="econtractNo" />
+    <result column="SIGN_MODE" property="signMode" />
+	<result column="SIGN_DATE" property="signDate" />
+	<result column="SIGN_USER" property="signUser" />
+  </resultMap>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdEcontractSignLog">
+  	<selectKey  keyProperty="signLogId" resultClass="Long"> SELECT ORD_ECONTRACT_SIGN_LOG_ID_SEQ.NEXTVAL FROM DUAL</selectKey>
+	INSERT INTO ORD_ECONTRACT_SIGN_LOG
+		(SIGN_LOG_ID,
+		ECONTRACT_NO,
+		SIGN_MODE,
+		SIGN_DATE,
+		SIGN_USER
+	) VALUES (
+		#signLogId#,
+		#econtractNo#,
+		#signMode#,
+		SYSDATE,
+		#signUser#)
+  </insert>
+
+  <select id="query" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+ SELECT SIGN_LOG_ID,
+	    ECONTRACT_NO,
+		SIGN_MODE,
+		SIGN_DATE,
+		SIGN_USER
+   FROM ORD_ECONTRACT_SIGN_LOG
+   <dynamic prepend=" WHERE ">
+   	 	<isNotEmpty property="signLogId" prepend=" AND "> SIGN_LOG_ID = #signLogId# </isNotEmpty>
+   	 	<isNotEmpty property="econtractNo" prepend=" AND "> ECONTRACT_NO = #econtractNo# </isNotEmpty>
+   	 	<isNotEmpty property="econtractNoList" prepend=" AND ">
+   	 		ECONTRACT_NO  IN
+			   <iterate property="econtractNoList" conjunction="," open="(" close=")">
+						#econtractNoList[]# 
+			   </iterate>
+   	 	</isNotEmpty>
+   </dynamic>
+   ORDER BY SIGN_DATE DESC
+  </select>
+</sqlMap>

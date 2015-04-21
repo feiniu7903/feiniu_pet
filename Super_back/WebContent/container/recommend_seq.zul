@@ -1,0 +1,15 @@
+<?page title="推荐排序值" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./recommendSeqWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="recommendSeqWin" title="推荐排序值" border="normal" closable="true"
+		apply="com.lvmama.back.web.container.RecommendSeqAction">
+		<hbox>
+			<label value="推荐排序值：" />
+			<longbox value="@{saction.recommendSeq}" maxlength="20" />
+			<button id="submit" label="确定" onClick="saction.setRecommendSeq();" />
+		</hbox>
+		<hbox>
+			(推荐排序值越小，产品越靠前)
+		</hbox>
+	</window>
+</zk>

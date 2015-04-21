@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_FAX_RECV" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.fax.OrdFaxRecv" >
+    <result column="ORD_FAX_RECV_ID" property="ordFaxRecvId" />
+    <result column="CALLER_ID" property="callerId" />
+    <result column="RECV_TIME" property="recvTime" />
+    <result column="FILE_URL" property="fileUrl" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="RECV_STATUS" property="recvStatus" />
+    <result column="PAGE_NUM" property="pageNum" />
+    <result column="VALID" property="valid" />
+    <result column="BARCODE" property="barcode" />
+  </resultMap>
+  
+  
+  <sql id="Example_Where_Clause">
+    <dynamic prepend="WHERE">
+    	<isEqual prepend="and" property="valid" compareValue="true" >
+	    	 VALID = 'true' 
+    	</isEqual>
+	    <isNotEmpty prepend=" and" property="recvId">
+	    	 ORD_FAX_RECV_ID = #recvId# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend=" and" property="callerNo">
+			 CALLER_ID  = #callerNo#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="maxRecvTime">
+			RECV_TIME &lt;  #maxRecvTime#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="minRecvTime">
+			RECV_TIME &gt; = #minRecvTime#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="recvStatus">
+			RECV_STATUS = #recvStatus#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="resultStatus">
+			RESULT_STATUS = #resultStatus#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="orderId">
+			exists ( select 1 from ord_fax_recv_link ofrl
+                    where ofr.ord_fax_recv_id=ofrl.ord_fax_recv_id
+                    and ofrl.order_id=#orderId#)
+		</isNotEmpty>
+	</dynamic>
+</sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.fax.OrdFaxRecv" >
+    select *
+    from ORD_FAX_RECV
+    where ORD_FAX_RECV_ID = #ordFaxRecvId#
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.fax.OrdFaxRecv" >
+    delete from ORD_FAX_RECV
+    where ORD_FAX_RECV_ID = #ordFaxRecvId#
+  </delete>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.fax.OrdFaxRecv" >
+  	<selectKey resultClass="java.lang.Long" keyProperty="ordFaxRecvId" >
+      select ORD_FAX_RECV_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_FAX_RECV (ORD_FAX_RECV_ID, CALLER_ID, RECV_TIME, FILE_URL, CREATE_TIME,RECV_STATUS,PAGE_NUM,VALID,BARCODE)
+    values (#ordFaxRecvId#, #callerId#, #recvTime#, #fileUrl#, #createTime#,#recvStatus#,#pageNum#,#valid#,#barcode#)
+  </insert>
+  
+  	<select id="selectByParam" parameterClass="java.util.Map" resultMap="BaseResultMap">
+      <include refid="pageSearchHead"/>
+  		select ofr.* from ORD_FAX_RECV  ofr
+  		<include refid="ORD_FAX_RECV.Example_Where_Clause"/>
+      <include refid="pageSearchFoot"/>
+	</select>
+	
+	 <select id="selectByParamCount" parameterClass="java.util.HashMap" resultClass="Long">
+	  select count(*)  from ORD_FAX_RECV ofr
+		 <include refid="ORD_FAX_RECV.Example_Where_Clause"/>
+	 </select>
+	 
+  <select id="selectRecvsByBarcode" resultMap="BaseResultMap" >
+    select r.* from ord_fax_recv r where r.barcode=#barcode#
+    </select>
+  	<select id="selectRecvsByOrderId" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.fax.OrdFaxRecvLink" >
+    select r.*
+    from ord_fax_recv r,ord_fax_recv_link l 
+    where r.ord_fax_recv_id = l.ord_fax_recv_id and l.order_id = #orderId#
+    </select>
+    
+  
+  
+  <update id="updateFaxRecvStatus" parameterClass="java.util.Map">
+    update ORD_FAX_RECV
+    set RECV_STATUS = #recvStatus#
+    where ORD_FAX_RECV_ID = #recvId#
+  </update>
+  
+  <update id="updateOrdFaxRecvValidToFalse" parameterClass="java.util.HashMap">
+    update ORD_FAX_RECV
+    set VALID = 'false'
+    where ORD_FAX_RECV_ID in
+    <iterate property="recvIdMapList" conjunction="," open="(" close=")">
+	      #recvIdMapList[]#
+	</iterate> 
+  </update>
+  
+</sqlMap>

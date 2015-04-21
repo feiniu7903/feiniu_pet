@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EBK_CERTIFICATE_ITEM" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ebooking.EbkCertificateItem" >
+    <result column="EBK_CERTIFICATE_ITEM_ID" property="ebkCertificateItemId" />
+    <result column="EBK_CERTIFICATE_ID" property="ebkCertificateId" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="ORDER_ID" property="orderId" />
+    <result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+    <result column="FAX_MEMO" property="faxMemo" />
+    <result column="ORD_LAST_CANCEL_TIME" property="ordLastCancelTime" />
+    <result column="TOTAL_SETTLEMENT_PRICE" property="totalSettlementPrice" />
+    <result column="SETTLEMENT_PRICE" property="settlementPrice" />
+    <result column="META_PRODUCT_ID" property="metaProductId" />
+    <result column="META_PRODUCT_NAME" property="metaProductName" />
+    <result column="PRODUCT_NAME" property="productName" />
+    <result column="VISIT_TIME" property="visitTime" />
+    <result column="SUPPLIER_NO" property="supplierNo" />
+    <result column="QUANTITY" property="quantity" />
+    <result column="NIGHTS" property="nights" />
+    <result column="META_BRANCH_ID" property="metaBranchId" />
+    <result column="VALID" property="valid" />
+	<result column="IS_RESOURCE_SENDFAX" property="isResourceSendFax"/>
+    <result column="IS_NEW" property="isNew" />
+  </resultMap>
+  
+   <select id="countValidEbkCertificateItem" resultClass="java.lang.Long">
+    select count(1)
+    from ebk_certificate_item eci
+    where eci.EBK_CERTIFICATE_ID=#ebkCertificateId#
+    and eci.valid='true'
+  </select>
+  <select id="countCertItemByParam" resultClass="java.lang.Long">
+  	select count(1)
+    from ebk_certificate_item eci
+    where eci.EBK_CERTIFICATE_ID=#ebkCertificateId#
+    <isNotEmpty prepend="and" property="orderItemMetaId">
+    	eci.ORDER_ITEM_META_ID = #orderItemMetaId#
+    </isNotEmpty>
+    and eci.valid='true'
+  </select>
+  <select id="selectEbkCertificateItemByParam" resultMap="BaseResultMap"  >
+       select item.* from ebk_certificate_item item
+    	WHERE VALID='true'
+        <isNotEmpty prepend="AND" property="ebkCertificateId">
+		   item.ebk_certificate_id=#ebkCertificateId#
+	    </isNotEmpty>
+		<isNotEmpty prepend="AND" property="orderId">
+		   item.order_id=#orderId#
+	    </isNotEmpty>    
+		<isNotEmpty prepend="AND" property="orderItemMetaId">
+		   item.ORDER_ITEM_META_ID=#orderItemMetaId#
+	    </isNotEmpty>    
+   </select>
+  
+  <sql id="selectEbkCertificateItemSql">
+    select item.* from ebk_certificate_item item
+    WHERE VALID='true'
+        <isNotEmpty prepend="AND" property="ebkCertificateId">
+		   item.ebk_certificate_id=#ebkCertificateId#
+	    </isNotEmpty>
+		<isNotEmpty prepend="AND" property="ebkCertificateItemId">
+		   item.EBK_CERTIFICATE_ITEM_ID=#ebkCertificateItemId#
+	    </isNotEmpty>   
+	    <isNotEmpty prepend="AND" property="orderId">
+		   item.order_id=#orderId#
+	    </isNotEmpty>  
+		<isNotEmpty prepend="AND" property="orderItemMetaId">
+		   item.ORDER_ITEM_META_ID=#orderItemMetaId#
+	    </isNotEmpty>    
+    order by ebk_certificate_id desc
+  </sql>
+  
+  <select id="getEbkCertificateItemCountByParams" resultClass="java.lang.Integer" parameterClass="java.util.Map" >
+      select count(*) from (<include refid="selectEbkCertificateItemSql" />)
+  </select>
+  
+  <select id="queryEbkCertificateItemList" resultMap="BaseResultMap" parameterClass="java.util.Map" >
+    <include refid="pageSearchHead" />
+    <include refid="selectEbkCertificateItemSql" />
+    <include refid="pageSearchFoot" />
+  </select>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkCertificateItem" >
+    <selectKey resultClass="java.lang.Long" keyProperty="ebkCertificateItemId" >
+      select EBK_CERTIFICATE_ITEM_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into EBK_CERTIFICATE_ITEM (EBK_CERTIFICATE_ITEM_ID, EBK_CERTIFICATE_ID, CREATE_TIME,
+      ORDER_ID, ORDER_ITEM_META_ID, FAX_MEMO, ORD_LAST_CANCEL_TIME, TOTAL_SETTLEMENT_PRICE,
+      SETTLEMENT_PRICE, META_PRODUCT_ID, META_PRODUCT_NAME, SUPPLIER_NO, QUANTITY, NIGHTS, META_BRANCH_ID,VALID,
+      PRODUCT_NAME,VISIT_TIME, IS_RESOURCE_SENDFAX,IS_NEW)
+    values (#ebkCertificateItemId#, #ebkCertificateId#, #createTime#,
+      #orderId#, #orderItemMetaId#, #faxMemo#, #ordLastCancelTime#,
+      #totalSettlementPrice#, #settlementPrice#, #metaProductId#,
+      #metaProductName#, #supplierNo#, #quantity#, #nights#, #metaBranchId#,'true',
+      #productName#,#visitTime#, #isResourceSendFax#,#isNew#)
+  </insert>
+  
+  <update id="updateIsNewByOrderItemMetaId" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkCertificateItem" >
+    update EBK_CERTIFICATE_ITEM
+    set IS_NEW = #isNew#
+    where ORDER_ITEM_META_ID = #orderItemMetaId#
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkCertificateItem" >
+    update EBK_CERTIFICATE_ITEM
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="ebkCertificateId" >
+        EBK_CERTIFICATE_ID = #ebkCertificateId#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="orderId" >
+        ORDER_ID = #orderId#
+      </isNotNull>
+      <isNotNull prepend="," property="orderItemMetaId" >
+        ORDER_ITEM_META_ID = #orderItemMetaId#
+      </isNotNull>
+      <isNotNull prepend="," property="faxMemo" >
+        FAX_MEMO = #faxMemo#
+      </isNotNull>
+      <isNotNull prepend="," property="ordLastCancelTime" >
+        ORD_LAST_CANCEL_TIME = #ordLastCancelTime#
+      </isNotNull>
+      <isNotNull prepend="," property="totalSettlementPrice" >
+        TOTAL_SETTLEMENT_PRICE = #totalSettlementPrice#
+      </isNotNull>
+      <isNotNull prepend="," property="settlementPrice" >
+        SETTLEMENT_PRICE = #settlementPrice#
+      </isNotNull>
+      <isNotNull prepend="," property="metaProductId" >
+        META_PRODUCT_ID = #metaProductId#
+      </isNotNull>
+      <isNotNull prepend="," property="metaProductName" >
+        META_PRODUCT_NAME = #metaProductName#
+      </isNotNull>
+      <isNotNull prepend="," property="productName" >
+       PRODUCT_NAME =  #productName#
+      </isNotNull>
+      <isNotNull prepend="," property="visitTime" >
+        VISIT_TIME = #visitTime#
+      </isNotNull>
+      <isNotNull prepend="," property="supplierNo" >
+        SUPPLIER_NO = #supplierNo#
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        QUANTITY = #quantity#
+      </isNotNull>
+      <isNotNull prepend="," property="nights" >
+        NIGHTS = #nights#
+      </isNotNull>
+      <isNotNull prepend="," property="metaBranchId" >
+        META_BRANCH_ID = #metaBranchId#
+      </isNotNull>
+      <isNotNull prepend="," property="valid" >
+        VALID = #valid#
+      </isNotNull>
+      <isNotNull prepend="," property="isResourceSendFax" >
+        IS_RESOURCE_SENDFAX = #isResourceSendFax#
+      </isNotNull>
+    </dynamic>
+    where EBK_CERTIFICATE_ITEM_ID = #ebkCertificateItemId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkCertificateItem" >
+    update EBK_CERTIFICATE_ITEM
+    set EBK_CERTIFICATE_ID = #ebkCertificateId#,
+      CREATE_TIME = #createTime#,
+      ORDER_ID = #orderId#,
+      ORDER_ITEM_META_ID = #orderItemMetaId#,
+      FAX_MEMO = #faxMemo#,
+      ORD_LAST_CANCEL_TIME = #ordLastCancelTime#,
+      TOTAL_SETTLEMENT_PRICE = #totalSettlementPrice#,
+      SETTLEMENT_PRICE = #settlementPrice#,
+      META_PRODUCT_ID = #metaProductId#,
+      META_PRODUCT_NAME = #metaProductName#,
+      SUPPLIER_NO = #supplierNo#,
+      QUANTITY = #quantity#,
+      NIGHTS = #nights#,
+      META_BRANCH_ID = #metaBranchId#,
+      VISIT_TIME = #visitTime#,
+      IS_RESOURCE_SENDFAX = #isResourceSendFax#
+    where EBK_CERTIFICATE_ITEM_ID = #ebkCertificateItemId#
+  </update>
+</sqlMap>

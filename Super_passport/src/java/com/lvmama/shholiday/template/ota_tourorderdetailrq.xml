@@ -1,0 +1,19 @@
+<#import "sh_holiday_base.xml" as base>
+<@base.layout "OrderDetailRQ"  'UniqueID=""'  'ExternalOrderNo="${body.orderNo}"'>
+	<DataTypes><!--请求数据类型-返回请求的数据块-->
+			<DataType Code="all"><!--Code:数据类型代码-->
+				<!--String类型
+				all:全部，
+				BaseInfo：订单基本信息，
+				ContactInfo：联系人信息，
+				PassengerInfo：旅客信息，
+	            Addition：订单附加产品信息，
+	            TeamInfo:团队信息，
+	            PayDetail：付款明细，
+	            OrderExpressInfo：订单配送信息，
+	            Trip：行程信息，
+	            ModifyDetail:订单修改明细
+	            FreeOrderHotelInfos：自由行产品订单酒店信息-->
+	        </DataType>
+		</DataTypes>
+</@base.layout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="VIEW_JOURNEY_TIPS" >
+
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ViewJourneyTips" >
+    <result column="TIP_ID" property="tipId" />
+    <result column="TIP_TITLE" property="tipTitle" jdbcType="VARCHAR" />
+    <result column="TIP_CONTENT" property="tipContent" jdbcType="VARCHAR" />
+    <result column="CONTENT_ID" property="journeyId" />
+  </resultMap>
+  
+  <select id="getViewJourneyTipsByJourneyId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+    select TIP_ID, TIP_TITLE, TIP_CONTENT, CONTENT_ID
+    from VIEW_TIP
+    where CONTENT_ID = #journeyId# ORDER BY TIP_ID asc
+  </select>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourneyTips" >
+    select TIP_ID, TIP_TITLE, TIP_CONTENT, CONTENT_ID
+    from VIEW_TIP
+    where TIP_ID = #tipId#
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourneyTips" >
+    delete from VIEW_TIP
+    where TIP_ID = #tipId#
+  </delete>
+  
+  <delete id="deleteByJourneyId" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourneyTips">
+    delete from VIEW_TIP 
+  		WHERE CONTENT_ID=#journeyId#
+  </delete>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourneyTips" >
+    <selectKey keyProperty="tipId" resultClass="Long">
+  		select VIEW_TIP_ID_SEQ.nextVal FROM DUAL
+  	</selectKey>
+    insert into VIEW_TIP 
+    	(TIP_ID, TIP_TITLE, TIP_CONTENT, CONTENT_ID)
+    values (
+    	#tipId#, 
+    	#tipTitle#, 
+    	#tipContent#, 
+    	#journeyId#
+    )
+  </insert>
+  
+  <update id="updateViewJourneyTips" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourneyTips" >
+    update VIEW_TIP
+    	set TIP_TITLE = #tipTitle#,
+      		TIP_CONTENT = #tipContent#
+	      <isNotEmpty property="journeyId">
+	      	,CONTENT_ID = #journeyId#
+	      </isNotEmpty>
+    where TIP_ID = #tipId#
+  </update>
+  
+</sqlMap>

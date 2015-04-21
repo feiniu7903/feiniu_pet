@@ -1,0 +1,112 @@
+<?page title="订单审核" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./approveDetailPersons"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<zk>
+<window id="approveDetailPersons" border="none" apply="com.lvmama.back.web.ord.approve.ApproveDetailPersonsAction">
+<groupbox style="border: none;">
+		<caption label="用户信息" />
+		<grid >
+			<rows>
+				<row>	
+					<cell>用户名</cell>
+					<cell>用户姓名</cell>
+					<cell>手机号</cell>
+					<cell>座机号</cell>
+				</row>
+				<row>	
+					<cell>${saction.user.userName }</cell>
+					<cell>${saction.user.realName }</cell>
+					<cell>${saction.user.mobileNumber }</cell>
+					<cell>${saction.user.phoneNumber }</cell>
+				</row>
+			</rows>
+	</grid>
+</groupbox>
+<groupbox style="border: none;">
+		<caption label="联系人信息" />
+		<grid>
+			<rows >
+				<row>	
+					<cell width="60px">用户姓名</cell>
+					<cell width="130px">
+						<textbox maxlength="40" if="${arg.action=='approveOrder' || arg.action=='approveResource'}" width="120px" value="@{saction.contact.name }"/>
+						<label if="${arg.action=='monitor' }" value="@{saction.contact.name }" />
+					</cell>
+					
+					<cell width="60px">Email</cell>
+					<cell><textbox maxlength="50" value="@{saction.contact.email }" /></cell>
+					
+					<cell width="60px">传真</cell>
+					<cell><textbox maxlength="20" value="@{saction.contact.fax }" /></cell>
+					
+					
+					<cell></cell>
+				</row>
+				<row>	
+					<cell width="120px">手机号</cell>
+					<cell>
+						<textbox maxlength="30" if="${arg.action=='approveOrder' || arg.action=='approveResource'}" width="120px" value="@{saction.contact.mobile }" />
+						<label if="${arg.action=='monitor' }" value="@{saction.contact.mobile }" />
+					</cell>
+					<cell>座机号</cell>
+					<cell><textbox maxlength="30" value="@{saction.contact.tel }" /></cell>
+					<cell>传真接收人</cell>
+					<cell><textbox maxlength="40" value="@{saction.contact.faxTo }" /></cell>
+					
+					<cell>
+						
+					</cell>
+				</row>
+				<row spans="1,1,1,3">	
+					<cell>邮编</cell>
+					<cell><textbox maxlength="20" value="@{saction.contact.postcode }" width="120px"/></cell>
+					<cell>地址</cell>
+					<cell><textbox maxlength="200" width="450px" value="@{saction.contact.address }" /></cell>
+					<cell>
+						<button  xmlns:w="http://www.zkoss.org/2005/zk/client" 
+						label="外拨" w:onClick=" window.clipboardData.setData('text', '${saction.contact.mobile }');" />
+						<button label="保存" onClick="saction.updateContact()"/>
+					</cell>
+				</row>
+			</rows>
+	</grid>
+</groupbox>
+<groupbox style="border: none;">
+		<caption label="旅客信息" />
+		<button id = "refreshButton" visible="false" onClick="saction.refreshTravellers()"/>
+		<listbox  multiple="true" model ="@{saction.travellers,load-after='refreshButton.onClick' }">
+		<listhead>
+			<listheader label="旅客姓名" width="10%"/>
+			<listheader label="旅客联系方式" width="10%"/>
+			<listheader label="证件类型" width="10%"/>
+			<listheader label="证件号码" width="10%"/>
+			<listheader label="旅客邮编" width="10%"/>
+			<listheader label="旅客地址" width="20%"/>
+			<listheader></listheader>
+
+		</listhead>
+		<listitem self="@{each=item}">
+			<listcell label="@{item.name}" />
+			<listcell label="@{item.mobile}" />
+			<listcell label="@{item.certType,converter='com.lvmama.back.utils.CodesetZKConverter' }">
+					<custom-attributes codeset="CERT_TYPE"/>
+			</listcell>	
+			<listcell label="@{item.certNo}" />
+			<listcell label="@{item.postcode}" />
+			<listcell label="@{item.address}" />
+			<listcell>
+				<a style="color:blue" label="修改" onClick='saction.showWindow("/ord/approve/ApproveDetailPersonEdit.zul",self.getAttributes())'>
+								<custom-attributes traveller="@{item }"/>
+				</a>
+				<a style="color:blue" label="删除" onClick='saction.doDelete(self)'>
+								<custom-attributes personId="@{item.personId }"/>
+				</a>
+			</listcell>
+		</listitem>
+		</listbox>
+		<button label="新增" width="100px" onClick='saction.showWindow("/ord/approve/ApproveDetailPersonEdit.zul",self.getAttributes())'>
+			<custom-attributes orderId="@{saction.orderId }"/>
+		</button>
+</groupbox>
+</window>
+</zk>

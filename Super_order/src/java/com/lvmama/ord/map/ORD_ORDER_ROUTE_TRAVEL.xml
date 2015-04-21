@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ORD_ORDER_ROUTE_TRAVEL" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderRouteTravel" >
+    <result column="ROUTE_TRAVEL_ID" property="routeTravelId" />
+	<result column="ORDER_ID" property="orderId" />
+    <result column="FILE_ID" property="fileId" />
+	<result column="CREATE_USER" property="createUser" />
+	<result column="CREATE_DATE" property="createDate" />
+  </resultMap>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderRouteTravel">
+  	<selectKey  keyProperty="routeTravelId" resultClass="Long"> SELECT ORD_ORDER_ROUTE_TRAVEL_ID_SEQ.NEXTVAL FROM DUAL</selectKey>
+	INSERT INTO ORD_ORDER_ROUTE_TRAVEL
+		(ROUTE_TRAVEL_ID,
+		ORDER_ID,
+		FILE_ID,
+		CREATE_USER,
+		CREATE_DATE
+	) VALUES (
+		#routeTravelId#,
+		#orderId#,
+		#fileId#,
+		#createUser#,
+		SYSDATE)
+  </insert>
+
+  <select id="query" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+ 	  SELECT * FROM ORD_ORDER_ROUTE_TRAVEL
+   <dynamic prepend=" WHERE ">
+   	 	<isNotEmpty property="routeTravelId" prepend=" AND "> ROUTE_TRAVEL_ID = #routeTravelId# </isNotEmpty>
+   	 	<isNotEmpty property="orderId" prepend=" AND "> ORDER_ID = #orderId# </isNotEmpty>
+   	 	<isNotEmpty property="orderIds" prepend=" AND ">
+   	 		ORDER_ID  IN
+			   <iterate property="orderIds" conjunction="," open="(" close=")">
+						#orderIds[]# 
+			   </iterate>
+   	 	</isNotEmpty>
+   </dynamic>
+  </select>
+  <select id="queryContentByOrderId" parameterClass="java.lang.Long" resultClass="java.lang.String">
+  	SELECT O.ROUTE_TRAVEL FROM ORD_ORDER_ROUTE_TRAVEL O WHERE O.ORDER_ID = #orderId# 
+  </select>
+</sqlMap>

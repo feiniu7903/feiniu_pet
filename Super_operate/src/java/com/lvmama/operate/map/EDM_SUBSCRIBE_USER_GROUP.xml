@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EDM_SUBSCRIBE_USER_GROUP">
+	<typeAlias alias="edmUserGroup"
+		type="com.lvmama.comm.pet.po.edm.EdmSubscribeUserGroup" />	
+	<resultMap class="com.lvmama.comm.pet.po.edm.EdmSubscribeUserGroup" id="resultClass">
+		<result column="USER_GROUP_ID" property="userGroupId" />
+		<result column="USER_GROUP_NAME" property="userGroupName" />
+		<result column="FILTER_TYPE" property="filterType" />
+		<result column="USER_GROUP_STATUS" property="userGroupStatus" />
+		<result column="USER_ADDRESS" property="userAddress" />
+		<result column="USER_SUBSCRIBE_TYPE" property="userSubscribeType" />
+		<result column="EMAIL_IS_VALID" property="emailIsValid" />
+		<result column="MOBILE_IS_VALID" property="mobileIsValid"/>
+		<result column="EMAIL_OR_MOBILE" property="emailOrMobile"/>
+		<result column="LAST_LOGIN_FROM" property="lastLoginFrom"/>
+		<result column="LAST_LOGIN_TO" property="lastLoginTo"/>
+		<result column="REGISTER_DATE_FROM" property="registerDateFrom" />
+		<result column="REGISTER_DATE_TO" property="registerDateTo" />
+		<result column="LOGIN_DATE_FROM" property="loginDateFrom" />
+		<result column="LOGIN_DATE_TO" property="loginDateTo" />
+		<result column="ORDER_CREATE_FROM" property="orderCreateFrom" />
+		<result column="ORDER_CREATE_TO" property="orderCreateTo" />
+		<result column="USER_GROUP_TRIGGER" property="userGroupTrigger" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="CREATE_USER" property="createUser" />
+		<result column="UPDATE_DATE" property="updateDate" />
+		<result column="UPDATE_USER" property="updateUser" />
+		<result column="ITEM_NAME" property="chUserSubscribeType"/>
+		<result column="SENSITIVE_FROM" property="sensitiveFrom"/>
+		<result column="SENSITIVE_TO" property="sensitiveTo"/>
+		<result column="USER_TYPE" property="userType"/>
+	</resultMap>
+	<sql id="searchParam">
+		<isNotNull prepend=" AND" property="userGroupId"> USER_GROUP_ID= #userGroupId# </isNotNull>
+		<isNull property="blur">
+			<isNotNull prepend=" AND " property="userGroupName">USER_GROUP_NAME LIKE '%$userGroupName$%'</isNotNull>
+		</isNull>
+		<isNotNull property="precise">
+			<isNotNull prepend=" AND " property="userGroupName">USER_GROUP_NAME =#userGroupName# </isNotNull>
+		</isNotNull>
+		<isNotNull prepend=" AND " property="userGroupStatus">USER_GROUP_STATUS=#userGroupStatus#</isNotNull>
+		<isNotNull prepend=" AND " property="userGroupIdList">
+			USER_GROUP_ID IN
+			<iterate property="userGroupIdList" conjunction="," open="(" close=")">
+				#userGroupIdList[]# 
+			</iterate>
+		</isNotNull>
+	</sql>
+	<select id="search" parameterClass="java.util.HashMap" resultMap="resultClass">
+		SELECT * FROM (
+		  SELECT A.*,C.ITEM_NAME,ROWNUM RN 
+		    FROM EDM_SUBSCRIBE_USER_GROUP  A,
+		       (SELECT C.ITEM_CODE, C.ITEM_NAME
+				  FROM COM_CODE C
+				 WHERE C.SET_CODE = 'EDM_EMAIL_TYPE'
+				   AND C.VALID_FLAG = 'Y') C
+		  WHERE A.USER_SUBSCRIBE_TYPE = C.ITEM_CODE(+)
+		<dynamic>
+			<include refid="searchParam"/>
+			<isNotEmpty property="_endRow"  prepend=" AND " > ROWNUM  &lt;=#_endRow#   </isNotEmpty>
+		</dynamic>
+		ORDER BY A.CREATE_DATE DESC
+		  )
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND ">  RN  &gt;=#_startRow#   </isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="count" resultClass="java.lang.Long">
+	   SELECT COUNT(*) FROM EDM_SUBSCRIBE_USER_GROUP
+	   <dynamic prepend=" WHERE">
+	   		<include refid="searchParam"/>
+	   </dynamic>
+	</select>
+	<insert id="insert" parameterClass="edmUserGroup">
+	<selectKey keyProperty="userGroupId" resultClass="java.lang.Long">
+			SELECT EDM_USER_GROUP_ID_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO EDM_SUBSCRIBE_USER_GROUP
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="userGroupId">USER_GROUP_ID</isNotNull>
+			<isNotNull prepend="," property="userGroupName">USER_GROUP_NAME</isNotNull>
+			<isNotNull prepend="," property="filterType">FILTER_TYPE</isNotNull>
+			<isNotNull prepend="," property="userGroupStatus">USER_GROUP_STATUS</isNotNull>
+			<isNotNull prepend="," property="userAddress">USER_ADDRESS</isNotNull>
+			<isNotNull prepend="," property="userSubscribeType">USER_SUBSCRIBE_TYPE</isNotNull>
+			<isNotNull prepend="," property="emailIsValid">EMAIL_IS_VALID</isNotNull>
+			<isNotNull prepend="," property="mobileIsValid">MOBILE_IS_VALID</isNotNull>
+			<isNotNull prepend="," property="emailOrMobile">EMAIL_OR_MOBILE</isNotNull>
+			<isNotNull prepend="," property="lastLoginFrom">LAST_LOGIN_FROM</isNotNull>
+			<isNotNull prepend="," property="lastLoginTo">LAST_LOGIN_TO</isNotNull>
+			<isNotNull prepend="," property="registerDateFrom">REGISTER_DATE_FROM</isNotNull>
+			<isNotNull prepend="," property="registerDateTo">REGISTER_DATE_TO</isNotNull>
+			<isNotNull prepend="," property="loginDateFrom">LOGIN_DATE_FROM</isNotNull>
+			<isNotNull prepend="," property="loginDateTo">LOGIN_DATE_TO</isNotNull>
+			<isNotNull prepend="," property="orderCreateFrom">ORDER_CREATE_FROM</isNotNull>
+			<isNotNull prepend="," property="orderCreateTo">ORDER_CREATE_TO</isNotNull>
+			<isNotNull prepend="," property="userGroupTrigger">USER_GROUP_TRIGGER</isNotNull>
+			<isNotNull prepend="," property="createUser">CREATE_DATE,CREATE_USER,UPDATE_DATE,UPDATE_USER</isNotNull>
+			<isNotNull prepend="," property="sensitiveFrom">SENSITIVE_FROM</isNotNull>
+			<isNotNull prepend="," property="sensitiveTo">SENSITIVE_TO</isNotNull>
+			<isNotNull prepend="," property="userType">USER_TYPE</isNotNull>
+		</dynamic>
+		<dynamic prepend=") VALUES (">
+			<isNotNull prepend="," property="userGroupId">#userGroupId#</isNotNull>
+			<isNotNull prepend="," property="userGroupName">#userGroupName#</isNotNull>
+			<isNotNull prepend="," property="filterType">#filterType#</isNotNull>
+			<isNotNull prepend="," property="userGroupStatus">#userGroupStatus#</isNotNull>
+			<isNotNull prepend="," property="userAddress">#userAddress#</isNotNull>
+			<isNotNull prepend="," property="userSubscribeType">#userSubscribeType#</isNotNull>
+			<isNotNull prepend="," property="emailIsValid">#emailIsValid#</isNotNull>
+			<isNotNull prepend="," property="mobileIsValid">#mobileIsValid#</isNotNull>
+			<isNotNull prepend="," property="emailOrMobile">#emailOrMobile#</isNotNull>
+			<isNotNull prepend="," property="lastLoginFrom">#lastLoginFrom#</isNotNull>
+			<isNotNull prepend="," property="lastLoginTo">#lastLoginTo#</isNotNull>
+			<isNotNull prepend="," property="registerDateFrom">#registerDateFrom#</isNotNull>
+			<isNotNull prepend="," property="registerDateTo">#registerDateTo#</isNotNull>
+			<isNotNull prepend="," property="loginDateFrom">#loginDateFrom#</isNotNull>
+			<isNotNull prepend="," property="loginDateTo">#loginDateTo#</isNotNull>
+			<isNotNull prepend="," property="orderCreateFrom">#orderCreateFrom#</isNotNull>
+			<isNotNull prepend="," property="orderCreateTo">#orderCreateTo#</isNotNull>
+			<isNotNull prepend="," property="userGroupTrigger">#userGroupTrigger#</isNotNull>
+			<isNotNull prepend="," property="createUser">SYSDATE,#createUser#,SYSDATE,#createUser#</isNotNull>
+			<isNotNull prepend="," property="sensitiveFrom">#sensitiveFrom#</isNotNull>
+			<isNotNull prepend="," property="sensitiveTo">#sensitiveTo#</isNotNull>
+			<isNotNull prepend="," property="userType">#userType#</isNotNull>
+			)
+		</dynamic>
+	</insert>
+	<update id="update"  parameterClass="edmUserGroup">
+	  UPDATE EDM_SUBSCRIBE_USER_GROUP
+		 SET USER_GROUP_NAME=#userGroupName#
+			 ,FILTER_TYPE=#filterType#
+			 ,USER_GROUP_STATUS=#userGroupStatus#
+			 ,USER_ADDRESS=#userAddress#
+			 ,USER_SUBSCRIBE_TYPE=#userSubscribeType#
+			 ,EMAIL_IS_VALID=#emailIsValid#
+			 ,MOBILE_IS_VALID=#mobileIsValid#
+			 ,EMAIL_OR_MOBILE=#emailOrMobile#
+			 ,LAST_LOGIN_FROM=#lastLoginFrom#
+			 ,LAST_LOGIN_TO=#lastLoginTo#
+			 ,REGISTER_DATE_FROM=#registerDateFrom#
+			 ,REGISTER_DATE_TO=#registerDateTo#
+			 ,LOGIN_DATE_FROM=#loginDateFrom#
+			 ,LOGIN_DATE_TO=#loginDateTo#
+			 ,ORDER_CREATE_FROM=#orderCreateFrom#
+			 ,ORDER_CREATE_TO=#orderCreateTo#
+			 ,USER_GROUP_TRIGGER=#userGroupTrigger#
+			 ,UPDATE_DATE=SYSDATE,UPDATE_USER=#updateUser#
+			 ,SENSITIVE_FROM=#sensitiveFrom#
+			 ,SENSITIVE_TO=#sensitiveTo#
+			 ,USER_TYPE=#userType#
+		WHERE USER_GROUP_ID=#userGroupId#
+	</update>
+</sqlMap>

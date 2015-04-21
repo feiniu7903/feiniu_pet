@@ -1,0 +1,86 @@
+<#if orderList?? && orderList?size&gt;0>
+<#assign hostName = reauestHostName/>
+       <#list orderList as order>
+	        <div class="lv-box clear"> 
+		        <a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/order/order_detail.htm?orderId=${order.orderId!}');">
+			      <div class="lv-order-title lv-padding-x10 lv-fontsize-12">订单号：${order.orderId!} 
+			      <#if order.orderViewStatus?? && order.orderViewStatus == "UNPAY">
+				      <#if order.canToPay>
+				         <#if order.mainProductType=="TICKET" || order.mainProductType=="ROUTE">
+				           <span class="lv-order-status lv-pull-right lv-color-01"  id="order_status${order.orderId!}">待支付</span>
+				         <#else>
+				          <span class="lv-order-status lv-pull-right f_9f9f9f"  id="order_status${order.orderId!}">待支付</span> 
+				         </#if>
+				      <#else>
+				         <span class="lv-order-status lv-pull-right f_9f9f9f"  id="order_status${order.orderId!}">待支付</span>
+				      </#if>
+			      <#else>
+			          <#if order.canToPay>
+			             <#if order.mainProductType=="TICKET" || order.mainProductType=="ROUTE">
+				             <span class="lv-order-status lv-pull-right lv-color-01" id="order_status${order.orderId!}"> ${order.zhOrderViewState!}</span>
+				         <#else>
+				             <span class="lv-order-status lv-pull-right f_9f9f9f" id="order_status${order.orderId!}"> ${order.zhOrderViewState!}</span>
+				         </#if>
+				      <#else>
+				          <span class="lv-order-status lv-pull-right f_9f9f9f" id="order_status${order.orderId!}"> ${order.zhOrderViewState!}</span>
+				      </#if>
+			      </#if>
+			       
+			      </div>
+			      <div class="lv-order-content clear">
+			        <div class="lv-order-icon  lv-pull-left"><img src="${prefixPic!}${order.imgUrl!}"></div>
+			        <div class="lv-order-desc lv-pull-left lv-fontsize-12">
+			          <div style="color:#333333;">${order.productName!}</div>
+			          <div>总额：<span class="lv-color">&yen; ${order.amount?number!}</span></div>
+			          <div>游玩时间 : ${order.visitTime!}</div>
+			        </div>
+			        <img class="lv-next-01 lv-redirect-next" src="${prefix_pic_url!}/img/next.png"> 
+			     </div>
+		       </a>
+		      <#if  order.canToPay> 
+			      <div class="lv-order-operate" id="order_pay${order.orderId!}">
+			        <#if order.canCancel> 
+			       		 <a class="lv-btn-booking lv-btn-03 lv-pull-left" href="javascript:popCancelOrder('${order.orderId!}');">取消订单</a> 
+			        </#if>
+			        <!--  门票直接去支付 ，线路现在app支付 ，其它支付按钮灰色 -->
+			        <#if order.mainProductType=="TICKET" || 
+					     order.orderType=="FREENESS" || 
+					     order.orderType=="GROUP" || 
+					     order.orderType=="SELFHELP_BUS"|| 
+					     order.orderType=="GROUP_LONG" || 
+						 order.orderType=="FREENESS_LONG" || 
+						 order.orderType=="GROUP_FOREIGN" || 
+						 order.orderType=="FREENESS_FOREIGN">
+						 
+			           <#if order.needResourceConfirm>
+			           <!--  需要资源审核-->
+				             <#if order.orderViewStatus =="UNPAY" || order.orderViewStatus =="PARTPAY"> 
+				             <!-- 审核通过 或者订单状态是等待支付，部分支付  -->
+				             		<#if (order.paymentChannel?? && order.paymentChannel =="BAIDU_PAY") || hostName=="qing.lvmama.com">
+										  <a class="lv-btn-booking lv-btn-01 lv-pull-left" href="javascript:void(0);" onclick="union_skip('${request.contextPath}/bdorder/baidu_order_success.htm?orderId=${order.orderId}');">去支付</a>
+				             		<#else>
+				             			   <a class="lv-btn-booking lv-btn-01 lv-pull-left" href="javascript:void(0);" onclick="union_skip('${request.contextPath}/order/order_success.htm?orderId=${order.orderId}');">去支付</a>
+				             		</#if>
+				             <#else>
+				                 <a class="lv-btn-booking lv-btn-05 lv-pull-left" href="javascript:void(0);">去支付</a> 
+				             </#if>
+						<#else>
+					         <#if (order.paymentChannel?? && order.paymentChannel =="BAIDU_PAY") || hostName=="qing.lvmama.com">
+								  <a class="lv-btn-booking lv-btn-01 lv-pull-left" href="javascript:void(0);" onclick="union_skip('${request.contextPath}/bdorder/baidu_order_success.htm?orderId=${order.orderId}');">去支付</a>
+		             		<#else>
+		             			   <a class="lv-btn-booking lv-btn-01 lv-pull-left" href="javascript:void(0);" onclick="union_skip('${request.contextPath}/order/order_success.htm?orderId=${order.orderId}');">去支付</a>
+		             		</#if>
+					    </#if>
+			        <#elseif order.mainProductType=="ROUTE" && order.orderType!="FREENESS">
+			           <a class="lv-btn-booking lv-btn-01 lv-pull-left" href="javascript:void(0);" onclick="union_skip('http://${hostName}/download?Ch=1');">下载App支付</a>
+			        <#else>
+			            <a class="lv-btn-booking lv-btn-01 lv-pull-left" href="javascript:void(0);" onclick="union_skip('http://${hostName}/download?Ch=1');">下载App支付</a>
+			        </#if>
+			      </div>
+		      </#if>
+		    </div>
+       </#list>
+    <#else>
+	     <#assign no_data_msg="还没有任何订单">
+         <#include "../common/no_data_list.html">
+    </#if>

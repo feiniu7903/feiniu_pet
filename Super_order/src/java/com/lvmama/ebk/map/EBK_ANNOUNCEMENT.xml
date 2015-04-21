@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EBK_ANNOUNCEMENT" >
+
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ebooking.EbkAnnouncement" >
+    <result column="ANNOUNCEMENT_ID" property="announcementId"/>
+    <result column="TITLE" property="title"/>
+    <result column="CONTENT" property="content"/>
+    <result column="ATTACHMENT" property="attachment"/>
+    <result column="BEGIN_DATE" property="beginDate"/>
+    <result column="BIZ_TYPE" property="bizType"/>
+    <result column="OPERATOR" property="operator"/>
+    <result column="CREATE_TIME" property="createTime"/>
+  </resultMap>
+  <sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="announcementId">
+	             ANNOUNCEMENT_ID = #announcementId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="title">
+	             TITLE = #title#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="beginDate">
+	             BEGIN_DATE &lt;= #beginDate#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="bizType">
+	             BIZ_TYPE like '%'||#bizType#||'%'
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="attachment">
+	             attachment = #attachment#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="includeBizType">
+       	  <![CDATA[ BIZ_TYPE  in ]]>
+          <iterate property="includeBizType" conjunction="," open="(" close=")">
+              #includeBizType[]#
+          </iterate>
+       </isNotEmpty>
+	       
+	       <!-- A:查询已发布记录. -->
+	       <isEqual property="releaseStatus" compareValue="RELEASED">
+	        	 BEGIN_DATE &lt;= SYSDATE
+	       </isEqual>
+	       <!-- B:查询未发布记录. 当不满足A,B条件时,查询全部记录.-->
+	       <isEqual property="releaseStatus" compareValue="UNRELEASED">
+	        	BEGIN_DATE &gt;= SYSDATE
+	       </isEqual>
+	    </dynamic>	
+  </sql>
+
+  <select id="selectByExample" resultMap="BaseResultMap" parameterClass="java.util.Map" >
+  	<include refid="pageSearchHead"/>
+	    select ANNOUNCEMENT_ID, TITLE, CONTENT, ATTACHMENT, BEGIN_DATE, BIZ_TYPE, OPERATOR, CREATE_TIME
+	    from EBK_ANNOUNCEMENT
+	    <include refid="dynamicWhere"/>
+	   	<isEqual property="orderByBeginDateDesc" compareValue="true">
+	   		order by begin_date desc
+	   	</isEqual>
+	   	<isEqual property="orderByCreateTimeDesc" compareValue="true">
+	   		order by create_time desc
+	   	</isEqual>
+	 <include refid="pageSearchFoot"/>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select ANNOUNCEMENT_ID, TITLE, CONTENT, ATTACHMENT, BEGIN_DATE, BIZ_TYPE, OPERATOR, CREATE_TIME
+    from EBK_ANNOUNCEMENT
+    where ANNOUNCEMENT_ID = #announcementId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    delete from EBK_ANNOUNCEMENT
+    where ANNOUNCEMENT_ID = #announcementId#
+  </delete>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkAnnouncement" >
+    <selectKey keyProperty="announcementId" resultClass="java.lang.Long">
+		SELECT EBK_ANNOUNCEMENT_SEQ.NEXTVAL FROM DUAL
+	</selectKey>
+    insert into EBK_ANNOUNCEMENT (ANNOUNCEMENT_ID, TITLE, CONTENT, ATTACHMENT, BEGIN_DATE, BIZ_TYPE,
+      OPERATOR, CREATE_TIME)
+    values (#announcementId#, #title#, #content#, #attachment#,
+      #beginDate#, #bizType#, #operator#, #createTime#)
+  </insert>
+  <select id="countByExample" parameterClass="java.util.Map" resultClass="java.lang.Integer" >
+    select count(*) from EBK_ANNOUNCEMENT
+    <include refid="dynamicWhere"/>
+  </select>
+
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkAnnouncement" >
+    update EBK_ANNOUNCEMENT
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="title" >
+        TITLE = #title#
+      </isNotNull>
+      <isNotNull prepend="," property="content" >
+        CONTENT = #content#
+      </isNotNull>
+      <isNotNull prepend="," property="attachment" >
+        ATTACHMENT = #attachment#
+      </isNotNull>
+      <isNotNull prepend="," property="beginDate" >
+        BEGIN_DATE = #beginDate#
+      </isNotNull>
+      <isNotNull prepend="," property="bizType" >
+        BIZ_TYPE = #bizType#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+    </dynamic>
+    where ANNOUNCEMENT_ID = #announcementId:DECIMAL#
+  </update>
+</sqlMap>

@@ -1,0 +1,193 @@
+@charset "utf-8";
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{margin:0;padding:0;}
+body,button,input,select,textarea{font:12px/1.5 tahoma,arial,\5b8b\4f53;}
+fieldset,img {border:0;}
+ol,ul {list-style:none;}
+em,i,strong,b {font-style:normal; font-weight:100;}
+h1,h2,h3,h4,h5,h6 {font-weight:normal;}
+address,cite,dfn,em,var{font-style:normal;}
+code,kbd,pre,samp{font-family:courier new,courier,monospace;}
+small{font-size:12px;}
+sup{vertical-align:text-top;}
+sub{vertical-align:text-bottom;}
+legend{color:#000;}
+button,input,select,textarea{font-size:100%;}
+table{border-collapse:collapse;border-spacing:0;}
+.clear {clear:both;}
+.ofl-hid {overflow:hidden;}
+.display-none {display:none;}
+.no-border {border:none;}
+/*element*/
+font {font-size:12px;}
+em {color:#c06;}
+strong {color:#f50;}
+del {color:#666;}
+/*blobal link*/
+a/*,a:link,a:visited*/ {color:#05e;text-decoration:none;}
+a:hover {color:#c06;text-decoration:underline;}
+a.red{color:#f00;}
+a.c-d06-a {color:#d06;}
+/*font*/
+.underline {text-decoration:underline;}
+.boldfont {font-weight:bold;}
+/*color*/
+.c-000 {color:#000;}
+.c-333 {color:#333;}
+.c-666 {color:#666;}
+
+/*size*/
+.w-980 {width:980px;}
+.w-710 {width:710px;}
+.w-580 {width:580px;}
+.w-370 {width:370px;}
+.w-260 {width:260px;}
+
+/*float direction*/
+.float-l {float:left;}
+.float-r {float:right;}
+
+/*frame*/
+.main-container {width:980px;margin:0 auto;}
+.left-container {float:left;}
+.right-container {float:right;}
+
+/*product list price block*/
+p.s2-price {width:240px;float:right;}
+p.s2-price del {color:#666;display:inline-block;width:50px;padding:0 2px 0 0;}
+p.s2-price strong {color:#f50;display:inline-block;width:50px;padding:0 2px 0 0;}
+p.s2-price span {color:#390;display:inline-block;padding:0 2px;}
+p.s2-price img {/*vertical-align:middle;*/margin:-2px 0 0;border:none;position:absolute;right:0;}
+
+/*header*/
+.shortcut{position:relative;z-index:99;width:100%;background:#eeeeee;height:29px;zoom:1;line-height:29px;border-bottom:1px solid #dcdcdc;}
+.shortcut p{float:left;color:#666;}
+.shortcut ul{float:right;}
+.shortcut ul li{float:left;display:inline; margin-right:5px;background:url(http://pic.lvmama.com/img/20800102/headerbg.png) no-repeat right 8px;padding-right:5px;}
+.shortcut a{color:#0055ee;text-decoration:none;}
+.shortcut a:hover{color:#cc0066; text-decoration:underline;}
+.shortinner{width:980px;margin:0 auto;position:relative;}
+/*my lvmama*/
+#my-lvmama {/*position:relative;*/}
+#my-lvmama b {display:inline-block;width:7px;height:7px;margin:0 0 0 2px;background:url(http://pic.lvmama.com/img/20800102/headerbg.png) 0 -125px no-repeat;}
+#my-lvmama a {padding-right:12px;background:url(http://pic.lvmama.com/img/20800102/headerbg.png) 63px -122px no-repeat;}
+#my-lvmama a.on {background:url(http://pic.lvmama.com/img/20800102/headerbg.png) 63px -135px no-repeat;}
+#lvmama_sub {display:none;position:absolute;right:58px;top:22px;border:1px solid #d06;background-color:#fff;padding:5px 20px;z-index:999; zoom:1;}
+#lvmama_sub a {display:block;line-height:25px;}
+
+.wrap{position:relative;z-index:2;width:980px;margin:18px auto 10px;}
+.bottom-line {border-bottom:4px solid #CC0066;}
+.header{ overflow:hidden;zoom:1;margin-bottom:20px;padding-left:10px;}
+.header .logo{float:left;padding:0;}/*delete padding:8px 0 0; in mudidi.css*/
+.header .logo img{margin-right:30px;}
+.header .search{float:left;margin:12px 0px 0px 50px;width:440px;height:30px; overflow:hidden;zoom:1; display:inline;}
+.header .search input{background:none;margin:0;width:346px;height:24px;line-height:24px;color:#666;font-size:14px;border-left:2px solid #cc0066;border-top:2px solid #cc0066;border-bottom:2px solid #cc0066;border-right:none 0;float:left;vertical-align:middle;padding:2px 0px 0px 2px;}
+.header .search img{float:left;vertical-align:middle;cursor:pointer;}
+#vertical-channel {border-bottom:4px solid #cc0066;width:975px;padding:0px 0px 0px 5px;}
+#vertical-channel ul {height:30px;padding-left:5px;}
+#vertical-channel li {display:inline;float:left;margin:2px 5px 0px 0px;background-position:0 -56px;}
+#vertical-channel .current a {background-color:#cc0066;background-position:0 -56px;}
+#vertical-channel .current a span {background-position:right -56px;color:#FFFFFF;height:28px;line-height:27px;padding:0 17px;}
+#vertical-channel .current a:hover span{background-position:right -56px;color:#FFFFFF;height:28px;line-height:27px;padding:0 17px;}
+#vertical-channel .current a:hover{background-position:0 -56px;}
+#vertical-channel a span {cursor:pointer;display:inline-block;font-size:14px;font-weight:700;height:28px;line-height:27px;padding:0 17px;}
+#vertical-channel a {color:#333;display:inline-block;outline:0 none;padding-left:3px;text-decoration:none;}
+#vertical-channel a, #vertical-channel a span{background:url(http://pic.lvmama.com/img/20800102/headerbg.png) no-repeat scroll -999em 0 transparent;}
+#vertical-channel a {color:#333;display:inline-block;outline:0 none;background-position:0 -84px;}
+#vertical-channel a:hover {background-position:0 -56px;color:#fff !important;text-decoration:none;}
+#vertical-channel a span {cursor:pointer;display:inline-block;font-size:14px;font-weight:bold;height:28px;line-height:27px;padding:0 17px;background-position:right -84px;}
+#vertical-channel a:hover span {background-position:right -56px;}
+#vertical-channel li.otherchannel{float:right;}
+#channel #vertical-channel li.otherchannel a{background:url(http://pic.lvmama.com/img/20800102/headerbg.png) no-repeat scroll 0 -8px;font-weight:500;}
+#channel #vertical-channel li.otherchannel span{background:none 0;padding:0px 10px 0px 5px;font-weight:500;}
+#channel #vertical-channel li.otherchannel a:hover span{color:#cc0066;font-weight:500;}
+#channel #vertical-channel li.current-text a span,#channel #vertical-channel li.current-text a:hover span {color:#c06;font-weight:bold;}
+.shopcart{background:url(http://pic.lvmama.com/img/20800102/headerbg.png) no-repeat  -152px -35px;padding-left:22px;}
+
+/*this css for the text under the header in the page —— line-notice-text*/
+.line-notice-text {display:none;padding:10px;width:960px;margin:0 auto;}
+.menuhot{position:absolute; top:58px; left:432px; z-index:999;}
+.menuhot2{position:absolute; top:60px; left:750px; z-index:999;}
+.wrap .indexmenuhot{top:58px;}
+
+.indextopban{width:980px;margin:0 auto;}
+topbanner{margin:0px 0px 18px;}
+/*footer*/
+.l_footer {clear:both;overflow:hidden;}
+.index_footer_img,.footer_img{text-align:center;width:984px;padding:10px 0px;}
+.index_footer_img img,.footer_img img{margin:0px 10px;}
+.index_footer,.footer{clear:both;width:980px;margin:0 auto;border-top:3px solid #d35299;text-align:center;padding:10px 0px;margin-top:10px;line-height:25px;color:#666;}
+.index_footer .indexftmenu{color:#003dee;}
+.index_footer a,.footer a{margin:0px 7px;}
+.index_footer .ftsrc{color:#333;}
+.index_footer .ftsrc span{font-size:14px;}
+.index_footer .ftsrc a{color:#333;margin:0;}
+.fl {line-height:24px; padding:0px 0px 10px 0px; color:#000;width:980px;margin:0 auto; }
+.fl a{ color:#666;}
+.fl p{ overflow:hidden;}
+.fl strong,.fl span{ display:block;float:left;font-weight:500;}
+.fl span{width:900px; text-align:left;}
+.fttencent{color:#333;margin-top:5px;}
+.fttencent strong{font-weight:500;}
+.fttencent span{margin-right:10px;}
+/*page */
+#lv_page { overflow:hidden; zoom:1; }
+.Pages { clear:both;padding:5px;text-align:right;font-size:12px;float:right; font-family:Arial, Helvetica, sans-serif; }
+.Pages a.PrevPage { background:url(http://pic.lvmama.com/img/g_com.gif) left top no-repeat; font-family:"", ""; }
+.Pages a.NextPage { background:url(http://pic.lvmama.com/img/b_com.gif) left top no-repeat; font-family:"", ""; }
+.Pages a.PageLink:Link,a.PageLink:Visited,a.PageLink:Active{background:#fff;float:left;margin-left:2px;padding:4px 8px;line-height:100%;font-weight:normal;color:#0076fa;text-decoration:none;font-size:12px;border:1px solid #e4b4d7;}
+.Pages a.PageLink:Hover{padding:4px 8px;color:#a70679;background:#f7f1f5;text-decoration:none;font-size:12px;border:1px solid #e4b4d7;}
+.Pages a.PrevPage:Link,a.PrevPage:Visited,a.PrevPage:Active{float:left;margin-left:2px;padding:5px 5px 3px 14px;line-height:100%;font-weight:normal;color:#0076fa;text-decoration:none;font-size:12px;border:1px solid #e4b4d7;background-color:#fff;background-position:3px 5px;}
+.Pages a.PrevPage:Hover{padding:5px 5px 3px 14px;color:#a70679;text-decoration:none;font-size:12px;border:1px solid #e4b4d7;background-color:#f7f1f5;background-position:3px 5px;}
+.Pages a.NextPage:Link,a.NextPage:Visited,a.NextPage:Active{float:left;margin-left:2px;padding:5px 14px 3px 5px;line-height:100%;font-weight:normal;color:#0076fa;text-decoration:none;font-size:12px;border:1px solid #e4b4d7;background-color:#fff;background-position:45px 5px;}
+.Pages a.NextPage:Hover{padding:5px 14px 3px 5px;color:#a70679;text-decoration:none;font-size:12px;border:1px solid #e4b4d7;background-color:#f7f1f5;background-position:45px 5px;}
+.Pages span.PageSel{float:left;padding:4px 8px;background:#fff;color:#a70679;font-weight:bold;margin-left:2px;}
+.Pages span.PageMore{float:left;padding:2px 8px;}
+
+.toptips{
+background:url(http://pic.lvmama.com/img/tipsbg.gif) no-repeat 5px 3px #FFFFE0;
+border:1px solid #F9DFB2;
+color:#555555;
+margin:0 auto;
+padding:4px 0 4px 25px;
+width:953px;
+}
+
+/*background image (icon)*/
+.quick-menu li {background:url(http://pic.lvmama.com/img/super_v2/s2_detail_icons.gif) no-repeat 999em 0;}
+
+/*site current location navigation*/
+#s2-site-nav {color:#333;height:26px;line-height:26px;padding:2px 0;margin:-10px auto 0;background-color:#F0F0F0;position:relative;z-index:999;}
+#site-nav .menu {position:relative;}
+#s2-site-nav .quick-menu {position:absolute;left:10px;top:1px;top:2px\9;_top:1px;}
+#s2-site-nav .quick-menu li {float:left;margin-left:-1px;padding:1px 15px 0 0;background-position:right -447px;position:relative;}
+#s2-site-nav .quick-menu li.last {background:none;}
+#s2-site-nav .quick-menu li a, #s2-site-nav .quick-menu li a:hover {color:#333;}
+#s2-site-nav .menu-hd {display:inline-block;position:relative;height:26px;margin:0px 1px 0;padding:0 15px 0 10px;cursor:pointer;z-index:1002;}
+#s2-site-nav .menu-hd b{position:absolute;right:3px;top:12px;top:10px\9;_top:11px;width:0;height:0;border-width:4px 4px;border-style:solid;border-color:#666 #eee #eee #eee;font-size:0;line-height:0;-webkit-transition:-webkit-transform .2s ease-in;-moz-transition:-webkit-transform .2s ease-in;-o-transition:-webkit-transform .2s ease-in;transition:-webkit-transform .2s ease-in;}
+#s2-site-nav .menu-bd{width:194px;height:130px;height:auto!important;min-height:130px;background:#fff url(http://pic.lvmama.com/img/super_v2/loading_32_32.gif) no-repeat 50% 50%;overflow:hidden;}
+#s2-site-nav .menu-bd-panel{padding:5px 10px;background-color:#fff;}
+#s2-site-nav .menu-bd dl{/*border-bottom:1px solid #e5e5e5;*/padding:5px 0;}
+#s2-site-nav .menu-bd .last{border:0;}
+#s2-site-nav .menu-bd dt{line-height:1.5;font-weight:bold;color:#8c8c8c;text-align:left;}
+#s2-site-nav .menu-bd dt a{color:#c06;}
+#s2-site-nav .menu-bd dd{line-height:22px;text-align:left;}
+#s2-site-nav .menu-bd dd a{white-space:nowrap;margin-right:2px;}
+#s2-site-nav .menu-bd dd i{padding:0 2px;color:#8c8c8c;font-style:normal;}
+#s2-site-nav .menu-bd dd span{color:#8c8c8c;}
+#s2-site-nav .menu-bd{display:none;position:absolute;left:0;top:27px;*top:26px;padding:10px;background:#fff;border:1px solid #bfbfbf;z-index:999;}
+
+#s2-site-nav .menu:hover .menu-hd,#s2-site-nav .hover .menu-hd {border-bottom:1px solid white;margin:0;*margin-top:-1px;_margin-top:0;border:1px solid #999;border-bottom:none;background:white;}
+#s2-site-nav .menu:hover .menu-bd,#s2-site-nav .hover .menu-bd{display:block;}
+#s2-site-nav .menu:hover .menu-hd b,#s2-site-nav .hover .menu-hd b{border-color:#666 #fff #fff #fff;-moz-transform:rotate(180deg);-moz-transform-origin:50% 30%;-webkit-transform:rotate(180deg);-webkit-transform-origin:50% 30%;-o-transform:rotate(180deg);-o-transform-origin:50% 30%;transform:rotate(180deg);transform-origin:50% 30%;filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);top:6px\9;}
+
+
+
+
+
+
+
+
+
+
+
+

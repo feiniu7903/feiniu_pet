@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	
+	<!-- 连接数据库不一样 -->
+	<bean id="baseIbatisDao" class="com.lvmama.comm.BaseIbatisDAO" abstract="true">
+		<property name="sqlMapClient">
+	      <ref bean="sqlMapClient"/>
+	    </property>
+	    <property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="baseIbatisDaoSc" class="com.lvmama.comm.BaseIbatisDAO" abstract="true">
+		<property name="sqlMapClient">
+	      <ref bean="sqlMapClientSc"/>
+	    </property>
+        <property name="dataSource" ref="dataSourceSc" />  
+	</bean>
+	<!-- EDM -->
+	<bean id="edmSubscribeBatchJobDAO" class="com.lvmama.operate.dao.EdmSubscribeBatchJobDAO" parent="baseIbatisDao"/>
+	<bean id="edmSubscribeBatchDAO" class="com.lvmama.operate.dao.EdmSubscribeBatchDAO" parent="baseIbatisDao"/>
+	<bean id="edmSubscribeTemplateDAO" class="com.lvmama.operate.dao.EdmSubscribeTemplateDAO" parent="baseIbatisDao"/>
+	<bean id="edmSubscribeUserGroupDAO" class="com.lvmama.operate.dao.EdmSubscribeUserGroupDAO" parent="baseIbatisDao"/>
+	<bean id="edmSubscribeTaskDAO" class="com.lvmama.operate.dao.EdmSubscribeTaskDAO" parent="baseIbatisDao"/>
+	<bean id="subscribeDAO" class="com.lvmama.operate.dao.EdmSubscribeDAO" parent="baseIbatisDao"/>
+	<bean id="subscribeInfoDAO" class="com.lvmama.operate.dao.EdmSubscribeInfoDAO" parent="baseIbatisDao"/>
+	
+	<bean id="edmSubscribeDAO" class="com.lvmama.operate.dao.EdmSubscribeDAO" parent="baseIbatisDaoSc"/>
+	<bean id="edmSubscribeInfoDAO" class="com.lvmama.operate.dao.EdmSubscribeInfoDAO" parent="baseIbatisDaoSc"/>
+	<bean id="reportUsrUsersDAO" class="com.lvmama.operate.dao.ReportUsrUsersDAO" parent="baseIbatisDaoSc"/>
+	<bean id="edmExportDAO" class="com.lvmama.operate.dao.EdmExportDAO" parent="baseIbatisDaoSc"/>
+	<bean id="onlineMarketingDAO" class="com.lvmama.operate.dao.OnlineMarketingDAO" parent="baseIbatisDaoSc"/>
+	<bean id="comProvinceDAO" class="com.lvmama.operate.dao.ComProvinceDAO" parent="baseIbatisDaoSc"/>
+	<bean id="comCityDAO" class="com.lvmama.operate.dao.ComCityDAO" parent="baseIbatisDaoSc"/>
+	<!-- BASE -->
+	<bean id="comCodesetDAO" class="com.lvmama.operate.dao.ComCodesetDAO" parent="baseIbatisDao" />
+	<bean id="ordContractTempDAO" class="com.lvmama.operate.dao.OrdContractTempDAO" parent="baseIbatisDao"/>
+</beans>

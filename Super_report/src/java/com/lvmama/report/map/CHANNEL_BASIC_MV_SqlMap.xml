@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CHANNEL_BASIC_MV">
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.ChannelBasicMV">
+		<result column="CHANNEL_NAME" property="channelName" />
+		<result column="PAY_TIME" property="payTime" />
+		<result column="PRODUCT_NAME" property="prodProductName" />
+		<result column="PROD_PRODUCT_ID" property="prodProductId" />
+		<result column="DEST" property="dest" />
+		<result column="QUANTITY" property="quantity" />
+		<result column="AMOUNT" property="amount" />
+		<result column="PROFIT" property="profit" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+	</resultMap>
+	
+	<resultMap id="ChannelResultMap" class="com.lvmama.report.po.ChannelBasicMV">
+		<result column="CHANNEL_NAME" property="channelName" />
+		<result column="QUANTITY" property="quantity" />
+		<result column="AMOUNT" property="amount" />
+		<result column="PROFIT" property="profit" />
+	</resultMap>
+	
+	<resultMap id="loscOrderStatisticsMap" class="com.lvmama.report.po.LoscOrderStatisticsMV">
+        <result property="channel" column="CHANNEL" />  
+        <result property="orderAmount" column="ORDER_AMOUNT" /> 
+        <result property="sumOughtPay" column="SUM_OUGHT_PAY" /> 
+        <result property="sumActualPay" column="SUM_ACTUAL_PAY" /> 
+        <result property="payedAmount" column="PAYED_AMOUNT" /> 
+        <result property="payedMemberAmount" column="PAYED_MEMBER_AMOUNT" />     
+    </resultMap>
+	
+	<sql id="queryChannelBasicMVSql">
+		from (select CHANNEL_NAME,sum(QUANTITY) as QUANTITY,sum(AMOUNT) as AMOUNT,sum(PROFIT) as PROFIT from CHANNEL_BASIC_MV where 1=1
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="startDate">
+			PAY_TIME<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			PAY_TIME<![CDATA[<]]>#endDate#+1
+		</isNotNull>
+		<isNotNull prepend="and" property="channel">
+			CHANNEL_NAME like '%$channel$%'
+		</isNotNull>
+		group by CHANNEL_NAME
+		ORDER BY QUANTITY DESC ) info
+	</sql>
+	
+	<select id="countChannelBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(*) 
+					<include refid="queryChannelBasicMVSql"/>
+	</select>
+	
+	<select id="sumAmountChannelBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select sum(AMOUNT) from CHANNEL_BASIC_MV where 1=1
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="startDate">
+			PAY_TIME<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			PAY_TIME<![CDATA[<]]>#endDate#+1
+		</isNotNull>
+		<isNotNull prepend="and" property="channel">
+			CHANNEL_NAME like '%$channel$%'
+		</isNotNull>
+	</select>
+	
+	<select id="sumProfitChannelBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select sum(PROFIT) from CHANNEL_BASIC_MV where 1=1
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="startDate">
+			PAY_TIME<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			PAY_TIME<![CDATA[<]]>#endDate#+1
+		</isNotNull>
+		<isNotNull prepend="and" property="channel">
+			CHANNEL_NAME like '%$channel$%'
+		</isNotNull>
+	</select>
+	
+	<select id="queryChannelBasicMV" parameterClass="java.util.Map" resultMap="ChannelResultMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT 
+			rownum r,
+			info.*
+		<include refid="queryChannelBasicMVSql"/>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_endRow" >rownum &lt; #_endRow# </isNotEmpty> 
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;= #_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+
+	
+	<sql id="query_LoscOrderStatistics_sql">
+		select T1.*, T2.payed_amount, T2.payed_member_amount, T2.sum_actual_pay
+	    from (select ooc.channel, count(oo.order_id) as order_amount, sum(oo.ought_pay) sum_ought_pay
+		      from lvmama_super.ord_order_channel ooc inner join lvmama_super.ord_order oo on ooc.order_id=oo.order_id
+		      <dynamic prepend=" where ">		          
+	              <isNotEmpty prepend=" AND " property="startDate">ooc.CREATE_DATE &gt;= #startDate#</isNotEmpty>
+	              <isNotEmpty prepend=" AND " property="endDate">ooc.CREATE_DATE &lt;= #endDate# + 1</isNotEmpty>
+	              <isNotEmpty prepend=" AND " property="channel" > ooc.channel like '%'||#channel#||'%' </isNotEmpty>
+		      </dynamic>
+		      group by ooc.channel
+		      ) T1,
+		     (select ooc.channel, sum(oo.actual_pay) sum_actual_pay, count(oo.order_id) as payed_amount, count(distinct(oo.user_id)) as payed_member_amount
+		      from lvmama_super.ord_order_channel ooc inner join lvmama_super.ord_order oo on ooc.order_id=oo.order_id
+		      where oo.payment_status='PAYED' AND oo.payment_status != 'CANCEL'
+	                <isNotEmpty prepend=" AND " property="startDate">ooc.CREATE_DATE &gt;= #startDate#</isNotEmpty>
+	                <isNotEmpty prepend=" AND " property="endDate">ooc.CREATE_DATE &lt;= #endDate# + 1</isNotEmpty>
+	                <isNotEmpty prepend=" AND " property="channel" > ooc.channel like '%'||#channel#||'%' </isNotEmpty>           
+		      group by ooc.channel
+		      ) T2
+         where T1.channel = T2.channel(+)
+	</sql>
+	
+	<select id="loscOrderStatisticsCount" parameterClass="java.util.Map" resultClass="Long">
+        select count(*) 
+        from ( <include refid="query_LoscOrderStatistics_sql"/> ) T
+    </select> 	
+	   
+    <select id="queryLoscOrderStatistics" parameterClass="java.util.Map" resultMap="loscOrderStatisticsMap">
+		select * 
+		from (select T.*, rownum as rn
+		      from (<include refid="query_LoscOrderStatistics_sql"/>) T
+		      <dynamic prepend=" WHERE ">
+                <isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+              </dynamic>
+		     )
+		<dynamic prepend = " WHERE ">
+            <isNotEmpty property="_startRow" prepend=" AND "> rn &gt;= #_startRow# </isNotEmpty>
+        </dynamic>
+    </select> 
+</sqlMap>

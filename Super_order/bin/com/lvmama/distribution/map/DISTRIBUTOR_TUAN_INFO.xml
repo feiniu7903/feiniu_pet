@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="DISTRIBUTOR_TUAN_INFO">
+   <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributorTuanInfo">
+        <result property="distributorTuanInfoId" column="DISTRIBUTOR_TUAN_INFO_ID"/>
+        <result property="distributorCode" column="DISTRIBUTOR_CODE"/>
+        <result property="distributorName" column="DISTRIBUTOR_NAME"/>
+        <result property="channelType" column="CHANNEL_TYPE"/>
+        <result property="paymentCode" column="PAYMENT_CODE"/>
+        <result property="memo" column="MEMO"/>
+    </resultMap>
+
+	<sql id="columns">
+        DISTRIBUTOR_TUAN_INFO_ID ,DISTRIBUTOR_CODE ,DISTRIBUTOR_NAME ,CHANNEL_TYPE ,PAYMENT_CODE ,MEMO 
+	</sql>
+	
+    <insert id="insert" parameterClass="com.lvmama.comm.bee.po.distribution.DistributorTuanInfo" >
+    	<selectKey  keyProperty="distributorTuanInfoId" resultClass="Long"> SELECT DISTRIBUTOR_TUAN_INFO_ID_SEQ.NEXTVAL FROM DUAL</selectKey>
+        INSERT INTO DISTRIBUTOR_TUAN_INFO (
+        	DISTRIBUTOR_TUAN_INFO_ID ,
+        	DISTRIBUTOR_CODE ,
+        	DISTRIBUTOR_NAME ,
+        	CHANNEL_TYPE ,
+        	PAYMENT_CODE ,
+        	MEMO 
+        ) VALUES (
+        	#distributorTuanInfoId# ,
+        	#distributorCode# ,
+        	#distributorName# ,
+        	#channelType# ,
+        	#paymentCode# ,
+        	#memo# 
+        )
+    </insert>
+
+    <update id="update" parameterClass="com.lvmama.comm.bee.po.distribution.DistributorTuanInfo">
+        UPDATE DISTRIBUTOR_TUAN_INFO SET
+	        DISTRIBUTOR_NAME = #distributorName# ,
+	        MEMO = #memo# 
+        WHERE 
+	        DISTRIBUTOR_TUAN_INFO_ID = #distributorTuanInfoId# 
+    </update>
+
+    <delete id="delete" parameterClass="Long">
+        DELETE FROM DISTRIBUTOR_TUAN_INFO WHERE
+        DISTRIBUTOR_TUAN_INFO_ID = #distributorTuanInfoId# 
+    </delete>
+    
+    <select id="selectByDistributorId" resultMap="BaseResultMap" parameterClass="Long">
+	    SELECT <include refid="columns"/>
+	        FROM DISTRIBUTOR_TUAN_INFO 
+	        WHERE 
+		        DISTRIBUTOR_TUAN_INFO_ID = #distributorTuanInfoId# 
+    </select>
+
+	<sql id="findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="distributorCode">
+		             DISTRIBUTOR_CODE = #distributorCode#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="distributorName">
+		             DISTRIBUTOR_NAME LIKE '%'|| #distributorName# ||'%'
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="channelType">
+		             CHANNEL_TYPE = #channelType#
+		       </isNotEmpty>
+	    </dynamic>
+	    order by DISTRIBUTOR_TUAN_INFO_ID desc	
+	</sql>
+	 
+    <select id="findPageCount" resultClass="long" parameterClass="java.util.Map">
+        SELECT count(*) FROM DISTRIBUTOR_TUAN_INFO <include refid="findPage.where"/>    
+    </select>
+    
+    <select id="findPage" resultMap="BaseResultMap" parameterClass="java.util.Map">
+    	SELECT * FROM (SELECT T.*,ROWNUM RN FROM (
+	    	SELECT <include refid="columns"/> FROM DISTRIBUTOR_TUAN_INFO 
+			<include refid="findPage.where"/>
+			<dynamic prepend="ORDER BY">
+				<isNotEmpty property="sortColumns">$sortColumns$</isNotEmpty>
+			</dynamic>
+		)T )TT WHERE TT.RN &gt;=#start# and TT.RN &lt;=#end#
+    </select>
+
+    <select id="getByDistributorCode" resultMap="BaseResultMap" parameterClass="java.lang.String">
+	    SELECT <include refid="columns"/>
+	        FROM DISTRIBUTOR_TUAN_INFO WHERE DISTRIBUTOR_CODE = #distributorCode#
+    </select>
+    
+	<select id="queryByType" resultMap="BaseResultMap" parameterClass="java.lang.String">
+	    SELECT * FROM DISTRIBUTOR_TUAN_INFO WHERE CHANNEL_TYPE = #channelType#  order by DISTRIBUTOR_TUAN_INFO_ID
+    </select>
+    
+      <select id="getAllDistributors" resultMap="BaseResultMap">
+  		SELECT * FROM DISTRIBUTOR_TUAN_INFO ORDER BY DISTRIBUTOR_TUAN_INFO_ID ASC
+  </select>
+</sqlMap>
+

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_PRODUCT_BASIC_MV">
+	<resultMap id="SupplierResultMap" class="com.lvmama.report.po.MetaProductBasicMV">
+		<result column="META_PRODUCT_ID" property="metaProductId" />
+		<result column="SUPPLIER_NAME" property="supplierName" />
+		<result column="META_PRODUCT_NAME" property="metaProductName" />
+		<result column="META_PRODUCT_TYPE" property="metaType" />
+		<result column="PROD_PRODUCT_ID" property="sellProductId" />
+		<result column="PROD_PRODUCT_NAME" property="sellProductName" />
+		<result column="PROD_PRODUCT_TYPE" property="sellType" />
+		<result column="ORDER_QUANTITY" property="orderQuantity" />
+		<result column="QUANTITY" property="sellQuantity" />
+		<result column="AMOUNT" property="sellMoney" />
+	</resultMap>
+
+	<resultMap id="SupplierRankResultMap" class="com.lvmama.report.vo.SupportRankAnalysisVo">
+		<result column="SUPPLIER_NAME" property="supplierName" />
+		<result column="ORDER_QUANTITY" property="orderQuantity" />
+		<result column="PERSON_QUANTITY" property="personQuantity" />
+		<result column="ROOM_QUANTITY" property="roomQuantity" />
+		<result column="SUIT_QUANTITY" property="suitQuantity" />
+	</resultMap>
+
+
+
+	<sql id="queryMetaProductSqlBasicMVSql">
+		from (SELECT META_PRODUCT_ID META_PRODUCT_ID, SUPPLIER_NAME
+		SUPPLIER_NAME , META_PRODUCT_NAME META_PRODUCT_NAME, PRODUCT_TYPE
+		META_PRODUCT_TYPE,
+		PROD_PRODUCT_ID PROD_PRODUCT_ID, PROD_PRODUCT_NAME
+		PROD_PRODUCT_NAME,
+		SELL_PRODUCT_TYPE PROD_PRODUCT_TYPE,
+		SUM(ORDER_QUANTITY) ORDER_QUANTITY ,SUM(QUANTITY) QUANTITY
+		,SUM(AMOUNT/100) AMOUNT
+		from $tableName$ c where 1=1
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="startDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[<]]>#endDate#+1
+		</isNotNull>
+		<isNotNull prepend="and" property="meta_product_id">
+			META_PRODUCT_ID =
+			#meta_product_id#
+		</isNotNull>
+		<isNotNull prepend="and" property="metaProdName">
+			META_PRODUCT_NAME like
+			'%$metaProdName$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="supplierName">
+			SUPPLIER_NAME like
+			'%$supplierName$%'
+		</isNotNull>
+		GROUP BY META_PRODUCT_ID , SUPPLIER_NAME , META_PRODUCT_NAME
+		,PRODUCT_TYPE,
+		PROD_PRODUCT_ID , PROD_PRODUCT_NAME ,
+		SELL_PRODUCT_TYPE
+		order by PROD_PRODUCT_ID desc
+		)info
+	</sql>
+	<select id="countMetaProductBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		select count(*)
+		<include refid="queryMetaProductSqlBasicMVSql" />
+	</select>
+
+	<select id="sumOrderQuantityMetaProdProductBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(ORDER_QUANTITY)
+		<include refid="queryMetaProductSqlBasicMVSql" />
+	</select>
+
+	<select id="sumAmountQuantityMetaProductBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(QUANTITY)
+		<include refid="queryMetaProductSqlBasicMVSql" />
+	</select>
+
+	<select id="sumAmountProductBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(AMOUNT)
+		<include refid="queryMetaProductSqlBasicMVSql" />
+	</select>
+
+	<select id="queryMetaProductBasicMV" parameterClass="java.util.Map"
+		resultMap="SupplierResultMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT
+		rownum r,
+		info.*
+		<include refid="queryMetaProductSqlBasicMVSql" />
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow">rownum &lt;= #_endRow#
+			</isNotEmpty>
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;
+				=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<sql id="querySupportRankBasicMVSql">
+	from (select SUPPLIER_NAME SUPPLIER_NAME,
+		SUM(ORDER_QUANTITY)
+		ORDER_QUANTITY,
+		sum(nvl(PERSON_QUANTITY, 0)) PERSON_QUANTITY,
+		sum(nvl(ROOM_QUANTITY, 0)) ROOM_QUANTITY,
+		sum(nvl(SUIT_QUANTITY, 0)) SUIT_QUANTITY
+		from $tableName$ a where 1=1
+		<isNotNull prepend="and" property="startDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[<]]>#endDate#+1
+		</isNotNull>
+		GROUP BY SUPPLIER_NAME
+		<dynamic prepend=" order by ">
+			<isNotNull prepend="" property="sortTypeName">
+				$sortTypeName$
+				$sortAscOrDesc$
+			</isNotNull>
+		</dynamic>
+		)  info
+	</sql>
+	<select id="querySupportRankAnalysis" parameterClass="java.util.Map"
+		resultMap="SupplierRankResultMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT
+		rownum r,
+		info.*
+		<include refid="querySupportRankBasicMVSql" />
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow">rownum &lt;= #_endRow#
+			</isNotEmpty>
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;
+				=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="countSupportRankAnalysis" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		select count(*)
+		<include refid="querySupportRankBasicMVSql" />
+	</select>
+
+	<select id="sumOrderQuantity" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(ORDER_QUANTITY)
+		<include refid="querySupportRankBasicMVSql" />
+	</select>
+
+	<select id="sumPersonQuantity" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(PERSON_QUANTITY)
+		<include refid="querySupportRankBasicMVSql" />
+	</select>
+
+	<select id="sumRoomQuantity" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(ROOM_QUANTITY)
+		<include refid="querySupportRankBasicMVSql" />
+	</select>
+
+	<select id="sumSuitQuantity" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(SUIT_QUANTITY)
+		<include refid="querySupportRankBasicMVSql" />
+	</select>
+
+</sqlMap>

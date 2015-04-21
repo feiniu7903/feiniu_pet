@@ -1,0 +1,191 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_sale_deal_add"?>
+	<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+	<window id="win_sale_deal_add" title="售后服务处理" border="normal"
+		apply="com.lvmama.back.web.ord.sale.ordSaleDealAddAction">
+		<space />
+		<groupbox style="border: none;">
+			<caption label="售后服务对象"></caption>
+			<listbox model="@{saction.ordSaleServiceList}">
+				<listhead>
+					<listheader label="申请售后服务"></listheader>
+					<listheader label="申请内容"></listheader>
+					<listheader label="申请人"></listheader>
+					<listheader label="申请时间"></listheader>
+				</listhead>
+				<listitem self="@{each='ordSale'}">
+					<listcell label="@{ordSale.serviceTypeName}"></listcell>
+					<listcell style="word-break: break-all;">
+						<label value="@{ordSale.applyContent}" />
+					</listcell>
+					<listcell>
+						<label value="@{ordSale.operatorName}" />
+					</listcell>
+					<listcell label="@{ordSale.createTime}"></listcell>
+				</listitem>
+			</listbox>
+		</groupbox>
+		<space />
+		<groupbox style="border: none;">
+			<caption label="处理结果"></caption>
+			<listbox
+				model="@{saction.ordSaleServiceDealList,load-after='btnSaleDealAdd.onClick'}">
+				<listhead>
+					<listheader label="处理内容"></listheader>
+					<listheader label="处理人"></listheader>
+					<listheader label="处理时间"></listheader>
+					<listheader label="供应商" if='${saction.serviceType=="URGENCY"}'></listheader>
+				</listhead>
+				<listitem self="@{each='ordSaleDeal'}">
+					<listcell style="word-break: break-all;">
+						<label value="@{ordSaleDeal.dealContent}" />
+					</listcell>
+					<listcell>
+						<label value="@{ordSaleDeal.operatorName}" />
+					</listcell>
+					<listcell label="@{ordSaleDeal.createTime}"></listcell>
+					<listcell label="@{ordSaleDeal.supplierName}" if='${saction.serviceType=="URGENCY"}'></listcell>
+				</listitem>
+			</listbox>
+		</groupbox>
+		<space />
+		<groupbox style="border: none" visible="${saction.editabled}">
+			<caption label="添加售后服务内容" />
+			<grid>
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+					<column width="150px"></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label value="处理内容:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox id="ord_applyContent" rows="5"
+								maxlength="200" value="@{saction.ordSaleDealPo.dealContent}"
+								constraint="no empty:处理内容不能为空" width="550px">
+							</textbox>
+						</hbox>
+						<hbox>
+							<button id="btnSaleDealAdd" width="100px"
+								label="提交" onClick="chk_value()"/>
+						</hbox>
+					</row>
+					<row if='${saction.serviceType=="URGENCY"}'>
+						<hbox>
+							<label value="供应商选择:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<listbox model="@{saction.supList}" id="supplierId" mold="select" 
+								onSelect='saction.changeSupplier(self.selectedItem.value)' >
+								<listitem self="@{each='supplier'}" label="@{supplier.supplierName}" value="@{supplier.supplierId}"></listitem>
+							</listbox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<toolbar align="center" visible="${saction.editabled }">
+			<listbox codeset="ORD_SALE_REASON" mold="select"
+				onSelect='saction.changeSaleReason(self.selectedItem.value)' />
+			<button id="btnSaleFinish" width="100px" label="售后处理结束"
+				onClick="do_finish_sale()">
+				<custom-attributes
+					saleServiceId="@{saction.saleServiceId}" />
+			</button>
+			<button id="btnSale3DealAdd" width="100px" label="转售后"
+				if='${saction.serviceType=="URGENCY"}'
+				onClick='saction.updateOrdSaleServiceType(self.getAttribute("saleStaus"));win_refund_add.detach()' >
+				<custom-attributes
+					saleStaus="NORMAL" />
+				</button>
+				
+			<!-- button id="d" width="100px" label="转投拆"
+				if='${saction.serviceType=="NORMAL"}'
+				onClick='saction.updateOrdSaleServiceType(self.getAttribute("saleStaus"));win_refund_add.detach()' >
+				<custom-attributes
+					saleStaus="COMPLAINT" />
+				</button -->
+		</toolbar>
+		<zscript>    
+		 int countNum = 11; 
+		 void restart() {timer.start();timer.repeats=true; }
+		</zscript>
+		<zscript>
+		<![CDATA[
+	public void chk_value() {
+		String content = ord_applyContent.getValue();
+		if (content == "") {
+			alert("请填写售后服务中的处理内容!");
+			return;
+		}
+		
+		if ("URGENCY".equals(saction.serviceType)) {
+			if (supplierId.getValue() == "") {
+				alert("供应商不能为空");
+				return;
+			}
+		}
+		//if(content.length() < 20) {
+		//	alert("售后服务处理内容不能少于20字符!");
+		//	return;
+		//}
+		restart();
+		saction.addOrderSaleDeal();
+		btnSaleDealAdd.setDisabled(true);
+		
+	}
+	public void do_finish_sale() {
+		String content = ord_applyContent.getValue();
+		if (content == "") {
+			alert("请填写售后服务中的处理内容!");
+			return;
+		}
+		if ("URGENCY".equals(saction.serviceType)) {
+			if (supplierId.getValue() == "") {
+				alert("供应商不能为空");
+				return;
+			}
+		}
+		//if(content.length() < 20) {
+		//	alert("售后服务处理内容不能少于20字符!");
+		//	return;
+		//}
+		saction.ordSaleFinish();
+		String flag = saction.canCloseWin;
+		if(null == flag){
+			alert("处理成功!");
+			return;
+		}
+		if(!"N".equals(saction.canCloseWin)){
+			win_refund_add.detach();
+		}
+		
+	}]]>
+</zscript>
+		<timer id="timer" delay="1000">
+			<attribute name="onTimer">
+				if (countNum == 0) {
+					btnSaleDealAdd.setLabel("提交");
+					btnSaleDealAdd.setDisabled(false);
+					timer.stop();
+					return;
+				}
+				if (countNum == 11) {
+					--countNum;
+					btnSaleDealAdd.setLabel("提交");
+				} else {
+					if (countNum != null) {
+						btnSaleDealAdd.setLabel("提交(" + (--countNum) + ")");
+					}
+				}
+			</attribute>
+		</timer>
+	</window>
+</zk>

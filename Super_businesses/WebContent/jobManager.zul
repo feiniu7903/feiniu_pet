@@ -1,0 +1,26 @@
+<?page title="任务管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./jobManagement"?>
+<window id="jobManagement" title="任务管理" border="normal" apply="com.lvmama.businessreply.web.JobManagementAction">
+    	<grid>
+			<columns>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>任务名称：
+						<listbox rows="1" mold="select" onSelect="saction.serviceName = self.selectedItem.label">
+							<listitem label="vipShopBuildXmlJob"/>
+							<listitem label="ruichuangBuildXmlJob"/>
+							<listitem label="ruichuangTicketsJob"/>
+						</listbox>
+					</hbox>
+				</row>
+				
+				<row>
+					<hbox>
+					  <button label="提交" width="100px" onClick="saction.doVipShop123Job()" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+</window>

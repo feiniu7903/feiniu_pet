@@ -1,0 +1,33 @@
+<?page title="aud_pass" contentType="text/html;charset=UTF-8"?>
+
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./aud_pass"?>
+<zk>
+	<window id="aud_pass" title="终审审核历史列表" border="normal" closable="true"
+		apply="com.lvmama.back.web.audit.PermFinalAuditTaskHistoryAction">
+		<listbox id="metaProductListBox" model="@{saction.permFinalAuditTaskList}">
+		<listhead>
+			<listheader label="操作"/>
+			<listheader label="一审时间" width="15%"/>
+			<listheader label="初审审核人" />
+			<listheader label="审核消息内容" width="30%"/>
+			<listheader label="状态" />
+			<listheader label="终审时间" width="15%"/>
+			<listheader label="终审审核人" />
+		</listhead>
+		<listitem id="mysearch" height="25px" self="@{each='finalList'}">
+			<listcell>
+				<a style="color:blue" label="打开链接" onClick='saction.showWindow("/auditing/metas/first_audit_history.zul" ,self.getAttributes());' >
+					<custom-attributes finalTaskId="@{finalList.finalTaskId}" />
+				</a>
+			</listcell>
+			<listcell label="@{finalList.createTime}" />
+			<listcell label="@{finalList.createUserName}" />
+			<listcell label="@{finalList.description}" />
+			<listcell label="@{finalList.zhStatus}" />
+			<listcell label="@{finalList.updateTime}" />
+			<listcell label="@{finalList.auditUserName }" />
+		</listitem>
+	</listbox>
+		
+	</window>
+</zk>

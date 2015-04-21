@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CASH_BONUS_DAY_REPORT">
+
+	<resultMap id="cashBonusDayReport" class="com.lvmama.report.po.CashBonusDayReport">
+		<result column="TOTAL_SUM_CASH" property="totalSumCash" />
+		<result column="CREATE_DATE" property="createDate" />
+	</resultMap>
+	
+	<resultMap id="addedBonusResultMap" class="java.util.HashMap">
+		<result column="comefrom" property="comefrom" />
+		<result column="total" property="total" jdbcType="Long"/>
+	</resultMap>
+	<typeAlias alias="CashBonusDayReport" type="com.lvmama.report.po.CashBonusDayReport"/>
+	
+	<!-- 增加记录 -->
+    <insert id="insertData" parameterClass="CashBonusDayReport">
+	    INSERT INTO lvmama_report.CASH_BONUS_DAY_REPORT (create_date,total_sum_cash) VALUES (#createDate#,#totalSumCash#)
+    </insert>
+    
+    
+    <select id="getCounts" resultClass="java.lang.Long" parameterClass="java.util.Date">
+		select count(cs.create_date)
+		from lvmama_report.CASH_BONUS_DAY_REPORT cs 
+		where cs.create_date=to_char(#createDate#, 'yyyy-mm-dd')
+	</select>
+	
+	<delete id="delete" parameterClass="java.util.Date">
+		delete from lvmama_report.CASH_BONUS_DAY_REPORT where create_date=to_char(#createDate#, 'yyyy-mm-dd')
+	</delete>
+	
+	 <select id="sumTotalBonusBalance" resultClass="java.lang.Long" >
+		select nvl(sum(cs.BONUS_BALANCE), 0) from LVMAMA_PET.cash_account cs
+	</select>
+	
+	<select id="getTotalSumCash" resultClass="java.lang.Long" parameterClass="java.util.Date">
+		select cs.total_sum_cash as total 
+		from lvmama_report.CASH_BONUS_DAY_REPORT cs 
+		where cs.create_date=to_char(#createDate#, 'yyyy-mm-dd')
+	</select>
+	
+	<select id="getTotalAddedBonus" resultMap="addedBonusResultMap" parameterClass="java.util.HashMap">
+		<![CDATA[
+			SELECT cb.come_from AS comefrom,
+			SUM(cb.bonus) AS total
+			FROM LVMAMA_PET.CASH_BONUS_RETURN cb WHERE cb.create_date>=to_date(#startDate#, 'yyyy-mm-dd') 
+			AND cb.create_date<to_date(#endDate#, 'yyyy-mm-dd')+1
+			GROUP BY cb.come_from
+		 ]]>
+	</select>
+	
+	<select id="getTotalPayBonus" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		<![CDATA[
+			SELECT SUM(cp.amount) AS amount
+			FROM LVMAMA_PET.CASH_PAY cp
+			WHERE cp.pay_from='BONUS' 
+			AND cp.create_time>=to_date(#startDate#, 'yyyy-mm-dd')
+			AND cp.create_time<to_date(#endDate#, 'yyyy-mm-dd')+1
+		 ]]>
+	</select>
+
+</sqlMap>

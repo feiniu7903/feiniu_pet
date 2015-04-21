@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:const.properties</value>
+				<value>classpath:mail.properties</value>
+				<value>classpath:stock_insufficient.properties</value>
+				<value>classpath:jms.properties</value>
+			</list>
+		</property>
+	</bean>
+	<import resource="applicationContext-lvmama-comm-beans.xml"/>
+	<import resource="applicationContext-lvmama-comm-remote.xml"/>
+	<import resource="applicationContext-product-head-remote.xml"/>
+	<import resource="applicationContext-lvmama-comm-bee-remote.xml"/>
+	<import resource="applicationContext-report-database.xml"/>
+	<import resource="applicationContext-report-service.xml"/>
+	<import resource="applicationContext-report-dao.xml"/>
+	<import resource="applicationContext-report-remote.xml"/>
+	<import resource="applicationContext-report-job.xml"/>
+	
+	<bean id="sessionUserFilter" class="com.lvmama.report.web.filter.SessionUserFilter">
+	</bean>
+</beans>

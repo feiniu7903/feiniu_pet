@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_ORDER_ITEM_PROD_TIME" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderItemProdTime" >
+    <result column="ITEM_PROD_TIME_ID" property="itemProdTimeId" />
+    <result column="ORDER_ITEM_PROD_ID" property="orderItemProdId" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="PRICE" property="price" />
+    <result column="QUANTITY" property="quantity" />
+    <result column="VISIT_TIME" property="visitTime" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemProdTime" >
+    select ITEM_PROD_TIME_ID, ORDER_ITEM_PROD_ID, CREATE_TIME, PRICE, QUANTITY,VISIT_TIME
+    from ORD_ORDER_ITEM_PROD_TIME
+    where ITEM_PROD_TIME_ID = #itemProdTimeId:DECIMAL#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemProdTime" >
+    delete from ORD_ORDER_ITEM_PROD_TIME
+    where ITEM_PROD_TIME_ID = #itemProdTimeId:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemProdTime" >
+    <selectKey resultClass="java.lang.Long" keyProperty="itemProdTimeId" >
+      select ORDER_ITEM_PROD_TIME_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_ORDER_ITEM_PROD_TIME (ITEM_PROD_TIME_ID, ORDER_ITEM_PROD_ID, CREATE_TIME, PRICE,
+      QUANTITY,VISIT_TIME)
+    values (#itemProdTimeId:DECIMAL#, #orderItemProdId:DECIMAL#, sysdate, #price:DECIMAL#,
+      #quantity:DECIMAL#,#visitTime:DATE#)
+  </insert>
+  <select id="selectProdTimeByProdItemId" resultMap="BaseResultMap">
+  select * from ORD_ORDER_ITEM_PROD_TIME where ORDER_ITEM_PROD_ID=#itemId#
+  </select>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemProdTime" >
+    <selectKey resultClass="java.lang.Long" keyProperty="itemProdTimeId" >
+      select ORDER_ITEM_PROD_TIME_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_ORDER_ITEM_PROD_TIME
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="itemProdTimeId" >
+        ITEM_PROD_TIME_ID
+      </isNotNull>
+      <isNotNull prepend="," property="orderItemProdId" >
+        ORDER_ITEM_PROD_ID
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        PRICE
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        QUANTITY
+      </isNotNull>
+       <isNotNull prepend="," property="visitTime" >
+        VISIT_TIME
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="itemProdTimeId" >
+        #itemProdTimeId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="orderItemProdId" >
+        #orderItemProdId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        #createTime:DATE#
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        #price:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        #quantity:DECIMAL#
+      </isNotNull>
+       <isNotNull prepend="," property="visitTime" >
+        #visitTime:DATE#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemProdTime" >
+    update ORD_ORDER_ITEM_PROD_TIME
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="orderItemProdId" >
+        ORDER_ITEM_PROD_ID = #orderItemProdId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #date:DATE#
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        PRICE = #price:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        QUANTITY = #quantity:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    where ITEM_PROD_TIME_ID = #itemProdTimeId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemProdTime" >
+    update ORD_ORDER_ITEM_PROD_TIME
+    set ORDER_ITEM_PROD_ID = #orderItemProdId:DECIMAL#,
+      CREATE_TIME = #createTime:DATE#,
+      PRICE = #price:DECIMAL#,
+      QUANTITY = #quantity:DECIMAL#
+    where ITEM_PROD_TIME_ID = #itemProdTimeId:DECIMAL#
+  </update>
+</sqlMap>

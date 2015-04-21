@@ -1,0 +1,189 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>${toDest!}自由行（景点+酒店）_周边/主题游-驴妈妈手机站</title>
+<#include "../common/define.html">
+<script type="text/javascript">
+$(function(){
+	/*input 框变色*/
+	
+	
+});
+
+function ke_focus(obj) {
+	$(obj).val('');
+	$(obj).attr('placeholder','');
+}
+
+function key_blur(obj) {
+	var v = $(obj).val();
+	if(null == v || $.trim(v) =='') {
+		$(obj).val($("#toDest").val());
+	}
+}
+
+function freeTripSearch(){
+	var toDest = $("#keyword").val();
+	if (toDest!=null && typeof(toDest)!="undefined"&&toDest!=0){
+		$("input[name='toDest']").val(encodeURI(toDest));
+		$("input[name='subject']").val("");
+		$("#freetrip_search").submit();
+		$("input[name='toDest']").val("");
+	}else{
+		lvToast(false,"请输入目的地",1000);
+	}
+	
+}
+document.onkeydown=function(event){
+    var e = event || window.event;      
+    if(e && e.keyCode==13){
+    	freeTripSearch();
+    }
+}
+
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/route');"> 
+  	<img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">自由行</div>
+  <div class="lv-position lv-position-e"><a href="javascript:void(0);" class='home' onclick="union_skip('http://${hostName}');"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png' /></a></div>
+</div>
+ <div class="lv-search search">
+  <div class="lv-div-search">
+    <form method="get" action="${request.contextPath}/route/list"  id="freetrip_search" >
+    <span class="lv-clear-icon01" onclick="union_clear_context('keyword');"  style="display:none" id="clear_password">
+               <img src="${prefix_pic_url!}/img/clear.png"></span>
+	  <input class="lv-input-search" id="keyword" type="text" onfocus="ke_focus(this);" onblur="key_blur(this);" value="${toDest!}" placeholder="请输入搜索的目的地或关键字" autocomplete="off">
+      <input type="hidden" name="toDest" id="toDest" value="${toDest!}" >
+      <input type="hidden" name="subject" id="subject" value="${subject!}" >
+      <input type="hidden" name="subProductType" id="subProductType" value="FREENESS" >
+      <input type="hidden" name="sort" id="sort" value="${sort!}" >
+      <input type="hidden" name="page" id="page" value="1">
+       <input type="button" class="btn_sub" value="" onclick="freeTripSearch()" />
+    </form>
+  </div>
+
+ </div>
+        <div  id="search_autocomplete" style="display:none;">
+           <ul class="search_auto_complete" id="search_success"> </ul>
+        </div>
+
+<div class="lv-search lv-media-width lv-seach-mheight">
+  <ul class="lv-cascade-search sele_tab">
+    <li class="lv-li-row3" data-type="hidden"><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span>自由行(景+酒)</span>
+      <img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a></li>
+    <li class="lv-li-row3" ><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span id="span_subject">全部</span><img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png">
+      <img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a></li>
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span id="span_sort">默认</span><img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png"></a></li>
+  </ul>
+</div>
+
+<div class="lv-wrapper lv-min-height lv-media-width">
+  <div class="lv-cascade-div lv-media-width">
+        <div class="lv-tab" style="display:none;">
+      <ul class="lv-cascade-list bindclick">
+        <li data-value="FREENESS" id="sub">自由行(景+酒)</li>
+         <#if routeTypes?? && routeTypes?size&gt;0>
+              <#list routeTypes as route>
+                  <li data-value="${route.title!}" id="route${route.value!}" onclick="holidaySearch(this,'${route.value!}','route');">${route.title!}</li>
+              </#list>
+         <#else>
+	         <li data-value="seq" id="sortseq" onclick="holidaySearch(this,'seq','route');">全部</li>
+         </#if>
+      </ul>
+    </div>
+    <div class="lv-tab" style="display:none;">
+      <ul class="lv-cascade-list bindclick">
+         <#if subjects?? && subjects?size&gt;0>
+              <#list subjects as sub>
+                  <li onclick="freetripSearch(this,'${sub.value!}','subject')">${sub.title!}</li>
+              </#list>
+         <#else>
+	         <li data-value="  ">全部主题</li>
+         </#if>
+      </ul>
+    </div>
+    <div class="lv-tab" style="display:none;">
+      <ul class="lv-cascade-list bindclick">
+         <#if sortTypes?? && sortTypes?size&gt;0>
+              <#list sortTypes as sort>
+                  <li data-value="${sort.title!}" id="sort${sort.value!}" onclick="freetripSearch(this,'${sort.value!}','sort');">${sort.title!}</li>
+              </#list>
+         <#else>
+	         <li data-value="seq" id="sortseq" onclick="freetripSearch(this,'seq','sort');">默认排序</li>
+         </#if>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="lv-wrapper-container">
+    <#if mobileProductList?? && mobileProductList?size&gt;0>
+    <ul class="lv-spotticket-list jd_wrap" id="data_list">
+       <#list mobileProductList as product>
+	        <li class="lv-spotticket-li clear"><a href="javascript:void(0);" onclick="union_skip('http://${hostName}/product/${product.productId}/');">
+	        	<div class="lv-spotticket-img lv-pull-left">
+	        	    <img src="${product.absoluteRecommendImageUrl!}">
+	        	</div>
+	            <div class="lv-spotticket-info lv-pull-right">
+	            	<ul>
+	                	<li class="lv-spotticket-title">
+	                    <div class="jd_title2">
+								${product.productName?default("")}
+						</div>
+	                   </li>
+	                   <li> <span class="lv-pull-left">
+	                   			 <#if product.cmtNum?? && product.cmtNum&gt;0>
+	                   				${product.cmtNum!}人点评
+	                   			 <#else>
+	                   				无人点评
+	                   			 </#if>
+	                   		</span><span class="jd_fl_1 lv-color">&yen;${product.sellPriceYuan!}<i>起</i></span></li>
+	                   <li><span class="scenic_info_3">${product.zhSubProductType!}${product.visitDay!}天</span>
+		                   <span class="scenic_info_2">
+		                       <#if product.hasBusinessCoupon>
+			                   	  <i class="ic_hui"></i>
+			                   </#if>
+			                   <#if product.cashRefund>
+				                   <i class="ic_fan"></i><em>￥${product.cashRefundY!}</em>
+			                   </#if>
+		                   </span>
+	                   </li>
+	                </ul>
+	            </div>
+	            </a>
+	        </li>
+	        <div class="lv-seprator-line"></div>
+       </#list>
+    </ul>
+    <#else>
+	     <#assign no_data_msg="没有找到合适的度假线路</br> 请试试搜索其他关键词">
+         <#include "../common/no_data_list.html">
+    </#if>
+  	
+  	<!-- 如果不是最后一页  -->
+    <#if isLastPage?? && !isLastPage>
+	   <div class="lv-nav-li lv-btn-03" id="show_more">
+	        <a href="javascript:void(0);" onclick="getData()">
+	           <span>查看更多</span>
+	        </a>
+	    </div>
+     </#if>
+  </div>
+</div>
+ <script src="${request.contextPath}/js/freetrip.js"></script>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+ <div class="lv-transparent-div lv-transparent" style="display:none;"></div>
+</body>
+</html>

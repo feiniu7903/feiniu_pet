@@ -1,0 +1,125 @@
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<grid id="conditions">
+		<columns>
+			<column width="70px"></column>
+			<column></column>
+			<column width="70px"></column>
+			<column></column>
+			<column width="70px"></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row >
+				<hbox>订单号：</hbox>
+				<hbox>
+					<textbox value="@{saction.queryPars.orderNo }"/>
+				</hbox>
+				<hbox>下单人：</hbox>
+				<hbox>
+					<textbox value="@{saction.queryPars.userId }"/>
+				</hbox>
+				<hbox>下单时间：</hbox>
+				<hbox>
+					<datebox value="@{saction.queryPars.createTimeB}" />
+					至
+					<datebox value="@{saction.queryPars.createTimeE}" />
+				</hbox>
+			</row>
+			
+			<row>
+				<hbox>产品名：</hbox>
+				<hbox>
+					<textbox value="@{saction.queryPars.productName }"/>
+				</hbox>
+				<hbox>游玩人：</hbox>
+				<hbox>
+					<textbox value="@{saction.queryPars.personName }"/>
+				</hbox>
+				<hbox>游玩时间：</hbox>
+				<hbox>
+					<datebox value="@{saction.queryPars.visitTimeB}" />
+					至
+					<datebox value="@{saction.queryPars.visitTimeE}" />
+				</hbox>
+			</row>
+			
+			<row>
+			<hbox>凭证类型</hbox>
+				<hbox>
+					<listbox codeset="C_CERTIFICATE_TYPE" mold="select" selectedItem="@{saction.queryPars.certificateType}" />
+				</hbox>
+			<hbox>渠道：</hbox>
+			<hbox>
+				<listbox codeset="COM_CHANNEL" mold="select" selectedItem="@{saction.queryPars.channelId}" />
+			</hbox>
+			<hbox>结算类型：</hbox>
+			<hbox>
+				<listbox codeset="PAY_TARGET" mold="select" selectedItem="@{saction.queryPars.channelId}" />
+			</hbox>
+			</row>
+			
+			<row>
+				<hbox>资源需确认</hbox>
+				<hbox>
+					<listbox codeset="META_RESOURCE_CONFIRM" mold="select" selectedItem="@{saction.queryPars.resourceConfirm}" />
+				</hbox>
+				<hbox>
+				</hbox>
+				<hbox>
+				</hbox>
+				<hbox></hbox>
+				<hbox>
+				</hbox>
+			
+			</row>
+			
+			<row>
+				<hbox>产品类型</hbox>
+				<hbox>
+					<listbox codeset="PRODUCT_TYPE" mold="select" selectedItem="@{saction.queryPars.resourceConfirm}" />
+				</hbox>
+				
+				<hbox>支付方式</hbox>
+				<hbox>
+					<listbox codeset="PAYMENT_GATEWAY" mold="select" selectedItem="@{saction.queryPars.resourceConfirm}" />
+				</hbox>
+				
+				<hbox>
+					支付时间
+				</hbox>
+				<hbox>
+					<datebox value="@{saction.queryPars.transTimeB}" />
+					至
+					<datebox value="@{saction.queryPars.transTimeE}" />
+				</hbox>
+				
+			</row>
+			<row>
+				<hbox>交易号</hbox>
+				<hbox>
+					
+				</hbox>
+				
+				<hbox>订单金额</hbox>
+				<hbox>
+					<textbox value="@{saction.queryPars.actualPayB}"/>
+					~
+					<textbox value="@{saction.queryPars.actualPayE}"/>
+				</hbox>
+				
+				<hbox>
+					订单备注
+				</hbox>
+				<hbox>
+					<textbox value="@{saction.queryPars.ordrMemo}"/>
+				</hbox>
+				
+			</row>
+			
+			<row spans="6">
+				<hbox ><button label="查询" id="search" width="100px" onClick="saction.doQuery()"/></hbox>
+			</row>
+		</rows>
+	</grid>
+</zk>

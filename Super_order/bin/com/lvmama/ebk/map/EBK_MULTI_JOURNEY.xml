@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EBK_MULTI_JOURNEY">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ebooking.EbkMultiJourney">
+		<result column="MULTI_JOURNEY_ID" property="multiJourneyId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="JOURNEY_NAME" property="journeyName" />
+		<result column="DAYS" property="days" />
+		<result column="NIGHTS" property="nights"/>
+		<result column="CONTENT" property="content" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="VALID" property="valid" />
+	</resultMap>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.bee.po.ebooking.EbkMultiJourney">
+		select * from EBK_MULTI_JOURNEY
+		where MULTI_JOURNEY_ID =
+		#multiJourneyId#
+	</select>
+	<delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkMultiJourney">
+		delete from
+		EBK_MULTI_JOURNEY
+		where MULTI_JOURNEY_ID = #multiJourneyId#
+	</delete>
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkMultiJourney">
+		<selectKey keyProperty="multiJourneyId" resultClass="Long">
+			select
+			EBK_MULTI_JOURNEY_SEQ.nextVal FROM DUAL
+		</selectKey>
+		insert into EBK_MULTI_JOURNEY
+		(MULTI_JOURNEY_ID, PRODUCT_ID,
+		JOURNEY_NAME, DAYS, NIGHTS, CONTENT, CREATE_TIME, VALID)
+		values (
+		#multiJourneyId#,
+		#productId#,
+		#journeyName#,
+		#days#,
+		#nights#,
+		#content#,
+		sysdate,
+		#valid#
+		)
+	</insert>
+	<update id="update" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkMultiJourney">
+		update
+		EBK_MULTI_JOURNEY
+		<dynamic prepend="SET">
+		<isNotEmpty prepend="," property="journeyName">
+			JOURNEY_NAME = #journeyName#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="days">
+			DAYS = #days#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="nights">
+			NIGHTS = #nights#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="content">
+			CONTENT =#content#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="valid">
+			VALID = #valid#
+		</isNotEmpty>
+		</dynamic>
+		where MULTI_JOURNEY_ID = #multiJourneyId#
+	</update>
+	<sql id="commonQuerySql">
+		<isNotEmpty prepend="and" property="productId">
+			PRODUCT_ID = #productId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="journeyName">
+			JOURNEY_NAME  like '%$journeyName$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="days">
+			DAYS = #days#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="nights">
+			NIGHTS = #nights#		
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="valid">
+			VALID = #valid#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createBeginDate">
+			CREATE_TIME<![CDATA[>=]]>#createBeginDate#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createEndDate">
+			CREATE_TIME<![CDATA[<]]>#createEndDate#+1
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="viewMultiJourneyIds">
+			<iterate property="status" open=" MULTI_JOURNEY_ID IN (" close=")" conjunction=", ">  
+                #viewMultiJourneyIds[]#  
+            </iterate>
+		</isNotEmpty>
+	</sql>
+	<select id="selectRowCount" resultClass="java.lang.Integer">
+		select count(*) from EBK_MULTI_JOURNEY where 1=1
+		<include refid="commonQuerySql"/>
+	</select>
+	<select id="queryMultiJourneyByParams" resultMap="BaseResultMap">
+		 SELECT 
+		 mj.* from ebk_prod_product pp,
+		 EBK_MULTI_JOURNEY mj 
+    where mj.product_id=pp.ebk_prod_product_id 
+    <isNotEmpty prepend="and" property="ebkProdProductId">
+    	pp.ebk_prod_product_id = #ebkProdProductId#
+    </isNotEmpty>
+    order by multi_Journey_id
+	</select>
+	
+</sqlMap>

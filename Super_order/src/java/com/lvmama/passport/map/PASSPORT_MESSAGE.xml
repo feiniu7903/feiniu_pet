@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PASSPORT_MESSAGE">
+
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassportMessage">
+		<result property="messageId" column="MESSAGE_ID"/>
+		<result property="objectId" column="OBJECT_ID"/>
+		<result property="objectType" column="OBJECT_TYPE"/>
+		<result property="eventType" column="EVENT_TYPE"/>
+		<result property="addition" column="ADDITION"/>
+		<result property="hostname" column="HOSTNAME"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="processor" column="PROCESSOR"/>
+	</resultMap>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.pass.PassportMessage">
+		<selectKey keyProperty="messageId" resultClass="java.lang.Long">
+			select PASSPORT_MESSAGE_SEQ.nextval from dual
+		</selectKey>
+		insert into PASSPORT_MESSAGE(MESSAGE_ID,OBJECT_ID,OBJECT_TYPE,EVENT_TYPE,ADDITION,HOSTNAME,CREATE_TIME,PROCESSOR)
+			VALUES(#messageId#,#objectId#,#objectType#,#eventType#,#addition#,#hostname#,sysdate,#processor#)
+	</insert>
+	<delete id="delete" parameterClass="com.lvmama.comm.bee.po.pass.PassportMessage">
+		delete from PASSPORT_MESSAGE where MESSAGE_ID=#messageId#
+	</delete>
+	<select id="selectByParam" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		select * from (select * from PASSPORT_MESSAGE where HOSTNAME = #hostname#
+		<isNotEmpty prepend="and" property="processorList">
+			<iterate prepend="PROCESSOR not in" open="(" close=")" property="processorList" conjunction=",">
+				#processorList[]#
+			</iterate>
+		</isNotEmpty>
+		 order by MESSAGE_ID)
+		where ROWNUM &lt;=#_endRow#
+	</select>
+</sqlMap>

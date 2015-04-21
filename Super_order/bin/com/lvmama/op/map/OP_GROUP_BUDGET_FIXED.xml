@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="OP_GROUP_BUDGET_FIXED" >
+	<resultMap class="com.lvmama.comm.bee.po.op.OpGroupBudgetFixed" id="BaseOpGroupBudgetFixed">
+		<result property="itemId" column="ITEM_ID"/>
+		<result property="costsItem" column="COSTS_ITEM"/>
+		<result property="prdBranchId" column="PRD_BRANCH_ID"/>
+		<result property="bgCosts" column="BG_COSTS"/>
+		<result property="quantity" column="QUANTITY"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="exchangeRate" column="EXCHANGE_RATE"/>
+		<result property="subtotalCosts" column="SUBTOTAL_COSTS"/>
+		<result property="subtotalCostsFc" column="SUBTOTAL_COSTS_FC"/>
+		<result property="supplierId" column="SUPPLIER_ID"/>
+		<result property="supplierName" column=""/>
+		<result property="targetId" column="TARGET_ID"/>
+		<result property="paymentType" column="PAYMENT_TYPE"/>
+		<result property="payAmount" column="PAY_AMOUNT"/>
+		<result property="payStatus" column="PAY_STATUS"/>
+		<result property="remark" column="REMARK"/>
+		<result property="status" column="PAY_STATUS"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createtime" column="CREATETIME"/>
+		<result property="travelGroupCode" column="TRAVE_GROUP_CODE"/>
+		<result property="budgetId" column="BUDGET_ID"/>		
+	</resultMap>
+	
+	<select id="selectGroupBudgetFixedListByParam" resultMap="BaseOpGroupBudgetFixed" parameterClass="java.util.HashMap">
+		select * from OP_GROUP_BUDGET_FIXED
+		<dynamic prepend="where">
+			<isNotEmpty property="travelGroupCode">
+				TRAVEL_GROUP_CODE = #travelGroupCode#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="selectSumGroupBudgetFixedByParam" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		select sum(AMOUNT) from OP_GROUP_BUDGET_FIXED
+		<dynamic prepend="where">
+			<isNotEmpty property="travelGroupCode">
+				TRAVEL_GROUP_CODE = #travelGroupCode#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,13 @@
+<#macro layout RQTag tagAttr="">
+<?xml version="1.0" encoding="UTF-8"?>
+<OTResponse  Version=""><#--Version:1.0-->
+	<#include "header.xml"/>
+	<Success Code="${header.success.code}" Desc="${header.success.desc}" >
+		<Exception>${header.success.exception}</Exception>
+	</Success>
+	<${RQTag} ${tagAttr}>
+		<#include "external_user_info.xml"/>
+		<#nested>
+	</${RQTag}>
+</OTResponse>
+</#macro>

@@ -1,0 +1,1409 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="GROUP_BUDGET" >
+	<typeAlias alias="OpTravelGroup" type="com.lvmama.comm.bee.po.op.OpTravelGroup"/>
+	<typeAlias alias="OpGroupBudget" type="com.lvmama.comm.bee.po.op.OpGroupBudget"/>
+	<typeAlias alias="OpGroupBudgetProd" type="com.lvmama.comm.bee.po.op.OpGroupBudgetProd"/>
+	<typeAlias alias="OpGroupBudgetFixed" type="com.lvmama.comm.bee.po.op.OpGroupBudgetFixed"/>
+	<typeAlias alias="OptionItem" type="com.lvmama.comm.vo.OptionItem"/>
+	<typeAlias alias="OpOtherIncoming" type="com.lvmama.comm.bee.po.op.OpOtherIncoming"/>
+	<typeAlias alias="GroupBudgetLog" type="com.lvmama.comm.bee.po.op.GroupBudgetLog"/>
+	<typeAlias alias="FinGroupSettlement" type="com.lvmama.comm.bee.po.op.FinGroupSettlement"/>
+	<typeAlias alias="ProductOrderDetail" type="com.lvmama.comm.bee.po.op.ProductOrderDetail"/>
+	
+	<resultMap class="com.lvmama.comm.bee.po.op.OpGroupBudgetFixed" id="BaseOpGroupBudgetFixed">
+		<result property="itemId" column="ITEM_ID"/>
+		<result property="costsItem" column="COSTS_ITEM"/>
+		<result property="prdBranchId" column="PRD_BRANCH_ID"/>
+		<result property="bgCosts" column="BG_COSTS"/>
+		<result property="quantity" column="QUANTITY"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="exchangeRate" column="EXCHANGE_RATE"/>
+		<result property="subtotalCosts" column="SUBTOTAL_COSTS"/>
+		<result property="subtotalCostsFc" column="SUBTOTAL_COSTS_FC"/>
+		<result property="supplierId" column="SUPPLIER_ID"/>
+		<result property="supplierName" column=""/>
+		<result property="targetId" column="TARGET_ID"/>
+		<result property="paymentType" column="PAYMENT_TYPE"/>
+		<result property="payAmount" column="PAY_AMOUNT"/>
+		<result property="payStatus" column="PAY_STATUS"/>
+		<result property="remark" column="REMARK"/>
+		<result property="status" column="PAY_STATUS"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createtime" column="CREATETIME"/>
+		<result property="travelGroupCode" column="TRAVEL_GROUP_CODE"/>
+		<result property="budgetId" column="BUDGET_ID"/>		
+	</resultMap>
+	
+	<!-- 分页 -->
+	<sql id="pageSelectHead" >
+		SELECT * FROM (SELECT P_T.*,ROWNUM AS RN FROM ( 
+	</sql>
+	<sql id="pageSelectFoot" >
+		) P_T ) WHERE RN BETWEEN #startRow# AND #endRow#
+	</sql>
+	
+	<!-- 查询团列表 -->
+	<sql id="getGroupListSql">
+		SELECT
+			T1.TRAVEL_GROUP_CODE AS travelGroupCode,
+			T1.PRODUCT_ID AS productId,
+			T1.PRODUCT_NAME AS productName,
+			T1.VISIT_TIME AS visitTime,
+			(T1.VISIT_TIME + T1.DAYS - 1) AS backTime,
+			T1.SETTLEMENT_STATUS AS settlementStatus,
+			T1.TRAVEL_GROUP_STATUS AS travelGroupStatus,
+			T4.ACT_INCOMING	/ 100 AS actIncoming,
+			T4.ACT_ALLOWANCE / 100 AS actAllowance,
+			T4.ACT_PROFIT / 100 AS actProfit,
+			decode(T4.ACT_PERSONS, NULL, T1.PAY_SUCCESS_NUM, T4.ACT_PERSONS) AS paySuccessNum,
+			T4.ACT_ADULT AS actAdult,
+			T4.ACT_CHILD AS actChild
+		FROM
+			OP_TRAVEL_GROUP T1,
+			PROD_PRODUCT T2,
+			lvmama_pet.PERM_USER T3,
+			OP_GROUP_BUDGET T4
+		WHERE
+			(T1.TRAVEL_GROUP_STATUS = 'NORMAL' OR T1.TRAVEL_GROUP_STATUS = 'CONFIRM')
+		AND T1.PRODUCT_ID = T2.PRODUCT_ID
+		AND T2.MANAGER_ID = T3.USER_ID
+		AND T1.TRAVEL_GROUP_CODE = T4.TRAVEL_GROUP_CODE(+)
+		<!-- 上线时间 -->
+		AND T1.VISIT_TIME &gt;= TO_DATE('2012-06-29','yyyy-mm-dd')
+		
+		<!-- 销售产品类型是线路，且为自助团  的订单。 -->
+		AND T2.PRODUCT_TYPE = 'ROUTE' 
+		AND EXISTS
+		(
+			  SELECT R.PRODUCT_ID
+			    FROM PROD_ROUTE R
+			   WHERE R.PRODUCT_ID = T2.PRODUCT_ID
+			     AND R.GROUP_TYPE = 'BYONESELF'
+		)
+		
+		<isNotEmpty property="orgId">
+			AND T3.DEPARTMENT_ID = #orgId#
+		</isNotEmpty>
+		<isNotEmpty property="productName">
+			AND	T1.PRODUCT_NAME LIKE #productName#
+		</isNotEmpty>
+		<isNotEmpty property="travelGroupCode">
+			AND	T1.TRAVEL_GROUP_CODE = #travelGroupCode#
+		</isNotEmpty>
+		<isNotEmpty property="productId">
+			AND	T1.PRODUCT_ID = #productId#
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeStart">
+			AND	T1.VISIT_TIME &gt;= TO_DATE(#visitTimeStart#,'yyyy-mm-dd')
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd">
+			AND	T1.VISIT_TIME &lt;= TO_DATE(#visitTimeEnd#,'yyyy-mm-dd')
+		</isNotEmpty>
+		<isNotEmpty property="settlementStatus">
+			AND	T1.SETTLEMENT_STATUS = #settlementStatus#
+		</isNotEmpty>
+		<isEqual property="isExistOrder" compareValue="1">
+			AND EXISTS
+			(
+				select o.order_id 
+				  from ord_order o 
+				 where o.payment_status = 'PAYED'
+				   and (o.ORDER_STATUS = 'NORMAL' OR o.ORDER_STATUS = 'FINISHED')
+				   and o.travel_group_code = T1.TRAVEL_GROUP_CODE
+			)
+		</isEqual>
+		<isNotEmpty property="productManager">
+			AND T2.MANAGER_ID = #productManager#
+		</isNotEmpty>
+		ORDER BY
+			T1.VISIT_TIME
+		DESC
+	</sql>
+	<select id="getGroupList" parameterClass="map" resultClass="OpTravelGroup">
+		<include refid="pageSelectHead"/>
+		<include refid="getGroupListSql"/>
+		<include refid="pageSelectFoot"/>
+	</select>
+	<select id="getGroupListCount" parameterClass="map" resultClass="long">
+		SELECT
+			COUNT(*)
+		FROM
+		(
+			<include refid="getGroupListSql"/>
+		)
+	</select>
+	<select id="getGroupListForExport" parameterClass="map" resultClass="OpTravelGroup">
+		<include refid="getGroupListSql"/>
+	</select>
+	
+	<!-- 查询团预算 -->
+	<select id="getGroupBudgetByGroupCode" parameterClass="string" resultClass="OpGroupBudget">
+		SELECT
+			BUDGET_ID AS budgetId,
+			TRAVEL_GROUP_CODE AS travelGroupCode,
+			TRAVEL_GROUP_ID AS travelGroupId,
+			BG_PERSONS AS bgPersons,
+			NVL(SALE_PRICE,0) / 100 AS salePrice,
+			NVL(BG_TOTAL_COSTS,0)/100 AS bgTotalCosts,
+			NVL(BG_PER_COSTS,0)/100 AS bgPerCosts,
+			NVL(BG_INCOMING,0)/100 AS bgIncoming,
+			NVL(BG_PROFIT,0)/100 AS bgProfit,
+			BG_PROFIT_RATE AS bgProfitRate,
+			ACT_PERSONS AS actPersons,
+			ACT_ADULT AS actAdult,
+			ACT_CHILD AS actChild,
+			NVL(ACT_INCOMING,0)/100 AS actIncoming,
+			NVL(ACT_ALLOWANCE,0)/100 AS actAllowance,
+			NVL(ACT_TOTAL_COSTS,0)/100 AS actTotalCosts,
+			NVL(ACT_PER_COSTS,0)/100 AS actPerCosts,
+			NVL(ACT_PROFIT,0)/100 AS actProfit,
+			ACT_PROFIT_RATE AS actProfitRate
+		FROM
+			OP_GROUP_BUDGET
+		WHERE
+			TRAVEL_GROUP_CODE = #value#
+	</select>
+	
+	<!-- 从团信息中查询团产品项 -->
+	<select id="getGroupProductByGroupCode" parameterClass="java.util.Map" resultClass="OpGroupBudgetProd">
+		SELECT 
+	       T4.PRODUCT_NAME AS productName,
+	       T8.META_BRANCH_ID AS prdBranchId,
+	       T8.BRANCH_NAME AS prdBranchName,
+	       T4.CURRENCY AS currency,
+	       T7.SUPPLIER_ID AS supplierId,
+	       T7.SUPPLIER_NAME AS supplierName,
+	       T6.TARGET_ID AS targetId,
+	       T6.NAME AS targetName,
+	       T6.PAYMENT_TYPE AS paymentType,
+	       T8.ADULT_QUANTITY AS audltQuantity,
+	       T8.CHILD_QUANTITY AS childQuantity,
+	       T9.SETTLEMENT_PRICE/100 AS bgCosts,
+	       T10.CURRENCY_NAME AS currencyName,
+	       T10.SYMBOL AS currencySymbol,
+	       0 AS payAmount,
+	       'NOPAY' AS payStatus,
+	       T12.SUB_PRODUCT_TYPE AS subProductType,
+	       'Y' AS isInCost
+		FROM 
+		  OP_TRAVEL_GROUP T1,
+		  PROD_PRODUCT T12,
+		  PROD_PRODUCT_BRANCH T11,
+		  PROD_PRODUCT_BRANCH_ITEM T3,
+		  META_PRODUCT_BRANCH T8,
+		  META_PRODUCT T4,
+		  META_SETTLEMENT T5,
+		  SUP_SETTLEMENT_TARGET T6,
+		  SUP_SUPPLIER T7,
+		  META_TIME_PRICE T9,
+		  FIN_CURRENCY T10
+		WHERE 
+			T1.TRAVEL_GROUP_CODE = #value#
+		AND T1.PRODUCT_ID = T11.PRODUCT_ID
+		AND T11.PROD_BRANCH_ID = T3.PROD_BRANCH_ID
+		AND T3.META_BRANCH_ID = T8.META_BRANCH_ID
+		AND T8.META_PRODUCT_ID = T4.META_PRODUCT_ID
+		AND T4.META_PRODUCT_ID = T5.META_PRODUCT_ID
+		AND T5.TARGET_ID = T6.TARGET_ID
+		AND T6.SUPPLIER_ID = T7.SUPPLIER_ID
+		AND T4.META_PRODUCT_ID = T8.META_PRODUCT_ID
+		AND T3.META_BRANCH_ID = T9.META_BRANCH_ID
+		AND T9.SPEC_DATE = T1.VISIT_TIME
+		AND T4.CURRENCY = T10.CURRENCY
+		AND T12.PRODUCT_ID = T11.PRODUCT_ID
+		AND T11.DEFAULT_BRANCH = 'true'
+		<isNotEmpty property="subProductType">
+			AND T4.SUB_PRODUCT_TYPE != #subProductType#
+		</isNotEmpty>
+	</select>
+	
+	<!-- 查询团预算产品项 -->
+	<select id="getGroupBudgetProductByParam" parameterClass="map" resultClass="OpGroupBudgetProd">
+		SELECT 
+		   T1.ITEM_ID AS itemId,
+		   T1.TRAVEL_GROUP_CODE AS travelGroupCode,
+		   T2.PRODUCT_NAME AS productName,
+	       T1.Prod_Branch_Id    AS prdBranchId,
+	       T3.Branch_Name       AS prdBranchName,
+	       T1.BG_COSTS / 100         AS bgCosts,
+	       T1.QUANTITY          AS quantity,
+	       T3.ADULT_QUANTITY AS audltQuantity,
+	       T3.CHILD_QUANTITY AS childQuantity,
+	       T1.CURRENCY          AS currency,
+	       T1.EXCHANGE_RATE     AS exchangeRate,
+	       T1.SUBTOTAL_COSTS / 100   AS subtotalCosts,
+	       T1.SUBTOTAL_COSTS_FC /100 AS subtotalCostsFc,
+	       T1.SUPPLIER_ID       AS supplierId,
+	       T4.SUPPLIER_NAME AS supplierName,
+	       T1.TARGET_ID         AS targetId,
+	       T5.NAME	AS targetName,
+	       T1.PAYMENT_TYPE      AS paymentType,
+	       NVL(T1.PAY_AMOUNT,0)/100     AS payAmount,
+	       T1.PAY_STATUS        AS payStatus,
+	       T6.CURRENCY_NAME AS currencyName,
+	       T6.SYMBOL AS currencySymbol,
+	       NVL(T1.PAY_AMOUNT,0)/100 AS payAmount,
+	       T1.TYPE AS type,
+	       T1.IS_IN_COST AS isInCost
+	  FROM OP_GROUP_BUDGET_PROD T1,
+	       META_PRODUCT         T2,
+	       META_PRODUCT_BRANCH  T3,
+	       SUP_SUPPLIER	T4,
+	       SUP_SETTLEMENT_TARGET T5,
+		   FIN_CURRENCY T6
+	 WHERE T1.PROD_BRANCH_ID = T3.META_BRANCH_ID
+	   AND T3.META_PRODUCT_ID = T2.META_PRODUCT_ID
+	   AND T1.SUPPLIER_ID = T4.SUPPLIER_ID
+	   AND T1.TARGET_ID = T5.TARGET_ID
+	   AND T1.CURRENCY = T6.CURRENCY
+	    <isNotEmpty property="type">
+	     AND T1.TYPE = #type#
+	   </isNotEmpty>
+	   <isNotEmpty property="prodBranchId">
+	      AND T1.Prod_Branch_Id = #prodBranchId#
+	   </isNotEmpty>
+	   <isNotEmpty property="itemId">
+	      AND T1.ITEM_ID = #itemId#
+	   </isNotEmpty>
+	   <isNotEmpty property="travelGroupCode">
+	      AND T1.TRAVEL_GROUP_CODE = #travelGroupCode#
+	   </isNotEmpty>
+	</select>
+	
+	<!-- 更新产品成本 -->
+	<update id="updateGroupBudgetProd" parameterClass="OpGroupBudgetProd">
+		UPDATE
+			OP_GROUP_BUDGET_PROD
+		SET
+			PAY_STATUS = #payStatus#,
+			SUBTOTAL_COSTS = #subtotalCosts# * 100,
+			SUBTOTAL_COSTS_FC = #subtotalCostsFc# * 100	
+		WHERE
+			ITEM_ID = #itemId#		
+	</update>
+	
+	<!-- 根据团号，查询团预算固定成本项 -->
+	<select id="getGroupBudgetFixedByParam" parameterClass="map" resultClass="OpGroupBudgetFixed">
+		SELECT 
+			T1.ITEM_ID AS itemId,
+			T1.BUDGET_ID AS budgetId,
+			T1.TRAVEL_GROUP_CODE AS travelGroupCode,
+			T1.COSTS_ITEM_ID AS costsItem,
+			T3.NAME AS costsItemName,
+			T1.BG_COSTS/100 AS  bgCosts,
+			T1.QUANTITY AS quantity,
+			T1.CURRENCY AS currency,
+			T1.EXCHANGE_RATE AS exchangeRate,
+			T1.SUBTOTAL_COSTS/100 AS subtotalCosts,
+			T1.SUBTOTAL_COSTS_FC/100 AS subtotalCostsFc,
+			T1.SUPPLIER_ID AS supplierId,
+			T4.SUPPLIER_NAME AS supplierName,
+			T1.TARGET_ID AS targetId,
+			T5.NAME AS targetName,
+			T1.PAYMENT_TYPE AS paymentType,
+			NVL(T1.PAY_AMOUNT/100,0) AS payAmount,
+			T1.PAY_STATUS AS payStatus,
+			T1.REMARK AS remark,
+			T2.CURRENCY_NAME AS currencyName,
+			T2.SYMBOL AS currencySymbol
+		FROM 
+			OP_GROUP_BUDGET_FIXED T1,
+			FIN_CURRENCY T2,
+			OP_COSTS_ITEM T3,
+			SUP_SUPPLIER T4,
+			SUP_SETTLEMENT_TARGET T5
+		WHERE
+			T1.CURRENCY = T2.CURRENCY
+		AND T1.COSTS_ITEM_ID = T3.ID
+		AND T4.SUPPLIER_ID = T1.SUPPLIER_ID
+		AND T5.TARGET_ID = T1.TARGET_ID
+		<isNotEmpty property="travelGroupCode">
+		  AND T1.TRAVEL_GROUP_CODE = #travelGroupCode#
+		</isNotEmpty>
+	    <isNotEmpty property="type">
+	      AND T1.TYPE = #type#
+	    </isNotEmpty>
+	    <isNotEmpty property="costsItem">
+	      AND T1.COSTS_ITEM_ID = #costsItem#
+	    </isNotEmpty>
+	    <isNotEmpty property="itemId">
+	      AND T1.ITEM_ID = #itemId#
+	    </isNotEmpty>
+	</select>
+	
+	<!-- 查询币种的最新汇率 -->
+	<select id="getExchangeRateByCurrency" parameterClass="string" resultClass="double">
+		SELECT
+			T.RATE
+		FROM
+		(
+			SELECT
+				RATE
+			FROM
+				FIN_EXCHANGE_RATE
+			WHERE
+				FOREIGN_CURRENCY = #value#
+			ORDER BY
+				CREATE_DATE
+			DESC
+		) T
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<!-- 查询固定成本下拉项 -->
+	<select id="getFixedOptions" resultClass="OptionItem">
+		SELECT
+			NAME AS label,
+			ID AS value
+		FROM
+			OP_COSTS_ITEM
+		ORDER BY
+			ID ASC
+	</select>
+	<!-- 查询币种下拉项 -->
+	<select id="getCurrencyOptions" resultClass="OptionItem">
+		SELECT
+			T2.FOREIGN_CURRENCY AS label,
+			CONCAT(CONCAT(T2.FOREIGN_CURRENCY,'-'),DECODE(sign(T2.RATE -1), -1,CONCAT('0',T2.Rate),T2.Rate)) AS value
+		FROM
+			FIN_EXCHANGE_RATE T2
+		ORDER BY ID
+	</select>
+	<!-- 查询产品经理下拉列表 -->
+	<select id="getProductManagerForAutocomplete" parameterClass="string" resultClass="OptionItem">
+		SELECT 
+			* 
+		FROM 
+		(
+			select pu.user_id as value,
+				   pu.real_name as label,
+				   rownum as RN
+			  from lvmama_pet.PERM_USER pu
+			 where pu.user_name = #term#
+			    or pu.real_name like CONCAT(CONCAT('%',#term#),'%')
+		) 
+		WHERE 
+			RN &lt;= 12
+	</select>
+	<!-- 查询供应商下拉项 -->
+	<select id="getSupplierForAutocomplete" parameterClass="string" resultClass="OptionItem">
+		SELECT 
+			* 
+		FROM 
+		(
+			SELECT 
+				SUPPLIER_ID AS VALUE,
+				SUPPLIER_NAME AS LABEL ,
+				ROWNUM AS RN
+			FROM 
+				SUP_SUPPLIER 
+			WHERE 
+				SUPPLIER_NAME LIKE CONCAT(CONCAT('%',#value#),'%')
+			OR
+				SUPPLIER_ID LIKE #value#
+		) 
+		WHERE 
+			RN &lt;= 12
+	</select>
+	<!-- 查询结算对象下拉项 -->
+	<select id="getTargetForAutocomplete" parameterClass="map" resultClass="OptionItem">
+		SELECT 
+			TARGET_ID AS VALUE,
+			NAME AS LABEL 
+		FROM 
+			SUP_SETTLEMENT_TARGET
+		WHERE 
+			SUPPLIER_ID = #supplierId#
+		AND 
+			VALID = 'Y'
+	</select>
+	
+	<!-- 新增固定成本项  -->
+	<insert id="insertOpGroupBudgetFixed" parameterClass="OpGroupBudgetFixed">
+		<selectKey keyProperty="itemId" resultClass="long">
+			SELECT
+				OP_GROUP_BUDGET_FIXED_ID_SEQ.NEXTVAL
+			FROM
+				DUAL
+		</selectKey>
+		INSERT INTO
+			OP_GROUP_BUDGET_FIXED
+		(
+			ITEM_ID,
+			BUDGET_ID,
+			TRAVEL_GROUP_CODE,
+			COSTS_ITEM_ID,
+			BG_COSTS,
+			QUANTITY,
+			CURRENCY,
+			EXCHANGE_RATE,
+			SUBTOTAL_COSTS,
+			SUBTOTAL_COSTS_FC,
+			SUPPLIER_ID,
+			TARGET_ID,
+			PAYMENT_TYPE,
+			PAY_AMOUNT,
+			PAY_STATUS,
+			REMARK,
+			CREATETIME,
+			TYPE
+		)
+		VALUES
+		(
+			#itemId#,
+			#budgetId#,
+			#travelGroupCode#,
+			#costsItem#,
+			#bgCosts# * 100,
+			#quantity#,
+			#currency#,
+			#exchangeRate#,
+			#subtotalCosts# * 100,
+			#subtotalCostsFc# * 100,
+			#supplierId#,
+			#targetId#,
+			#paymentType#,
+			#payAmount# * 100,
+			#payStatus#,
+			#remark#,
+			SYSDATE,
+			#type#
+		)
+	</insert>
+	<!-- 更新固定成本项  -->
+	<update id="updateOpGroupBudgetFixed" parameterClass="OpGroupBudgetFixed">
+		UPDATE
+			OP_GROUP_BUDGET_FIXED
+		SET
+			COSTS_ITEM_ID = #costsItem#,
+			BG_COSTS = #bgCosts# * 100,
+			QUANTITY = #quantity#,
+			CURRENCY = #currency#,
+			SUBTOTAL_COSTS = #subtotalCosts# * 100,
+			SUBTOTAL_COSTS_FC = #subtotalCostsFc# * 100,
+			SUPPLIER_ID = #supplierId#,
+			TARGET_ID = #targetId#,
+			PAYMENT_TYPE = #paymentType#,
+			REMARK = #remark#,
+			<isNotEmpty property="payStatus">
+			PAY_STATUS = #payStatus#,
+			</isNotEmpty>
+			EXCHANGE_RATE = #exchangeRate#
+		WHERE
+			ITEM_ID = #itemId#
+	</update>
+	
+	<!-- 更新产品成本项  -->
+	<update id="updateOpGroupBudgetProd" parameterClass="OpGroupBudgetProd">
+		UPDATE
+			OP_GROUP_BUDGET_PROD
+		SET
+			BG_COSTS = #bgCosts# * 100,
+			QUANTITY = #quantity#,
+			CURRENCY = #currency#,
+			SUBTOTAL_COSTS = #subtotalCosts# * 100,
+			SUBTOTAL_COSTS_FC = #subtotalCostsFc# * 100,
+			SUPPLIER_ID = #supplierId#,
+			TARGET_ID = #targetId#,
+			PAYMENT_TYPE = #paymentType#,
+			PAY_STATUS = #payStatus#
+		WHERE
+			ITEM_ID = #itemId#
+	</update>
+	
+	<!-- 删除固定成本项 -->
+	<delete id="deleteOpGroupBudgetFixed" parameterClass="long" >
+		DELETE
+		FROM
+			OP_GROUP_BUDGET_FIXED
+		WHERE
+			ITEM_ID = #value#
+	</delete>
+	
+	<!-- 删除固定成本项 -->
+	<delete id="deleteOpGroupBudgetFixedByParam" parameterClass="map" >
+		DELETE
+		FROM
+			OP_GROUP_BUDGET_FIXED
+		WHERE
+			TRAVEL_GROUP_CODE = #travelGroupCode#
+		<isNotEmpty property="type">
+			TYPE = #type#
+		</isNotEmpty>			
+	</delete>
+	
+	<!-- 删除产品成本项 -->
+	<delete id="deleteOpGroupBudgetProdByParam" parameterClass="map" >
+		DELETE
+		FROM
+			OP_GROUP_BUDGET_PROD
+		WHERE
+			TRAVEL_GROUP_CODE = #travelGroupCode#
+		<isNotEmpty property="type">
+			TYPE = #type#
+		</isNotEmpty>			
+	</delete>
+	
+	<!-- 新增预算表 -->
+	<insert id="insertGroupBudget" parameterClass="OpGroupBudget">
+		<selectKey keyProperty="budgetId" resultClass="long">
+			SELECT
+				OP_GROUP_BUDGET_ID_SEQ.NEXTVAL
+			FROM
+				DUAL
+		</selectKey>
+		INSERT INTO
+			OP_GROUP_BUDGET
+		(
+			BUDGET_ID,
+			TRAVEL_GROUP_ID,
+			TRAVEL_GROUP_CODE,
+			BG_PERSONS,
+			SALE_PRICE,
+			BG_TOTAL_COSTS,
+			BG_PER_COSTS,
+			BG_INCOMING,
+			BG_PROFIT,
+			BG_PROFIT_RATE
+		)
+		VALUES
+		(
+			#budgetId#,
+			#travelGroupId#,
+			#travelGroupCode#,
+			#bgPersons#,
+			#salePrice# * 100,
+			#bgTotalCosts# * 100,
+			#bgPerCosts# * 100,
+			#bgIncoming# * 100,
+			#bgProfit# * 100,
+			#bgProfitRate#
+		)
+	</insert>
+	
+	<!-- 更新预算表  -->
+	<update id="updateGroupBudget" parameterClass="OpGroupBudget">
+		UPDATE
+			OP_GROUP_BUDGET
+		SET
+			BG_PERSONS = #bgPersons#,
+			BG_TOTAL_COSTS = #bgTotalCosts# * 100,
+			BG_PER_COSTS = #bgPerCosts# * 100,
+			BG_INCOMING = #bgIncoming# * 100,
+			BG_PROFIT = #bgProfit# * 100,
+			BG_PROFIT_RATE = #bgProfitRate#,
+			ACT_PERSONS = #actPersons#,
+			ACT_INCOMING = #actIncoming# * 100,
+			ACT_ALLOWANCE = #actAllowance# * 100,
+			ACT_TOTAL_COSTS = #actTotalCosts# * 100,
+			ACT_PROFIT = #actProfit# * 100,
+			ACT_PROFIT_RATE = #actProfitRate#
+		WHERE
+			BUDGET_ID = #budgetId#
+	</update>
+	
+	<!-- 生成产品成本明细 -->
+	<insert id="insertGroupBudgetProd" parameterClass="OpGroupBudgetProd">
+		<selectKey keyProperty="itemId" resultClass="long">
+			SELECT
+				OP_GROUP_BUDGET_PROD_ID_SEQ.NEXTVAL
+			FROM
+				DUAL
+		</selectKey>
+		INSERT　INTO
+			OP_GROUP_BUDGET_PROD
+		(
+			ITEM_ID,
+			BUDGET_ID,
+			PROD_BRANCH_ID,
+			BG_COSTS,
+			QUANTITY,
+			CURRENCY,
+			EXCHANGE_RATE,
+			SUBTOTAL_COSTS,
+			SUBTOTAL_COSTS_FC,
+			SUPPLIER_ID,
+			TARGET_ID,
+			PAYMENT_TYPE,
+			PAY_AMOUNT,
+			PAY_STATUS,
+			CREATETIME,
+			TYPE,
+			TRAVEL_GROUP_CODE,
+			IS_IN_COST
+		)
+		VALUES
+		(
+	        #itemId#,
+	        #budgetId#,
+	        #prdBranchId#,
+	        #bgCosts# * 100,
+	        #quantity#,
+	        #currency#,
+	        #exchangeRate#,
+	        #subtotalCosts# * 100,
+	        #subtotalCostsFc# * 100,
+	        #supplierId#,
+	        #targetId#,
+	        #paymentType#,
+	        #payAmount# * 100,
+	        #payStatus#,
+	        SYSDATE,
+	        #type#,
+	        #travelGroupCode#,
+	        #isInCost#
+		)
+	</insert>
+	
+	<!-- 查询团信息 -->
+	<select id="getOpTravelGroupByCode" parameterClass="string" resultClass="OpTravelGroup">
+		SELECT
+			TRAVEL_GROUP_ID AS travelGroupId,
+			TRAVEL_GROUP_CODE AS travelGroupCode,
+			PRODUCT_ID AS productId,
+			PRODUCT_NAME AS productName,
+			VISIT_TIME AS visitTime,
+			(VISIT_TIME + DAYS) AS backTime,
+			SETTLEMENT_STATUS AS settlementStatus,
+			TRAVEL_GROUP_STATUS AS travelGroupStatus,
+			SELL_PRICE AS sellPrice,
+			PAY_SUCCESS_NUM AS paySuccessNum
+		FROM
+			OP_TRAVEL_GROUP
+		WHERE
+			TRAVEL_GROUP_CODE = #value#
+	</select>
+	
+	<!-- 从订单信息中查询实际产品成本 -->
+	<select id="selectGroupBudgetProdListFromOrderByParam" resultClass="OpGroupBudgetProd" parameterClass="java.util.HashMap">
+		SELECT O.META_BRANCH_ID AS prdBranchId,
+		       O.SETTLEMENT_PRICE / 100 AS BGCOSTS,
+		       SUM(O.QUANTITY * O.PRODUCT_QUANTITY) AS QUANTITY,
+		       MP.CURRENCY AS CURRENCY,
+		       nvl(SUM(O.TOTAL_SETTLEMENT_PRICE),0)	/ 100 AS SUBTOTALCOSTSFC,
+		       ST.SUPPLIER_ID AS SUPPLIERID,
+		       ST.TARGET_ID AS TARGETID,
+		       ST.PAYMENT_TYPE AS PAYMENTTYPE,
+		       D.TRAVEL_GROUP_CODE AS TRAVELGROUPCODE,
+		       P.SUB_PRODUCT_TYPE AS subProductType
+		  FROM ORD_ORDER_ITEM_META   O,
+		       ORD_ORDER             D,
+		       META_PRODUCT          MP,
+		       META_SETTLEMENT       S,
+		       SUP_SETTLEMENT_TARGET ST,
+		       OP_TRAVEL_GROUP TG,
+		       PROD_PRODUCT P
+		 WHERE D.TRAVEL_GROUP_CODE = #travelGroupCode#
+		   AND O.ORDER_ID = D.ORDER_ID
+		   AND (O.PRODUCT_TYPE != 'OTHER' OR O.SUB_PRODUCT_TYPE != 'INSURANCE') 		<!-- 保险进入单项结算 -->
+		   AND O.META_PRODUCT_ID = MP.META_PRODUCT_ID
+		   AND O.META_PRODUCT_ID = S.META_PRODUCT_ID
+		   AND S.TARGET_ID = ST.TARGET_ID
+		   AND D.TRAVEL_GROUP_CODE = TG.TRAVEL_GROUP_CODE
+		   AND TG.PRODUCT_ID = P.PRODUCT_ID
+		   AND (D.ORDER_STATUS = 'NORMAL' OR D.ORDER_STATUS = 'FINISHED')  
+		   AND D.PAYMENT_STATUS = 'PAYED'
+		   <!-- 排除包含退款信息 --> AND NOT EXISTS(SELECT 1 FROM ORD_REFUNDMENT_ITEM ORI,ORD_REFUNDMENT ORF WHERE ORI.REFUNDMENT_ID = ORF.REFUNDMENT_ID AND ORI.ORDER_ITEM_META_ID = O.ORDER_ITEM_META_ID AND ORF.STATUS = 'REFUNDED')
+		 GROUP BY O.META_BRANCH_ID,
+		          O.SETTLEMENT_PRICE,
+		          MP.CURRENCY,
+		          ST.SUPPLIER_ID,
+		          ST.TARGET_ID,
+		          ST.PAYMENT_TYPE,
+		          D.TRAVEL_GROUP_CODE,
+		          P.SUB_PRODUCT_TYPE
+	</select>
+	<!-- 从订单信息中查询实际产品成本(有退款信息的订单) -->
+	<select id="selectGroupBudgetProdRefundListFromOrderByParam" resultClass="com.lvmama.comm.bee.po.op.OpGroupBudgetProdRefund" parameterClass="java.util.HashMap">
+	    SELECT DISTINCT D.ORDER_ID,O.META_BRANCH_ID AS prdBranchId,
+	           O.ACTUAL_SETTLEMENT_PRICE * O.PRODUCT_QUANTITY  / 100 AS BGCOSTS,
+	           O.QUANTITY AS QUANTITY,
+	           O.PRODUCT_QUANTITY AS productQuantity,
+	           MP.CURRENCY AS CURRENCY,
+	           O.ACTUAL_SETTLEMENT_PRICE  AS actualSettlementPrice,
+	           ST.SUPPLIER_ID AS SUPPLIERID,
+	           ST.TARGET_ID AS TARGETID,
+	           ST.PAYMENT_TYPE AS PAYMENTTYPE,
+	           D.TRAVEL_GROUP_CODE AS TRAVELGROUPCODE,
+	           ORI.TYPE AS refundType,
+	           DECODE(ORI.TYPE,'VISITOR_LOSS',ORI.ACTUAL_LOSS,ORI.AMOUNT) / 100 AS refundAmount,
+	           D.ORDER_STATUS AS ORDERSTATUS
+	      FROM ORD_ORDER_ITEM_META   O,
+	           ORD_ORDER             D,
+	           META_PRODUCT          MP,
+	           META_SETTLEMENT       S,
+	           SUP_SETTLEMENT_TARGET ST,
+	           ORD_REFUNDMENT_ITEM ORI,
+	           ORD_REFUNDMENT ORF
+	     WHERE D.TRAVEL_GROUP_CODE = #travelGroupCode#
+	       AND O.ORDER_ID = D.ORDER_ID
+	       AND (O.PRODUCT_TYPE != 'OTHER' OR O.SUB_PRODUCT_TYPE != 'INSURANCE') 		<!-- 保险进入单项结算 -->
+	       AND O.META_PRODUCT_ID = MP.META_PRODUCT_ID
+	       AND O.META_PRODUCT_ID = S.META_PRODUCT_ID
+	       AND S.TARGET_ID = ST.TARGET_ID
+	       AND ORI.ORDER_ITEM_META_ID = O.ORDER_ITEM_META_ID
+	       AND ORI.REFUNDMENT_ID = ORF.REFUNDMENT_ID
+       	   AND ORF.STATUS = 'REFUNDED'
+	</select>
+	
+	
+	<!-- 总固定成本（人民币） -->
+	<select id="selectSumGroupBudgetFixedByParam" resultClass="java.lang.Double" parameterClass="java.util.HashMap">
+		select  
+			nvl(sum(SUBTOTAL_COSTS),0) 	/ 100
+		 from 
+		 	OP_GROUP_BUDGET_FIXED
+		where 
+			TRAVEL_GROUP_CODE = #travelGroupCode#	
+		 and TYPE = #type#
+	</select>
+	
+	<!-- 查询团订单中的保险总收入 -->
+	<select id="getTotalInsuranceIncomingByGroupCode" parameterClass="string" resultClass="long">
+		select NVL(sum(p.quantity * p.price),0)
+		  from ord_order o, ord_order_item_prod p
+		 where o.order_id = p.order_id
+		   and (o.order_status = 'NORMAL' or o.order_status = 'FINISHED')
+		   and o.travel_group_code = #value#
+		   and p.product_type = 'OTHER'
+		   and p.sub_product_type = 'INSURANCE'
+				
+	</select>
+	
+	<!-- 查询附加收入 -->
+	<select id="selectOtherIncomingListByParam" resultClass="OpOtherIncoming" parameterClass="java.util.HashMap">
+		select 
+			T1.ID AS id,
+			T1.BUDGET_ID AS budgetId,
+			T1.TRAVEL_GROUP_CODE AS travelGroupCode,
+			T1.AMOUNT/100 AS amount,
+			T1.REMARK AS remark,
+			T1.CREATOR AS creator,
+			T1.CREATETIME AS createtime,
+			T1.COSTS_ITEM_ID AS costsItemId,
+			T2.NAME AS costsItemName
+		from 
+			OP_OTHER_INCOMING T1,
+			OP_COSTS_ITEM T2
+		WHERE
+			T1.COSTS_ITEM_ID = T2.ID
+		<isNotEmpty property="travelGroupCode">
+			AND TRAVEL_GROUP_CODE = #travelGroupCode#
+		</isNotEmpty>
+	</select>
+	
+	<!-- 查询附加总收入 -->
+	<select id="selectSumOtherIncomingByParam" resultClass="java.lang.Double" parameterClass="java.util.HashMap">
+		select 
+			nvl(sum(AMOUNT),0) / 100
+		from 
+			OP_OTHER_INCOMING
+		<dynamic prepend="where">
+			<isNotEmpty property="travelGroupCode">
+				TRAVEL_GROUP_CODE = #travelGroupCode#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="selectSumActuralSettlePriceByParam" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		 select nvl(sum(o.actual_settlement_price * o.quantity),0)
+		   from ord_order_item_meta o, ord_order d
+		  where o.order_id = d.order_id
+		    and d.travel_group_code = #travelGroupCode#
+	</select>
+	
+	<!-- 更新团信息的结算状态 -->
+	<update id="updateOpTravelGroupSettlementStatus" parameterClass="map">
+		UPDATE
+			OP_TRAVEL_GROUP
+		SET
+			SETTLEMENT_STATUS = #status#
+		WHERE
+			TRAVEL_GROUP_CODE = #groupCode#
+	</update>
+	
+	<!-- 更新预算产品支付状态 -->
+	<update id="updateBudgetProdSettlementStatus" parameterClass="map">
+		UPDATE
+			OP_GROUP_BUDGET_PROD
+		SET
+			PAY_STATUS = #status#
+		WHERE
+			PROD_BRANCH_ID = #branchId#
+		AND
+			TRAVEL_GROUP_CODE = #groupCode#
+		AND
+			TYPE = 'BUDGET'
+	</update>
+	<!-- 更新产品成本支付状态 -->
+	<update id="updateBudgetProdSettlementStatusById" parameterClass="map">
+		UPDATE
+			OP_GROUP_BUDGET_PROD
+		SET
+			PAY_STATUS = #payStatus#
+		WHERE
+			ITEM_ID = #itemId#
+	</update>
+	
+	<!--  更新预算固定成本支付状态 -->
+	<update id="updateBudgetFixedSettlementStatus" parameterClass="map">
+		UPDATE
+			OP_GROUP_BUDGET_FIXED
+		SET
+			PAY_STATUS = #payStatus#
+		WHERE
+			ITEM_ID = #itemId#
+	</update>
+	<!-- 保存延迟时间 -->
+	<update id="updateDelayTime" parameterClass="map">
+		UPDATE
+			FIN_GROUP_SETTLEMENT
+		SET
+			SETTLEMENT_DATE = #time#,
+			REMARK = #memo#
+		WHERE
+			BUDGET_ITEM_ID = #itemId#
+		AND BUDGET_ITEM_TYPE = #itemType#
+	</update>
+	
+	<!-- 根据ID，查询固定成本项 -->
+	<select id="getBudgetFixedByItemId" parameterClass="long" resultClass="OpGroupBudgetFixed">
+		SELECT 
+			T1.ITEM_ID AS itemId,
+			T1.COSTS_ITEM_ID AS costsItem,
+			T2.NAME AS costsItemName,
+			T1.BG_COSTS/100 AS  bgCosts,
+			T1.QUANTITY AS quantity,
+			T1.CURRENCY AS currency,
+			T1.EXCHANGE_RATE AS exchangeRate,
+			T1.SUBTOTAL_COSTS/100 AS subtotalCosts,
+			T1.SUBTOTAL_COSTS_FC/100 AS subtotalCostsFc,
+			T1.SUPPLIER_ID AS supplierId,
+			T1.TARGET_ID AS targetId,
+			T1.PAYMENT_TYPE AS paymentType,
+			NVL(T1.PAY_AMOUNT/100,0) AS payAmount,
+			T1.PAY_STATUS AS payStatus,
+			T1.REMARK AS remark,
+			T1.TRAVEL_GROUP_CODE AS travelGroupCode
+		FROM 
+			OP_GROUP_BUDGET_FIXED T1,
+			OP_COSTS_ITEM T2
+		WHERE
+			T1.ITEM_ID = #value#
+		AND T1.COSTS_ITEM_ID = T2.ID
+	</select>
+	
+	<select id="getLogs" parameterClass="map" resultClass="GroupBudgetLog">
+		SELECT
+			OPERATOR_NAME AS operatorname,
+			LOG_NAME AS logName,
+			CREATE_TIME AS createTime,
+			CONTENT AS content
+		FROM
+			COM_LOG
+		WHERE
+			OBJECT_ID = #groupId#
+		AND
+			LOG_TYPE = #logType#
+		ORDER BY
+			CREATE_TIME
+		DESC
+	</select>
+	
+	<!-- 新增附加收入 -->
+	<insert id="insertOtherIncoming" parameterClass="OpOtherIncoming">
+		<selectKey keyProperty="id" resultClass="long">
+			SELECT 
+				OP_OTHER_INCOMING_ID_SEQ.NEXTVAL
+			FROM
+				DUAL
+		</selectKey>
+		INSERT INTO
+			OP_OTHER_INCOMING
+		(
+			ID,
+			BUDGET_ID,
+			TRAVEL_GROUP_CODE,
+			COSTS_ITEM_ID,
+			AMOUNT,
+			REMARK,
+			CREATOR,
+			CREATETIME
+		)
+		VALUES
+		(
+			#id#,
+			#budgetId#,
+			#travelGroupCode#,
+			#costsItemId#,
+			#amount# * 100,
+			#remark#,
+			#creator#,
+			#createtime#
+		)
+	</insert>
+	
+	<!--  更新附加收入 -->
+	<update id="updateOtherIncoming"  parameterClass="OpOtherIncoming">
+		UPDATE
+			OP_OTHER_INCOMING
+		SET
+			COSTS_ITEM_ID = #costsItemId#,
+			AMOUNT = #amount# * 100,
+			REMARK = #remark#
+		WHERE
+			ID = #id#
+	</update>
+	
+	<!--  删除附加收入 -->
+	<delete id="deleteOtherIncoming"  parameterClass="long">
+		DELETE 
+		FROM
+			OP_OTHER_INCOMING
+		WHERE
+			ID = #id#
+	</delete>
+	
+	<!-- 查询催款记录 -->
+	<select id="getFinGroupSettlement" parameterClass="map" resultClass="FinGroupSettlement">
+		SELECT 
+			GROUP_SETTLEMENT_ID AS groupSettlementId,
+			TRAVEL_GROUP_CODE AS travelGroupCode,
+			BUDGET_ITEM_ID AS budgetItemId,
+			BUDGET_ITEM_TYPE AS budgetItemType,
+			SUBTOTAL_COSTS / 100 AS subtotalCosts,
+			NVL(PAY_AMOUNT / 100,0) AS payAmount,
+			PAYMENT_STATUS AS paymentStatus
+		FROM 
+			FIN_GROUP_SETTLEMENT 
+		WHERE
+			BUDGET_ITEM_ID = #budgetItemId#
+		AND BUDGET_ITEM_TYPE = #budgetItemType#
+	</select>
+	
+	<!-- 插入催款记录 -->
+	<insert id="insertRequirePay" parameterClass="FinGroupSettlement">
+	<selectKey keyProperty="groupSettlementId" resultClass="long">
+		SELECT 
+			FIN_GROUP_SETTLEMENT_ID_SEQ.NEXTVAL
+		FROM
+			DUAL
+	</selectKey>
+    insert into 
+    	FIN_GROUP_SETTLEMENT 
+    (
+    	GROUP_SETTLEMENT_ID, 
+    	TRAVEL_GROUP_CODE,
+        BUDGET_ITEM_ID, 
+        BUDGET_ITEM_NAME, 
+        BUDGET_ITEM_TYPE, 
+        PRD_BRANCH_NAME, 
+        SUPPLIER_ID, 
+        TARGET_ID,
+        PAYMENT_TYPE, 
+        CURRENCY, 
+        EXCHANGE_RATE, 
+        SUBTOTAL_COSTS, 
+        SETTLEMENT_DATE, 
+        PAY_AMOUNT,
+        PAYMENT_STATUS, 
+        REMARK, 
+        CREATOR, 
+        CREATETIME,
+        IS_USE_ADVANCEDEPOSITS
+    )
+    values 
+    (
+    	#groupSettlementId#, 
+    	#travelGroupCode#, 
+    	#budgetItemId#,
+      	#budgetItemName#, 
+      	#budgetItemType#, 
+      	#prdBranchName#,
+      	#supplierId#, 
+      	#targetId#, 
+      	#paymentType#, 
+      	#currency#,
+      	#exchangeRate#, 
+      	#subtotalCosts# * 100, 
+      	#settlementDate#,
+      	#payAmount# * 100, 
+      	#paymentStatus#, 
+      	#remark#, 
+      	#creator#,
+      	SYSDATE,
+      	#isUseAdvancedeposits#
+     )
+  </insert>
+  
+  <!-- 更新催款记录 -->
+  <update id="updateFinGroupSettlement" parameterClass="FinGroupSettlement">
+  	UPDATE
+  		FIN_GROUP_SETTLEMENT
+  	SET
+        BUDGET_ITEM_ID = #budgetItemId#,
+        SUBTOTAL_COSTS = #subtotalCosts# * 100,
+        PAYMENT_STATUS = #paymentStatus#
+    <dynamic prepend=" WHERE ">
+    	<isNotEmpty property="groupSettlementId">
+    		GROUP_SETTLEMENT_ID = #groupSettlementId#
+    	</isNotEmpty>
+    </dynamic>
+  </update>
+  
+  <!-- 更新催款记录 的成本明细ID -->
+  <update id="updateFinGroupSettlementBudgetItemId" parameterClass="map">
+  	UPDATE
+  		FIN_GROUP_SETTLEMENT
+  	SET
+        BUDGET_ITEM_ID = #newBudgetItemId#
+    WHERE
+    	BUDGET_ITEM_TYPE = #budgetItemType#
+    AND BUDGET_ITEM_ID = #oldBudgetItemId#
+  </update>
+  
+  <!-- 查询附加收入 -->
+  <select id="getOtherIncoming" parameterClass="map" resultClass="OpOtherIncoming">
+  	SELECT
+  		T1.ID AS id,
+		T1.BUDGET_ID AS budgetId,
+		T1.TRAVEL_GROUP_CODE AS travelGroupCode,
+		T1.AMOUNT/100 AS amount,
+		T1.REMARK AS remark,
+		T1.CREATOR AS creator,
+		T1.CREATETIME AS createtime,
+		T1.COSTS_ITEM_ID AS costsItemId,
+		T2.NAME AS costsItemName
+  	FROM
+  		OP_OTHER_INCOMING T1,
+  		OP_COSTS_ITEM T2
+  	WHERE
+  		T1.COSTS_ITEM_ID = T2.ID
+  	<isNotEmpty property="id">
+  	AND T1.ID = #id#
+  	</isNotEmpty>
+  </select>
+  
+  <!-- 查询产品订单列表分页 -->
+  <sql id="getProductOrderDetailsSql">
+  SELECT * FROM (
+  	SELECT 
+  	   O2.ORDER_ID AS orderId,
+       O2.ACTUAL_SETTLEMENT_PRICE/100 AS settlePrice,
+       MIN(DECODE(O.ORDER_STATUS,'CANCEL',DECODE(O3.TYPE,NULL,O2.QUANTITY * O2.PRODUCT_QUANTITY,0),O2.QUANTITY * O2.PRODUCT_QUANTITY)) AS quantity,
+       SUM(DECODE(
+	       	O3.TYPE,NULL,O2.TOTAL_SETTLEMENT_PRICE,
+	       	'VISITOR_LOSS',O3.ACTUAL_LOSS,
+	       	NVL(O2.TOTAL_SETTLEMENT_PRICE,0) - O3.AMOUNT)
+	   )/100 AS settleAmount,
+	   MAX(O2.PAYED_AMOUNT) payedAmount
+	FROM 
+		ORD_ORDER O, 
+		ORD_ORDER_ITEM_META O2,
+		(SELECT O4.ORDER_ITEM_META_ID,
+	               O4.TYPE,
+	               SUM(O4.AMOUNT) AMOUNT,
+	               SUM(ACTUAL_LOSS) ACTUAL_LOSS
+	          FROM ORD_REFUNDMENT_ITEM O4, ORD_REFUNDMENT O5
+	         WHERE O4.REFUNDMENT_ID = O5.REFUNDMENT_ID
+	           AND O5.STATUS = 'REFUNDED'
+	           AND (O4.MEMO != '自动生成退款单' OR O4.MEMO IS NULL)
+	         GROUP BY O4.ORDER_ITEM_META_ID, O4.TYPE) O3
+	WHERE O.ORDER_ID = O2.ORDER_ID
+	AND O2.ORDER_ITEM_META_ID = O3.ORDER_ITEM_META_ID(+)
+   	AND O.TRAVEL_GROUP_CODE = #groupCode#
+   	<dynamic>
+   		<isNotEmpty prepend=" AND " property="prdBranchId">O2.META_BRANCH_ID = #prdBranchId#</isNotEmpty>
+   	</dynamic>
+   	AND (O.ORDER_STATUS = 'NORMAL' OR O.ORDER_STATUS = 'FINISHED'  OR (O.ORDER_STATUS = 'CANCEL' AND O3.ORDER_ITEM_META_ID IS NOT NULL))
+   	AND O.PAYMENT_STATUS = 'PAYED'
+	GROUP BY 
+		O2.ORDER_ID, 
+		O2.ACTUAL_SETTLEMENT_PRICE
+	 ) WHERE SETTLEAMOUNT >0
+  </sql>
+  <select id="getProductOrderDetailsCount" parameterClass="map" resultClass="long">
+  	SELECT
+		COUNT(*)
+	FROM
+	(
+		<include refid="getProductOrderDetailsSql"/>
+	)
+  </select>
+  <select id="getProductOrderDetails" parameterClass="map" resultClass="ProductOrderDetail">
+  	<include refid="pageSelectHead"/>
+	<include refid="getProductOrderDetailsSql"/>
+	<include refid="pageSelectFoot"/>
+  </select>
+  
+  <!-- 查询活动转让  -->
+  <select id="getOrderAllowanceSum" parameterClass="map" resultClass="double">
+  	SELECT 
+  		SUM(I.ITEM_AMOUNT) / 100
+  	FROM 
+  		ORD_ORDER O, 
+  		ORD_ORDER_AMOUNT_ITEM I
+ 	WHERE 
+ 		O.ORDER_ID = I.ORDER_ID
+   	AND (O.ORDER_STATUS = 'NORMAL' OR O.ORDER_STATUS = 'FINISHED')
+   	AND O.PAYMENT_STATUS = 'PAYED'
+   	AND O.TRAVEL_GROUP_CODE = #travelGroupCode#
+   	AND I.ODER_AMOUNT_TYPE = 'ORDER_COUPON_AMOUNT'
+  </select>
+  <!-- 根据成本项ID，成本项类型查询已打款的外币，人民币合计 -->
+  <select id="searchSubTotalCosts" parameterClass="map" resultClass="OpGroupBudgetProd">
+  	SELECT 
+      B.RATE AS exchangeRate,
+      B.AMOUNT AS subtotalCostsFc
+  	FROM 
+  		FIN_GROUP_SETTLEMENT A, 
+  		LVMAMA_PET.SET_SETTLEMENT_PAYMENT B
+ 	WHERE 
+ 		A.GROUP_SETTLEMENT_ID = B.GROUP_SETTLEMENT_ID
+   	AND 
+   		A.BUDGET_ITEM_ID = #itemId#
+   	AND  
+   		A.BUDGET_ITEM_TYPE = #type#
+    ORDER BY 
+    	B.CREATETIME DESC
+  </select>
+  <!-- 更新产品成本明细的单项结算总额（人民币） -->
+  <update id="updateProdSubTotalCosts" parameterClass="OpGroupBudgetProd">
+ 		UPDATE
+ 			OP_GROUP_BUDGET_PROD
+ 		SET
+ 			SUBTOTAL_COSTS = #subtotalCosts#,
+ 			EXCHANGE_RATE = #exchangeRate#
+ 		WHERE
+ 			ITEM_ID = #itemId#
+ 	</update>
+ 	 <!-- 更新固定成本明细的单项结算总额（人民币） -->
+  	<update id="updateFixedSubTotalCosts" parameterClass="OpGroupBudgetFixed">
+ 		UPDATE
+ 			OP_GROUP_BUDGET_FIXED
+ 		SET
+ 			SUBTOTAL_COSTS = #subtotalCosts#,
+ 			EXCHANGE_RATE = #exchangeRate#
+ 		WHERE
+ 			ITEM_ID = #itemId#
+ 	</update>
+ 	
+ 	<!-- 查询团的实际人数 -->
+ 	<select id="getActOrderPersonNum" parameterClass="string" resultClass="long">
+ 		SELECT 
+	  	   SUM(O2.QUANTITY * O2.PRODUCT_QUANTITY * (O2.ADULT_QUANTITY + O2.CHILD_QUANTITY))
+		FROM 
+			ORD_ORDER O, 
+			ORD_ORDER_ITEM_META O2
+		WHERE O.ORDER_ID = O2.ORDER_ID
+	   	AND O.TRAVEL_GROUP_CODE = #value#
+	   	AND (O.ORDER_STATUS = 'NORMAL' OR O.ORDER_STATUS = 'FINISHED')
+	   	AND O.PAYMENT_STATUS = 'PAYED'
+ 	</select>
+ 	
+ 	<!-- 查询供应商预付款总额 -->
+ 	<select id="getSupAdvanceAmount" parameterClass="map" resultClass="double">
+ 		 SELECT 
+ 		 	NVL(O.ADVANCE_DEPOSIT_AMOUNT,0) / 100
+ 		 FROM 
+ 		 	LVMAMA_PET.FIN_SUPPLIER_MONEY O
+ 		 WHERE
+ 		 	O.SUPPLIER_ID = #supplierId#
+ 		 <isNotEmpty property="currencyType">
+ 		 AND O.ADVANCE_DEPOSIT_CURRENCY = #currencyType#
+ 		 </isNotEmpty>
+ 	</select>
+ 	
+ 	<!-- 删除未打款的催款记录 -->
+ 	<update id="deleteFinGroupSettlementByGroupId" parameterClass="long">
+ 		UPDATE FIN_GROUP_SETTLEMENT O
+		   SET O.DEL = 'Y'
+		 WHERE O.PAYMENT_STATUS = 'NOPAY'
+		 AND   O.TRAVEL_GROUP_CODE IN 
+		       (SELECT T1.TRAVEL_GROUP_CODE
+		          FROM OP_TRAVEL_GROUP T1
+		         WHERE T1.TRAVEL_GROUP_ID = #value#)
+ 	</update>
+ 	<!-- 根据团id，把已打款的明细项生成抵扣款 -->
+ 	<update id="createMoneyForChargeByGroupId" parameterClass="long">
+ 		UPDATE FIN_GROUP_SETTLEMENT O
+		   SET O.PAY_AMOUNT = 0,
+		       O.SUBTOTAL_COSTS = 0 - O.PAY_AMOUNT,
+		       O.PAYMENT_STATUS = 'NOPAY'
+		 WHERE (O.PAYMENT_STATUS = 'PARTPAY' OR O.PAYMENT_STATUS = 'PAYED')
+		 AND   O.TRAVEL_GROUP_CODE IN 
+		       (SELECT T1.TRAVEL_GROUP_CODE
+		          FROM OP_TRAVEL_GROUP T1
+		         WHERE T1.TRAVEL_GROUP_ID = #value#)
+ 	</update>
+ 	
+ 	<!-- 查询团的订单总数 -->
+ 	<select id="getOrderNumByGroupCode" parameterClass="string" resultClass="long">
+ 		SELECT COUNT(O.ORDER_ID)
+		  FROM ORD_ORDER O
+		 WHERE (O.ORDER_STATUS = 'NORMAL' OR O.ORDER_STATUS = 'FINISHED' OR (O.ORDER_STATUS = 'CANCEL' AND EXISTS(SELECT 1 FROM ORD_REFUNDMENT_ITEM ORI,ORD_REFUNDMENT ORF WHERE ORI.REFUNDMENT_ID = ORF.REFUNDMENT_ID AND ORF.ORDER_ID = O.ORDER_ID AND ORF.STATUS = 'REFUNDED')))
+		   AND O.PAYMENT_STATUS = 'PAYED'
+		   AND O.TRAVEL_GROUP_CODE = #value#
+ 	</select>
+ 	
+ 	<!-- 查询代售团团号 -->
+ 	<select id="getGroupCode" parameterClass="map" resultClass="string">
+ 		select g.travel_group_code
+		  from op_travel_group g, prod_route r
+		 where g.product_id = r.product_id
+		   and r.group_type = 'AGENCY'
+		   and g.travel_group_status != 'CANCEL'
+		   <!-- 存在已支付的订单 -->
+		   and exists
+		   (
+		   		select o.order_id
+		   		from ord_order o
+		   		where (o.order_status = 'NORMAL' or o.order_status = 'FINISHED')
+		   		and o.payment_status = 'PAYED'
+		   		and o.travel_group_code = g.travel_group_code
+		   )
+		   and g.visit_time &gt;= sysdate - 1
+		   and g.visit_time &lt; sysdate
+		   <isNotEmpty property="settlementStatus">
+		   and g.settlement_status = #settlementStatus#
+		   </isNotEmpty>
+ 	</select>
+ 	
+ 	<!-- 查询产品明细币种 -->
+ 	<select id="getProductCurrencyByItemId" parameterClass="long" resultClass="string">
+ 		select p.currency from op_group_budget_prod p where p.item_id = #value#
+ 	</select>
+ 	
+ 	<!-- 查询固定成本明细币种 -->
+ 	<select id="getFixedCurrencyByItemId" parameterClass="long" resultClass="string">
+ 		select f.currency from op_group_budget_fixed f where f.item_id = #value#
+ 	</select>
+ 	
+ 	<!-- 更新实际人数 -->
+ 	<update id="updateActPersons" parameterClass="map">
+ 		update op_group_budget
+ 		   set act_adult = #actAdult#,
+ 		   	   act_child = #actChild#,
+ 		   	   act_persons = #actAdult# + #actChild#
+ 		 where travel_group_code = #groupCode#
+ 		   	
+ 	</update>
+ 	
+ 	<!-- 产品是否加入总成本 -->
+ 	<update id="updateIsInCostBudget" parameterClass="map">
+ 		update op_group_budget_prod
+ 		   set is_in_cost = #isInCost#
+ 		 where travel_group_code = #groupCode#
+ 		   and prod_branch_id = #prdBranchId#
+ 		   and type = 'BUDGET' 
+ 	</update>
+ 	
+ 	<!-- 产品是否加入总成本 -->
+ 	<update id="updateIsInCost" parameterClass="map">
+ 		update op_group_budget_prod
+ 		   set is_in_cost = #isInCost#
+ 		 where travel_group_code = #groupCode#
+ 		   and prod_branch_id = #prdBranchId#
+ 		   and type = 'COST' 
+ 	</update>
+ 	
+ 	<!-- 修改订单子子项的结算状态 -->
+ 	<update id="updateOrderItemMetaSettlementStatus" parameterClass="map">
+ 		 update ord_order_item_meta m 
+			set m.settlement_status = #status#
+			where m.order_id in
+			(
+				 select o.order_id 
+				 from ord_order o
+				 where o.travel_group_code = #groupCode#
+				 and o.payment_status = 'PAYED'
+				 and (o.order_status = 'NORMAL' or o.order_status = 'FINISHED')
+			 )
+			and m.meta_branch_id = #metaBranchId#
+ 	</update>
+ 	<!-- 修改订单的结算状态 -->
+ 	<update id="updateOrderSettlementStatus" parameterClass="map">
+ 		 update ord_order o 
+			set o.settlement_status = #status#
+			where o.travel_group_code = #groupCode#
+			and o.payment_status = 'PAYED'
+			and (o.order_status = 'NORMAL' or o.order_status = 'FINISHED')
+			and exists
+			(
+			 select m.order_id from ord_order_item_meta m 
+			 where m.order_id = o.order_id
+			 and m.meta_branch_id = #metaBranchId#
+			)
+ 	</update>
+ 	<!-- //TODO -->
+ 	<!-- 生成抵扣款begin -->
+ 	<insert id="insertDeduction" parameterClass="FinGroupSettlement" >
+ 		INSERT INTO 
+ 			FIN_GROUP_SETTLEMENT
+		(
+			GROUP_SETTLEMENT_ID,
+			TRAVEL_GROUP_CODE,
+			BUDGET_ITEM_ID,
+			BUDGET_ITEM_NAME,
+			BUDGET_ITEM_TYPE,
+			PRD_BRANCH_NAME,
+			SUPPLIER_ID,
+			TARGET_ID,
+			CURRENCY,
+			EXCHANGE_RATE,
+			SUBTOTAL_COSTS,
+			CREATOR,
+			CREATETIME,
+			PAYMENT_STATUS
+ 		)VALUES(
+ 			FIN_GROUP_SETTLEMENT_ID_SEQ.NEXTVAL,
+ 			#travelGroupCode#,
+ 			#budgetItemId#,
+ 			#budgetItemName#,
+ 			#budgetItemType#,
+ 			#prdBranchName#,
+ 			#supplierId#,
+ 			#targetId#,
+ 			#currency#,
+ 			#exchangeRate#,
+ 			#subtotalCosts#*100,
+ 			#creator#,
+ 			#createtime#,
+ 			'NOPAY'
+ 		)
+ 	</insert>
+ 	<!-- 生成抵扣款end -->
+ 	
+ 	<!-- 根据团号查询退款金额 -->
+	<select id="getSubRefundAmountByGroupCode" resultClass="double" parameterClass="string">
+		SELECT NVL(SUM(A.AMOUNT),0)/100
+		  FROM ORD_REFUNDMENT A, ORD_ORDER B
+		 WHERE A.ORDER_ID = B.ORDER_ID
+		   AND B.TRAVEL_GROUP_CODE = #groupCode#
+		   AND A.STATUS = 'REFUNDED' 
+		
+	</select>
+	<select id="getTotalOrderActualPay" parameterClass="string" resultClass="double">
+		SELECT NVL(SUM(CASE
+                 WHEN REFUNDMENT_AMOUNT = 0 AND ORDER_STATUS = 'CANCEL' THEN
+                  0
+                 ELSE
+                  ACTUAL_PAY - REFUNDMENT_AMOUNT
+               END),
+           0) INCOMING
+		  FROM (SELECT A.ACTUAL_PAY,
+		               NVL((SELECT SUM(B.AMOUNT)
+		                     FROM ORD_REFUNDMENT B
+		                    WHERE A.ORDER_ID = B.ORDER_ID
+		                      AND B.STATUS = 'REFUNDED'
+		                      AND B.REFUND_TYPE = 'ORDER_REFUNDED'),
+		                   0) REFUNDMENT_AMOUNT,
+		               A.ORDER_STATUS
+		          FROM ORD_ORDER A
+		         WHERE A.ORDER_STATUS IN ('NORMAL', 'FINISHED', 'CANCEL')
+		           AND A.TRAVEL_GROUP_CODE = #groupCode#)		
+	</select>
+</sqlMap>

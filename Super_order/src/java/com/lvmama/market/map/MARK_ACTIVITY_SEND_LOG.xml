@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_ACTIVITY_SEND_LOG">
+
+    <typeAlias alias="markActivitySendLog" type="com.lvmama.comm.pet.po.mark.MarkActivitySendLog"/>
+
+    <resultMap id="MarkActivitySendLogMap" class="markActivitySendLog">
+        <result column="ACT_SEND_ID" property="actSendId"/>
+        <result column="TARGET" property="target"/>
+        <result column="TYPE" property="type"/>
+        <result column="SEND_TIMES" property="sendTimes"/>
+        <result column="SEND_TIME" property="sendTime"/>
+        <result column="ACT_ITEM_ID" property="actItemId"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <insert id="insertMarkActivitySendLog" parameterClass="markActivitySendLog">
+        <selectKey keyProperty="actSendId" resultClass="java.lang.Long">
+            SELECT MARK_ACTIVITY_SEND_LOG_SEQ.nextval FROM DUAL
+        </selectKey>
+        insert into MARK_ACTIVITY_SEND_LOG(ACT_SEND_ID,TARGET,TYPE,SEND_TIMES,SEND_TIME,ACT_ITEM_ID,CREATE_TIME)
+        VALUES(#actSendId#,#target#,#type#,#sendTimes#,#sendTime#,#actItemId#,#createTime#)
+    </insert>
+
+    <select id="selectExcludeEmail" parameterClass="java.util.Map" resultClass="java.lang.String">
+        SELECT TARGET
+        FROM MARK_ACTIVITY_SEND_LOG
+        WHERE TYPE = 'EMAIL'
+
+        <isNotEmpty property="WEEK">
+            and SEND_TIME > sysdate-7+1
+        </isNotEmpty>
+
+        <isNotEmpty property="MONTH">
+            and SEND_TIME > add_months(sysdate,-1)+1
+        </isNotEmpty>
+
+        group by TARGET
+
+        having count(TARGET)
+
+        <isNotEmpty property="GREATER">
+            <![CDATA[ > ]]>
+        </isNotEmpty>
+
+        <isNotEmpty property="LESS">
+            <![CDATA[ < ]]>
+        </isNotEmpty>
+
+        <isNotEmpty property="GREATER_EQUAL">
+            <![CDATA[ >= ]]>
+        </isNotEmpty>
+
+        <isNotEmpty property="LESS_EQUAL">
+            <![CDATA[ <= ]]>
+        </isNotEmpty>
+
+        #excludeTimes#
+    </select>
+
+    <delete id="cleanupSendLog" parameterClass="java.lang.Long">
+        DELETE FROM MARK_ACTIVITY_SEND_LOG
+        WHERE create_time <![CDATA[ < ]]> (sysdate - #cleanupDays#)
+    </delete>
+
+    <select id="selectSendAmountBySendOffTimes" parameterClass="java.util.Map" resultClass="java.lang.Long">
+        select count(1) c from mark_activity_send_log where act_item_id=#actItemId# and send_times=#sendTimes#
+    </select>
+</sqlMap>

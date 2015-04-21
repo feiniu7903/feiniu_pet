@@ -1,0 +1,165 @@
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?page title="new settlement target" contentType="text/html;charset=UTF-8"?>
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./settlementTargetDetailWin"?>
+	<window id="settlementTargetDetailWin" title="结算对象详情"
+		border="normal" mode="embedded"
+		apply="com.lvmama.back.web.targets.settlementtarget.DetailSettlementTargetAction">
+		<space />
+		<groupbox style="border:none;">
+			<caption label="结算信息" />
+			<grid>
+				<rows>
+					<row style="border:none;" valign="top">
+						<grid>
+							<columns>
+								<column width="80px"></column>
+								<column></column>
+							</columns>
+
+							<rows>
+								<row>
+									<hbox>供应商：</hbox>
+									<hbox>
+										<label id="supplierName" value="${saction.supplier.supplierName }"/>
+									</hbox>
+								</row>
+								<row>
+									<hbox>对象名称：</hbox>
+									<hbox>
+										<label id="settlementTargetName" value="${saction.settlementTarget.name }">
+										</label>
+									</hbox>
+								</row>
+								<row>
+									<hbox>结算周期：</hbox>
+									<hbox>
+										<label id="settlementPeriod" value="${saction.settlementTarget.zhSettlementPeriod }"></label>
+									</hbox>
+								</row>
+								<row>
+									<hbox>预存款余额：</hbox>
+									<hbox>
+										<label value="${saction.settlementTarget.supplier.foregiftsBalance / 100.00 }"></label>
+										元
+									</hbox>
+								</row>
+								<row>
+									<hbox>押金：</hbox>
+									<hbox>
+										<label value="${saction.settlementTarget.supplier.advancedepositsBalance / 100.00 }"></label>
+										元
+									</hbox>
+								</row>
+								<row>
+									<hbox>付款方式：</hbox>
+									<hbox>
+										<label value="${saction.settlementTarget.paymentTypeName }"></label>
+									</hbox>
+								</row>
+							</rows>
+						</grid>
+						<grid>
+							<columns>
+								<column width="80px"></column>
+								<column></column>
+							</columns>
+							<rows>
+								<row align="left">
+									<hbox>结算账号：</hbox>
+									<hbox>
+										开户名称：
+										<label id="bankAccountName" value="${saction.settlementTarget.bankAccountName }"></label>
+									</hbox>
+								</row>
+								<row align="left">
+									<hbox></hbox>
+									<hbox>
+										开户银行：
+										<label id="bankName" value="${saction.settlementTarget.bankName }"></label>
+									</hbox>
+								</row>
+								<row align="left">
+									<hbox></hbox>
+									<hbox>
+										开户账号：
+										<label id="bankAccount" value="${saction.settlementTarget.bankAccount }"></label>
+									</hbox>
+								</row>
+								<row align="left">
+									<hbox></hbox>
+									<hbox>
+										支付宝账号：
+										<label id="alipayName" value="${saction.settlementTarget.alipayAccount }"></label>
+									</hbox>
+								</row>
+								<row align="left">
+									<hbox></hbox>
+									<hbox>
+										支付宝用户名：
+										<label id="alipayAccount" value="${saction.settlementTarget.alipayName }"></label>
+									</hbox>
+								</row>
+							</rows>
+						</grid>
+					</row>
+					<row style="border:none;" spans="2">
+						<hbox>
+							<hbox height="60px">
+								备注：
+								<label id="memo" value="${saction.settlementTarget.memo }"></label>
+							</hbox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<space />
+		<groupbox style="border:none;">
+			<caption label="财务联系人" />
+			<grid style="border:none;">
+				<rows>
+					<row style="border:none;" spans="2">
+						<hbox>
+							<vbox>
+								<listbox id="contactList" model="@{saction.comContactRelationList}">
+									<listhead>
+										<listheader label="名称"
+											width="80px" />
+										<listheader label="手机" />
+										<listheader label="电话" />
+										<listheader label="公司名称" />
+										<listheader label="类型" />
+									</listhead>
+									<listitem height="25px"
+										self="@{each='com' }" value="@{com}">
+										<listcell
+											label="@{com.name }">
+										</listcell>
+										<listcell
+											label="@{com.mobilephone }">
+										</listcell>
+										<listcell label="@{com.telephone }"></listcell>
+										<listcell
+											label="${saction.supplier.supplierName }">
+										</listcell>
+										<listcell
+											label="@{com.memo }">
+										</listcell>
+									</listitem>
+								</listbox>
+							</vbox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+
+		<space />
+		<toolbar align="center" visible="${saction.closeable}" >
+			<button label="关闭窗口" width="100px"
+				onClick="settlementTargetDetailWin.detach()">
+			</button>
+		</toolbar>
+	</window>
+</zk>

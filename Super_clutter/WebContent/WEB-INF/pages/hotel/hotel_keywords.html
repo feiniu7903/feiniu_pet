@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>酒店详情页面_旅游门票手机预订-驴妈妈手机站</title>
+    <#include "../common/define_v4.html">
+    <link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/order.css">
+	<script src="${request.contextPath}/js/hotel.js"></script>
+	<script type="text/javascript">
+		//搜索城市加载用到
+		var landMarkMapListAll = ${landMarkMapListAll!};
+		//自动加载方法
+		$(function(){
+			
+			// 自动补全查询
+			$("#landmarkkeyword").keyup(function() {
+				initLandMarkAutoCompleteDatas();
+			});
+			var hotelkeyword = getLocalStorage(LOCAL_STRTORAGE_HOTEL_HOTELKEYWORD);//关键字
+			$("#landmarkkeyword").val(hotelkeyword);
+			
+		});
+	</script>
+</head>
+
+<body>
+<div id="container">
+    <header class="header" id="hotel_search_title">
+        <a href="javascript:union_back();"  class="back"><span class="ic_back"></span></a>
+        <h1>关键字查询</h1>
+        <section class="header_btn">
+            <a href="javascript:defaultlandMark();">恢复默认</a>
+        </section>
+    </header>
+    <div id="content">
+        <div class="lv-search-bar">
+            <div class="lv-search">
+                   <span class="clear-icon" onclick="union_clear_context('keyword');" id="clear_password"></span>
+                   <input class="lv-search-input" id="landmarkkeyword" type="text" value="${toDest!}"
+                          placeholder="请输入酒店名或位置" autocomplete="off">
+                   <input type="button" class="btn_sub" value="" onclick="clickKeyWordsButton();" />
+            </div>
+            <div id="search_autocomplete" style="display:none;">
+                <ul class="search_auto_complete" id="search_success"></ul>
+            </div>
+        </div>
+        <nav class="common-nav">
+            <#if landMarkMapList?? && landMarkMapList?size&gt;0>
+                <ul class="notBtn"><!-- notBtn标记该元素下的li不触发取值事件 -->
+                    <#list landMarkMapList as landMark>
+                        <li>${landMark.name}<span class="ic_triangle_up"></span></li>
+                    </#list>
+                </ul>
+            </#if>
+        </nav>
+        <#if landMarkMapList?? && landMarkMapList?size&gt;0>
+            <section class="common-order">
+                <#list landMarkMapList as landMark>
+                    <#if landMark?? && landMark.datas?size&gt;0>
+                        <article class="tabChange">
+                            <#list landMark.datas as landMarkOne>
+                                <div class="common-order-line" onclick="chooselandMark(${landMark_index!},'${landMarkOne.locationId}','${landMarkOne.locationName}','${landMarkOne.locationType}','${landMarkOne.pinyin}');"><span>${landMarkOne.locationName}</span></div>
+                            </#list>
+                        </article>
+                    </#if>
+                </#list>
+            </section>
+        </#if>
+    </div>
+    <#include "../common/footer_v4.html"/>
+</div>
+<script type="text/javascript">
+    $(".common-nav").tabChange();
+</script>
+</body>
+</html>

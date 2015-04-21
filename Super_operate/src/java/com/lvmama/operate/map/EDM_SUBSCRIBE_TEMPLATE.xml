@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EDM_SUBSCRIBE_TEMPLATE">
+	<typeAlias alias="edmSubscribeTemplate"
+		type="com.lvmama.comm.pet.po.edm.EdmSubscribeTemplate" />	
+	<resultMap class="com.lvmama.comm.pet.po.edm.EdmSubscribeTemplate" id="resultClass">
+		<result column="TEMP_ID" property="tempId" />
+		<result column="TEMP_NAME" property="tempName" />
+		<result column="TEMP_URL" property="tempUrl" />
+		<result column="TEMP_STATUS" property="tempStatus" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="CREATE_USER" property="createUser" />
+		<result column="UPDATE_DATE" property="updateDate" />
+		<result column="UPDATE_USER" property="updateUser" />
+	</resultMap>
+	<sql id="searchParam">
+		<isNotNull prepend=" AND " property="tempId"> TEMP_ID = #tempId# </isNotNull>
+		<isNull property="blur">
+			<isNotNull prepend=" AND " property="tempName"> TEMP_NAME LIKE '%$tempName$%'</isNotNull>
+		</isNull>
+		<isNotNull property="precise">
+			<isNotNull prepend=" AND " property="tempName"> TEMP_NAME =#tempName#</isNotNull>
+		</isNotNull>
+		<isNotNull prepend=" AND " property="tempStatus"> TEMP_STATUS = #tempStatus#</isNotNull>
+		<isNotNull prepend=" AND " property="tempIdList">
+			TEMP_ID IN
+			<iterate property="tempIdList" conjunction="," open="(" close=")">
+				#tempIdList[]# 
+			</iterate>
+		</isNotNull>
+	</sql>
+	<select id="search" parameterClass="java.util.HashMap" resultMap="resultClass">
+		SELECT * FROM (
+		  SELECT A.*,ROWNUM RN 
+		   FROM EDM_SUBSCRIBE_TEMPLATE  A
+		<dynamic prepend=" WHERE ">
+			<include refid="searchParam"/>
+			<isNotEmpty property="_endRow"  prepend=" AND " > ROWNUM  &lt;=#_endRow#   </isNotEmpty>
+		</dynamic>
+		  )
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND ">  RN  &gt;=#_startRow#   </isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="count" resultClass="java.lang.Long">
+	   SELECT COUNT(*) FROM EDM_SUBSCRIBE_TEMPLATE A 
+	   <dynamic prepend=" WHERE ">
+	   	 <include refid="searchParam"/>
+	   </dynamic>
+	</select>
+	<insert id="insert" parameterClass="edmSubscribeTemplate">
+		<selectKey keyProperty="tempId" resultClass="java.lang.Long">
+			SELECT EDM_TEMP_ID_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO EDM_SUBSCRIBE_TEMPLATE
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="tempId">TEMP_ID</isNotNull>
+			<isNotNull prepend="," property="tempName">TEMP_NAME</isNotNull>
+			<isNotNull prepend="," property="tempUrl">TEMP_URL</isNotNull>
+			<isNotNull prepend="," property="tempStatus">TEMP_STATUS</isNotNull>
+			<isNotNull prepend="," property="createUser">CREATE_DATE,CREATE_USER,UPDATE_DATE,UPDATE_USER</isNotNull>
+		</dynamic>
+		<dynamic prepend=") VALUES (">
+			<isNotNull prepend="," property="tempId">#tempId#</isNotNull>
+			<isNotNull prepend="," property="tempName">#tempName#</isNotNull>
+			<isNotNull prepend="," property="tempUrl">#tempUrl#</isNotNull>
+			<isNotNull prepend="," property="tempStatus">#tempStatus#</isNotNull>
+			<isNotNull prepend="," property="createUser">SYSDATE,#createUser#,SYSDATE,#createUser#</isNotNull>
+			)
+		</dynamic>
+	</insert>
+	<update id="update"  parameterClass="edmSubscribeTemplate">
+		UPDATE EDM_SUBSCRIBE_TEMPLATE
+		<dynamic prepend=" SET ">
+			<isNotNull prepend="," property="tempName">TEMP_NAME=#tempName#</isNotNull>
+			<isNotNull prepend="," property="tempUrl">TEMP_URL=#tempUrl#</isNotNull>
+			<isNotNull prepend="," property="tempStatus">TEMP_STATUS=#tempStatus#</isNotNull>
+			<isNotNull prepend="," property="updateUser">UPDATE_DATE=SYSDATE,UPDATE_USER=#updateUser#</isNotNull>
+		</dynamic>
+		WHERE TEMP_ID=#tempId#
+	</update>
+</sqlMap>

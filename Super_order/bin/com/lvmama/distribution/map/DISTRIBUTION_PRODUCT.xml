@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="DISTRIBUTION_PRODUCT" >
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributionProduct" >
+	  <result column="DISTRIBUTION_PRODUCCT_ID" property="distributionProductId" />
+	  <result column="PRODUCT_ID" property="productId" />
+	  <result column="PRODUCT_BRANCH_ID" property="productBranchId" />
+	  <result column="DISTRIBUTOR_INFO_ID" property="distributorInfoId" />
+	  <result column="CREATE_TIME" property="createTime" />
+	  <result column="VOLID" property="volid" />
+	  <result column="COMMENTS_CASHBACK" property="commentsCashback" />
+	  <result column="NEED_AUTO_UPDATE_CASHBACK" property="needAutoUpdateCashBack" />
+	</resultMap>
+	<resultMap id="branchForDistributionMap" class="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		<result column="PROD_BRANCH_ID" property="prodBranchId" />
+		<result column="PRODUCT_ID" property="prodProduct.productId" />
+		<result column="PRODUCT_NAME" property="prodProduct.productName" />
+		<result column="BRANCH_NAME" property="branchName" />
+		<result column="BRANCH_TYPE" property="branchType" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="PRODUCT_TYPE" property="prodProduct.productType" />
+		<result column="ON_LINE" property="online" />
+		<result column="MINIMUM" property="minimum" />
+		<result column="MAXIMUM" property="maximum" />
+		<result column="ADULT_QUANTITY" property="adultQuantity" />
+		<result column="CHILD_QUANTITY" property="childQuantity" />
+		<result column="VALID" property="valid" />
+		<result column="COMMENTS_CASHBACK" property="sellPrice" />
+	</resultMap>
+	
+	<resultMap id="branchForParamsMap" class="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		<result column="PROD_BRANCH_ID" property="prodBranchId" />
+		<result column="PRODUCT_ID" property="prodProduct.productId" />
+		<result column="PRODUCT_NAME" property="prodProduct.productName" />
+		<result column="BRANCH_NAME" property="branchName" />
+		<result column="BRANCH_TYPE" property="branchType" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="PRODUCT_TYPE" property="prodProduct.productType" />
+		<result column="ON_LINE" property="online" />
+		<result column="MINIMUM" property="minimum" />
+		<result column="MAXIMUM" property="maximum" />
+		<result column="ADULT_QUANTITY" property="adultQuantity" />
+		<result column="CHILD_QUANTITY" property="childQuantity" />
+		<result column="VALID" property="valid" />
+	</resultMap>
+
+	<resultMap id="distributionProductMap" class="com.lvmama.comm.bee.po.prod.ProdProduct">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="ON_LINE" property="onLine" />
+		<result column="ONLINE_TIME" property="onlineTime" />
+		<result column="OFFLINE_TIME" property="offlineTime" />
+		<result column="TRAVELLER_INFO_OPTIONS" property="travellerInfoOptions" />
+		<result column="VALID" property="valid" />
+	</resultMap>
+
+	<sql id="selectByDistributionSql">
+		FROM PROD_PRODUCT PP , PROD_PRODUCT_BRANCH PPB, DISTRIBUTION_PRODUCT DP
+		<isNotEmpty prepend="," property="placeId">
+				PROD_PRODUCT_PLACE PPP
+		</isNotEmpty>
+		WHERE PP.PRODUCT_ID = PPB.PRODUCT_ID
+		AND PPB.PROD_BRANCH_ID = DP.PRODUCT_BRANCH_ID(+)
+		AND PPB.VALID = 'Y'
+    	AND PP.VALID = 'Y'
+		<isNotEmpty prepend="AND" property="placeId">
+		 		PPP.PRODUCT_ID = PP.PRODUCT_ID
+				AND PPP.PLACE_ID = #placeId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="isAperiodic">
+	    		nvl(PP.IS_APERIODIC, 'false') = #isAperiodic#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="distributorInfoId">
+				DP.DISTRIBUTOR_INFO_ID = #distributorInfoId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="volid">
+				DP.VOLID = #volid#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="productName">
+				PP.PRODUCT_NAME like '%$productName$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="productId">
+				PP.PRODUCT_ID = #productId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="prodBranchId">
+				PPB.PROD_BRANCH_ID = #prodBranchId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bizcode">
+				PP.BIZ_CODE = #bizcode#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="filialeName">
+		 		PP.FILIALE_NAME = #filialeName#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="productTypeList">
+			<iterate property="productTypeList" open="(" close=")"
+				conjunction="OR">
+				PP.PRODUCT_TYPE = #productTypeList[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="subProductTypeList">
+			<iterate property="subProductTypeList" open="(" close=")"
+				conjunction="OR">
+				PP.SUB_PRODUCT_TYPE = #subProductTypeList[]#
+			</iterate>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="selectProdProductBranchByParams" resultMap="branchForParamsMap" parameterClass="java.util.HashMap">
+		 <include refid="pageSearchHead"/>
+		 SELECT DISTINCT(PPB.PROD_BRANCH_ID) ,PP.PRODUCT_ID , PPB.MINIMUM , PPB.MAXIMUM ,PPB.VALID, PP.PRODUCT_NAME, PPB.BRANCH_NAME, PPB.BRANCH_TYPE ,PPB.DESCRIPTION ,PP.PRODUCT_TYPE , PPB.ON_LINE , PPB.ADULT_QUANTITY , PPB.CHILD_QUANTITY 
+		 <include refid="DISTRIBUTION_PRODUCT.selectByDistributionSql"/>
+		 order by PPB.PROD_BRANCH_ID desc
+		 <include refid="pageSearchFoot"/>
+		 
+	</select>
+	
+	<select id="selectProdProductBranchByDistribution" resultMap="branchForDistributionMap" parameterClass="java.util.HashMap">
+		 <include refid="pageSearchHead"/>
+		 SELECT DISTINCT(PPB.PROD_BRANCH_ID) ,PP.PRODUCT_ID , PPB.MINIMUM , PPB.MAXIMUM ,PPB.VALID, PP.PRODUCT_NAME, PPB.BRANCH_NAME, PPB.BRANCH_TYPE ,PPB.DESCRIPTION ,PP.PRODUCT_TYPE , PPB.ON_LINE , PPB.ADULT_QUANTITY , PPB.CHILD_QUANTITY,DP.COMMENTS_CASHBACK 
+		 <include refid="DISTRIBUTION_PRODUCT.selectByDistributionSql"/>
+		 order by PPB.PROD_BRANCH_ID desc
+		 <include refid="pageSearchFoot"/>
+		 
+	</select>
+	
+	<select id="selectByDistributionCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		 SELECT COUNT(DISTINCT(PPB.PROD_BRANCH_ID))
+		 <include refid="DISTRIBUTION_PRODUCT.selectByDistributionSql"/>
+	</select>
+	
+	<select id="selectDistributionProductInfo" resultMap="distributionProductMap"
+		parameterClass="java.util.Map">
+		<isNotNull property="start">
+			SELECT * 
+			FROM (SELECT T.*, ROWNUM RN
+			FROM (
+		</isNotNull>
+		SELECT DISTINCT(PP.PRODUCT_ID), PP.VALID , PP.PRODUCT_NAME,
+		PP.PRODUCT_TYPE ,
+		PP.ON_LINE,PP.ONLINE_TIME,PP.OFFLINE_TIME,PP.TRAVELLER_INFO_OPTIONS
+		FROM PROD_PRODUCT PP, DISTRIBUTION_PRODUCT DP
+		WHERE DP.PRODUCT_ID = PP.PRODUCT_ID
+		AND DP.VOLID = 'true'
+		<isNotNull property="productId" prepend="AND">
+			PP.PRODUCT_ID=#productId#
+		</isNotNull>
+		<isNotNull prepend="AND" property="productIds">
+			<iterate property="productIds" open="(" close=")"
+				conjunction="or">
+				pp.PRODUCT_ID=#productIds[]#
+			</iterate>
+		</isNotNull>
+		<isNotNull property="productType" prepend="AND">
+			PP.PRODUCT_TYPE =
+			#productType#
+		</isNotNull>
+		<isNotNull property="branchId" prepend="AND">
+			DP.PRODUCT_BRANCH_ID =
+			#branchId#
+		</isNotNull>
+		<isNotNull property="distributorInfoId" prepend="AND">
+		 DP.DISTRIBUTOR_INFO_ID = #distributorInfoId#
+		 </isNotNull>
+		 <isNotNull property="start">
+			) T ) TT
+			WHERE RN &lt;= #end#
+			AND RN &gt;= #start#
+		</isNotNull>
+	</select>
+
+	<select id="selectDistributionProductInfoCount" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		SELECT COUNT(PP.PRODUCT_ID)
+		FROM PROD_PRODUCT PP, DISTRIBUTION_PRODUCT DP
+		WHERE DP.PRODUCT_ID = PP.PRODUCT_ID
+		AND DP.VOLID = 'true'
+		<isNotNull property="productType" prepend="AND">
+			PP.PRODUCT_TYPE =
+			#productType#
+		</isNotNull>
+		<isNotNull property="productId" prepend="AND">
+			PP.PRODUCT_ID=#productId#
+		</isNotNull>
+		<isNotNull prepend="AND" property="productIds">
+			<iterate property="productIds" open="(" close=")"
+				conjunction="or">
+				pp.PRODUCT_ID=#productIds[]#
+			</iterate>
+		</isNotNull>
+		AND DP.DISTRIBUTOR_INFO_ID = #distributorInfoId#
+	</select>
+	
+		<select id="selectByParams" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+		SELECT * 
+		FROM DISTRIBUTION_PRODUCT
+		<dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="distributorInfoId">
+			DISTRIBUTOR_INFO_ID = #distributorInfoId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="volid">
+			VOLID = #volid#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="productBranchId">
+			PRODUCT_BRANCH_ID = #productBranchId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="productId">
+			PRODUCT_ID = #productId#
+	       </isNotEmpty>
+	    </dynamic>
+	</select>
+	<select id="selectProdBranchIdByCondition" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		SELECT PRODUCT_BRANCH_ID 
+		FROM DISTRIBUTION_PRODUCT
+		WHERE DISTRIBUTOR_INFO_ID = #distributorInfoId#
+		AND PRODUCT_BRANCH_ID =#productBranchId#
+       <isNotEmpty prepend="AND" property="productId">
+		PRODUCT_ID = #productId#
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="volid">
+		VOLID = #volid#
+       </isNotEmpty>
+	</select>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionProduct">
+	  	<selectKey  keyProperty="distributionProductId" resultClass="Long"> 
+	  		SELECT DISTRIBUTION_PRODUCT_ID_SEQ.NEXTVAL FROM DUAL
+	  	</selectKey>
+		INSERT INTO DISTRIBUTION_PRODUCT (DISTRIBUTION_PRODUCCT_ID,PRODUCT_ID,PRODUCT_BRANCH_ID,DISTRIBUTOR_INFO_ID,CREATE_TIME,VOLID)
+		VALUES (#distributionProductId#,#productId#,#productBranchId#,#distributorInfoId#,SYSDATE,#volid#)
+	</insert>
+  
+	<delete id="deleteByProductIdAndProductBranchId" parameterClass="java.util.Map">
+  		DELETE FROM DISTRIBUTION_PRODUCT DP 
+  		WHERE DP.PRODUCT_ID=#productId# 
+  		AND DP.PRODUCT_BRANCH_ID=#productBranchId#
+	</delete>
+	<update id="updateVolid" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionProduct">
+  		UPDATE DISTRIBUTION_PRODUCT
+  		SET volid=#volid# 
+  		WHERE DISTRIBUTOR_INFO_ID = #distributorInfoId#
+  		AND PRODUCT_BRANCH_ID = #productBranchId#
+	</update>
+	
+	<update id="updateCommentsCashback" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionProduct">
+  		UPDATE DISTRIBUTION_PRODUCT
+  		SET COMMENTS_CASHBACK=#commentsCashback# ,
+  		NEED_AUTO_UPDATE_CASHBACK = #needAutoUpdateCashBack#
+  		WHERE DISTRIBUTOR_INFO_ID = #distributorInfoId#
+  		AND PRODUCT_BRANCH_ID = #productBranchId#
+	</update>
+	
+	<update id="updateVolidByProductId" parameterClass="java.util.Map">
+  		UPDATE DISTRIBUTION_PRODUCT
+  		SET volid=#valid# 
+  		<dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="productId">
+			PRODUCT_ID = #productId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="productBranchId">
+			PRODUCT_BRANCH_ID = #productBranchId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="distributorInfoId">
+			DISTRIBUTOR_INFO_ID = #distributorInfoId#
+	       </isNotEmpty>
+	    </dynamic>
+	</update>
+</sqlMap>

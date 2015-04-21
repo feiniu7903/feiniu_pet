@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_TRAIN_FETCH_INFO" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdTrainFetchInfo" >
+    <result column="PROD_TRAIN_FETCH_INFO_ID" property="prodTrainFetchInfoId" />
+    <result column="FETCH_CATALOG" property="fetchCatalog" />
+    <result column="FETCH_KEY" property="fetchKey" />
+    <result column="VISIT_TIME" property="visitTime" />
+    <result column="FETCH_STATUS" property="fetchStatus" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="OPER_INFO" property="operInfo" />
+  </resultMap>
+  
+  <select id="selectCountFetchInfo" resultClass="java.lang.Long" parameterClass="java.util.Map" >
+    select count(*)
+    from PROD_TRAIN_FETCH_INFO
+    where FETCH_KEY = #fetchKey#
+    and VISIT_TIME = #visitTime#
+  </select>
+  <select id="selectFetchInfoList" resultMap="BaseResultMap">
+    SELECT * FROM(select *
+    from PROD_TRAIN_FETCH_INFO
+    where FETCH_STATUS='CREATE' 
+    AND CREATE_TIME >sysdate-1
+    ORDER BY CREATE_TIME ASC
+    )
+    WHERE ROWNUM &lt;=100
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdTrainFetchInfo" >
+    select *
+    from PROD_TRAIN_FETCH_INFO
+    where PROD_TRAIN_FETCH_INFO_ID = #prodTrainFetchInfoId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdTrainFetchInfo" >
+    delete from PROD_TRAIN_FETCH_INFO
+    where PROD_TRAIN_FETCH_INFO_ID = #prodTrainFetchInfoId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdTrainFetchInfo" >
+    <selectKey resultClass="java.lang.Long" keyProperty="prodTrainFetchInfoId" >
+      select PROD_TRAIN_FETCH_INFO_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PROD_TRAIN_FETCH_INFO (PROD_TRAIN_FETCH_INFO_ID, FETCH_CATALOG, FETCH_KEY,
+      VISIT_TIME, FETCH_STATUS, CREATE_TIME, OPER_INFO)
+    values (#prodTrainFetchInfoId#, #fetchCatalog#, #fetchKey#,
+      #visitTime#, #fetchStatus#, #createTime#, #operInfo#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdTrainFetchInfo" >
+    <selectKey resultClass="java.lang.Long" keyProperty="prodTrainFetchInfoId" >
+      select PROD_TRAIN_FETCH_INFO_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PROD_TRAIN_FETCH_INFO
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="prodTrainFetchInfoId" >
+        PROD_TRAIN_FETCH_INFO_ID
+      </isNotNull>
+      <isNotNull prepend="," property="fetchCatalog" >
+        FETCH_CATALOG
+      </isNotNull>
+      <isNotNull prepend="," property="fetchKey" >
+        FETCH_KEY
+      </isNotNull>
+      <isNotNull prepend="," property="visitTime" >
+        VISIT_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="fetchStatus" >
+        FETCH_STATUS
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="prodTrainFetchInfoId" >
+        #prodTrainFetchInfoId#
+      </isNotNull>
+      <isNotNull prepend="," property="fetchCatalog" >
+        #fetchCatalog#
+      </isNotNull>
+      <isNotNull prepend="," property="fetchKey" >
+        #fetchKey#
+      </isNotNull>
+      <isNotNull prepend="," property="visitTime" >
+        #visitTime#
+      </isNotNull>
+      <isNotNull prepend="," property="fetchStatus" >
+        #fetchStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        #createTime#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdTrainFetchInfo" >
+    update PROD_TRAIN_FETCH_INFO
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="fetchCatalog" >
+        FETCH_CATALOG = #fetchCatalog#
+      </isNotNull>
+      <isNotNull prepend="," property="fetchKey" >
+        FETCH_KEY = #fetchKey#
+      </isNotNull>
+      <isNotNull prepend="," property="visitTime" >
+        VISIT_TIME = #visitTime#
+      </isNotNull>
+      <isNotNull prepend="," property="fetchStatus" >
+        FETCH_STATUS = #fetchStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+    </dynamic>
+    where PROD_TRAIN_FETCH_INFO_ID = #prodTrainFetchInfoId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdTrainFetchInfo" >
+    update PROD_TRAIN_FETCH_INFO
+    set FETCH_CATALOG = #fetchCatalog#,
+      FETCH_KEY = #fetchKey#,
+      VISIT_TIME = #visitTime#,
+      FETCH_STATUS = #fetchStatus#,
+      CREATE_TIME = #createTime#
+    where PROD_TRAIN_FETCH_INFO_ID = #prodTrainFetchInfoId#
+  </update>
+</sqlMap>

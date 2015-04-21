@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE> New Document </TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<META NAME="Generator" CONTENT="EditPlus">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<script type="text/javascript" src="http://www.oschina.net/js/2012/jquery-1.7.1.min.js"></script>
+<style type="text/css">
+input{ width:400px;}
+</style>
+<script language="javascript">
+$(function(){
+	$("#reportXml").val("<?xml version=\"1.0\" encoding=\"UTF-8\"?><reportList><report><seqId>1399368160144721</seqId><reportStatus>0</reportStatus><mobile>15800926537</mobile><errorCode>deliver</errorCode><submitDate>20100109152333</submitDate><receiveDate>20100109152339</receiveDate></report></reportList>");
+	$("#emayBtn").click(submitEmayReport);
+	$("#dodocaBtn").click(submitDodocaReport);
+});
+
+function submitEmayReport(){
+	$.ajax({url:$("#url1").val(),data:$("#form1").serializeArray()
+		,type:"POST",success:function(data){
+		alert(data);
+		}});
+}
+
+function submitDodocaReport(){
+	$.ajax({url:$("#url2").val(),data:$("#form2").serializeArray()
+		,type:"POST",success:function(data){
+		alert(data);
+		}});
+}
+</script>
+
+</HEAD>
+
+<BODY>
+	<fieldset>
+		<legend>亿美短信状态报告 <font style="color:#ff0000;">请输入状态报告数据</font></legend>
+		<form id="form1" action="" method="post">
+			亿美状态报告提交地址:<input id="url1" value="http://www.lvmama.com/smsReport/emay.do"><br/>
+			<textarea id="reportXml" name="reportXml" rows="10" style="width:99%;"></textarea><br/>
+			<input id="emayBtn" type="button" value="提交">
+		</form>
+	</fieldset>
+
+	<fieldset>
+		<legend>点点客短信状态报告</legend>
+		<form id="form2" action="" method="post">
+			点点客状态报告提交地址:<input id="url2" value="http://www.lvmama.com/smsReport/dodoca.do"><br/>
+			msgid: <input name="msgid" value="1000506172302794000"><br/>
+			status:<input name="status" value="DELIVRD"><br/>
+			<div>
+			status值说明：
+			DELIVRD:短消息转发成功 |
+			EXPIRED:短消息超过有效期|
+			UNDELIV:短消息是不可达的|
+			UNKNOWN:未知短消息状态|
+			REJECTD:短消息被短信中心拒绝|
+			DTBLACK:目的号码是黑名单号码|
+			ERR:104:系统忙|
+			REJECT:审核驳回|
+			其他:网关内部状态
+			</div>
+			<input id="dodocaBtn" type="button" value="提交">
+		</form>
+	</fieldset>
+</BODY>
+</HTML>

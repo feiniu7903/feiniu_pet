@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_SMS_HISTORY" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.pub.ComSmsHistory" >
+    <result column="SMS_ID" property="smsId" />
+    <result column="TEMPLATE_ID" property="templateId" />
+    <result column="STATUS" property="status" />
+    <result column="SEND_TIME" property="sendTime" />
+    <result column="OBJECT_ID" property="objectId" />
+    <result column="OBJECT_TYPE" property="objectType" />
+    <result column="CONTENT" property="content" />
+    <result column="MOBILE" property="mobile"/>
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="DESCRIPTION" property="description"/>
+    <result column="MMS" property="mms"/>
+    <result column="REAPPLY" property="reapply"/>
+    <result column="CODE_IMAGE_URL" property="codeImageUrl"/>
+    <result column="CODE_IMAGE" property="codeImage"/>
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.pub.ComSmsHistory" >
+    select *
+    from COM_SMS_HISTORY
+    where SMS_ID = #smsId#
+  </select>
+  <!-- 通过时间分组取得最接近的短信凭证 -->
+  <select id="selectPassSmsByParam" parameterClass="java.util.HashMap" resultMap="BaseResultMap"> 
+  select *  from com_sms_history  
+  where to_char(create_time,'yyyy-mm-dd HH24:MI')=
+  (select * from(select to_char(create_time,'yyyy-mm-dd HH24:MI') 
+  from com_sms_history where 1=1
+  <isNotEmpty prepend="and" property="objectId">
+   OBJECT_ID=#objectId:LONG# 
+  </isNotEmpty> 
+    <isNotEmpty prepend="and" property="templateId">
+   TEMPLATE_ID=#templateId#
+   </isNotEmpty>
+  group by to_char(create_time,'yyyy-mm-dd HH24:MI')  
+  order by to_char(create_time,'yyyy-mm-dd HH24:MI') desc) 
+  where rownum=1)
+   <isNotEmpty prepend="and" property="templateId">
+   TEMPLATE_ID=#templateId#
+   </isNotEmpty>
+   <isNotEmpty prepend="and" property="objectId">
+   OBJECT_ID=#objectId:LONG# 
+  </isNotEmpty> 
+  </select>
+  
+  
+  
+  <select id="selelctSmsHistoryByPrama" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+  SELECT * FROM 
+  (
+  SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+  (
+  select * from COM_SMS_HISTORY where 1=1 
+  <dynamic>
+  <isNotEmpty prepend="and" property="objectId">
+   OBJECT_ID=#objectId:LONG# 
+  </isNotEmpty>
+  <isNotEmpty prepend="and" property="mobile">
+  MOBILE=#mobile#
+  </isNotEmpty>
+   <isNotEmpty prepend="and" property="status">
+   STATUS=#status#
+   </isNotEmpty>
+    <isNotEmpty prepend="and" property="templateId">
+   TEMPLATE_ID=#templateId#
+   </isNotEmpty>
+  </dynamic>
+  order by SMS_ID desc
+  	) T WHERE ROWNUM &lt;= #_endRow#
+	)
+	  WHERE ROWNUM1 &gt;=#_startRow#
+   </select>
+   
+  <select id="selectSmsWaitingToSend" parameterClass="java.util.HashMap">
+  select * from COM_SMS where  STATUS='SMS_WAITSEND' and SEND_TIME
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.pub.ComSmsHistory" >
+    delete from COM_SMS_HISTORY
+    where SMS_ID = #smsId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.pub.ComSmsHistory" >
+    <selectKey resultClass="java.lang.Long" keyProperty="smsId" >
+      select com_sms_history_id_seq.nextval as id from DUAL
+    </selectKey>
+    insert into COM_SMS_HISTORY (SMS_ID, TEMPLATE_ID, STATUS, SEND_TIME, OBJECT_ID, OBJECT_TYPE, CONTENT,
+      CREATE_TIME,MOBILE,DESCRIPTION, MMS,REAPPLY,CODE_IMAGE_URL, CODE_IMAGE)
+    values (#smsId#, #templateId#, #status#, #sendTime#,
+      #objectId#, #objectType#, #content#, sysdate, #mobile#,#description#, #mms#,#reapply#,#codeImageUrl#,#codeImage#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.pet.po.pub.ComSmsHistory" >
+    update COM_SMS_HISTORY
+    set TEMPLATE_ID = #templateId#,
+      STATUS = #status#,
+      SEND_TIME = #sendTime#,
+      OBJECT_ID = #objectId#,
+      OBJECT_TYPE = #objectType#,
+      CONTENT = #content#,
+      MOBILE = #mobile#,
+      MMS = #mms#
+    where SMS_ID = #smsId#
+  </update>
+  
+  <select id="selectRowCount" resultClass="java.lang.Integer">
+  	 select count(*) from COM_SMS_HISTORY where 1=1 
+  <dynamic>
+  <isNotEmpty prepend="and" property="objectId">
+   OBJECT_ID=#objectId:LONG# 
+  </isNotEmpty>
+  <isNotEmpty prepend="and" property="mobile">
+  MOBILE=#mobile#
+  </isNotEmpty>
+   <isNotEmpty prepend="and" property="status">
+   STATUS=#status#
+   </isNotEmpty>
+  </dynamic> 
+  </select>
+</sqlMap>

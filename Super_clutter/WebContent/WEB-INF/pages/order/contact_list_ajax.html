@@ -1,0 +1,30 @@
+<#if contactList?? && contactList?size &gt;0>
+   <#list contactList as contact>
+   <#if contact.certType?? && (contact.certType=="HUZHAO" ||contact.certType=="ID_CARD")>
+	   <li id="traveller2${contact.receiverId!}" data-id="${contact.receiverId!}" data-value="${contact.receiverName!}-${contact.mobileNumber!}-TRAVELLER-${contact.certNo!}-${contact.certType!}<#if contact.certType?? && contact.certType=="HUZHAO">-${contact.birthday?if_exists?replace("-","/")}-${contact.gender!}</#if>">
+	        <#assign className="ic_check_right2">
+	        <#if choosedIdList?? && choosedIdList?size &gt;0>
+	           <#list choosedIdList as c>
+		           <#if c == contact.receiverId >
+		             <#assign className="ic_check_right">
+		           </#if>
+	           </#list>
+	        </#if>
+	        
+	        <span class="${className!}"><i></i></span>
+	       	<a href="javascript:editContact('${contact.receiverId!}','${contact.receiverName!}','${contact.mobileNumber!}','TRAVELLER','${contact.certType!}','${contact.certNo!}','${contact.birthday!}','${contact.gender!}');" >
+	        	<aside>
+                  	<p id="traveler_id${contact.receiverId!}">
+                          <em>${contact.receiverName!}</em><br/>
+                          ${contact.mobileNumber?default(" ")}<br/>
+                          ${contact.certNo?default(" ")}<br/>
+                      </p>
+                </aside>
+	            <span class="ic_ri"></span>
+	        </a>
+	    </li>
+     </#if>
+     </#list>
+  <#else>
+                      暂无游玩人数据
+  </#if>

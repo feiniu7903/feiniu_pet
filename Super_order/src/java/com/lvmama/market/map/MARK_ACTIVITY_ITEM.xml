@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_ACTIVITY_ITEM">
+	<typeAlias alias="markActivityItem" type="com.lvmama.comm.pet.po.mark.MarkActivityItem"/>
+
+	<resultMap id="MarkActivityItemMap" class="markActivityItem">
+
+        <result column="ACT_ITEM_ID" property="actItemId"/>
+        <result column="SEND_WAY" property="sendWay"/>
+        <result column="SEND_TIME" property="sendTime"/>
+        <result column="DATA_MODEL" property="dataModel"/>
+        <result column="CONTENT" property="content"/>
+        <result column="EXCLUDE_SCOPE" property="excludeScope"/>
+        <result column="EXCLUDE_SYMBOL" property="excludeSymbol"/>
+        <result column="EXCLUDE_TIMES" property="excludeTimes"/>
+        <result column="CHANNEL" property="channel"/>
+        <result column="ACT_ID" property="actId"/>
+        <result column="SEND_OFF_TIMES" property="sendOffTimes"/>
+        <result column="CYCLE" property="cycle"/>
+        <result column="WEEK" property="week"/>
+        <result column="LAST_SEND_TIME" property="lastSendTime"/>
+
+	</resultMap>
+
+    <insert id="insertMarkActivityItem" parameterClass="markActivityItem">
+        <selectKey keyProperty="actItemId" resultClass="java.lang.Long">
+            SELECT MARK_ACTIVITY_ITEM_ID_SEQ.nextval FROM DUAL
+        </selectKey>
+        insert into MARK_ACTIVITY_ITEM (ACT_ITEM_ID,SEND_WAY,SEND_TIME,DATA_MODEL,CONTENT,EXCLUDE_SCOPE,EXCLUDE_SYMBOL,EXCLUDE_TIMES,CHANNEL,ACT_ID,SEND_OFF_TIMES,CYCLE,WEEK,LAST_SEND_TIME)
+        VALUES(#actItemId#,#sendWay#,#sendTime#,#dataModel#,#content#, #excludeScope#,#excludeSymbol#,#excludeTimes#,#channel#,#actId#,#sendOffTimes#,#cycle#,#week#,#lastSendTime#)
+    </insert>
+
+    <delete id="deleteMarkActivityItem" parameterClass="java.lang.Long">
+        DELETE FROM MARK_ACTIVITY_ITEM
+        WHERE ACT_ID = #actId#
+    </delete>
+
+    <update id="updateMarkActivityItem" parameterClass="markActivityItem">
+        update MARK_ACTIVITY_ITEM
+        <dynamic prepend="set">
+            <isNotEmpty prepend="," property="sendWay">
+                SEND_WAY = #sendWay#
+            </isNotEmpty>
+           <isNotEmpty prepend="," property="sendTime">
+               SEND_TIME = #sendTime#
+            </isNotEmpty>
+           <isNotEmpty prepend="," property="dataModel">
+               DATA_MODEL = #dataModel#
+            </isNotEmpty>
+           <isNotEmpty prepend="," property="content">
+               CONTENT = #content#
+            </isNotEmpty>
+           <isNotEmpty prepend="," property="excludeScope">
+               EXCLUDE_SCOPE = #excludeScope#
+            </isNotEmpty>
+           <isNotEmpty prepend="," property="excludeSymbol">
+               EXCLUDE_SYMBOL = #excludeSymbol#
+            </isNotEmpty>
+           <isNotEmpty prepend="," property="excludeTimes">
+               EXCLUDE_TIMES = #excludeTimes#
+            </isNotEmpty>
+           <isNotEmpty prepend="," property="channel">
+               CHANNEL = #channel#
+            </isNotEmpty>
+           <isNotEmpty prepend="," property="sendOffTimes">
+               SEND_OFF_TIMES = #sendOffTimes#
+            </isNotEmpty>
+           <isNotEmpty prepend="," property="cycle">
+               CYCLE = #cycle#
+           </isNotEmpty>
+           <isNotEmpty prepend="," property="week">
+               WEEK = #week#
+           </isNotEmpty>
+           <isNotEmpty prepend="," property="lastSendTime">
+            LAST_SEND_TIME = #lastSendTime#
+           </isNotEmpty>
+        </dynamic>
+        WHERE ACT_ITEM_ID = #actItemId#
+    </update>
+
+    <select id="selectMarkActivityItemEmail" parameterClass="java.lang.Long" resultMap="MarkActivityItemMap">
+        SELECT ACT_ITEM_ID,SEND_WAY,SEND_TIME,DATA_MODEL,CONTENT,EXCLUDE_SCOPE,EXCLUDE_SYMBOL,EXCLUDE_TIMES,CHANNEL,ACT_ID,SEND_OFF_TIMES,CYCLE,WEEK,LAST_SEND_TIME
+        FROM MARK_ACTIVITY_ITEM
+        WHERE CHANNEL='EMAIL' AND ACT_ID=#actId#
+    </select>
+</sqlMap>

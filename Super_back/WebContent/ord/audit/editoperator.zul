@@ -1,0 +1,17 @@
+<?page title="edit viewPage" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_editoperator"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_editoperator" title="分单给指定人处理" closable="true" apply="com.lvmama.back.web.ord.audit.EditOperatorAction">
+	<groupbox style="border: none;">
+		<label value="处理人："></label>
+		<textbox id="operator" maxlength="10" value="@{saction.operator}"/>
+	</groupbox>
+    <panel border="normal">
+        <toolbar align="center">
+        <button label="提交" width="100px" onClick="saction.doSubmit()"/>
+        <space />
+        <button label="取消" width="100px" onClick="win_editoperator.detach()"/>
+        </toolbar>
+    </panel>
+  </window>
+</zk>

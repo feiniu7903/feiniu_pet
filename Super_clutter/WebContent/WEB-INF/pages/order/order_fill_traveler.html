@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>填写联系人-驴妈妈手机站</title>
+<#include "../common/define_v3.html">
+</head>
+<body>
+<div class="wrap">
+    <header class="header" id="header2">
+    	<a href="javascript:history.back();" class="back"><span class="ic_back"></span></a>
+        <h1>游玩人信息</h1>
+        <!-- <section class="header_alice">
+        	<a href="javascript:void(0);" onclick="home_back();" class="btn1"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a>
+        </section> -->
+    </header>
+    <header class="header" id="header3" style="display:none" >
+    	<a href="javascript:traverllerBack(2);" class="back"><span class="ic_back"></span></a>
+        <h1 id="header_add_edit_contact_id">新增游玩人</h1>
+        <section class="header_alice">
+        	<a href="javascript:void(0);" onclick="editContact_ok();" class="btn1">完成</a>
+        </section>
+    </header>
+    <!-- 第二步 选择游玩人 -->
+    <section class="add_people"  id="section2">
+        <form action="${request.contextPath}/order/order_submit.htm" method="post" id="order_submit" >
+	         <#list request.getParameterNames() as parameterName>
+	              <#if parameterName!="totalPrice" || parameterName.indexOf("t_")==-1>
+			          <#if parameterName!="canOrderToday" && parameterName!="needIdCard">
+			             <input type="hidden" name="${parameterName!}" value="${Request[parameterName]?default("")}"/>
+			          <#else>
+			             <input type="hidden" name="${parameterName!}" value="${Request[parameterName]?string}"/>
+			          </#if>
+			      </#if>
+			 </#list>
+	         <input type="hidden" name="fillTravellerNum" id="fillTravellerNum" value="${fillTravellerNum!}"/>
+	         <input type="hidden" name="personListItems" id="personListItems" value=""/>
+        </form>
+         <#if contactList?? && contactList?size &gt;0>
+             <em class="reward_ti3">请选择${fillTravellerNum!}个游玩人</br>(若无可选择项，可新增游玩人)</em>
+         <#else>
+            <em class="reward_ti3">请新增并选择${fillTravellerNum!}个游玩人</em>
+         </#if>
+    	<section class="new_add_people"><a href="javascript:void(0);" onclick="editContact('','','','TRAVELLER','ID_CARD','','','');"><span class="ic_add"><i></i></span>
+    	      <span class="contac_02">新增游玩人</span><span class="ic_ri"></span></a>
+    	</section>
+    	 <!-- 紧急联系人 -->
+         <#if emergencyContact?? && emergencyContact>
+         <section class="urgency_contacts">
+          <dl class="reward_li">
+          <dt class="reward_ti2">紧急联系人</dt>
+          <!-- EMERGENCY_CONTACT -->
+          <dd><label for="lx2" class="contac_01">联系人</label><input type="text" name="lx2" id="emergency_lx" value="" placeholder="姓名" /></dd>
+          <dd><label for="tel2" class="contac_01">手机号</label><input type="tel" name="tel2" id="emergency_tel" value="" placeholder="用于接收通知" /></dd>
+         </dl>
+         </section>
+         </#if>
+    	
+          <#if contactList?? && contactList?size &gt;0>
+      	  <ul class="people_list" id="people_list">
+             <#list contactList as contact>
+             <#if contact.certType?? && (contact.certType=="HUZHAO" ||contact.certType=="ID_CARD")>
+		           <li id="traveller2${contact.receiverId!}" data-id="${contact.receiverId!}" data-value="${contact.receiverName!}-${contact.mobileNumber!}-TRAVELLER-${contact.certNo!}-${contact.certType!}<#if contact.certType?? && contact.certType=="HUZHAO">-${contact.birthday?if_exists?replace("-","/")}-${contact.gender!}</#if>">
+		                <span class="ic_check_right2"><i></i></span>
+		               	<a href="javascript:void(0);" onclick="editContact('${contact.receiverId!}','${contact.receiverName!}','${contact.mobileNumber!}','TRAVELLER','${contact.certType!}','${contact.certNo!}','${contact.birthday!}','${contact.gender!}');" >
+		                	<aside>
+		                    	<p id="traveler_id${contact.receiverId!}">
+		                            <em>${contact.receiverName!}</em><br/>
+		                            ${contact.mobileNumber?default(" ")}<br/>
+		                            ${contact.certNo?default(" ")}<br/>
+		                        </p>
+		                    </aside>
+		                    <span class="ic_ri"></span>
+		                </a>
+		            </li>
+		        </#if>
+             </#list>
+           </ul>
+          </#if>
+        
+       <!-- 订单联系人 CONTACT -->
+       <dd  style="display:none">
+         <input type="text" name="lx" id="contact1_lx" value="${userName!}" placeholder="姓名" />
+         <input type="tel" name="lx" id="contact1_tel" value="${mobile!}" placeholder="手机" />
+         <#if idCard?? && idCard !="">
+         <input type="text" name="cardNum" id="contact1_cardNum" value="${idCard!}" placeholder="身份证号" />
+         </#if>
+         <input type="hidden" id="traveller_list_hidden"  value=""/>
+         <!-- 实体票 -->
+         <#if physical?? && physical=="true" && mpi??>
+             <input type="hidden" id="exp_contact_hidden"  value="${mpi.personName!}-${mpi.personMobile!}-${mpi.personType!}-${mpi.province!}-${mpi.city!}-${mpi.address!}"/>
+         </#if>
+       </dd>
+       
+       <section class="order_all">
+        	<span>订单总额：<b>￥${totalPrice!}</b></span>
+            <a href="javascript:void(0);" onclick="fill_traveller_submit();" id="fill_traveller_submit_show" _popupEvent='_popup' class="btn_se_sub1">提交订单</a>
+            <a href="javascript:void(0);" class="btn_se_sub1" id="fill_traveller_submit_hide" style="display:none">提交订单</a>
+       </section>
+        
+    </section>
+    
+    <!-- 第三步 填写联系人信息-->
+    <section class="papers contacts"  id="section3" style="display:none" >
+        <dl class="reward_li play_user">
+            <input type="hidden" name="receiverId" id="contact3ReceiverId" value="" />
+            <input type="hidden" name="personType" id="personType3" value="TRAVELLER" />
+            <dd><label for="contact3Name" class="contac_01">姓名</label><input type="text" name="receiverName" id="contact3Name" value="" placeholder="姓名" /></dd>
+            <dd><label for="contact3Tel" class="contac_01">手机</label><input type="tel" name="mobileNumber" id="contact3Tel" value="" placeholder="手机" /></dd>
+            <dd>
+	            <label for="paper" class="contac_01">证件类型</label>
+	            <select class="sex" name="certType" id="certType3" onchange="onPersonTypeChoose(this);">
+	                   <option value="ID_CARD">&nbsp;&nbsp;身份证&nbsp;&nbsp;</option>
+                       <option value="HUZHAO">&nbsp;&nbsp;护照&nbsp;&nbsp;</option>
+	            </select>
+            </dd>
+            <dd><label for="paper_num" class="contac_01">证件号码</label><input type="text" name="certNo" id="contact3CertNo" value="" placeholder="有效证件号码" /></dd>
+            <div id="only_huzhao_used" style="display:none">
+	            <dd><label for="paper_num" class="contac_01">出生日期</label><input type="date" name="birthday" id="contact3BirthDay" value="19800101" placeholder="格式19800101" /></dd>
+	            <dd><label for="paper_num" class="contac_01">性别</label>
+	               <select class="sex" name="gender" id="contact3Sex">
+	                   <option value="M">&nbsp;&nbsp;男&nbsp;&nbsp;</option>
+                       <option value="F">&nbsp;&nbsp;女&nbsp;&nbsp;</option>
+	               </select>
+	            </dd>
+            </div>
+        </dl>
+        <a href="javascript:void(0);" onclick="deleteContact();" class="btn_se_sub2 play_user2" id="delete_contact_id">删除游玩人</a>
+    </section>
+    <!-- footer -->
+	<#include "../common/order_footer.html"/>
+	<script src="${request.contextPath}/js/validate.js?_v=20131017" type="text/javascript"></script>
+	<script src="${request.contextPath}/js/order_traveler.js?_v=20131017" type="text/javascript"></script>
+	<script src="${request.contextPath!}/js/moudle_v3.js?_version=20130826"></script>
+	<script>
+		function home_back(){
+			//第一个TRUE是半段弹出框是否显示true显示false隐藏,第二个TRUE判断几个按钮TRUE一个FALSE是两个
+			popupModal(true, "您的订单尚未完成，是否确定要离开当前页面？", null, 0,false); 
+			$('.ic_roseo').bind('click',function(){
+				 window.location.href='http://${hostName}';
+			});
+			$('.ic_yellow').bind('click',function(){
+				popupModal_logOut();
+			});
+		 }
+		function popupModal_logOut(){
+			popupModal(false, '', null, 0,false);
+		}
+	</script>
+</div>
+</body>
+</html>

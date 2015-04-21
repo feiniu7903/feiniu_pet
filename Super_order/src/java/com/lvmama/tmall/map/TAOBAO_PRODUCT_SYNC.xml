@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TAOBAO_PRODUCT_SYNC">
+    <!-- 别名 -->
+    <typeAlias alias="taobaoProductSync" type="com.lvmama.comm.bee.po.tmall.TaobaoProductSync" />
+
+    <resultMap id="taobaoProductSyncResultMap" class="taobaoProductSync">
+        <result column="ID" property="id" />
+        <result column="TB_TYPE" property="tbType" />
+        <result column="TB_TICKET_TYPE" property="tbTicketType" />
+        <result column="TB_ITEM_ID" property="tbItemId" />
+        <result column="TB_CID" property="tbCid" />
+        <result column="TB_TITLE" property="tbTitle" />
+        <result column="TB_MODIFIED" property="tbModified" />
+        <result column="TB_AUCTION_STATUS" property="tbAuctionStatus" />
+        <result column="PRODUCT_ID" property="productId" />
+    </resultMap>
+
+    <!-- 别名 -->
+    <typeAlias alias="taobaoProductSyncPojo" type="com.lvmama.comm.bee.po.tmall.TaobaoProductSyncPojo" />
+    <resultMap id="taobaoProductSyncPojoResultMap" class="taobaoProductSyncPojo">
+        <result column="ID" property="id" />
+        <result column="TB_TYPE" property="tbType" />
+        <result column="TB_TICKET_TYPE" property="tbTicketType" />
+        <result column="TB_ITEM_ID" property="tbItemId" />
+        <result column="TB_CID" property="tbCid" />
+        <result column="TB_TITLE" property="tbTitle" />
+        <result column="TB_MODIFIED" property="tbModified" />
+        <result column="TB_AUCTION_STATUS" property="tbAuctionStatus" />
+        <result column="PRODUCT_ID" property="productId" />
+        <result column="TICKET_SKU_ID" property="ticketSkuId" />
+        <result column="TRAVEL_COMBO_ID" property="travelComboId" />
+        <result column="TB_OUTER_ID" property="tbOuterId" />
+        <result column="TB_PID_VID" property="tbPidVid" />
+        <result column="TB_PROD_SYNC_ID" property="tbProdSyncId" />
+        <result column="TB_PID" property="tbPid" />
+        <result column="TB_VID" property="tbVid" />
+        <result column="TB_COMBO_NAME" property="tbComboName" />
+        <result column="IS_SYNC" property="isSync" />
+        <result column="ON_LINE" property="onLine" />
+        <result column="IS_APERIODIC" property="isAperiodic" />
+        <result column="PRODUCT_NAME" property="productName" />
+        <result column="PROD_BRANCH_ID" property="prodBranchId" />
+        <result column="FILIALE_NAME" property="filialeName" />
+        <result column="BRANCH_NAME" property="branchName" />
+    </resultMap>
+
+    <resultMap id="queryTicketSyncListResultMap" class="taobaoProductSyncPojo">
+        <result column="TB_TITLE" property="tbTitle" />
+        <result column="TB_ITEM_ID" property="tbItemId" />
+        <result column="TB_AUCTION_STATUS" property="tbAuctionStatus" />
+        <result column="TB_TICKET_TYPE" property="tbTicketType" />
+        <result column="TICKET_SKU_ID" property="ticketSkuId" />
+        <result column="TB_OUTER_ID" property="tbOuterId" />
+        <result column="IS_SYNC" property="isSync" />
+        <result column="PRODUCT_ID" property="productId" />
+        <result column="PRODUCT_NAME" property="productName" />
+        <result column="ON_LINE" property="onLine" />
+        <result column="FILIALE_NAME" property="filialeName" />
+        <result column="IS_APERIODIC" property="isAperiodic" />
+        <result column="PROD_BRANCH_ID" property="prodBranchId" />
+        <result column="PROD_BRANCH_ID" property="prodBranchId" />
+        <result column="BRANCH_NAME" property="branchName" />
+        <result column="TB_VID_NAME" property="tbVidName" />
+    </resultMap>
+
+    <resultMap id="queryTravelSyncListResultMap" class="taobaoProductSyncPojo">
+        <result column="TB_TITLE" property="tbTitle" />
+        <result column="TB_ITEM_ID" property="tbItemId" />
+        <result column="TB_AUCTION_STATUS" property="tbAuctionStatus" />
+        <result column="TB_TICKET_TYPE" property="tbTicketType" />
+        <result column="TRAVEL_COMBO_ID" property="travelComboId" />
+        <result column="TB_COMBO_NAME" property="tbComboName" />
+        <result column="IS_SYNC" property="isSync" />
+        <result column="PRODUCT_ID" property="productId" />
+        <result column="ON_LINE" property="onLine" />
+        <result column="FILIALE_NAME" property="filialeName" />
+        <result column="IS_APERIODIC" property="isAperiodic" />
+        <result column="PRODUCT_NAME" property="productName" />
+    </resultMap>
+
+    <select id="selectSeq" resultClass="java.lang.Long">
+        select taobao_product_sync_seq.nextval from dual
+    </select>
+
+    <sql id="querySyncWhere">
+        <isNotEmpty property="tbItemId" >
+            and t1.tb_item_id = #tbItemId#
+        </isNotEmpty>
+        <isNotEmpty property="itemId" >
+            and t1.tb_item_id = #itemId#
+        </isNotEmpty>
+        <isNotEmpty property="productName" >
+            and t3.product_name like '%'||#productName#||'%'
+        </isNotEmpty>
+        <isNotEmpty property="productId" >
+            and t3.product_id = #productId#
+        </isNotEmpty>
+        <isNotEmpty property="prodBranchId" >
+            and t4.prod_branch_id = #prodBranchId#
+        </isNotEmpty>
+        <isNotEmpty property="type_prodBranchId" >
+            and exists (select e1.id
+            from taobao_travel_combo_type e1
+            where t2.id = e1.travel_combo_id
+            and e1.prod_branch_id = #type_prodBranchId#)
+        </isNotEmpty>
+        <isNotEmpty property="tbTitle" >
+            and t1.tb_title like '%'||#tbTitle#||'%'
+        </isNotEmpty>
+        <isNotEmpty property="tbAuctionStatus" >
+            and t1.tb_auction_status = #tbAuctionStatus#
+        </isNotEmpty>
+        <isNotEmpty property="tbTicketType" >
+            and t1.tb_ticket_type = #tbTicketType#
+        </isNotEmpty>
+        <isNotEmpty property="filialeName" >
+            and t3.filiale_name = #filialeName#
+        </isNotEmpty>
+        <isNotEmpty property="isAperiodic" >
+            and t3.is_aperiodic = #isAperiodic#
+        </isNotEmpty>
+        <isNotEmpty property="onLine" >
+            and t3.on_line = #onLine#
+        </isNotEmpty>
+    </sql>
+
+    <select id="queryTicketSyncCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+        select count(*)
+        from taobao_product_sync t1,
+        taobao_ticket_sku   t2,
+        prod_product        t3,
+        prod_product_branch t4
+        where t1.id = t2.tb_prod_sync_id(+)
+        and t2.product_id = t3.product_id(+)
+        and t2.prod_branch_id = t4.prod_branch_id(+)
+        and t1.tb_type = '1'
+        <include refid="querySyncWhere"/>
+    </select>
+
+    <!-- 门票 -->
+    <select id="queryTicketSyncList" resultMap="queryTicketSyncListResultMap" parameterClass="java.util.Map">
+        SELECT * FROM (
+        SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+        select t1.tb_title,
+        t1.tb_item_id,
+        t1.tb_auction_status,
+        t2.tb_ticket_type,
+        t2.tb_outer_id,
+        t2.is_sync,
+        t2.tb_vid_name,
+        t2.id as ticket_sku_id,
+        t3.product_id,
+        t3.on_line,
+        t3.is_aperiodic,
+        t3.product_name,
+        t3.filiale_name,
+        t4.prod_branch_id,
+        t4.branch_name
+        from taobao_product_sync t1,
+        taobao_ticket_sku   t2,
+        prod_product        t3,
+        prod_product_branch t4
+        where t1.id = t2.tb_prod_sync_id(+)
+        and t2.product_id = t3.product_id(+)
+        and t2.prod_branch_id = t4.prod_branch_id(+)
+        and t1.tb_type = '1'
+        <include refid="querySyncWhere"/>
+        order by t1.product_id desc
+        ) T
+        <dynamic prepend=" WHERE">
+            <isNotEmpty property="_endRow">ROWNUM &lt;= #_endRow#</isNotEmpty>
+        </dynamic>
+        )
+        <dynamic prepend=" WHERE">
+            <isNotEmpty property="_startRow">ROWNUM1 &gt;=#_startRow#</isNotEmpty>
+        </dynamic>
+    </select>
+
+    <select id="queryTravelSyncCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+        select count(*)
+        from taobao_product_sync t1,
+        taobao_travel_combo t2,
+        prod_product        t3
+        where t1.id = t2.tb_prod_sync_id(+)
+        and t1.product_id = t3.product_id(+)
+        and t1.tb_type = '2'
+        <include refid="querySyncWhere"/>
+    </select>
+
+    <!-- 线路 -->
+    <select id="queryTravelSyncList" resultMap="queryTravelSyncListResultMap" parameterClass="java.util.Map" >
+        SELECT * FROM (
+        SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+        select t1.tb_title,
+        t1.tb_item_id,
+        t1.tb_auction_status,
+        t1.tb_ticket_type,
+        t2.id as travel_combo_id,
+        t2.tb_combo_name,
+        t2.is_sync,
+        t3.product_id,
+        t3.on_line,
+        t3.is_aperiodic,
+        t3.product_name,
+        t3.filiale_name
+        from taobao_product_sync t1,
+        taobao_travel_combo t2,
+        prod_product        t3
+        where t1.id = t2.tb_prod_sync_id(+)
+        and t2.product_id = t3.product_id(+)
+        and t1.tb_type = '2'
+        <include refid="querySyncWhere"/>
+        order by t1.product_id desc
+
+        ) T
+        <isNotEmpty prepend=" where " property="_endRow">ROWNUM &lt;= #_endRow#</isNotEmpty>
+        )
+        <isNotEmpty prepend=" where " property="_startRow">ROWNUM1 &gt;=#_startRow#</isNotEmpty>
+    </select>
+
+    <select id="byId" resultMap="taobaoProductSyncResultMap" parameterClass="java.lang.Long">
+        select * from taobao_product_sync where id = #value#
+    </select>
+
+    <select id="countByItemId" resultClass="java.lang.Long" parameterClass="java.lang.Long">
+        select count(*) from taobao_product_sync where tb_item_id = #value#
+    </select>
+
+    <select id="countByMap" resultClass="java.lang.Long" parameterClass="java.util.Map">
+        select count(*) from taobao_product_sync
+        where 1 = 1
+        <isNotEmpty property="tdItemId">
+            and tb_item_id = #tdItemId#
+        </isNotEmpty>
+        <isNotEmpty property="itemId">
+            and tb_item_id = #itemId#
+        </isNotEmpty>
+        <isNotEmpty property="productId">
+            and product_id = #productId#
+        </isNotEmpty>
+    </select>
+
+    <select id="byItemId" resultMap="taobaoProductSyncResultMap" parameterClass="java.lang.Long">
+        select * from taobao_product_sync where tb_item_id = #value#
+    </select>
+
+    <select id="byMap" resultMap="taobaoProductSyncResultMap" parameterClass="java.util.Map">
+        select * from taobao_product_sync
+        where 1=1
+        <isNotEmpty property="id">
+            and id = #id#
+        </isNotEmpty>
+        <isNotEmpty property="itemId">
+            and tb_item_id = #itemId#
+        </isNotEmpty>
+        <isNotEmpty property="productId">
+            and product_id = #productId#
+        </isNotEmpty>
+    </select>
+
+    <!-- job获取门票SkuId -->
+    <select id="queryTicketSkuId" resultClass="java.lang.Long" parameterClass="java.util.Map">
+        select b.id
+        from taobao_ticket_sku b
+        where 1=1
+        <isNotEmpty property="productId">
+            and b.product_id = #productId#
+        </isNotEmpty>
+        <isNotEmpty property="prodBranchId">
+            and b.prod_branch_id = #prodBranchId#
+        </isNotEmpty>
+        <isNotEmpty property="isSync">
+            and b.is_sync = #isSync#
+        </isNotEmpty>
+        <isNotEmpty property="not_null_productId">
+            and b.product_id is not null
+        </isNotEmpty>
+        <isNotEmpty property="not_null_prodBranchId">
+            and b.prod_branch_id is not null
+        </isNotEmpty>
+    </select>
+
+    <!-- job获取线路套餐ID -->
+    <select id="queryTravelToTravelComboId" resultClass="java.lang.Long" parameterClass="java.util.Map">
+        select distinct b.id
+        from taobao_travel_combo b, taobao_travel_combo_type c
+        where 1 = 1
+        <isNotEmpty property="productId">
+            and b.product_id = #productId#
+        </isNotEmpty>
+        <isNotEmpty property="prodBranchId">
+            and c.prod_branch_id = #prodBranchId#
+        </isNotEmpty>
+        <isNotEmpty property="isSync">
+            and b.is_sync = #isSync#
+        </isNotEmpty>
+        <isNotEmpty property="not_null_productId">
+            and b.product_id is not null
+        </isNotEmpty>
+        <isNotEmpty property="not_null_prodBranchId">
+            and c.prod_branch_id is not null
+        </isNotEmpty>
+    </select>
+
+    <select id="queryProductItemIdList" resultClass="java.lang.Long" parameterClass="java.util.Map">
+        select tb_item_id from taobao_product_sync where 1=1
+        <isNotEmpty property="tbType">
+            and tb_type = #tbType#
+        </isNotEmpty>
+    </select>
+
+    <insert id="insert" parameterClass="taobaoProductSync">
+		insert into taobao_product_sync
+		  (id, tb_type, tb_ticket_type, tb_item_id, tb_cid, tb_title, tb_modified, tb_auction_status, product_id)
+		values
+		  (#id#, #tbType#, #tbTicketType#, #tbItemId#, #tbCid#, #tbTitle#, #tbModified#, #tbAuctionStatus#, #productId#)
+	</insert>
+
+    <update id="update" parameterClass="taobaoProductSync">
+		update taobao_product_sync
+		   set id = #id#,
+		       tb_type = #tbType#,
+		       tb_ticket_type = #tbTicketType#,
+		       tb_item_id = #tbItemId#,
+		       tb_cid = #tbCid#,
+		       tb_title = #tbTitle#,
+		       tb_modified = #tbModified#,
+		       tb_auction_status = #tbAuctionStatus#,
+		       product_id = #productId#
+		 where id = #id#
+	</update>
+
+    <update id="updateAuctionStatusById" parameterClass="taobaoProductSync">
+        update taobao_product_sync
+        set id = #id#
+        <isNotEmpty property="tbAuctionStatus">
+            , tb_auction_status = #tbAuctionStatus#
+        </isNotEmpty>
+        <isNotEmpty property="tbModified">
+            , tb_modified = #tbModified#
+        </isNotEmpty>
+        where id = #id#
+    </update>
+
+    <delete id="delete" parameterClass="java.lang.Long">
+		delete taobao_product_sync where id = #value#
+	</delete>
+
+</sqlMap>

@@ -1,0 +1,14 @@
+<?page title="下单成功" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>
+String orderId=Executions.getCurrent().getParameter("orderId");
+</zscript>
+<window title="下单成功" border="none">
+<label value="下单成功，订单号：${arg.orderId }" />
+<toolbar width="300px" align="center">
+<button label="关闭" onClick='Executions.sendRedirect("OrderEdit.zul")'/>
+</toolbar>
+
+</window>
+
+</zk>

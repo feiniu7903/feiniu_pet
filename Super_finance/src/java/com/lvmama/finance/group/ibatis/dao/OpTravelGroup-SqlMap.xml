@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="OpTravelGroup" >
+	 
+	<typeAlias alias="TravelGroup" type="com.lvmama.finance.group.ibatis.po.TravelGroup"/>
+	<typeAlias alias="ProductOrderDetail" type="com.lvmama.comm.bee.po.op.ProductOrderDetail"/>
+	
+	
+	<!-- 查询团信息begin -->
+	<select id="searchGroup" parameterClass="String" resultClass="TravelGroup">
+		SELECT 
+		 	A.TRAVEL_GROUP_ID AS  TRAVELGROUPID,
+	       	A.TRAVEL_GROUP_CODE AS TRAVELGROUPCODE,
+	       	A.PRODUCT_ID AS PRODUCTID,
+	       	A.PRODUCT_NAME AS PRODUCTNAME,
+	       	A.TRAVEL_GROUP_STATUS AS TRAVELGROUPSTATUS,
+	       	A.SETTLEMENT_STATUS AS SETTLEMENTSTATUS,
+	       	A.VISIT_TIME AS VISITTIME,
+	       	A.VISIT_TIME+DAYS-1 AS BACKTIME,
+	       	A.CHECK_TIME AS CHECKTIME,
+	       	A.CHECK_USER AS CHECKUSER
+	     FROM
+	     	OP_TRAVEL_GROUP A
+	     WHERE
+	     	A.TRAVEL_GROUP_CODE = #travelGroupCode#
+	</select>
+	<!-- 查询团信息end -->
+	
+	<!-- 查询团列表分页信息begin -->
+	<sql id="searchList_sql">
+		FROM 
+			OP_TRAVEL_GROUP A,
+			PROD_ROUTE B, 
+			PROD_PRODUCT C, 
+			lvmama_pet.PERM_USER D
+		WHERE 
+			A.PRODUCT_ID = B.PRODUCT_ID
+       	AND 
+       		B.PRODUCT_ID = C.PRODUCT_ID
+       	AND 
+       		C.MANAGER_ID = D.USER_ID
+	<!-- AND
+			B.GROUP_TYPE = 'BY-ONESELF' -->	
+		<isNotNull property="product" prepend="AND">
+			A.PRODUCT_ID = #product#
+		</isNotNull>
+		<isNotEmpty property="travelGroupCode" prepend="AND">
+			A.TRAVEL_GROUP_CODE = #travelGroupCode#
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeBegin" prepend="AND">
+			A.VISIT_TIME &gt;= TO_DATE(#visitTimeBegin#,'yyyy-mm-dd')
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd" prepend="AND">
+			A.VISIT_TIME  &lt; TRUNC(TO_DATE(#visitTimeEnd#,'YYYY-MM-DD') + 1)
+		</isNotEmpty>
+		<isNotNull property="settlementStatus" prepend="AND">
+			A.SETTLEMENT_STATUS IN
+			<iterate property="settlementStatus" open="(" close=")" conjunction=",">
+					#settlementStatus[]#  
+			</iterate>
+		</isNotNull>
+		<isNotNull property="travelGroupStatus" prepend="AND">
+			A.TRAVEL_GROUP_STATUS IN
+			<iterate property="travelGroupStatus" open="(" close=")" conjunction=",">
+				#travelGroupStatus[]#  
+			</iterate>
+		</isNotNull>
+		<isNotEmpty property="checkTimeBegin" prepend="AND">
+			A.CHECK_TIME &gt;= TO_DATE(#checkTimeBegin#,'yyyy-mm-dd')
+		</isNotEmpty>
+		<isNotEmpty property="checkTimeEnd" prepend="AND">
+			A.CHECK_TIME  &lt; TRUNC(TO_DATE(#checkTimeEnd#,'YYYY-MM-DD') + 1)
+		</isNotEmpty>
+		<isNotEmpty property="groupType" prepend="AND">
+			B.GROUP_TYPE  = #groupType#
+		</isNotEmpty>
+		<isNotNull property="routeType" prepend="AND">
+			c.sub_product_type IN
+			<iterate property="routeType" open="(" close=")" conjunction=",">
+					#routeType[]#  
+			</iterate>
+		</isNotNull>
+	</sql>
+	<select id="searchList" resultClass="TravelGroup" parameterClass="map">
+		<include refid="pageSearchHead"/>
+		SELECT 
+		 	A.TRAVEL_GROUP_ID AS  TRAVELGROUPID,
+	       	A.TRAVEL_GROUP_CODE AS TRAVELGROUPCODE,
+	       	A.PRODUCT_ID AS PRODUCTID,
+	       	A.PRODUCT_NAME AS PRODUCTNAME,
+	       	A.TRAVEL_GROUP_STATUS AS TRAVELGROUPSTATUS,
+	       	A.SETTLEMENT_STATUS AS SETTLEMENTSTATUS,
+	       	A.VISIT_TIME AS VISITTIME,
+	       	A.VISIT_TIME+ A.DAYS-1 AS BACKTIME,
+	       	A.CHECK_TIME AS checkTime,
+       		D.REAL_NAME AS USERNAME,
+       		(SELECT  t.ACT_PROFIT_RATE FROM OP_GROUP_BUDGET t WHERE t.travel_group_code=a.travel_group_code)*100 ACTPROFITRATE,
+       		B.GROUP_TYPE GROUPTYPE
+		<include refid="searchList_sql"/>
+		<isEmpty property="orderby" prepend="ORDER BY">
+			VISIT_TIME DESC
+		</isEmpty>
+		<include refid="pageSearchFoot"/>
+ 	</select>
+ 	<select id="searchListCount" parameterClass="map" resultClass="Integer">
+		SELECT 	COUNT(*)
+		<include refid="searchList_sql"/>
+ 	</select>
+ 	<!-- 查询团列表分页信息end -->
+ 	
+ 	<!-- 核算begin -->
+ 	<update id="checkGroup" parameterClass="map">
+ 		UPDATE
+ 			OP_TRAVEL_GROUP
+ 		SET
+ 			SETTLEMENT_STATUS = #status#,
+ 			CHECK_TIME = SYSDATE,
+ 			CHECK_USER = #user#
+ 		WHERE
+ 			TRAVEL_GROUP_CODE = #groupCode#
+ 	</update>
+ 	<update id="confirmedGroupCost" parameterClass="map">
+ 		UPDATE
+ 			OP_TRAVEL_GROUP
+ 		SET
+ 			SETTLEMENT_STATUS = #status#
+ 		WHERE
+ 			TRAVEL_GROUP_CODE = #groupCode#
+ 	</update>
+ 	<!-- 核算end -->
+ 	
+ 	<!-- 修改订单的结算状态 -->
+ 	<update id="updateOrderSettlementStatus">
+ 		UPDATE  
+		      ORD_ORDER 
+		    SET 
+		      SETTLEMENT_STATUS =  #status#
+		    WHERE ORDER_ID IN(
+			      SELECT 
+			        ORDER_ID 
+			      FROM (SELECT A.ORDER_ID, COUNT(*) AS SETTLEMENTEDCOUNT,
+			(SELECT COUNT(*) FROM ORD_ORDER_ITEM_META AC WHERE AC.ORDER_ID=A.ORDER_ID) AS METACOUNT 
+			  FROM ORD_ORDER_ITEM_META A, ORD_ORDER B
+			 WHERE A.ORDER_ID = B.ORDER_ID
+			   AND B.TRAVEL_GROUP_CODE = #groupCode#
+			   AND A.SETTLEMENT_STATUS = #status#
+			GROUP BY A.ORDER_ID ) T 
+		WHERE 
+			T.SETTLEMENTEDCOUNT = T.METACOUNT
+		)
+ 	</update>
+ 	<!-- 修改订单子子项的结算状态 -->
+ 	<update id="updateOrderItemMetaSettlementStatus">
+ 		UPDATE 
+ 			ORD_ORDER_ITEM_META D
+   		SET 
+   			D.SETTLEMENT_STATUS = #status#,
+   			D.SETTLEMENT_TIME = SYSDATE
+ 		WHERE EXISTS (
+ 			SELECT 1 FROM 
+         		ORD_ORDER E
+         	WHERE E.ORDER_ID = D.ORDER_ID
+           	AND E.TRAVEL_GROUP_CODE = #groupCode#
+           	)
+        AND
+        	D.SUB_PRODUCT_TYPE != 'INSURANCE'
+ 	</update>
+ 	
+	<!-- 查询产品订单列表分页begin -->
+	<sql id="getProductOrderDetailsSql">
+		SELECT 
+		 	  O2.ORDER_ID AS orderId,
+		      O2.ACTUAL_SETTLEMENT_PRICE/100 AS settlePrice,
+		      MIN(O2.QUANTITY * O2.PRODUCT_QUANTITY) AS quantity,
+		      SUM(DECODE(
+	       			O3.TYPE,NULL,O2.TOTAL_SETTLEMENT_PRICE / 100 ,
+	       			'VISITOR_LOSS',O3.ACTUAL_LOSS /100 ,
+	       			(O2.TOTAL_SETTLEMENT_PRICE  - O3.AMOUNT)/ 100)) AS settleAmount
+		FROM 
+			ORD_ORDER O, 
+			ORD_ORDER_ITEM_META O2,
+		   (SELECT O4.ORDER_ITEM_META_ID,
+	               O4.TYPE,
+	               SUM(O4.AMOUNT) AMOUNT,
+	               SUM(ACTUAL_LOSS) ACTUAL_LOSS
+	          FROM ORD_REFUNDMENT_ITEM O4, ORD_REFUNDMENT O5
+	         WHERE O4.REFUNDMENT_ID = O5.REFUNDMENT_ID
+	           AND O5.STATUS = 'REFUNDED'
+	           AND (O4.MEMO != '自动生成退款单' OR O4.MEMO IS NULL)
+	         GROUP BY O4.ORDER_ITEM_META_ID, O4.TYPE) O3
+		WHERE O.ORDER_ID = O2.ORDER_ID
+			AND O2.ORDER_ITEM_META_ID = O3.ORDER_ITEM_META_ID(+)
+		  	AND O.TRAVEL_GROUP_CODE = #groupCode#
+		  	AND O2.META_BRANCH_ID = #prodBranchId#
+		  	AND (O.ORDER_STATUS = 'NORMAL' OR O.ORDER_STATUS = 'FINISHED'  OR (O.ORDER_STATUS = 'CANCEL' AND O3.ORDER_ITEM_META_ID IS NOT NULL))
+		  	AND O.PAYMENT_STATUS = 'PAYED'
+		GROUP BY 
+			O2.ORDER_ID, 
+			O2.ACTUAL_SETTLEMENT_PRICE
+	</sql>
+	<select id="searchProductOrderDetailsCount" parameterClass="map" resultClass="Integer">
+	 	SELECT
+		COUNT(*)
+	FROM
+	(
+		<include refid="getProductOrderDetailsSql"/>
+	)
+	</select>
+	<select id="searchProductOrderDetails" parameterClass="map" resultClass="ProductOrderDetail">
+	  	<include refid="pageSearchHead"/>
+		<include refid="getProductOrderDetailsSql"/>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<!-- 查询产品订单列表分页end -->
+</sqlMap>
+	

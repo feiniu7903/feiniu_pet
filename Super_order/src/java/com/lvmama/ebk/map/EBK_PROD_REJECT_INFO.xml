@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="EBK_PROD_REJECT_INFO" >
+
+  <typeAlias alias="ebkProdRejectInfoDO" type="com.lvmama.comm.bee.po.ebooking.EbkProdRejectInfo" />
+
+  <resultMap id="ebkProdRejectInfoDOResultMap" class="ebkProdRejectInfoDO" >
+    <result property="rejectInfoId" column="REJECT_INFO_ID" />
+    <result property="productId" column="PRODUCT_ID" />
+    <result property="type" column="TYPE" />
+    <result property="message" column="MESSAGE" />
+  </resultMap>
+
+  <sql id="ebkProdRejectInfo_columns" >
+    a1.REJECT_INFO_ID, a1.PRODUCT_ID, a1.TYPE, a1.MESSAGE
+  </sql>
+
+  <sql id="ebkProdRejectInfo_do_columns" >
+    a1.REJECT_INFO_ID, a1.PRODUCT_ID, a1.TYPE, a1.MESSAGE
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="rejectInfoId" prepend="AND" >
+        <![CDATA[  
+        REJECT_INFO_ID = #rejectInfoId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="type" prepend="AND" >
+        <![CDATA[  
+        TYPE = #type#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="message" prepend="AND" >
+        <![CDATA[  
+        MESSAGE = #message#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <sql id="doQueryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="rejectInfoId" prepend="AND" >
+        <![CDATA[  
+        REJECT_INFO_ID = #rejectInfoId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="type" prepend="AND" >
+        <![CDATA[  
+        TYPE = #type#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="message" prepend="AND" >
+        <![CDATA[  
+        MESSAGE = #message#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <insert id="insert" parameterClass="ebkProdRejectInfoDO" >
+    <selectKey keyProperty="rejectInfoId" resultClass="java.lang.Long" >
+       SELECT EBK_PROD_REJECT_INFO_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO EBK_PROD_REJECT_INFO( REJECT_INFO_ID, PRODUCT_ID, TYPE, MESSAGE)
+     VALUES ( #rejectInfoId#, #productId#, #type#, #message#)
+  </insert>
+
+  <update id="update" parameterClass="ebkProdRejectInfoDO" >
+    UPDATE EBK_PROD_REJECT_INFO   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="rejectInfoId" prepend="," >
+        <![CDATA[  
+        REJECT_INFO_ID = #rejectInfoId#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="productId" prepend="," >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="type" prepend="," >
+        <![CDATA[  
+        TYPE = #type#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="message" prepend="," >
+        <![CDATA[  
+        MESSAGE = #message#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE REJECT_INFO_ID = #rejectInfoId#  
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="ebkProdRejectInfoDOResultMap" >
+     SELECT 
+    <include refid="ebkProdRejectInfo_do_columns" />
+    <![CDATA[  
+     FROM EBK_PROD_REJECT_INFO a1 WHERE REJECT_INFO_ID = #rejectInfoId#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_REJECT_INFO WHERE REJECT_INFO_ID = #rejectInfoId#
+    ]]>  
+  </delete>
+
+  <delete id="delete" parameterClass="ebkProdRejectInfoDO" >
+     DELETE FROM EBK_PROD_REJECT_INFO  WHERE 
+     <dynamic prepend=" ">
+     	<isNotNull prepend=" AND " property="rejectInfoId"> REJECT_INFO_ID = #rejectInfoId# </isNotNull>
+     	<isNotNull prepend=" AND " property="productId"> PRODUCT_ID = #productId# </isNotNull>
+     </dynamic>
+  </delete>
+  
+  <select id="countByDOExample" parameterClass="ebkProdRejectInfoDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(REJECT_INFO_ID) AS num FROM EBK_PROD_REJECT_INFO 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="ebkProdRejectInfoDOResultMap" parameterClass="ebkProdRejectInfoDO" >
+     SELECT 
+    <include refid="ebkProdRejectInfo_do_columns" />
+     FROM EBK_PROD_REJECT_INFO a1 
+    <include refid="doQueryParams" />
+  </select>
+</sqlMap>

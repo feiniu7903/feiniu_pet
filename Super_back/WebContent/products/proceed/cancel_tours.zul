@@ -1,0 +1,34 @@
+<?page title="巴士班自助统计" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./cancelToursWin"?>
+<zk>
+<window id="cancelToursWin" mode="embedded" apply="com.lvmama.back.web.product.CancelToursAction">
+	<grid>
+	<columns>
+		<column width="300px"></column>
+		<column></column>
+	</columns>
+		<rows>
+			<row>
+				<hbox>商品名称</hbox>
+				<hbox>${saction.proceedTours.productName}</hbox>
+			</row>
+			<row>
+				<hbox>发班状态</hbox>
+				<hbox>${saction.proceedTours.chProceedStatus}</hbox>
+			</row>
+			<row>
+				<hbox>确定发班时间</hbox>
+				<hbox><label value="@{saction.proceedTours.confirmDate,converter='com.lvmama.back.utils.DateZKConverter2'}"/></hbox>
+			</row>
+			<row>
+				<hbox>成团人数</hbox>
+				<hbox>${saction.proceedTours.initialNum}</hbox>
+			</row>
+		</rows>
+	</grid>
+	<toolbar align="center">
+		<button label="确定" width="100px" onClick='saction.cancel();'/>
+		<button label="关闭" width="100px" onClick='cancelToursWin.detach();'/>
+	</toolbar>	
+</window>
+</zk>

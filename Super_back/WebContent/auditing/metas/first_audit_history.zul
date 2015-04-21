@@ -1,0 +1,23 @@
+<?page title="aud_pass" contentType="text/html;charset=UTF-8"?>
+
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./aud_firstList"?>
+<zk>
+	<window id="aud_firstList" title="初审任务列表" border="normal" closable="true"
+		apply="com.lvmama.back.web.audit.MetaPermAuditTaskAction">
+		<listbox id="metaProductListBox" model="@{saction.permAuditTaskList}">
+		<listhead>
+			<listheader label="创建时间" width="20%"/>
+			<listheader label="操作人" width="20%"/>
+			<listheader label="操作内容"/>
+			<listheader label="状态" width="5%"/>
+		</listhead>
+		<listitem id="searchFirstList" height="25px" self="@{each='firstList'}">
+			<listcell label="@{firstList.createTime}" />
+			<listcell label="@{firstList.auditUserName}" />
+			<listcell label="@{firstList.description}" />
+			<listcell label="@{firstList.strStatus }" />
+		</listitem>
+	</listbox>
+		
+	</window>
+</zk>

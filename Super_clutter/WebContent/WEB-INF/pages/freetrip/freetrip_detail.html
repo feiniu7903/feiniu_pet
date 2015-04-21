@@ -1,0 +1,319 @@
+<script language="javascript"> 
+//参考http://blog.csdn.net/hellohaifei/article/details/15340173 
+~(function(){ 
+var locUrl = window.location.href; 
+var LvmmUrl = locUrl.replace("http://","lvmama://") 
+//alert(LvmmUrl) 
+if(locUrl.split("channel=")[1].substring(0,2)=="QR"){ 
+if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) { 
+window.location = LvmmUrl; 
+window.setTimeout(function() { 
+window.location = "http://m.lvmama.com/static/zt/3.0.0/download/index.html"; 
+}, 3000); 
+
+} else if (navigator.userAgent.match(/android/i)) { 
+window.location = LvmmUrl; 
+window.setTimeout(function() { 
+window.location = "http://m.lvmama.com/static/zt/3.0.0/download/index.html"; 
+}, 3000); 
+} 
+} 
+})();
+</script>
+<!doctype html>
+<html>
+<head>
+    <title>${productNameTitle!}-驴妈妈无线官网</title>
+	<meta name="Description" content="驴妈妈手机站为您提供旅游度假预订服务，${productNameTitle!}，7*24小时服务热线：4001-570-570，点评返现金，在线支付服务，简单、方便，是您旅行的好伙伴。"/>
+    <#setting number_format="#.##">
+	<#include "../common/define_v5.html">
+    <link rel="canonical" href="http://${hostName}/product/<#if mpr??>${mpr.productId!}</#if>/" />
+	<#assign commentScore= "com.lvmama.clutter.utils.CommentScoreMethod"?new()>
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/detail.css">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/ui/idangerous.swiper.css">
+    <script src="http://pic.lvmama.com/js/wap/js/ui/swiper.min.js"></script>
+    <script src="${request.contextPath}/js/route.js" type="text/javascript"></script>
+    <script src="${request.contextPath}/js/order_back.js"></script>
+    <script src="${request.contextPath}/js/baidu_login.js"></script>
+    <style type="text/css">
+     .swiper-container{z-index:0}
+     .lv-filtrate-bar{z-index:0;}
+    </style>
+   <script type="text/javascript">
+	    var htmlTitle=document.title;
+		$(function(){
+			if(htmlTitle.length>42){
+				var productName=htmlTitle.split("-驴妈妈无线官网")[0];
+				if(productName.length>30){
+					document.title = productName.substring(0,30)+"-驴妈妈无线官网";
+				}
+			}
+		});
+</script>
+<#assign hostName = reauestHostName/>
+<script type="text/javascript">
+	var hostName=window.location.host;
+	if(hostName!=null && hostName=="qing.lvmama.com"){
+		hostName="qing.lvmama.com";
+	}
+</script>
+</head>
+<body>
+<!--  头部-->
+<header class="header">度假详情
+	<span class="icon-back"></span>
+	<#if hostName?? && hostName=="m.lvmama.com">
+		 <#if mpr??>
+			<span id="favoritor_in" onclick="addFavoritor('${mpr.productId!}','PRODUCT','${mpr.smallImage!}','${mpr.productName!}');" class="header-icon-fav"></span>
+		 	<span id="favoritor_out" onclick="cancelFavoritor('${mpr.productId!}','PRODUCT');" class="header-icon-fav-ed"></span>
+		 </#if>
+	</#if>
+		<a style="color:#fff" href="http://${hostName}/"><div class="out_address"><span class="icon-svg14"></span></div></a>
+	
+</header>
+<input type="hidden" value="http://qing.lvmama.com" id="callUrlBaidu" name="callUrlBaidu">
+<!-- 下载层 -->
+<!-- 线路详情 -->
+<div id="wrapper">
+	<#if mpr??>
+        <#if mpr.hasIn>
+		   <script>
+		       $("#favoritor_in").hide();
+		       $("#favoritor_out").show();
+		   </script>
+	   <#else>
+		    <script>
+		       $("#favoritor_out").hide();
+		       $("#favoritor_in").show();
+		   </script>
+       </#if>
+	    <div id="content">
+	        <div class="lv-project-detail">
+	            <div class="swiper-main detail-banner">
+	                <div class="swiper-container swiper-banner">
+	                    <!-- <h2>${mpr.productName!}</h2> -->
+	                    <div class="swiper-wrapper">
+	                        <!--内容添加-->
+	                        <#if mpr.imageList?? &&  mpr.imageList?size&gt;0>
+								<#list  mpr.imageList as img>
+			                        <div class="swiper-slide"><img src="${prefixPic!}${img}" alt=""></div>
+								</#list>  
+	     					</#if>
+	                    </div>
+	                </div>
+	                <div class="pagination"></div>
+	            </div>
+	            <div class="t_base_info">
+	                <h2>${mpr.productName!} 
+		                <!-- 活动标签 -->
+					    <#if mpr.tagList?? && mpr.tagList?size&gt;0>
+					        <span class="flag">${mpr.tagList[0].tagName!}</span>
+					  	</#if>
+					  	<!--手机独享  -->
+					  	<#if mpr.mobileAlone?? && mpr.mobileAlone>
+					  		<span class="flag">手机独享</span>
+					  	</#if>
+	                </h2>
+	                <p class="mt10">
+	                    <span class="info_p1">出发/目的地：${mpr.fromDest!}—${mpr.toDest!}</span>
+	                    <span class="info_p2">产品编号：${mpr.productId!}</span>
+	                </p>
+	                <p class="mt5">
+	                    <span class="fr">
+	                    	<#if mpr.subProductType?? &&  (mpr.subProductType=="FREENESS" 
+						      || mpr.subProductType=="GROUP_LONG" 
+						      || mpr.subProductType=="FREENESS_LONG" 
+						      || mpr.subProductType=="GROUP_FOREIGN" 
+						      || mpr.subProductType=="FREENESS_FOREIGN" 
+						      || mpr.subProductType=="GROUP" 
+						      || mpr.subProductType=="SELFHELP_BUS" )>
+						      <#if hostName?? && hostName=="qing.lvmama.com">
+	                            <a href="javascript:void(0);" onclick="product_order_skip(${mpr.productId!},${mpr.branchId!},'false');" class="btn_style_1">在线预订</a>
+						      <#else>
+	                            <a href="javascript:void(0);" onclick="order_skip('${request.contextPath!}',${mpr.productId!},${mpr.branchId!},'false');" class="btn_style_1">在线预订</a>
+						      </#if>
+					       <#else>
+					      		<a href="tel:4001-570-570;" class="btn_style_1">电话预订</a>
+					       </#if>
+	                    </span>
+	                    <span class="pro-value">
+	                        &yen;${mpr.sellPriceYuan!}</em><br>
+	                        <del>&yen;${mpr.marketPriceYuan!}</del>
+	                    </span>
+	                </p>
+	            </div>
+	            <div class="t_info">
+	            	<#if mpr.hasBusinessCoupon || mpr.canDeduction || mpr.cashRefund>
+		                <div class="project_favorable">
+		                    <a href="${request.contextPath!}${mpr.preferentUrl!}&firstChannel=CLIENT" class="block">
+		                         <#if mpr.hasBusinessCoupon>
+		                         	 <p><span class="privilege">惠</span><#if mpr.favourableDesc?? && mpr.favourableDesc!=""><em>${mpr.favourableDesc!}</em></#if></p>
+		                         </#if>
+		                         <#if mpr.canDeduction>
+		                          <p><span class="privilege">抵</span><#if mpr.deductionDesc?? && mpr.deductionDesc!=""><em>${mpr.deductionDesc!}</em></#if></p>
+		                         </#if>
+			                     <#if mpr.cashRefund?? && mpr.cashRefund>
+		                          <p><span class="privilege rose">返</span><em class="f-color-1 f-size-10">&yen;${mpr.cashRefundY!}(比网站多返&yen;${mpr.mobileCashRefund!})</em></p>
+		                         </#if>
+		                    </a>
+		                    <span class="ic_ri"></span>
+		                </div>
+	                </#if>
+	                <!-- 推荐理由 -->
+	                <#if mpr.managerRecommend?? && mpr.managerRecommend !="">
+						<div class="lv-box set-btn">   
+					        <h3>推荐理由</h3>
+					         <div class="t_content">
+	                      	  ${mpr.managerRecommend!?if_exists?replace("\n","</br>")}
+	                    	</div>
+					    </div>
+					    
+					</#if>
+	                 <!-- 公告 -->
+				    <#if mpr.announcement?? && mpr.announcement !="">
+		                <div class="lv-box set-btn">
+		                    <h3>公告</h3>
+		                    <div class="t_content seeMore">
+		                        <p>
+		                             ${mpr.announcement!?if_exists?replace("\n","</br>")}
+		                        </p>
+		                        <span class="ic_di"></span>
+		                    </div>
+		                </div>
+	                </#if>
+	                <!-- 行程 -->
+	                <#if viewJourneyList?? && viewJourneyList?size&gt;0>
+		                <div class="lv-box set-btn">
+		                    <h3>行程说明</h3>
+		                    <div class="t_content journey">
+		                   		<#if viewJourneyList?? && viewJourneyList?size&gt;0>
+		                   		<#assign one=viewJourneyList[0]>
+			                        <section>
+			                            <dl>
+			                                <dt><b>DAY ${one.seq}</b><em>${one.title?if_exists}</em></dt>
+			                                <dd>${one.contentBr?if_exists?replace("\n","</br>")}</dd>
+			                                <div class="lv-padding-y10">
+				                                <#if one.journeyPictureList?? && one.journeyPictureList?size &gt; 0> 
+										               <#list one.journeyPictureList as jp>
+										                 <#if jp_index == 0>
+										                     <img title="${jp.pictureName?if_exists}"  style="width:124px; height:92px;" src="${jp.absoluteUrl?if_exists}">
+										                 <#elseif jp_index == 1>
+										                    <img title="${jp.pictureName?if_exists}" style="width:124px; height:92px;margin-left:10px;" src="${jp.absoluteUrl?if_exists}">
+										                 </#if>
+										               </#list>
+											     </#if>                   
+										     </div>          
+			                                 <#if one.dinner??> 
+			                                 	<dd><span class="ic_dinner"></span>${one.dinner?default("")} </dd>
+										      </#if>
+										      
+											  <#if one.hotel??>
+										        <dd><span class="ic_wineshop"></span>${one.hotel?default("")}</dd>
+											  </#if>
+			                            </dl>
+			                        </section>
+		                        </#if>
+		                        <#if viewJourneyList?? && viewJourneyList?size&gt;1>
+		                        <#assign two=viewJourneyList[1]>
+			                        <section>
+			                            <dl>
+			                                <dt><b>DAY ${two.seq}</b><em>${two.title?if_exists}</em></dt>
+			                                <dd>${two.contentBr?if_exists?replace("\n","</br>")}</dd>
+			                                <div class="lv-padding-y10">
+				                                <#if two.journeyPictureList?? && two.journeyPictureList?size &gt; 0> 
+										               <#list two.journeyPictureList as jp>
+										                 <#if jp_index == 0>
+										                     <img title="${jp.pictureName?if_exists}"  style="width:124px; height:92px;" src="${jp.absoluteUrl?if_exists}">
+										                 <#elseif jp_index == 1>
+										                    <img title="${jp.pictureName?if_exists}" style="width:124px; height:92px;margin-left:10px;" src="${jp.absoluteUrl?if_exists}">
+										                 </#if>
+										               </#list>
+											     </#if>
+										     </div>                             
+			                                 <#if two.dinner??> 
+			                                 	<dd><span class="ic_dinner"></span>${two.dinner?default("")} </dd>
+										      </#if>
+										      
+											  <#if two.hotel??>
+										        <dd><span class="ic_wineshop"></span>${two.hotel?default("")}</dd>
+											  </#if>
+			                            </dl>
+			                        </section>
+		                        </#if>
+		                    </div>
+		                    <#if viewJourneyList?? && viewJourneyList?size&gt;2>
+			                    <div class="lv-box-btn tc">
+			                        <a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/prod_comm/${mpr.productId!}/JOURNEY');" class="f-color-1">查看全部行程</a>
+			                    </div>
+		                    </#if>
+		                </div>
+	                </#if>
+	                <!-- 点评  -->
+				    <#if mpr?? && mpr.cmtNum &gt; 0 >
+		                <div class="lv-box set-btn">
+		                    <div class="t_content" onclick="union_skip('${request.contextPath}/comment_comm/${mpr.productId!}');">
+		                        <div class="comment_block">
+		                        	<#assign avgscore =commentScore("${mpr.avgScore!}")/>
+		                            <span class="lv-score lv-score-${avgscore!}"></span><br>
+		                            <small><i class="f-color-1">${mpr.cmtNum!}</i>人点评</small>
+		                        </div>
+		                        <h4>用户点评</h4>
+		                        <span class="ic_ri"></span>
+		                    </div>
+		                </div>
+	                </#if>
+	                <div class="lv-box set-btn">
+	                    <div class="t_content" onclick="union_skip('${request.contextPath}/prod_comm/${mpr.productId!}/FEATURES');">
+	                        <h4>产品特色</h4>
+	                        <span class="ic_ri"></span>
+	                    </div>
+	                </div>
+	                <div class="lv-box set-btn">
+	                    <div class="t_content" onclick="union_skip('${request.contextPath}/prod_comm/${mpr.productId!}/COSTCONTAIN');">
+	                        <h4>费用说明</h4>
+	                        <span class="ic_ri"></span>
+	                    </div>
+	                </div>
+	                <div class="lv-box set-btn">
+	                    <div class="t_content" onclick="union_skip('${request.contextPath}/prod_comm/${mpr.productId!}/IMPORTANTNOTES');">
+	                        <h4>重要提示</h4>
+	                        <span class="ic_ri"></span>
+	                    </div>
+	                </div>
+	                <#if mpr.visa >
+		                <div class="lv-box set-btn">
+		                    <div class="t_content" onclick="union_skip('${request.contextPath}/${mpr.visaUrl!}&firstChannel=CLIENT');">
+		                        <h4>签注/签证</h4>
+		                        <span class="ic_ri"></span>
+		                    </div>
+		                </div>
+		            </#if>
+	            </div>
+	        </div>
+	        <!--电话弹出层 st-->
+	        <div class="telBox">
+	            <div class="telBox_con"></div>
+	            <div class="p">
+	                <span>咨询预订的产品ID为3629</span>
+	                <p>4001-570-570</p>
+	                <a _dele="" class="ic_ret" href="javascript:void(0);"></a>
+	                <a class="ic_tel" href="tel:4001-570-570"></a>
+	            </div>
+	        </div>
+	    </div>
+	 <#else>
+	  	<#assign no_data_msg="没有找到合适的度假线路</br>请试试搜索其他关键词">
+   		<#include "../common/no_data_list.html">
+	 </#if>   
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+</div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+
+<script type="text/javascript">
+    $(function(){
+        $(".lv-filtrate-bar").tabChange();
+        $(".seeMore").seeMore();
+    });
+</script>
+</body>
+</html>

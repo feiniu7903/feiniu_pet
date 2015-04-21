@@ -1,0 +1,118 @@
+<?page title="用户筛选" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.operate.util.ListboxCodeset" ?>
+<zk>
+<window title="用户筛选" border="normal" apply="com.lvmama.operate.web.statistics.EdmUsersAction" id="win">
+<grid>
+		<rows>
+			<row>
+				<hbox>
+					<label value="注册时间:"/>
+					<datebox id="regStart" value="@{saction.searchConds.regStart}" onChange='saction.checkDate("regStart","regEnd");'/>
+					<label value="到"/>
+					<datebox id="regEnd" value="@{saction.searchConds.regEnd}" onChange='saction.checkDate("regStart","regEnd");'/>
+				</hbox>
+				<hbox>
+					<label value="下单时间:"/>
+					<datebox id="orderStart" value="@{saction.searchConds.orderStart}" onChange='saction.checkDate("orderStart","orderEnd");'/>
+					<label value="到"/>
+					<datebox id="orderEnd" value="@{saction.searchConds.orderEnd}" onChange='saction.checkDate("orderStart","orderEnd");'/>
+				</hbox>
+				
+				<hbox>
+					<label value="省/市"/>
+					<listbox id="capitalListBox" mold="select" model="@{saction.capitals}" onSelect="saction.changeCapitals();">
+						<listitem self="@{each='capital'}" label="@{capital.provinceName}" value="@{capital.provinceId}"/>
+					</listbox>
+					<listbox id="cityListBox" mold="select" model="@{saction.cities,load-after='capitalListBox.onSelect'}">
+						<listitem self="@{each='city'}" label="@{city.cityName}" value="@{city.cityId}"/>
+					</listbox>					
+				</hbox>
+				
+				<hbox>
+					<label value="登录时间:"/>
+					<datebox id="loginStartNote" value="@{saction.searchConds.loginStartNote}" onChange='saction.checkDate("loginStartNote","loginEndNote");'/>
+					<label value="到"/>
+					<datebox id="loginEndNote" value="@{saction.searchConds.loginEndNote}" onChange='saction.checkDate("loginStartNote","loginEndNote");'/>
+				</hbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="最后登录时间:"/>
+					<datebox id="loginStart" value="@{saction.searchConds.loginStart}" onChange='saction.checkDate("loginStart","loginEnd");'/>
+					<label value="到"/>
+					<datebox id="loginEnd" value="@{saction.searchConds.loginEnd}" onChange='saction.checkDate("loginStart","loginEnd");'/>
+				</hbox>
+				<hbox>
+					手机号:<textbox value="@{saction.searchConds.mobileNumber}" id="mobileNumberTextBox"/>
+				</hbox>
+				
+				<hbox>
+					手机筛选:<radiogroup selectedItem="@{saction.searchConds.checkMobile}"><radio label="是" value="true"/><radio label="否" value="false"/></radiogroup>
+				</hbox>
+				<hbox>
+					手机验证:<radiogroup selectedItem="@{saction.searchConds.isCheckMobile}"><radio label="全部" value=""/><radio label="已验证" value="Y"/><radio label="未验证" value="N"/></radiogroup>
+				</hbox>
+			</row>
+			
+			<row>
+				<hbox>
+					邮箱验证:<radiogroup selectedItem="@{saction.searchConds.isCheckEmail}"><radio label="全部" value=""/><radio label="已验证" value="Y"/><radio label="未验证" value="N"/></radiogroup>
+				</hbox>
+				<hbox>邮箱：<textbox value="@{saction.searchConds.email}" id="emailTextBox"/></hbox>
+				<hbox>
+					订阅类型：<listbox mold="select"
+							model="@{saction.codeItemList}"
+							onSelect='saction.searchConds.put("emailType",self.selectedItem.value);'>
+							<listitem self="@{each='item'}"
+								label="@{item.name }" value="@{item.code}"
+								selected="@{item.checked}" />
+					</listbox>
+				</hbox>
+				<hbox>
+					敏感价值:<listbox id="sensitiveSegment"  codeset="EDM_SENSITIVE_SEGMENT" mold="select" selectedItem="@{saction.searchConds.sensitiveSegment}"/>
+				</hbox>
+			</row>
+			<row>
+				<hbox>用户类型:<listbox id="userType"  codeset="EDM_USER_DW_TYPE" mold="select" selectedItem="@{saction.searchConds.userType}"/></hbox>
+				<hbox>
+					<button label="查询" onClick="saction.search();" id="searchBtn"/>
+					<button label="导出TXT" onClick="saction.downloadTxt()"/>
+				</hbox>
+				<hbox/><hbox/>
+			</row>
+		</rows>
+	</grid>
+	<space></space>
+	<listbox model="@{saction.users,load-after='searchBtn.onClick,_paging.onPaging'}" itemRenderer="com.lvmama.operate.web.statistics.CityRenderer">
+		<listhead>
+			<listheader label="用户名"/>
+			<listheader label="省份"/>
+			<listheader label="城市"/>
+			<listheader label="性别"/>
+			<listheader label="邮箱"/>
+			<listheader label="手机号"/>
+		</listhead>
+		<listitem self="@{each='user'}">
+			<listcell label="@{user.userName}"/>
+			<listcell label="@{user.capital}"/>			
+			<listcell label="@{user.city}"/>
+			<listcell label="@{user.email}"/>
+		</listitem>
+	</listbox>
+	<toolbar>
+		<grid>
+			<rows>
+				<row>
+					<cell width="100px">
+						<button label="导出EXECL" onClick="saction.exportUsers()"/>
+					</cell>
+					<cell>
+						<paging id="_paging" pageSize="20" onPaging="saction.search();"></paging>
+					</cell>
+				</row>
+			</rows>
+		</grid>		
+	</toolbar>
+</window>
+</zk>

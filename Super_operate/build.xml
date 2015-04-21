@@ -1,0 +1,119 @@
+<project name="super_operate" basedir="." default="help">
+
+	<property file="./build.properties" />
+	<!-- properies -->
+	<property environment="env" />
+	<echo>begining.......</echo>
+	<echo>${env.classpath}</echo>
+
+	<property name="project.name" value="super_operate" /><!--need to setting-->
+	<property name="lvmama_common.classes.dir" value="${lvmama_common.dir}/target/lvmama_common" />
+	<property name="src.dir" value="src/java" />
+	<property name="config.dir" value="src/config" />
+	<property name="target.dir" value="target" />
+	<property name="classes.dir" value="target/classes" />
+	
+	
+	<!-- 定义classpath -->
+	<path id="classpath">
+		<fileset file="${lib.dir}/*.jar" />
+		<fileset file="${java_home}/lib/*.jar" />
+		<fileset file="${java_home}/jre/lib/*.jar" />
+		<fileset file="${env.CATALINA_HOME}/common/lib/*.jar" />
+		<pathelement path="${classes.dir}" />
+	</path>
+
+	<!-- ant的使用帮助-->
+	<target name="help">
+		<echo>############################################################</echo>
+		<echo>###         前提：需要配置build.properties文件        ######</echo>
+		<echo>###1. ant clear  清空所有编译后的文件                 ######</echo>
+		<echo>###2. ant ec  编译JAVA并且发布，需要重启tomcat        ######</echo>
+		<echo>###3. ant html 只发布修改的静态文件，不需要重启tomcat ######</echo>
+		<echo>############################################################</echo>
+	</target>
+
+	<!-- 清空所有编译后的文件-->
+	<target name="clear">
+		<delete dir="${target.dir}" />
+		<delete dir="${classes.dir}" />
+	</target>
+
+	<!-- 初始化任务-->
+	<target name="init">
+		<!--<delete dir="${target.dir}" />-->
+		<mkdir dir="${target.dir}/${project.name}"/>
+		<mkdir dir="${classes.dir}"/>
+		<mkdir dir="${target.dir}/${project.name}/WEB-INF/classes"/>
+	</target>
+	<target name="compile" depends="init" description="compile the source files">
+		<!--<delete dir="${classes.dir}" />-->
+		<mkdir dir="${classes.dir}" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" target="1.6">
+			<compilerarg line="-encoding UTF-8"/>
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+	 
+	 
+	 <target name="cleansvn" depends="compile">
+		 <delete includeemptydirs="true">
+		    <fileset dir="./WebContent" includes="**/*_svn/**" defaultexcludes="true"/>
+		  </delete>
+	</target>
+	<!--- overwrite="true" can use at first-->
+	<target name="ec" depends="cleansvn">
+		<copy todir="${target.dir}/${project.name}" filtering="off">
+			<fileset dir="./WebContent">
+				<include name="**/*.*"/>
+			</fileset>
+		</copy>
+		<copy todir="${target.dir}/${project.name}/WEB-INF/classes" filtering="off">
+			<fileset dir="./src/java">
+				<include name="**/*.xml"/>
+			</fileset>
+		</copy>
+		<copy todir="${target.dir}/${project.name}/WEB-INF/classes" filtering="off">
+			<fileset dir="${config.dir}">
+				<include name="**/*.*"/>
+			</fileset>
+		</copy>
+		<copy todir="${target.dir}/${project.name}/WEB-INF/classes" filtering="off">
+			<fileset dir="${classes.dir}">
+				<include name="**/*.*"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${target.dir}/${project.name}/WEB-INF/lib"/>
+		<copy todir="${target.dir}/${project.name}/WEB-INF/lib" filtering="off">
+			<fileset dir="${lib.dir}">
+				<include name="**/*.*"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="cleanHtmlSvn">
+		 <delete includeemptydirs="true">
+		    <fileset dir="./WebContent" includes="**/*_svn/**" defaultexcludes="true"/>
+		  </delete>
+	</target>
+	 <target name="html" depends="cleanHtmlSvn">
+		<copy todir="${target.dir}/${project.name}" filtering="off">
+			<fileset dir="./WebContent">
+				<include name="**/*.*"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="war" depends="ec">
+		<war destfile="${basedir}/${target.dir}/myApp.war" webxml="${basedir}/${target.dir}/${project.name}/WEB-INF/web.xml">
+			<fileset dir="${basedir}/${target.dir}/${project.name}" casesensitive="yes" id="id">
+				<include name="WEB-INF/**" />
+				<exclude name="*.war" />
+			</fileset>
+			<lib dir="${lib.dir}">
+				<include name="*.jar"/>
+			</lib>
+		</war>
+	</target>
+
+	<echo>end.......</echo>
+</project>

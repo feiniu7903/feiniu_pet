@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>写点评</title>
+<#include "../common/define.html">
+<script>
+$(function(){
+	$(".lv-item-sprite01 a").click(function(e){
+		$(this).parent().removeClass().addClass("lv-item-scroe"+($(this).index()+1)).addClass("lv-item-sprite01").addClass("lv-pull-left");
+		$(this).siblings("input:first").val($(this).index()+1);
+	});	
+	
+	$("textarea").focus(function(e) {
+		$(this).addClass("lv-input01-focus");
+	});
+	$("textarea").blur(function(e) {
+		$(this).removeClass("lv-input01-focus");
+	});	
+});
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:union_skip('${request.contextPath}/user/envaluate.htm');"> 
+  <img style="width:16px;height:16px;padding:13px;" src="${prefix_pic_url!}/img/close.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">写点评</div>
+  <div class="lv-position lv-fontsize-15"><a href="javascript:void(0);" onclick="submitCommentForm();">提交</a></div>
+</div>
+<div class="lv-wrapper lv-media-width" style="min-height:300px;">
+  <form action="${request.contextPath}/user/submit_comment.htm" method="POST" id="commnt_form">
+      <input type="hidden" value="${orderId}" name="objectId">
+	  <div id="lv-evaluate-score" class="lv-item-sprite01 lv-item-default">
+			<span class="lv-item-sprite01 lv-item-default lv-pull-left">
+	            <a style="padding-left:0;"></a>
+	            <a></a><a></a><a></a><a style="padding-left:4px;"></a>
+			     <input id="lv-score" type="hidden" value="4" name="scores">
+			     <input id="lv-latitued" type="hidden" name="latitudeIds" value="FFFFFFFFFFFFFFFFFFFFFFFFFFFF">
+	         </span>
+	  </div>
+	  <div class="lv-wrapper-container">
+	    <div class="lv-box clear" style="padding-bottom:10px;">
+	      <div class="lv-evaluate-items lv-fontsize-12" style="width:270px; margin:0 auto;">
+	        <#if latitudeList?? && latitudeList?size&gt;0>
+		         <ul>
+			         <#list latitudeList as lat>
+				          <li class="lv-evaluate-item"><span class="lv-item-title lv-pull-left">${lat.name!}</span>
+					          <span class="lv-item-sprite01 lv-item-default lv-pull-left">
+					             <a style="padding-left:0;"></a>
+					             <a></a><a></a><a></a><a style="padding-left:4px;"></a>
+					            <input value="4" id="lv-score-item${lat_index+1}" type="hidden" name="scores">
+					            <input value="${lat.latitudeId!}" id="lv-score-item1" type="hidden" name="latitudeIds">
+					          </span>
+				          </li>
+		              </#list>
+		         </ul>
+	          </#if>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="lv-wrapper-container">
+	  	<div style="margin-top:10px;">请输入您的评价</div>
+	    <textarea class="" id="content" name="content" style="width:300px; resize:none; min-height:100px; border:1px solid #d2d2d2;"placeholder="可输入500个字符...." ></textarea>
+	  </div>
+  </form>
+</div>
+  <script >
+       function submitCommentForm() {
+    	   // 内容必填  
+    	   if($("#content").val()=="" || $("#content").val().length < 20 || $("#content").val().length > 500) {
+				lvToast(false,"内容长度应该在20-500个字符",LT_LOADING_CLOSE);
+				$("#content").focus();;
+				return false;
+		   }
+    	   
+    	   $.ajax({
+    			url : contextPath+'/user/submit_comment.htm',
+    			data : $('#commnt_form').serialize(),
+    			type : "POST",
+    			beforeSend : function() {
+    				//lvToast(true,"提交点评中...",LT_LOADING_TIME);
+    			},
+    			success : function(data) {
+    				if(data.code == '1') {
+    				   // 页面跳转
+    				    lvToast(true,"提交点评成功!",LT_LOADING_CLOSE);
+    				    setTimeout(function(){
+	    					window.location.href = contextPath + "/user/envaluate.htm";
+    					},3000);
+    				} else {
+    					lvToast(false,"网络异常,请稍后再试!",LT_LOADING_CLOSE);
+    				}
+    			},
+    			error:function() {
+    				lvToast(false,"提交点评失败!",LT_LOADING_CLOSE);
+    			}
+    		});
+       }
+  </script>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+</body>
+</html>

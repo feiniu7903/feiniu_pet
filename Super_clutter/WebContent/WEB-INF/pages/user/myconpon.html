@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>我的优惠券</title>
+<#include "../common/define.html">
+<script src="${request.contextPath!}/js/my.js"></script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:union_back();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">我的优惠券</div>
+  <section class="header_alice">
+   		<a href="http://${hostName}" class="btn1"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a>
+   </section>
+</div>
+<div class="lv-search lv-media-width lv-seach-mheight  myconpon">
+  <ul class="lv-cascade-search">
+    <li class="lv-li-row2"><a href="javascript:void(0);">
+      <div class="lv-cascade-icongrey"></div>
+      <span class="lv-change-color lv-color-01">未使用</span><img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a></li>
+    <li class="lv-li-row2"><a href="javascript:void(0);">
+      <div class="lv-cascade-icongrey" style="display:none;"></div>
+      <span class="lv-change-color">已使用</span><img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a></li>
+  </ul>
+</div>
+<div class="lv-wrapper lv-min-height lv-media-width"> 
+  
+  <!--未使用-->
+  <div class="lv-tab">
+     <#if unusedList?? && unusedList?size&gt;0>
+        <#list unusedList as uList>
+		    <div class="lv-box clear">
+		      <div class="lv-order-title lv-padding-x10 lv-fontsize-12 lv-fontweight-bold">优惠券号：${uList.code!}</div>
+		      <div class="lv-order-content clear">
+		        <div class="lv-pull-left lv-fontsize-12 lv-lineheight-18">
+		          <div class="conpon_ti">${uList.name!}</div>
+		          <div class="f_9f9f9f">详情：<span class="lv-color-01">${uList.price!}</span></div>
+		          <div class="f_9f9f9f">有效期：${uList.expiredDate!}</div>
+		         <!--  <div class="lv-btn-03">复制优惠券号</div> -->
+		        </div>
+		      </div>
+		    </div>
+         </#list>
+      <#else>
+		   <#assign no_data_msg="还没有可用的优惠券">
+		   <#include "../common/no_data_list.html">
+      </#if>
+  </div>
+  
+  <!--已使用-->
+  <div class="lv-tab" style="display:none;" >
+    <#if usedList?? && usedList?size&gt;0>
+        <#list usedList as uList>
+		    <div class="lv-box clear">
+		      <div class="lv-order-title lv-padding-x10 lv-fontsize-12 lv-fontweight-bold">优惠券号：${uList.code!}</div>
+		      <div class="lv-order-content clear">
+		        <div class="lv-pull-left lv-fontsize-12 lv-lineheight-18">
+		          <div class="conpon_ti">${uList.name!}</div>
+		          <div class="f_9f9f9f">详情：<span class="lv-color-01">${uList.price!}</span></div>
+		          <div class="f_9f9f9f">有效期：${uList.expiredDate!}</div>
+		        </div>
+		      </div>
+		    </div>
+	    </#list>
+	<#else>
+		   <#assign no_data_msg="没有使用过的优惠券">
+		   <#include "../common/no_data_list.html">
+    </#if>
+   </div>
+</div>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+ <#if activityChannel?? && activityChannel != "" && hasSendConpon?? && hasSendConpon=="true">
+     <#if activityChannel =="mobile_activity_12580_login" || activityChannel =="mobile_activity_10000_login">
+		 <script type="text/javascript">
+		 lvToast(true,"恭喜您！<br/>优惠券大礼包已发送至您的账户中，请注意查收。",LT_LOADING_TIME)
+		 </script>
+	 <#elseif activityChannel =="mobile_activity_12580_reg" || activityChannel =="mobile_activity_10000_reg">
+	     <script type="text/javascript">
+		      lvToast(true,"恭喜您已注册成功！<br/>优惠券大礼包已发送至您的账户中，请注意查收。",LT_LOADING_TIME)
+		 </script>
+	 </#if>
+ </#if>
+ <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/globe.js"></script>
+ <script type="text/javascript">
+ 	$(function(){
+		var dishini_activity=getLocalStorage("dishini_activity");
+		if(dishini_activity!=null && dishini_activity=="yes"){
+			globe.createDialog("冰点裸奔价，再用上您的券，赚翻不解释，去看看活动产品吧！",1);
+			
+			$(".ic_roseo").click(function(){
+				setLocalStorage("dishini_activity","");
+				window.location.href='http://m.lvmama.com/static/zt/3.0.0/1404/default/dinsey.html';
+			});
+			
+			
+		}
+	});
+	//根据key获取值.
+	function getLocalStorage(key) {
+		try {
+			return null == window.localStorage.getItem(key)?"":window.localStorage.getItem(key);
+		} catch(err){
+			
+		}
+	}
+	//设置localStroage
+	function setLocalStorage(key,value){
+		try {
+		window.localStorage.setItem(key,value);
+		} catch(err){
+			
+		}
+	}
+</script>
+</body>
+</html>

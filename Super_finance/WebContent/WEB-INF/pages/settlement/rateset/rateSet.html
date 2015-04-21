@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>汇率设置页面</title>
+	<#assign dialog_inc = true>
+	<#assign autocomplete_inc = true>
+	<#assign grid_inc = true>
+	<#assign datepicker_inc = true>
+	<#include "/common/define.html"/>
+	<script type="text/javascript" src="/finance/js/rateset.js"></script>
+  </head>
+  
+  <body>
+    <div class="wapper_accounts" style="width: 90%">
+		<div class="wapper_list wapper_list_cash">
+			<h3 class="order_check">汇率设置</h3>
+			<div class="cash_seach">
+				<form id="rate_form">
+					<table style="width: 90%; padding-left: 10%;">
+						<#list rateList as var>
+							<tr class="order_top_list">
+								<td style="width:20%; height:50px;">
+									${var.currencyName!"" }&nbsp;&&nbsp;人民币
+									<input type="hidden" name="foreignCurrency" value="${var.foreignCurrency!'' }" />
+								</td>
+								<td style="width:30%; height:50px;">
+									1&nbsp;:&nbsp;
+									<#if var.rate ==0>
+										<input type="text" name="modifyRate" value="" />
+									<#else>
+										<input type="text" name="modifyRate" value="${var.rate?string('0.######')}" />
+									</#if>
+								</td>
+								<td style="width:50%; height:50px;">
+									<a href="javascript:void(0)" class="ordsettlement_log" rowid="${var.rateId}">查看日志</a>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3"> <hr> </td>
+							</tr>
+			    		</#list>
+					</table>
+					
+					<table style="width:100%; height:100px;">
+						<tr>
+							<td width="40%"></td>
+							<td align="center"><input type="button" class="left_bt" id="save_btn" value="保  存" /></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+  </body>
+</html>

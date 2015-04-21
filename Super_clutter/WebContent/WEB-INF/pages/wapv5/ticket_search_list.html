@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+<head>
+    <title>门票列表_${keyword!}门票列表</title>
+    <#include "../common/define_v5.html">
+    <script src="${request.contextPath}/js/search_v5.js"></script>
+    <#setting number_format="#.##">
+    <script type="text/javascript">
+		var contextPath = '${request.contextPath}';
+		$(function(){
+		});
+	</script>
+</head>
+<body>
+
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/header.js"></script>
+
+<div id="wrapper">
+    <div id="content"> 
+    	<!-- 门票5.0搜索 -->
+        <form method="get" action="${request.contextPath}/search/ticket_search_list.htm"  id="ticket_search_list" >
+            <input  value="${keyword!}"  type="hidden" name="keyword" id="keyword"><!--  -->
+            <input  value="${subjects!}"  type="hidden" name="subjects" id="subjects"><!--  -->
+            <input  value="${sort!}"  type="hidden" name="sort" id="sort"><!-- -->
+            <input  value="${page!}"  type="hidden" name="page" id="page"><!-- -->
+            <input  value="${ajax?string!}"  type="hidden" name="ajax" id="ajax"><!---->
+            <input  value="${sortTitle!}"  type="hidden" name="sortTitle" id="sortTitle"><!-- 排序TITLE-->
+            <input  value="${initKeyword!}"  type="hidden" name="initKeyword" id="initKeyword">
+        </form>       
+      	<div class="lv-search-bar">
+            <div class="lv-search" onclick="union_skip('${request.contextPath}/search/keyword_search.htm?searchStatus=TICKET');">
+                <div class="lv-search-submit"><span class="icon-search"></span></div>
+                <div class="clear-icon" id="clear_password"></div>
+                <div class="lv-search-input">
+                	<input type="search" value="${initKeyword!}" placeholder="输入目的地/关键词/主题" autocomplete="off" id="keyword" disabled="disabled">
+                </div>
+            </div>
+        </div>
+        <div class="lv-filtrate-bar">
+            <div class="tab_select">
+                <ul>
+                    <li>
+                        <span id="span_subProductType">全部地区</span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    </li>
+                    <li>
+                        <span id="span_subject"><#if subjects?? && subjects!="">${subjects!}<#else>全部主题</#if></span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    </li>
+                    <li>
+                        <span id="span_sort"><#if sortTitle?? && sortTitle!="">${sortTitle!}<#else>驴妈妈推荐</#if></span><i class="ic_arrow_d"></i><span class="ic_triangle_up"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="lv-mask"></div>
+            <div class="lv-cascade-div">
+                <!--综合刷选数据  -->
+                <div class="filtrate-wrap tabChange">
+                    <div class="filtrate-list-l1">
+		                <ul>
+	                    	<li>全部地区<span class="ic_radio_a selected"></span></li>
+                    		<#if cities?? && cities?size&gt;0>
+					        	<#list cities as city>
+					        		<li>${city.value!}<span class="ic_radio_a selected"></span></li>
+					        	</#list>
+				        	</#if>
+		                </ul>
+                    </div>
+                    <div class="filtrate-list-l2">
+                    	<!--综合筛选二级  -->
+                  		<div data-index="-1" data-child="f21" class="tabChangeL2">
+	                     	<div class="t_list">
+	                            <div data-val="${initKeyword!}" class="t_li radioOption allcity">全部地区<span id="second_0_0" class="ic_radio_a" item-index="0"><i></i></span></div>
+	                            	<!-- 这里JS 处理二级选中 -->
+									<script type="text/javascript">
+										var allTypeSelect=getLocalStorage("TICKETCITY");
+										if(allTypeSelect!=null && allTypeSelect=='selected'){
+											$("#second_0_0").addClass("selected");
+										}
+	                    			</script>
+	                    	</div>
+                        </div>
+                    	<#if cities?? && cities?size&gt;0>
+                    		<#list cities as cityOne>
+	                    		 <div data-index="-1" data-child="f21" class="tabChangeL2">
+			                     	<div class="t_list">
+		                    		 	<#if cityOne.list?? && cityOne.list?size&gt;0>
+			                            	<#list cityOne.list as cityChild>
+			                                    <div data-val="${cityChild.value!}" class="t_li radioOption onecity">${cityChild.value!}<span id="second_${cityOne_index+1}_${cityChild_index+1}" class="ic_radio_a" item-index="${cityChild_index+1}"><i></i></span></div>
+			                                    <script type="text/javascript">
+													var cityChildV='${cityChild.value!}'
+													var keyword='${keyword!}'
+													var allTypeSelect=getLocalStorage("TICKETCITY");
+													
+													if(keyword!=null && keyword!="" && keyword==cityChildV && (allTypeSelect==null || allTypeSelect=="")){
+														$("#second_"+${cityOne_index+1}+"_"+${cityChild_index+1}).addClass("selected");
+													}
+				                    			</script>
+		                                    </#list>
+			                         	</#if>
+			                    	</div>
+		                        </div>
+							</#list>
+                    	</#if>
+                    </div>
+                </div>
+                <!-- 类型筛选 -->
+                <div class="tabChange" style="display: none;">
+	                 <ul>
+	                 	<li data-type="subProductType" data-val="">全部主题</li>
+                		<#if initSubjects?? && initSubjects?size&gt;0>
+				        	<#list initSubjects as subject>
+				        		<li data-type="subProductType" data-val="${subject!}">${subject!}</li>
+				        	</#list>
+			        	</#if>
+	                </ul>
+                </div>
+                <!--排序筛选 -->
+                <div class="tabChange" style="display: none;">
+                	<#if sorts?? && sorts?size&gt;0>
+                    <ul>
+                    	<#list sorts as sort>
+		                    <li data-type="sort" data-val="${sort.value!}-${sort.title!}">${sort.title!}</li>
+	                    </#list>
+                    </ul>
+                    </#if>
+                </div>
+            </div>
+        </div>
+        <div class="lv-project-list bg-white">
+        	<ul id="data_list">
+	       		<#if mplaceList?? && mplaceList?size&gt;0>
+					<#list mplaceList as product>
+			            <article onclick="union_skip('http://${hostName}/ticket/piao-${product.id}/');">
+			                <a href="javascript:void(0);" class="block">
+			                    <div style="background-image: url(${prefixPic!}${product.middleImage!})"
+			                         class="pro-pic">
+			                         <#if product.canOrderToday?? && product.canOrderToday>
+				        				<div class="flag">可订今日票</div>
+				        			</#if>
+				        		</div>
+			                    <div class="pro-info">
+			                        <h2>${product.name?default("")} </h2>
+			                        <p>
+			                            <span class="fr"><#if product.cmtStarts?? &&  product.cmtStarts!="" >${product.cmtStarts!}分</#if></span>
+			                            <span class="pro-value"><small>&yen;</small> ${product.sellPriceYuan!} <i>起</i><del class="ml10">&yen; ${product.marketPriceYuan!}</del></span>
+			                        </p>
+			                        <p>
+			                            <#if product.hasBusinessCoupon>
+			                            	<span class="privilege">惠</span>
+			                            </#if>
+			                            <#if product.cashRefund?? && product.cashRefund>
+				                            <span class="privilege rose">返&yen;${product.cashRefundY!}</span>
+			                            </#if>
+			                            <span class="fl">${product.subject!}</span>
+			                        </p>
+			                        <p class="f-size-10">${product.address!}</p>
+			                    </div>
+			                </a>
+			            </article>
+			         </#list>
+			     <#else>	
+				 	<#assign no_data_msg="没有找到符合条件的结果">
+				  	<#include "../common/no_data_list.html">	
+			     </#if> 
+			</ul>  
+            <#if isLastPage?? && !isLastPage>
+	            <a href="javascript:void(0);" onclick="getTicketListData()" id="show_more" class="view_more">查看更多产品</a>
+        	</#if>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+</div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+
+<script type="text/javascript">
+    $(function(){
+        $(".lv-filtrate-bar").filtrateTab({
+            submit : function(index){//综合筛选
+            	//alert(this);
+           		//allSearch(this,index);
+            }
+            },function(){},function(){
+            if(this.attr("data-type")=="subProductType"){//类型筛选
+            	chooseTicketSubProductType(this.attr("data-val"));
+            }else{//排序筛选
+            	chooseTicketSortInlist(this.attr("data-val"));
+            }
+        }); 
+        //点击子城市
+        $(".onecity").each(function(){
+        	var obj = $(this);
+        	$(this).MBPBtn({
+        		handler: function(){
+            		allTicketSearch(obj.attr("data-val"));
+            	}
+        	});
+        });
+        
+        //点击全部城市
+    	$(".allcity").MBPBtn({
+    		handler: function(){
+    			allTicketSearchAll($(".allcity").attr("data-val"));
+        	}
+    	});
+    });
+</script>
+</body>
+</html>

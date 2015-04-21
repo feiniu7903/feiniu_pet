@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_COUPON_INTERVAL" >
+	<typeAlias alias="ProdCouponInterval" type="com.lvmama.comm.pet.po.prod.ProdCouponInterval"/>
+  <resultMap id="BaseResultMap" class="ProdCouponInterval" >
+    <result column="PROD_COUPON_INTERVAL_ID" property="prodCouponIntervalId" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="BRANCH_ID" property="branchId" />
+    <result column="SPEC_DATE" property="specDate" />
+    <result column="COUPON_TYPE" property="couponType" />
+  </resultMap>
+  
+  <resultMap id="minBaseResultMap" class="com.lvmama.comm.pet.po.prod.ProdCouponInterval" >
+    <result column="BEGIN_TIME" property="beginTime" />
+    <result column="END_TIME" property="endTime" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+	    select * from PROD_COUPON_INTERVAL    
+	    where PROD_COUPON_INTERVAL_ID = #prodCouponIntervalId#
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long">
+	    DELETE FROM PROD_COUPON_INTERVAL
+	    WHERE PROD_COUPON_INTERVAL_ID = #prodCouponIntervalId#
+  </delete>
+   
+  <insert id="insert" parameterClass="ProdCouponInterval" >
+  	<selectKey resultClass="java.lang.Long" keyProperty="prodCouponIntervalId">
+  		select PROD_COUPON_INTERVAL_ID_SEQ.nextval as prodCouponIntervalId from DUAL
+	</selectKey>
+    insert into PROD_COUPON_INTERVAL
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="prodCouponIntervalId" >
+        PROD_COUPON_INTERVAL_ID
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID
+      </isNotNull>
+       <isNotNull prepend="," property="branchId" >
+        BRANCH_ID
+      </isNotNull>
+      <isNotNull prepend="," property="specDate" >
+        SPEC_DATE
+      </isNotNull>
+       <isNotNull prepend="," property="couponType" >
+        COUPON_TYPE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="prodCouponIntervalId" >
+        #prodCouponIntervalId#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        #productId#
+      </isNotNull>
+       <isNotNull prepend="," property="branchId" >
+        #branchId#
+      </isNotNull>
+      <isNotNull prepend="," property="specDate" >
+        #specDate#
+      </isNotNull>
+       <isNotNull prepend="," property="couponType" >
+        #couponType#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+   
+	<sql id="selectByParamsSql">
+		select ppt.* from PROD_COUPON_INTERVAL ppt
+		<dynamic prepend=" WHERE ">
+				<isNotNull prepend="and" property="prodCouponIntervalId">
+					ppt.PROD_COUPON_INTERVAL_ID = #prodCouponIntervalId#
+				</isNotNull> 
+				<isNotNull prepend="and" property="productId">
+					ppt.PRODUCT_ID = #productId#
+				</isNotNull>
+				<isNotNull prepend="and" property="branchId">
+					ppt.BRANCH_ID = #branchId#
+				</isNotNull>
+				<isNotEmpty prepend=" and " property="productIds">
+		            ppt.PRODUCT_ID in
+		            <iterate property="productIds" open="(" close=")" conjunction="," > 
+		                #productIds[]#
+		            </iterate> 
+		    	 </isNotEmpty>
+				<isNotNull prepend="and" property="specDate">
+					ppt.SPEC_DATE = #specDate#
+				</isNotNull>
+				<isNotEmpty prepend=" and " property="endDate">
+					ppt.SPEC_DATE &lt;= #endDate#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and " property="startDate">
+					ppt.SPEC_DATE &gt;= #startDate#
+				</isNotEmpty>
+				<isNotNull prepend="and" property="couponType">
+					ppt.COUPON_TYPE = #couponType#
+				</isNotNull>
+		</dynamic>
+	</sql>
+	
+	 <delete id="deleteByParams" parameterClass="java.util.Map" >
+	    DELETE FROM PROD_COUPON_INTERVAL ppt
+	    	<dynamic prepend=" WHERE ">
+				<isNotNull prepend="and" property="productId">
+					ppt.PRODUCT_ID = #productId#
+				</isNotNull>
+				<isNotNull prepend="and" property="branchId">
+					ppt.BRANCH_ID = #branchId#
+				</isNotNull>
+				<isNotEmpty prepend=" and " property="endDate">
+					ppt.SPEC_DATE &lt;= #endDate#
+				</isNotEmpty>
+				<isNotEmpty prepend=" and " property="startDate">
+					ppt.SPEC_DATE &gt;= #startDate#
+				</isNotEmpty>
+				<isNotNull prepend="and" property="couponType">
+					ppt.COUPON_TYPE = #couponType#
+				</isNotNull>
+			</dynamic>
+  	</delete>
+  
+	<select id="selectByParams" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		select * from (
+			select t.*, ROWNUM rn from (
+				<include refid="selectByParamsSql"/>
+				order by PROD_COUPON_INTERVAL_ID desc , product_id desc
+			) t
+				<isNotNull prepend="where" property="_endRow">
+					ROWNUM &lt;= #_endRow#
+				</isNotNull>
+		)
+		<isNotNull prepend="where" property="_startRow">
+			rn &gt;= #_startRow#
+		</isNotNull>
+	</select>
+	
+	<select id="selectByParamsCount" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select count(PROD_COUPON_INTERVAL_ID) from (
+			<include refid="selectByParamsSql"/>
+		)
+	</select>
+	
+	 <!-- 查询有效日期范围，根据条件 -->
+	  <select id="selectValidDate"  resultMap="minBaseResultMap" parameterClass="java.util.HashMap" >
+	  	SELECT MIN(t.SPEC_DATE) BEGIN_TIME, 
+	           MAX(t.SPEC_DATE) END_TIME
+	      FROM PROD_COUPON_INTERVAL t
+	      <dynamic prepend=" WHERE ">
+				<isNotNull prepend="and" property="productId">
+					t.PRODUCT_ID = #productId#
+				</isNotNull>
+				<isNotNull prepend="and" property="branchId">
+					t.BRANCH_ID = #branchId#
+				</isNotNull>
+				<isNotNull prepend="and" property="couponType">
+					t.COUPON_TYPE = #couponType#
+				</isNotNull>
+		</dynamic>
+	  </select>
+	 
+</sqlMap>

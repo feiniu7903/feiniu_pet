@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_TRAFFIC" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductTraffic" >
+    <result column="PROD_TRAFFIC_ID" property="prodTrafficId" />
+    <result column="FLIGHT_TIME" property="flightTime" />
+    <result column="FROM_TIME" property="fromTime" />
+    <result column="TO_TIME" property="toTime" />
+    <result column="FROM_AIRPORT" property="fromAirport" />
+    <result column="TO_AIRPORT" property="toAirport" />
+    <result column="AIRLINE_NAME" property="airlineName" />
+    <result column="FLIGHT_NUMBER" property="flightNumber" />
+    <result column="FLIGHT_MODEL" property="flightModel" />
+    <result column="DESCRIPTION" property="description" />
+    <result column="AIRPORT_TAX" property="airportTax" />
+    <result column="BUNKER_SURCHARGE" property="bunkerSurcharge" />
+    <result column="PRODUCT_ID" property="productId" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductTraffic" >
+    select PROD_TRAFFIC_ID, FLIGHT_TIME, FROM_TIME, TO_TIME, FROM_AIRPORT, TO_AIRPORT, AIRLINE_NAME,
+      FLIGHT_NUMBER, FLIGHT_MODEL, DESCRIPTION, AIRPORT_TAX, BUNKER_SURCHARGE, PRODUCT_ID
+    from PROD_PRODUCT_TRAFFIC
+    where PROD_TRAFFIC_ID = #prodTrafficId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductTraffic" >
+    delete from PROD_PRODUCT_TRAFFIC
+    where PROD_TRAFFIC_ID = #prodTrafficId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductTraffic" >
+  <selectKey resultClass="java.lang.Long" keyProperty="prodTrafficId" >
+      select PROD_PRODUCT_TRAFFIC_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PROD_PRODUCT_TRAFFIC (PROD_TRAFFIC_ID, FLIGHT_TIME, FROM_TIME, TO_TIME,
+      FROM_AIRPORT, TO_AIRPORT, AIRLINE_NAME, FLIGHT_NUMBER, FLIGHT_MODEL, DESCRIPTION, AIRPORT_TAX,
+      BUNKER_SURCHARGE, PRODUCT_ID)
+    values (#prodTrafficId#, #flightTime#, #fromTime#, #toTime#,
+      #fromAirport#, #toAirport#, #airlineName#, #flightNumber#,
+      #flightModel#, #description#, #airportTax#, #bunkerSurcharge#,
+      #productId#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductTraffic" >
+    insert into PROD_PRODUCT_TRAFFIC
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="prodTrafficId" >
+        PROD_TRAFFIC_ID
+      </isNotNull>
+      <isNotNull prepend="," property="flightTime" >
+        FLIGHT_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="fromTime" >
+        FROM_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="toTime" >
+        TO_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="fromAirport" >
+        FROM_AIRPORT
+      </isNotNull>
+      <isNotNull prepend="," property="toAirport" >
+        TO_AIRPORT
+      </isNotNull>
+      <isNotNull prepend="," property="airlineName" >
+        AIRLINE_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="flightNumber" >
+        FLIGHT_NUMBER
+      </isNotNull>
+      <isNotNull prepend="," property="flightModel" >
+        FLIGHT_MODEL
+      </isNotNull>
+      <isNotNull prepend="," property="description" >
+        DESCRIPTION
+      </isNotNull>
+      <isNotNull prepend="," property="airportTax" >
+        AIRPORT_TAX
+      </isNotNull>
+      <isNotNull prepend="," property="bunkerSurcharge" >
+        BUNKER_SURCHARGE
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="prodTrafficId" >
+        #prodTrafficId#
+      </isNotNull>
+      <isNotNull prepend="," property="flightTime" >
+        #flightTime#
+      </isNotNull>
+      <isNotNull prepend="," property="fromTime" >
+        #fromTime#
+      </isNotNull>
+      <isNotNull prepend="," property="toTime" >
+        #toTime#
+      </isNotNull>
+      <isNotNull prepend="," property="fromAirport" >
+        #fromAirport#
+      </isNotNull>
+      <isNotNull prepend="," property="toAirport" >
+        #toAirport#
+      </isNotNull>
+      <isNotNull prepend="," property="airlineName" >
+        #airlineName#
+      </isNotNull>
+      <isNotNull prepend="," property="flightNumber" >
+        #flightNumber#
+      </isNotNull>
+      <isNotNull prepend="," property="flightModel" >
+        #flightModel#
+      </isNotNull>
+      <isNotNull prepend="," property="description" >
+        #description#
+      </isNotNull>
+      <isNotNull prepend="," property="airportTax" >
+        #airportTax#
+      </isNotNull>
+      <isNotNull prepend="," property="bunkerSurcharge" >
+        #bunkerSurcharge#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        #productId#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductTraffic" >
+    update PROD_PRODUCT_TRAFFIC
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="flightTime" >
+        FLIGHT_TIME = #flightTime#
+      </isNotNull>
+      <isNotNull prepend="," property="fromTime" >
+        FROM_TIME = #fromTime#
+      </isNotNull>
+      <isNotNull prepend="," property="toTime" >
+        TO_TIME = #toTime#
+      </isNotNull>
+      <isNotNull prepend="," property="fromAirport" >
+        FROM_AIRPORT = #fromAirport#
+      </isNotNull>
+      <isNotNull prepend="," property="toAirport" >
+        TO_AIRPORT = #toAirport#
+      </isNotNull>
+      <isNotNull prepend="," property="airlineName" >
+        AIRLINE_NAME = #airlineName#
+      </isNotNull>
+      <isNotNull prepend="," property="flightNumber" >
+        FLIGHT_NUMBER = #flightNumber#
+      </isNotNull>
+      <isNotNull prepend="," property="flightModel" >
+        FLIGHT_MODEL = #flightModel#
+      </isNotNull>
+      <isNotNull prepend="," property="description" >
+        DESCRIPTION = #description#
+      </isNotNull>
+      <isNotNull prepend="," property="airportTax" >
+        AIRPORT_TAX = #airportTax#
+      </isNotNull>
+      <isNotNull prepend="," property="bunkerSurcharge" >
+        BUNKER_SURCHARGE = #bunkerSurcharge#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID = #productId#
+      </isNotNull>
+    </dynamic>
+    where PROD_TRAFFIC_ID = #prodTrafficId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductTraffic" >
+    update PROD_PRODUCT_TRAFFIC
+    set FLIGHT_TIME = #flightTime#,
+      FROM_TIME = #fromTime#,
+      TO_TIME = #toTime#,
+      FROM_AIRPORT = #fromAirport#,
+      TO_AIRPORT = #toAirport#,
+      AIRLINE_NAME = #airlineName#,
+      FLIGHT_NUMBER = #flightNumber#,
+      FLIGHT_MODEL = #flightModel#,
+      DESCRIPTION = #description#,
+      AIRPORT_TAX = #airportTax#,
+      BUNKER_SURCHARGE = #bunkerSurcharge#,
+      PRODUCT_ID = #productId#
+    where PROD_TRAFFIC_ID = #prodTrafficId#
+  </update>
+</sqlMap>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_MODEL_TYPE">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProductModelType">
+		<result column="ID" property="id" />
+		<result column="MODEL_NAME" property="modelName" />
+		<result column="PARENT_ID" property="parentId" />
+		<result column="IS_MAINTAIN" property="isMaintain" />
+		<result column="IS_MULTICHOICE" property="isMultiChoice" />
+        <result column="REMARK" property="remark" />       
+	</resultMap>
+
+	<sql id="reuse_query_sql"> 
+		select *
+          from prod_model_type
+          <dynamic prepend=" where ">
+			<isNotEmpty property="id" prepend=" and ">
+				ID = #id#
+			</isNotEmpty>
+			<isNotEmpty property="noParentId" prepend=" and ">
+				PARENT_ID IS NULL
+			</isNotEmpty>
+			<isNotEmpty property="parentId" prepend=" and ">
+				PARENT_ID = #parentId#
+			</isNotEmpty>
+			<isNotEmpty property="modelName" prepend=" and ">
+				MODEL_NAME like '%'||#modelName#||'%'
+			</isNotEmpty>			
+			<isNotEmpty property="isMaintain" prepend=" and ">
+				IS_MAINTAIN = #isMaintain#
+			</isNotEmpty>
+			<isNotEmpty property="isMultiChoice" prepend=" and ">
+				IS_MULTICHOICE = #isMultiChoice#
+			</isNotEmpty>
+		</dynamic>
+		order by SEQ asc
+    </sql>
+    
+    <select id="select" parameterClass="java.util.Map" resultMap="BaseResultMap">
+    	 select *
+		   from (select T.*, rownum as rn
+		           from (<include refid="reuse_query_sql"/>) T
+				   <dynamic prepend=" where ">
+						<isNotEmpty property="_endRow">
+						 rownum &lt; #_endRow#
+						</isNotEmpty>
+				   </dynamic>)
+		  <dynamic prepend=" where ">
+				<isNotEmpty property="_startRow">
+					rn &gt; #_startRow#
+				</isNotEmpty>
+		  </dynamic>
+    </select>
+
+	<select id="count" parameterClass="java.util.Map" resultClass="long">
+		select count(ID)
+		  from (<include refid="reuse_query_sql"/>) T 		
+	</select>	
+</sqlMap>

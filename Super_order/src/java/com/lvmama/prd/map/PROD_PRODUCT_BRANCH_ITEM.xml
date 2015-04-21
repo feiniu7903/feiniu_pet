@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_BRANCH_ITEM" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductBranchItem" >
+    <result column="BRANCH_ITEM_ID" property="branchItemId" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="PROD_BRANCH_ID" property="prodBranchId" />
+    <result column="META_BRANCH_ID" property="metaBranchId" />
+    <result column="QUANTITY" property="quantity" />
+  </resultMap>
+  
+  <resultMap id="ProdProductBranchItem" extends="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductBranchItem" >
+    <result column="META_PRODUCT_ID" property="metaProductId" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranchItem" >
+    select BRANCH_ITEM_ID, CREATE_TIME, PROD_BRANCH_ID, META_BRANCH_ID, QUANTITY
+    from PROD_PRODUCT_BRANCH_ITEM
+    where BRANCH_ITEM_ID = #branchItemId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranchItem" >
+    delete from PROD_PRODUCT_BRANCH_ITEM
+    where BRANCH_ITEM_ID = #branchItemId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranchItem" >
+   <selectKey keyProperty="branchItemId" resultClass="java.lang.Long">
+   		select BRANCH_ITEM_ID_SEQ.nextval from dual
+   </selectKey>
+    insert into PROD_PRODUCT_BRANCH_ITEM (BRANCH_ITEM_ID, CREATE_TIME, PROD_BRANCH_ID,
+      META_BRANCH_ID, QUANTITY)
+    values (#branchItemId#, sysdate, #prodBranchId#,
+      #metaBranchId#, #quantity#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranchItem" >
+    insert into PROD_PRODUCT_BRANCH_ITEM
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="branchItemId" >
+        BRANCH_ITEM_ID
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchId" >
+        PROD_BRANCH_ID
+      </isNotNull>
+      <isNotNull prepend="," property="metaBranchId" >
+        META_BRANCH_ID
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        QUANTITY
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="branchItemId" >
+        #branchItemId#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchId" >
+        #prodBranchId#
+      </isNotNull>
+      <isNotNull prepend="," property="metaBranchId" >
+        #metaBranchId#
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        #quantity#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranchItem" >
+    update PROD_PRODUCT_BRANCH_ITEM
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchId" >
+        PROD_BRANCH_ID = #prodBranchId#
+      </isNotNull>
+      <isNotNull prepend="," property="metaBranchId" >
+        META_BRANCH_ID = #metaBranchId#
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        QUANTITY = #quantity#
+      </isNotNull>
+    </dynamic>
+    where BRANCH_ITEM_ID = #branchItemId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranchItem" >
+    update PROD_PRODUCT_BRANCH_ITEM
+    set CREATE_TIME = #createTime#,
+      PROD_BRANCH_ID = #prodBranchId#,
+      META_BRANCH_ID = #metaBranchId#,
+      QUANTITY = #quantity#
+    where BRANCH_ITEM_ID = #branchItemId#
+  </update>
+  <select id="selectBranchItemByProdBranchId" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranchItem" resultMap="BaseResultMap">
+  	select * from PROD_PRODUCT_BRANCH_ITEM where PROD_BRANCH_ID=#prodBranchId#
+  </select>
+  
+  <select id="selectByParam" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+  	select * from PROD_PRODUCT_BRANCH_ITEM 
+  	<dynamic prepend="where">
+  		<isNotNull property="metaBranchId" prepend="and">
+  		META_BRANCH_ID=#metaBranchId#
+  		</isNotNull>
+  		<isNotNull property="prodBranchId" prepend="and">
+  		PROD_BRANCH_ID=#prodBranchId#
+  		</isNotNull>
+  	</dynamic>
+  </select>
+  
+  <select id="selectUniqueBranchIdByMeta" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductBranchItem" resultMap="BaseResultMap">
+  	select ppbi.* from PROD_PRODUCT_BRANCH_ITEM ppbi,(
+  			SELECT max(ppbi2.BRANCH_ITEM_ID) as BRANCH_ITEM_ID,ppbi2.PROD_BRANCH_ID FROM PROD_PRODUCT_BRANCH_ITEM ppbi2 
+  				WHERE ppbi2.META_BRANCH_ID=#metaBranchId# GROUP BY ppbi2.PROD_BRANCH_ID
+  		) tmp WHERE  ppbi.BRANCH_ITEM_ID=tmp.BRANCH_ITEM_ID;  
+  </select>
+  
+  <select id="selectProductBranchItemByPbid" resultMap="ProdProductBranchItem" parameterClass="java.lang.Long" >
+	select t.BRANCH_ITEM_ID,
+		t.CREATE_TIME,
+		t.PROD_BRANCH_ID,
+		t.META_BRANCH_ID,
+		t.QUANTITY, 
+		t2.META_PRODUCT_ID
+	from PROD_PRODUCT_BRANCH_ITEM t, META_PRODUCT_BRANCH t2
+	where t.META_BRANCH_ID = t2.META_BRANCH_ID
+		and t.PROD_BRANCH_ID = #prodBranchId#
+  </select>
+  <select id="countProductItem" parameterClass="java.lang.Long" resultClass="java.lang.Long">
+  	select count(*) from PROD_PRODUCT_BRANCH_ITEM where PROD_BRANCH_ID=#prodBranchId#
+  </select>
+  <select id="countProductItemByProductId" parameterClass="java.lang.Long" resultClass="java.lang.Long">
+  	select count(*) from PROD_PRODUCT_BRANCH_ITEM ppbi,prod_product_branch ppb where  ppbi.PROD_BRANCH_ID=ppb.prod_branch_id and ppb.VALID='Y' and ppb.product_id=#productId#
+  </select>
+  <select id="selectItemsByMetaProductId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+      select *
+	  from PROD_PRODUCT_BRANCH_ITEM
+	 where meta_branch_id in (select distinct (meta_branch_id)
+	  from meta_product_branch
+	   where meta_product_id = #metaProductId#)
+  </select>
+</sqlMap>

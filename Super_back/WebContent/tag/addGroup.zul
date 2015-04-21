@@ -1,0 +1,18 @@
+<?page title="addGroup" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./addGroupWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="addGroupWin" title="新增小组" border="normal" closable="true" apply="com.lvmama.back.web.tag.AddGroupAction">
+		<hbox>
+			<label value="小组名：" />
+			<textbox value="@{saction.group.tagGroupName}" maxlength="20" />
+			<label value="类别：" />
+			<radiogroup selectedItem="@{saction.group.type}">
+				<radio label="单选" value="singleOption" />
+				<radio label="复选" value="multipleOption" />
+			</radiogroup>
+		</hbox>
+		<hbox>
+			<button id="submit" label="提交" onClick="saction.addGroup();" />
+		</hbox>
+	</window>
+</zk>

@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>订单详情</title><link rel="apple-touch-icon" href="lvmama_v1_png.png" />
+<#include "../common/define.html">
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_back();"> <img src="http://pic.lvmama.com/img/mobile/touch/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="http://pic.lvmama.com/img/mobile/touch/img/operate_sep.png"></div>
+  <div class="lv-title">预约单详情</div>
+  <section class="header_alice">
+   		<a href="http://${hostName}" class="btn1"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a>
+   </section>
+</div>
+<div class="lv-wrapper lv-min-height lv-media-width">
+  <div class="lv-wrapper-container">
+    
+    <div class="lv-box clear"> <a href="javascript:void(0);">
+      <div class="lv-order-title lv-padding-x10 lv-fontsize-12">编号：${jianYiOrder.workOrderId!} <span class="lv-order-status lv-pull-right lv-color-01">${jianYiOrder.orderJYStatus!}</span></div>
+      <div class="lv-order-content clear">
+      	<div>
+        	<ul class="lv-order-items">
+            	<li class="simp_info_img">
+                  <img src="${prefixPic!}${jianYiOrder.orderJYImg!}">
+                  <p>${jianYiOrder.productName!}</p>
+                </li>
+                <#list jianYiOrder.jianYiProductList as JianYiProduct>
+            	<li class="simp_info_img2"><span>${JianYiProduct.shortName!}</span><i>${JianYiProduct.priceAndNum!}</i></li>
+            	</#list>
+            </ul>
+        </div>
+        <div class="lv-pull-left lv-fontsize-12 lv-lineheight-18">
+          <div>游玩时间：${jianYiOrder.visitTime!}</div>
+          <div>下单时间：${jianYiOrder.createTime!}</div>
+        </div>
+         </div>
+      </a>
+    </div>
+    
+    <div class="lv-box" style="margin-top:4px; margin-bottom:10px;">
+    <div class="lv-order-title lv-padding-x10 lv-fontsize-15">联系人</div>
+      <ul class="lv-proinfo-list">
+        <li>
+            <label for="username">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</label><input readonly class="lv-input-text" id="username" name="username" type="text" placeholder="${jianYiOrder.userName!}" value="${jianYiOrder.userName!}">
+        </li>
+        <li>
+            <label for="tel">手机号码：</label><input readonly class="lv-input-text" id="tel" name="tel" type="tel" placeholder="${jianYiOrder.userMobile!}" value="${jianYiOrder.userMobile!}">
+         </li>
+      </ul>
+    </div>
+  </div>
+</div>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+</body>
+</html>

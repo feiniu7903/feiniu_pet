@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="VIEW_JOURNEY" >
+
+
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ViewJourney" >
+    <result column="JOURNEY_ID" property="journeyId" />
+    <result column="SEQ" property="seq" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="PAGE_ID" property="pageId" />
+    <result column="DINNER" property="dinner" jdbcType="VARCHAR" />
+    <result column="HOTEL" property="hotel" jdbcType="VARCHAR" />
+    <result column="TRAFFIC" property="traffic" jdbcType="VARCHAR" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="MULTI_JOURNEY_ID" property="multiJourneyId" />
+  </resultMap>
+  <select id="getViewJourneysByProductId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+    select JOURNEY_ID, SEQ, TITLE, CONTENT, PAGE_ID, DINNER, HOTEL, TRAFFIC, PRODUCT_ID, MULTI_JOURNEY_ID
+    from VIEW_JOURNEY
+    where PRODUCT_ID = #productId# ORDER BY SEQ asc
+  </select>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourney" >
+    select JOURNEY_ID, SEQ, TITLE, CONTENT, PAGE_ID, DINNER, HOTEL, TRAFFIC, PRODUCT_ID, MULTI_JOURNEY_ID
+    from VIEW_JOURNEY
+    where JOURNEY_ID = #journeyId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourney" >
+    delete from VIEW_JOURNEY
+    where JOURNEY_ID = #journeyId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourney" >
+    <selectKey keyProperty="journeyId" resultClass="Long">
+  		select VIEW_JOURNEY_ID_SEQ.nextVal FROM DUAL
+  	</selectKey>
+    insert into VIEW_JOURNEY 
+    	(JOURNEY_ID, SEQ, TITLE, CONTENT, PAGE_ID, DINNER, HOTEL, TRAFFIC, PRODUCT_ID, MULTI_JOURNEY_ID)
+    values (
+    	#journeyId#, 
+    	#seq#, 
+    	#title#, 
+    	#content#,
+        #pageId#, 
+        #dinner#, 
+        #hotel#, 
+        #traffic#,
+        #productId#,
+        #multiJourneyId#
+        )
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourney" >
+    update VIEW_JOURNEY
+    set SEQ = #seq#,
+      TITLE = #title#,
+      CONTENT = #content#,
+      <isNotEmpty property="pageId">
+      	PAGE_ID = #pageId#,
+      </isNotEmpty>
+      DINNER = #dinner#,
+      HOTEL = #hotel#,
+      TRAFFIC = #traffic#
+      <isNotEmpty property="productId">
+      	,PRODUCT_ID = #productId#
+      </isNotEmpty>
+    where JOURNEY_ID = #journeyId#
+  </update>
+  
+  <select id="getViewJourneyByMultiJourneyId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  	select * from VIEW_JOURNEY where MULTI_JOURNEY_ID=#multiJourneyId# order by seq
+  </select>
+</sqlMap>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="DISTRIBUTION_RAKE_BACK" >
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributionRakeBack" >
+	  <result column="distribution_prod_rakeback_id" property="distributionProdRakebackId" />
+	  <result column="product_branch_id" property="productBranchId" />
+	  <result column="distributor_info_id" property="distributorInfoId" />
+	  <result column="rake_back_rate" property="rakeBackRate" />
+	  <result column="rate_volid" property="rateVolid" />
+	</resultMap>
+	
+	<select id="selectByParams" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+		SELECT * FROM distribution_prod_rakeback
+		<dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="distributorInfoId">
+			DISTRIBUTOR_INFO_ID = #distributorInfoId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="productBranchId">
+			PRODUCT_BRANCH_ID = #productBranchId#
+	       </isNotEmpty>
+	    </dynamic>
+	</select>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionRakeBack">
+	  	<selectKey  keyProperty="distributionProdRakebackId" resultClass="Long"> 
+	  		SELECT distribution_prod_rakeback_SEQ.NEXTVAL FROM DUAL
+	  	</selectKey>
+		INSERT INTO distribution_prod_rakeback (
+			distribution_prod_rakeback_id,
+			product_branch_id,
+			distributor_info_id,
+			rake_back_rate,
+			rate_volid)
+		VALUES (
+			#distributionProdRakebackId#,
+			#productBranchId#,
+			#distributorInfoId#,
+			#rakeBackRate#,
+			#rateVolid#
+		)
+	</insert>
+	
+	<update id="update" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionRakeBack">
+  		UPDATE 
+  			distribution_prod_rakeback
+  		SET 
+  			RAKE_BACK_RATE=#rakeBackRate#, 
+  			rate_volid=#rateVolid#
+  		where
+  			distribution_prod_rakeback_id=#distributionProdRakebackId#	
+	</update>
+	
+	<update id="updateByParams" parameterClass="java.util.Map">
+  		UPDATE distribution_prod_rakeback
+  		SET RAKE_BACK_RATE=#rakeBackRate# 
+  		<dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="productBranchId">
+			PRODUCT_BRANCH_ID = #productBranchId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="distributorInfoId">
+			DISTRIBUTOR_INFO_ID = #distributorInfoId#
+	       </isNotEmpty>
+	    </dynamic>
+	</update>
+</sqlMap>

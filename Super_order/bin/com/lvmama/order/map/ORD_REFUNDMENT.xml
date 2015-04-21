@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_REFUNDMENT">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdRefundment">
+		<result column="REFUNDMENT_ID" property="refundmentId" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="REFUND_TYPE" property="refundType" />
+		<result column="REFUND_CHANNEL" property="refundChannel" />
+		<result column="AMOUNT" property="amount" />
+		<result column="ACCOUNT" property="account" />
+		<result column="ACCOUNT_TYPE" property="accountType" />
+		<result column="MEMO" property="memo" />
+		<result column="STATUS" property="status" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="REFUND_TIME" property="refundTime" />
+		<result column="APPROVE_TIME" property="approveTime" />
+		<result column="OPERATOR_NAME" property="operatorName" />
+		<result column="SALE_SERVICE_ID" property="saleServiceId" />
+		<result column="REFUND_BANK_SERIAL_NO" property="refundBankSerialNo" />
+		<result column="REFUND_BANK" property="refundBank" />
+		<result column="ACTUAL_PAY" property="actualPay" />
+        <result column="ALLOW_REFUND_TIME" property="allowRefundTime" />
+	</resultMap>
+	
+	<insert id="insertOrdRefundmentItem" parameterClass="java.util.HashMap" >
+		<selectKey resultClass="java.lang.Long" keyProperty="refundmentItemId" >
+		  select ORD_REFUNDMENT_ITEM_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into ORD_REFUNDMENT_ITEM
+		(REFUNDMENT_ITEM_ID, REFUNDMENT_ID, ORDER_ITEM_META_ID, TYPE, AMOUNT, MEMO, ACTUAL_LOSS)
+		values (#refundmentItemId#, #refundmentId#, #orderItemMetaId#, #type#, #amount#, #memo#, #actualLoss#)
+	</insert>
+
+	<insert id="save" parameterClass="com.lvmama.comm.bee.po.ord.OrdRefundment">
+		<selectKey resultClass="java.lang.Long" keyProperty="refundmentId">
+			SELECT
+			ORD_REFUNDMENT_ID_SEQ.NEXTVAL FROM DUAL
+    	</selectKey>
+		INSERT INTO ORD_REFUNDMENT
+		(REFUNDMENT_ID,
+		ORDER_ID,
+		SALE_SERVICE_ID,
+		REFUND_TYPE,
+		REFUND_CHANNEL,
+		AMOUNT,
+		ACCOUNT,
+		ACCOUNT_TYPE,
+		MEMO,
+		STATUS,
+		CREATE_TIME,
+		REFUND_TIME,
+		APPROVE_TIME,
+		OPERATOR_NAME,
+		REFUND_BANK_SERIAL_NO,
+		REFUND_BANK,
+		ACTUAL_PAY,
+        ALLOW_REFUND_TIME,
+        PENALTY_AMOUNT,
+        IF_APPLY,
+        SYS_CODE)
+		VALUES
+		(#refundmentId#,
+		#orderId#,
+		#saleServiceId#,
+		#refundType#,
+		#refundChannel#,
+		#amount#,
+		#account#,
+		#accountType#,
+		#memo#,
+		#status#,
+		#createTime#,
+		#refundTime#,
+		#approveTime#,
+		#operatorName#,
+		#refundBankSerialNo#,
+		#refundBank#,#actualPay#,#allowRefundTime#,#penaltyAmount#,#ifApply#,#sysCode#)
+	</insert>
+	<insert id="saveOrdRefundmentItemByOrderId" parameterClass="map">
+		INSERT INTO 
+			ORD_REFUNDMENT_ITEM
+		SELECT 
+			ORD_REFUNDMENT_ITEM_ID_SEQ.NEXTVAL,
+         	#refundmentId#,
+         	A.ORDER_ITEM_META_ID,
+         	#type#,
+         	#amount#,
+         	'自动生成退款单',
+         	#amount#
+   		FROM 
+   			ORD_ORDER_ITEM_META A
+		WHERE 
+			A.ORDER_ID = #orderId#
+	</insert>
+	<update id="updateOrdRefundmentByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.ord.OrdRefundment">
+		<![CDATA[
+		UPDATE ORD_REFUNDMENT
+			SET REFUNDMENT_ID = #refundmentId#,
+			ORDER_ID = #orderId#,
+			SALE_SERVICE_ID = #saleServiceId#,
+			REFUND_TYPE = #refundType#,
+			REFUND_CHANNEL = #refundChannel#,
+			AMOUNT = #amount#,
+			ACCOUNT = #account#,
+			ACCOUNT_TYPE = #accountType#,
+			MEMO = #memo#,
+			STATUS = #status#,
+			REFUND_TIME = #refundTime#,
+			APPROVE_TIME = #approveTime#,
+			OPERATOR_NAME = #operatorName#,
+			REFUND_BANK_SERIAL_NO = #refundBankSerialNo#,
+			REFUND_BANK = #refundBank#,      
+			ACTUAL_PAY = #actualPay#,
+            ALLOW_REFUND_TIME = #allowRefundTime#
+		WHERE REFUNDMENT_ID = #refundmentId#
+		]]>
+	</update>
+
+	<select id="queryRefundAmountSum" resultClass="java.lang.Long"
+		parameterClass="java.lang.Long">
+			<![CDATA[
+		SELECT NVL(SUM(AMOUNT),0) AS AMOUNT FROM ORD_REFUNDMENT
+		WHERE ORDER_ID = #orderId#
+		AND REFUND_TYPE = 'ORDER_REFUNDED'
+		AND (STATUS <> 'CANCEL' OR STATUS <> 'REJECTED')
+ 		]]>
+	</select>
+	<select id="queryRefundAmountSumByOrderIdAndSysCode" resultClass="java.lang.Long"
+		parameterClass="map">
+			<![CDATA[
+		SELECT NVL(SUM(AMOUNT),0) AS AMOUNT FROM ORD_REFUNDMENT
+		WHERE ORDER_ID = #orderId# 
+		AND SYS_CODE = #sysCode# 
+		AND REFUND_TYPE = 'ORDER_REFUNDED'
+		AND (STATUS <> 'CANCEL' OR STATUS <> 'REJECTED')
+ 		]]>
+	</select>
+	<select id="findOrderRefundmentByOrderIdStatus" resultMap="BaseResultMap"
+		parameterClass="map">
+		SELECT * FROM ORD_REFUNDMENT
+		WHERE ORDER_ID = #orderId#
+		AND REFUND_TYPE = 'ORDER_REFUNDED'
+		AND STATUS=#status#
+	</select>
+	
+	<select id="findValidOrdRefundmentByOrderId" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+			<![CDATA[
+		SELECT * FROM ORD_REFUNDMENT
+		WHERE ORDER_ID = #orderId#
+		AND REFUND_TYPE = 'ORDER_REFUNDED'
+		AND STATUS <> 'CANCEL'
+ 		]]>
+	</select>
+	<select id="findRefundOrdRefundmentByOrderId" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+			<![CDATA[
+		SELECT * FROM ORD_REFUNDMENT
+		WHERE ORDER_ID = #orderId#
+		AND REFUND_TYPE = 'ORDER_REFUNDED'
+		AND  STATUS NOT IN('CANCEL','REFUNDED')
+ 		]]>
+	</select>
+	
+	<!-- 查询订单的已退款总金额 -->
+	<select id="findOrdRefundmentAmountByOrderId" resultClass="java.lang.Long"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+		SELECT SUM(AMOUNT) FROM ORD_REFUNDMENT
+		WHERE ORDER_ID = #value#
+		AND STATUS = 'REFUNDED'
+ 		]]>
+	</select>
+
+	<select id="queryOrdRefundmentById" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+		SELECT * FROM ORD_REFUNDMENT WHERE REFUNDMENT_ID = #refundmentId#
+ 		]]>
+	</select>
+
+	<select id="queryOrdRefundmentByOrderIdAndStatus" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		<![CDATA[
+SELECT ORD_REFUNDMENT.*
+  FROM ORD_REFUNDMENT
+  		]]>
+		<isNotNull prepend=" , " property="gatewayTradeNo">
+			<![CDATA[
+			ORD_TRANSACTION
+			]]>
+		</isNotNull>
+  		<![CDATA[
+ WHERE 1 = 1
+ 		]]>
+		<isNotNull prepend=" AND " property="orderId">
+			<![CDATA[
+			ORD_REFUNDMENT.ORDER_ID = #orderId#
+			]]>
+		</isNotNull>
+		<isNotNull prepend=" AND " property="status">
+			<![CDATA[
+			ORD_REFUNDMENT.STATUS = #status#
+			]]>
+		</isNotNull>
+		<isNotEmpty prepend=" and" property="sysCode">
+    	 ORD_REFUNDMENT.SYS_CODE = #sysCode# 
+    	</isNotEmpty>
+	</select>
+
+	<select id="queryOrdRefundmentByRefundmentBatchId" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+SELECT * FROM ORD_REFUNDMENT WHERE REFUNDMENT_BATCH_ID = #refundmentBatchId#
+ 		]]>
+	</select>
+
+	<update id="updateOrdRefundmentStatusById" parameterClass="java.util.Map">
+		<![CDATA[
+UPDATE ORD_REFUNDMENT
+   SET STATUS = #status#
+ WHERE REFUNDMENT_ID = #refundmentId#
+		]]>
+	</update>
+
+	<update id="updateOrdRefundmentStatusAndRefundTimeById"
+		parameterClass="java.util.Map">
+		<![CDATA[
+UPDATE ORD_REFUNDMENT
+   SET STATUS = #status#, REFUND_TIME = #refundTime#
+ WHERE REFUNDMENT_ID = #refundmentId#
+		]]>
+	</update>
+
+	<update id="updateOrdRefundmentStatusAndMemoById"
+		parameterClass="java.util.Map">
+		<![CDATA[
+		UPDATE ORD_REFUNDMENT
+		SET STATUS = #status#,
+		OPERATOR_NAME = #operatorName#
+		]]>
+		<isNotNull prepend=", " property="memo">
+			<![CDATA[
+			MEMO = #memo#
+			]]>
+		</isNotNull>
+		<![CDATA[
+		WHERE REFUNDMENT_ID = #refundmentId#
+		]]>
+	</update>
+	<select id="queryOrdRefundmentByOrderId" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+			SELECT * FROM ORD_REFUNDMENT WHERE ORDER_ID = #orderId#
+ 		]]>
+	</select>
+
+	<!-- 根据orderid删除退款单 -->
+	<delete id="deleteOrdRefundmentByOrderId" parameterClass="java.util.Map">
+		DELETE FROM ORD_REFUNDMENT WHERE REFUNDMENT_ID = #refundmentId#
+	</delete>
+
+	<!-- 海外酒店退款单 -->
+	<select id="queryAbroadHotelOrdRefundmentById" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+		SELECT * FROM ABROADHOTEL_ORD_REFUNDMENT WHERE REFUNDMENT_ID = #refundmentId#
+ 		]]>
+	</select>
+
+
+	<!-- 根据refundmentId删除退款单明细  -->
+	<delete id="deleteOrdRefundmentItemByRefundmentId" parameterClass="java.lang.Long" >
+		delete from ORD_REFUNDMENT_ITEM
+		where REFUNDMENT_ID = #refundmentId#
+	</delete>
+	
+	<insert id="updateRefundment" parameterClass="map">
+		UPDATE 
+			ORD_REFUNDMENT
+		SET 
+			AMOUNT = #amount#,
+			MEMO = #memo#,
+			OPERATOR_NAME = #operatorName#,
+			PENALTY_AMOUNT = #penaltyAmount#,
+			STATUS = #refundStatus#
+		WHERE
+			REFUNDMENT_ID = #refundmentId#
+	</insert>
+	<select id="queryOrdRefundmentItemByRefundmentId" parameterClass="Long" resultClass="com.lvmama.comm.bee.po.ord.OrdRefundMentItem">
+		SELECT * FROM (
+			SELECT 
+				B.ORDER_ITEM_META_ID AS ORDERITEMMETAID,
+				B.TYPE,
+				SUM(B.AMOUNT) AS AMOUNT,
+				SUM(NVL(B.ACTUAL_LOSS, 0)) AS ACTUALLOSS,
+				MAX(A.CREATE_TIME) AS CREATE_TIME
+  			FROM 
+  				ORD_REFUNDMENT A, ORD_REFUNDMENT_ITEM B
+ 			WHERE 
+ 				A.REFUNDMENT_ID = B.REFUNDMENT_ID
+   			AND 
+   				A.REFUNDMENT_ID = #value#
+   			AND 
+   				A.STATUS = 'REFUNDED'
+   			AND 
+   				A.REFUND_TYPE = 'ORDER_REFUNDED'
+   			AND (B.MEMO!='自动生成退款单' OR b.memo IS NULL)
+ 			GROUP BY 
+ 				ORDER_ITEM_META_ID, B.TYPE
+			UNION
+			SELECT 
+				B.ORDER_ITEM_META_ID AS ORDERITEMMETAID,
+				B.TYPE,
+				B.AMOUNT,
+				NVL(B.ACTUAL_LOSS, 0) AS ACTUALLOSS,
+				A.CREATE_TIME AS CREATE_TIME
+  			FROM 
+  				ORD_REFUNDMENT A, ORD_REFUNDMENT_ITEM B
+ 			WHERE 
+ 				A.REFUNDMENT_ID = B.REFUNDMENT_ID
+   			AND 
+   				A.REFUNDMENT_ID = #value#
+   			AND 
+   				A.STATUS = 'REFUNDED'
+   			AND 
+   				A.REFUND_TYPE = 'COMPENSATION'
+   			AND (B.MEMO!='自动生成退款单' OR b.memo IS NULL)
+			) TMP ORDER BY 
+				ORDERITEMMETAID,CREATE_TIME
+	</select>
+	<insert id="insertChangeModifyTotalPrice" parameterClass="map">
+	INSERT INTO 
+  		ORD_SETTLEMENT_CHANGE
+	(
+  		SETTLEMENT_CHANGE_ID,
+  		ORDER_ITEM_META_ID,
+  		SETTLEMENT_ID,
+  		SUB_SETTLEMENT_ID,
+  		SUB_SETTLEMENT_ITEM_ID,
+  		CHANGETYPE,
+  		AMOUNT_BEFORE_CHANGE,
+  		AMOUNT_AFTER_CHANGE,
+  		CREATOR,
+  		CREATETIME
+  	)SELECT 
+  			ORD_SETTLEMENT_CHANGE_ID_SEQ.NEXTVAL,
+  			#orderMetaId#,
+  			#settlementId#,
+  			#subSettlementId#,
+  			#subSettlementItemId#,
+  			#changeType#,
+  			#amountBefore#,
+  			#amountAfter#,
+  			USER_ID,
+  			SYSDATE
+	 FROM lvmama_pet.PERM_USER U WHERE U.USER_NAME = #creator#
+  </insert>
+  
+</sqlMap>

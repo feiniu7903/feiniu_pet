@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_CODESET" >
+
+   <select id="selectCodeBySet" resultClass="com.lvmama.comm.pet.po.pub.CodeItem" parameterClass="java.lang.String">
+	   select 
+   		item_code as "code", 
+   		item_name as "name"
+   	   from com_code
+	   where valid_flag = 'Y' and set_code = #setCode#
+	   order by seq
+   </select>
+   
+   <select id="selectCodeItemBySet" resultClass="com.lvmama.comm.pet.po.pub.CodeItem" parameterClass="java.util.HashMap">
+	   select 
+	   	   item_code as "code",
+	   	   item_name as "name"
+	   from com_code  
+	   where 1=1
+		<isNotEmpty prepend=" and" property="setCode">
+    	 set_code = #setCode# 
+     	</isNotEmpty>
+     	<isNotEmpty prepend=" and" property="itemCode">
+    	 ITEM_CODE = #itemCode# 
+     	</isNotEmpty>
+   </select>
+
+   <select id="selectCodeChecked" resultClass="com.lvmama.comm.pet.po.pub.CodeItem" parameterClass="java.util.HashMap">
+	   select 
+	   	   cc.item_code as "code",
+	   	   cc.item_name as "name",
+		<dynamic>
+		  <isNotNull property="pkFieldValue" >
+		   CASE t.$fieldName$ WHEN cc.item_code THEN 'true' ELSE 'false' END as "checked"
+	   	   from COM_CODE cc, $tableName$ t
+		   where cc.valid_flag = 'Y' and cc.set_code='$setCode$' 
+		   and t.$pkFieldName$ = #pkFieldValue#
+		  </isNotNull>
+		  <isNull property="pkFieldValue" >
+		   'false' as "checked"
+	   	   from COM_CODE cc, dual t
+		   where cc.valid_flag = 'Y' and cc.set_code='$setCode$' 
+		  </isNull>
+		</dynamic>
+	   order by cc.seq
+   </select>
+   
+	<select id="selectAllProvince" resultClass="com.lvmama.comm.pet.po.pub.CodeItem">
+		select PROVINCE_ID code, PROVINCE_NAME name
+	    from COM_PROVINCE
+	</select>
+
+	<select id="selectCityByProvince" resultClass="com.lvmama.comm.pet.po.pub.CodeItem" parameterClass="java.lang.String">
+		select CITY_ID code, CITY_NAME name
+		from COM_CITY  where
+		PROVINCE_ID=#provinceId#
+	</select>
+	
+	<insert id="insertPamentGetWay" parameterClass="com.lvmama.comm.pet.po.pub.CodeItem">
+		 INSERT INTO COM_CODE (
+        	SET_CODE ,
+        	ITEM_CODE ,
+        	ITEM_NAME ,
+        	VALID_FLAG ,
+        	SEQ ,
+        	CREATE_TIME
+        ) VALUES (
+        	#attr01# ,
+        	#code# ,
+        	#name# ,
+        	#attr02# ,
+        	#attr03#,
+        	SYSDATE
+        )
+	</insert>
+	
+</sqlMap>

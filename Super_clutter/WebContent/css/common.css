@@ -1,0 +1,2366 @@
+/* CSS Document */
+/**common**/
+body { font-family:"微软雅黑","Arial Black", Gadget, sans-serif;color:#333333;
+	background:#eeeeee;
+	font-size:10px;
+	line-height:20px;}
+.lv-media-width {
+	width:320px;/*pc defaut width*/
+	background:#eeeeee;
+	max-width:720px;
+}
+.lv-header-mheight {
+	height:42px; overflow:hidden;
+}
+.lv-seach-mheight {
+	height:44px;
+}
+.lv-input-search {
+	height:26px;
+	/*line-height:26px;*/
+}
+/*@media screen and (max-width:720px) {
+	body {
+		font-size:22.5px;
+		background:#CCC;
+		width:320px;
+	}
+	.lv-media-width {
+		width:720px;
+		background:#CCC;
+		max-width:720px;
+	}
+	.lv-header-mheight {
+		height:94.5px;
+	}
+	.lv-seach-mheight {
+		height:99px;
+	}
+	.lv-input-search {
+		height:58.5px;
+		line-height:58.5px;
+		font-size:3.6em;
+	}
+}*/
+/*@media screen and (device-width: 720px) and (-webkit-min-device-pixel-ratio: 1){
+	body {
+		font-size:16px;
+	}
+	.lv-media-width {
+		width:720px;
+		background:#FF0000;
+		max-width:720px;
+	}
+	.lv-header-mheight {
+		height:120px;
+	}
+	.lv-seach-mheight {
+		height:132px;
+	}
+}*/
+/*@media screen and (max-width:640px) {
+	body {
+		font-size:10px;
+	}
+	.lv-media-width {
+		width:320px;
+		background:#FF0000;
+		max-width:320px;
+	}
+	.lv-header-mheight {
+		height:42px;
+	}
+	.lv-seach-mheight {
+		height:44px;
+	}
+	.lv-input-search {
+		height:26px;
+		line-height:26px;
+	}
+}*/
+.lv-pull-left {
+	float:left;
+}
+.lv-pull-right {
+	float:right;
+}
+input,button,select,textarea{outline:none}
+img,object,video,embed{max-width:100%}
+img { width:100%;}
+.lv-seprator-line {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/seprator-line.png) repeat-x left center;
+	height:2px;
+	width:100%;
+}
+
+.lv-seprator-liney {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/index/seprator-line-y.png) repeat-y right center;
+}
+
+.lv-seprator-line01 {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/seprator-line-01.png) repeat-x left center;
+	height:6px;
+	width:100%;
+	margin:10px auto;
+}
+.lv-seprator-lined2{
+	background:#c6c6c6;
+	width:100%;
+	height:1px;
+}
+.lv-seprator-linewhite{
+	background:#ffffff;
+	width:100%;
+	height:1px;
+}
+.lv-radius-10 {
+	border-radius:10px;
+}
+.lv-slogan {
+	width:60px;height:60px; background:#71b026;
+	color:#ffffff;
+	font-size:1.8em;
+	text-align:center;
+	line-height:28px;
+}
+.lv-slogan-icon01 {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/specialsubject/slogan-lvxing-01.png) no-repeat center center;
+}
+.lv-slogan-icon02 {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/specialsubject/slogan-lvxing-02.png) no-repeat center center;
+}
+.lv-slogan-icon03 {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/specialsubject/slogan-lvxing-03.png) no-repeat center center;
+}
+.lv-slogan-icon04 {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/specialsubject/slogan-lvxing-04.png) no-repeat center center;
+}
+.lv-warn-color {
+	color:#ff4000;
+}
+.lv-calendar-icon {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/calendar.png) no-repeat left 9px;
+}
+.lv-calendar-icon01 {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/calendar.png) no-repeat 6px 9px;
+}
+.lv-nav-li {
+	margin:10px;
+	background:#f7f7f7;
+	line-height:1.5em;
+	border:1px solid #d2d2d2;
+	border-radius:4px;
+	font-size:16px;
+	position:relative;
+	padding:4px 24px;
+	text-align:center;
+}
+.lv-nav-li a {
+	display:block;
+}
+.lv-nav-li a img {
+	width:9px; 
+	height:15px;
+}
+.lv-nav-li a img.lv-img-left {
+	position:absolute;
+	left:10px;
+	top:35%;
+}
+.lv-nav-li a img.lv-img-right {
+	position:absolute;
+	right:10px;
+	top:35%;
+}
+
+.lv-imgletter-icon {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/image-letter.png) no-repeat left center;
+	padding-left: 29px;
+	margin-bottom:10px;
+	font-size:16px; color:#333;
+}
+/*文字溢出变...*/
+.lv-ellipsis {
+	width:90%; 
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis; /*For Opera*/
+	-ms-text-overflow: ellipsis; /*For IE8*/
+}
+.lv-ellipsis-01 {
+	width:100%; 
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis; /*For Opera*/
+	-ms-text-overflow: ellipsis; /*For IE8*/
+}
+
+.lv-fixed {
+	background:#eeeeee;
+	position: fixed;
+	left:0;
+	right:0;
+	top:0;
+	width: 100%;
+	margin:0 auto;
+	z-index:1000;
+}
+
+#lv-fixed-after {
+	position:absolute;
+	left:0;
+	right:0;
+	margin:0 auto;
+	top:149px;
+}
+.lv-btn-booking {
+	margin-left:8px;
+	display:block;
+	min-width:52px;
+	height:30px;
+	line-height:30px;
+	width:90px;
+}
+.lv_jdmp2 .lv-btn-booking{ width:auto;}
+.lv_jdmp2 .lv-btn-02{ width:70px;}
+.lv-btn-01 {
+	border: 1px solid #c4006e;
+	background-color: #d10b84;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#ec3297),to(#ce0980));
+	background-image: -webkit-linear-gradient(#ec3297,#ce0980);
+	background-image: -moz-linear-gradient(#ec3297,#ce0980);
+	background-image: -ms-linear-gradient(#ec3297,#ce0980);
+	background-image: -o-linear-gradient(#ec3297,#ce0980);
+	background-image: linear-gradient(#ec3297,#ce0980);	color:#fff;
+	color:#fff;
+	text-align:center;
+	border-radius:4px;
+	/*text-shadow: 1px 1px 1px rgba(0,0,0,.2);*/
+}
+.lv-btn-01:hover {
+	background-color: #ec3297;
+	background: -webkit-linear-gradient(#ec3297,#ec3297,#ec3297);
+	background: linear-gradient(#ec3297,#ec3297,#ec3297);
+}
+
+.lv-btn-02 {
+	display:block;
+	width:90px;
+	height:30px;
+	line-height:30px;
+	border: 1px solid #dc9556;
+	background-color: #f29e30;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#ffcf4d),to(#f89f30));
+	background-image: -webkit-linear-gradient(#ffcf4d,#f89f30);
+	background-image: -moz-linear-gradient(#ffcf4d,#f89f30);
+	background-image: -ms-linear-gradient(#ffcf4d,#f89f30);
+	background-image: -o-linear-gradient(#ffcf4d,#f89f30);
+	background-image: linear-gradient(#ffcf4d,#f89f30);	color:#fff;
+	text-align:center;
+	border-radius:4px;
+	/*text-shadow: 1px 1px 1px rgba(0,0,0,.2);*/
+	margin-left:8px;
+}
+.lv-btn-02:hover {
+	background-color: #fdd56a;
+	background: -webkit-linear-gradient(#fdd56a,#fdd56a,#fdd56a);
+	background: linear-gradient(#fdd56a,#fdd56a,#fdd56a);
+}
+
+.lv-btn-03 {
+	background-color: #e2e2e2;
+	color:#666;
+	text-align:center;
+	border-radius:4px; font-size:14px; border:1px solid #e2e2e2;
+}
+.lv-btn-03:hover {
+	background-color: #e2e2e2;
+}
+
+.lv-btn-04 {
+	display:block;
+	width:70px;
+	height:30px;
+	line-height:30px;
+	border: 1px solid #e2e2e2;
+	background-color: #e2e2e2;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#e2e2e2),to(#d2d2d2));
+	background-image: -webkit-linear-gradient(#e2e2e2,#d2d2d2);
+	background-image: -moz-linear-gradient(#e2e2e2,#d2d2d2);
+	background-image: -ms-linear-gradient(#e2e2e2,#d2d2d2);
+	background-image: -o-linear-gradient(#e2e2e2,#d2d2d2);
+	background-image: linear-gradient(#e2e2e2,#d2d2d2);	color:#fff;
+	text-align:center;
+	border-radius:4px;
+	/*text-shadow: 1px 1px 1px rgba(0,0,0,.2);*/
+	margin-left:8px;
+}
+/*.lv-btn-04:hover {
+	background-color: #e2e2e2;
+	background: -webkit-linear-gradient(#e2e2e2,#e2e2e2,#e2e2e2);
+	background: linear-gradient(#e2e2e2,#e2e2e2,#e2e2e2);
+}*/
+
+.lv-btn-white {
+	border: 1px solid #e2e2e2;
+	color:#666666;
+	text-align:center;
+	border-radius:4px;
+	/*text-shadow: 1px 1px 1px rgba(0,0,0,.2);*/
+}
+.lv-btn-white a span {
+	color:#666666;
+}
+
+/*点评*/
+.lv-evaluate-items {
+	padding-top:10px;
+}
+.lv-evaluate-items ul li {
+	padding-left:10px;
+	clear:both;
+}
+.lv-evaluate-items ul li.lv-evaluate-item {
+	padding:10px 0;
+}
+
+.lv-evaluate-items ul li span.lv-item-title  {
+	width:20%;
+	height:20px;
+	line-height:20px;
+	font-size:1.2em;
+	color:#666;
+}
+.lv-evaluate-items ul li span.lv-item-score {
+	height:21px;
+	line-height:21px;
+	padding-left:4px;
+}
+.lv-item-sprite {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/evaluate-level.png) no-repeat left 0px;
+	width:68px;
+	height:13px;
+	margin:3px 0;
+}
+.lv-item-sprite01 {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/evaluate-big-icon.png) no-repeat center center;
+	height:25px;
+	width:160px;
+}
+.lv-item-sprite02 {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/star.gif) no-repeat left 0px;
+	width:80px;
+	height:14px;
+	margin:3px 0;
+}
+.lv-item-scroe0{
+	background-position:0 -5px;
+}
+.lv-item-scroe1{
+	background-position:0 -25px;
+}
+.lv-item-scroe2{
+	background-position:0 -50px;
+}
+.lv-item-scroe3{
+	background-position:0 -75px;
+}
+.lv-item-scroe4{
+	background-position:0 -100px;
+}
+.lv-item-scroe5{
+	background-position:0 -125px;
+}
+.lv-item-default{
+	background-position:0 -100px;
+}
+.lv-item-bggrey {
+	background-position: 0 0;
+}
+.lv-score-0 {
+	background-position: 0 0;
+}
+.lv-score-5 {
+	background-position: -69px -13px;
+}
+.lv-score-10 {
+	background-position: 0 -13px;
+}
+.lv-score-15 {
+	background-position: -69px -26px;
+}
+.lv-score-20 {
+	background-position: 0 -26px;
+}
+.lv-score-25 {
+	background-position: -69px -39px;
+}
+.lv-score-30 {
+	background-position: 0 -39px;
+}
+.lv-score-35 {
+	background-position: -69px -52px;
+}
+.lv-score-40 {
+	background-position: 0 -52px;
+}
+ .lv-score-45 {
+	background-position: -69px -65px;
+}
+ .lv-score-50 {
+	background-position: 0 -65px;
+}
+.lv-score-s40 {
+	background-position: 0 -27px;
+}
+.lv-score-s45 {
+	background-position: 0 -14px;
+}
+.lv-score-s50 {
+/*	background-position: 0 -65px;
+*/}
+.lv-item-variety {
+	background-position: -69px -65px;
+}
+.lv-item-variety01{
+	background-position:0 -105px;
+}
+.lv-item-serve {
+	background-position: -0 -65px;
+}
+.lv-item-serve01 {
+	background-position: -0 -130px;
+}
+.lv-item-entertainment {
+	background-position: -0 -52px;
+}
+.lv-item-entertainment01 {
+	background-position: -0 -105px;
+}
+.lv-item-popularity {
+	background-position: -69px -52px;
+}
+.lv-item-popularity01 {
+	background-position: -0 -130px;
+}
+/*点评结束*/
+.lv-verify {
+	height:20px;
+	width:20px;
+	color:#ffffff;
+	background:#97cb77;
+	margin:2px; padding:0 3px;
+}
+.lv-elite {
+	height:20px;
+	width:20px;
+	color:#ffffff;
+	background:#e35aa4;
+	margin:2px; padding:0 3px;
+}
+.lv-two-line {
+	position:relative;
+	width:136px;
+	height:40px;
+	line-height:20px;
+	overflow:hidden;
+	padding-top:4px;
+}
+.lv-three-line {
+	position:relative;
+	width:136px;
+	max-height:60px;
+	line-height:20px;
+	overflow:hidden;
+	color:#1f1f1f;
+	padding-top:4px;
+}
+.lv-narrow-position {
+	position:absolute;
+	right:0;
+	top:0;
+	min-width:20%;
+	max-width:25%;
+	height:100%;
+	text-align:center;
+	font-size:1.5em;
+	padding-left:20px;
+}
+.lv-narrow-icon {
+	width:10px;
+	height:7px;
+	padding-right:4px;
+}
+.lv-narrow-position a {
+	color:#ffffff;
+	display:block;
+	height:100%;
+}
+.lv-narrow-position a span {
+	padding-top:10px;
+	display:block;
+}
+
+/*lv city list*/
+.lv-city-title {
+	background:#e2e2e2;
+	padding:2px 10px;
+}
+ul.lv-city-list {
+	background:#ffffff;
+}
+ul.lv-city-list li {
+	height:40px;
+	line-height:40px;
+	padding:0 10px;
+	font-size:1.5em;
+}
+
+/*lv navigation*/
+ul.lv-navigation-list {
+}
+ul.lv-navigation-list li {
+	float:left;
+	width:33.3333333333%;
+	height:105px;
+}
+.lv-nav-icon {
+	width:36px;
+	margin:0 auto;
+	display:block;
+	padding-top:23px;
+	padding-bottom:5px;
+}
+ul.lv-navigation-list li a {
+	display:block;
+	height:100%;
+}
+ul.lv-navigation-list li a span {
+	font-size:16px;
+	text-align:center;
+	display:block; color:#666666;
+}
+/*tab*/
+ul.lv-tab-ul {
+	padding:3%;
+	color:#e2e2e2;
+	height:76.1904761905%;/*32/42*/
+}
+ul.lv-tab-ul li {
+	padding-top:3.125%;
+	margin-left:10px;
+	float:left;
+	width:25%;/*80/320*/
+	height:100%;
+	border:1px solid #88054c;
+	border-radius:8px 8px 0 0;
+	text-align:center;
+	font-size:1.8em;
+	line-height:100%;
+}
+.lv-li-current {
+	background:#e2e2e2;
+	border-bottom:1px solid #e2e2e2;
+	color:#d11f7f;
+}
+/*end tab*/
+
+/*16宫格*/
+ul.lv-biz-list {
+	padding-bottom:5%;
+}
+ul.lv-biz-list li {
+	height:auto; overflow:hidden; margin-top:10px;
+}
+ul.lv-biz-list:last-child {
+	/*padding-bottom:5%;*//*16/320*/
+	padding-bottom:16px;
+}
+ul.lv-biz-list li a{
+	display:block;
+	text-align:center; float:left; margin:0 10px;
+}
+#lv-fixdiv ul.lv-biz-list li a{
+	width:18.75%;/*60/320*/
+}
+ul.lv-biz-list li a img {
+	width:60px;
+	height:60px;
+}
+ul.lv-biz-list li a span {
+	padding-top:4px;
+	display:block;
+	color:#333333;
+	width:60px;
+	height:20px;
+	line-height:20px;
+	overflow:hidden;
+	margin-bottom: 10px;
+}
+ul.lv-biz-list li a span.lv-biz-point {
+	background:#ffffff;
+	border:1px solid #b7b7b7;
+	padding:6px 0;
+	font-size:18px;
+	-moz-box-shadow: 0px 2px 3px #b7b7b7;
+	-webkit-box-shadow:0px 2px 3px #b7b7b7;
+	box-shadow:0px 2px 3px #b7b7b7;
+	border-radius:3px;
+	color:#464646;
+}
+/*end 16宫格*/
+
+/*search list*/
+ul.lv-search-ul {
+	/*min-height:440px;*/
+}
+.lv-search-minheight {
+	min-height:440px;
+}
+
+ul.lv-search-ul li.lv-search-li {
+	height:10%; /*44/440*/
+	line-height:10%; /*44/440*/
+	padding:6% 5%;/*1-(288/320)/2*/
+}
+ul.lv-search-ul li.lv-search-liFirst {
+	border-top:none;
+}
+ul.lv-search-ul li.lv-search-liLast {
+	border-bottom:none;
+}
+/*end search list*/
+
+/*推荐列表*/
+.lv-recommend-icon {
+/*	background:url(http://pic.lvmama.com/img/mobile/touch/img/hand-nice.png) no-repeat left center;
+*/	height:19px;
+	line-height:19px;
+	font-size:1.5em;
+	color:#333333;
+	margin-bottom:10px;
+}
+.lv-recommend-icon img {
+	width:4.3333333333%;/*13/300*/
+}
+
+.lv-recommend-list {
+	font-size:1.2em;
+	padding-bottom:10px;
+}
+.lv-recommend-list li {
+	height:24px;
+	line-height:24px;
+}
+.lv-recommend-li {
+/*	background:url(http://pic.lvmama.com/img/mobile/touch/img/star.png) no-repeat left center;
+*/}
+/*推荐列表结束*/
+
+/*normal list*/
+ul.lv-normal-list {
+	font-size:1.5em;
+	color:#333333;
+}
+ul.lv-normal-list li {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/next.png) no-repeat right center;
+	height:40px;
+	line-height:40px;
+	margin-right:20px;
+	padding-right:20px;
+	padding-left:10px;
+}
+ul.lv-normal-list li a {
+	display:block;
+}
+ul.lv-normal-list li span {
+	color:#d11f7f;
+}
+/*normal list end*/
+
+/*cascade search*/
+ul.lv-cascade-search {
+	font-size:1.2em;
+	height:44px;
+	line-height:44px;
+	text-align:center;
+}
+ul.lv-cascade-search li{
+	float:left;
+	position:relative;
+}
+ul.lv-cascade-search li a {
+	display:block;
+	color:#666;
+	font-size:13px;
+}
+.sele_tab li a {padding-left:10px;text-align:left;}
+.lv-li-row2 {
+	width:50%;
+}
+.lv-li-row3 {
+	width:33.3333333333%;
+}
+.lv-li-row4 {
+	width:25%;
+}
+ul.lv-cascade-search li a div.lv-cascade-icon {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/narrow-white.png) no-repeat center bottom;
+	width:12px;
+	height:7px;
+	position:absolute;
+	left:50%;
+	bottom:-2px;
+	margin-left: -6px;
+}
+.lv-cascade-icongrey {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/narrow-grey.png) no-repeat center bottom;
+	width:12px;
+	height:10px;
+	position:absolute;
+	left:50%;
+	bottom:-4px;
+	margin-left: -6px;
+}
+
+.lv-cascade-current {
+	
+}
+.lv-narrow-icon {
+	width:10px;
+	position:absolute;
+	top:40%;
+	right:3px;
+}
+.lv-seprator-y {
+	width:2px;
+	float:right;
+	padding-top:2px;
+}
+.lv-cascade-div {
+	position:absolute;
+	margin:0 auto;
+	/*margin-top:-10px;*/
+	z-index: 20;
+}
+body,html { height:100%; width:100%;}
+.lv-transparent-div {
+	position:absolute;
+	width: 100%;
+	bottom:0;
+}
+/*div透明*/
+.lv-transparent {
+	background:#000;
+	filter:alpha(opacity=50);
+	-moz-opacity:0.5;
+	-khtml-opacity: 0.5;
+	opacity: 0.5;
+	z-index:10;
+}
+.lv-cascade-div  ul.lv-cascade-list {
+	font-size:1.2em;
+	color:#333333;
+	background:#FFF;
+}
+ul.lv-cascade-area {
+	width:106px;
+}
+.lv-cascade-div ul.lv-cascade-list li {
+	height:40px;
+	line-height:40px;
+	padding-left:15px;
+	position:relative;
+	border-bottom:1px solid #cbcbcb; color:#666;
+}
+.lv-cascade-childrendiv li {border-bottom:1px solid #cbcbcb;background-color:#e2e2e2;}
+.lv-cascade-childrendiv .lv-seprator-linewhite{ margin-left:-15px; width:auto;}
+
+ul.lv-cascade-list li:hover {
+	background:#e2e2e2 url(http://pic.lvmama.com/img/mobile/touch/img/cascade-icon.png) no-repeat -4px center;
+}
+/*.lv-current-cascadeli {
+	background:#eeeeee url(http://pic.lvmama.com/img/mobile/touch/img/cascade-icon.png) no-repeat left center;
+}*/
+.lv-cascade-childrendiv {
+	background:#eeeeee;
+	position:absolute;
+	left:106px;
+	top:0;
+	min-height:100%;
+}
+ul.lv-cascade-childrenlist {
+	/*font-size:1.2em;*/
+	color:#333333;
+	width:220px;
+}
+ul.lv-cascade-childrenlist li {
+	height:40px;
+	line-height:40px;
+	padding-left:10px;
+}
+ul.lv-cascade-childrenlist li:hover {
+	background:#eeeeee url(http://pic.lvmama.com/img/mobile/touch/img/cascade-icon.png) left center; color:#fff;
+}
+.lv-cascade-childrenlist li:hover .lv-seprator-linewhite { background-color:#e73796;}
+/*cascade search end*/
+/*ticket list*/ 
+.lv-ticket-list {
+	font-size:1.5em;
+	color:#333333;
+	background:#FFF;
+}
+/*end ticket list*/
+/*套票，联票 列表*/
+ul.lv-box-list {
+ background:#eeeeee; border-bottom:1px solid #d2d2d2;
+}
+ul.lv-box-list li{
+	border-bottom:1px solid #d2d2d2;
+	padding:4px 10px 12px;
+	 width:278px; height:auto; overflow:hidden;
+}
+ul.lv-box-list li.lv-box-title {
+	padding-top:10px;
+	padding-bottom:10px;
+	clear:both;border: 1px solid #d2d2d2; margin-top:10px;background:#f7f7f7;
+}
+ul.lv-box-list li:last-child {
+	border-bottom:none;
+}
+/*套票，联票 列表结束*/
+
+/*lv pad start*/
+.lv-pad-title {
+	height:40px;
+	line-height:40px;
+	border-bottom:1px dashed #cbcbcb;
+}
+.lv-pad-icon01 {
+/*	background:url(http://pic.lvmama.com/img/mobile/touch/img/hand-nice.png) no-repeat left center;
+*/	
+	padding-left:10px;
+	font-size:16px;
+}
+.lv-pad-icon02 {
+/*	background:url(http://pic.lvmama.com/img/mobile/touch/img/pad-icon.png) no-repeat left center;
+*/
+	padding-left:10px;
+	font-size:16px;
+	border-bottom:1px dashed #cbcbcb;
+
+}
+.lv-pad-icon03 {
+/*	background:url(http://pic.lvmama.com/img/mobile/touch/img/spot-desc.png) no-repeat 10px 15px;
+*/	padding-left:10px;
+	font-size:16px;
+	border-bottom:1px dashed #cbcbcb;
+}
+.lv-pad-content {
+	line-height:20px;
+	padding:4px 10px; color:#929292;
+}
+/*end lv pad*/
+
+/*lv-evaluate-list*/
+.lv-evaluate-sum {
+	width:100%;
+	height:100px;
+	border:1px solid #d2d2d2;
+	margin:10px 0;
+}
+.lv-evaluate-count {
+	width:40%;
+	border-right:1px solid #d2d2d2;
+	height:100px;
+	padding-left:10px; color:#333;
+}
+.lv-evaluate-count .lv-color { font-weight:bold;}
+.lv-evaluate-count h3 { margin-bottom:-5px;}
+.lv-evaluate-items {
+	width:56%;
+}
+.lv-evaluate-count ul {
+	padding:10px;
+}
+.lv-evaluate-count ul li {
+	height:23px;
+	line-height:23px;
+}
+.lv-evaluate-title {
+	border-bottom:1px solid #d2d2d2;
+	padding-left:10px; color:#999; padding-bottom:3px;
+}
+.lv-evaluate-title span{
+	font-size:16px;
+	color:#333;
+}
+.lv-evaluate-list li {
+	padding:4px 0;
+}
+
+.lv-evaluate-list li .lv-user-name {
+	font-size:1.2em;
+	color:#333333;
+}
+.lv-evaluate-list li .lv-user-desc {
+	line-height:21px; font-size:14px; color:#666;overflow: hidden;white-space: normal;word-warp: break-word;word-break: break-all;text-overflow: ellipsis;}
+.lv-load-more {
+	text-align:center;
+	height:40px;
+	line-height:40px;
+}
+/*banner*/
+.lv-banner {position:relative; width:320px; height:160px; overflow:hidden; margin:0 auto;}
+.lv-banner-stdetail {height:112px;}
+.lv-banner-list img {border:0px;}
+.lv-colltion-icon { width:28px; position:absolute; right:10px; bottom:10px; z-index:50;}
+.lv-banner-bg {position:absolute; top:0;background-color:#000;height:25px;filter: Alpha(Opacity=30);opacity:0.65;z-index:1000;
+cursor:pointer; width:320px;}
+.lv-banner-info{position:absolute; top:0; left:10px;height:25px;color:#fff;z-index:1001;cursor:pointer; width:100%;font-size:14px;}
+.lv-banner-text {position:absolute;width:120px;z-index:1002; right:3px; bottom:3px;}
+.lv-banner ul {position:absolute;list-style-type:none;z-index:50; margin:0; padding:0; bottom:3px; left:40%;}
+.lv-banner ul li { background:url(http://pic.lvmama.com/img/mobile/touch/img/lv-banner-on.png) no-repeat center center; padding:0px 8px;float:left;display:block;color:#FFF;/*border:#e5eaff 1px solid;background:#6f4f67;*/cursor:pointer; text-indent:-9999px; Alpha(Opacity=80); opacity:.8;}
+.lv-banner ul li.on { /*background:#900;*/ background:url(http://pic.lvmama.com/img/mobile/touch/img/lv-banner-on-1.png) no-repeat center center}
+.lv-banner-list a{position:absolute;}
+/*end banner*/
+
+/*start spot ticket list*/
+.lv-spotticket-list {
+}
+.lv-spotticket-list li.lv-spotticket-li {
+	/*height:66px;*/
+	padding:10px 0;
+}
+.lv-spotticket-li >a {
+	display:block;
+}
+
+.lv-spotticket-list li div.lv-spotticket-img {
+	width:28.6666666667%/*86/300*/;
+	position:relative;
+}
+.lv-today-book {
+	position:absolute;
+	top:0;
+	left:0;
+	width:73px;
+}
+.lv-spotticket-list li div.lv-spotticket-info {
+	width:71.3333333333%/*(300-86)/300*/;
+}
+.lv-spotticket-info ul li {
+	padding-left:10px;
+}
+.lv-spotticket-info ul li.lv-spotticket-title {
+	color:#333333;
+	/*font-weight:bold;*/
+}
+.lv-spotticket-list li .lv-spotticket-img img:not(.lv-today-book) {
+	width:86px;
+	height:65px;
+}
+/*end spot ticket list*/
+
+/**start index**/
+
+/**header**/
+.lv-header {
+	background:#d11f7f;
+	margin:0 auto;
+	border-bottom:1px solid #88054c;
+	position:relative;
+}
+.lv-header-container {
+	width:90%;/*288÷320*/
+	margin:0 auto;
+	height:100%;
+	position:absolute;
+	top:14.2857142857%;/*6/42*/
+	left:5%;/*16/320*/
+}
+.lv-header .lv-logo {
+	/*width:39.0625%;*//*125/320*/
+	width:125px;
+}
+.lv-header .lv-phone a{
+	color:#ffffff; height:24px; line-height:24px;
+}
+
+/**search**/
+.lv-search {
+	background:#e2e2e2;
+	margin:0 auto;
+	position:relative;
+	border-bottom:1px solid #cccccc;
+}
+.lv-search .lv-search-icon {/*18*18*/
+	width:5.625%;/*18/320*/
+	float:left;
+	padding:7px 0 0 7px;
+}
+.lv-search .lv-div-search {
+	background:#FFF;
+	width:90%;/*288÷320*/
+	height:63.6363636363%;/*28÷44*/
+	border: 1px solid #aaa;
+	border-radius:96px;
+	margin:0 auto;
+	line-height:63.6363636363%;/*28÷44*/
+	position:absolute;
+	top:18.1818181818%;/*8/44*/
+	left:5%;/*16÷320*/
+}
+.lv-search .lv-div-search input.lv-input-search {
+	width:76%;
+	border:none;
+	font-size:1.5em;
+	padding-left:3%;
+	padding-top:1px;
+	border-radius:22px;
+}
+.lv-search .lv-div-search input.lv-search-pLeft {
+	padding-left:6%;
+}
+.lv-input-focus {
+/*	-moz-box-shadow: 0px 0px 12px 			#387bbe ;
+	-webkit-box-shadow: 0px 0px 12px 		#387bbe;
+	box-shadow: 0px 0px 12px 					#387bbe;	
+	border-radius:22px;
+	border:none;
+*/
+}
+/**wrapper**/
+.lv-wrapper {
+	background:#eeeeee;
+	margin:0 auto;
+/*	position:relative;
+*/	font-size:1.2em;
+}
+
+/**content**/
+.lv-content {
+	background:#eeeeee;
+	/*width:480px;*/
+	/*width:100%;*/
+	margin:0 auto;
+}
+.lv-content-01 {
+	line-height:1.5em;
+}
+.lv-spot-div {
+	padding:10px;
+	/*width:452px;*/
+	margin:0 auto;
+}
+
+.lv-spot-div dl dt {
+	text-align:center;
+	padding:5px 0 3px 0;
+	font-size:16px;
+	color:#333333;
+}
+
+.lv-spot-div dl dd {
+	font-size:14px; color:#929292; line-height:22px;
+}
+
+
+/**lv-footer**/
+.lv-footer {
+	background:#eeeeee;
+	margin:10px auto;
+	text-align:center;
+	padding-bottom:14px;
+	font-size:1.2em;
+}
+.lv-footer a { display:inline-block; padding:0 3px;}
+.lv-footer-banner {
+	border-bottom:1px solid #CCC;
+	background:#e2e2e2;
+	height:34px;
+	font-size:14px;
+	line-height:34px;
+	padding:0 10px 0 10px;
+	text-align:left; margin-bottom:10px;
+}
+.lv-footer div.lv-footer-link {
+	color:#666; line-height:21px; width:260px; margin:0 auto; font-size:12px;
+}
+.lv-footer-copyright {
+	font-size:0.8em;
+}
+.lv-footer div span {
+	margin:0 1%;
+}
+.lv-footer div a {
+	color:#666666;
+}
+.lv-footer div a:hover {
+	color:#780f4c;
+}
+
+/**search**/
+
+.lv-submit-search {
+	background:#f2f2f2 url(http://pic.lvmama.com/img/mobile/touch/img/search.png) no-repeat center center;
+	width:40px;
+	height:28px;
+	position:absolute;
+	right:0;
+	top:0;
+	border-radius:0 22px 22px 0;
+	border:none;
+}
+.lv-clear-icon {
+	position:absolute;
+	right:46px;
+	top:4px;
+	display:block;
+}
+.lv-clear-icon01 {
+	position:absolute;
+	right:7px;
+	top:4px;
+	display:block;
+}
+.lv-close-div {
+	width:10%;/*32/320*/
+	position:absolute;
+	right:0;
+	top:0;
+}
+.lv-close-div .lv-close-sep {
+	width:2px;
+	height:30px;
+}
+.lv-block-a {
+	margin:20%;
+}
+.lv-auto-complete {
+	font-size:1.5em;
+	
+}
+.lv-spot-autocomplete {
+	background:#e2e2e2;
+	position:absolute;
+	left:0;
+	top:45px;
+	width:100%;
+	z-index:1000;
+}
+.lv-search-success {
+	font-size:1.5em;
+}
+.lv-search-fail {
+	width:auto;
+	margin:0 auto;
+	text-align:center;
+	font-size:1.5em;
+}
+.lv-sorry-icon {
+	padding:90px 0 0 0;
+	max-height: 57px;
+}
+.lv-sorry-icon img { width:auto !important; max-width:100%;}
+.lv-search-fail p {
+	padding-top:10px;
+	font-size:14px;
+}
+
+/*free trip*/
+.lv-biz-title {
+	text-align:center;
+	padding-top:10px;
+	font-size:1.5em;
+	color:#333333;
+	/*font-weight:bold;*/
+}
+.lv-biz-title01 {
+	text-align:center;
+	font-size:1.2em;
+	color:#333333;
+	padding-top:4px
+}
+.lv-seprator-super {
+	width:95.625%;/*306/320*/
+	height:20px;
+	margin:0 auto;
+}
+.lv-operate-icon {
+	width:44px;
+	/*width:13.75%;*//*44/320*/
+	height:100%;
+	position:absolute;
+	left:0;
+	top:0;
+}
+.lv-operate-icon a {
+	display:block;
+	height:100%;
+}
+.lv-operate-icon img {
+	width:11px;
+	/*width:25%;*//*11/320*/
+	padding:25% 0 0 40%/*11/44*//*11/44*/
+}
+.lv-operate-sep {
+	width:2px;
+	position:absolute;
+	/*left:13.75%;*/
+	left:44px;
+	top:1px;
+}
+
+.lv-title {
+	text-align:center;
+	color:#FFF;
+	font-size:2em;
+	/*padding-top:3%;*/
+	line-height:44px;
+}
+.lv-title-01 {
+	padding:8px 0 6px 0;
+	font-weight:bold;
+}
+ul.lv-content-list li{
+	line-height:1.5em;
+}
+.lv-position {
+	height:30px;
+	line-height:30px;
+	position:absolute;
+	right:2%;
+	top:12%;
+	border:1px solid #971059;
+	border-radius:6px;
+	text-align:center;
+	padding:0 10px;
+}
+.lv-position a {
+	display:block;
+	color:#ffffff;
+}
+.lv-position img {
+	width:21px;/*20/46*/
+	/*padding:6%;*/
+}
+.lv-position-e {
+	font-size:1.5em;
+}
+.lv-position-e img {
+	width:15px;
+	margin-right:4px;
+	margin-top:-4px;
+}
+.lv-wrapper-container {
+	width:93.75%;/*(320-20)/320*/
+	margin:0 auto;
+}
+.lv-wrapper-container:last-child .lv-box {
+	margin:10px auto;
+}
+.lv-spot-desc {
+	padding-top:2%;
+	font-size:1.2em;
+	color:#333333;
+}
+.lv-spot-addinfo {
+	padding-top:4%;
+	font-size:1em; width:100%; height:auto; overflow:hidden; color:#666;
+}
+
+ul.lv-book-list {
+	padding-top:8%;
+	vertical-align:middle;
+}
+ul.lv-book-list li {
+	float:left;
+	width:33.3333333333%;/*100/300*/
+	padding-left:2px;
+	height:auto;
+}
+ul.lv-book-list li a img.lv-book-icon01 {
+	width:90px;
+}
+ul.lv-book-list li a img.lv-book-icon02 {
+	width:110px;
+}
+ul.lv-book-list li.lv-book-liFirst {
+	/*color:#d11f7f;*/
+	font-size:1.8em;
+	width:94px;
+}
+ul.lv-book-list li a {
+	display:block;
+	/*padding-top:20px;*/
+}
+ul.lv-book-list li.lv-book-liFirst span {
+	width:104px;
+	display: inline-block;
+	vertical-align: middle;
+}
+/*group by*/
+.lv-box {
+	background:#f7f7f7;
+	margin:10px 10px 0 10px;
+	border:1px solid #cbcbcb;
+}
+.lv-box a.lv-groupbuy-list {
+	display:block;
+}
+.lv-box-last {
+	margin-bottom:10px;
+}
+.lv-box-info {
+	margin:0 auto;
+	padding:9px;
+	border-left:1px solid #cbcbcb;
+	border-right:1px solid #cbcbcb; background:#f7f7f7;
+}
+.lv-box-info p {
+	padding-top:1.2%;/*10/250*/
+	font-size:1.2em;
+	color:#333333;
+	line-height:22px;
+}
+
+.lv-box-price {
+	height:52px;
+	width:40%;
+	border-right:1px solid #cbcbcb;
+	text-align:center;
+	
+}
+.lv-current-price {
+	color:#d11f7f;
+	font-size:16px;
+	height:26px; font-weight:bold; 
+	line-height:35px;
+}
+.lv-proto-price {
+	text-decoration:line-through;
+	height:22px;
+	line-height:22px;
+	padding-left:3px;
+	color:#999;
+	font-size:0.8em;
+}
+.lv-box-desc {
+	height:52px;
+	width:58%;
+}
+.lv-box-desc table tr td {
+	width:33.3333333333%;
+	text-align:left;
+}
+.lv-box-desc table tr th{
+	width:33.3333333333%;
+	text-align:left;
+}
+.lv-box-desc table tr th,td {
+	height:22px;
+	line-height:22px;
+}
+.lv-color {
+	color:#d11f7f;
+	font-size: 1.3em;
+}
+.lv-color-01 {
+	color:#d11f7f !important;
+	/*font-family:"微软雅黑";*/
+}
+.lv-color-02 {
+	color:#ff4e00;
+	font-size:1.2em;
+	font-weight:bold;
+	height:30px;
+	line-height:30px;
+}
+.lv-color-03 {
+	color:#333333;
+}
+.lv-booking-name {
+	width:300px;
+	line-height:1.5em;
+	margin:0 auto;
+	font-size:1.3em;
+	color:#333;
+	border-bottom:1px solid #d2d2d2;
+	padding:10px;
+}
+ul.lv-proinfo-list { margin-bottom:-1px;}
+ul.lv-proinfo-list li {
+	/*height:54px;*/
+
+	border-bottom:1px solid #d2d2d2;
+	width:100%;
+	position:relative;
+}
+.lv-span-01 {
+	font-size:1.2em;
+	padding:10px 10px;
+	line-height:1.5em;
+	width:25%;
+	display:inline-block;
+	vertical-align:middle;
+}
+.lv-span-02 {
+	font-size:1.2em;
+	font-weight:bold;
+	height:54px;
+	line-height:54px;
+	padding:0 10px;
+	width:60px;
+	display:inline-block;
+}
+.lv-span-03 {
+	font-size:1.2em;
+	font-weight:bold;
+	padding-left:10px;
+}
+.lv-span-04 {
+	font-size:1.2em;
+	font-weight:bold;
+	width:80px;
+	display:inline-block;
+	line-height:1.8em;
+}
+.lv-next-01 {
+	width:9px;
+	height:15px;
+	position:absolute;
+	right:20px;
+	top:35%;
+}
+ul.lv-proinfo-list li a {
+	display:inline-block;
+}
+.lv-reduce {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/reduce.png) no-repeat left center;
+	height:25px;
+	width:25px;
+}
+.lv-plus {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/plus.png) no-repeat left center;
+	height:25px;
+	width:25px;
+}
+.lv-ticket-num {
+	width:100px;
+	padding:0 10px;
+}
+ul.lv-proinfo-list li label {
+	padding-left:10px;
+	font-size:16px;
+	width:70px;
+	display:inline-block;
+}
+ul.lv-proinfo-list li input.lv-input-text {
+	background:#f7f7f7;
+	border:none;
+	font-size:1.2em;
+	height:34px;
+	padding:5px 10px 5px 0;
+}
+.lv-scroller {
+	background:#f7f7f7;
+	border:none;
+	width:120px;
+	font-size:1.2em;
+	height:40px;
+	line-height:45px; color:#999;
+}
+.lv-warn-bg {
+	background:#fef8e7;
+}
+.lv-padding-10 {
+	padding:10px;
+}
+.lv-padding-20 {
+	padding:20px;
+}
+.lv-padding-x10 {
+	padding:0 10px;
+}
+.lv-padding-x20 {
+	padding:0 20px;
+}
+.lv-padding-y10{
+	padding:10px 0;
+}
+.lv-padding-y20 {
+	padding:20px 0;
+}
+.lv-paddingtop-10 {
+	padding-top:10px;
+}
+.lv-paddingright-10 {
+	padding-right:10px;
+}
+.lv-paddingbottom-10 {
+	padding-bottom:10px;
+}
+.lv-paddingleft-10 {
+	padding-left:10px;
+}
+.lv-margin-y20 {
+	margin:20px 0;
+}
+.lv-lineheight-15 {
+	line-height:1.5em;
+}
+.lv-lineheight-18 {
+	line-height:1.8em;
+}
+.lv-lineheight-20 {
+	line-height:2em;
+}
+.lv-fontsize-12 {
+	font-size:1.2em;
+}
+.lv-fontsize-15 {
+	font-size:1.5em;
+}
+.lv-fontsize-18 {
+	font-size:1.8em;
+}
+.lv-fontsize-20 {
+	font-size:2em;
+}
+.lv-fontweight-bold {
+	font-family:"微软雅黑"; font-weight:bold;
+}
+.lv-order-list {
+	padding:10px 10px;
+}
+.lv-order-list .lv-order-li {
+	width:100%;
+	position:relative;
+}
+.lv-order-list input {
+	background:#f7f7f7;
+	border:none;
+	width:180px;
+	height:25px;
+	line-height:25px;
+}
+.lv-order-price {
+	padding-left:10px;
+	border-top:1px solid #d2d2d2;
+	height:40px;
+	line-height:40px;
+}
+.lv-pay-choose {
+	font-size:1.3em;
+	padding:10px 0 10px 10px;
+	height:auto; overflow:hidden;
+}
+ul.lv-pay-list:first-child {
+	padding-left:10px;
+}
+.lv-pay-list .lv-pay-li {
+	padding-left:8px;
+	float:left;
+}
+.lv-pay-list .lv-pay-li img{
+	width:137px;
+	border:none;
+	
+}
+.lv-clock {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/clock.png) no-repeat left center;
+	color:#ffffff;
+	width:87px;
+	height:30px;
+	line-height:30px;
+	padding-left:10px;
+	display:inline-block;
+	text-align:center; margin-left:10px;
+}
+.lv-smile-icon {
+	width:50px;
+	height:50px;
+	padding:20px;
+}
+
+.lv-banner-mylvbg {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/my-banner-bg.jpg) no-repeat left center;
+	height:116px;
+	width:320px;
+}
+.lv-user-photobg {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/user-photo-bg.png) no-repeat left center;
+	height:68px;
+	width:68px;
+	margin-top:20px;
+}
+.lv-welcome-panel {
+	height:28px;
+	line-height:27px;
+}
+.lv-welcome-panel2 {
+	height:25px;
+	line-height:25px;
+	text-shadow:2px 2px 2px #CCC;
+	width: 219px; margin:-48px 0 0 77px;
+	table-layout:fixed; word-break: break-all; overflow:hidden; /*英文一行显示*/
+}
+.lv-user-photo {
+	width:56px;
+	height:56px;
+	border-radius:28px;
+	margin:6px;
+}
+.integral { border-radius:90px; display:inline-block; width:auto; padding:3px 7px; 
+color:#fff; background:#434343; height:17px; line-height:17px; margin:85px 0 0 143px;}
+.lv-myorder-icon {
+	width:23px;
+	height:30px;
+}
+
+.lv-module-box {
+	height:60px;
+	width:60px;
+	border:1px solid #d2d2d2;
+	border-radius:4px;
+	-webkit-box-shadow:1px 1px 1px #d2d2d2;
+    -moz-box-shadow:1px 1px 1px #d2d2d2;
+    box-shadow:1px 1px 1px #d2d2d2;
+	margin-left:27px;
+	text-align:center;
+	line-height:60px;
+}
+.lv-module-list {
+}
+
+.lv-module-list li {
+	float:left;
+}
+.lv-module-list li p {
+	margin-left:27px;
+	text-align:center;
+	margin:20px 0;
+}
+
+.lv-order-title {
+	height:35px;
+	line-height:35px;
+	border-bottom:1px solid #d2d2d2;
+	color:#000;
+}
+.lv-order-content {
+	width:277px;
+	margin:5px auto;
+	position:relative;
+}
+.lv-order-operate {
+	height:40px;
+	line-height:40px;
+	border-top:1px solid #d2d2d2;
+	padding-top:5px;
+}
+.lv-order-icon {
+	width:60px;
+	height:46px;
+	padding-top:2px;
+}
+.lv-order-desc {
+	width:210px;
+	padding-left:10px;
+}
+.lv-redirect-next {
+	position:absolute;
+	right:0;
+	top:27%;
+}
+
+.lv-redirect-next01 {
+	position:absolute;
+	right:20px;
+	top:40%;
+}
+
+.lv-order-items {
+
+}
+.lv-order-items li {
+	line-height:1.8em;
+	font-size:1.2em;
+	font-weight:bold;
+	border-bottom:1px solid #d2d2d2;
+	padding:10px 0;word-break: break-all;word-wrap: break-word;
+}
+
+.lv-evaluate-icon {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/evaluate-small-icon.png) no-repeat left center;
+	padding-left:24px;
+}
+.lv-evaluate-final {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/evaluate-final.png) no-repeat left center;
+	padding-left:20px;
+}
+ul.lv-progress-list {
+	padding-top:5px;
+}
+ul.lv-progress-list li {
+	float:left;
+	text-align:center;
+}
+.lv-progress {
+	color:#ffffff;
+	height:16px;
+	line-height:16px;
+}
+.lv-progress-active {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/node-active.png) no-repeat center center;
+}
+.lv-progress-node {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/progress-node.png) no-repeat center center;
+}
+.lv-tab-div {
+	width:300px;
+	margin:10px auto;
+	position:relative;
+}
+.lv-input-01 {
+	width:290px;
+	height:30px;
+	border-radius:4px;
+	padding-left:10px;
+	border:1px solid #d2d2d2;
+}
+.lv-input01-focus {
+	-moz-box-shadow: 0px 0px 12px 			#387bbe /*{global-active-background-color}*/;
+	-webkit-box-shadow: 0px 0px 12px 		#387bbe /*{global-active-background-color}*/;
+	box-shadow: 0px 0px 12px 					#387bbe /*{global-active-background-color}*/;	
+	border-radius:4px;
+}
+.lv-sinaweibo-icon {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/sinaweibo.png) no-repeat 10px center;
+}
+.lv-tencentweibo-icon {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/tencentweibo.png) no-repeat 10px center;
+}
+.lv-proinfo-list li.lv-weibo {
+	line-height:45px;
+	font-size:15px;
+	border:none;
+}
+.lv-proinfo-list li.lv-weibo a{
+	padding-left:60px;
+}
+#lv-evaluate-score {
+	margin:10px auto;
+}
+.lv-item-sprite01 a {
+	display:inline-block;
+	height:25px;
+	width:25px;
+	padding-left:9px;
+}
+
+.lv-toast {
+	background:#000000;
+	position:absolute;
+	width:200px;
+	border-radius:6px;
+	text-align:center;
+	z-index:1002;
+}
+.lv-toast-div {
+	width:42px;
+	height:42px;
+	margin:20px auto;
+}
+.lv-toast-loading {
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin-left: -16px;
+}
+.lv-toast p {
+	padding:0 10px 20px 10px;
+	color:#ffffff;
+	font-size:1.5em;
+	font-weight:bold;
+}
+ul.lv-evaluate-01 {
+	padding-left:4px;
+}
+.lv-evaluate-01 li{
+	float:left;
+}
+.lv-justify {
+	text-align:justify;
+	text-justify:inter-ideograph;
+}
+.lv-banner-specialsubject {
+	height:146px;
+}
+.lv-spesub-spot {
+	width:145px;
+	position:relative;
+	height:117px;
+}
+.lv-spesub-spot a { display:block;}
+.lv-spesub-spot01 {
+	width:136px;
+	position:relative;
+	/*height:109px;*/
+}
+.lv-spesub-spot01 div img {
+	height:96px;
+}
+.lv-spesubspotdesc-bg01 {
+	background:#2c9a94; height:50px;
+}
+.lv-spesubspotdesc-bg02 {
+	background:#d27f4f; height:50px;
+}
+.lv-spesubspotdesc-bg03 {
+	background:#a0529c; height:50px; bottom:1px !important;
+}
+.lv-spesubspotdesc-bg04 {
+	background:#05a5b8;
+	width:125px;
+	position:relative;
+	height:109px;
+	color:#ffffff;
+	font-size:1em;
+	line-height:1.5em;
+	padding:4px 10px;
+}
+.lv-spesubspotdesc-bg05 {
+	background:#f3ebc4;
+	width:126px;
+	position:relative;
+	height:93px;
+	color:#a3460d;
+	font-size:14px;
+	line-height:19px;
+	padding:3px 10px 13px 10px;
+}
+.lv-spesubspotdesc-bg06{
+	background:#333333;
+	left:0;
+}
+.lv-spesubspot-desc {
+	color:#ffffff;
+	width:70%;
+	position:absolute;
+	bottom:0;
+	margin-left:22px;
+	opacity:.85;
+	text-align:center;
+	line-height:1.5em;
+	clear:both;
+}
+.lv-spesubspot-desc01 {
+	color:#ffffff;
+	width:87px;
+	position:absolute;
+	left:0;
+	bottom:0;
+	opacity:.8;
+	text-align:center;
+}
+.lv-displayblock{
+	display:block;
+}
+.lv-spesubspot-desc01 p{
+	height:30px;
+	line-height:30px;
+}
+.lv-hot-activity {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/specialsubject/activity-hot2.jpg) no-repeat 10px 12px;
+	font-size:1.3em;
+	padding-left:30px;
+	height:30px;
+	line-height:31px;
+	font-family:"微软雅黑";
+	color:#000;
+	padding-top:6px;
+}
+.lv-hot-suggest {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/specialsubject/suggest-hot.gif) no-repeat 10px center;
+	font-size:17px;
+	padding-left:40px;
+	height:36px;
+	line-height:36px;
+}
+dl.lv-activity-dl {
+}
+dl.lv-activity-dl dt {
+	font-size:1.2em;
+	font-family:"微软雅黑";
+	line-height:2em;
+	padding-bottom:3px;
+	color:#000;
+}
+dl.lv-activity-dl dd {
+	line-height:1.8em;
+}
+.lv-route {
+	border-radius:4px; height:120px; overflow:hidden; margin-bottom:10px;
+}
+.lv-route-icon {
+	width:177px;
+	height:120px;
+}
+.lv-route-desc {
+	width:103px;
+	height:120px;
+	background:#ffffff;
+	margin-bottom:10px;
+	padding:8px 4px 8px 14px;
+}
+.lv-narrow-right {
+	position:fixed;
+	right:0;
+	top:100px;
+	width:25px;
+	text-align:center;
+}
+.lv-narrow-li{
+	border-right:4px solid #666666;
+	padding-right:10px;
+	margin-top:4px;
+	font-size:1.2em;
+	font-weight:bold;
+}
+.lv-narrow-current {
+	border-right:3px solid #d957a3;
+	color:#d957a3;
+}
+.lv-paymethod-title {
+	padding-top:10px; font-size:16px;
+}
+.lv-paymethod-desc {
+	margin:10px 0;
+}
+.lv-paymethod-bg {
+	background:#d957a3;
+	padding:4px;
+	margin:10px 0;
+	color:#ffffff;
+}
+.lv-route-reference {
+	position:relative;
+	line-height:1.5em;
+	padding:10px 0;
+	display:table-cell;
+	color:#333; width:90px;
+}
+.lv-route-reference img {
+	position:relative;
+	width:23px;
+	height:11px;
+	margin-bottom:-29px; margin-left:-44px;
+}
+.lv-route-info {
+	background:#ffffff;
+	border-radius:4px;
+}
+.lv-route-list {
+	width:270px;
+	margin:0 auto;
+}
+.lv-route-spot {
+	width:125px;
+	position:relative;
+	height:94px;
+}
+.lv-product-list {
+	
+}
+ul.lv-product-list li {
+	width:270px;
+	position:relative;
+	margin:10px auto;;
+}
+ul.lv-product-list li a {
+	display:block;
+}
+ul.lv-product-list li a div {
+	padding-right:10px;
+}
+.lv-whirl-90{
+   -moz-transform:rotate(90deg);
+   -webkit-transform:rotate(90deg);
+   filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+}
+.lv-italic {
+	font-style:italic;
+}
+.lv-spot-icon {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-icon.png) no-repeat left center;
+	padding-left:20px;
+}
+.lv-spot-icon01 {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-icon-red.png) no-repeat left 10px;
+	padding-left:28px;
+}
+ul.lv-qiandaohu-list {
+}
+ul.lv-qiandaohu-list li {
+}
+.lv-title-02 {
+	background:#08a3d5;
+	width:120px; 
+	text-align:center; 
+	color:#ffffff;
+	height:30px; 
+	line-height:30px;
+}
+
+.dl_con { width:90%; margin:0 auto;}
+#download, #download img { margin:0 auto;}
+.lv-line {
+	background:url(http://pic.lvmama.com/img/mobile/touch/img/seprator-line.png) repeat-x left center;
+	height:2px;
+	width:100%;
+}
+.fl { float:left;}
+.fr { float:right;}
+.cl { clear:both;}
+.iphone, .android { width:50%; margin:0 auto;}
+.iphone img, .android img{ display:inline;}
+.iphone { text-align:right;}
+.android { text-align:left;}
+.footer_v1 { background-color:#ececec; border-top:1px solid #bfbfbf; padding:0 0.5em;}
+
+.backtrack { background:url(http://pic.lvmama.com/img/mobile/touch/img/backtrack.gif) no-repeat 0 11px; display:inline-block; width:31px; padding-left:13px !important;}
+.about_logo{ text-align:center; padding:10px 0; width:70%; margin:0 auto;}
+.about_us { font-family:"微软雅黑";}
+.about_us h1 { font-size:15px; padding-bottom:15px; text-align:center;}
+.about_us .info { line-height:20px; font-size:13px; display:block; margin:0 13px;}
+.copyright { text-align:center; padding:20px 0 10px 0; line-height:20px;}
+.about_info { width:300px; padding:0 10px; margin-bottom:15px;}
+.about_info dt { text-align:left; border-bottom:1px dashed #ccc; padding:5px 0 10px 5px; margin-bottom:5px; }
+.about_info dd { padding:2px 5px;}
+.about_info dt i{ font-weight:bold; color:#d50076; font-style:normal;}
+.contact_us { margin-top:5px; padding-bottom:20px;}
+.ic_my1, .ic_my2, .ic_my3, .ic_my4 { background:url(http://pic.lvmama.com/img/mobile/touch/img/my_loging.gif) no-repeat; width:30px; height:23px; display:block; float:left;}
+.ic_my1 { background-position:left -13px;}
+.ic_my2 { background-position:left -53px;}
+.ic_my3 { background-position:-4px -95px;}
+.ic_my4 { background-position:left -143px;}
+.my_lv em, .my_lv img, .my_lv li a { display:block}
+.my_lv em { float:left; font-style:normal; padding-left:5px; font-size:14px;}
+.my_lv img { float:right; width:9px;}
+.my_lv { border-bottom:1px solid #d2d2d2; margin:10px;}
+.my_lv li { height:auto; overflow:hidden; border:1px solid #d2d2d2; border-bottom:none;}
+.my_lv li a { width:auto; height:auto;padding:12px; overflow:hidden;}
+.sugg_note { background:#fef8e7; border:1px solid #e7d7af; padding:10px; color:#666; line-height:20px; font-size:14px; margin:10px;}
+.sugg_text { padding:12px 14px; margin:0 10px 10px 10px; width:271px; height:170px; color:#999; text-align:left;}
+.lv-min-height { min-height:300px;}
+.none_lv { margin:15px auto; width:224px;text-align:center;height:auto; overflow:hidden;}
+.none_lv img { width:auto; display:inline-block; float:left;}
+.none_lv span { display:inline-block; width:150px; line-height:20px; text-align:left; padding:13px 0 0 5px;}
+.telBox { position:absolute; z-index:100; color:#fff; left:50%; top:50%; margin-left:-140px; margin-top:-70px; width:280px; display:none;}
+.telBox_con { width:280px; opacity:0.8;background:#0b1b44; height:136px; border-radius:10px; border:2px solid #fff;}
+.telBox span, .telBox p { display:block; font-size:18px; width:auto; margin-left:auto; margin-right:auto; height:auto; overflow:hidden;position:relative;}
+.telBox a { width:127px; height:43px; display:block; float:left; margin:0 1px 0 10px;}
+.telBox .p{ margin-top:-124px; position:relative;}
+.telBox p { color:#fff !important; font-weight:bold; height:25px; padding-left:67px; overflow:hidden; margin-bottom:10px;}
+.telBox span { color:#fff; margin-bottom:10px; text-align:center;}
+.ic_tel { background:url(http://pic.lvmama.com/img/mobile/touch/img/button_sub.png) no-repeat; margin-left:3px;}
+.ic_tel:active { background:url(http://pic.lvmama.com/img/mobile/touch/img/button_sub_02.png) no-repeat;}
+.ic_ret { background:url(http://pic.lvmama.com/img/mobile/touch/img/button_ret.png) no-repeat;}
+.ic_ret:active { background:url(http://pic.lvmama.com/img/mobile/touch/img/button_ret_02.png) no-repeat;}
+.conpon_ti { color:#333; font-family:"微软雅黑"; margin-bottom:2px;}
+.f_9f9f9f { color:#9f9f9f;}
+.model { left:0; top:0; position:absolute; z-index:5; background-color:#000;opacity:0.5;}
+.ic_up, .ic_down {display:block; width:20px; height:20px; float:right; padding-right:9px; margin-top:-27px;}
+.ic_down{background:url(http://pic.lvmama.com/img/mobile/touch/img/ic_down.gif) no-repeat;}
+.ic_up{background:url(http://pic.lvmama.com/img/mobile/touch/img/ic_up.gif) no-repeat;}
+.lv-box-list .spot_note, .spot_note {line-height:21px; color:#999;}
+.spot_hei { height:auto !important;}
+.spot_note_mor { border:none !important; padding-bottom:0 !important;}
+.ic_logout {background:url(http://pic.lvmama.com/img/mobile/touch/img/button_zx.png) no-repeat;}
+.ic_logout:active { background:url(http://pic.lvmama.com/img/mobile/touch/img/button_zx_02.png) no-repeat;}
+.telBox_logout .p { margin-top:-108px;}
+.tianmu_zt { margin-top:-50px; position:relative;color:#fff; text-align:center; width:70%; margin-left:auto; margin-right:auto;font-family:"微软雅黑"; }
+.tianmu_zt .lv-color, .tianmu_zt2 .lv-color{ color:#fff; font-size:1.1em;}
+.tiammu_zt .lv-proto-price{color:#42d1c8;}
+.tianmu_zt2 .lv-proto-price { color:#f3b996;}
+.tianmu_zt3 .lv-proto-price { color:#c480b3;}
+.about_journey { font-size:16px; color:#000; font-family:"微软雅黑"; padding:8px 0 12px 0}
+.abt_jny i { font-style:normal; font-size:8px; color:#333;}
+.abt_jny .lv-proto-price { color:#9a9a9a; font-size:9px; padding-left:7px;}
+.lv-route-desc p { color:#333; min-height:86px;}
+.btn_more { display:block; display:none; background:#e53996; color:#fff; text-align:center; padding:8px 0; font-size:17px; margin:10px auto; width:233px;}
+.tmh_mar { margin-top:5px;}
+.about_jou_info {border-radius:0;}
+.tab_ti { background-color:#fff; height:41px;}
+.tab_ti .lv-cascade-search {line-height:40px !important;}
+.tab_ti .lv-change-color { font-size:17px; color:#464646; font-family:"微软雅黑";}
+.tmh_mar .lv-fontweight-bold {margin-top:5px; font-family:"微软雅黑";}
+.tab_con2 .lv-paymethod-desc{ color:#666; margin:4px 0 12px 0;}
+.tab_con2 .lv-route-info { border-radius:0; border-top:1px solid #ebebeb; margin:0 -5px 17px -5px; 
+padding-bottom:3px;}
+.date1 { padding:8px 10px; line-height:20px; font-size:14px;}
+.tab_con2 .date2 {margin-top:7px;}
+.pl20{padding-left:20px;}
+.play_a { font-size:16px; font-family:"微软雅黑"; color:#000; padding-top:20px; padding-left:10px;}
+.play_a_con {margin:5px auto; background:#ffffff; width:290px;}
+.play_a_con li { margin:7px auto !important;}
+.play_a_con .lv-color-03 { margin-bottom:5px; width:98%;}
+.play_a_con div { margin-bottom:3px;}
+.play_a_con .lv-proto-price{ padding-left:10px; font-size:14px;}
+.date_pd{ padding-left:30px;}
+.tab_con3 .lv-title-01 img { padding:0 5px; width:20px; height:20px;}
+.play_03 { font-size:16px; padding:5px 10px 7px 15px;}
+.tab_con3 .lv-route-list { margin-bottom:9px;}
+.lv_v1_qdh { background-color:#fff;}
+.lv_v1_qdh .lv-change-color { font-size:16px; color:#333;}
+.lv_v1_qdh .lv-cascade-search { height:41px; line-height:39px;}
+.lv_v1_qdh .lv-cascade-icongrey{ bottom:-5px !important;}
+.lv_v1_qdh2 .lv-paymethod-desc { color:#666; padding-bottom:10px;}
+.lv_v1_qdh2 .lv-box-info { border:1px solid #e8e8e8;}
+.lv_v1_qdh2 .lv-spot-icon { font-size:16px;}
+.lv_v1_qdh2 .lv-padding-y10 { padding:6px 0 2px 0; color:#333;}
+.lv_v1_qdh2 .lv-spot-icon { padding-left:23px;}
+.lv_v1_qdh3 .lv-title-02{font-size:15px;}
+.lv_v1_qdh3 .lv-qiandaohu-list { color:#666;}
+.lv_v1_qdh3 .lv-route-info {border-radius:0; border:1px solid #e7e7e7; padding-bottom:12px; margin-bottom:12px;}
+.lv_qdh3_ti { font-size:15px; color:#000; padding:5px 0 5px 13px; width:255px;}
+.lv_qdh3_li { margin:0 auto !important; background:none; width:272px; border:1px solid #e6e6e6;}
+.lv_qdh3_li a { width:242px;}
+.lv_qdh3_li li { margin:4px 9px !important;width:255px !important;}
+.lv_qdh3_li .lv-color-03 { padding-bottom:3px; padding-right:0;}
+.lv_qdh3_li2 { padding:5px 0 13px 13px;}
+.lv_v1_qdh3 { margin:11px 0 0 0;}
+.zzy_ti { color:#1f1f1f; font-size:22px; padding:0 0 6px 13px; display:inline-block;}
+.zzy_wrap .lv-spesub-spot01{ padding-top:16px;}
+.zzy_wrap .lv-color-02 { font-size:18px; font-weight:bold;}
+.zzy_wrap .lv-box { border:1px solid #e3e3e3;}
+.zzy_wrap .lv-displayblock { padding-top:2px;}
+.lv_cl2 {height:44px; line-height:40px; position:relative; margin:5px auto; font-size:22px;}
+.lv_cl2 a{ color:#383636;text-shadow:-1px 0 1px #989898;}
+.lv_cl_dis { font-size:17px; line-height:24px; padding:8px 15px 13px 15px; color:#666;}
+.lv_cl_ti { color:#000; font-size:18px; padding:0 0 10px 15px;}
+.lv_v1_qdh4 { background:none; margin:0 auto 15px auto !important; width:262px;}
+.lv_v1_qdh4 li { width:auto !important; margin:8px auto 0 auto !important;}
+.lv_v1_qdh4 li div { width:228px; padding-bottom:8px; font-size:14px;}
+.lv_v1_qdh4 li .lv-color-03{ font-size:17px; line-height:23px;}
+.lv_v1_qdh4 li a{ padding:0 0 0 10px;}
+.lv_v1_qdh4 .lv-redirect-next01 { right:10px; top:30%;}
+.lv_jn_stp { background:#d11f7f; font-size:16px; margin-right:10px; font-weight:bold; color:#fff; padding:2px 7px 2px 3px; font-family:Arial;}
+.lv_jn_ti { font-size:22px; color:#333; text-shadow:-1px 0 1px #989898;}
+.lv_jn_timain { padding:10px 0 11px 0;}
+.lv_nj_ti2 { font-size:16px; color:#000; padding:7px 0 2px 10px;text-shadow:-1px 0 1px #989898;}
+.lv_nj_dis { color:#454545; font-size:14px; line-height:24px; padding:0 10px;}
+.lv_jn_lk_gl { color:#0066cc; text-align:right; padding-left:120px; font-size:14px;}
+.lv_jn_wrap { margin:10px auto;}
+.lv_lx_ti1 { padding:0 !important;height:20px; width:59px; overflow:hidden; margin:0 auto;}
+.lv_lx_ti2 { padding-top:8px; width:87%; margin:0 auto;}
+.lv_lx_wrap .lv-biz-list{ padding:0 0 3px 0!important; margin:0; width:100%; height:auto; overflow:hidden;}
+.lv_lx_wrap .lv-biz-list li { padding-top:0;}
+.lv_lx_wrap .lv-hot-activity { padding-top:0; background-position:10px 8px; font-size:17px; height:36px; line-height:36px;}
+.lv_lx_wrap .lv-box { padding-bottom:13px; border:1px solid #ececec;}
+.lv_lx_wrap .lv-two-line { color:#333;}
+.lv_lx_wrap .lv-seprator-lined2 { background-color:#dedede;}
+.lv-header-container .lv-phone { padding-top:4px;}
+.spt_btn { border-radius:0; margin-left:0; margin-right:0; padding-left:10px;}
+.spt_btn_pad { margin:10px;background-image: -webkit-gradient(linear,left top,left bottom,from(#f9f9f9),to(#f1f1f1));
+background-image: -webkit-linear-gradient(#f9f9f9,#f1f1f1);
+background-image: -moz-linear-gradient(#f9f9f9,#ee9c38);
+background-image: -ms-linear-gradient(#f9f9f9,#f1f1f1);
+background-image: -o-linear-gradient(#f9f9f9,#f1f1f1);
+background-image: linear-gradient(#f9f9f9,#f1f1f1);
+}
+.spt_map { color:#333; font-size:14px; text-align:left; height:29px; line-height:30px; overflow:hidden;}
+.lv-create-time { color:#999;}
+.lv-user-score .lv-pull-right { color:#999;}
+.lv_jdmp .lv-box-title h3{ color:#333 !important; font-weight:100;}
+.lv_jdmp .lv_jdmp h3 { color:#666; font-weight:100; font-size:15px;}
+.lv_jdmp .lv-box-list .lv-color { font-size:18px;}
+.lv_jdmp .lv-box-list .lv-padding-y10 { padding-top:2px;padding-bottom:0;}
+.lv_jdmp .lv-seprator-line { margin:4px 0 10px 0;}
+.lv_jdmp .lv-box-list .lv-btn-01 { margin-top:-14px;}
+.lv_jdmp .lv-box-list .lv-btn-02 { margin-top:-14px;}
+.lv_jdmp .lv-box-list .lv-btn-04 { margin-top:-14px;}
+.lv_jdmp .lv-box-list h3 { font-size:14px;}
+.lv_jdmp .lv-box { margin-top:5px !important; margin-bottom:13px !important;}
+.lv_jdmp2 .lv-box-list { /*background:#f7f7f7;*/}
+.lv_jdmp2 { border:none;}
+.lv_jdmp_add { box-shadow:inset 0 3px 6px #e0e0e0; background:#eeeeee;display:none; border-left:1px solid #cbcbcb;border-right:1px solid #cbcbcb;}
+#wrapper {
+	position:absolute; z-index:1; width:100px;
+}
+#scroller {
+	position:relative;/* width:100px;*/
+}
+#scroller ul {
+	position:relative;
+}
+.lv-order-content .lv-color{ font-size:14px;}
+.message a{ color:#333;}
+.message .lv-evaluate-final { margin-left:10px !important; color:#666; font-size:10px;}
+.message .lv-box{ margin-left:10px; margin-right:10px;}
+.message .lv-order-content, .myorder .lv-order-content{width:275px;}
+.message .lv-order-desc, .myorder .lv-order-desc{ width:194px;}
+.myorder .lv-order-operate{padding-top:9px;}
+.myorder .lv-box { margin:10px 0 !important;}
+
+/*datepicker*/
+#datePicker {  border-collapse:collapse; border-spacing:0; width:100%;}
+#datePicker thead { background:#f3f3f3; color:#8c8c8c; border-left:1px solid #cacaca; 
+border-right:1px solid #cacaca;}
+#datePicker thead tr th { color:#8c8c8c; padding:3px 0;}
+#datePicker tbody tr td{ border:#d2d2d2 solid 1px; padding:2px;}
+.date_active { background:#d11f7f !important; color:#fff;}
+.date_active div { color:#fff !important;}
+.lv-text-right { text-align:right; padding-right:4px;}
+.lv-text-center { text-align:center; } 
+.date_month { text-align:center; font-weight:bold; padding:5px 0;border:1px solid #cecece; margin-top:10px; 
+background:#fff;font-size:16px;}
+.date_da { color:#afafaf; padding-left:5px;  font-size:16px;}
+.date_da2, .date_da2 .date_da { background:#e9e9e9; color:#e0e0e0;}
+.date_da2 .date_da{ padding-left:5px; vertical-align:top;}
+.date_da3 { background:#f3f3f3;}
+.date_da5 { background:#fff;}
+.date_da5 .date_da { color:#000; font-weight:bold;}
+.lv-price{ text-align:center; color:#d11f7f; font-size:13px;}
+.date_da_week .date_da { color:#fb8d36;}
+.calendar { margin:0 10px 10px 10px;}
+.calendar_con { padding-bottom:10px; width:320px;}
+.group .lv-color{ font-size:13px;}
+.group .lv-current-price, .group .lv-proto-price { text-align:left; padding-left:9px;}
+.group th { color:#999; font-weight:100;}
+.group .lv-box-info { padding-bottom:5px;}
+.group .lv-box-info p { padding-top:7px;}
+.pay_note { color:#333; padding:5px 10px;}
+.pay_note_con { border:1px solid #e7d7af; background:#fef8e7; margin-top:10px;}
+.pay_wrap .lv-span-04{width:70px; color:#666; font-weight:100; text-align:right; vertical-align:top;}
+.pay_wrap .lv-span-03 { font-weight:100;color:#000 !important;padding-left:0;width: 203px;display: inline-block; line-height:25px;}
+.pay_wrap .lv-order-li { width:100%; height:auto; overflow:hidden;}
+.pay_wrap .lv-wrapper-container .lv-box { margin-left:0; margin-right:0;}
+.pay_w1 { width:205px !important; text-align:left !important; color:#000 !important;}
+.pay_w2 { font-size:16px; color:#666;}
+.pay_w3 { font-size:18px;}
+.pay_w4 { margin:5px 0 0 27px; width:20px; height:22px; margin-bottom:-6px; background:url(http://pic.lvmama.com/img/mobile/touch/img/sheng.gif) 0 0 no-repeat; font-size:14px; display:inline-block;}
+.pay_w5 { font-size:14px; display:inline-block; padding-left:6px;}
+.ic_right { position:relative; top:-77px; left:266px; width:auto;}
+.dapay_a { display:block; height:auto; overflow:hidden; margin-bottom:-22px;}
+.pay_class { padding-top:4px; display:inline-block;}
+.jd_title {position:relative; width:200px; overflow:hidden; z-index:1; 
+padding-bottom:5px;
+font-size:16px;white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+-o-text-overflow: ellipsis;
+-ms-text-overflow: ellipsis;}
+.jd_info { color:#999; font-size:10px;}
+.jd_wrap li i, .jd_wrap_free li i, .holiday_wrap li i { color:#666; font-style:normal; padding:0 8px 0 2px; font-size:10px;}
+.jd_wrap .lv-proto-price, .jd_wrap .lv-pull-right , 
+.jd_wrap_free .lv-proto-price, .jd_wrap_free .lv-pull-right,
+.holiday_wrap .lv-proto-price, .holiday_wrap .lv-pull-right
+ { color:#666;}
+.holiday_wrap .jd_title2, .jd_wrap_free .jd_title2, .jd_wrap .jd_title2{ max-height:42px; overflow:hidden; width:200px; font-size:16px; line-height:20px;}
+.holiday_dis { font-size:16px; line-height:23px;}
+.timing { width:100%; height:auto; overflow:hidden; color:#666; margin:8px 0 -10px 0;}
+.timing em {font-style:normal;}
+.ic_peo { /*padding-right:20px;*/}
+.ic_peo i {background:url(http://pic.lvmama.com/img/mobile/touch/img/ic_people.gif) 0 3px;}
+.ic_time i {background:url(http://pic.lvmama.com/img/mobile/touch/img/ic_time.gif) 0 3px;}
+.ic_peo i, .ic_time i { display:inline-block; background-repeat:no-repeat;width:16px; height:18px;
+margin-bottom:-3px; margin-right:2px;}
+.ic_time i { padding-left:2px;}
+.lv_jdmp { margin-top:10px;}
+.free_btn .lv-btn-02 { float:right;}
+.free_line { margin-top:-8px;}
+.free_line .lv-seprator-line{ margin:0;}
+.lv-jj li a span.lv-span-jj {font-size:0.8em;}
+.stbok_01 { right:10px;}
+.mylv_login { padding-left:10px;}
+.mylv_login2 { width:80px;}
+.mylv_login .lv-btn-03 { font-size:14px; margin-top:5px;}
+.more_btn { font-size:16px;}
+.group .lv-box:first-child { margin-top:0px;}
+.img_info { font-size:14px; line-height:23px; padding-top:10px;}
+.img_info img{ width:auto !important;}
+#data_list .lv-box { margin-left:0 !important; margin-right:0 !important}
+.order_tab { width:100%; height:auto; overflow:hidden;}
+.order_tab li{ float:left; width:99px; margin-bottom:5px; text-align:center; height:36px; border-bottom:1px solid #d4d4d4;}
+.order_tab a { display:block; width:99px; padding:8px 0; position:absolute;}
+.order_tab span { display:block;color:#666666;}
+.order_tab .lv-cascade-icongrey { position:relative; bottom:-3px; background:url(http://pic.lvmama.com/img/mobile/touch/img/narrow-grey2.png);}
+.order_tab_cur span{ color:#000;}
+.tab_box .lv-pad-content { color:#555; padding-bottom:9px;}
+.stbook .lv-booking-name{ padding-bottom:0; border-bottom:none; padding:7px 10px 0 10px;}
+.stbook h3{ color:#666666; margin-bottom:8px; font-weight:100; font-size:16px;}
+.stbook .lv_tab { background-color:#f7f7f7;}
+.stbook .lv-proinfo-list label, .stbook .lv-proinfo-list .lv-span-01 {font-size:16px; font-weight:100; width:65px;}
+.stbook .lv_tab{ margin-bottom:10px;}
+.app_dis { padding-bottom:10px;}
+.app_dis dl dt{ font-size:18px; padding:15px 10px 10px 10px; color:#000; 
+border-bottom:1px solid #bfbfbf; box-shadow:0 4px 4px #e4e4e4;}
+.app_dis dd{ line-height:25px; padding:8px 10px 0 10px; font-size:14px;}
+.lv11_w {max-height: 40px;overflow: hidden;margin-bottom:-5px;}
+.spott_pad1 { margin-top:12px;}
+#spanSort {font-size:13px;text-align:left;display: block;}
+.down_push { width:320px; background-image: -webkit-gradient(linear,left top,left bottom,from(#f7f7f7),to(#d0d0d0));
+background-image: -webkit-linear-gradient(#f7f7f7,#d0d0d0);
+background-image: -moz-linear-gradient(#f7f7f7,#d0d0d0);
+background-image: -ms-linear-gradient(#f7f7f7,#d0d0d0);
+background-image: -o-linear-gradient(#f7f7f7,#d0d0d0);
+background-image: linear-gradient(#f7f7f7,#d0d0d0); height:auto; overflow:hidden; margin:0 auto; padding:5px 0;}
+.down_push h1 i{background-image: url(data:image/gif;base64,R0lGODlhBwAHAMQRAMrKytjY2OLi4ouLi8/Pz+np6a+vr5+fn5ycnODg4MPDw6Ojo3BwcH19ffj4+P///25ubv///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjAxODAxMTc0MDcyMDY4MTE5MTA5RDE4OEMyQ0JCNzIwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjYyNDZDMkQ1RTg2MTExRTJBNkMyQTNCRkI3QUM3MjJGIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjYyNDZDMkQ0RTg2MTExRTJBNkMyQTNCRkI3QUM3MjJGIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgTWFjaW50b3NoIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MDE4MDExNzQwNzIwNjgxMThBNkRDMzc3RDJCM0RCQzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MDE4MDExNzQwNzIwNjgxMTkxMDlEMTg4QzJDQkI3MjAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4B//79/Pv6+fj39vX08/Lx8O/u7ezr6uno5+bl5OPi4eDf3t3c29rZ2NfW1dTT0tHQz87NzMvKycjHxsXEw8LBwL++vby7urm4t7a1tLOysbCvrq2sq6qpqKempaSjoqGgn56dnJuamZiXlpWUk5KRkI+OjYyLiomIh4aFhIOCgYB/fn18e3p5eHd2dXRzcnFwb25tbGtqaWhnZmVkY2JhYF9eXVxbWllYV1ZVVFNSUVBPTk1MS0pJSEdGRURDQkFAPz49PDs6OTg3NjU0MzIxMC8uLSwrKikoJyYlJCMiISAfHh0cGxoZGBcWFRQTEhEQDw4NDAsKCQgHBgUEAwIBAAAh+QQBAAARACwAAAAABwAHAAAFIGDkGANSRNECrY0TMesaRE0MCREAQ8cTPQkF4eEjGiMhADs=);
+background-size:contain; display:inline-block; margin:0 3px;width:5px;height:5px;}
+.down_push h1 { text-shadow:0 2px 1px #fff; width:178px; line-height:23px; padding-top:5px; display:inline-block; font-weight:100;}
+.down_push h1 b{ display:block; font-size:15px; color:#000; font-weight:100;}
+.down_push h1 em{ display:block; font-size:12px; font-style:normal; color:#535252;}
+.down_logo { width:52px; float:left; padding:0 8px;}
+.down_push p {width: 65px;display: block;padding-left:5px;margin-top:-31px;position: absolute;margin-left: 250px;}
+.btn_down { display:inline-block; padding:3px 12px; border:1px solid #a7a7a7; background-image: -webkit-gradient(linear,left top,left bottom,from(#fefefe),to(#d3d3d3));
+background-image: -webkit-linear-gradient(#fefefe,#d3d3d3);
+background-image: -moz-linear-gradient(#fefefe,#d3d3d3);
+background-image: -ms-linear-gradient(#fefefe,#d3d3d3);
+background-image: -o-linear-gradient(#fefefe,#d3d3d3);
+background-image: linear-gradient(#fefefe,#d3d3d3); border-radius:5px; text-align:center; color:#666; text-shadow:0 1px 1px #fff;}
+.ic_del {background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAYAAAA6GuKaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOTEwOUQxODhDMkNCQjcyMCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo4RkE3OUY4QkU4NjgxMUUyQTdBRUZBN0NDNUI4M0Q5OCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo4RkE3OUY4QUU4NjgxMUUyQTdBRUZBN0NDNUI4M0Q5OCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4RkYwRDAyOTY0RThFMjExOEE5RUY2M0NFMTY3MUEzQSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOTEwOUQxODhDMkNCQjcyMCIvPiA8L3JkZjpEZXNjcmlwdGlv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);
+background-size:contain; display:block; width:22px; height:22px; float:right; margin:-24px 7px 0 0;}
+.lv_jdmp2 .lv-pull-left { color:#999;}
+.lv_jdmp2 .lv-btn-02 { color:#fff;}
+#timeHolder{font-size:14px; display:inline-block; vertical-align:middle;}
+.free_btn { padding-top:10px !important; margin-top:5px; border-top:1px solid #dddddd; height:auto; overflow:hidden;}
+.v1_1_hui { width:278px; padding:10px; background:#f7f7f7; margin:0 10px; border:1px solid #cfcfcf;}
+.v1_1_hui em, .v1_1_hui i{ font-style:normal;}
+.ic_fan {background:url(http://pic.lvmama.com/img/mobile/touch/img/holiday/ic_fan.gif)}
+.ic_hui {background:url(http://pic.lvmama.com/img/mobile/touch/img/holiday/ic_hui.gif)}
+.ic_point { background:url(http://pic.lvmama.com/img/mobile/touch/img/holiday/icon.jpg); background-size:contain; margin:0 5px; display:inline-block; width:5px; height:5px;}
+.ic_hui, .ic_fan {display:inline-block; background-size:contain; width:20px; height:20px;}
+.f_e70685 { color:#e70685;}
+.login_note { font-size:15px; color:#999; padding-left:10px;padding-left: 10px;margin-bottom: -5px;}
+.tap_click { width:134px; height:auto; overflow:hidden; float:left;}
+.tap_btn { margin:22px 0 5px 0;}
+.pay_order { width:99%; margin:0 auto; font-size:16px; padding:5px 0;}
+.pay_wrap { height:auto; overflow:hidden;}
+.radio_01 {background-image: url(data:image/gif;base64,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); background-size:contain; width:22px; height:22px; display:inline-block;float:right;}
+.pad_01 { margin:5px 10px 0 0;}
+.pay_ti { color:#666; font-weight:100; margin-bottom:-5px; font-size:16px;}
+.ti_01 {}
+.ti_02 { padding-top:3px;}
+.sub_order { padding:0 0 18px 0;font-size:1.2em;}
+.pay_sub01 {height:47px; line-height:47px; font-size:16px; background:#2c2c2c; color:#fff; margin:0 -10px -10px -10px; color:#ebebeb;}
+.pay_ti01 { padding:3px 10px;}
+.pay_submit {margin:7px; width:80px;}
+#lv-pay-list {margin:10px 0;background:#f7f7f7;}
+#order_submit input.lv-input-text { padding:0; margin-left:5px; line-height:23px;}
+#order_submit label { padding:0;}
+.order_01 {display:inline-block;margin-left:14px;}
+.fill_01 { padding:5px;}
+#order_submit { text-align:left; padding-left:5px;}
+#scroller { width:102px; color:#999;}
+#total_price { font-size:18px;}
+.user_name {height:30px; overflow:hidden;}
+.login_v2 label{ width:47px !important;}
+.tab_place a{ font-size:16px !important;}
+.message {margin:0 auto;}
+
+

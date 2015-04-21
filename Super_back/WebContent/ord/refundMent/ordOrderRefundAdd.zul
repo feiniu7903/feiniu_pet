@@ -1,0 +1,208 @@
+﻿<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_refund_add"?>
+<?component name="ordSaleAddComponent" macroURI="/ord/sale/ordSaleAdd.zul" ?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	
+	<window  id="win_refund_add" title="售后服务处理" border="normal"
+		apply="com.lvmama.back.web.ord.refundMent.OrdOrderRefundAddAction">
+		<groupbox style="border: none">
+			<caption label="添加售后服务内容" />
+			<grid>
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label width="150px" value="申请售后服务类型:" />
+						</hbox>
+						<hbox>
+							<listbox id="service_Type" codeset="SERVICE_TYPE"
+								mold="select" selectedItem="@{saction.ordSalePo.serviceType}" onSelect="btn_showButton()" />
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="申请内容:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox id="ordSale_applyContent" rows="5"
+								maxlength="200" value="@{saction.ordSalePo.applyContent}"
+								constraint="no empty:申请内容不能为空" width="680px">
+							</textbox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		
+		<zscript>
+			List items = saction.historyOrderDetail.allOrdOrderItemMetas; 
+		</zscript>
+		<groupbox style="border: none;">
+			<caption label="采购产品"></caption>
+			<listbox id="ordItemMetaListbox" multiple="true" checkmark="true">
+				<listhead>
+					<listheader style="width:100px;" label="采购产品ID"></listheader>
+					<listheader label="采购产品名称"></listheader>
+					<listheader label="结算状态"></listheader>
+					<listheader label=""></listheader>
+					<listheader label="备注" />
+				</listhead>
+				<listitem forEach="${items}">
+					<listcell> 
+						<label value="${each.metaProductId}" id="${each.orderItemMetaId}" />
+						<label value="${each.orderItemMetaId}" visible="false"  />
+					</listcell>
+					<listcell> <label value="${each.productName}" /> </listcell>
+					<listcell> <label value="${each.settlementStatusStr}" /></listcell>
+					<listcell> 
+						<listbox mold="select">
+							<listitem label="游客损失" value="VISITOR_LOSS" selected="true"/>
+							<listitem label="供应商承担金额" value="SUPPLIER_BEAR"/>
+						</listbox>
+						<doublebox width="60px" maxlength="10"></doublebox> 
+						<label value="${each.actualSettlementPrice}" visible="false"  />
+						<label value="${each.productQuantity}" visible="false"  />
+						<label value="${each.quantity}" visible="false"  />
+					</listcell>
+					<listcell> 
+						<textbox width="120px"></textbox> 
+					</listcell>
+				</listitem>
+			</listbox>
+		</groupbox>
+		
+		<groupbox style="border: none">
+			<caption label="添加退款服务内容" />
+			<grid>
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+					<column width="100px" align="right"></column>
+					<column></column>
+					<column width="100px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label width="150px" value="退款总金额:" />
+						</hbox>
+						<hbox>
+							<doublebox id="amount"
+								value="@{saction.ordRefundment.amountYuanStr}"
+								constraint="/^[0-9]*$/:仅允许输入数字;">
+							</doublebox>
+							<button label="计算" onClick="computeAmount()"></button>
+						</hbox>
+						<hbox>
+							<label width="100px" value="违约金:" />
+						</hbox>
+						<hbox>
+							<doublebox id="penaltyAmount"
+								value="@{saction.ordRefundment.penaltyAmountYuan}"
+								constraint="/^[0-9]*$/:仅允许输入数字;">
+							</doublebox>
+						</hbox>
+						<hbox>
+							<label width="100px" value="退款类型:" />
+						</hbox>
+						<hbox>
+							<listbox id="ord_refund_type" if='${saction.isCancelOrder=="true"}' mold="select" >
+								<listitem label="订单退款" value="ORDER_REFUNDED" selected="true" />
+							</listbox>
+							
+							<listbox id="ord_refund_type" if='${saction.isCancelOrder!="true"}' codeset="REFUND_TYPE"
+									mold="select" selectedItem="@{saction.ordRefundment.refundType}" />
+							<label id="cancelOrder" visible="false" value="@{saction.isCancelOrder}"></label>
+						</hbox>
+					</row>
+					<row spans="1,5">
+						<hbox>
+							<label value="退款要求及备注:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox id="ord_applyContent" rows="5"
+								maxlength="200" value="@{saction.ordRefundment.memo}"
+								constraint="no empty:退款要求信息不能为空" width="680px">
+							</textbox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		
+		<textbox id="btnPayTotal"  value="@{saction.historyOrderDetail.oughtPayYuan}" visible="false"/>
+		<textbox id="btnActualPay"  value="@{saction.historyOrderDetail.actualPayYuan}" visible="false"/>
+		<textbox id="btnRefundedAmount" value="@{saction.historyOrderDetail.refundedAmountYuan}" visible="false"/>
+		<toolbar align="center">
+			<button id="saveSale" width="100px" label="提交" onClick="chk_value()">
+				<custom-attributes saleServiceId="${saction.saleServiceId}" />
+				<custom-attributes isCancelOrder="@{saction.isCancelOrder}" />
+				<custom-attributes cancelResson="旅客申请取消" />
+			</button>
+			<button label="关闭窗口" width="100px" onClick="win_refund_add.detach()"></button>
+			<button id="applySale" label="申请" width="100px" onClick="checkForApply()"></button>
+		</toolbar>
+			<zscript>
+				public void chk_value() {
+					if(service_Type.getSelectedItem()==null || service_Type.getSelectedItem().getValue()==""){
+							alert("请选择售后服务申请服务类型!");
+							return;
+					}
+					if(ordSale_applyContent.getValue()==""){
+							alert("请填写售后服务申请内容!");
+							return;
+					}
+					if ( null == amount.getValue() || amount.getValue() == "") {
+							alert("请填写退款单中的退款金额!");
+							return;
+					}
+					if (ord_applyContent.getValue() == "") {
+							alert("请填写退款单中的退款要求及备注!");
+							return;
+					}
+					saction.checkUserIsvalid("UNVERIFIED");
+				}
+				
+				public void btn_showButton(){
+					if(service_Type.getSelectedItem().getValue().equals("URGENCY")){
+						saveSale.setVisible(false);
+						applySale.setVisible(false);
+					}else{
+						saveSale.setVisible(true);
+						applySale.setVisible(true);
+					}
+				}
+				
+				// 点击【申请】按钮时，校验
+				public void checkForApply(){
+					if(service_Type.getSelectedItem()==null || service_Type.getSelectedItem().getValue()==""){
+							alert("请选择售后服务申请服务类型!");
+							return;
+					}
+					if(ordSale_applyContent.getValue()==""){
+							alert("请填写售后服务申请内容!");
+							return;
+					}
+					if (ord_applyContent.getValue() == "") {
+							alert("请填写退款单中的退款要求及备注!");
+							return;
+					}
+					saction.checkUserIsvalid("REFUND_APPLY");
+				}
+			
+				// 计算
+				public void computeAmount(){
+					Double amountValue = saction.computeAmount();
+					amount.setValue(amountValue);
+				}
+			</zscript>
+		</window>
+	</zk>

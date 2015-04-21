@@ -1,0 +1,44 @@
+<#if hotelOrderList?? && hotelOrderList?size&gt;0>
+	<#list hotelOrderList as hotelOrder>
+		<article >
+		    <div class="common-order-pan t_title"><h3>订单号：${hotelOrder.orderId!}</h3>
+		       <#if hotelOrder.statusCode?? && (
+	           	hotelOrder.statusCode=="N" || 
+	           	hotelOrder.statusCode=="V" || 
+	           	hotelOrder.statusCode=="G" || 
+	           	hotelOrder.statusCode=="U" || 
+	           	hotelOrder.statusCode=="O" || 
+	           	hotelOrder.statusCode=="Z" || 
+	           	hotelOrder.statusCode=="H" || 
+	           	hotelOrder.statusCode=="B1"
+	           	)>
+	           	<span> ${hotelOrder.status!}</span>
+	           	<#else>
+	               	<span class="disable"> ${hotelOrder.status!}</span>
+		       </#if>
+		    </div>
+		
+		    <div class="common-order-line" onclick="union_skip('${request.contextPath}/order/hotel_order_detail.htm?orderId=${hotelOrder.orderId!}');">
+		    <span>
+		   	${hotelOrder.name!}<br>
+		                    总额：<span class="f-color-1">&yen; ${hotelOrder.totalPrice!}</span><br>
+		                    预订日期： ${hotelOrder.creationDate!}<br>
+		                    入住日期： ${hotelOrder.arrivalDate!}<br>
+		                    离店日期：${hotelOrder.departureDate!}<br>
+		                </span>
+		        <span class="ic_ri"></span>
+		    </div>
+		
+		    <div class="common-order-line">
+			     <#if hotelOrder.canCancel>
+	               	<a class="btn_style_2" onclick="cancelHotelOrder(${hotelOrder.orderId!},0);" href="javascript:void(0);">取消订单</a>
+	           	 </#if>
+	             <a class="btn_style_1" href="${request.contextPath!}/hotel/hotelDetail.htm?arrivalDate=${arrivalDate!}&departureDate=${departureDate!}&hotelId=${hotelOrder.hotelId!}" >再次预订</a>
+		    </div>
+		</article>
+	</#list>	
+</#if>
+<input id = "tmp_p" type ="hidden" value = "${pageIndex!}"/>
+<#if !hasNext  >
+    <input id="lastPage_flag" type="hidden" value="1"/>
+</#if>

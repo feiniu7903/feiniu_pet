@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="NC_COMPLAINT_TRACKING">
+
+    <resultMap id="NcComplaintTrackingResultMap" class="com.lvmama.comm.bee.po.ord.NcComplaintTracking">
+
+        <result column="TRACKING_ID" property="trackingId"/>
+        <result column="COMPLAINT_ID" property="complaintId"/>
+        <result column="OPERATION_TIME" property="operationTime"/>
+        <result column="CATEGORY" property="category"/>
+        <result column="DETAILS" property="details"/>
+        <result column="OPERATOR" property="operator"/>
+    </resultMap>
+
+    <insert id="insertNcComplaintTracking" parameterClass="com.lvmama.comm.bee.po.ord.NcComplaintTracking">
+        INSERT INTO NC_COMPLAINT_TRACKING (TRACKING_ID,COMPLAINT_ID ,OPERATION_TIME,CATEGORY,DETAILS,OPERATOR)
+        VALUES (#trackingId#,#complaintId#,#operationTime#,#category#,#details#,#operator#)
+    </insert>
+
+    <select id="selectNcComplaintTrackingByTrackingId" resultMap="NcComplaintTrackingResultMap" parameterClass="java.lang.Long">
+
+        SELECT
+            TRACKING_ID,
+            COMPLAINT_ID,
+            OPERATION_TIME,
+            CATEGORY,
+            DETAILS,
+            OPERATOR
+        FROM NC_COMPLAINT_TRACKING
+        WHERE TRACKING_ID = #trackingId#
+
+    </select>
+
+    <select id="selectNcComplaintTrackingList" resultMap="NcComplaintTrackingResultMap" parameterClass="java.util.Map">
+        SELECT
+        TRACKING_ID,
+        COMPLAINT_ID,
+        OPERATION_TIME,
+        CATEGORY,
+        DETAILS,
+        OPERATOR
+        FROM NC_COMPLAINT_TRACKING
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend=" AND " property="category">CATEGORY = #category#</isNotEmpty>
+            <isNotEmpty prepend=" AND " property="complaintId">COMPLAINT_ID = #complaintId#</isNotEmpty>
+        </dynamic>
+        order by OPERATION_TIME
+    </select>
+
+    <select id="selectNcComplaintTrackingSequence" resultClass="java.lang.Long">
+        SELECT
+            NC_COMPLAINT_TRACKING_ID_SEQ.nextval AS id
+        FROM DUAL
+    </select>
+</sqlMap>

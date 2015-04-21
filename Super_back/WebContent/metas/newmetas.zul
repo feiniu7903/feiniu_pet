@@ -1,0 +1,35 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<?component name="new_ticket" macroURI="/metas/new_ticket.zul" inline="true"?>
+<?component name="new_hotel" macroURI="/metas/new_hotel.zul" inline="true"?>
+<?component name="new_route" macroURI="/metas/new_route.zul" inline="true"?>
+<?component name="new_other" macroURI="/metas/new_other.zul" inline="true"?>
+<window id="win_newmetas" title="新增采购产品" border="normal" closable="true">
+    <tabbox width="100%" tabscroll="true">
+		<tabs>
+			<tab id="tab_new_ticket" label="门票"/>
+			<tab id="tab_new_hotel" label="酒店"/>
+			<tab id="tab_new_route" label="线路"/>
+			<tab id="tab_new_other" label="其它"/>
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+				<custom-attributes productType="TICKET"/>
+				<new_ticket/>
+			</tabpanel>
+			<tabpanel fulfill="tab_new_hotel.onSelect">
+				<custom-attributes productType="HOTEL"/>
+				<new_hotel/>
+			</tabpanel>
+			<tabpanel fulfill="tab_new_route.onSelect">
+				<custom-attributes productType="ROUTE"/>
+				<new_route/>
+			</tabpanel>
+			<tabpanel fulfill="tab_new_other.onSelect">
+				<custom-attributes productType="OTHER"/>
+				<new_other/>
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+  </window>
+</zk>

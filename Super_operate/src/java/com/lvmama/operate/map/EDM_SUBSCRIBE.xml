@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EDM_SUBSCRIBE" >
+	<typeAlias alias="edm" type="com.lvmama.comm.pet.po.edm.EdmSubscribe"/>
+	<resultMap  id="edmSubscribe" class="com.lvmama.comm.pet.po.edm.EdmSubscribe">
+		<result  column="ID" 			property="id"/>
+		<result  column="EMAIL" 		property="email"/>
+		<result  column="PROVINCE" 		property="province"/>
+		<result  column="CITY" 			property="city"/>
+		<result  column="USER_ID"		property="userId"/>
+		<result  column="CREATE_DATE" 	property="createDate"/>
+		<result  column="TYPE_NAME"		property="typeName"/>
+		<result  column="TRAVEL_TIME" 	property="travelTime"/>
+		<result  column="MUST_WANTED_TRAVEL"		property="mustWantedTravel"/>
+	</resultMap>
+	<insert id="insert" parameterClass="edm">
+		<selectKey  resultClass="java.lang.Long" keyProperty="id">
+			SELECT LVMAMA_SUPER.EDM_USER_PK_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO LVMAMA_SUPER.EDM_SUBSCRIBE
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="id">ID</isNotNull>
+			<isNotNull prepend="," property="email">EMAIL</isNotNull>
+			<isNotNull prepend="," property="city">PROVINCE,CITY</isNotNull>
+			<isNotNull prepend="," property="id">CREATE_DATE</isNotNull>
+			<isNotNull prepend="," property="userId">USER_ID</isNotNull>
+			<isNotNull prepend="," property="travelTime">TRAVEL_TIME</isNotNull>
+			<isNotNull prepend="," property="mustWantedTravel">MUST_WANTED_TRAVEL</isNotNull>
+			<isNotNull prepend="," property="channel">CHANNEL</isNotNull>
+		</dynamic>
+		<dynamic prepend=")VALUES(">
+			<isNotNull prepend="," property="id">#id#</isNotNull>
+			<isNotNull prepend="," property="email">LOWER(#email#)</isNotNull>
+			<isNotNull prepend="," property="city">(SELECT C.PROVINCE_ID FROM LVMAMA_SUPER.com_city C WHERE C.CITY_ID=#city#),#city#</isNotNull>
+			<isNotNull prepend="," property="id">SYSDATE</isNotNull>
+			<isNotNull prepend="," property="userId">#userId#</isNotNull>
+			<isNotNull prepend="," property="travelTime">#travelTime#</isNotNull>
+			<isNotNull prepend="," property="mustWantedTravel">#mustWantedTravel#</isNotNull>
+			<isNotNull prepend="," property="channel">#channel#</isNotNull>
+		</dynamic>
+		)
+	</insert>
+	<update id="update" parameterClass="edm">
+		UPDATE LVMAMA_SUPER.EDM_SUBSCRIBE E 
+		<dynamic prepend=" SET ">
+			<isNotNull prepend="," property="email"> E.EMAIL    = LOWER(#email#) </isNotNull>
+			<isNotNull prepend="," property="city"> E.PROVINCE=(SELECT C.PROVINCE_ID FROM LVMAMA_SUPER.com_city C WHERE C.CITY_ID=#city#),E.CITY     = #city# </isNotNull>
+			<isNotNull prepend="," property="userId">E.USER_ID =#userId#</isNotNull>
+			<isNotNull prepend="," property="travelTime"> E.TRAVEL_TIME     = #travelTime# </isNotNull>
+			<isNotNull prepend="," property="mustWantedTravel">E.MUST_WANTED_TRAVEL =#mustWantedTravel#</isNotNull>
+		</dynamic>
+		WHERE E.ID =#id#
+	</update>
+	
+	<select id="searchEmailIsSubscribe" resultClass="edm" parameterClass="java.lang.String">
+		SELECT S.ID,
+		       S.EMAIL,
+		       S.PROVINCE,
+		       S.CITY,
+		       S.CREATE_DATE        CREATEDATE,
+		       S.USER_ID            USERID,
+		       S.TRAVEL_TIME        TRAVELTIME,
+		       S.MUST_WANTED_TRAVEL MUSTWANTEDTRAVEL
+		  FROM LVMAMA_SUPER.EDM_SUBSCRIBE S, LVMAMA_SUPER.EDM_SUBSCRIBE_INFO I
+		 WHERE S.ID = I.EDM_USER_ID
+		   AND I.IS_VALID = 'Y'
+		   AND S.EMAIL = LOWER(#email#)
+		   AND ROWNUM &lt;=1
+	</select>
+	<select id="searchEmailbyEmail"  resultClass="edm" parameterClass="java.lang.String">
+		SELECT S.ID,
+		       S.EMAIL,
+		       S.PROVINCE,
+		       S.CITY,
+		       S.CREATE_DATE        CREATEDATE,
+		       S.USER_ID            USERID,
+		       S.TRAVEL_TIME        TRAVELTIME,
+		       S.MUST_WANTED_TRAVEL MUSTWANTEDTRAVEL
+		  FROM EDM_SUBSCRIBE S
+		 WHERE S.EMAIL = LOWER(#email#)
+		   AND ROWNUM &lt;=1
+	</select>
+	
+	<select id="searchSubscribe" resultMap="edmSubscribe" parameterClass="java.util.HashMap">
+		SELECT S.*,
+       (SELECT WMSYS.WM_CONCAT(I.TYPE) SUBSCRIBE_TYPE
+          FROM LVMAMA_SUPER.EDM_SUBSCRIBE_INFO I
+         WHERE I.EDM_USER_ID = S.ID
+           AND I.IS_VALID = 'Y') TYPE_NAME
+		  FROM LVMAMA_SUPER.EDM_SUBSCRIBE S
+		 WHERE ROWNUM &lt;= 1
+		<dynamic>
+			<isNotEmpty prepend=" AND " property="id"> S.ID = #id# </isNotEmpty>
+			<isNotEmpty prepend=" AND " property="userId"> S.USER_ID = #userId# </isNotEmpty>
+			<isNotEmpty prepend=" AND " property="email"> S.EMAIL = LOWER(#email#) </isNotEmpty>
+		</dynamic>
+	</select>
+</sqlMap>

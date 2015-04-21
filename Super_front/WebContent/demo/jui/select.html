@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>jQuery UI Autocomplete - Combobox</title>
+<link href="jquery.ui.autocomplete.css" rel="stylesheet" type="text/css">
+<script src="jquery-1.6.2.min.js"></script>
+<script src="jquery.ui.core.js"></script>
+<script src="jquery.ui.widget.js"></script>
+<script src="jquery.ui.button.js"></script>
+<script src="jquery.ui.position.js"></script>
+<script src="jquery.ui.autocomplete.js"></script>
+<!--<link href="demos.css" rel="stylesheet" type="text/css">-->
+<style>
+.ui-button {
+	margin-left: -1px;
+}
+.ui-button-icon-only .ui-button-text {
+	padding: 0.35em;
+}
+.ui-autocomplete-input {
+	margin: 0;
+	padding: 0.48em 0 0.47em 0.45em;
+}
+ul {
+	font-size:14px;
+	border: 1px solid #CBCBCB;
+}
+ul .py_right {
+	font: 10px/22px verdana;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+	text-align: right;
+	white-space: nowrap;
+	width: 110px;
+	float:right;
+}
+ul .li_line {
+	padding: 1px 9px 0;
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #FFF;
+	cursor: pointer;
+	display: block;
+	height: 22px;
+	line-height: 22px;
+	min-height: 22px;
+}
+ul .li_line:hover {
+	color:#C06;
+	background-color:#999999;/*	font-weight:600;*/
+}
+</style>
+</head>
+<body>
+<div class="demo">
+  <label for="search">Search: </label>
+  <input id="search111" />
+  <input type="hidden" id="search111-id"/>
+</div>
+<!-- End demo --> 
+<script>
+$(document).ready(function(){	
+						$.ajax({
+							url:"http://www.lvmama.com/indexPakage/stationAction.do?blockId=7541&station=main&fname=ticket",
+							dataType: "map",
+							data: {
+								
+							},
+							success: function( data ) {
+								var infos = eval("(" + data + ")");
+								alert(infos);
+							},
+							error:function(x,e,c){
+								alert(e);
+							}
+						});
+});
+	</script>
+</body>
+</html>

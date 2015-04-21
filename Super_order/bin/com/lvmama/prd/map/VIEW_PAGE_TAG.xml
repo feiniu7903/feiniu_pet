@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VIEW_PAGE_TAG">
+
+  <select id="selectByPrimaryKey" parameterClass="java.lang.Long" resultClass="com.lvmama.comm.bee.po.prod.ViewPageTag">
+   select 
+    	t1.PAGE_TAG_ID as "pageTagId", 
+    	t1.PAGE_ID as "pageId", 
+    	t1.TAG_ID as "tagId" ,
+      t2.name as "tagName"
+    from VIEW_PAGE_TAG t1 ,view_tag t2
+    where t1.tag_id=t2.tag_id
+    and PAGE_TAG_ID = #pageTagId#
+  </select>
+  
+   <select id="selectByPageId" parameterClass="java.lang.Long" resultClass="com.lvmama.comm.bee.po.prod.ViewPageTag">
+  select 
+    	t1.PAGE_TAG_ID as "pageTagId", 
+    	t1.PAGE_ID as "pageId", 
+    	t1.TAG_ID as "tagId" ,
+      	t2.name as "tagName"
+    from VIEW_PAGE_TAG t1 ,view_tag t2
+    where t1.tag_id=t2.tag_id
+    and PAGE_ID = #pageId#
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long">
+    delete from VIEW_PAGE_TAG
+    where PAGE_TAG_ID = #pageTagId#
+  </delete>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ViewPageTag">
+  	begin
+  	delete VIEW_PAGE_TAG 
+  	where PAGE_ID=#pageId# 
+  	and TAG_ID = #tagId#;
+	insert into VIEW_PAGE_TAG 
+	(
+		PAGE_TAG_ID, 
+		PAGE_ID, 
+		TAG_ID)
+	values (
+		VIEW_PAGE_TAG_ID_SEQ.Nextval, 
+		#pageId#, 
+		#tagId#
+	);
+	end;
+  </insert>
+ 
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ViewPageTag">
+  update VIEW_PAGE_TAG
+    set PAGE_ID = #pageId#,
+      TAG_ID = #tagId#
+    where PAGE_TAG_ID = #pageTagId#
+  </update>
+</sqlMap>

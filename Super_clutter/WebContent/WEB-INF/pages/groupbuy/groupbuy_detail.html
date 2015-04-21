@@ -1,0 +1,195 @@
+<script language="javascript"> 
+//参考http://blog.csdn.net/hellohaifei/article/details/15340173 
+~(function(){ 
+var locUrl = window.location.href; 
+var LvmmUrl = locUrl.replace("http://","lvmama://") 
+//alert(LvmmUrl) 
+if(locUrl.split("channel=")[1].substring(0,2)=="QR"){ 
+if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) { 
+window.location = LvmmUrl; 
+window.setTimeout(function() { 
+window.location = "http://m.lvmama.com/static/zt/3.0.0/download/index.html"; 
+}, 3000); 
+
+} else if (navigator.userAgent.match(/android/i)) { 
+window.location = LvmmUrl; 
+window.setTimeout(function() { 
+window.location = "http://m.lvmama.com/static/zt/3.0.0/download/index.html"; 
+}, 3000); 
+} 
+} 
+})();
+</script>
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>${productNameTitle!}-驴妈妈无线官网</title>
+<meta name="Keywords" content="旅游团购,自由行,周边游,手机预订"/>
+<meta name="Description" content="驴妈妈手机站为您提供旅游团购预订服务，${productNameTitle!}，7*24小时服务热线：4001-570-570，点评返现金，在线支付服务，简单、方便，是您旅行的好伙伴。"/>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/groupbuy.js?_version=20120815"></script>
+<script type="text/javascript">
+	    var htmlTitle=document.title;
+		$(function(){
+			if(htmlTitle.length>42){
+				var productName=htmlTitle.split("-驴妈妈无线官网")[0];
+				if(productName.length>30){
+					document.title = productName.substring(0,30)+"-驴妈妈无线官网";
+				}
+			}
+		});
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:history.back();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">团购详情</div>
+ <div class="lv-position lv-position-e"><a href="javascript:void(0);" class='home' onclick="union_skip('http://${hostName}');"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a></div>
+</div>
+<!--  -->
+<#if mobileProduct?? >
+	<div class="lv-banner lv-media-width">
+	  <ul>
+	      <#if mobileProduct.imageList?? &&  mobileProduct.imageList?size&gt;0 >
+	          <#list mobileProduct.imageList as i>
+	            <#if i_index == 0 >
+	            	<li class="on">
+	            <#else>
+	          		<li>
+	            </#if>
+	          	${i_index+1}</li>
+		      </#list>
+		   </#if>
+	  </ul>
+	  <div class="lv-banner-list"> 
+	       <#if mobileProduct.imageList?? &&  mobileProduct.imageList?size&gt;0 >
+	          <#list mobileProduct.imageList as img>
+		   		<a href="javascript:void(0);" target="_blank"> <img src="${prefixPic!}${img!}" title="" alt=""/></a>
+		     </#list>
+		   </#if>
+	   </div>
+	</div>
+	<div class="lv-wrapper lv-media-width">
+	  <div class="lv-wrapper-container clear">
+	    <p class="lv-spot-desc">${mobileProduct.productName!}</p>
+	    <!-- 活动标签 -->
+	    <#if mobileProduct.tagList?? && mobileProduct.tagList?size&gt;0>
+	        <i class="flag">${mobileProduct.tagList[0].tagName!}</i>
+	  	</#if>
+	  	<!--手机独享  -->
+	  	<#if mobileProduct.mobileAlone?? && mobileProduct.mobileAlone>
+	  		<span class="flag">手机独享</span>
+	  	</#if>
+	    <div class="timing">
+    	<span class="ic_peo"><i></i><em>${mobileProduct.orderCount!}人已购</em></span>
+    	<span class="ic_time"><i></i><em>${mobileProduct.remainTime!}</em></span>
+    	<span class="lv-pull-right">产品编号：${mobileProduct.productId!}</span> 
+    	</div>
+	    <ul class="lv-book-list">
+	      <li class="lv-book-liFirst">
+	        <span class="lv-color-01">&yen;${mobileProduct.sellPriceYuan!}</span>
+	        <span class="lv-proto-price">&yen;${mobileProduct.marketPriceYuan!}</span>
+	      </li>
+	      
+	      <#if productType?? && productType == 'ROUTE'> <!-- 度假线路可以app预订 -->
+	      <!--<li><a class="lv-btn-02" href="javascript:void(0);" _tel="咨询预订的产品ID为${mobileProduct.productId!}" style="margin-right: -10px;">电话预订</a> </li>-->
+		      <#if mobileProduct.subProductType?? && (mobileProduct.subProductType=="FREENESS" 
+			      || mobileProduct.subProductType=="GROUP_LONG" 
+			      || mobileProduct.subProductType=="FREENESS_LONG" 
+			      || mobileProduct.subProductType=="GROUP_FOREIGN" 
+			      || mobileProduct.subProductType=="FREENESS_FOREIGN" 
+			      || mobileProduct.subProductType=="GROUP" 
+			      || mobileProduct.subProductType=="SELFHELP_BUS")>
+		          <li>
+		          	<#if hostName?? && hostName=="m.lvmama.com">
+			          	<a class="lv-btn-booking lv-btn-01 lv-pull-right" href="javascript:void(0);" onclick="order_skip('${request.contextPath!}',${mobileProduct.productId!},${mobileProduct.branchId!},'false');">在线预订</a>
+		          	<#else>
+						<a class="lv-btn-booking lv-btn-01 lv-pull-right disable" href="javascript:void(0);">在线预订</a>
+		          	</#if>
+		          </li>
+		      <#else>
+	      		  <li><a class="lv-btn-booking lv-btn-01 lv-pull-right" href="tel:4001-570-570">电话预订</a></li>
+		      </#if>
+	      </#if>
+	      <#if productType?? && productType == 'TICKET'> <!-- 门票预订 -->
+		     <!--  <li><a class="lv-btn-02" style="width:92px;" href="javascript:void(0);" _tel="咨询预订的产品ID为${mobileProduct.productId!}" >电话预订</a> </li> -->
+      		  <li style="float: right;">
+      		  	<#if hostName?? && hostName=="m.lvmama.com">
+	      		  	<a class="lv-btn-booking lv-btn-01 lv-pull-right" href="javascript:void(0);" onclick="order_skip('${request.contextPath!}',${mobileProduct.productId!},${mobileProduct.branchId!},'false');">立即预订</a>
+      		  	<#else>
+      		  		<a class="lv-btn-booking lv-btn-01 lv-pull-right disable" href="javascript:void(0);">立即预订</a>
+      		  	</#if>
+      		  </li>
+	      </#if>
+	    </ul>
+	    <!-- 景点支付情况显示-->
+	     <#if mobileProduct.productType=="TICKET">
+		 <div class="note_fan"><span class="btn_pay1">${mobileProduct.zhPaymentTarget!}</span>
+		    <#if mobileProduct.cashRefund>
+		 		<i class="ic_fan"></i><em>￥${mobileProduct.cashRefundY!}（比网站多返${mobileProduct.mobileCashRefund!}元）</em>
+		 	</#if>
+		 </div>
+		 </#if>
+		<!-- /景点支付情况显示-->
+	    
+	  </div>
+	</div>
+	
+	<div class="lv-wrapper lv-media-width">
+	    <div class="lv-seprator-line01"></div>
+	    <!-- 线路显示-->
+	    <#if mobileProduct.productType=="ROUTE" && (mobileProduct.preferentialInfo !="" || mobileProduct.cashRefund)>
+	    <a href="${request.contextPath!}${mobileProduct.preferentUrl!}&firstChannel=CLIENT" class="v1_1_hui_a">
+	     <ul class="v1_1_hui">
+	         <#if mobileProduct.preferentialInfo?? && mobileProduct.preferentialInfo !="">
+	      	  <li><span class="ic_hui"></span><em>${mobileProduct.preferentialInfo!}</em></li>
+	         </#if>
+	     	<#if mobileProduct.cashRefund>
+	          <li><span class="ic_fan"></span><em>返<i class="f_e70685">¥${mobileProduct.cashRefundY!}</i>奖金<i class="f_e70685">(比网站多返¥${mobileProduct.mobileCashRefund!}）</i></em><span class="nor_ri"><img src="http://pic.lvmama.com/img/mobile/touch/img/next.png" /></span></li>
+	     	</#if>
+	     </ul>
+	    </a>
+	    </#if>
+        <!-- /线路显示-->
+        
+		<div class="lv-wrapper-container clear">
+	        <div class="lv-recommend-icon">推荐理由</div>
+	        <ul class="lv-recommend-list">
+	            ${mobileProduct.managerRecommend!}
+	        </ul>
+	    </div>
+	    
+	    
+	</div>
+	<div class="lv-wrapper lv-media-width">
+                <#if mobileProduct.productId??>
+			        <div class="lv-nav-li spt_btn spt_btn_pad">
+			          <a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/html5/index.htm?productId=${mobileProduct.productId!}&tag=2');">
+			              <span class="lv-imgletter-icon">查看图文详情</span>
+			          </a>
+			        </div>
+		        </#if>
+	</div>
+<#else>
+   <#assign no_data_msg="暂无数据!">
+   <#include "../common/no_data_list.html">
+</#if>
+<!--电话弹出层 st-->
+	<div class="telBox">
+    	<div class="telBox_con"></div>
+        <div class="p">
+            <span>咨询预订的产品ID为3629</span>
+            <p>4001-570-570</p>
+            <a href="javascript:void(0);" class="ic_ret" _dele=""></a>
+            <a href="tel:4001-570-570" class="ic_tel"></a>
+        </div>
+    </div>
+<!--电话弹出层 end-->
+<div class='model'></div>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+</body>
+<script src="${request.contextPath}/js/order_back.js"></script>
+</html>

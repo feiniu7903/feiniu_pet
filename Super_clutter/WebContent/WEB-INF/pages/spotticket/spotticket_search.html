@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>${keyword!}景点列表</title>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/spotTicket.js?_version=20130812"></script>
+<script src="${request.contextPath}/js/comm.js"></script>
+<script type="text/javascript">
+var latitude;
+var longitude;
+$(function(){
+	// 取消绑定
+	$(".lv-cascade-search li:first").unbind("click") ;
+	
+	/*input 框变色*/
+	$("input.lv-input-search").focus(function(e) {
+		$("input.lv-input-search").parent().parent().addClass("lv-input-focus");
+	});
+	$("input.lv-input-search").blur(function(e) {
+		$("input.lv-input-search").parent().parent().removeClass("lv-input-focus");
+	});
+	
+	// 加载数据 
+	initDatas();
+	
+	// 第一级省份不能搜索 。 
+	$(".lv-cascade-div div.lv-tab ul.bindclick li").click(function(){
+		$(".lv-transparent-div").hide();
+		$(".lv-cascade-search li a div").hide();
+		$(".lv-cascade-div div.lv-tab").hide();
+		var index = $(this).parent("ul").parent("div.lv-tab").index();
+		$(".lv-cascade-search li:eq("+(index)+") span").html($(this).html());
+		$(".lv-cascade-search li a .lv-narrow-icon").eq((--index)).attr('src', 'http://pic.lvmama.com/img/mobile/touch/img/narrow.png');
+	});
+});
+
+// 加载数据. 
+function  initDatas() {
+	getPlaceListData('1');
+}
+
+function ke_focus(obj) {
+	$(obj).val('');
+	$(obj).attr('placeholder','');
+}
+
+function key_blur(obj) {
+	var v = $(obj).val();
+	if(null == v || $.trim(v) =='') {
+		$(obj).val($("#hidden_keyword").val());
+	}
+}
+
+// 
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="window.history.go(-1);"> 
+  <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">景点列表</div>
+  <div class="lv-position lv-position-e"><a href="javascript:void(0);" class='home' onclick="union_skip('http://${hostName}');"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a></div>
+</div>
+<div class="lv-search search">
+  <div class="lv-div-search">
+	  <form method="get" action="${request.contextPath}/place"  id="key_search" >
+	    <span class="lv-clear-icon01" onclick="union_clear_context('keyword');"  style="display:none" id="clear_password">
+               <img src="${prefix_pic_url!}/img/clear.png"></span>
+		  <input class="lv-input-search" id="keyword" type="text" onfocus="ke_focus(this);" onblur="key_blur(this);" value="${keyword!}" placeholder="请输入景点目的地/关键字" autocomplete="off">
+	      <input type="hidden" name="keyword" id="hidden_keyword" value="${keyword!}" data-name="">
+	       <input type="button" class="btn_sub" value="" onclick="btnClick()" />
+	  </form>
+    
+      <input type="hidden" name="toDest" id="toDest" value="" data-name="">
+      <input type="hidden" name="subjects" id="subjects" value="${subjects!}" data-name="">
+      <input type="hidden" name="sort" id="sort" value="${sort!}" data-name="">
+      <input type="hidden" name="stage" id="stage" value="2" data-name="">
+      <input type="hidden" name="page" id="page" value="0" data-name="">
+  </div>
+        <div  id="search_autocomplete" style="display:none;">
+           <ul class="search_auto_complete" id="search_success"> </ul>
+        </div>
+ </div>
+<div class="lv-search lv-media-width lv-seach-mheight">
+  <ul class="lv-cascade-search sele_tab">
+    <li class="lv-li-row3">
+      <a href="javascript:void(0);">
+	      <div class="lv-cascade-icon" style="display:none;"></div>
+	      <span id="spanCities">全部地区</span>
+	      <img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png">
+      </a>
+    </li>
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span id="spanSubjects">主题类型</span><img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png"><img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a></li>
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span id="spanSort">驴妈妈推荐</span><img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png"></a></li>
+  </ul>
+</div>
+
+<div class="lv-wrapper lv-min-height lv-media-width">
+   <div class="lv-cascade-div lv-media-width">
+	   <!-- 内容搜索 列表  -->
+          <div class="lv-tab" style="display:none;">
+            <ul class="lv-cascade-list lv-cascade-area bindmouse">
+	            
+            </ul>
+          </div>
+         <div class="lv-tab" style="display:none;">
+		      <ul class="lv-cascade-list bindclick" id="subjects">
+		        <li data-type="subjects" data-value=" ">全部类型</li>
+		        <#if allSubject?? && allSubject?size&gt;0>
+			        <#list allSubject as subList>
+			             <#if subList != '0'>
+		        		  <li data-type="subjects" data-value="${subList!}">${subList!}</li>
+		        		 </#if>
+			        </#list>
+			    </#if>
+		      </ul>
+         </div>
+         <!-- 排序 -->
+         <div class="lv-tab" style="display:none;">
+	          <ul class="lv-cascade-list bindclick">
+	          <#if sortTypes?? && sortTypes?size&gt;0 >
+	             <#list sortTypes as sort>
+	               <li data-type="sort" data-value="${sort.value!}" id="li${sort.value!}" >${sort.title}</li>
+	             </#list>
+	           </#if>
+	          </ul>
+         </div>
+  </div>
+  <div class="lv-wrapper-container">
+  	<ul class="lv-spotticket-list jd_wrap" id="data_list">
+  	    <!-- 列表 -->
+	  	
+    </ul>
+   <!-- 如果不是最后一页  -->
+   <div class="lv-nav-li lv-btn-03" id="show_more" style="display:none">
+        <a href="javascript:void(0);" onclick="getPlaceListData('0')">
+           <span>查看更多</span>
+        </a>
+    </div>
+  </div>
+</div>
+
+
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+ <div class="lv-transparent-div lv-transparent" style="display:none;"></div>
+</body>
+</html>

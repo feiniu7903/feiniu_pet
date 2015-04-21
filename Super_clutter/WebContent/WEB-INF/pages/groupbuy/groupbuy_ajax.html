@@ -1,0 +1,41 @@
+<#assign prefix_pic_url="http://pic.lvmama.com/img/mobile/touch">
+<#setting number_format="#.##"> 
+     <#if mglist?? && mglist?size&gt;0> 
+        <#list mglist as mg>
+	        <div class="lv-box">
+	          <a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/groupbuy/${mg.productId}')">
+		      <div class="lv-box-info">
+		        <img src="${prefixPic!}${mg.largeImage!}" >
+		        <p>${mg.productName}</p>
+		      </div>
+		      <div class="lv-box-addinfo clear">
+		        <div class="lv-box-price lv-pull-left">
+		          <div class="lv-current-price">&yen; ${mg.sellPriceYuan}</div>
+		          <div class="lv-proto-price">&yen; ${mg.marketPriceYuan}</div>
+		        </div>
+		        <div class="lv-box-desc lv-pull-right">
+		          <table style="width: 100%;">
+		            <tr>
+		              <th>折扣</th>
+		              <th>节省</th>
+		              <th>购买人数</th>
+		            </tr>
+		            <tr>
+		              <td class="lv-color">${mg.discount}折</td>
+		              <td>&yen;${mg.saved}</td>
+		              <td>${mg.orderCount}人 </td>
+		            </tr>
+		          </table>
+		        </div>
+		      </div>
+		      </a> 
+		    </div>
+	    </#list>
+	<#else>
+	     <#assign no_data_msg="没有找到合适的团购产品</br>请试试搜索其他关键词">
+         <#include "../common/no_data_list.html">
+    </#if>
+     <input id = "tmp_p" type ="hidden" value = "${page!}"/>
+	<#if isLastPage?? && isLastPage  >
+		<input id = "lastPage_flag" type ="hidden" value = "1"/>
+	</#if>

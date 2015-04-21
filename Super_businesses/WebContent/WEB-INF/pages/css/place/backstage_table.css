@@ -1,0 +1,94 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+*{ margin:0; padding:0; font-size:12px;}
+body{font:12px/1 arial,"\5b8b\4f53"; overflow-x:hidden;}
+table{border-collapse:collapse;border-spacing:0;}
+ol,ul{list-style:none outside;}
+a{ text-decoration:none; color:#05569D;}
+a:hover{ text-decoration:underline; }
+.red{ color:#F00;}
+
+
+
+/*酒店活动*/
+.cg_tab_nav{ margin:15px auto 0; height:25px; padding-top:2px; background:#f2f2f2; position:relative; z-index:3;}
+.cg_tab_nav li{ float:left; height:24px; padding:0 10px; margin-left:3px; line-height:24px; text-align:center; border:#ddd solid 1px; border-bottom:none; background:#f5f5f5; display:inline; cursor:pointer;}
+.cg_tab_nav li.cg_tab_nav_li{ background:#FFF; height:25px; color:#0077cc; position:relative; bottom:0; _bottom:-1px;}
+.cg_tab_list{ border-top: 1px solid #DDDDDD; display: none; padding: 0 10px; position: relative; z-index: 2;}
+
+.hd_tj{ height:30px; line-height:30px; }
+.hd_tj span,.hd_list strong{ padding-right:20px;}
+.hd_tj a{ color:#0077cc;}
+.w_450{ width:450px;}
+.hd_list{ padding:8px 0;}
+.bjq{ width:870px; height:150px; border:#CCC solid 1px;}
+.hd_bot{ padding:8px;}
+
+
+/*酒店图片*/
+.tab_tp_top{ padding:5px 0; border:#ddd solid 1px; border-bottom:none;}
+
+/*表格样式*/
+.tupian_table{ width:100%; border:#ddd solid 1px;}
+.tupian_table th{ line-height:18px; padding:5px; font-weight:bold; color:#555; background:#F3F3F3;}
+.tupian_table td{ border:#ddd solid 1px; text-align:center; color:#555; line-height:18px; padding:3px 5px;}
+.w_80{ width:80px;}
+
+
+/*景点管理——基本信息*/
+.jdgl_xx{ margin-top:10px; border:#ddd solid 1px; color:#101010;}
+.jdgl_xx td{ border:#ddd solid 1px; padding:8px 5px; line-height:18px;}
+.jianjie{ vertical-align:top; font-weight:normal;}
+.jianjie_text{ width:800px; height:50px; overflow-y:scroll;}
+.w_390{ width:390px;}
+.w_350{ width:350px;}
+.js_zs{ width:718px; padding-bottom:20px; border:#CCC solid 1px; color:#555; overflow:hidden; zoom:1;}
+.js_zs h3{ height:32px; line-height:32px; background:#eee; padding:0 10px; font-size:14px; font-weight:bold;}
+
+
+
+/*关闭按钮样式*/
+.close{float:right; text-decoration:none;color:#000; font-family:Verdana;font-weight:700;}
+/*弹出层样式*/
+.xh_overlay{ background:#000;filter:alpha(opacity=20); opacity:.2; width:100%; height:100%; position:absolute; overflow:hidden; left:0;top:0; z-index:2000; display:none;}
+.js_zs{ display:none; width:718px; padding-bottom:20px; border:#CCC solid 1px; color:#555; overflow:hidden; zoom:1; position:absolute; left:50%; margin-left:-359px; z-index:9999; background:#FFF;}
+.js_zs h3{ height:32px; line-height:32px; background:#eee; padding:0 10px; font-size:14px; font-weight:bold;}
+
+.tab_ztxx_all{ padding:20px 50px 0;}
+.tab_ztxx{ width:100%; border:#ddd solid 1px;}
+.tab_ztxx td{ padding:8px 5px; border:#ddd solid 1px;}
+.td_r{ text-align:right;}
+.ztxx_bot{ padding:10px 0 10px 100px;}
+.ztxx_bot input{ margin-left:30px;}
+.img_big{ width:400px; position:absolute; z-index:999; display:none; text-align:center;}
+.img_big img{ vertical-align:middle;}
+
+.uploadDiv {
+	border: 1px red;
+	padding:20px;
+}
+.uploadDiv input{
+	margin:10px;
+	
+}
+.label{float:left;width:9.3%;text-align:right}
+.content{float:left;width:90%;}
+.content input{vertical-align:middle;margin-bottom:6px;}
+.content label{display:inline-block;overflow:hidden;}
+ul.container li{
+	float: left;
+    line-height: 24px;
+    width: 255px;
+     margin-bottom: 6px;
+}
+ul.container span{ 
+	display: block;
+	float: left;
+    line-height: 25px;
+    width: 60px;
+}
+ul.container input,ul.container select {
+	height: 24px;
+	min-width: 70px;
+}

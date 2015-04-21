@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_RELATE_MENU">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.UserRelateMenu">
+		<result column="USER_RELATE_MENU_ID"
+			property="userRelateMenuId" />
+		<result column="PASS_PORT_USER_ID" property="passPortUserId" />
+		<result column="RESOURCE_ID" property="resourceId" />
+	</resultMap>
+
+	<select id="selectFull" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select
+		*from USER_RELATE_MENU u where 1=1
+		<isNotEmpty prepend=" and" property="resourceId">
+			u.RESOURCE_ID= #resourceId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="passPortUserId">
+			u.PASS_PORT_USER_ID= #passPortUserId#
+		</isNotEmpty>
+		) T WHERE ROWNUM &lt;= #_endRow# ) WHERE ROWNUM1
+		&gt;=#_startRow#
+	</select>
+
+	<select id="selectFullCount" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		select count(*) from USER_RELATE_MENU u where 1=1
+		<isNotEmpty prepend=" and" property="resourceId">
+			u.RESOURCE_ID= #resourceId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="passPortUserId">
+			u.PASS_PORT_USER_ID= #passPortUserId#
+		</isNotEmpty>
+	</select>
+	
+	<delete id="deleteByPrimaryKey"
+		parameterClass="java.lang.Long">
+		delete from USER_RELATE_MENU where PASS_PORT_USER_ID = #passportUserId#
+	</delete>
+	
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.bee.po.pass.UserRelateMenu">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="userRelateMenuId">
+			select USER_RELATE_MENU_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into USER_RELATE_MENU
+		(USER_RELATE_MENU_ID,PASS_PORT_USER_ID,RESOURCE_ID) values
+		(#userRelateMenuId#,#passPortUserId#,#resourceId#)
+	</insert>
+
+</sqlMap>

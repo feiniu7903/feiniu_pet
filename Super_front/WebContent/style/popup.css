@@ -1,0 +1,40 @@
+/*---------- 弹层20130312 ----------*/
+.popCover{display:none;position:absolute; z-index:9999; top:0; left:0; width:100%; background:#000;filter:alpha(opacity=50);opacity:0.5; height:auto;}
+.common_pop{display:none;position:absolute; z-index:99999; width:100px; margin:auto;  border: 2px solid blue;}
+.common_pop_close{position:absolute; right:0; top:0; width:20px; height:15px; cursor:pointer; border:1px solid #888;}
+.common_pop_tit{display:block;height:32px; line-height:32px; text-indent:9px; font-size:14px; font-weight:bold;}
+.common_pop_cont{padding:20px 10px 10px; font-size:12px;}
+.common_btn_box{padding:30px 10px 10px; text-align:center;}
+.common_btn{display:inline-block; padding:0 20px; margin:0 4px; height:24px; font:normal 14px/24px Arial;  border-radius:3px;cursor:pointer;}
+
+/*style*/
+.common_pop_close,.red_common_btn,.grey_common_btn,.yellow_common_btn{background:url(http://pic.lvmama.com/img/v3/module/pop_icon.gif) repeat-x;}
+.common_pop{background:url(http://pic.lvmama.com/img/v3/module/darkgrey_pop.png) repeat;border:1px solid #ddd;}
+.common_pop_close{ background-repeat:no-repeat; background-position:5px 3px; margin-top:5px; margin-right:5px;}
+.common_pop_tit{color:#000; background:#eee;}
+.common_pop_cont{background:#fff;}
+
+
+/*style red*/
+.red_common_pop{border:1px solid #ddd; border-top:2px solid #e08;}
+.red_common_btn{color:#fff; border:1px solid #d37; background-position:0 -165px;}
+.red_common_btn:hover{background-position:0 -205px;}
+/*style yellow*/
+.yellow_common_pop{border:1px solid #ddd;}
+.yellow_common_btn{color:#fff; border:1px solid #e60; background-position:0 -40px;}
+.yellow_common_btn:hover{background-position:0 -70px;}
+
+/*style grey*/
+.grey_common_pop{border:1px solid #ddd;}
+.grey_common_btn{color:#000; background-position:0 -95px;border:1px solid #ccc;}
+.grey_common_btn:hover{background-position:0 -130px;border:1px solid #abc;}
+/*机票频道*/
+.test_flight{
+    padding:10px 10px 10px 0; text-align:left;
+}
+.common_flight_btn{
+    padding:10px 10px 10px 0; text-align:center;
+}
+.common_center{
+    padding:10px 10px 10px 0; text-align:center;
+}

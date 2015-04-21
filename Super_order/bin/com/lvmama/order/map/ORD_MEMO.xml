@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_MEMO">
+
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderMemo" >
+    <result column="MEMO_ID" property="memoId" />
+    <result column="ORDER_ID" property="orderId" />
+    <result column="CONTENT" property="content" />
+    <result column="TYPE" property="type" />
+    <result column="OPERATOR_NAME" property="operatorName" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="USER_MEMO" property="userMemo" />
+    <result column="STATUS" property="status" />
+  </resultMap>
+
+  <select id="select" parameterClass="Long" resultMap="BaseResultMap">
+  	select * 
+    from ORD_ORDER_MEMO
+    where ORDER_ID = #orderId#
+    order by MEMO_ID
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderMemo" >
+    select *
+    from ORD_ORDER_MEMO
+    where MEMO_ID = #memoId#
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    delete from ORD_ORDER_MEMO
+    where MEMO_ID = #memoId#
+  </delete>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderMemo" >
+    <selectKey resultClass="java.lang.Long" keyProperty="memoId" >
+      select ORD_ORDER_MEMO_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_ORDER_MEMO (MEMO_ID, ORDER_ID, CONTENT, TYPE, OPERATOR_NAME, CREATE_TIME,USER_MEMO,STATUS)
+    values (#memoId#, #orderId#, #content# ,#type#, #operatorName#, sysdate,#userMemo#,#status#)
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderMemo" >
+    update ORD_ORDER_MEMO
+    set ORDER_ID = #orderId#,
+    CONTENT = #content#,
+    TYPE = #type#,
+    OPERATOR_NAME = #operatorName#,
+    USER_MEMO = #userMemo#,
+    STATUS=#status#
+    where MEMO_ID = #memoId#
+  </update>
+
+</sqlMap>

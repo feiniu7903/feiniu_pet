@@ -1,0 +1,762 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_REFUNDMENT" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdRefundment" >
+    <result column="REFUNDMENT_ID" property="refundmentId" />
+    <result column="ORDER_ID" property="orderId" />
+    <result column="REFUND_TYPE" property="refundType" />
+    <result column="REFUND_CHANNEL" property="refundChannel" />
+    <result column="AMOUNT" property="amount" />
+    <result column="ACCOUNT" property="account" />
+    <result column="ACCOUNT_TYPE" property="accountType" />
+    <result column="MEMO" property="memo" />
+    <result column="STATUS" property="status" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="REFUND_TIME" property="refundTime" />
+    <result column="APPROVE_TIME" property="approveTime" />
+    <result column="OPERATOR_NAME" property="operatorName" />
+    <result column="SALE_SERVICE_ID" property="saleServiceId" />
+    <result column="REFUND_BANK_SERIAL_NO" property="refundBankSerialNo" />
+    <result column="REFUND_BANK" property="refundBank" />
+    <result column="ACTUAL_PAY" property="actualPay" />
+    <result column="ALLOW_REFUND_TIME" property="allowRefundTime" />
+    <result column="SYS_CODE" property="sysCode" />
+  </resultMap>
+	<resultMap id="OrdRefundMentItemMap" class="com.lvmama.comm.bee.po.ord.OrdRefundMentItem">
+		<result column="REFUNDMENT_ITEM_ID" property="refundmentItemId" />
+		<result column="REFUNDMENT_ID" property="refundmentId" />
+		<result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+		<result column="type" property="type" />
+		<result column="amount" property="amount" />
+		<result column="memo" property="memo" />
+		<result column="actual_loss" property="actualLoss" />
+	</resultMap>
+   <resultMap id="extBaseResultMap" extends="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdRefundment">
+  	<result column="USER_NAME" property="userName" />
+  	<result column="CHANNEL_NAME" property="channelName" />
+  	<result column="PENALTY_AMOUNT" property="penaltyAmount" />
+  </resultMap>
+  <resultMap id="SupplierResultMap" class="com.lvmama.comm.pet.po.sup.SupSupplier">
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="SUPPLIER_NAME" property="supplierName" />
+		<result column="CITY_ID" property="cityId" />
+		<result column="WEBSITE" property="webSite" />
+		<result column="TELEPHONE" property="telephone" />
+		<result column="FAX" property="fax" />
+		<result column="ADDRESS" property="address" />
+		<result column="POSTCODE" property="postcode" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="MOBILE" property="mobile" />
+		<result column="BOSSHEAD" property="bosshead" />
+		<result column="SUPPLIER_TYPE" property="supplierType"/>
+		<result column="LEGAL_PERSON" property="legalPerson"/>
+		<result column="TRAVEL_LICENSE" property="travelLicense"/>
+		<result column="assess_points" property="assessPoints"/>
+		<result column="PARENT_ID" property="parentId" />
+		<result column="COMPANY_ID" property="companyId"/>
+		<result column="VALID" property="valid"/>
+	</resultMap>
+  
+	<select id="selectById"  resultMap="BaseResultMap" parameterClass="java.lang.Long">
+		SELECT * FROM ORD_REFUNDMENT
+			WHERE
+				REFUNDMENT_ID = #refundmentId#
+		  
+	</select>
+
+	<select id="findOrderRefundMentItemByOrderItemMetaId" parameterClass="long" resultMap="OrdRefundMentItemMap">
+		SELECT A.* FROM ORD_REFUNDMENT_ITEM A,
+		ORD_REFUNDMENT B 
+		WHERE A.REFUNDMENT_ID = B.REFUNDMENT_ID 
+		AND A.ORDER_ITEM_META_ID = #orderItemMetaId#
+		AND B.STATUS = 'REFUNDED'
+		AND B.REFUND_TYPE = 'ORDER_REFUNDED'
+	</select>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdRefundment" >
+    update ORD_REFUNDMENT
+    set REFUND_TYPE = #refundType#,
+      REFUND_CHANNEL = #refundChannel#,
+      AMOUNT = #amount#,
+      ACCOUNT = #account#,
+      ACCOUNT_TYPE = #accountType#,
+      MEMO = #memo#,
+      STATUS = #status#,
+      CREATE_TIME = #createTime#,
+      REFUND_TIME = #refundTime#,
+      APPROVE_TIME = #approveTime#,
+      OPERATOR_NAME = #operatorName#,
+      REFUND_BANK_SERIAL_NO = #refundBankSerialNo#,
+      REFUND_BANK = #refundBank#,
+      ACTUAL_PAY = #actualPay#,
+      ALLOW_REFUND_TIME = #allowRefundTime#
+    where REFUNDMENT_ID = #refundmentId#
+  </update> 
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdRefundment" >
+    <selectKey resultClass="java.lang.Long" keyProperty="refundmentId" >
+      select ORD_REFUNDMENT_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_REFUNDMENT (REFUNDMENT_ID, ORDER_ID, REFUND_TYPE, REFUND_CHANNEL, AMOUNT, ACCOUNT, ACCOUNT_TYPE, MEMO, STATUS, CREATE_TIME, REFUND_TIME,SALE_SERVICE_ID,OPERATOR_NAME,REFUND_BANK_SERIAL_NO,REFUND_BANK,ACTUAL_PAY,ALLOW_REFUND_TIME,SYS_CODE)
+	values (#refundmentId#, #orderId#, #refundType#, #refundChannel#, #amount#, #account#, #accountType#, #memo#, #status#, #createTime#, #refundTime#,#saleServiceId#,#operatorName#,#refundBankSerialNo#,#refundBank#,#actualPay#,#allowRefundTime#,#sysCode#)
+  </insert>
+  
+    
+<sql id="selectByParamsSql">
+  select orf.*,usr.user_name,prodChannel.CHANNEL_NAME  from ORD_REFUNDMENT orf,ORD_ORDER ord ,USER_USER usr, PROD_CHANNEL prodChannel
+  where orf.order_id = ord.order_id AND usr.user_no = ord.user_id AND ord.channel = prodChannel.channel_code
+     <isNotEmpty prepend=" and" property="refundmentId">
+    	 orf.REFUNDMENT_ID = #refundmentId# 
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="orderId">
+    	 orf.ORDER_ID = #orderId# 
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="status">
+		 orf.STATUS  = #status#
+	</isNotEmpty>
+	<isNotEmpty prepend=" and" property="notStatus">
+		 orf.STATUS  != #notStatus#
+	</isNotEmpty>
+	<isNotEmpty prepend=" and" property="refundTypeEndDate">
+		orf.REFUND_TIME &lt; = #refundTypeEndDate#
+	</isNotEmpty>
+	<isNotEmpty prepend=" and" property="refundTypeBeginDate">
+		orf.REFUND_TIME &gt; = #refundTypeBeginDate#
+	</isNotEmpty>
+    <isNotEmpty prepend=" and" property="operatorName">
+    	 orf.OPERATOR_NAME = #operatorName# 
+    </isNotEmpty>
+     <isNotEmpty prepend=" and" property="refundType">
+    	 orf.REFUND_TYPE = #refundType# 
+    </isNotEmpty>
+     <isNotEmpty prepend=" and" property="userName">
+    	 usr.USER_NO = #userName# 
+    </isNotEmpty>
+     <isNotEmpty prepend=" and" property="channelCode">
+    	 ord.CHANNEL= #channelCode# 
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="saleServiceId">
+        orf.SALE_SERVICE_ID = #saleServiceId#
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="sysCode">
+    	 orf.SYS_CODE = #sysCode# 
+    </isNotEmpty>
+    order by orf.create_time desc 
+</sql>
+
+<sql id="selectVstOrdByParamsSql">
+  select orf.*  from ORD_REFUNDMENT orf 
+  where 1=1 
+     <isNotEmpty prepend=" and" property="refundmentId">
+    	 orf.REFUNDMENT_ID = #refundmentId# 
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="orderId">
+    	 orf.ORDER_ID = #orderId# 
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="status">
+		 orf.STATUS  = #status#
+	</isNotEmpty>
+	<isNotEmpty prepend=" and" property="notStatus">
+		 orf.STATUS  != #notStatus#
+	</isNotEmpty>
+	<isNotEmpty prepend=" and" property="refundTypeEndDate">
+		orf.REFUND_TIME &lt; = #refundTypeEndDate#
+	</isNotEmpty>
+	<isNotEmpty prepend=" and" property="refundTypeBeginDate">
+		orf.REFUND_TIME &gt; = #refundTypeBeginDate#
+	</isNotEmpty>
+    <isNotEmpty prepend=" and" property="operatorName">
+    	 orf.OPERATOR_NAME = #operatorName# 
+    </isNotEmpty>
+     <isNotEmpty prepend=" and" property="refundType">
+    	 orf.REFUND_TYPE = #refundType# 
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="saleServiceId">
+        orf.SALE_SERVICE_ID = #saleServiceId#
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="sysCode">
+    	 orf.SYS_CODE = #sysCode# 
+    </isNotEmpty>
+    order by orf.create_time desc 
+</sql>
+  
+  <select id="selectByParam" resultMap="extBaseResultMap" parameterClass="java.util.HashMap" >
+  	   select * from (
+  	   		select st.*,rownum as rn from (
+       			<include refid="selectByParamsSql"/>
+       		) st
+       	)
+       	<dynamic prepend=" where ">
+       		<isNotEmpty property="skipResults">
+       			<isNotEmpty property="maxResults">
+       				rn between #skipResults# and #maxResults#
+       			</isNotEmpty>
+       		</isNotEmpty>
+       	</dynamic>
+  </select>
+  
+  <select id="selectVstOrdByParam" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+  	   select * from (
+  	   		select st.*,rownum as rn from (
+       			<include refid="selectVstOrdByParamsSql"/>
+       		) st
+       	)
+       	<dynamic prepend=" where ">
+       		<isNotEmpty property="skipResults">
+       			<isNotEmpty property="maxResults">
+       				rn between #skipResults# and #maxResults#
+       			</isNotEmpty>
+       		</isNotEmpty>
+       	</dynamic>
+  </select>
+  
+  <select id="selectByParamCount"  resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+    select count(*)  from ( <include refid="selectByParamsSql"/> )
+  </select>
+  
+  <select id="selectVstOrdByParamCount"  resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+    select count(*)  from ( <include refid="selectVstOrdByParamsSql"/> )
+  </select>
+  
+  <select id="selectByParamSumAmount"  resultClass="java.math.BigDecimal" parameterClass="java.util.HashMap" >
+    select sum(amount)  from (<include refid="selectByParamsSql"/>)
+  </select>
+  
+  <select id="selectByParamSaleFinish" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+   	select refund.*  from ORD_REFUNDMENT refund,ord_sale_service sale where  
+	sale.sale_service_id=refund.sale_service_id and sale.status='FINISH'
+     <isNotEmpty prepend=" and" property="refundmentId">
+    	 refund.REFUNDMENT_ID = #refundmentId# 
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="orderId">
+    	 refund.ORDER_ID = #orderId# 
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="refundTypeBeginDate">
+		 refund.REFUND_TIME &gt; = #refundTypeBeginDate#
+	</isNotEmpty>
+	<isNotEmpty prepend=" and" property="refundTypeEndDate">
+		refund.REFUND_TIME &lt; = #refundTypeEndDate#
+	</isNotEmpty>
+    <isNotEmpty prepend=" and" property="operatorName">
+    	 refund.OPERATOR_NAME = #operatorName# 
+    </isNotEmpty>
+     <isNotEmpty prepend=" and" property="refundType">
+    	 refund.REFUND_TYPE = #refundType# 
+    </isNotEmpty>
+    order by refund.create_time desc 
+  </select>
+  
+   <select id="selectByParamCountSaleFinish"  resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+    select count(*)  from ORD_REFUNDMENT refund,ord_sale_service sale where  
+	sale.sale_service_id=refund.sale_service_id and sale.status='FINISH'
+     <isNotEmpty prepend=" and" property="refundmentId">
+    	 refund.REFUNDMENT_ID = #refundmentId# 
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="orderId">
+    	 refund.ORDER_ID = #orderId# 
+    </isNotEmpty>
+    <isNotEmpty prepend=" and" property="refundTypeBeginDate">
+		 refund.REFUND_TIME &gt; = #refundTypeBeginDate#
+	</isNotEmpty>
+	<isNotEmpty prepend=" and" property="refundTypeEndDate">
+		refund.REFUND_TIME &lt; = #refundTypeEndDate#
+	</isNotEmpty>
+    <isNotEmpty prepend=" and" property="operatorName">
+    	 refund.OPERATOR_NAME = #operatorName# 
+    </isNotEmpty>
+     <isNotEmpty prepend=" and" property="refundType">
+    	 refund.REFUND_TYPE = #refundType# 
+    </isNotEmpty>
+    order by refund.create_time desc 
+  </select>
+  
+  <sql id="queryRefundmentSql">
+	  	SELECT distinct
+	  		A.ORDER_ID       AS orderId,
+       		A.AMOUNT     	 AS amount,
+       		A.PENALTY_AMOUNT AS penaltyAmount,
+       		B.ITEM_NAME      AS refundType,
+       		A.OPERATOR_NAME  AS operatorName,
+       		A.CREATE_TIME    AS createTime,
+       		C.ITEM_NAME      AS status,
+       		A.MEMO           AS memo,
+       		A.REFUNDMENT_ID  AS refundmentId,
+            A.REFUND_TYPE  AS realRefundType,
+            A.SYS_CODE AS sysCode 
+  		FROM 
+  			ORD_REFUNDMENT A, 
+  			COM_CODE B,
+  			COM_CODE C, 
+  			ord_order_item_meta d, 
+  			meta_product e, 
+  			lvmama_pet.PERM_USER f
+ 		WHERE 
+ 			A.REFUND_TYPE = B.ITEM_CODE
+   		AND 
+   			B.SET_CODE = 'REFUND_TYPE'
+   		AND 
+   			A.STATUS = C.ITEM_CODE
+   		AND 
+   			C.SET_CODE = 'REFUNDMENT_STATUS'
+   		AND 
+   			A.STATUS = 'REFUND_APPLY'
+	   	and 
+	   		a.order_id = d.order_id
+	   	and 
+	   		d.meta_product_id = e.meta_product_id
+	   	and 
+	   		e.manager_id = f.user_id
+   		and 
+   			e.product_type &lt;&gt; 'OTHER'
+	    <isNotEmpty prepend="and" property="userName">
+			f.user_name = #userName#
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="orderId">
+	    	 A.ORDER_ID = #orderId# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="refundType">
+	    	 A.REFUND_TYPE = #refundType# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="operateName">
+			 A.OPERATOR_NAME = #operateName#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="sysCode">
+			 A.SYS_CODE = #sysCode#
+		</isNotEmpty>
+		ORDER BY A.CREATE_TIME DESC
+	</sql>
+  
+  	  <sql id="queryVstRefundmentSql">
+	  	SELECT distinct
+	  		A.ORDER_ID       AS orderId,
+       		A.AMOUNT     	 AS amount,
+       		A.PENALTY_AMOUNT AS penaltyAmount,
+       		B.ITEM_NAME      AS refundType,
+       		A.OPERATOR_NAME  AS operatorName,
+       		A.CREATE_TIME    AS createTime,
+       		C.ITEM_NAME      AS status,
+       		A.MEMO           AS memo,
+       		A.REFUNDMENT_ID  AS refundmentId,
+            A.REFUND_TYPE  AS realRefundType,
+            A.SYS_CODE AS sysCode 
+  		FROM 
+  			ORD_REFUNDMENT A, 
+  			COM_CODE B,
+  			COM_CODE C 
+ 		WHERE 
+ 			A.REFUND_TYPE = B.ITEM_CODE
+   		AND 
+   			B.SET_CODE = 'REFUND_TYPE'
+   		AND 
+   			A.STATUS = C.ITEM_CODE
+   		AND 
+   			C.SET_CODE = 'REFUNDMENT_STATUS'
+   		AND 
+   			A.STATUS = 'REFUND_APPLY'
+	    <isNotEmpty prepend="and" property="orderId">
+	    	 A.ORDER_ID = #orderId# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="refundType">
+	    	 A.REFUND_TYPE = #refundType# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="operateName">
+			 A.OPERATOR_NAME = #operateName#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="sysCode">
+			 A.SYS_CODE = #sysCode#
+		</isNotEmpty>
+		ORDER BY A.CREATE_TIME DESC
+	</sql>
+	
+  <select id="queryRefundment" parameterClass="java.util.HashMap" resultClass="com.lvmama.comm.bee.po.ord.OrdRefundment" >
+       	SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+			<include refid="queryRefundmentSql"/>
+		) T WHERE ROWNUM &lt;= #maxResults#
+		)
+		WHERE ROWNUM1 &gt;#skipResults#
+		
+  </select>
+  
+    <select id="queryVstRefundment" parameterClass="java.util.HashMap" resultClass="com.lvmama.comm.bee.po.ord.OrdRefundment" >
+       	SELECT * FROM 
+		(
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM 
+		(
+			<include refid="queryVstRefundmentSql"/>
+		) T WHERE ROWNUM &lt;= #maxResults#
+		)
+		WHERE ROWNUM1 &gt;#skipResults#
+		
+  </select>
+  
+  <select id="queryRefundmentCount"  resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+    select count(*) from ( <include refid="queryRefundmentSql"/> )
+  </select>
+  
+  <select id="queryVstRefundmentCount"  resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+    select count(*) from ( <include refid="queryVstRefundmentSql"/> )
+  </select>
+  
+  <select id="queryOrdOrderItemMetaList" resultClass=" com.lvmama.comm.bee.po.ord.OrdOrderItemMeta" parameterClass="long">
+  		   SELECT DISTINCT T.ORDER_ITEM_META_ID AS ORDERITEMMETAID,
+                   T.META_PRODUCT_ID AS METAPRODUCTID,
+                   T.META_BRANCH_ID AS METABRANCHID,
+                   T.PRODUCT_NAME AS PRODUCTNAME,
+                   T1.SUPPLIER_NAME AS SUPPLIERNAME,
+                   T.ACTUAL_SETTLEMENT_PRICE AS ACTUALSETTLEMENTPRICE,
+                   I.ITEM_NAME AS SETTLEMENTSTATUSSTR,
+                   b.REFUNDMENT_ID AS REFUNDMENTID,
+                   B.TYPE AS amountType,
+                   B.AMOUNT AS amountValue,
+                   B.MEMO AS memo,
+                   b.refundment_item_id as refundmentItemId,
+                   B.ACTUAL_LOSS AS actualLoss,
+                   T.QUANTITY AS quantity,
+                   T.PRODUCT_QUANTITY AS productQuantity
+	     FROM ORD_REFUNDMENT_ITEM B,
+	          ORD_ORDER_ITEM_META T,
+	          COM_CODE            I,
+	          SUP_SUPPLIER        T1
+	    WHERE b.order_item_meta_id = t.order_item_meta_id
+	      AND T.SETTLEMENT_STATUS = I.ITEM_CODE
+	      AND T.SUPPLIER_ID = T1.SUPPLIER_ID
+	      AND b.REFUNDMENT_ID = #value#
+	      AND I.SET_CODE = 'SETTLEMENT_STATUS'
+  </select>
+  
+    <select id="queryOrdRefundmentItemsByRefundmentId" parameterClass="long" resultMap="OrdRefundMentItemMap">
+		SELECT * 
+		FROM ORD_REFUNDMENT_ITEM 
+		WHERE REFUNDMENT_ID = #value#
+ </select>
+ <select id="selectSupplierById"  resultMap="SupplierResultMap" parameterClass="java.lang.Long">
+		SELECT *  
+		FROM SUP_SUPPLIER
+		WHERE
+			VALID = 'Y' 
+			AND SUPPLIER_ID = #supplierId# 
+	</select>
+  
+  <update id="updateRefundStatus" parameterClass="map">
+  		UPDATE ORD_REFUNDMENT SET STATUS = #status#, CONFIRM_TIME = SYSDATE WHERE REFUNDMENT_ID = #refundmentId#
+  </update>
+  
+  <insert id="insertRefundmentItem" parameterClass="map">
+		  	<selectKey resultClass="java.lang.Long" keyProperty="refundmentItemId" >
+		  		select ORD_REFUNDMENT_ITEM_ID_SEQ.nextval as id from DUAL
+			</selectKey>
+		insert into ORD_REFUNDMENT_ITEM
+		(REFUNDMENT_ITEM_ID, REFUNDMENT_ID, ORDER_ITEM_META_ID, TYPE, AMOUNT, MEMO)
+		values (#refundmentItemId#, #refundmentId#, #orderItemMetaId#, #type#, #amount#*100, #memo#)
+  </insert>
+  <update id="updateRefundmentItem" parameterClass="map">
+  		update ORD_REFUNDMENT_ITEM set type=#type#,amount=#amount#,memo=#memo#, actual_loss=#actualLoss# where refundment_id=#refundmentId# and order_item_meta_id=#orderItemMetaId#
+  </update>
+  
+  <sql id="queryRefundmentListSql">
+  		select distinct * from (
+	  	select * from (
+	  	SELECT distinct
+	  		T.ORDER_ID      AS orderId,
+       		T.REFUNDMENT_ID AS refundmentId,
+       		T.AMOUNT/100    AS amount,
+       		D.ITEM_NAME     AS refundType,
+       		T.MEMO          AS memo,
+       		T.OPERATOR_NAME AS operatorName,
+       		T.CREATE_TIME   AS createTime,
+       		C.ITEM_NAME     AS status,
+       		T.SALE_SERVICE_ID AS saleServiceId,
+       		T.SYS_CODE AS sysCode 
+  		FROM 
+  			ORD_REFUNDMENT T, 
+  			COM_CODE C, 
+  			COM_CODE D, 
+  			ord_order_item_meta ORD, 
+  			meta_product e, 
+  			lvmama_pet.PERM_USER f,
+       		ord_sale_service    g
+ 		WHERE 
+ 			T.STATUS = C.ITEM_CODE
+   		AND 
+   			C.SET_CODE = 'REFUNDMENT_STATUS'
+   		AND 
+   			T.REFUND_TYPE = D.ITEM_CODE
+   		AND 
+   			D.SET_CODE = 'REFUND_TYPE'
+   		and 
+   			t.status in ('REFUND_APPLY','APPLY_CONFIRM','UNVERIFIED','REJECTED','REFUND_VERIFIED')
+   		and 
+   			T.order_id = ORD.order_id
+  	 	and 
+  	 		ORD.meta_product_id = e.meta_product_id
+   		and 
+   			e.manager_id = f.user_id
+   		and 
+   			t.sale_service_id = g.sale_service_id
+   		and 
+   			g.service_type = 'NORMAL'
+	   	<isNotEmpty prepend="and" property="userName">
+	    	 f.user_name = #userName#
+	    </isNotEmpty>
+   		<isNotEmpty prepend="and" property="orderId">
+	    	 T.ORDER_ID = #orderId# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="operateName">
+			 T.OPERATOR_NAME = #operateName#
+		</isNotEmpty>
+	    <isNotEmpty prepend="and" property="status">
+	    	 T.STATUS = #status# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="beginTime">
+			 T.CREATE_TIME &gt; = #beginTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="endTime">
+			T.CREATE_TIME &lt; = #endTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="sysCode">
+	    	 T.SYS_CODE = #sysCode# 
+	    </isNotEmpty>
+		)
+		union all
+		select * from (
+	  	SELECT distinct
+	  		T.ORDER_ID      AS orderId,
+       		T.REFUNDMENT_ID AS refundmentId,
+       		T.AMOUNT/100    AS amount,
+       		D.ITEM_NAME     AS refundType,
+       		T.MEMO          AS memo,
+       		T.OPERATOR_NAME AS operatorName,
+       		T.CREATE_TIME   AS createTime,
+       		C.ITEM_NAME     AS status,
+       		T.SALE_SERVICE_ID AS saleServiceId,
+       		T.SYS_CODE AS sysCode 
+  		FROM 
+  			ORD_REFUNDMENT T, 
+  			COM_CODE C, 
+  			COM_CODE D, 
+  			ord_order_item_meta ORD, 
+  			meta_product e, 
+  			lvmama_pet.PERM_USER f,
+       		nc_complaint   nc
+ 		WHERE 
+ 			T.STATUS = C.ITEM_CODE
+   		AND 
+   			C.SET_CODE = 'REFUNDMENT_STATUS'
+   		AND 
+   			T.REFUND_TYPE = D.ITEM_CODE
+   		AND 
+   			D.SET_CODE = 'REFUND_TYPE'
+   		and 
+   			t.status in ('REFUND_APPLY','APPLY_CONFIRM','UNVERIFIED','REJECTED','REFUND_VERIFIED')
+   		and 
+   			T.order_id = ORD.order_id
+  	 	and 
+  	 		ORD.meta_product_id = e.meta_product_id
+   		and 
+   			e.manager_id = f.user_id
+   		and 
+   			t.sale_service_id = nc.complaint_id
+	   	<isNotEmpty prepend="and" property="userName">
+	    	 f.user_name = #userName#
+	    </isNotEmpty>
+   		<isNotEmpty prepend="and" property="orderId">
+	    	 T.ORDER_ID = #orderId# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="operateName">
+			 T.OPERATOR_NAME = #operateName#
+		</isNotEmpty>
+	    <isNotEmpty prepend="and" property="status">
+	    	 T.STATUS = #status# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="beginTime">
+			 T.CREATE_TIME &gt; = #beginTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="endTime">
+			T.CREATE_TIME &lt; = #endTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="sysCode">
+	    	 T.SYS_CODE = #sysCode# 
+	    </isNotEmpty>
+		)
+		) 
+		ORDER BY createTime DESC
+	</sql>
+	
+		<sql id="queryVstRefundmentListSql">
+  		select distinct * from (
+	  	select * from (
+	  	SELECT distinct
+	  		T.ORDER_ID      AS orderId,
+       		T.REFUNDMENT_ID AS refundmentId,
+       		T.AMOUNT/100    AS amount,
+       		D.ITEM_NAME     AS refundType,
+       		T.MEMO          AS memo,
+       		T.OPERATOR_NAME AS operatorName,
+       		T.CREATE_TIME   AS createTime,
+       		C.ITEM_NAME     AS status,
+       		T.SALE_SERVICE_ID AS saleServiceId,
+       		T.SYS_CODE AS sysCode 
+  		FROM 
+  			ORD_REFUNDMENT T, 
+  			COM_CODE C, 
+  			COM_CODE D 
+ 		WHERE 
+ 			T.STATUS = C.ITEM_CODE
+   		AND 
+   			C.SET_CODE = 'REFUNDMENT_STATUS'
+   		AND 
+   			T.REFUND_TYPE = D.ITEM_CODE
+   		AND 
+   			D.SET_CODE = 'REFUND_TYPE'
+   		and 
+   			t.status in ('REFUND_APPLY','APPLY_CONFIRM','UNVERIFIED','REJECTED','REFUND_VERIFIED')
+   		<isNotEmpty prepend="and" property="orderId">
+	    	 T.ORDER_ID = #orderId# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="operateName">
+			 T.OPERATOR_NAME = #operateName#
+		</isNotEmpty>
+	    <isNotEmpty prepend="and" property="status">
+	    	 T.STATUS = #status# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="beginTime">
+			 T.CREATE_TIME &gt; = #beginTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="endTime">
+			T.CREATE_TIME &lt; = #endTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="sysCode">
+	    	 T.SYS_CODE = #sysCode# 
+	    </isNotEmpty>
+		)
+		union all
+		select * from (
+	  	SELECT distinct
+	  		T.ORDER_ID      AS orderId,
+       		T.REFUNDMENT_ID AS refundmentId,
+       		T.AMOUNT/100    AS amount,
+       		D.ITEM_NAME     AS refundType,
+       		T.MEMO          AS memo,
+       		T.OPERATOR_NAME AS operatorName,
+       		T.CREATE_TIME   AS createTime,
+       		C.ITEM_NAME     AS status,
+       		T.SALE_SERVICE_ID AS saleServiceId,
+       		T.SYS_CODE AS sysCode 
+  		FROM 
+  			ORD_REFUNDMENT T, 
+  			COM_CODE C, 
+  			COM_CODE D 
+ 		WHERE 
+ 			T.STATUS = C.ITEM_CODE
+   		AND 
+   			C.SET_CODE = 'REFUNDMENT_STATUS'
+   		AND 
+   			T.REFUND_TYPE = D.ITEM_CODE
+   		AND 
+   			D.SET_CODE = 'REFUND_TYPE'
+   		and 
+   			t.status in ('REFUND_APPLY','APPLY_CONFIRM','UNVERIFIED','REJECTED','REFUND_VERIFIED')
+   		<isNotEmpty prepend="and" property="orderId">
+	    	 T.ORDER_ID = #orderId# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="operateName">
+			 T.OPERATOR_NAME = #operateName#
+		</isNotEmpty>
+	    <isNotEmpty prepend="and" property="status">
+	    	 T.STATUS = #status# 
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="beginTime">
+			 T.CREATE_TIME &gt; = #beginTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="endTime">
+			T.CREATE_TIME &lt; = #endTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="sysCode">
+	    	 T.SYS_CODE = #sysCode# 
+	    </isNotEmpty>
+		)
+		) 
+		ORDER BY createTime DESC
+	</sql>
+	
+  <select id="queryRefundmentList" parameterClass="java.util.HashMap" resultClass="com.lvmama.comm.bee.po.ord.OrdRefundment" >
+  	   select * from (
+  	   		select st.*,rownum as rn from (
+       			<include refid="queryRefundmentListSql"/>
+       		) st
+       	)
+       	<dynamic prepend=" where ">
+       		<isNotEmpty property="skipResults">
+       			<isNotEmpty property="maxResults">
+       				rn between #skipResults# and #maxResults#
+       			</isNotEmpty>
+       		</isNotEmpty>
+       	</dynamic>
+  </select>
+  
+    <select id="queryVstRefundmentList" parameterClass="java.util.HashMap" resultClass="com.lvmama.comm.bee.po.ord.OrdRefundment" >
+  	   select * from (
+  	   		select st.*,rownum as rn from (
+       			<include refid="queryVstRefundmentListSql"/>
+       		) st
+       	)
+       	<dynamic prepend=" where ">
+       		<isNotEmpty property="skipResults">
+       			<isNotEmpty property="maxResults">
+       				rn between #skipResults# and #maxResults#
+       			</isNotEmpty>
+       		</isNotEmpty>
+       	</dynamic>
+  </select>
+  
+  <select id="queryRefundmentListCount"  resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+    select count(*) from ( <include refid="queryRefundmentListSql"/> )
+  </select>
+  
+  <select id="queryVstRefundmentListCount"  resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+    select count(*) from ( <include refid="queryVstRefundmentListSql"/> )
+  </select>
+  
+  <update id="updateOrderStatus" parameterClass="map">
+  		UPDATE ORD_ORDER SET ORDER_STATUS = #status# WHERE ORDER_ID = #orderId#
+  </update>
+  
+  <select id="queryRefundmentByOrderId" parameterClass="map" resultClass="com.lvmama.comm.bee.po.ord.OrdRefundment">
+		SELECT T.REFUNDMENT_ID AS refundmentId, T.STATUS AS status FROM ORD_REFUNDMENT T WHERE T.ORDER_ID=#orderId#
+  </select>
+  
+  <select id="queryProdsByOrderId" parameterClass="long" resultClass="com.lvmama.comm.bee.po.ord.OrdOrderItemProd">
+  		SELECT T.PRODUCT_NAME AS productName FROM ORD_ORDER_ITEM_PROD T WHERE T.ORDER_ID = #orderId#
+  </select>
+  
+  <select id="queryManagerNameList" parameterClass="long" resultClass="string">
+  		SELECT DISTINCT
+  			f.real_name     as managerName
+  		FROM 
+  			ORD_REFUNDMENT       T,
+       		ord_order_item_meta  ORD,
+       		meta_product         e,
+       		lvmama_pet.PERM_USER f
+ 		WHERE 
+ 			t.status in ('REFUND_APPLY', 'APPLY_CONFIRM', 'UNVERIFIED', 'REJECTED', 'REFUND_VERIFIED')
+   			and T.order_id = ORD.order_id
+   			and e.manager_id = f.user_id
+   			and ORD.meta_product_id = e.meta_product_id
+   			and T.ORDER_ID = #orderId#
+  </select>
+
+	<insert id="insertRefundmentItemProd" parameterClass="com.lvmama.comm.bee.po.ord.OrdRefundmentItemProd">
+		<selectKey resultClass="java.lang.Long" keyProperty="refundmentItemProdId">
+			select ord_refundment_item_prod_seq.nextval as id from DUAL
+		</selectKey>
+		insert into ORD_REFUNDMENT_ITEM_PROD
+		(REFUNDMENT_ITEM_PROD_ID,REFUNDMENT_ID,ORD_ITEM_PROD_ID,REFUNDED_AMOUNT)
+		values (#refundmentItemProdId#, #refundmentId#, #ordItemProdId#,#refundedAmount#)
+	</insert>
+	<select id="queryRefundmentItemProdCount" resultClass="long"  parameterClass="long" >
+		SELECT COUNT(*) FROM ORD_REFUNDMENT_ITEM_PROD P WHERE P.REFUNDMENT_ID =#value#
+	</select>
+</sqlMap>

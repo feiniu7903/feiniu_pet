@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>信用卡担保</title>
+    <#include "../common/define_v4.html">
+	<link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/order.css">
+	<script src="${request.contextPath}/js/hotel.js"></script>
+</head>
+
+<body>
+<div class="wrap">
+    <header class="header">
+        <a href="javascript:union_back();" class="back"><span class="ic_back"></span></a>
+        <h1>选择信用卡</h1>
+    </header>
+    <section class="common-order">
+    	<article class="box-sp-2">
+            <div class="common-order-line">
+                <span>该酒店需要信用卡担保：</span><span class="ml10 f-color-1">&yen;${totalPrice!}</span>
+            </div>
+        </article>
+    	<form method="get" action="${request.contextPath}/hotel/create.do"  id="hotel_submit" >
+	        <input  value="${arrivalDate!}"  type="hidden" name="arrivalDate" id="arrivalDate">
+	        <input  value="${departureDate!}"  type="hidden" name="departureDate" id="departureDate">
+	        <input  value="${hotelId!}"  type="hidden" name="hotelId" id="hotelId">
+	        <input  value="${roomTypeId!}"  type="hidden" name="roomTypeId" id="roomTypeId">
+	        <input  value="${ratePlanId!}"  type="hidden" name="ratePlanId" id="ratePlanId">
+	        <input  value="${numberOfRooms!}"  type="hidden" name="numberOfRooms" id="numberOfRooms">
+	        <input  value="${numberOfCustomers!}"  type="hidden" name="numberOfCustomers" id="numberOfCustomers">
+	        <input  value="${customerIPAddress!}"  type="hidden" name="customerIPAddress" id="customerIPAddress">
+	        <input  value="${option!}"  type="hidden" name="option" id="option">
+	        <input  value="${contactName!}"  type="hidden" name="contactName" id="contactName">
+	        <input  value="${contactMobile!}"  type="hidden" name="contactMobile" id="contactMobile">
+	        <input  value="${totalPrice!}"  type="hidden" name="totalPrice" id="totalPrice">
+	        <input  value="${customerNames!}"  type="hidden" name="customerNames" id="customerNames">
+	        <input  value="${customerType!}"  type="hidden" name="customerType" id="customerType">
+	    </form>
+        <article>
+            <div class="common-order-line">
+                <label>
+                    <span class="t_l1">卡　号</span>
+                    <input type="text" class="lv-text-input" id="ccNo" name="ccNo" placeholder="请输入信用卡卡号">
+                </label>
+            </div>
+            <div class="common-order-line">
+                <label>
+                    <span class="t_l1">CVV2</span>
+                    <input type="text" class="lv-text-input" maxlength="3" id="ccCvv" name="ccCvv" placeholder="卡背面末三位数字">
+                </label>
+            </div>
+            <div class="common-order-line">
+                <label>
+                    <span class="t_l1">有效期</span>
+                    <!-- <input type="tel" class="lv-text-input" placeholder="MM/YY"> -->
+                </label>
+                <select class="sex" name="ccExpirationYear" id="ccExpirationYear">
+                	<#list yearList as year>
+                    	<option onclick="arriveDate();" <#if nowYear==year>selected="selected"</#if> value="" data-key="">${year!}</option>
+                	</#list>
+               	</select>&nbsp;&nbsp;&nbsp;
+               	<select class="sexs" name="ccExpirationMonth" id="ccExpirationMonth">
+               		<#list monthList as month>
+                   		<option onclick="arriveDate();" <#if nowMonth==month>selected="selected"</#if> value="" data-key="">${month!}</option>
+                    </#list>
+               	</select>
+                <!-- <span class="ic_ri"></span> -->
+            </div>
+        </article>
+        <article>
+            <div class="common-order-line">
+                <span>持卡人</span>
+                <input type="text" class="lv-text-input" id="ccHolderName" name="ccHolderName" placeholder="请输入持卡人姓名">
+            </div>
+            <div class="common-order-line">
+                <label>
+                    <span class="t_l1">证件类型</span>
+                    <select id="ccIdType">
+                        <option value="IdentityCard">居民身份证</option>
+                        <option value="Passport">护照</option>
+                        <option value="Other">其他</option>
+                    </select>
+                </label>
+            </div>
+            <div class="common-order-line">
+                <label>
+                    <span class="t_l1">证件号码</span>
+                    <input type="text" class="lv-text-input" id="ccIdNo" name="ccIdNo" placeholder="请输入持卡人证件号码">
+                </label>
+            </div>
+        </article>
+        <article  class="checkBox">
+            <div class="common-order-pan checkOption" onclick="saveCardFlagSW();">
+                <span>保存信用卡信息</span>
+                <span id="saveCardFlagSW"  class="ic_check_a fr selected"><i></i></span>
+            </div>
+        </article>
+        <div class="common-order-title"><p>选择保存部分信息，将该卡保存为常用信用卡，
+            下次预订时只要输入卡号后4位，有效期和CVV2码</p></div>
+    </section>
+    <div class="common-order-result">
+        <div class="fl"><span class="f-size-20"></span></div>
+        <div class="btn_style_1 fr" onclick="guaranteeOrderSubmit();">担保</div>
+        <input  value="0"  type="hidden" name="clickType" id="clickType"><!-- 区分是列表担保还是其他信用卡担保,1列表0其他 -->
+    </div>
+    <#include "../common/order_footer.html"/>
+</div>
+</body>
+</html>

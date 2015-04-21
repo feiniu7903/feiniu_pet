@@ -1,0 +1,15 @@
+	<groupbox style="border: none"> 
+		<caption label="关联标的" />
+		<hbox>
+			<listbox id="prodTargetListbox" model="@{saction.placeList}">
+				<listhead>
+					<listheader width="100px">编号：</listheader>
+					<listheader>名称：</listheader>
+				</listhead>
+				<listitem self="@{each='place'}" > 
+						<listcell label="@{place.placeId}"/>
+						<listcell label="@{place.placeName}"/>
+				</listitem>
+			</listbox>
+		</hbox>
+	</groupbox>

@@ -1,0 +1,99 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./supWin"?>
+<?component name="lvmama_pcity" macroURI="/macors/p_city.zul"?>
+<?component name="lvmama_product" macroURI="/macors/product.zul"?> 
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?> 
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="supWin"  mode="embedded" apply="com.lvmama.back.web.group.ListGroupDreamAction">
+		<grid>
+			<columns>
+				<column width="80px"></column>
+				<column></column>
+				<column width="80px"></column>
+				<column></column>
+				<column width="80px"></column>
+				<column></column>
+				<column></column>
+			</columns>
+			<rows>
+			 <row>
+					<hbox>团购梦ID：</hbox>
+					<hbox><longbox id="dreamId" value="@{saction.searchConds.dreamId}"></longbox></hbox>
+				    <hbox>所属年月：</hbox>
+				    <hbox><textbox id="dreamYearMonth" value="@{saction.searchConds.dreamYearMonth}"></textbox></hbox>
+				    <hbox>产品名称：</hbox>
+				    <hbox><textbox id="productName" value="@{saction.searchConds.productName}"></textbox></hbox>
+				</row>
+				<row>
+				
+				<hbox></hbox>
+				<hbox></hbox>
+				<hbox></hbox>
+				<hbox></hbox>
+				<hbox></hbox>
+				<hbox></hbox>
+					<hbox>
+						<button label="查询" id="search" width="100px" onClick='_paging.activePage=0;saction.search()'></button><button label="新增团购梦" permCode="1452" onClick='saction.showWindow("/group/newgroup_dream.zul", null);' width="100px"></button>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox mold="paging" pageSize="10"  
+			model="@{saction.groupDreamList, load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+			    <listheader label="编号" width="5%" sort="auto(dreamId)"/>
+				<listheader label="产品名称" />
+				<listheader label="喜欢人数" />
+				<listheader label="不喜欢人数" />
+				<listheader label="最低团购预订价格"/>
+				<listheader label="最高团购价格"/>
+				<listheader label="门市价格"/>
+				<listheader label="创建时间"/>
+				<listheader label="修改时间"/>
+				<listheader label="操作人" />
+				<listheader label="操作" />
+			</listhead>
+		
+			<listitem height="25px" self="@{each='each'}">
+				<listcell label="@{each.dreamId}"></listcell>
+				<listcell label="@{each.productName}"></listcell>
+				<listcell label="@{each.enjoyCount}"></listcell>
+				<listcell label="@{each.notEnjoyCount}"></listcell>
+				<listcell label="@{each.lowDreamPriceDou}"></listcell>
+				<listcell label="@{each.highDreamPriceDou}"></listcell>
+				<listcell label="@{each.marketPriceDou}"></listcell>
+				<listcell label="@{each.createTime}"></listcell>
+				<listcell label="@{each.updateTime}"></listcell>
+				<listcell label="@{each.operator}"></listcell>
+				<listcell>
+					<a style="color:blue" permCode="1453" onClick='saction.showWindow("/group/newgroup_dream.zul", self.getAttributes());' label="修改">
+						<custom-attributes dreamId="@{each.dreamId}"/>
+					</a> |
+					
+					<a style="color:blue" permCode="1454" onClick='saction.doDelete(self.getAttributes());' label="删除 ">
+						 <custom-attributes dreamId="@{each.dreamId}"/>  
+					</a>|
+					<a style="color:blue" onClick='saction.showWindow("/group/listgroup_dream_submitter.zul", self.getAttributes());' label="查看喜欢">
+						<custom-attributes dreamId="@{each.dreamId}"/>
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+
+		<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell width="200px">
+					<paging  id="_paging" pageSize ="10" onPaging='saction.search();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+	</window>
+</zk>

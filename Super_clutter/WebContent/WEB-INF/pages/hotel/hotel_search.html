@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>酒店预订_酒店查询_宾馆预订_手机网上订房-驴妈妈无线官网</title>
+	<meta name="Keywords" content="酒店预订,酒店查询,宾馆预订"/>
+	<meta name="Description" content="驴妈妈无线官网:提供全国酒店预订,宾馆及酒店价格查询服务,手机网上订房,方便,快捷,享受随订随住的舒适体现!"/>
+    <#include "../common/define_v4.html">
+    <link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/order.css">
+	<script src="${request.contextPath}/js/hotel.js"></script>
+	<script src="${request.contextPath}/js/comm.js"></script>
+	<script type="text/javascript">
+		//从时间表过来的会根据后台算出的入住日期和离开日期重新写入LocacStr/从其他页面过来的则直接读取LocalStr
+		$(function(){
+			if($("#arrivalDate").val()!=null && $("#arrivalDate").val()!=''){
+				setLocalStorage(LOCAL_STRTORAGE_HOTEL_CHECKINDATE,$("#arrivalDate").val());
+				setLocalStorage(LOCAL_STRTORAGE_HOTEL_CHECKINDATEZHWEEK,$("#arrivalZhDate").val());
+				
+			}if($("#departureDate").val()!=null && $("#departureDate").val()!=''){
+				setLocalStorage(LOCAL_STRTORAGE_HOTEL_LEAVEDATE,$("#departureDate").val());
+				setLocalStorage(LOCAL_STRTORAGE_HOTEL_LEAVEDATEZHWEEK,$("#departureZhDate").val());
+			}
+			
+		});
+		//自动加载方法
+		$(function(){
+			//从LocalStorage获取搜索条件
+			var hotelcitykey = getLocalStorage(LOCAL_STRTORAGE_HOTEL_CITYKEY);//城市ID 查询中的cityid或citycode
+			var hotelcity = getLocalStorage(LOCAL_STRTORAGE_HOTEL_CITY);//酒店城市
+			var checkindate = getLocalStorage(LOCAL_STRTORAGE_HOTEL_CHECKINDATE);//入住日期
+			var leavedate = getLocalStorage(LOCAL_STRTORAGE_HOTEL_LEAVEDATE);//离开日期
+			var checkinzhdate=getLocalStorage(LOCAL_STRTORAGE_HOTEL_CHECKINDATEZHWEEK);//入住星期
+			var leaveinzhdate=getLocalStorage(LOCAL_STRTORAGE_HOTEL_LEAVEDATEZHWEEK);//离开星期
+			//var daytimes = getLocalStorage(LOCAL_STRTORAGE_HOTEL_DAYTIMES);//住几晚
+			var hotelprice = getLocalStorage(LOCAL_STRTORAGE_HOTEL_HOTELPRICE);//价格区间
+			var hotelpriceMin = getLocalStorage(LOCAL_STRTORAGE_HOTEL_HOTELPRICEMIN);//价格区间 小
+			var hotelpriceMax = getLocalStorage(LOCAL_STRTORAGE_HOTEL_HOTELPRICEMAX);//价格区间 大
+			var hotelkeyword = getLocalStorage(LOCAL_STRTORAGE_HOTEL_HOTELKEYWORD);//关键字
+			var hotelkeywordid=getLocalStorage(LOCAL_STRTORAGE_HOTEL_HOTELKEYWORDID);//关键字ID
+			var searchPriceValue=getLocalStorage("searchPriceValue");
+			var searchAreaValue=getLocalStorage("searchAreaValue");
+			
+			if(hotelcitykey!=null && hotelcitykey!=''){$("#cityId").val(hotelcitykey);}else{$("#cityId").val('0101')}
+			if(hotelcity!=null && hotelcity!=''){$("#hotel_city_text").text(hotelcity);$("#cityName").val(hotelcity);}else{$("#hotel_city_text").text("北京");$("#cityName").val("北京");}
+			if(checkindate!=null && checkindate!=''){$("#hotel_checkin_date_text").text(checkindate);$("#arrivalDate").val(checkindate);}
+			if(leavedate!=null && leavedate!=''){$("#hotel_leave_date_text").text(leavedate);$("#departureDate").val(leavedate);}
+			if(checkinzhdate!=null && checkinzhdate!=''){$("#hotel_checkin_date_zh").text(checkinzhdate);$("#arrivalZhDate").val(checkinzhdate)}
+			if(leaveinzhdate!=null && leaveinzhdate!=''){$("#hotel_leave_date_zh").text(leaveinzhdate);$("#departureZhDate").val(leaveinzhdate)}
+			if((checkindate==null || checkindate=='') || (leavedate==null && leavedate=='')){getDefaultDate();}
+			if(hotelprice!=null && hotelprice!=''){$("#hotel_price_check_text").text(hotelprice);}else{$("#hotel_price_check_text").text("价格不限");}
+			if(hotelpriceMin!=null && hotelpriceMin!=''){$("#lowRate").val(hotelpriceMin);}else{$("#lowRate").val("");}
+			if(hotelpriceMax!=null && hotelpriceMax!=''){$("#highRate").val(hotelpriceMax);}else{$("#highRate").val("");}
+			if(hotelkeyword!=null && hotelkeyword!=''){$("#hotel_keyword_text").text(hotelkeyword);$("#queryText").val(hotelkeyword);$("#hotel_keyword_text").attr("class","value")}else{$("#hotel_keyword_text").text("酒店名称等");$("#queryText").val("");$("#hotel_keyword_text").attr("class","value f-color-3")}
+			if(hotelkeywordid!=null && hotelkeywordid!=''){$("#locationId").val(hotelkeywordid);}
+			if(searchPriceValue!=null && searchPriceValue!=''){$("#searchPriceValue").val(searchPriceValue);}else{$("#searchPriceValue").val("");}
+			if(searchAreaValue!=null && searchAreaValue!=''){$("#searchAreaValue").val(searchAreaValue);}else{$("#searchAreaValue").val("");}
+	});
+	</script>
+</head>
+<body>
+<div id="container">
+    <header class="header" id="hotel_search_title">
+        <a href="javascript:void(0);"  onclick="union_skip('http://${hostName}');" class="back"><span class="ic_back"></span></a>
+        <h1>酒店查询</h1>
+        <section class="header_btn">
+            <a href="javascript:selectCircumHotelList();">周边酒店</a>
+        </section>
+        <!-- <div class="header_btn">
+            <a href="javascript:union_skip('http://${hostName}');" class="header-icon-home"></a>
+        </div> -->
+    </header>
+    <!--价格页面  -->
+    <header class="header" id="hotel_price_title" style="display:none;">
+        <a href="javascript:priceBack();" class="back"><span class="ic_back"></span></a>
+        <h1>请选择价格</h1>
+    </header>
+    <div id="content">
+        <section class="common-order" id="hotel_search_text">
+            <div class="common-order-title">城市</div>
+            <article>
+                <div class="common-order-line setting-btn" onclick="getCities();" data-option="http://10.3.1.38/lmm/lvmama_1.0/pages/grogshop/chooseposition.html">
+                    <span class="value" id="hotel_city_text"><!-- 北京 --></span>
+                    <span class="ic_ri"></span>
+                </div>
+            </article>
+            <div class="t-box">
+                <div class="t-form-line t-date">
+                    <div class="common-order-title">入住日期</div>
+                    <article>
+                        <div class="common-order-line setting-btn" onclick="selsctHoteldate(1,'hotel_search');" data-option="http://10.3.1.38/lmm/lvmama_1.0/pages/grogshop/datepicker.html">
+                            <em class="t-date-num" id="hotel_checkin_date_text"><!-- 入店时间 --></em><br><em id="hotel_checkin_date_zh"><!-- 今天 --></em>
+                            </span><span class="ic_ri"></span>
+                        </div>
+                    </article>
+                </div>
+                <div class="t-form-line t-date">
+                    <div class="common-order-title">离店日期</div>
+                    <article>
+                        <div class="common-order-line setting-btn" onclick="selsctHoteldate(0,'hotel_search');" data-option="http://10.3.1.38/lmm/lvmama_1.0/pages/grogshop/datepicker.html">
+                            <em class="t-date-num" id="hotel_leave_date_text"><!-- 离开时间 --></em><br><em id="hotel_leave_date_zh"><!-- 明天 --></em>
+                            </span><span class="ic_ri"></span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="common-order-title">价格</div>
+            <article>
+                <div class="common-order-line setting-btn" onclick="searchPrice();" data-option="http://10.3.1.38/lmm/lvmama_1.0/pages/grogshop/value.html">
+                    <span id="hotel_price_check_text" class="value"><!-- 价格不限 --></span>
+                    <span class="ic_ri"></span>
+                </div>
+            </article>
+            <div class="common-order-title">关键字</div>
+            <article>
+                <div class="common-order-line setting-btn" onclick="searchKeyWord();" data-option="http://10.3.1.38/lmm/lvmama_1.0/pages/grogshop/grogshop_keywords.html">
+                    <span class="value f-color-3" id="hotel_keyword_text"><!-- 酒店名/商圈等 --></span>
+                    <span class="ic_ri"></span>
+                </div>
+            </article>
+            <div class="view_more rose"><a href="javascript:void(0);" onclick="selectHotelList();">查找酒店</a></div>
+        </section>
+        <!-- 酒店搜索表单 -->
+		<form method="get" action="${request.contextPath}/hotel/hotelSearchList.htm"  id="hotel_search_list" >
+			<input  value=""  type="hidden" name="cityId" id="cityId"><!--cityid  -->
+			<input  value=""  type="hidden" name="cityName" id="cityName"><!-- 城市名 -->
+			<input  value="${arrivalDate!}"  type="hidden" name="arrivalDate" id="arrivalDate"><!--入住日期 -->
+			<input  value="${departureDate!}"  type="hidden" name="departureDate" id="departureDate"><!--离开日期 -->
+			<input  value="${arrivalZhDate!}"  type="hidden" name="arrivalZhDate" id="arrivalZhDate"><!--入住星期 -->
+			<input  value="${departureZhDate!}"  type="hidden" name="departureZhDate" id="departureZhDate"><!--离开星期 -->
+			<input  value=""  type="hidden" name="lowRate" id="lowRate"><!-- 价格最小值 -->
+			<input  value=""  type="hidden" name="highRate" id="highRate"><!-- 价格最大值 -->
+			<input  value=""  type="hidden" name="queryText" id="queryText"><!--关键字/商圈/地标  -->
+			<input  value=""  type="hidden" name="locationId" id="locationId"><!--关键字/商圈/地标 编码 -->
+			<input  value="1"  type="hidden" name="pageIndex" id="pageIndex"><!--分页第几页  -->
+			<input  value="10"  type="hidden" name="pageSize" id="pageSize"><!--分页大小  -->
+			<input  value=""  type="hidden" name="searchPriceValue" id="searchPriceValue"><!--综合筛选价格VALUE  -->
+            <input  value="0"  type="hidden" name="searchBrandValue" id="searchBrandValue"><!--综合筛选品牌VALUE -->
+            <input  value=""  type="hidden" name="searchAreaValue" id="searchAreaValue"><!--综合筛选区域VALUES -->
+		</form>
+		<input  value=""  type="hidden" name="locationCityName" id="locationCityName"><!-- 定位当前城市名 -->
+		<input  value=""  type="hidden" name="locationLatitude" id="locationLatitude"><!-- 当前位置纬度 -->
+		<input  value=""  type="hidden" name="locationLongitude" id="locationLongitude"><!-- 当前城市经度 -->
+        <div class="common-order" id="hotel_price_text" style="display:none;">
+            <article>
+                <div class="common-order-line" onclick="selectPrice('','','价格不限');"><span>价格不限</span><span class="ic_ri"></span></div>
+                <div class="common-order-line" onclick="selectPrice(0,100,'0-100元');"><span>0-100元</span><span class="ic_ri"></span></div>
+                <div class="common-order-line" onclick="selectPrice(100,300,'100-300元');"><span>100-300元</span><span class="ic_ri"></span></div>
+                <div class="common-order-line" onclick="selectPrice(300,500,'300-500元');"><span>300-500元</span><span class="ic_ri"></span></div>
+                <div class="common-order-line" onclick="selectPrice(500,1000000,'500以上');"><span>500以上</span><span class="ic_ri"></span></div>
+            </article>
+            <!-- <div href="#" class="view_more"><a href="#">确 定</a></div> -->
+        </div>
+    </div>
+    <#include "../common/footer_v4.html"/>
+</div>
+<script type="text/javascript">
+	//定位城市--搜索周边酒店用到
+	$(function() {
+		    /********   定位 相关 ************/
+			if(navigator.geolocation) {
+		        navigator.geolocation.getCurrentPosition(function(e){
+					latitude = e.coords.latitude;
+					longitude = e.coords.longitude;
+					//经度纬度赋值
+					$("#locationLatitude").val(latitude);
+					$("#locationLongitude").val(longitude);
+					initCity(latitude,longitude,"location_city_loc"); // 定位成功. 
+				},function(e){
+					initDatas(DEFAULT_CITY); // 如果定位失败 ! 
+				},{enableHighAccuracy:true,timeout:3000,maximumAge:3000});
+		    } else {
+		    	initDatas(DEFAULT_CITY); // 如果浏览器不支持定位  
+		    }
+	});
+	//定位城市并赋值
+	function initDatas(locationCity){
+		$("#locationCityName").val(locationCity);
+	}
+</script>	
+</body>
+</html>

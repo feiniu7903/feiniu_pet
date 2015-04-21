@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="AUTOCOMPLETE" >
+	
+	<typeAlias alias="AutocompleteItem" type="com.lvmama.finance.common.ibatis.vo.AutocompleteItem"/>
+	
+	<select id="searchSupplier" resultClass="AutocompleteItem" parameterClass="Map">
+		SELECT * FROM (
+		SELECT 
+			SUPPLIER_ID AS VALUE,
+			SUPPLIER_NAME AS LABEL ,
+			ROWNUM AS RN
+		FROM 
+			SUP_SUPPLIER 
+		WHERE 
+			SUPPLIER_NAME LIKE #label#
+		OR
+			SUPPLIER_ID LIKE #value#
+		) WHERE RN &lt;= 12
+	</select>
+	
+	<!-- 查询结算对象 -->
+	<select id="searchSettlementTarget" resultClass="AutocompleteItem" parameterClass="Map">
+		SELECT * FROM (
+		SELECT 
+			TARGET_ID AS VALUE,
+			NAME AS LABEL ,
+			ROWNUM AS RN
+		FROM 
+			SUP_SETTLEMENT_TARGET
+		WHERE 
+		(
+			NAME LIKE #label#
+		OR
+			TARGET_ID LIKE #value#
+		)
+		AND 
+			VALID = 'Y'
+		) WHERE RN &lt;= 12
+	</select>
+	
+	<!-- 查询采购产品（ID——名称） -->
+	<select id="searchMetaProduct" resultClass="AutocompleteItem" parameterClass="Map">
+		SELECT * FROM (
+		SELECT 
+			META_PRODUCT_ID AS VALUE,
+			PRODUCT_NAME AS LABEL ,
+			ROWNUM AS RN
+		FROM 
+			META_PRODUCT
+		WHERE 
+		(
+			PRODUCT_NAME LIKE #label#
+		OR
+			META_PRODUCT_ID LIKE #value#
+		)
+		AND 
+			VALID = 'Y'
+		) WHERE RN &lt;= 12
+	</select>
+	
+	<!-- 查询销售产品（ID——名称） -->
+	<select id="searchProduct" resultClass="AutocompleteItem" parameterClass="Map">
+		SELECT * FROM (
+		SELECT 
+			PRODUCT_ID AS VALUE,
+       		PRODUCT_NAME AS LABEL,
+			ROWNUM AS RN
+		FROM 
+			PROD_PRODUCT
+		WHERE 
+			PRODUCT_NAME LIKE #label#
+		OR
+			PRODUCT_ID LIKE #value#
+		
+		) WHERE RN &lt;= 12
+	</select>
+</sqlMap>

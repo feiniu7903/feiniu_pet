@@ -1,0 +1,27 @@
+<?page title="产品展示列表" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_listordaudit"?>
+<?component name="listordauditwait" macroURI="/ord/audit/listordauditwait.zul" tab="WAIT"?>
+<?component name="listordauditres" macroURI="/ord/audit/listordauditres.zul" tab="RES"?>
+<?component name="listordauditsent" macroURI="/ord/audit/listordauditsent.zul" tab="SENT"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_listordaudit" mode="embedded">
+	<tabbox width="99%" tabscroll="false">
+		<tabs>
+			<tab id="listordauditwait" label="待分单"/>
+			<tab id="listordauditres" label="线路无资源确认订单"/>
+			<tab id="listordauditsent" label="已分单"/>
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+				<listordauditwait/>
+			</tabpanel>
+			<tabpanel fulfill="listordauditres.onSelect">
+				<listordauditres/>
+			</tabpanel>
+			<tabpanel fulfill="listordauditsent.onSelect">
+				<listordauditsent/>
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+</window>
+</zk>

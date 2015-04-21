@@ -1,0 +1,67 @@
+<?page title="订单审核" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./detail"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<?component name="approveDetailOrder" macroURI="/ord/approve/ApproveDetailOrder.zul" ?>
+<?component name="approveDetailPersons" macroURI="/ord/approve/ApproveDetailPersons.zul" ?>
+<?component name="comLog" macroURI="/macors/com_log.zul" ?>
+<zk>
+
+<zscript>
+	String action=(String)Executions.getCurrent().getArg().get("action");
+	Long orderId=(Long)Executions.getCurrent().getArg().get("orderId");
+	String title=null;
+	if (action.equals("approveOrder")) title="订单审核";
+	else if (action.equals("approveResource")) title="资源确认";
+	else title="订单监控";
+</zscript>
+
+<window id="detail" title="${title }" border="normal" apply="com.lvmama.back.web.ord.approve.ApproveDetailAction">
+<tabbox width="100%" tabscroll="true" height="600px">
+		<tabs>
+			<tab id="tab_order_info" label="订单信息"/>
+			<tab id="tab_order_user_info" label="用户信息"/>
+			<tab id="tab_order_deal_log" label="处理日志"/>
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+				<approveDetailOrder ordOrder = "${saction.ordOrder }" action="${arg.action }"/>
+			</tabpanel>
+			<tabpanel >
+				<!-- 只能从zscript中取，arg.orderId取不到 -->
+				<approveDetailPersons  orderId = "${orderId }" action="${action }" />
+			</tabpanel>
+			<tabpanel >
+				<comLog  objectType = "ORD_ORDER" objectId="${orderId }" />
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+	
+	<grid style="border:0">
+	<rows>
+	<row>
+		<cell width="50%">
+		
+			<button if="${action=='approveOrder' &amp;&amp; saction.ordOrder.approveStatus=='UNVERIFIED'}" label="信息审核通过" onClick="saction.doApproveInfo()"/>
+			<label if="${action=='approveOrder' &amp;&amp; saction.ordOrder.approveStatus=='INFOPASS' &amp;&amp; saction.ordOrder.resourceConfirmStatus==null}" value="等待资源审核.." />
+			
+			<span if="${action!='approveResource'}">
+			<listbox codeset="ORD_CANCEL_REASON" mold="select" selectedItem="@{saction.cancelReason }"/>
+			<button label="废单" onClick="saction.doCancel()"/>
+			</span>
+			
+			<button if="${action=='approveOrder' }" label="订单审核通过" onClick="saction.doApprovePass()"/>
+		</cell>
+		<cell if="${action=='approveOrder' }" >
+			<checkbox checked="@{saction.ordOrder.redail }"/><label value="需重拨" />
+			<button label="保存" onClick="saction.saveRedail()"/>
+		</cell>
+		
+		<cell if="${action=='approveResource' &amp;&amp; saction.ordOrder.approveStatus=='INFOPASS' &amp;&amp; saction.ordOrder.resourceConfirmStatus==null}">
+			<button label="保存资源状态" onClick="saction.doResourceConfirm()"/>
+		</cell>
+	</row>
+	</rows>
+	</grid>
+	
+</window>
+</zk>

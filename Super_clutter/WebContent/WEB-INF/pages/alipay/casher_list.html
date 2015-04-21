@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>选择银行-驴妈妈手机站</title>
+<#include "../common/define_v3.html">
+<script src="${request.contextPath}/js/comm.js"></script>
+<script src="${request.contextPath}/js/order.js?_version=20131023"></script>
+</head>
+
+<body>
+<div class="wrap">
+    <#if firstChannel?? && (firstChannel =="" || firstChannel =="CLIENT")>
+		<header class="header">
+	    	<a href="javascript:history.back();" class="back"><span class="ic_back"></span></a>
+	        <h1>选择银行</h1>
+	    </header>
+    </#if>
+    <section class="coupon_main">
+	    <#if payChanelList?? && payChanelList?size&gt;0>
+		    <ul class="pay_list"> 
+		       <#list payChanelList as pay>
+		           <li><a href="javascript:pay_by_cashier('${alipayWapUrl!}?orderId=${orderId!}&cashierCode=${pay.cashierCode!}','${pay.cashierCode!}','${pay.name!}(${casherParttern!})')">${pay.name?default("")}(${casherParttern!})</a></li>
+		       </#list>
+		    </ul>
+	    <#else>
+			<#assign no_data_msg="获取银行列表数据失败！">
+		    <#include "../common/no_data_list.html">
+	    </#if>
+    </section>
+</div>
+
+</body>
+</html>

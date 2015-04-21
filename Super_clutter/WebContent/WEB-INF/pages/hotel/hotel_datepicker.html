@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>选择日期</title>
+<#include "../common/define_v4.html">
+<script src="${request.contextPath}/js/hotel.js"></script>
+</head>
+<script>
+
+	function choseDays(obj,price,date,week) {
+		$('td').removeClass('date_active');
+		$(obj).addClass('date_active');
+		
+		window.location.href=contextPath+"/ticketorder/order_fill.htm?canOrderToday=false&branchId=${branchId!}&productId=${productId!}&visitTime="+date;
+	}
+</script>
+<body>
+<div id="container">
+    <header class="header">
+        <a href="javascript:union_back();" class="back"><span class="ic_back"></span></a>
+        <h1>选择日期</h1>
+    </header>
+    <div id="content">
+    	<#if zeroSixText?? && zeroSixText!="" && clickType?? && clickType==1><div class="tips-noborder">${zeroSixText!}</div></#if>
+        <#if resultTimePicker?? && resultTimePicker?size&gt;0>
+            <input  value="${arrivalDate!}"  type="hidden" name="arrivalDate" id="arrivalDate"><!--入住日期 -->
+            <input  value="${departureDate!}"  type="hidden" name="departureDate" id="departureDate"><!--离开日期 -->
+            <input  value="${hotelId!}"  type="hidden" name="hotelId" id="hotelId"><!--酒店ID -->
+            <#list resultTimePicker as timePicker>
+                <#if timePicker?? && timePicker?size&gt;0>
+                    <div class="calendar">
+                        <div class="date_month">${timePicker[timePicker_index].year}年<span>${timePicker[timePicker_index].month}</span>月</div>
+                        <table class="datePicker">
+                            <thead>
+                            <tr>
+                                <th>周日</th>
+                                <th>周一</th>
+                                <th>周二</th>
+                                <th>周三</th>
+                                <th>周四</th>
+                                <th class="date_da_week">周五</th>
+                                <th class="date_da_week">周六</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <#list timePicker as p>
+                                    <#assign t_status = "2"/>
+                                    <#assign weekEnd = ""/>
+                                    <#if p.day?? && p.day !="">
+                                        <#assign t_status = "3"/>
+                                        <#if p.isSellable?? && p.isSellable?string=="true" >
+                                            <#assign t_status = "4"/>
+                                            <#if p.dayStock?? && p.dayStock=="-2">
+                                                <#assign t_status = "5"/>
+                                            </#if>
+                                        </#if>
+                                        <#if  p.dayStock?? && p.dayStock=="-2">
+                                            <#assign t_status = "5"/>
+                                        </#if>
+                                        <#if p.week?? && p.week?number&gt;5>
+                                            <#assign weekEnd = "date_da_week"/>
+                                        </#if>
+                                    </#if>
+
+                                    <td <#if t_status=="5"> onclick="hotelChoseDays('${p.date!}',${clickType!},'${clickPageType!}');"</#if>  class="date_da${t_status} ${weekEnd!}">
+                                    <!-- 日期 -->
+                                    <div class="date_da">
+                                    	<#if p.zHweek!="今天" && p.zHweek!="明天" && p.zHweek!="后天">
+                                        	&nbsp;${p.day!}
+                                        </#if>
+                                    </div>
+                                    <!--如果是“今”“明”“后”  -->
+                                    <#if p.zHweek=="今天" || p.zHweek=="明天" || p.zHweek=="后天">
+	                                    <div class="lv-price">
+	                                     	&nbsp;${p.zHweek!}<br>
+	                                        <#if p.isSellable?? && p.isSellable!="" >&nbsp;${p.isSellable!}</#if>
+	                                    </div>
+	                                <#else>
+	                                    <div class="lv-price">
+	                                        &nbsp;
+	                                        <#if p.isSellable?? && p.isSellable!="" >${p.isSellable!}</#if>
+	                                    </div>
+                                    </#if>
+                                    
+                                    </td>
+                                    <#assign pIndex = p_index + 1/>
+                                    <#if p_has_next && pIndex%7 ==0 >
+                            </tr>
+                            <tr>
+                </#if>
+            </#list>
+            </tr>
+            </tbody>
+            </table>
+    </div>
+    </#if>
+    </#list>
+    </#if>
+</div>
+
+</div>
+<!-- <div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a onclick="union_back();" href="javascript:void(0);"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">选择日期</div>
+</div> -->
+<script>
+    $(function() {
+        $(".lv-price").each(function(){
+            var num=parseInt($(this).html().replace(/\W/g, ""));
+            if((num/10000)>1){
+                $(this).css("font-size","10px");
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!-- 附加产品说明  快递费-->
+<#if physical?? && physical && hasExpressAddtional?? && hasExpressAddtional >
+	<div class="wrap" id="addition_product_desc" style="display:none">
+	    <div class="lv-header lv-media-width lv-header-mheight" id="order_fill_header">
+		  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:additionalPageChange(2);"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+		  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+		  <div class="lv-title">附加产品说明</div>
+		</div>
+	    <section class="coupon_main">
+	        <article class="coupon_list">
+	            <#if productItems?? && productItems?size&gt;0>
+			        <#list productItems.datas as item>
+			            <#if item.additional && item.subProductType=="EXPRESS">
+				            <dl class="coupon_list_con">
+				                <dt>${item.fullName!}</dt>
+				                <dd>
+				                	<p class="coupon_ti2">${item.description!}</p>
+				                </dd>
+				            </dl>
+			            </#if>
+			         </#list>
+			    <#else>
+					 <p class="coupon_none">暂无附加产品说明</p>
+			    </#if>
+	        </article>
+	    </section>
+	</div>
+<#else>
+     <div id="addition_product_desc"></div>
+</#if>

@@ -1,0 +1,35 @@
+<?page title="Binding product with tags" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./placeTag_list_win"?>
+<zk>
+	<window id="placeTag_list_win" title="目的地  关联标签" border="normal"
+		closable="true" apply="com.lvmama.back.web.tag.ProdTagAction">
+		<listbox id="box" fixedLayout="true"
+			model="@{saction.placeTags,load-after='delButton.onClick,refreshButton.onClick'}">
+			<listhead>
+				<listheader label="小组名" />
+				<listheader label="标签名" />
+				<listheader label="起始时间" />
+				<listheader label="结束时间" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem self="@{each='placeTag'}"
+				value="@{placeTag}">
+				<listcell label="@{placeTag.tag.tagGroupName}" />
+				<listcell label="@{placeTag.tag.tagName}" />
+				<listcell label="@{placeTag.strBeginTime}" />
+				<listcell label="@{placeTag.strEndTime}" />
+				<listcell>
+					<hbox>
+						<button id="delButton" label="删除"
+							onClick='saction.delPlaceTag(self.getAttribute("placeTagId"), self.getAttribute("placeId"));'>
+							<custom-attributes placeTagId="@{placeTag.id}" />
+							<custom-attributes placeId="@{saction.placeId}" />
+						</button>
+					</hbox>
+				</listcell>
+			</listitem>
+		</listbox>
+		<button id="refreshButton" onClick="saction.loadPlaceTags();"
+			visible="false" />
+	</window>
+</zk>

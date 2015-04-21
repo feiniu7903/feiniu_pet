@@ -1,0 +1,138 @@
+<?page title="产品展示列表" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_listordtrans"?>
+<?component name="lvmama_user" macroURI="/macors/user.zul"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_listordtrans" mode="embedded"
+		apply="com.lvmama.back.web.ord.ListTransactionAction">
+		<grid>
+			<columns>
+				<column width="80px"></column>
+				<column></column>
+				<column width="70px"></column>
+				<column ></column>
+				<column width="70px"></column>
+				<column ></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						用    户：
+					</hbox>
+					<hbox>
+						
+						<textbox value="@{saction.searchParams.userId }" id="userId" visible="false"/>
+						<lvmama_user />
+					</hbox>
+					<hbox>订单号：</hbox>
+					<hbox>
+						<textbox id="orderId"
+							value="@{saction.searchParams.objectId}" />
+					</hbox>
+					<hbox>交易号：</hbox>
+					<hbox>
+						<textbox id="gatewayTradeNo"
+							value="@{saction.searchParams.gatewayTradeNo}" />
+					</hbox>
+
+				</row>
+				<row>
+					<hbox>
+						支付流水号：
+					</hbox>
+					<hbox>
+						
+						<textbox id="serial"
+							value="@{saction.searchParams.serial}" />
+					</hbox>
+					<hbox>交易时间：</hbox>
+					<hbox>
+						<datebox id="minTransTime"
+							value="@{saction.searchParams.minTransTime}" width="90">
+						</datebox>
+						<label value="~" />
+						<datebox id="maxTransTime"
+							value="@{saction.searchParams.maxTransTime}" width="90" >
+						</datebox>
+					</hbox>
+					<hbox>创建时间：</hbox>
+					<hbox>
+						<datebox id="minCreateTime"
+							value="@{saction.searchParams.minCreateTime}" width="90">
+						</datebox>
+						<label value="~" />
+						<datebox id="maxCreateTime"
+							value="@{saction.searchParams.maxCreateTime}" width="90" >
+						</datebox>
+					</hbox>
+				</row>
+				<row spans="6" align="right">
+					<hbox  >
+						<button label="查询" id="search" width="100px"
+							onClick="win_listordtrans$composer.loadDataList();" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox id="ordtransListBox"
+			model="@{win_listordtrans$composer.transList,load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader label="编号" width="5%" />
+				<listheader label="交易对象ID" />
+				<listheader label="交易对象" />
+				<listheader label="交易号" />
+				<listheader label="流水号" />
+				<listheader label="金额" />
+				<listheader label="收款" />
+				<listheader label="交易渠道" />
+				<listheader label="交易类型" />
+				<listheader label="交易时间" />
+				<listheader label="操作人" />
+			</listhead>
+			<listitem height="25px" self="@{each='trans'}">
+				<listcell label="@{trans.transactionId}" />
+				<listcell label="@{trans.objectId}" />
+				<listcell >
+					<label value="@{trans.objectType,converter='com.lvmama.back.utils.CodesetZKConverter'}" >
+						<custom-attributes codeset="OBJECT_TYPE"/>
+					</label>
+				</listcell>
+				<listcell label="@{trans.gatewayTradeNo}" />
+				<listcell label="@{trans.serial}" />
+				<listcell label="@{trans.amountYuan}" />
+				<listcell label="@{trans.payee}" />
+				<listcell>
+					<label
+						value="@{trans.paymentGateway,converter='com.lvmama.back.utils.CodesetZKConverter'}">
+						<custom-attributes codeset="PAYMENT_GATEWAY" />
+					</label>
+				</listcell>
+				<listcell>
+					<label
+						value="@{trans.transactionType,converter='com.lvmama.back.utils.CodesetZKConverter'}">
+						<custom-attributes codeset="TRANSACTION_TYPE" />
+					</label>
+				</listcell>
+				<listcell label="@{trans.transTime}" />
+				<listcell label="@{trans.operator}" />
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="10"
+								onPaging='saction.loadDataList();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	</window>
+</zk>

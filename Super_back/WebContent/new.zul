@@ -1,0 +1,38 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window title="hello" border="normal">
+hello world!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  <button label="Say Hello" onClick="sayHello()"/>
+  <zscript>
+      int count=0;
+      void sayHello(){
+                alert("Hello World!"+ ++count);
+            }
+  </zscript>
+  Do you like ZK? <label id="be"/>
+<separator/>
+<button label="Yes" onClick="be.value = self.label"/>
+ <button label="No" onClick="be.value = self.label"/>
+ 
+ <textbox id="source" value="ABC"/>
+ <label value="${source.value}"/>
+ 
+  <zscript>contacts = new String[] {"Monday", "Tuesday",
+"Wednesday"};</zscript>
+<listbox width="100px">
+<listitem label="${each}" forEach="${contacts}"/>
+</listbox>
+
+<listbox>
+<listitem label="Monday"/>
+<listitem label="Tuesday"/>
+<listitem label="Wednesday"/>
+</listbox>
+
+<listbox>
+<listitem label="${each}" forEach="Monday, Tuesday, Wednesday"/>
+</listbox>
+  
+</window>
+</zk>

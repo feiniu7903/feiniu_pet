@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COMLOG" >
+	
+	<typeAlias alias="ComLog" type="com.lvmama.finance.common.ibatis.po.ComLog"/>
+	
+	<insert id="insert" parameterClass="ComLog" >
+		INSERT INTO 
+			COM_LOG
+		(
+			LOG_ID,
+			CREATE_TIME,
+			CONTENT,
+			MEMO,
+			USERID,
+			OBJECT_ID,
+			OBJECT_TYPE,
+			LOG_TYPE,
+			LOG_NAME,
+			OPERATOR_NAME
+			<isNotEmpty property="parentId" prepend=",">
+				PARENT_ID
+			</isNotEmpty>
+			<isNotEmpty property="parentType" prepend=",">
+				PARENT_TYPE
+			</isNotEmpty>
+		)VALUES(
+			COM_LOG_ID_SEQ.NEXTVAL,
+			SYSDATE,
+			#content#,
+			#memo#,
+			#userid#,
+			#objectId#,
+			#objectType#,
+			#logType#,
+			#logName#,
+			#operatorName#
+			<isNotEmpty property="parentId" prepend=",">
+				#parentId#
+			</isNotEmpty>
+			<isNotEmpty property="parentType" prepend=",">
+				#parentType#
+			</isNotEmpty>
+		)
+	</insert>
+	<select id="search" parameterClass="map" resultClass="ComLog">
+		SELECT 
+			LOG_ID AS LOGID,
+			CREATE_TIME AS CREATETIME,
+			CONTENT,
+			MEMO,
+			USERID,
+			OBJECT_ID AS OBJECTID,
+			OBJECT_TYPE AS OBJECTTYPE,
+			LOG_TYPE AS LOGTYPE,
+			LOG_NAME AS LOGNAME,
+			OPERATOR_NAME AS OPERATORNAME,
+			PARENT_ID AS PARENTID,
+			PARENT_TYPE AS PARENTTYPE
+		FROM 
+			COM_LOG
+		WHERE
+			OBJECT_TYPE = #objectType#
+			<isNotNull property="objectId" prepend="AND">
+				OBJECT_ID = #objectId#
+			</isNotNull>
+		ORDER BY CREATE_TIME DESC
+	</select>
+</sqlMap>

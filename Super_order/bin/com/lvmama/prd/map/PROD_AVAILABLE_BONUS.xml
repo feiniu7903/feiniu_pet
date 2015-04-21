@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_AVAILABLE_BONUS">
+
+    <resultMap id="ProdAvailableBonusResultMap" class="com.lvmama.comm.bee.po.prod.ProdAvailableBonus">
+        <result column="AVAILABLE_ID" property="availableId"/>
+        <result column="PRODUCT_TYPE" property="productType"/>
+        <result column="TYPE_LEVEL" property="typeLevel"/>
+        <result column="AMOUNT" property="amount"/>
+    </resultMap>
+
+    <select id="selectProdAvailableBonusByMainProductType" resultMap="ProdAvailableBonusResultMap">
+		SELECT *
+		FROM PROD_AVAILABLE_BONUS
+		WHERE TYPE_LEVEL='MAIN' AND PRODUCT_TYPE=#type#
+	</select>
+    <select id="selectProdAvailableBonusBySubProductType" resultMap="ProdAvailableBonusResultMap">
+		SELECT *
+		FROM PROD_AVAILABLE_BONUS
+		WHERE TYPE_LEVEL='SUB' AND PRODUCT_TYPE=#type#
+	</select>
+
+</sqlMap>

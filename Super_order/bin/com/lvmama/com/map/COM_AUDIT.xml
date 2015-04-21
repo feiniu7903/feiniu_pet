@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_AUDIT" >
+
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.pub.ComAudit" >
+    <result column="AUDIT_ID" property="auditId" />
+    <result column="OPERATOR_NAME" property="operatorName" />
+    <result column="OBJECT_ID" property="objectId" />
+    <result column="OBJECT_TYPE" property="objectType" />
+    <result column="AUDIT_TIME" property="auditTime" />
+    <result column="MEMO" property="memo" />
+    <result column="AUDIT_STATUS" property="auditStatus" />
+    <result column="CREATE_TIME" property="createTime" />
+  </resultMap>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.pub.ComAudit" >
+    select * 
+    from COM_AUDIT
+    where AUDIT_ID = #auditId#
+  </select>
+  
+  <select id="selectByParamMap" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+    select * 
+    from COM_AUDIT 
+    where 1 = 1
+    	<isNotNull prepend=" and " property="operatorName">
+			OPERATOR_NAME = #operatorName# 
+  	 	</isNotNull>
+  	 	<isNotNull prepend=" and " property="objectId">
+			OBJECT_ID = #objectId# 
+  	 	</isNotNull>
+  	 	<isNotNull prepend=" and " property="objectType">
+			OBJECT_TYPE = #objectType# 
+  	 	</isNotNull>
+  	 	<isNotNull prepend=" and " property="auditStatus">
+			AUDIT_STATUS = #auditStatus# 
+  	 	</isNotNull>
+  	 	order by create_time desc
+  </select>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.pub.ComAudit" >
+    <selectKey resultClass="java.lang.Long" keyProperty="auditId" >
+      select COM_AUDIT_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into COM_AUDIT (AUDIT_ID, OPERATOR_NAME, OBJECT_ID, OBJECT_TYPE, AUDIT_TIME, MEMO, AUDIT_STATUS, CREATE_TIME)
+    values (#auditId#, #operatorName#, #objectId#, #objectType#, #auditTime#, #memo#, #auditStatus#, sysdate)
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.pub.ComAudit">
+		update COM_AUDIT
+		set
+		AUDIT_ID = #auditId#
+  	 	<isNotNull prepend=" ," property="auditStatus">
+			AUDIT_STATUS = #auditStatus#
+  	 	</isNotNull>
+  	 	<isNotNull prepend=" ," property="auditTime">
+			AUDIT_TIME = #auditTime#
+  	 	</isNotNull>
+  	 	<isNotNull prepend=" ," property="memo">
+			MEMO = #memo#
+  	 	</isNotNull>
+		where AUDIT_ID = #auditId#
+	</update>
+
+</sqlMap>

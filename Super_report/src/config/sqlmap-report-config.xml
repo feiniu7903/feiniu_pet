@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+
+	<settings enhancementEnabled="true" maxTransactions="40"
+		maxRequests="32" maxSessions="10" cacheModelsEnabled="false"
+		classInfoCacheEnabled="false" useStatementNamespaces="true" />
+
+	<!-- Identify all SQL Map XML files to be loaded by this SQL map. Relative to classpath -->
+	<sqlMap resource="com/lvmama/report/map/USER_REGISTER_BASIC.xml" />
+	<sqlMap resource="com/lvmama/report/map/PROD_PRODUCT_BASIC_MV_SqlMap.xml" />
+	<sqlMap resource="com/lvmama/report/map/CHANNEL_BASIC_MV_SqlMap.xml" />
+	<sqlMap resource="com/lvmama/report/map/ORDER_BASIC_MV_SqlMap.xml" />
+	<sqlMap resource="com/lvmama/report/map/META_PRODUCT_BASIC_MV_SqlMap.xml" />
+	<sqlMap resource="com/lvmama/report/map/USER_REGISTER_BASIC_MV_SqlMap.xml" />
+	<sqlMap resource="com/lvmama/report/map/ORDER_SALE_SERVICE_BASIC_MV_SqlMap.xml" />
+	<sqlMap resource="com/lvmama/report/map/COM_CODESET.xml" />
+	<sqlMap resource="com/lvmama/report/map/ORD_REPORT.xml" />
+	<sqlMap resource="com/lvmama/report/map/MEMBERSHIP_CARD_MV_SqlMap.xml" />
+	<sqlMap resource="com/lvmama/report/map/USER_REGISTER_CHANNEL_MV_SqlMap.xml" />
+	<sqlMap resource="com/lvmama/report/map/MARK_COUPON_USAGE.xml" />
+	<sqlMap resource="com/lvmama/report/map/USR_USERS.xml"/>
+	<sqlMap resource="com/lvmama/report/map/ORDER_DETAIL_TV_SqlMap.xml" />
+	<sqlMap resource="com/lvmama/report/map/CALL_CENTER_BASIC_SqlMap.xml"/>
+	<sqlMap resource="com/lvmama/report/map/TOTAL_ANALYSIS_TV.xml"/>
+	<sqlMap resource="com/lvmama/report/map/WEEK_ANALYSIS_TV.xml"/>
+	<sqlMap resource="com/lvmama/report/map/ORDER_CUSTOMER_BASIC_MV_SqlMap.xml"/>
+	<sqlMap resource="com/lvmama/report/map/ORDER_TRANSFORM_BASIC_MV.xml"/>
+	<sqlMap resource="com/lvmama/report/map/CMT_STATISTICS_SqlMap.xml"/>
+	<sqlMap resource="com/lvmama/report/map/STOCK_INSUFFICIENT.xml"/>
+	<sqlMap resource="com/lvmama/report/map/REPORT_POINT.xml"/>
+
+	<sqlMap resource="com/lvmama/report/map/MONEY_USER_CHANGE_TV_SqlMap.xml"/>
+	<sqlMap resource="com/lvmama/report/map/PROD_CHANNEL.xml" />
+	<sqlMap resource="com/lvmama/report/map/MONEY_USER_DETAIL_EXPORT.xml"/>
+	<sqlMap resource="com/lvmama/report/map/RPT_QUERY.xml"/>
+	<sqlMap resource="com/lvmama/report/map/CASH_BONUS_DAY_REPORT.xml"/>
+	<sqlMap  resource="com/lvmama/report/map/USERTAGS_SEARCHLOGS.xml"   />
+</sqlMapConfig>

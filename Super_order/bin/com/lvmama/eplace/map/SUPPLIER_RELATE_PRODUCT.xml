@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SUPPLIER_RELATE_PRODUCT">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.SupplierRelateProduct">
+		<result column="SUPPLIER_RELATE_PRODUCT_ID"
+			property="supplierRelateProductId" />
+		<result column="META_PRODUCT_ID" property="metaProductId" />
+		<result column="EPLACE_SUPPLIER_ID" property="eplaceSupplierId" />
+		<result column="META_BRANCH_ID" property="metaProductBranchId" />
+	</resultMap>
+
+	<resultMap id="BaseResultMapFull" extends="BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.SupplierRelateProduct">
+		<result column="branchName" property="metaProductBranch.branchName" />
+	</resultMap>
+	
+	<select id="selectSupplierProductByUserId"  resultMap="BaseResultMapFull"
+		parameterClass="java.util.HashMap">
+		select A.* ,B.PRODUCT_NAME as productName from SUPPLIER_RELATE_PRODUCT A
+		,META_PRODUCT B,PASS_PORT_USER C where
+		A.META_PRODUCT_ID=B.META_PRODUCT_ID and
+		A.EPLACE_SUPPLIER_ID=C.EPLACE_SUPPLIER_ID and C.PASS_PORT_USER_ID=#userId#
+	</select>
+
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.bee.po.pass.SupplierRelateProduct">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="supplierRelateProductId">
+			select SUPPLIER_RELATE_PRODUCT_ID_SEQ.nextval as id from
+			DUAL
+		</selectKey>
+		insert into SUPPLIER_RELATE_PRODUCT
+		(SUPPLIER_RELATE_PRODUCT_ID,META_PRODUCT_ID,EPLACE_SUPPLIER_ID,META_BRANCH_ID)
+		values
+		(#supplierRelateProductId#,#metaProductId#,#eplaceSupplierId#,#metaProductBranchId#)
+	</insert>
+
+	<delete id="deleteByPrimaryKey" parameterClass="java.lang.Long">
+		delete from SUPPLIER_RELATE_PRODUCT where EPLACE_SUPPLIER_ID =
+		#eplaceSupplierId#
+	</delete>
+
+	<!-- <select id="selectBySupplierId" resultClass="java.lang.Long"
+		parameterClass="java.lang.Long">
+		select META_PRODUCT_ID from SUPPLIER_RELATE_PRODUCT where
+		EPLACE_SUPPLIER_ID=#eplaceSupplierId#
+	</select>
+	 -->
+	<select id="selectBySupplierId" resultClass="java.lang.Long"
+		parameterClass="java.lang.Long">
+		select META_BRANCH_ID from SUPPLIER_RELATE_PRODUCT where
+		EPLACE_SUPPLIER_ID=#eplaceSupplierId#
+	</select>
+
+	<select id="selectByFull" resultMap="BaseResultMapFull"
+		parameterClass="java.util.HashMap">
+		SELECT u.*, MPB.BRANCH_NAME AS branchName
+  		FROM SUPPLIER_RELATE_PRODUCT u, META_PRODUCT_BRANCH MPB
+ 		WHERE 
+ 		MPB.META_BRANCH_ID = u.META_BRANCH_ID
+    	AND EPLACE_SUPPLIER_ID = #eplaceSupplierId#
+	</select>
+</sqlMap>

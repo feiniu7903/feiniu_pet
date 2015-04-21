@@ -1,0 +1,26 @@
+<?page title="添加或编辑分销商IP" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./editDistributorIpWin"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset"?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="label" extends="label" class="com.lvmama.back.utils.perm.PermLabel" ?>
+<zk>
+<window id="editDistributorIpWin" title="编辑分销商IP" border="normal" closable="false" mode="embedded" apply="com.lvmama.back.web.distribution.EditDistributorIpAction">
+			<grid fixedLayout="true" width="100%">
+				<columns>
+					<column width="150px" align="right" />
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label value="IP" />
+						</hbox>
+						<hbox>
+							<textbox value="@{saction.distributorIp.ip}" />
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+	<button id="doSave" label="保存" onClick="saction.doSave()" />
+</window>
+</zk>

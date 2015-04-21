@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<response>
+	<#include "responseHeader.xml">
+	<#if responseBody?? >
+	<body>
+		 <totalQuantity>${responseBody.totalNum}</totalQuantity>
+		<productList>
+			<#list responseBody.products as product>
+			<product>
+				<productId>${product.productId}</productId>
+				<placeId>${product.placeId}</placeId>
+				<productName>${product.productName}</productName>
+				<productType>${product.productType}</productType>
+				<branchCount>${product.branchCount}</branchCount>
+				<paymentType>${product.paymentType}</paymentType>
+				<productOnLine>${product.productOnLine}</productOnLine>
+				<onlineTime>${product.onlineTime}</onlineTime>
+				<offlineTime>${product.offlineTime}</offlineTime>
+				<placeFrom>${product.placeFrom}</placeFrom>
+				<placeTo>${product.placeTo}</placeTo>
+				<days>${product.days}</days>
+				<recommend>${product.recommend}</recommend>
+				<post>${product.post}</post>
+				<costInclude>${product.costInclude}</costInclude>
+				<costNotInclude>${product.costNotInclude}</costNotInclude>
+				<recommendProject>${product.recommendProject}</recommendProject>
+				<shoppingExplanation>${product.shoppingExplanation}
+				</shoppingExplanation>
+				<refundmentExplanation>${product.refundmentExplanation}
+				</refundmentExplanation>
+				<bookingInformation>${product.bookingInformation}
+				</bookingInformation>
+				<remind>${product.remind}</remind>
+				<serviceGuarantee>${product.serviceGuarantee}</serviceGuarantee>
+				<visitPoint>${product.visitPoint}</visitPoint>
+				<trafficInfo>${product.trafficInfo}</trafficInfo>
+				<visa>${product.visa}</visa>
+				<productCharacteristic>${product.productCharacteristic}
+				</productCharacteristic>
+				<firstVisitCustomer>
+					<name>${product.firstVisitCustomer.name}</name>
+					<pinyin>${product.firstVisitCustomer.pinyin}</pinyin>
+					<mobile>${product.firstVisitCustomer.mobile}</mobile>
+					<credentials>${product.firstVisitCustomer.credentials}
+					</credentials>
+				</firstVisitCustomer>
+				<otherVisitCustomer>
+					<name>${product.otherVisitCustomer.name}</name>
+					<pinyin>${product.otherVisitCustomer.pinyin}</pinyin>
+					<mobile>${product.otherVisitCustomer.mobile}</mobile>
+					<credentials>${product.otherVisitCustomer.credentials}
+					</credentials>
+				</otherVisitCustomer>
+				<#if product.travelExplanationList??>
+				<#list
+				product.travelExplanationList as day >
+				<travelExplanation>
+					<list>
+						<day>
+							<seq>${day.seq}</seq>
+							<title>${day.seq}</title>
+							<constent>${day.seq}</constent>
+							<dinner>${day.seq}</dinner>
+							<hotel>${day.seq}</hotel>
+							<images>
+								<#list day.images as url>
+								<url>${url}</url>
+								</#list>
+							</images>
+							<tipList>
+								<#list day.tipList as tip>
+								<tip>
+									<tipTitle>${tip.tipTitle}</tipTitle>
+									<tipContent>${tip.tipContent}</tipContent>
+								</tip>
+								</#list>
+							</tipList>
+						</day>
+					</list>
+				</travelExplanation>
+				</#list>
+				</#if>
+				<productBranch>
+					<#list product.productBranch as branch>
+					<branch>
+						<branchId>${branch.branchId}</branchId>
+						<branchName>${branch.branchName}</branchName>
+						<branchOnLine>${branch.branchOnLine}</branchOnLine>
+						<minimum>${branch.minimum}</minimum>
+						<maximum>${branch.maximum}</maximum>
+						<adultQuantity>${branch.adultQuantity}</adultQuantity>
+						<childQuantity>${branch.childQuantity}</childQuantity>
+						<branchDescription>${branch.branchDescription}</branchDescription>
+						<#if branch.priceList??>
+						<priceList>
+							<#list branch.priceList as price>
+							<price>
+								<date>${price.date}</date>
+								<sellPrice>${price.sellPrice}</sellPrice>
+								<marketPrice>${price.marketPrice}</marketPrice>
+								<stock>${price.stock}</stock>
+								<aheadHour>${price.aheadHour}</aheadHour>
+							</price>
+							</#list>
+						</priceList>
+						</#if>
+					</branch>
+					</#list>
+				</productBranch>
+				<images>
+					<small>${product.small}</small>
+					<middle>${product.middle}</middle>
+					<large>${product.large}</large>
+				</images>
+			</product>
+			</#list>
+		</productList>
+	</body>
+	</#if>
+</response>

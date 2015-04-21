@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_TIME_PRICE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.TimePrice" >
+    <result column="TIME_PRICE_ID" property="timePriceId" />
+    <result column="SPEC_DATE" property="specDate" />
+    <result column="PRICE" property="price" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="PROD_BRANCH_ID" property="prodBranchId" />
+    <result column="AHEAD_HOUR" property="aheadHour" />
+    <result column="CANCEL_HOUR" property="cancelHour" />
+    <result column="PRICE_TYPE" property="priceType"/>
+    <result column="RATE_PRICE" property="ratePrice"/>
+    <result column="FIXED_ADD_PRICE" property="fixedAddPrice"/>
+    <result column="CANCEL_STRATEGY" property="cancelStrategy"/>
+    <result column="MULTI_JOURNEY_ID" property="multiJourneyId" />   
+  </resultMap>
+  
+  <resultMap id="TimePriceSimpleResultMap" class="com.lvmama.comm.bee.po.prod.TimePrice" >
+    <result column="TIME_PRICE_ID" property="timePriceId" />
+    <result column="SPEC_DATE" property="specDate" />
+    <result column="PRICE" property="price" />
+  </resultMap>
+  
+  <resultMap id="ProdProduct" class="com.lvmama.comm.bee.po.prod.ProdProduct">
+  		<result column="ONLINE_TIME" property="onlineTime" />
+		<result column="OFFLINE_TIME" property="offlineTime" />
+  </resultMap>
+
+  <select id="selectProdTimePriceCountByProductId" parameterClass="java.lang.Long" resultClass="java.lang.Integer">
+    SELECT COUNT(*) FROM PROD_TIME_PRICE WHERE PRODUCT_ID=#productId# AND CANCEL_HOUR IS NOT NULL
+  </select>
+  
+  <!--查询有时间价格的采购产品数量与打包数量是否一置-->
+  <sql id="queryValidPackTimePrice">
+    (select count(*)
+		          from meta_time_price mtp,prod_product_branch_item pi
+		         where pi.meta_branch_id = mtp.meta_branch_id
+		           and pi.prod_branch_id = #prodBranchId#
+		           and mtp.spec_date = ptp.spec_date) =
+		       (select count(*)
+		          from prod_product_branch_item pi
+		         where pi.prod_branch_id = #prodBranchId#)
+  </sql>
+
+  <!--现在读取的日期是为有效的时间价格表中最早的一个日期-->
+  <select id="selectNearBranchTimePriceByBranchId" resultClass="java.util.Date" parameterClass="java.util.Map">
+  	SELECT MIN(SPEC_DATE)
+		  FROM PROD_TIME_PRICE ptp
+		 WHERE 
+  		   <include refid="queryValidPackTimePrice"/>
+		   and ptp.PROD_BRANCH_ID = #prodBranchId#
+		   and ptp.spec_date>sysdate+ptp.ahead_hour/60/24	         
+  </select>
+  <select id="selectNearBranchTimePriceByBranchIdFromTemp" resultClass="java.util.Date" parameterClass="java.util.Map">
+  	SELECT MIN(SPEC_DATE)
+		  FROM TEMP_PROD_TIME_PRICE ptp
+		 WHERE
+  		   <include refid="queryValidPackTimePrice"/>
+		   and ptp.PROD_BRANCH_ID = #prodBranchId#
+		   and ptp.spec_date>sysdate+ptp.ahead_hour/60/24
+  </select>
+
+<!--现在读取的日期是为有效的时间价格表中最早的一个日期-->
+  <select id="selectNearBranchTimePriceByBranchIdAndDay" resultClass="java.util.Date" parameterClass="java.util.Map">
+  	SELECT MIN(SPEC_DATE)
+		  FROM PROD_TIME_PRICE ptp
+		 WHERE 
+  		   <include refid="queryValidPackTimePrice"/>
+		   and ptp.PROD_BRANCH_ID = #prodBranchId#
+		   and ptp.spec_date<![CDATA[>=]]>#day#        
+  </select>
+  <select id="selectNearBranchTimePriceByBranchIdAndDayFromTemp" resultClass="java.util.Date" parameterClass="java.util.Map">
+  	SELECT MIN(SPEC_DATE)
+		  FROM TEMP_PROD_TIME_PRICE ptp
+		 WHERE
+  		   <include refid="queryValidPackTimePrice"/>
+		   and ptp.PROD_BRANCH_ID = #prodBranchId#
+		   and ptp.spec_date<![CDATA[>=]]>#day#
+  </select>
+
+  <select id="selectLowestPriceByProductIdAndNearDate" parameterClass="java.util.Map" resultMap="TimePriceSimpleResultMap">
+  	SELECT * from(
+  	SELECT ptp.* FROM PROD_TIME_PRICE ptp WHERE 
+      	<include refid="queryValidPackTimePrice"/>
+      	AND ptp.SPEC_DATE<![CDATA[>=]]>#nearDate# AND ptp.SPEC_DATE<![CDATA[<=]]>(#nearDate#+#maxdays#)
+  		AND ptp.PROD_BRANCH_ID = #prodBranchId#
+  		ORDER BY ptp.PRICE ASC
+  	) WHERE ROWNUM=1
+  </select>
+  
+  <!-- 包含库存检查 -->
+  <select id="selectLowestSalePriceByProductIdAndNearDate" parameterClass="java.util.Map" resultMap="TimePriceSimpleResultMap">
+  	select *
+  from (select ptp.TIME_PRICE_ID, ptp.price, ptp.spec_date, TT.min_stock as day_stock
+          from prod_time_price ptp,
+               (select T.spec_date, min(stock) min_stock
+                  from (select ppbi.branch_item_id,
+                               ppbi.meta_branch_id,
+                               mtp.spec_date,
+                               decode(mpb.total_decrease,
+                                      'true',
+                                      decode(mpb.total_stock,-1,9999,mpb.total_stock),
+                                      decode(mtp.day_stock,
+                                             -1,
+                                             99999,
+                                             0, 
+											 decode(mtp.over_sale,'true',9999,0),
+                                             mtp.day_stock)) / ppbi.quantity as stock
+                          from prod_product_branch_item ppbi,
+                               meta_time_price          mtp,
+                               meta_product_branch      mpb
+                         where ppbi.meta_branch_id = mtp.meta_branch_id
+                           and ppbi.meta_branch_id = mpb.meta_branch_id
+                           and ppbi.prod_branch_id = #prodBranchId#) T
+                 group by T.spec_date) TT
+         where ptp.spec_date = TT.spec_date
+            and <include refid="queryValidPackTimePrice"/>
+            and ptp.SPEC_DATE<![CDATA[>=]]>#nearDate# AND ptp.SPEC_DATE<![CDATA[<=]]>(#nearDate#+#maxdays#)
+            and TT.min_stock > 0
+            and ptp.prod_branch_id = #prodBranchId#
+            ORDER BY ptp.price) WHERE ROWNUM=1
+  </select>
+
+  <select id="selectProdTimePriceByParams" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+	  select * from PROD_TIME_PRICE
+	  <dynamic prepend="where">
+		  <isNotNull prepend="and" property="productId">
+		  PRODUCT_ID = #productId# 
+		  </isNotNull>
+		  <isNotNull prepend="and" property="prodBranchId">
+		  PROD_BRANCH_ID = #prodBranchId# 
+		  </isNotNull>
+		  <isNotNull prepend="and" property="specDate">
+		  SPEC_DATE<![CDATA[=]]>#specDate#
+		  </isNotNull>
+		  <isNotNull prepend="and" property="date">
+		  SPEC_DATE<![CDATA[=]]>TO_DATE(#date#,'YYYYMMDD')
+		  </isNotNull>
+		  <isNotNull prepend="and" property="beginDate">
+		  SPEC_DATE<![CDATA[>=]]>#beginDate#
+		  </isNotNull>
+		  <isNotNull prepend="and" property="endDate">
+		  SPEC_DATE<![CDATA[<=]]>#endDate#
+		  </isNotNull>
+		  <isNotNull prepend="and" property="multiJourneyId">
+		  MULTI_JOURNEY_ID= #multiJourneyId# 
+		  </isNotNull>
+		  <isNotNull prepend="and" property="specDates">
+		  	<iterate property="specDates" open="SPEC_DATE IN (" close=")" conjunction="," > 
+			     #specDates[]#
+			</iterate>
+		  </isNotNull>
+	  </dynamic>
+	  order by SPEC_DATE asc
+  </select>
+  <select id="selectProdTimePriceByParamsFromTemp" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+	  select * from TEMP_PROD_TIME_PRICE
+	  <dynamic prepend="where">
+		  <isNotNull prepend="and" property="productId">
+		  PRODUCT_ID = #productId#
+		  </isNotNull>
+		  <isNotNull prepend="and" property="prodBranchId">
+		  PROD_BRANCH_ID = #prodBranchId#
+		  </isNotNull>
+		  <isNotNull prepend="and" property="specDate">
+		  SPEC_DATE<![CDATA[=]]>#specDate#
+		  </isNotNull>
+		  <isNotNull prepend="and" property="date">
+		  SPEC_DATE<![CDATA[=]]>TO_DATE(#date#,'YYYYMMDD')
+		  </isNotNull>
+		  <isNotNull prepend="and" property="beginDate">
+		  SPEC_DATE<![CDATA[>=]]>#beginDate#
+		  </isNotNull>
+		  <isNotNull prepend="and" property="endDate">
+		  SPEC_DATE<![CDATA[<=]]>#endDate#
+		  </isNotNull>
+		  <isNotNull prepend="and" property="multiJourneyId">
+		  MULTI_JOURNEY_ID= #multiJourneyId#
+		  </isNotNull>
+		  <isNotNull prepend="and" property="specDates">
+		  	<iterate property="specDates" open="SPEC_DATE IN (" close=")" conjunction="," >
+			     #specDates[]#
+			</iterate>
+		  </isNotNull>
+	  </dynamic>
+	  order by SPEC_DATE asc
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice" >
+    delete from PROD_TIME_PRICE
+    where TIME_PRICE_ID = #timePriceId#
+  </delete>
+
+  <delete id="deleteByBeginDateAndEndDate">
+		delete from PROD_TIME_PRICE 
+		where SPEC_DATE	<![CDATA[>=]]>#beginDate# 
+		and SPEC_DATE <![CDATA[<=]]>#endDate# 
+		and PROD_BRANCH_ID = #prodBranchId#
+  </delete>
+
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice" >
+		update PROD_TIME_PRICE 
+		set	PRICE = #price#, CANCEL_HOUR=#cancelHour#, AHEAD_HOUR=#aheadHour#,
+  			PRICE_TYPE = #priceType#, RATE_PRICE = #ratePrice#, FIXED_ADD_PRICE=#fixedAddPrice#,CANCEL_STRATEGY=#cancelStrategy#,MULTI_JOURNEY_ID=#multiJourneyId#
+		where TIME_PRICE_ID = #timePriceId# 
+  </update>
+  
+  <!-- 提供动态更新 -->
+	<update id="updateDynamicByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice">
+		update PROD_TIME_PRICE
+		 <dynamic prepend="SET" >
+	      <isNotNull property="price" prepend="," >
+	        <![CDATA[  
+	        PRICE = #price#  
+	        ]]>  
+	      </isNotNull>
+	       <isNotNull property="cancelHour" prepend="," >
+	        <![CDATA[  
+	        CANCEL_HOUR = #cancelHour#  
+	        ]]>  
+	      </isNotNull>
+	      <isNotNull property="aheadHour" prepend="," >
+	        <![CDATA[  
+	        AHEAD_HOUR = #aheadHour#  
+	        ]]>  
+	      </isNotNull>
+	      <isNotNull property="priceType" prepend="," >
+	        <![CDATA[  
+	        PRICE_TYPE = #priceType#  
+	        ]]>  
+	      </isNotNull>
+	       <isNotNull property="ratePrice" prepend="," >
+	        <![CDATA[  
+	        RATE_PRICE = #ratePrice#  
+	        ]]>  
+	      </isNotNull>
+	        <isNotNull property="fixedAddPrice" prepend="," >
+	        <![CDATA[  
+	        FIXED_ADD_PRICE = #fixedAddPrice#  
+	        ]]>  
+	      </isNotNull>
+	      <isNotNull property="cancelStrategy" prepend="," >
+	        <![CDATA[  
+	        CANCEL_STRATEGY = #cancelStrategy#  
+	        ]]>  
+	      </isNotNull>
+	       <isNotNull property="multiJourneyId" prepend="," >
+	        <![CDATA[  
+	        MULTI_JOURNEY_ID = #multiJourneyId#  
+	        ]]>  
+	      </isNotNull>
+    	</dynamic>
+		where TIME_PRICE_ID = #timePriceId#
+	</update>
+  
+  <update id="updateNoMultiJourneyFK" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice" >
+		update PROD_TIME_PRICE
+		<dynamic prepend="set">
+  		<isNotNull property="price" prepend=",">
+  		PRICE = #price#
+  		</isNotNull>
+  		<isNotNull property="cancelHour" prepend=",">
+  		CANCEL_HOUR=#cancelHour#
+  		</isNotNull>
+  		<isNotNull property="aheadHour" prepend=",">
+  		AHEAD_HOUR=#aheadHour#
+  		</isNotNull>
+  		<isNotNull property="priceType" prepend=",">
+  		PRICE_TYPE = #priceType#
+  		</isNotNull>
+  		<isNotNull property="ratePrice" prepend=",">
+  		RATE_PRICE = #ratePrice#
+  		</isNotNull>
+  		<isNotNull property="fixedAddPrice" prepend=",">
+  		FIXED_ADD_PRICE=#fixedAddPrice#
+  		</isNotNull>
+  		<isNotNull property="cancelStrategy" prepend=",">
+  		CANCEL_STRATEGY=#cancelStrategy#
+  		</isNotNull>
+  		<isNotNull property="multiJourneyId" prepend=",">
+  		MULTI_JOURNEY_ID=#multiJourneyId#
+  		</isNotNull>
+  		</dynamic>
+		where TIME_PRICE_ID = #timePriceId# 
+  </update>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice" >
+    <selectKey keyProperty="timePriceId" resultClass="java.lang.Long">
+    	select PROD_TIME_PRICE_ID_SEQ.nextVal as id from dual
+    </selectKey>
+    insert into PROD_TIME_PRICE (TIME_PRICE_ID, SPEC_DATE, PRICE, PRODUCT_ID ,PROD_BRANCH_ID,CANCEL_HOUR,AHEAD_HOUR,PRICE_TYPE,RATE_PRICE,FIXED_ADD_PRICE,CANCEL_STRATEGY, MULTI_JOURNEY_ID)
+    values (#timePriceId#, #specDate#, #price#, #productId#,#prodBranchId#,#cancelHour#,#aheadHour#,#priceType#,#ratePrice#,#fixedAddPrice#,#cancelStrategy#,#multiJourneyId#)
+  </insert>
+
+  <select id="selectNotFixedPriceList" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice" resultMap="BaseResultMap">
+    select * from prod_time_price 
+  			where PROD_BRANCH_ID = #prodBranchId# 
+  			and SPEC_DATE<![CDATA[>=]]>#beginDate#
+  			and SPEC_DATE<![CDATA[<=]]>#endDate#
+  			and PRICE_TYPE!='FIXED_PRICE'
+  </select>
+  
+  <select id="selectMaxTimePriceByProdBranchId" parameterClass="java.lang.Long" resultClass="java.util.Date">
+    select max(SPEC_DATE) from prod_time_price where PROD_BRANCH_ID = #prodBranchId# 
+  </select>
+  <select id="selectMaxTimePriceByProductId" parameterClass="java.lang.Long" resultClass="java.util.Date">
+    select max(tp.SPEC_DATE) 
+		from prod_time_price tp, prod_product_branch bp 
+		where tp.prod_branch_id = bp.prod_branch_id 
+		and bp.valid = 'Y' 
+		and tp.product_id  = #productId# 
+  </select>
+  <select id="getMinOrMaxTimePriceByMetaBranchId" parameterClass="java.util.Map" resultMap="BaseResultMap">
+        select * from (select * from prod_time_price 
+		where prod_branch_id = #prodBranchId# 
+		order by spec_date 
+		<isEqual property="isMax" compareValue = "true">
+		    desc
+		</isEqual>
+		) where rownum=1
+    </select>
+    
+    <!--现在读取的日期是为有效的时间价格表中最早的一个日期-->
+  <select id="selectValidBranchTimePriceByBranchId" resultClass="java.util.Date" parameterClass="java.lang.Long">
+  	SELECT ptp.SPEC_DATE
+		  FROM PROD_TIME_PRICE ptp
+		 WHERE 
+  		   <include refid="queryValidPackTimePrice"/>
+		   and ptp.PROD_BRANCH_ID = #prodBranchId#
+		   and ptp.SPEC_DATE<![CDATA[>=]]>trunc(sysdate)
+		   ORDER BY ptp.SPEC_DATE ASC  
+  </select>
+  
+  <delete id="deleteTimePriceByMultiJourneyId" parameterClass="java.util.Map">
+  	delete from prod_time_price where product_id=#productId# and MULTI_JOURNEY_ID=#multiJourneyId#
+  </delete>
+  <select id="getBranchIdsByMultiJourneyId" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select distinct(prod_branch_id) from prod_time_price where product_id=#productId# and multi_journey_id=#multiJourneyId#
+  </select>
+  
+  <select id="getPriceByBranchId" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		select * from prod_time_price ptp where ptp.prod_branch_id=#prodBranchId#  and ptp.price=#price# and ptp.spec_date>= sysdate  and rownum=1
+  </select>
+  
+  <!--  跟据秒杀规则  进行更新时间价格表的值   @author zenglei -->
+  <update id="updateTimePriceForBranchId" parameterClass="java.util.Map" >
+		update PROD_TIME_PRICE
+		<dynamic prepend="set">
+	  		<isNotNull property="price" prepend=",">
+	  		PRICE = (PRICE - #price#)
+	  		</isNotNull>
+  		</dynamic>
+		where PROD_BRANCH_ID = #branchId# 
+  </update>
+</sqlMap>

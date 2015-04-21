@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="RPT_QUERY" >
+
+	<select id ="select" parameterClass="java.util.HashMap" resultClass="com.lvmama.report.po.RptQuery" >
+		select query_id as "queryId",
+		       title as "title",
+		       sql_map_statement as "sqlMapStatement",
+		       module as "module",
+		       remark as "remark",
+		       page_path as "pagePath",
+		       report_template as "reportTemplate",
+		       seq as "seq"
+		  from rpt_query t
+		  where 1=1
+		  <isNotEmpty prepend=" and" property="queryId">
+		  	query_id = #queryId#
+		  </isNotEmpty>
+		  <isNotEmpty prepend=" and" property="title">
+		  	title like '%$title$%'
+		  </isNotEmpty>
+		  <isNotEmpty prepend=" and" property="sqlMapStatement">
+		  	sql_map_statement = #sqlMapStatement#
+		  </isNotEmpty>
+		  <isNotEmpty prepend=" and" property="module">
+		  	module = #module#
+		  </isNotEmpty>
+		  <isNotEmpty prepend=" and" property="remark">
+		  	remark = #remark#
+		  </isNotEmpty>
+		  <isNotEmpty prepend=" and" property="pagePath">
+		  	page_path = #pagePath#
+		  </isNotEmpty>
+		  <isNotEmpty prepend=" and" property="reportTemplate">
+		  	report_template = #reportTemplate#
+		  </isNotEmpty>
+		  
+		   <isNotEmpty prepend=" and" property="userId">
+		   	exists (select 1 from auth_users_groups aug,auth_groups_report agr where user_id=#userId# and aug.group_id=agr.group_id and agr.rpt_query_id=t.query_id)
+		  </isNotEmpty>
+	  
+	</select>
+	
+	<insert id="insert" parameterClass="com.lvmama.report.po.RptQuery" >
+			insert into rpt_query
+		  (query_id,
+		   title,
+		   sql_map_statement,
+		   module,
+		   remark,
+		   page_path,
+		   report_template,
+		   seq)
+		values
+		  (#queryId#,
+		   #title#,
+		   #sqlMapStatement#,
+		   #module#,
+		   #remark#,
+		   #pagePath#,
+		   #reportTemplate#,
+		   #seq#)
+	</insert>
+	
+	<delete id="delete" parameterClass="String">
+		delete rpt_query
+		where query_id = #queryId#
+	</delete>
+	
+	<update id="update" parameterClass="com.lvmama.report.po.RptQuery" >
+			update rpt_query
+		   set
+		       title = #title#,
+		       sql_map_statement = #sqlMapStatement#,
+		       module = #module#,
+		       remark =  #remark#,
+		       page_path = #pagePath#,
+		       report_template = #reportTemplate#,
+		       seq = #seq#
+		 where query_id = #queryId#
+	</update>
+
+
+	<insert id="addGroupReport" parameterClass="java.util.HashMap">
+		insert into auth_groups_report
+		  (rpt_query_id, group_id)
+		values
+		  (#queryId#, #groupId#)
+	</insert>
+	
+	<delete id="deleteGroupReport" parameterClass="java.util.HashMap">
+		  delete auth_groups_report
+		   where rpt_query_id = #queryId#
+		     and group_id = #groupId#
+	</delete>
+	
+	 <select id="getGroupHasReport" resultClass="com.lvmama.report.po.RptQuery" parameterClass="java.lang.String">
+  	select 
+  				query_id as "queryId",
+		       title as "title",
+		       sql_map_statement as "sqlMapStatement",
+		       module as "module",
+		       remark as "remark",
+		       page_path as "pagePath",
+		       report_template as "reportTemplate",
+		       seq as "seq"
+	  from rpt_query rq
+	 where exists (select 1
+	          from AUTH_GROUPS_REport agr
+	         where agr.rpt_query_id = rq.query_id
+	           and agr.group_id = #groupId#)   
+  </select>
+  
+  <select id="getGroupHasNotReport" resultClass="com.lvmama.report.po.RptQuery" parameterClass="java.lang.String">
+  	 select 
+		query_id as "queryId",
+		       title as "title",
+		       sql_map_statement as "sqlMapStatement",
+		       module as "module",
+		       remark as "remark",
+		       page_path as "pagePath",
+		       report_template as "reportTemplate",
+		       seq as "seq"
+	  from rpt_query rq
+	 where not exists (select 1
+	          from AUTH_GROUPS_REport agr
+	         where agr.rpt_query_id = rq.query_id
+	           and agr.group_id = #groupId#)   
+  </select>
+  
+</sqlMap>

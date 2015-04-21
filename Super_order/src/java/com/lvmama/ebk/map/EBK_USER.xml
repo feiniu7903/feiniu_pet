@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="EBK_USER">
+	<!-- 别名 -->
+    <typeAlias alias="ebkUser" type="com.lvmama.comm.bee.po.eplace.EbkUser"/>
+	<!-- 查询结果集 -->
+    <resultMap id="ebkUserResult" class="ebkUser">
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="department" column="department"/>
+        <result property="phone" column="phone"/>
+        <result property="mobile" column="mobile"/>
+        <result property="email" column="email"/>
+        <result property="valid" column="valid"/>
+        <result property="isAdmin" column="is_admin"/>
+        <result property="supplierId" column="supplier_id"/>
+        <result property="description" column="description"/>
+        <result property="lvmamaContactName" column="lvmama_contact_name"/>
+        <result property="lvmamaContactPhone" column="lvmama_contact_phone"/>
+        <result property="bizType" column="biz_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="parentUserId" column="parent_user_id"/>
+        <result property="canPrint" column="can_print"/>
+    </resultMap>
+    <resultMap id="ebkUserWithParentResult" class="ebkUser" extends="ebkUserResult">
+        <result property="parentUserName" column="parent_user_name"/>
+    </resultMap>
+	
+	<update id="updatePwdByUsername" parameterClass="ebkUser">
+		update ebk_user set password = #password# where user_name = #userName#
+	</update>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	user_id ,
+        	user_name ,
+        	password ,
+        	name ,
+        	department ,
+        	phone ,
+        	mobile ,
+        	email ,
+        	valid ,
+        	is_admin ,
+        	supplier_id ,
+        	description ,
+        	lvmama_contact_name ,
+        	lvmama_contact_phone ,
+        	biz_type ,
+        	create_time ,
+        	parent_user_id,
+        	can_print
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	 	<dynamic prepend=" where ">
+	       <isNotEmpty prepend="AND" property="userId">
+	             user_id = #userId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="userName">
+	             user_name = #userName#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="password">
+	             password = #password#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="name">
+	             name = #name#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="department">
+	             department = #department#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="phone">
+	             phone = #phone#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="mobile">
+	             mobile = #mobile#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="email">
+	             email = #email#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="valid">
+	             valid = #valid#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="isAdmin">
+	             is_admin = #isAdmin#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="supplierId">
+	             supplier_id = #supplierId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="description">
+	             description = #description#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="lvmamaContactName">
+	             lvmama_contact_name = #lvmamaContactName#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="lvmamaContactPhone">
+	             lvmama_contact_phone = #lvmamaContactPhone#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="bizType">
+	             biz_type = #bizType#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="parentUserId">
+	             parent_user_id = #parentUserId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             create_time = #createTime#
+	       </isNotEmpty>
+       </dynamic>
+	</sql>
+	
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="ebkUser">
+				<selectKey keyProperty="userId" resultClass="java.lang.Long">
+					SELECT EBK_USER_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        EBK_USER (
+        	user_id ,
+        	user_name ,
+        	password ,
+        	name ,
+        	department ,
+        	phone ,
+        	mobile ,
+        	email ,
+        	valid ,
+        	is_admin ,
+        	supplier_id ,
+        	description ,
+        	lvmama_contact_name ,
+        	lvmama_contact_phone ,
+        	biz_type ,
+        	create_time,
+        	parent_user_id,
+        	can_print
+        ) VALUES (
+        	#userId# ,
+        	#userName# ,
+        	#password# ,
+        	#name# ,
+        	#department# ,
+        	#phone# ,
+        	#mobile# ,
+        	#email# ,
+        	#valid# ,
+        	#isAdmin# ,
+        	#supplierId# ,
+        	#description# ,
+        	#lvmamaContactName# ,
+        	#lvmamaContactPhone# ,
+        	#bizType# ,
+        	#createTime# ,
+        	#parentUserId#,
+        	#canPrint#
+        )
+    ]]>
+    </insert>
+    
+    <!-- 更新Admin账号 -->
+    <update id="update" parameterClass="ebkUser">
+    <![CDATA[
+        UPDATE EBK_USER SET
+	        VALID = #valid# ,
+	        DESCRIPTION = #description# ,
+	        LVMAMA_CONTACT_NAME = #lvmamaContactName# ,
+	        LVMAMA_CONTACT_PHONE = #lvmamaContactPhone#,
+	        CAN_PRINT = #canPrint#
+        WHERE 
+	        USER_ID = #userId# 
+    ]]>
+    </update>
+    
+    <!-- 更新User账号 -->
+    <update id="updateUser" parameterClass="ebkUser">
+    <![CDATA[
+        UPDATE EBK_USER SET
+        	name = #name#,
+        	department = #department#,
+        	phone = #phone#,
+        	mobile = #mobile#,
+        	email = #email#,
+	        VALID = #valid#
+        WHERE 
+	        USER_ID = #userId# 
+    ]]>
+    </update>
+    
+    <!-- 查询记录，根据主键值 -->
+    <select id="getEbkUserById" resultMap="ebkUserResult">
+	    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from EBK_USER 
+	        where 
+						user_id = #userId# 
+	    ]]>
+    </select>
+    <!-- 查询记录 根据特定条件 -->
+    <select id="queryEbkUserByParam"  resultMap="ebkUserResult" parameterClass="java.util.Map">
+       select <include refid="commonColumns"/> from EBK_USER 
+		<include refid="dynamicWhere"/>    
+    </select>
+    
+    <select id="getEbkUserByUserName" resultMap="ebkUserResult">
+	    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from EBK_USER 
+	        where user_name = #userName#
+	    ]]>
+    </select>
+    <select id="getEbkUserBySupplierId" resultMap="ebkUserResult" parameterClass="java.util.Map">
+	    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from EBK_USER 
+	        where supplier_id = #supplierId# 
+	    ]]>
+	    <isNotEmpty property="isAdmin" prepend="and">
+	    	is_admin=#isAdmin#
+	    </isNotEmpty>
+    </select>
+    <sql id="getEbkUserWithParentSql">
+    	select 
+			u.user_id ,
+        	u.user_name ,
+        	u.password ,
+        	u.name ,
+        	u.department ,
+        	u.phone ,
+        	u.mobile ,
+        	u.email ,
+        	u.valid ,
+        	u.is_admin ,
+        	u.can_print,
+        	decode(u.supplier_id,null,parent.supplier_id,u.supplier_id) as supplier_id,
+        	decode(u.description,null,parent.description,u.description) as description ,
+        	decode(u.lvmama_contact_name,null,parent.lvmama_contact_name,u.lvmama_contact_name) as lvmama_contact_name ,
+        	decode(u.lvmama_contact_phone,null,parent.lvmama_contact_phone,u.lvmama_contact_phone) as lvmama_contact_phone ,
+        	decode(u.biz_type,null,parent.biz_type,u.biz_type) as biz_type ,
+        	u.create_time ,
+        	u.parent_user_id,
+        	parent.user_name as parent_user_name
+   		from ebk_user u,ebk_user parent
+   		where u.parent_user_id = parent.user_id(+)
+   		order by u.create_time desc
+    </sql>
+    <select id="getEbkUserCount" parameterClass="map" resultClass="long">
+    	select count(*) from (
+	    		<include refid="getEbkUserWithParentSql"/>
+	    	)
+    	<include refid="dynamicWhere"/>
+    </select>
+    
+    <select id="getEbkUser" parameterClass="map" resultMap="ebkUserWithParentResult">
+    	<include refid="pageSearchHead"/>
+    		select * from (
+	    		<include refid="getEbkUserWithParentSql"/>
+	    	)
+    		<include refid="dynamicWhere"/>
+    	<include refid="pageSearchFoot"/>
+    </select>
+    <update id="changePassword" parameterClass="map">
+    	update ebk_user set password = #password# where user_id = #userId#
+    </update>
+    
+    <select id="getEbkUserMetaBranchIds" parameterClass="long" resultClass="long">
+    	select distinct meta_branch_id from 
+    		meta_product_branch branch,
+    		meta_product product, 
+    		ebk_user_target usertarget,
+    		meta_perform perform
+		where
+			branch.meta_product_id = product.meta_product_id and 
+      		(product.product_type='TICKET' OR product.sub_product_type='FREENESS') and  
+			branch.meta_product_id = perform.meta_product_id and
+			perform.target_id = usertarget.sup_perform_target_id
+			and usertarget.user_id=#value#
+    	
+    </select>
+    
+    <sql id="getEbkSupplierSql">
+	  select sup.supplier_id as supplierId,
+   		   sup.supplier_name as supplierName
+   	  from sup_supplier sup
+   	  where 1=1
+	  <isNotEmpty property="supName">
+		 	and sup.supplier_name like '%'||#supName#||'%'
+	   </isNotEmpty>	
+	   <isNotEmpty property="lvmamaContactName">
+		 	and exists (
+		 		select u.supplier_id
+		 		from ebk_user u
+		 		where u.supplier_id = sup.supplier_id
+		 		and u.lvmama_contact_name like '%'||#lvmamaContactName#||'%'
+		 	)
+	    </isNotEmpty>
+    </sql>
+    <select id="getEbkSupplierCount" parameterClass="map" resultClass="long">
+    	select count(*) 
+    	  from (
+    	  	<include refid="getEbkSupplierSql"/>
+    	  )
+    </select>
+    <select id="getEbkSupplier" parameterClass="map" resultClass="com.lvmama.comm.pet.po.sup.SupSupplier">
+    	<include refid="pageSearchHead"/>
+	    	<include refid="getEbkSupplierSql"/>
+    	<include refid="pageSearchFoot"/>
+    </select>
+    
+    <!-- E景通用户登录验证，
+    	首先用用户密码登录，如果系统中存此用户并且所有状态都标识了此用户是可以登录的，
+    	然后：验证当前用户所对应的供应商的履行对象所绑定的通关设备是否存在，如果存在，用户登录有效
+    	新加验证：EBK用户绑定到履行对象
+     -->
+    <select id="getEbkUserWithTargetAndDeviceForEplace" parameterClass="java.util.Map" resultMap="ebkUserResult">
+		select distinct euser.* 
+		from 
+			pass_device device,
+			sup_perform_target performTarget,
+			ebk_user euser,
+			ebk_user_target userTarget
+		where 
+			euser.user_id = #userId# and
+			device.device_no= #udid# and 
+			performTarget.Supplier_Id = #supplierId# and 
+			performTarget.Supplier_Id = euser.supplier_id and 
+			device.target_id = performTarget.Target_Id and 
+			device.target_id = userTarget.sup_Perform_Target_Id
+    </select>
+    
+    <!-- 查询开通ebk账号的供应商列表 -->
+    <select id="getDistinctEbkSupplier" resultClass="com.lvmama.comm.pet.po.sup.SupSupplier" parameterClass="java.util.Map">
+    	<include refid="pageSearchHead"/>
+	      select distinct sup.supplier_id as supplierId,sup.supplier_name as supplierName from ebk_user eu left join sup_supplier sup on sup.supplier_id = eu.supplier_id
+    	<include refid="pageSearchFoot"/>
+    </select>
+     <!-- 查询开通ebk账号的供应商数量 -->
+    <select id="getDistinctEbkSupplierCount" resultClass="long">
+        select count(distinct sup.supplier_id) from ebk_user eu left join sup_supplier sup on sup.supplier_id = eu.supplier_id
+    </select>
+    
+    
+    
+</sqlMap>

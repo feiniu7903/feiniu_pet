@@ -1,0 +1,36 @@
+<?page title="Binding product with tags" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./prodTagWin"?>
+<zk>
+	<window id="prodTagWin" title="产品关联标签" border="normal"
+		closable="true" apply="com.lvmama.back.web.tag.ProdTagAction">
+		<listbox id="box" fixedLayout="true"
+			model="@{saction.productTags,load-after='delButton.onClick,refreshButton.onClick'}">
+			<listhead>
+				<listheader label="小组名" />
+				<listheader label="标签名" />
+				<listheader label="起始时间" />
+				<listheader label="结束时间" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem self="@{each='productTag'}"
+				value="@{productTag}">
+				<listcell label="@{productTag.tagGroupName}" />
+				<listcell label="@{productTag.tagName}" />
+				<listcell label="@{productTag.strBeginTime}" />
+				<listcell label="@{productTag.strEndTime}" />
+				<listcell>
+					<hbox>
+						<button id="delButton" label="删除"
+							onClick='saction.delProductTag(self.getAttribute("productTagId"), self.getAttribute("productId"), self.getAttribute("tagId"));'>
+							<custom-attributes productTagId="@{productTag.productTagId}" />
+							<custom-attributes productId="@{productTag.productId}" />
+							<custom-attributes tagId="@{productTag.tagId}" />
+						</button>
+					</hbox>
+				</listcell>
+			</listitem>
+		</listbox>
+		<button id="refreshButton" onClick="saction.loadProductTags();"
+			visible="false" />
+	</window>
+</zk>

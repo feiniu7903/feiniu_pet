@@ -1,0 +1,53 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./editInsurantWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="editInsurantWin" title="编辑保单" closable="true" sizable="false" border="normal" mode="embedded" apply="com.lvmama.back.web.insurance.EditInsurantAction">
+		<label value="@{saction.insurant.insurantId}" visible="false"/>
+		<label value="@{saction.insurant.orderId}" visible="false"/>
+		<label value="@{saction.insurant.policyId}" visible="false"/>
+		<label value="@{saction.insurant.personType}" visible="false"/>
+		<grid>
+			<columns>
+				<column width="19%"></column>
+				<column width="30%"></column>
+				<column width="17%"></column>
+				<column width="34%"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>用户名：</hbox>
+					<hbox><textbox value="@{saction.insurant.name}" constraint="no empty:用户名不能为空"/></hbox>
+					<hbox>性别：</hbox>
+					<hbox>
+						<listbox rows="1" mold="select" onSelect="saction.changeSex(self.selectedItem.value);">
+							<listitem label="${each.value}" value="${each.key}" forEach="${saction.sexTypes}" selected="${each.key == saction.insurant.sex }"></listitem>
+						</listbox>					
+					</hbox>
+				</row>
+				<row>
+					<hbox>出生日期：</hbox>
+					<hbox>
+						<datebox value="@{saction.insurant.birthday}" constraint="no empty,no future,no today:出生日期不能为空或未来日期"/>
+					</hbox>
+					<hbox>手机号：</hbox>
+					<hbox><textbox value="@{saction.insurant.mobileNumber}" constraint="/\d{11}/:手机号为11位数字"/></hbox>
+				</row>
+				<row>
+					<hbox>证件类型：</hbox>
+					<hbox>
+						<listbox rows="1" mold="select" onSelect="saction.changeCertType(self.selectedItem.value)">
+							<listitem label="${each.value}" value="${each.key}" forEach="${saction.certTypes}" selected="${each.key == saction.insurant.certType }"></listitem>
+						</listbox>
+					</hbox>				
+					<hbox>证件号码：</hbox>
+					<hbox><textbox value="@{saction.insurant.certNo}" constraint="no empty:证件号不能为空"/></hbox>
+				</row>								
+			</rows>						
+		</grid>
+		<toolbar align="end">
+		    <button label="新增被保险人" width="100px" onClick="saction.insert()" if="${saction.insurant.insurantId == -1}"/>
+		    <button label="更新投保人" width="100px" onClick="saction.update()" if="${saction.insurant.insurantId != -1 and saction.insurant.personType == 'APPLICANT'}"/>
+        	<button label="更新被保险人" width="100px" onClick="saction.update()" if="${saction.insurant.insurantId != -1 and saction.insurant.personType == 'INSURANT'}"/>
+        	<button label="取消" width="100px" onClick='editInsurantWin.detach()'/>
+        </toolbar>
+	</window>
+</zk>

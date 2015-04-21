@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CNRequest>
+	<ActionName>NewHotelBooking</ActionName>
+	<#include "requestHeader.xml">
+	<BookingInfo>
+		<AddInfoList>
+			<#list bookingInfo.addInfoList as addInfo>
+			<AddInfo>
+				<AppendType>${addInfo.appendType}</AppendType>
+				<BreakfastType>${addInfo.breakfastType}</BreakfastType>
+				<Time>${addInfo.time}</Time>
+				<Num>${addInfo.num}</Num>
+			</AddInfo>
+			</#list>
+		</AddInfoList>
+		<MemberNo>${authorization.memberNo}</MemberNo>
+		<BookPassword>${authorization.bookPassword}</BookPassword>
+		<Hotelid>${bookingInfo.hotelid}</Hotelid>
+		<RoomID>${bookingInfo.roomID}</RoomID>
+		<InDate>${bookingInfo.inDate}</InDate>
+		<OutDate>${bookingInfo.outDate}</OutDate>
+		<RoomCount>${bookingInfo.roomCount}</RoomCount>
+		<Currency>${bookingInfo.currency}</Currency>
+		<BookPhone>${bookingInfo.bookPhone}</BookPhone>
+		<BookName>${bookingInfo.bookName}</BookName>
+		<GuestName>${bookingInfo.guestName}</GuestName>
+		<GuestPhoneFax>${bookingInfo.guestPhoneFax}</GuestPhoneFax>
+		<GuestType>${bookingInfo.guestType}</GuestType>
+		<EarlyDate>${bookingInfo.earlyDate}</EarlyDate>
+		<LateDate>${bookingInfo.lateDate}</LateDate>
+		<SpecialRemark>${bookingInfo.specialRemark}</SpecialRemark>
+	</BookingInfo>
+</CNRequest>

@@ -1,0 +1,87 @@
+<?page title="景区产品管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./scenicProductList"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.passport.utils.ListboxProviderValNameSet"?>
+
+<zk>
+	<window id="scenicProductList" title="景区产品管理" border="normal"
+		apply="com.lvmama.passport.web.pass.ListScenicProductAction">
+	<zscript>
+		<![CDATA[
+			public void checkValues() {
+				saction.doQuery();
+			}
+			
+		]]>			
+		</zscript>
+	<grid>
+		<columns>
+			<column width="110px"></column>
+			<column></column>
+			<column width="110px"></column>
+			<column></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row >
+				<hbox width="350px">服务商帐号：</hbox>
+				<hbox>
+					<textbox value="@{saction.queryOption.SupplierUid }" />
+				</hbox>
+				<hbox width="300px">服务商名称：</hbox>
+				<hbox>
+					<listbox mold="select"
+							selectedItem="@{saction.queryOption.providerName}" />
+				</hbox>
+			</row>
+			<row>
+				<hbox width="300px">开始日期：</hbox>
+				<hbox>
+					<datebox
+							value="@{saction.queryOption.startDate}" />
+				</hbox>
+				<hbox width="300px">结束日期：</hbox>
+				<hbox>
+					<datebox
+							value="@{saction.queryOption.endDate}" />
+				</hbox>
+				<hbox>
+					<button label="查询" id="search" width="100px"
+							onClick="checkValues();" />
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+	<listbox
+			model="@{saction.scenicProducts,load-after='search.onClick'}">
+		<listhead>
+			<listheader label="景区产品名称" width="300px"/>
+			<listheader label="景区类别名称" width="200px"/>
+			<listheader label="代理产品类型" width="80px"/>
+			<listheader label="代理产品编号" width="80px"/>
+			<listheader label="开始日期"/>
+			<listheader label="结束日期"/>
+			<listheader label="价格"/>
+			<listheader label="服务商帐号"/>
+			<listheader label="扩展字段"/>
+		</listhead>
+		
+		<listitem height="25px" self="@{each='scenicProduct'}">
+			<listcell label="@{scenicProduct.productName}" />
+			<listcell label="@{scenicProduct.prodBranchName}" />
+			<listcell label="@{scenicProduct.productTypeSupplier}"/>
+			<listcell label="@{scenicProduct.productIdSupplier}" />
+			<listcell label="@{scenicProduct.startDate}"/>
+			<listcell label="@{scenicProduct.endDate}"/>
+			<listcell label="@{scenicProduct.price}"/>
+			<listcell label="@{scenicProduct.merchantType}"/>
+			<listcell label="@{scenicProduct.extId}"/>
+			
+			<!--<listcell>
+				<a style="color:blue" label="修改" onClick='saction.showWindow("/bussiness/editPassProduct.zul",self.getAttributes());'>
+					<custom-attributes passProduct="@{passProduct}"/>
+				</a>
+			</listcell>-->
+		</listitem>
+	</listbox>
+</window>
+</zk>

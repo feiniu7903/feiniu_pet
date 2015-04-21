@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_ORDER_BLACK" >
+    <typeAlias alias="ordOrderBlack" type="com.lvmama.comm.bee.po.ord.OrdOrderBlack"/>
+    <resultMap id="BaseResultMap" class="ordOrderBlack" >
+    <result column="BLACK_ORDER_ID" property="blackOrderId" />
+	<result column="ORDER_ID" property="orderId" />
+    <result column="MOBILE" property="mobile" />
+	<result column="PRODUCT_ID" property="productId" />
+	<result column="USER_ID" property="userId" />
+	<result column="ORDER_STATUS" property="orderStatus"/>
+	<result column="PAYMENT_STATUS" property="paymentStatus"/>
+	<result column="IMEI" property="imei"/>
+	<result column="CREATE_TIME" property="createTime"/>
+  </resultMap>
+
+  <sql id="commonColumns">
+	 <![CDATA[
+	 	 BLACK_ORDER_ID,
+	     ORDER_ID,
+		 MOBILE,
+		 PRODUCT_ID,
+		 USER_ID,
+		 ORDER_STATUS,
+		 PAYMENT_STATUS,
+		 IMEI,
+		 CREATE_TIME
+	  ]]>
+  </sql> 	
+	
+  <insert id="insert" parameterClass="ordOrderBlack">
+  		<selectKey keyProperty="blackOrderId" resultClass="java.lang.Long">
+	      select LVMAMA_SUPER.ORD_ORDER_BLACK_SEQ.nextval as id from DUAL
+	    </selectKey>
+	    insert into LVMAMA_SUPER.ORD_ORDER_BLACK (
+	    	<include refid="commonColumns"/>
+	    	)
+	    values 
+	    	(#blackOrderId#,#orderId#,#mobile#,#productId#,#userId#,#orderStatus#,#paymentStatus#,#imei#,sysdate)
+  </insert>
+  
+  <select id="queryOrderBlackByParam" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	  		select count(*) from LVMAMA_SUPER.ord_order ords
+		where ords.order_id in (
+	  		select ord.order_id from LVMAMA_SUPER.ord_order_black ord
+	  		where 1 = 1
+			<isNotEmpty prepend="and" property="mobile">
+				 ord.MOBILE = #mobile#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="userId">
+				 ord.USER_ID = #userId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="imei">
+				 ord.IMEI = #imei#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="productId">
+				 ord.PRODUCT_ID = #productId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="productIds">
+				<iterate property="productIds" open="(" close=")" conjunction="or">
+		        	ord.PRODUCT_ID = #productIds[]#
+		        </iterate>
+			</isNotEmpty>
+	        <isNotEmpty prepend="and" property="startTime">
+	        	ord.CREATE_TIME &gt;= #startTime#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="and" property="endTime">
+	        	ord.CREATE_TIME &lt;= #endTime#
+	        </isNotEmpty>
+	    ) and (ords.order_status = 'FINISHED' or ords.order_status = 'NORMAL') 
+  </select>
+</sqlMap>

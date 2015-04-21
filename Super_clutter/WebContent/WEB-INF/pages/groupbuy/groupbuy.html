@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>团购_旅游团购_景点门票团购-驴妈妈无线官网</title>
+<meta name="Keywords" content="团购,旅游团购,门票团购"/>
+<meta name="Description" content="驴妈妈无线官网:提供旅游团购,景区门票团购服务,千百种旅游产品组合搭配,给您一个实惠的旅游消费!"/>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/comm.js"></script>
+<script src="${request.contextPath}/js/groupbuy.js?version=12"></script>
+<script >
+     var cityJson = ${cityJson!};
+     
+     $(function(){
+    	    /********   定位 相关 ************/
+    		/* latitude = getLocalStorage(LOCAL_STORAGE_LAT);
+    		longitude = getLocalStorage(LOCAL_STORAGE_LON);
+    		currentCity = getLocalStorage(LOCAL_STRTORAGE_GROUPBUY_CITY);
+    		if(null == currentCity || "" == currentCity) {
+    			if(navigator.geolocation) {
+    		        navigator.geolocation.getCurrentPosition(function(e){
+    					latitude = e.coords.latitude;
+    					longitude = e.coords.longitude;
+    					setLocalStorage(LOCAL_STORAGE_LAT,latitude);
+    					setLocalStorage(LOCAL_STORAGE_LON,longitude);
+    					initCity(latitude,longitude,LOCAL_STRTORAGE_GROUPBUY_CITY); // 定位成功. 
+    				},function(e){
+    					initDatas(DEFAULT_CITY); // 如果定位失败 ! 
+    				},{enableHighAccuracy:true,timeout:3000,maximumAge:3000});
+    		    } else {
+    		    	initDatas(DEFAULT_CITY); // 如果浏览器不支持定位  
+    		    }
+    		} else {
+    			initDatas(currentCity);// 如果已经定位过.  
+    		} */
+    		initDatas('全部');// 每次搜索默认给全部
+     });
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:union_skip('http://${hostName}');"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">旅游团购</div>
+  <div class="lv-position lv-position-e"><a href="javascript:void(0);" class='home' onclick="union_skip('http://${hostName}');"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png' /></a></div>
+</div>
+<div class="lv-search lv-media-width lv-seach-mheight">
+  <ul class="lv-cascade-search sele_tab">
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span id="tag_to_dest">全部 </span>
+      <img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png">
+      <img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a></li>
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span id="tag_productType">全部</span>
+      <img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png">
+      <img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a>
+      </li>
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span id="tag_sort">热门</span>
+      <img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png"></a>
+      </li>
+  </ul>
+</div>
+<div class="lv-wrapper lv-min-height lv-media-width">
+	<form method="get" id="g_search" action="${request.contextPath}/groupbuy">
+	       <input type="hidden" name="toDest" id="toDest" value="${toDest!}" data-name="">
+	       <input type="hidden" name="productType" id="productType" value="${productType!}" data-name="">
+	       <input type="hidden" name="sort" id="sort" value="${sort!}" data-name="">
+	       <input type="hidden" name="page" id="page" value="0" data-name="">
+      </form>
+  <div class="lv-cascade-div lv-media-width">
+       <#if mlist?exists>
+		    <div class="lv-tab" style="display:none;">
+			    <ul class="lv-cascade-list bindclick">
+		          <#list mlist.cities as c>
+					  <li id="li${c.placeId}" data-value="${c.placeId}" data-place-name="${c.name!}"  data-type="cities">${c.name}</li>
+		          </#list>
+		        </ul>
+		    </div>
+		    
+		     <div class="lv-tab" style="display:none;">
+			    <ul class="lv-cascade-list bindclick">
+		          <#list mlist.productTypes as c>
+		               <li id="li${c.value}" data-value="${c.value}" data-type="productTypes">${c.title}</li>
+		          </#list>
+		        </ul>
+		    </div>
+		    
+		     <div class="lv-tab" style="display:none;">
+			    <ul class="lv-cascade-list bindclick">
+		          <#list mlist.sortTypes as c>
+		               <li id="li${c.value}" data-value="${c.value}" data-type="sortTypes">${c.title}</li>
+		          </#list>
+		        </ul>
+		    </div>
+       </#if>
+  </div>
+  
+  <!-- 列表数据  -->
+  <div class="lv-wrapper-container group lv-paddingtop-10" id="data_list">
+    
+  </div>
+  <!-- 如果不是最后一页  -->
+  <div class="lv-nav-li lv-btn-03" id="show_more" style="display:none">
+       <a href="javascript:void(0);" onclick="getGroupBuyListData('0')">
+          <span>查看更多</span>
+       </a>
+   </div>
+</div>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+ <div class="lv-transparent-div lv-transparent" style="display:none;"></div>
+</body>
+</html>

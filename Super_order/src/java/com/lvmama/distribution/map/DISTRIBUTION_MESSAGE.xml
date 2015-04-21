@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="DISTRIBUTION_MESSAGE">
+
+    <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributionMessage">
+        <result property="messageId" column="MESSAGE_ID"/>
+        <result property="objectId" column="OBJECT_ID"/>
+        <result property="objectType" column="OBJECT_TYPE"/>
+        <result property="eventType" column="EVENT_TYPE"/>
+        <result property="distributorChannel" column="DISTRIBUTOR_CHANNEL"/>
+		<result property="status" column="STATUS"/>
+		<result property="reapplyTime" column="REAPPLYTIME"/>
+    </resultMap>
+
+	<sql id="columns">
+         MESSAGE_ID ,OBJECT_ID ,OBJECT_TYPE ,EVENT_TYPE ,DISTRIBUTOR_CHANNEL ,STATUS ,REAPPLYTIME
+	</sql>
+	
+    <insert id="insert" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionMessage" >
+    <selectKey  keyProperty="messageId" resultClass="java.lang.Long"> SELECT DISTRIBUTION_MSG_SEQ.NEXTVAL FROM DUAL</selectKey>
+        INSERT INTO DISTRIBUTION_MESSAGE (
+        	MESSAGE_ID ,
+        	OBJECT_ID ,
+        	OBJECT_TYPE ,
+        	EVENT_TYPE ,
+        	DISTRIBUTOR_CHANNEL ,
+        	STATUS ,
+        	REAPPLYTIME
+        ) VALUES (
+        	#messageId# ,
+        	#objectId# ,
+        	#objectType# ,
+        	#eventType# ,
+        	#distributorChannel# ,
+        	#status# ,
+        	#reapplyTime#
+        )
+    </insert>
+
+    <update id="update" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionMessage">
+        UPDATE DISTRIBUTION_MESSAGE SET
+	       STATUS = #status# 
+        WHERE 
+	        MESSAGE_ID = #messageId# 
+    </update>
+
+    <select id="getByMsg" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionMessage">
+	    SELECT *   FROM DISTRIBUTION_MESSAGE 
+	          WHERE OBJECT_ID = #objectId#
+	       <isNotEmpty prepend="AND" property="objectType">
+	             OBJECT_TYPE = #objectType#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="eventType">
+	             EVENT_TYPE = #eventType#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="distributorChannel">
+	             DISTRIBUTOR_CHANNEL = #distributorChannel#
+	       </isNotEmpty>
+    </select>
+
+	<sql id="where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="messageId">
+		             MESSAGE_ID = #messageId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="objectId">
+		             OBJECT_ID = #objectId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="objectType">
+		             OBJECT_TYPE = #objectType#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="eventType">
+		             EVENT_TYPE = #eventType#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="distributorChannel">
+		             DISTRIBUTOR_CHANNEL = #distributorChannel#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="status">
+		       		 STATUS =#status#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="reapplyTime">
+		      		 REAPPLYTIME &lt;#reapplyTime#
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	 
+    <select id="findByParamsCount" parameterClass="java.util.HashMap" resultClass="java.lang.Long">
+        SELECT count(*) FROM DISTRIBUTION_MESSAGE <include refid="where"/>    
+    </select>
+    
+    <select id="findByParams" resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+    	<isNotEmpty property="start">
+    		SELECT * FROM (SELECT T.*,ROWNUM RN FROM (
+    	</isNotEmpty>
+	    	SELECT <include refid="columns"/> FROM DISTRIBUTION_MESSAGE 
+			<include refid="where"/>
+		<isNotEmpty property="start">
+			)T )TT WHERE TT.RN &gt;=#start# and TT.RN &lt;=#end#
+		</isNotEmpty>
+    </select>
+
+	
+</sqlMap>
+

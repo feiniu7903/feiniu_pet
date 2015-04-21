@@ -1,0 +1,212 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>微信登录-驴妈妈手机站</title>
+<#include "../common/define_v3.html">
+<script src="${request.contextPath}/jquery.mobile/jquery.cookie.js"></script>
+<script src="${request.contextPath}/js/comm.js"></script>
+<script src="${request.contextPath}/js/login.js?_version=20120806"></script>
+<style type="text/css">
+.lv-toast {
+	background:#000000;
+	position:absolute;
+	width:200px;
+	border-radius:6px;
+	text-align:center;
+	z-index:1002;
+}
+.lv-toast-div {
+	width:42px;
+	height:42px;
+	margin:20px auto;
+}
+.lv-toast-loading {
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin-left: -16px;
+}
+.lv-toast p {
+	padding:0 10px 20px 10px;
+	color:#ffffff;
+	font-size:16px;
+	font-weight:bold;
+}
+</style>
+<script type="text/javascript">
+$(function(){
+	inputClear();
+});
+/*
+input clear
+@inputVal is input val
+@inputPlaceholder is input attribute
+@_inputObj is obj
+*/
+function inputClear(){
+	var inputVal, inputPlaceholder, _inputObj;
+	_inputObj = $('input');
+	inputVal = _inputObj.val();
+	inputPlaceholder = _inputObj.attr('placeholder');
+	if(inputVal !='' && inputVal != inputPlaceholder){
+		_inputObj.each(function(i) {
+			var _index = i;
+			var numObj = _inputObj.eq(_index);
+			var _valI = _inputObj.eq(_index).val();
+			if(_valI !=''){
+				numObj.next('.ic_delete').show();
+			}
+			$('body').delegate('input', 'keyup',function(){
+				inputVal = numObj.val();
+				if(inputVal != ''){
+					numObj.next('.ic_delete').show();
+				}else {
+					numObj.next('.ic_delete').hide();
+				}
+			});
+			$('body').delegate('input', 'keydown',function(){
+				inputVal = numObj.val();
+				if(inputVal == ''){
+					numObj.next('.ic_delete').hide();
+				}else {
+					numObj.next('.ic_delete').show();
+				}
+			});
+			
+		});
+	  $('body').delegate('.ic_delete', 'click',function(){
+		   $(this).hide();
+		   $(this).prev('input').val('');
+	  });
+	}
+}
+function weixinLogin () {
+	var u = $("#username").val();
+	if($.trim(u) == ""){
+		lvToast(false,"用户名不能为空！",LT_LOADING_CLOSE);
+		$("#username").focus();
+		return ;
+	}
+	var p = $("#password").val();
+	if($.trim(p) == ""){
+		lvToast(false,"密码不能为空！",LT_LOADING_CLOSE);
+		$("#password").focus();
+		return ;
+	}
+	$.post(contextPath+"/t_weixin_login.htm",{ username : u, password : p},function(data){
+		if(data.success){
+			if(navigator.geolocation) {
+				setLocalStorage("LT_user_p",p);
+			}
+			bindCount(data);//微信用户绑定驴妈妈账号
+		}else{
+			var msg = data.errorText;
+			if(null != msg && ""!=msg) {
+				lvToast(false,data.errorText,LT_LOADING_CLOSE);
+			} else {
+				lvToast(false,"用户名/密码错误",LT_LOADING_CLOSE);
+			}
+		}
+	});
+}
+/**
+ * 微信用户绑定驴妈妈账号
+ */
+function bindCount(data){
+	var bindUrl= data.bindUrl;
+	var openid = data.openid ;
+	var weixinUrl=decodeURIComponent(getCookie('loginUrl'));
+	var uid = data.uid;
+	$.getJSON(bindUrl+"?openid="+openid+"&uid="+uid+"&subscribe=1&flag=1&jsoncallback=?",function(msg) {
+		if(msg.data=="success"){
+			var url = $("#redirect_url").val();
+			if(weixinUrl!=null && weixinUrl!=""){
+			 	var callBackUrl=loginParmsWeixin(weixinUrl,uid);
+				window.location.href=callBackUrl;
+			}else{
+			   	if(url!=""){
+					window.location.href=contextPath+url;
+				}else{
+				   	window.location.href=contextPath+"/weixinBindSuccess.htm";
+				}
+			}
+		}else{
+			lvToast(false,"用户绑定失败",LT_LOADING_CLOSE);
+		}
+	});
+}
+//初始化登录按钮 
+function initWeixinLoginButton() {
+	var u = $("#username").val();
+	var p = $("#password").val();
+	if($.trim(u) != "" && $.trim(p) != "" && p.length > 5) {
+		$("#login").show();
+		$("#no_login").hide();
+	} else {
+		$("#no_login").show();
+		$("#login").hide();
+	}
+}
+	$(function() {
+		//请求地址写入cookie
+		 var loginUrl= decodeURIComponent(window.location.href);
+		 if(loginUrl.indexOf("activityChannel=mobile_activity_weixin")>0 && loginUrl.indexOf("callUrl")>0){
+	   	 	setcookie('loginUrl', loginUrl, 72000000, '/', ".lvmama.com",false); //设置cookie 秒
+	   		 var openId=loginUrl.split("openId=")[1];
+	   	 	setcookie('openid', openId, 72000000, '/', ".lvmama.com",false); //设置cookie 秒
+		 }
+	});
+	//跳转请求URL微信调用
+	function loginParmsWeixin(loginUrl,userId){
+		var parms=loginUrl.split("callUrl=")[1];
+		var backUrl=parms+"&userId="+userId;
+		$.cookie('loginUrl', null);
+		return backUrl;
+	}
+	//读取Cookie
+	function getCookie(objName) {
+		var arrStr = document.cookie.split("; ");
+		for (var i = 0; i < arrStr.length; i++) {
+			var temp = arrStr[i].split("=");
+			if (temp[0] == objName) {
+				return temp[1];
+			}
+		}
+		return '';
+	}
+</script>
+</head>
+
+<body>
+<div class="wrap">
+    <section class="coupon_main wechat">
+    	<article class="find_pass">
+        	<div class="wechat_con">
+            <form id="weixinLoginForm" action="/clutter/t_weixin_login.htm" method="post">
+            <input id="redirect_url" type="hidden" value ="${service!}"/>
+                <p>
+                   亲爱的微信会员<br/>
+                   马上登录驴妈妈，即送380元优惠券
+                </p>
+                <ul>
+                    <li><input type="text" id="username" name="username"  placeholder="驴妈妈账号" value="${username!}" onkeyup="initWeixinLoginButton();" /><i class="ic_delete"></i></li>
+                    <li><input type="password" id="password" name="password" value="${password!}" placeholder="密码" onkeyup="initWeixinLoginButton();"  /><i class="ic_delete"></i></li>
+                </ul>
+                <a href="javascript:void(0);" onclick="weixinLogin();" class="btn_se_sub1">登录并绑定</a>
+                </form>
+              </div>
+              <a href="/clutter/weixinRegister.htm" class="wechat_b">注册新用户>></a>  <a href="/clutter/weixinForgetPassword.htm" class="wechat_c">用短信找回密码</a>
+        </article>
+    </section>
+</div>
+<div class="lv-toast lv-toast-success" style="display:none;">
+	<div class="lv-toast-div"><img src="${prefix_pic_url!}/img/smile-grey.png"></div>
+    <p></p>
+</div>
+<div class="lv-toast lv-toast-fail" style="display:none;">
+	<div class="lv-toast-div"><img src="${prefix_pic_url!}/img/sad-big.png"></div>
+    <p></p>
+</div>
+<div class="lv-toast-loading" style="display:none;"><img style="width:32px;" src="${prefix_pic_url!}/img/3.gif"></div>
+</body>
+</html>

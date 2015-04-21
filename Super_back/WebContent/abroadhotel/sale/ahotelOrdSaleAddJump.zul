@@ -1,0 +1,59 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_sale_add_jump"?>
+	<window id="win_sale_add_jump" title="售后服务处理" border="normal"
+		apply="com.lvmama.back.web.abroadhotel.sale.AhotelOrdSaleAddJumpAction">
+		<space />
+		<groupbox style="border: none">
+			<caption label="用户售后服务处理提交单"></caption>
+		</groupbox>
+		<tree id="ordSaleTree"></tree>
+		<space />
+		<button id="refreshOrdRefundBtn" onClick="@{scation.doBefore()}"
+			visible="false">
+		</button>
+		<button id="refreshOrdSaleBtn" onClick="@{scation.doAfter()}"
+			visible="false">
+		</button>
+		<space />
+		<groupbox style="border: none">
+			<caption label="用户售后处理退款单"></caption>
+		</groupbox>
+		<listbox mold="paging" 
+			model="@{saction.ordRefundmentList,load-after=refreshOrdRefundBtn.onClick}">
+			<listhead>
+				<listheader label="退款单号" width="6%" />
+				<listheader label="退款金额" width="8%" />
+				<listheader label="退款类型" width="13%" />
+				<listheader label="处理内容" width="25%" />
+				<listheader label="提交人" width="10%" />
+				<listheader label="提交时间" />
+				<listheader label="退款状态" />
+				<listheader label="退款时间" />
+			</listhead>
+			<listitem height="25px" self="@{each='refundment'}">
+				<listcell label="@{refundment.refundmentId}" />
+				<listcell label="@{refundment.amountYuan}" />
+				<listcell label="@{refundment.refundTypeName}" />
+				<listcell label="@{refundment.memo}" />
+				<listcell label="@{refundment.operatorName}" />
+				<listcell label="@{refundment.createTime}" />
+				<listcell label="@{refundment.statusName}" />
+				<listcell label="@{refundment.refundTime}" />
+			</listitem>
+		</listbox>
+		<toolbar align="center">
+			<button id="btnsaleService" width="100px" label="我要售后服务申请"
+				onClick='saction.showWindow("/abroadhotel/sale/ahotelOrdSaleAdd.zul",self.getAttributes());'>
+				<custom-attributes orderId="@{saction.orderId}" />
+			</button>
+			<button id="saleRefund" width="100px" label="我要退款服务申请" visible="false"
+				onClick='saction.showWindow("/abroadhotel/refundMent/ahotelOrdOrderRefundAdd.zul",self.getAttributes());'>
+				<custom-attributes orderId="@{saction.orderId}" />
+				<custom-attributes isCancelOrder="@{saction.isCancelOrder}" />
+				<custom-attributes cancelResson="@{saction.cancelResson}" />
+			</button>
+		</toolbar>
+	</window>
+</zk>

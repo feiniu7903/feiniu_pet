@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+       		classpath:applicationContext-finance-beans.xml,
+       		classpath:applicationContext-finance-database.xml,
+        </param-value>
+	</context-param>
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- 权限控制 -->
+	<filter>
+		<filter-name>permissionFilter</filter-name>
+		<filter-class>com.lvmama.comm.filter.PermissionFilter</filter-class>
+		<init-param>
+			<param-name>excludeUrl</param-name>
+			<param-value>
+				.*\.js,.*\.css,.*\.gif,.*\.jpg,.*\.jpeg,.*\.jpe,.*\.jfif,.*\.bmp,.*\.tif,.*\.png,
+				.*/zkau.*,.*/timeout.zul,.*/call/.*,.*/checkversion.jsp,
+				.*/msg/initMessage.do,.*/msg/.*,.*/remoting/.*
+			</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>permissionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>BaseFilterHtm</filter-name>
+		<filter-class>com.lvmama.finance.base.filter.BaseFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>BaseFilterHtm</filter-name>
+		<url-pattern>*.htm</url-pattern>
+	</filter-mapping>
+	<filter>
+		<filter-name>BaseFilterAjax</filter-name>
+		<filter-class>com.lvmama.finance.base.filter.BaseFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>BaseFilterAjax</filter-name>
+		<url-pattern>*.json</url-pattern>
+	</filter-mapping>
+	
+	<servlet>
+		<servlet-name>SpringMVC</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>
+				classpath:applicationContext-finance-servlet.xml
+			</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SpringMVC</servlet-name>
+		<url-pattern>*.htm</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SpringMVC</servlet-name>
+		<url-pattern>*.json</url-pattern>
+	</servlet-mapping>
+
+	<listener>
+		<listener-class>
+			com.lvmama.comm.spring.SuperContextLoaderListener
+		</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>
+			org.springframework.web.util.IntrospectorCleanupListener
+		</listener-class>
+	</listener>
+</web-app>

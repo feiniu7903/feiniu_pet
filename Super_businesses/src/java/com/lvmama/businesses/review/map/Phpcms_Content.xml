@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PHPCMSCONTENT" >
+    <!-- 详细内容  -->
+    <typeAlias alias="phpcmscontent" type="com.lvmama.comm.businesses.po.review.PhpcmsContent"/>
+    <resultMap id="baseMap" class="phpcmscontent" >
+    	 <result  column="contentid"  property="contentid"/>
+    	 <result column="content" property="content"/>
+     	 <result column="reviewstatus" property="reviewstatus"/>
+     	 <result column="url" property="url"/>
+    </resultMap>
+    <resultMap class="phpcmscontent" id="newBaseMap" extends="baseMap">
+       <result property="createdate"  column="createdate"/>
+    </resultMap>
+   <sql id="where_query">
+             where 1=1
+            <isNotEmpty property="reviewstatus"  prepend="and ">
+                   reviewstatus=#reviewstatus#  
+                  <isNotEqual prepend="and" property="reviewstatus" compareValue="2">
+                       status=99
+                     </isNotEqual> 
+               </isNotEmpty>
+               <isNotEmpty property="datebegin" prepend=" and ">
+                  FROM_UNIXTIME(inputtime) &gt; #datebegin# 
+               </isNotEmpty>
+               <isNotEmpty property="dateend" prepend=" and ">
+                   FROM_UNIXTIME( inputtime) &lt; #dateend# 
+               </isNotEmpty>
+     </sql>
+          <select id="select" resultMap="baseMap" parameterClass="java.util.Map">
+           select c.contentid,c.content,c.reviewstatus,t.url from phpcms_content t ,$tableName$ as c 
+           where t.contentId=c.contentId and c.contentId=#contentId# 
+           </select>
+     <!--phpcms_c_news  -->
+     <select id="queryByParamForPhpcms_c" resultMap="newBaseMap" parameterClass="java.util.Map">
+        select contentid, content, reviewstatus, url,FROM_UNIXTIME(inputtime) as createdate from  (select c.contentid,c.content,c.reviewstatus,t.url,t.inputtime,t.status from phpcms_content t ,$tableName$ as c   
+           where t.contentId=c.contentId ) m
+               <include refid="where_query"/>
+              order by FROM_UNIXTIME(inputtime) desc 
+             LIMIT #start#,#end#
+     </select>
+      <select id="countForPhpcms_c" resultClass="java.lang.Long" parameterClass="java.util.Map">
+        select COUNT(*) from  (select c.contentid,c.content,c.reviewstatus,t.url,t.inputtime,t.status from phpcms_content t ,$tableName$ as c   
+           where t.contentId=c.contentId ) m
+          <include refid="where_query"/>
+       
+     </select>
+     <update id="updateForPhpcms_c" parameterClass="java.util.Map">
+         update     $tableName$  
+         set reviewstatus=#reviewstatus# 
+         where contentid=#contentid# 
+     </update>
+     
+       <!--  状态更改表 -->
+	    <update id="updateForPhpcmsContent" parameterClass="java.util.Map">
+	         update    phpcms_content 
+	         <isNotEmpty  property="status">set status=#status#</isNotEmpty> 
+	         where contentid=#contentid# 
+	     </update>
+</sqlMap>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_BASIC_MV">
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.OrderBasicMV">
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="QUANTITY" property="quantity" />
+		<result column="UNPAYED_QUANTITY" property="unpayedQuantity" />
+		<result column="UNPAYED_AMOUNT" property="unpayedAmount" />
+		<result column="PAYED_QUANTITY" property="payedQuantity" />
+		<result column="PAYED_AMOUNT" property="payedAmount" />
+	</resultMap>
+	
+	<resultMap class="com.lvmama.report.vo.OrderBasicVO" id="orderBasicVOMap">		
+		<result property="orderQuantityTotal" column="orderQuantityTotal"/>
+		<result property="unpayedQuantityTotal" column="unpayedQuantityTotal"/>
+		<result property="unpayedAmountTotal" column="unpayedAmountTotal"/>
+		<result property="payedQuantityTotal" column="payedQuantityTotal"/>
+		<result property="payedAmountTotal" column="payedAmountTotal"/>
+	</resultMap>	
+	
+	<sql id="queryOrderBasicMVByParamSql" >
+			select  CREATE_TIME, 
+					PRODUCT_TYPE,
+					QUANTITY, 
+					PAYED_QUANTITY,
+					PAYED_AMOUNT, 
+					UNPAYED_QUANTITY,
+					UNPAYED_AMOUNT
+		    from ORDER_ANALYSIS_MV
+		<dynamic prepend="where">	
+		<isNotNull prepend="and" property="startDate">
+			to_date(CREATE_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			to_date(CREATE_TIME,'yyyy-mm-dd')<![CDATA[<]]>#endDate#+1
+		</isNotNull>
+		<isNotNull prepend="and" property="productType">
+			<iterate property="productType" open="(" close=")" conjunction="or">
+				PRODUCT_TYPE = #productType[]#
+			</iterate> 
+		</isNotNull>
+		</dynamic>
+		<dynamic prepend=" order by ">
+			<isNotNull prepend="" property="sortTypeName">
+				$sortTypeName$ $sortAscOrDesc$
+			</isNotNull>
+		</dynamic> 
+	</sql>
+	
+	<select id="sumOrderBasicVOByParam" parameterClass="java.util.Map"  resultMap="orderBasicVOMap" >
+		select nvl(sum(QUANTITY),0) orderQuantityTotal, nvl(sum(PAYED_QUANTITY),0) payedQuantityTotal, nvl(sum(PAYED_AMOUNT),0) payedAmountTotal, 
+			   nvl(sum(UNPAYED_QUANTITY),0) unpayedQuantityTotal, nvl(sum(UNPAYED_AMOUNT),0) unpayedAmountTotal 
+		from (
+			<include refid="queryOrderBasicMVByParamSql"/>
+		)
+	</select>
+	
+	<select id="countOfOrderBasicMVByParam" parameterClass="java.util.Map" resultClass="java.lang.Long"  >
+		select count(*) from (
+			<include refid="queryOrderBasicMVByParamSql"/>
+		 )
+	</select>
+	
+	<select id="queryOrderBasicMVByParam" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+			SELECT 
+				rownum r,
+				info.*
+			from (<include refid="queryOrderBasicMVByParamSql"/>) info
+			<dynamic prepend = " WHERE ">
+				<isNotEmpty property="_endRow" >rownum &lt;= #_endRow# </isNotEmpty> 
+			</dynamic>
+			<isNotEmpty property="_startRow">
+			)
+			</isNotEmpty>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;= #_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+</sqlMap>

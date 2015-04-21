@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_ORDER_ITEM_META_APERIODIC">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderItemMetaAperiodic">
+		<result column="APERIODIC_ID" property="aperiodicId" />
+		<result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+		<result column="PASSWORD_CERTIFICATE" property="passwordCertificate" />
+		<result column="ACTIVATION_STATUS" property="activationStatus" />
+		<result column="VALID_BEGIN_TIME" property="validBeginTime" />
+		<result column="VALID_END_TIME" property="validEndTime" />
+		<result column="ORDER_ID" property="orderId"/>
+		<result column="USED_TIME" property="usedTime"/>
+		<result column="INVALID_DATE" property="invalidDate"/>
+		<result column="INVALID_DATE_MEMO" property="invalidDateMemo"/>
+	</resultMap>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		select *
+		from ORD_ORDER_ITEM_META_APERIODIC
+		where APERIODIC_ID =
+		#aperiodicId:DECIMAL#
+	</select>
+	<select id="selectOrderAperiodicByOrderItemId" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		select *
+		from ORD_ORDER_ITEM_META_APERIODIC
+		where ORDER_ITEM_META_ID =
+		#orderItemId:DECIMAL#
+	</select>
+	<delete id="deleteByPrimaryKey" parameterClass="java.lang.Long">
+		delete from
+		ORD_ORDER_ITEM_META_APERIODIC
+		where APERIODIC_ID = #aperiodicId:DECIMAL#
+	</delete>
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMetaAperiodic">
+		<selectKey resultClass="java.lang.Long" keyProperty="aperiodicId">
+			select
+			ORDER_ITEM_META_APERIODIC_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into ORD_ORDER_ITEM_META_APERIODIC (APERIODIC_ID, ORDER_ITEM_META_ID,ORDER_ID,
+		PASSWORD_CERTIFICATE, ACTIVATION_STATUS, VALID_BEGIN_TIME, VALID_END_TIME, INVALID_DATE, INVALID_DATE_MEMO)
+		values (#aperiodicId:DECIMAL#, #orderItemMetaId:DECIMAL#,#orderId:DECIMAL#,
+		#passwordCertificate:VARCHAR#, #activationStatus:VARCHAR#,
+		#validBeginTime#,#validEndTime#,#invalidDate#, #invalidDateMemo#)
+	</insert>
+	<update id="updateStatusByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMetaAperiodic">
+		update
+		ORD_ORDER_ITEM_META_APERIODIC
+		set ACTIVATION_STATUS = #activationStatus:VARCHAR#,
+		USED_TIME = #usedTime#
+		where APERIODIC_ID =
+		#aperiodicId:DECIMAL#
+	</update>
+	<select id="isPasswordCertificateExisted" parameterClass="java.lang.String" resultClass="java.lang.Long">
+	select count(*) from ORD_ORDER_ITEM_META_APERIODIC 
+		where PASSWORD_CERTIFICATE=#passwordCertificate#
+		and sysdate<![CDATA[<]]>add_months(VALID_END_TIME,1)
+	</select>
+	<select id="selectOrderAperiodicByOrderId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select *
+		from ORD_ORDER_ITEM_META_APERIODIC
+		where ORDER_ID =
+		#orderId:DECIMAL#
+	</select>
+	<select id="getMaxValidEndTime" parameterClass="java.util.Map" resultClass="java.util.Date">
+		select max(valid_end_time) from ord_order_item_meta_aperiodic
+		<isNotEmpty property="orderItemMetaIds" prepend="where">
+			<iterate property="orderItemMetaIds" open="(" close=")" conjunction="or">
+				ORDER_ITEM_META_ID=#orderItemMetaIds[]#
+			</iterate>
+		</isNotEmpty>
+	</select>
+</sqlMap>

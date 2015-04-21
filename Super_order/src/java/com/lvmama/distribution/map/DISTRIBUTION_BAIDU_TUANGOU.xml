@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="DISTRIBUTION_BAIDU_TUANGOU" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributionBaiduTuangou" >
+    <result column="BAIDU_TUANGOU_PRODUCT_ID" property="baiduTuangouProductId" />
+    <result column="LOC" property="loc" />
+    <result column="WAPLOC" property="waploc" />
+    <result column="WEBSITE" property="website" />
+    <result column="SITEURL" property="siteurl" />
+    <result column="CITY" property="city" />
+    <result column="CATEGORY" property="category" />
+    <result column="SUBCATEGORY" property="subcategory" />
+    <result column="CHARACTERISTIC" property="characteristic" />
+    <result column="DESTINATION" property="destination" />
+    <result column="THRCATEGORY" property="thrcategory" />
+    <result column="MAJOR" property="major" />
+    <result column="TITLE" property="title" />
+    <result column="SHORTTITLE" property="shorttitle" />
+    <result column="IMAGE" property="image" />
+    <result column="STARTTIME" property="starttime" />
+    <result column="ENDTIME" property="endtime" />
+    <result column="VALUE" property="value" />
+    <result column="PRICE" property="price" />
+    <result column="REBATE" property="rebate" />
+    <result column="BOUGHT" property="bought" />
+    <result column="NAME" property="name" />
+    <result column="SPENDENDTIME" property="spendendtime" />
+    <result column="RESERVATION" property="reservation" />
+    <result column="TIPS" property="tips" />
+    <result column="SELLER" property="seller" />
+    <result column="PHONE" property="phone" />
+    <result column="ADDRESS" property="address" />
+    <result column="COORDS" property="coords" />
+    <result column="RANGE" property="range" />
+    <result column="DPSHOPID" property="dpshopid" />
+    <result column="SHOPSELLER" property="shopseller" />
+    <result column="SHOPPHONE" property="shopphone" />
+    <result column="SHOPADDRESS" property="shopaddress" />
+    <result column="SHOPCOORDS" property="shopcoords" />
+    <result column="SHOPRANGE" property="shoprange" />
+    <result column="SHOPDPSHOPID" property="shopdpshopid" />
+    <result column="OPENTIME" property="opentime" />
+    <result column="TRAFFICINFO" property="trafficinfo" />
+    <result column="PRODUCT_ID" property="productId" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionBaiduTuangou" >
+    select BAIDU_TUANGOU_PRODUCT_ID, LOC, WAPLOC, WEBSITE, SITEURL, CITY, CATEGORY, SUBCATEGORY,
+      CHARACTERISTIC, DESTINATION, THRCATEGORY, MAJOR, TITLE, SHORTTITLE, IMAGE, STARTTIME, ENDTIME,
+      VALUE, PRICE, REBATE, BOUGHT, NAME, SPENDENDTIME, RESERVATION, TIPS, SELLER, PHONE, ADDRESS,
+      COORDS, RANGE, DPSHOPID, SHOPSELLER, SHOPPHONE, SHOPADDRESS, SHOPCOORDS, SHOPRANGE,
+      SHOPDPSHOPID, OPENTIME, TRAFFICINFO, PRODUCT_ID
+    from DISTRIBUTION_BAIDU_TUANGOU
+    where BAIDU_TUANGOU_PRODUCT_ID = #baiduTuangouProductId:DECIMAL#
+  </select>
+
+	<select id="selectBaiduTuangouProducts" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		select b.* from (select a.*, rownum as row_num from (select * from
+		distribution_baidu_tuangou
+		) a where rownum &lt;= #endRow#) b where
+		b.row_num &gt;= #startRow#
+	</select>
+	
+  <select id="getDistributionBaiduTuangouTotalCount" resultClass="java.lang.Long">
+    select count(baidu_tuangou_product_id) from distribution_baidu_tuangou
+  </select>
+  
+  <select id="selectBaiduTuangouProductByProductId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+    select * from DISTRIBUTION_BAIDU_TUANGOU where PRODUCT_ID = #productId#
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionBaiduTuangou" >
+    delete from DISTRIBUTION_BAIDU_TUANGOU
+    where BAIDU_TUANGOU_PRODUCT_ID = #baiduTuangouProductId:DECIMAL#
+  </delete>
+  <delete id="deleteAllBaiduTuangouProducts">
+    delete from DISTRIBUTION_BAIDU_TUANGOU
+  </delete>
+  <delete id="deleteBaiduTuangouProductByProductId" parameterClass="java.lang.Long">
+    delete from DISTRIBUTION_BAIDU_TUANGOU where PRODUCT_ID = #productId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionBaiduTuangou" >
+    <selectKey resultClass="java.lang.Long" keyProperty="baiduTuangouProductId" >
+      select BAIDU_TUANGOU_PRODUCT_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into DISTRIBUTION_BAIDU_TUANGOU (BAIDU_TUANGOU_PRODUCT_ID, LOC, WAPLOC, WEBSITE, SITEURL,
+      CITY, CATEGORY, SUBCATEGORY, CHARACTERISTIC, DESTINATION, THRCATEGORY, MAJOR, TITLE,
+      SHORTTITLE, IMAGE, STARTTIME, ENDTIME, VALUE, PRICE, REBATE, BOUGHT, NAME, SPENDENDTIME,
+      RESERVATION, TIPS, SELLER, PHONE, ADDRESS, COORDS, RANGE, DPSHOPID, SHOPSELLER, SHOPPHONE,
+      SHOPADDRESS, SHOPCOORDS, SHOPRANGE, SHOPDPSHOPID, OPENTIME, TRAFFICINFO, PRODUCT_ID)
+    values (#baiduTuangouProductId:DECIMAL#, #loc:VARCHAR#, #waploc:VARCHAR#, #website:VARCHAR#,
+      #siteurl:VARCHAR#, #city:VARCHAR#, #category:VARCHAR#, #subcategory:VARCHAR#,
+      #characteristic:VARCHAR#, #destination:VARCHAR#, #thrcategory:VARCHAR#, #major:VARCHAR#,
+      #title:VARCHAR#, #shorttitle:VARCHAR#, #image:VARCHAR#, #starttime:VARCHAR#,
+      #endtime:VARCHAR#, #value:VARCHAR#, #price:VARCHAR#, #rebate:VARCHAR#, #bought:VARCHAR#,
+      #name:VARCHAR#, #spendendtime:VARCHAR#, #reservation:VARCHAR#, #tips:VARCHAR#,
+      #seller:VARCHAR#, #phone:VARCHAR#, #address:VARCHAR#, #coords:VARCHAR#, #range:VARCHAR#,
+      #dpshopid:VARCHAR#, #shopseller:VARCHAR#, #shopphone:VARCHAR#, #shopaddress:VARCHAR#,
+      #shopcoords:VARCHAR#, #shoprange:VARCHAR#, #shopdpshopid:VARCHAR#, #opentime:VARCHAR#,
+      #trafficinfo:VARCHAR#, #productId:DECIMAL#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionBaiduTuangou" >
+    <selectKey resultClass="java.lang.Long" keyProperty="baiduTuangouProductId" >
+      select BAIDU_TUANGOU_PRODUCT_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into DISTRIBUTION_BAIDU_TUANGOU
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="baiduTuangouProductId" >
+        BAIDU_TUANGOU_PRODUCT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="loc" >
+        LOC
+      </isNotNull>
+      <isNotNull prepend="," property="waploc" >
+        WAPLOC
+      </isNotNull>
+      <isNotNull prepend="," property="website" >
+        WEBSITE
+      </isNotNull>
+      <isNotNull prepend="," property="siteurl" >
+        SITEURL
+      </isNotNull>
+      <isNotNull prepend="," property="city" >
+        CITY
+      </isNotNull>
+      <isNotNull prepend="," property="category" >
+        CATEGORY
+      </isNotNull>
+      <isNotNull prepend="," property="subcategory" >
+        SUBCATEGORY
+      </isNotNull>
+      <isNotNull prepend="," property="characteristic" >
+        CHARACTERISTIC
+      </isNotNull>
+      <isNotNull prepend="," property="destination" >
+        DESTINATION
+      </isNotNull>
+      <isNotNull prepend="," property="thrcategory" >
+        THRCATEGORY
+      </isNotNull>
+      <isNotNull prepend="," property="major" >
+        MAJOR
+      </isNotNull>
+      <isNotNull prepend="," property="title" >
+        TITLE
+      </isNotNull>
+      <isNotNull prepend="," property="shorttitle" >
+        SHORTTITLE
+      </isNotNull>
+      <isNotNull prepend="," property="image" >
+        IMAGE
+      </isNotNull>
+      <isNotNull prepend="," property="starttime" >
+        STARTTIME
+      </isNotNull>
+      <isNotNull prepend="," property="endtime" >
+        ENDTIME
+      </isNotNull>
+      <isNotNull prepend="," property="value" >
+        VALUE
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        PRICE
+      </isNotNull>
+      <isNotNull prepend="," property="rebate" >
+        REBATE
+      </isNotNull>
+      <isNotNull prepend="," property="bought" >
+        BOUGHT
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        NAME
+      </isNotNull>
+      <isNotNull prepend="," property="spendendtime" >
+        SPENDENDTIME
+      </isNotNull>
+      <isNotNull prepend="," property="reservation" >
+        RESERVATION
+      </isNotNull>
+      <isNotNull prepend="," property="tips" >
+        TIPS
+      </isNotNull>
+      <isNotNull prepend="," property="seller" >
+        SELLER
+      </isNotNull>
+      <isNotNull prepend="," property="phone" >
+        PHONE
+      </isNotNull>
+      <isNotNull prepend="," property="address" >
+        ADDRESS
+      </isNotNull>
+      <isNotNull prepend="," property="coords" >
+        COORDS
+      </isNotNull>
+      <isNotNull prepend="," property="range" >
+        RANGE
+      </isNotNull>
+      <isNotNull prepend="," property="dpshopid" >
+        DPSHOPID
+      </isNotNull>
+      <isNotNull prepend="," property="shopseller" >
+        SHOPSELLER
+      </isNotNull>
+      <isNotNull prepend="," property="shopphone" >
+        SHOPPHONE
+      </isNotNull>
+      <isNotNull prepend="," property="shopaddress" >
+        SHOPADDRESS
+      </isNotNull>
+      <isNotNull prepend="," property="shopcoords" >
+        SHOPCOORDS
+      </isNotNull>
+      <isNotNull prepend="," property="shoprange" >
+        SHOPRANGE
+      </isNotNull>
+      <isNotNull prepend="," property="shopdpshopid" >
+        SHOPDPSHOPID
+      </isNotNull>
+      <isNotNull prepend="," property="opentime" >
+        OPENTIME
+      </isNotNull>
+      <isNotNull prepend="," property="trafficinfo" >
+        TRAFFICINFO
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="baiduTuangouProductId" >
+        #baiduTuangouProductId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="loc" >
+        #loc:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="waploc" >
+        #waploc:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="website" >
+        #website:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="siteurl" >
+        #siteurl:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="city" >
+        #city:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="category" >
+        #category:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="subcategory" >
+        #subcategory:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="characteristic" >
+        #characteristic:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="destination" >
+        #destination:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="thrcategory" >
+        #thrcategory:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="major" >
+        #major:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="title" >
+        #title:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shorttitle" >
+        #shorttitle:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="image" >
+        #image:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="starttime" >
+        #starttime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="endtime" >
+        #endtime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="value" >
+        #value:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        #price:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="rebate" >
+        #rebate:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bought" >
+        #bought:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="spendendtime" >
+        #spendendtime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="reservation" >
+        #reservation:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tips" >
+        #tips:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="seller" >
+        #seller:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="phone" >
+        #phone:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="address" >
+        #address:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="coords" >
+        #coords:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="range" >
+        #range:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="dpshopid" >
+        #dpshopid:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shopseller" >
+        #shopseller:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shopphone" >
+        #shopphone:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shopaddress" >
+        #shopaddress:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shopcoords" >
+        #shopcoords:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shoprange" >
+        #shoprange:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shopdpshopid" >
+        #shopdpshopid:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="opentime" >
+        #opentime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="trafficinfo" >
+        #trafficinfo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        #productId:DECIMAL#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionBaiduTuangou" >
+    update DISTRIBUTION_BAIDU_TUANGOU
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="loc" >
+        LOC = #loc:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="waploc" >
+        WAPLOC = #waploc:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="website" >
+        WEBSITE = #website:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="siteurl" >
+        SITEURL = #siteurl:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="city" >
+        CITY = #city:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="category" >
+        CATEGORY = #category:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="subcategory" >
+        SUBCATEGORY = #subcategory:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="characteristic" >
+        CHARACTERISTIC = #characteristic:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="destination" >
+        DESTINATION = #destination:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="thrcategory" >
+        THRCATEGORY = #thrcategory:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="major" >
+        MAJOR = #major:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="title" >
+        TITLE = #title:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shorttitle" >
+        SHORTTITLE = #shorttitle:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="image" >
+        IMAGE = #image:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="starttime" >
+        STARTTIME = #starttime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="endtime" >
+        ENDTIME = #endtime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="value" >
+        VALUE = #value:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        PRICE = #price:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="rebate" >
+        REBATE = #rebate:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bought" >
+        BOUGHT = #bought:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        NAME = #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="spendendtime" >
+        SPENDENDTIME = #spendendtime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="reservation" >
+        RESERVATION = #reservation:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tips" >
+        TIPS = #tips:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="seller" >
+        SELLER = #seller:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="phone" >
+        PHONE = #phone:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="address" >
+        ADDRESS = #address:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="coords" >
+        COORDS = #coords:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="range" >
+        RANGE = #range:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="dpshopid" >
+        DPSHOPID = #dpshopid:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shopseller" >
+        SHOPSELLER = #shopseller:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shopphone" >
+        SHOPPHONE = #shopphone:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shopaddress" >
+        SHOPADDRESS = #shopaddress:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shopcoords" >
+        SHOPCOORDS = #shopcoords:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shoprange" >
+        SHOPRANGE = #shoprange:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shopdpshopid" >
+        SHOPDPSHOPID = #shopdpshopid:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="opentime" >
+        OPENTIME = #opentime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="trafficinfo" >
+        TRAFFICINFO = #trafficinfo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID = #productId:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    where BAIDU_TUANGOU_PRODUCT_ID = #baiduTuangouProductId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionBaiduTuangou" >
+    update DISTRIBUTION_BAIDU_TUANGOU
+    set LOC = #loc:VARCHAR#,
+      WAPLOC = #waploc:VARCHAR#,
+      WEBSITE = #website:VARCHAR#,
+      SITEURL = #siteurl:VARCHAR#,
+      CITY = #city:VARCHAR#,
+      CATEGORY = #category:VARCHAR#,
+      SUBCATEGORY = #subcategory:VARCHAR#,
+      CHARACTERISTIC = #characteristic:VARCHAR#,
+      DESTINATION = #destination:VARCHAR#,
+      THRCATEGORY = #thrcategory:VARCHAR#,
+      MAJOR = #major:VARCHAR#,
+      TITLE = #title:VARCHAR#,
+      SHORTTITLE = #shorttitle:VARCHAR#,
+      IMAGE = #image:VARCHAR#,
+      STARTTIME = #starttime:VARCHAR#,
+      ENDTIME = #endtime:VARCHAR#,
+      VALUE = #value:VARCHAR#,
+      PRICE = #price:VARCHAR#,
+      REBATE = #rebate:VARCHAR#,
+      BOUGHT = #bought:VARCHAR#,
+      NAME = #name:VARCHAR#,
+      SPENDENDTIME = #spendendtime:VARCHAR#,
+      RESERVATION = #reservation:VARCHAR#,
+      TIPS = #tips:VARCHAR#,
+      SELLER = #seller:VARCHAR#,
+      PHONE = #phone:VARCHAR#,
+      ADDRESS = #address:VARCHAR#,
+      COORDS = #coords:VARCHAR#,
+      RANGE = #range:VARCHAR#,
+      DPSHOPID = #dpshopid:VARCHAR#,
+      SHOPSELLER = #shopseller:VARCHAR#,
+      SHOPPHONE = #shopphone:VARCHAR#,
+      SHOPADDRESS = #shopaddress:VARCHAR#,
+      SHOPCOORDS = #shopcoords:VARCHAR#,
+      SHOPRANGE = #shoprange:VARCHAR#,
+      SHOPDPSHOPID = #shopdpshopid:VARCHAR#,
+      OPENTIME = #opentime:VARCHAR#,
+      TRAFFICINFO = #trafficinfo:VARCHAR#,
+      PRODUCT_ID = #productId:DECIMAL#
+    where BAIDU_TUANGOU_PRODUCT_ID = #baiduTuangouProductId:DECIMAL#
+  </update>
+</sqlMap>

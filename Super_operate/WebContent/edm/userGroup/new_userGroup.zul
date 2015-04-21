@@ -1,0 +1,104 @@
+<?page title="EDM用户组管理-新增页面" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./newUserGroup"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.operate.util.ListboxCodeset" ?>
+	<window id="newUserGroup" title="EDM用户组管理-新增页面" mode="embedded" apply="com.lvmama.operate.web.userGroup.EditUserGroupAction">
+		<grid>
+			<columns>
+				<column width="120px"></column>
+				<column></column>
+			</columns>
+			<rows>
+			 	<row>
+					<hbox>用户组名称：<label value="[*]" style="color:red;"/></hbox>
+					<hbox>
+						<textbox id="userGroupName" value="@{saction.edmSubscribeUserGroup.userGroupName}" width="200px"/>
+						<image width="15px" height="15px" src="/img/qm.gif" tooltip="popup_userGroupName"/>
+						<popup id="popup_userGroupName" width="200px"> 
+								<label pre="true" value="名称长度小于100个字符"/> 
+						</popup>
+					</hbox>
+				</row>
+				<row>
+					<hbox>用户组类型：<label value="[*]" style="color:red;"/></hbox>
+					<hbox>
+						<listbox id="filterType"  codeset="EDM_TIMING_TYPE" mold="select" selectedItem="@{saction.edmSubscribeUserGroup.filterType}"/>
+					</hbox>
+				</row>
+				<row>
+					<hbox>地域：</hbox>
+					<hbox>
+						<checkbox forEach="${saction.addressList}" label="${each.name}" checked="${each.checked}" onCheck='saction.checkAddress(self.getAttribute("address"), self.checked);'>
+									<custom-attributes address="${each.code}"/>
+						</checkbox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>订阅类型：<label value="[*]" style="color:red;"/></hbox>
+					<hbox><listbox id="userSubscribeType"  codeset="EDM_EMAIL_TYPE" mold="select" selectedItem="@{saction.edmSubscribeUserGroup.userSubscribeType}"/></hbox>
+				</row>
+				<row>
+					<hbox>邮箱验证：</hbox>
+					<hbox><listbox mold="select"
+							model="@{saction.emailIsValidList}"
+							onSelect="saction.edmSubscribeUserGroup.setEmailIsValid(self.selectedItem.value);">
+							<listitem self="@{each='item'}"
+								label="@{item.name }" value="@{item.code}"
+								selected="@{item.checked}" />
+						</listbox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>手机筛选：</hbox>
+					<hbox>
+						<radiogroup selectedItem="@{saction.edmSubscribeUserGroup.emailOrMobile}"><radio label="是" value="Y"/><radio label="否" value="N"/></radiogroup>
+					</hbox>
+				</row>
+				<row>
+					<hbox>手机验证：</hbox>
+					<hbox><listbox mold="select"
+							model="@{saction.mobileIsValidList}"
+							onSelect="saction.edmSubscribeUserGroup.setMobileIsValid(self.selectedItem.value);">
+							<listitem self="@{each='item'}"
+								label="@{item.name }" value="@{item.code}"
+								selected="@{item.checked}" />
+						</listbox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>注册时间：</hbox>
+					<hbox><datebox id="registerDateFrom" value="@{saction.edmSubscribeUserGroup.registerDateFrom}"/>到<datebox id="registerDateTo" value="@{saction.edmSubscribeUserGroup.registerDateTo}"/></hbox>
+				</row>
+				<row>
+					<hbox>登录时间：</hbox>
+					<hbox><datebox id="loginDateFrom"  value="@{saction.edmSubscribeUserGroup.loginDateFrom}"/>到<datebox id="loginDateTo"  value="@{saction.edmSubscribeUserGroup.loginDateTo}"/></hbox>
+				</row>
+				<row>
+					<hbox>最后登录时间：</hbox>
+					<hbox><datebox id="lastLoginFrom"  value="@{saction.edmSubscribeUserGroup.lastLoginFrom}"/>到<datebox id="lastLoginTo"  value="@{saction.edmSubscribeUserGroup.lastLoginTo}"/></hbox>
+				</row>
+				<row>
+					<hbox>下单时间：</hbox>
+					<hbox><datebox id="orderCreateFrom"  value="@{saction.edmSubscribeUserGroup.orderCreateFrom}"/>到<datebox id="orderCreateTo"  value="@{saction.edmSubscribeUserGroup.orderCreateTo}"/></hbox>
+				</row>
+				<row>
+					<hbox>敏感价值区间：</hbox>
+					<hbox><listbox id="sensitiveSegment"  codeset="EDM_SENSITIVE_SEGMENT" mold="select" selectedItem="@{saction.sensitiveSegment}"/></hbox>
+				</row>
+				<row>
+					<hbox>用户类型：</hbox>
+					<hbox><listbox id="userType"  codeset="EDM_USER_DW_TYPE" mold="select" selectedItem="@{saction.edmSubscribeUserGroup.userType}"/></hbox>
+				</row>
+				<row>
+					<hbox>筛选用户SQL：</hbox>
+					<hbox><textbox id="userGroupTrigger" value="@{saction.edmSubscribeUserGroup.userGroupTrigger}" rows="15" width="600px"/></hbox>
+				</row>
+				<row spans="2">
+					<hbox><button id="save" label="保 存"
+							onClick='saction.save();'
+							width="100px"/></hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

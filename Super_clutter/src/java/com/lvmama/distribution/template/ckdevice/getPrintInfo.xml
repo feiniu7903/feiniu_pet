@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<response>
+	<#include "responseHeader.xml">
+	<#if order??>
+	<body>
+		<order>
+			<orderId>${order.orderId}</orderId>
+			<totalquantity>${order.totalQuantity}</totalquantity>
+			<#if order.productList??>
+			<#list order.productList as product>
+			<productList>
+				<product>
+					<productId>${product.productId}</productId>
+					<placeId>${product.placeId}</placeId>
+					<productName>${product.productName}</productName>
+					<productType>${product.productType}</productType>
+					<productPrice>${product.productPrice}</productPrice>
+					<validDate>${product.validDate}</validDate>
+					<amount>${product.amount}</amount>
+					<qrCode>${product.qrCode}</qrCode>
+					<placeName>${product.placeName}</placeName>
+					<productChannel>网络票</productChannel>
+				</product>
+			</productList>
+			</#list>
+			</#if>
+		</order>
+	</body>
+	</#if>
+</response>

@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDSUBSETTLEMENTITEM" >
+	 
+   	<typeAlias alias="OrdSubSettlementItem" type="com.lvmama.finance.settlement.ibatis.po.OrdSubSettlementItem"/>
+	<typeAlias alias="OrderSearchResult" type="com.lvmama.finance.settlement.ibatis.vo.OrderSearchResult"/>
+	<typeAlias alias="OrderProductDetail" type="com.lvmama.finance.settlement.ibatis.vo.OrderProductDetail"/>
+	
+	<resultMap id="SubSettlementItemMap" class="com.lvmama.finance.settlement.ibatis.po.OrdSubSettlementItem" >
+		<result property="orderId" column="orderId"/>
+		<result property="productId" column="productId"/>
+		<result property="productName" column="productName"/>
+		<result property="metaProductId" column="metaProductId"/>
+		<result property="metaProductName" column="metaProductName"/>
+		<result property="productQuantity" column="productQuantity"/>
+		<result property="quantity" column="quantity"/>
+		<result property="pickTicketPerson" column="pickTicketPerson"/>
+		<result property="visitDate" column="visitDate"/>
+		<result property="performTime" column="performTime"/>
+		<result property="itemPrice" column="itemPrice"/>
+		<result property="realItemPrice" column="realItemPrice"/>
+		<result property="realItemPriceSum" column="realItemPriceSum"/>
+		<result property="subSettlementItemId" column="subSettlementItemId"/>
+		<result property="subSettlementId" column="subSettlementId"/>
+		<result property="orderItemMetaId" column="orderItemMetaId"/>
+		<result property="branchName" column="branchName"/>
+		<result property="refundMemos" column="orderItemMetaId" select="ORDSUBSETTLEMENTITEM.searchRefundMemos"/>
+		<result property="productPrice" column="productPrice"/>
+		<result property="supplierId" column="supplierId"/>
+		<result property="supplierName" column="supplierName"/>
+		<result property="payedAmount" column="payedAmount"/>
+		<result property="code" column="code"/>
+		<result property="serialNo" column="serialno"/>
+		<result property="extId" column="extId"/>
+		<result property="createDate" column="createDate"/>
+		<result property="payedTime" column="payedTime"/>
+	</resultMap>
+<!-- 	<resultMap class="com.lvmama.finance.settlement.ibatis.po.OrdSubSettlementItem" id="exportSubSettlementItemMap" extends="SubSettlementItemMap">
+		<result property="remark" select="ORDSUBSETTLEMENTITEM.searchOrdSubSettlementItemModifyChangeRemark" column="subSettlementItemId" />
+	</resultMap> -->
+	
+	<!-- 插入结算子单项 -->   
+	<insert id="insertOrdSubSettlementItem" parameterClass="OrdSubSettlementItem">
+		<selectKey resultClass="long" keyProperty="subSettlementItemId" >
+         	SELECT 
+         		ORD_SUB_SETTLEMENT_IM_ID_SEQ.NEXTVAL AS subSettlementItemId 
+         	FROM 
+         		DUAL
+     	</selectKey>
+		INSERT INTO
+			ORD_SUB_SETTLEMENT_ITEM
+			(
+				SUB_SETTLEMENT_ITEM_ID,
+				SUB_SETTLEMENT_ID,
+				ORDER_ITEM_META_ID,
+				ITEM_PRICE,
+				REAL_ITEM_PRICE,
+				PAY_AMOUNT
+			)
+		VALUES
+			(
+				#subSettlementItemId#,
+				#subSettlementId#,
+				#orderItemMetaId#,
+				#itemPrice#,
+				#realItemPrice#,
+				#payAmount#
+			)
+	</insert>
+	
+	<select id="searchRefundMemos" resultClass="string" parameterClass="long">
+ 		SELECT 
+ 			B.MEMO 
+		FROM 
+			ORD_REFUNDMENT_ITEM A,
+			ORD_REFUNDMENT B 
+		WHERE 
+			A.REFUNDMENT_ID = B.REFUNDMENT_ID 
+		AND 
+			B.STATUS = 'REFUNDED'
+		AND 
+			A.ORDER_ITEM_META_ID = #id#
+	</select>
+	<sql id="searchOrdSubSettlementItem_sql">
+		SELECT 
+	      B.ORDER_ID AS orderId,
+          g.create_time as createDate,
+          g.PAYMENT_TIME as payedTime,
+	      C.PRODUCT_ID AS productId,
+	      C.PRODUCT_NAME AS productName,
+	      B.META_PRODUCT_ID AS metaProductId,
+	      B.PRODUCT_NAME AS metaProductName,
+	      B.PRODUCT_QUANTITY AS productQuantity,
+	      B.QUANTITY AS quantity,
+	      D.NAME AS pickTicketPerson,
+	      B.VISIT_TIME AS visitDate,
+	      E.CREATE_TIME AS performTime,
+	      A.ITEM_PRICE/100 AS itemPrice,
+	      A.REAL_ITEM_PRICE/100 AS realItemPrice,
+	      A.PAY_AMOUNT/100 AS realItemPriceSum,
+	      A.SUB_SETTLEMENT_ITEM_ID AS subSettlementItemId,
+	      A.SUB_SETTLEMENT_ID AS subSettlementId,
+	      A.ORDER_ITEM_META_ID AS orderItemMetaId,
+	      F.BRANCH_NAME AS branchName,
+	      C.PRICE/100 AS productPrice,
+          B.Supplier_Id AS supplierId,
+          S.SUPPLIER_NAME AS supplierName,
+          g.actual_pay as actualPay,
+          B.PAYED_AMOUNT/100 AS payedAmount,
+       	  t3.code as code,
+          t3.ext_id as extId,
+       	  t3.serialno as serialno
+	 	FROM 
+	    <isEqual property="type" compareValue="1">
+	    	ORD_SUB_SETTLEMENT AA,
+	    </isEqual>
+	      ORD_SUB_SETTLEMENT_ITEM A,
+	      ORD_ORDER_ITEM_META B,
+	      ORD_ORDER_ITEM_PROD C,
+	      META_PRODUCT_BRANCH F,
+          ord_order g,
+          SUP_SUPPLIER S,
+	      (SELECT OBJECT_ID,NAME FROM  ORD_PERSON DT WHERE OBJECT_TYPE = 'ORD_ORDER' AND PERSON_TYPE = 'CONTACT' ) D,
+	      (SELECT OBJECT_ID,CREATE_TIME FROM ORD_PERFORM ET WHERE ET.OBJECT_TYPE = 'ORD_ORDER_ITEM_META') E,
+       	  (SELECT * FROM PASS_CODE TBL WHERE 
+			<isNotEqual property="serialNo" compareValue="0">	
+				TBL.OBJECT_TYPE = 'ORD_ORDER_ITEM_META' AND 
+			</isNotEqual>
+			<isEqual property="serialNo" compareValue="0">
+				TBL.OBJECT_TYPE = 'ORD_ORDER' AND 
+			</isEqual>
+       	  	TBL.STATUS = 'SUCCESS') T3
+	    WHERE 
+     	<isEqual property="type" compareValue="1">
+	      	AA.SUB_SETTLEMENT_ID = A.SUB_SETTLEMENT_ID
+	    AND
+	    </isEqual>
+	      A.ORDER_ITEM_META_ID = B.ORDER_ITEM_META_ID 
+		<isNotEqual property="serialNo" compareValue="0">	
+			AND 
+  					B.order_item_meta_id = t3.object_id(+)
+		</isNotEqual>
+		<isEqual property="serialNo" compareValue="0">
+			AND 
+  					B.order_id = t3.object_id(+)
+		</isEqual>
+	    AND
+	      B.ORDER_ITEM_ID = C.ORDER_ITEM_PROD_ID
+	    AND
+	      B.ORDER_ID = D.OBJECT_ID(+)
+        and 
+        	g.order_id = b.order_id
+	    AND 
+	      B.ORDER_ITEM_META_ID = E.OBJECT_ID(+) 
+	    AND
+	      B.META_BRANCH_ID = F.META_BRANCH_ID
+        AND 
+          B.SUPPLIER_ID = S.SUPPLIER_ID
+	    AND
+	    <isEqual property="type" compareValue="1">
+	   		AA.SETTLEMENT_ID = #settlementId#
+	    </isEqual>
+	    <isEqual property="type" compareValue="2">
+	    	A.SUB_SETTLEMENT_ID = #subSettlementId#
+	    </isEqual>
+	    <isNotEmpty property="orderId" prepend="AND">
+			B.ORDER_ID  = #orderId#
+		</isNotEmpty>
+	    <isNotEmpty property="visitTimeBegin" prepend="AND">
+			B.VISIT_TIME &gt;= TRUNC(TO_DATE(#visitTimeBegin#,'YYYY-MM-DD'))
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd" prepend="AND">
+			B.VISIT_TIME &lt; TRUNC(TO_DATE(#visitTimeEnd#,'YYYY-MM-DD') + 1)
+		</isNotEmpty>
+		
+	</sql>
+	
+	<select id="searchOrdSubSettlementItemList" parameterClass="map" resultClass="com.lvmama.finance.settlement.ibatis.po.OrdSubSettlementItem">
+		SELECT 
+	      	j.paymentTime,
+            g.create_time as createDate,
+            g.PAYMENT_TIME as payedTime,
+	       	B.Supplier_Id AS supplierId,
+	       	S.SUPPLIER_NAME AS supplierName,
+	       	B.ORDER_ID AS orderId,
+	       	B.VISIT_TIME AS visitDate,
+	       	C.PRODUCT_NAME AS productName,
+	       	C.PRODUCT_ID AS productId,
+	       	B.PRODUCT_NAME AS metaProductName,
+	       	B.META_PRODUCT_ID AS metaProductId,
+	       	B.PRODUCT_QUANTITY AS productQuantity,
+	       	B.QUANTITY AS quantity,
+	       	C.PRICE / 100 AS productPrice,
+	       	A.REAL_ITEM_PRICE / 100 AS realItemPrice,
+	       	g.actual_pay/100 as actualPay,
+	       	A.PAY_AMOUNT / 100 AS realItemPriceSum,
+	       	D.NAME AS pickTicketPerson,
+	       	h.target_name AS settlementTargetName,
+       		com1.item_name AS settlementPeriod,
+       		com2.item_name AS settlementCompanyName,
+	       	i.bank_name AS bankName,
+	       	i.bank_account_name AS bankAccountName,
+	       	i.bank_account AS bankAccount,
+	       	B.PAYED_AMOUNT/100 AS payedAmount,
+       		t3.code as code,
+            t3.ext_id as extId,
+       		t3.serialno as serialno,
+       		tbl_user.real_name as manager,
+            com3.item_name as productType,
+            com4.ITEM_NAME as subProductType,
+            COM5.ITEM_NAME AS filialeName
+	 	FROM 
+	    	ORD_SUB_SETTLEMENT AA,
+	      	ORD_SUB_SETTLEMENT_ITEM A,
+	       	ORD_ORDER_ITEM_META B,
+	       	ORD_ORDER_ITEM_PROD C,
+            PROD_PRODUCT D,
+	       	META_PRODUCT_BRANCH F,
+	       	ord_order g,
+	       	ord_settlement h,
+	       	sup_settlement_target i,
+	       	SUP_SUPPLIER S,
+	       	(SELECT OBJECT_ID, NAME FROM ORD_PERSON DT WHERE OBJECT_TYPE = 'ORD_ORDER' AND PERSON_TYPE = 'CONTACT') D,
+	       	(select min(operatetime) as paymentTime from ord_settlement_payment t1 where t1.settlement_id = #settlementId#) j,
+       		com_code com1,
+       		com_code com2,
+       		com_code com3,
+            com_code com4,
+            com_code com5,
+       		lvmama_pet.perm_user tbl_user,
+       		meta_product tbl_prod,
+       		(SELECT * FROM PASS_CODE TBL WHERE 
+			<isNotEqual property="serialNo" compareValue="0">	
+				TBL.OBJECT_TYPE = 'ORD_ORDER_ITEM_META' AND 
+			</isNotEqual>
+			<isEqual property="serialNo" compareValue="0">
+				TBL.OBJECT_TYPE = 'ORD_ORDER' AND 
+			</isEqual>
+				 TBL.STATUS = 'SUCCESS') T3
+	    WHERE 
+     <!-- 	<isEqual property="type" compareValue="1"> -->
+	      	AA.SUB_SETTLEMENT_ID = A.SUB_SETTLEMENT_ID
+   		
+		<isNotEqual property="serialNo" compareValue="0">	
+			AND 
+  					B.order_item_meta_id = t3.object_id(+)
+		</isNotEqual>
+		<isEqual property="serialNo" compareValue="0">
+			AND 
+  					B.order_id = t3.object_id(+)
+		</isEqual>
+	    AND
+	    	H.SETTLEMENT_ID = AA.SETTLEMENT_ID
+	    AND
+	   <!--  </isEqual>-->
+	      	A.ORDER_ITEM_META_ID = B.ORDER_ITEM_META_ID
+	    AND 
+	    	B.META_PRODUCT_ID = tbl_prod.META_PRODUCT_ID
+	    AND 
+	    	tbl_prod.MANAGER_ID = tbl_user.USER_ID
+	    AND 
+	    	C.PRODUCT_TYPE = COM3.ITEM_CODE
+	    AND 
+	    	COM3.SET_CODE = 'PRODUCT_TYPE'
+	    AND 
+	    	COM5.SET_CODE = 'FILIALE_NAME'
+	    AND 
+	    	COM5.ITEM_CODE = D.FILIALE_NAME
+		AND 
+			B.ORDER_ITEM_ID = C.ORDER_ITEM_PROD_ID
+	   	AND 
+	   		B.ORDER_ID = D.OBJECT_ID(+)
+        AND 
+        	C.PRODUCT_ID = D.PRODUCT_ID
+        AND 
+        	COM4.SET_CODE = 'SUB_PRODUCT_TYPE'
+        AND 
+        	COM4.ITEM_CODE = D.SUB_PRODUCT_TYPE
+	   	AND 
+	   		B.META_BRANCH_ID = F.META_BRANCH_ID
+	   	AND 
+	   		B.SUPPLIER_ID = S.SUPPLIER_ID
+	   	and 
+	   		g.order_id = b.order_id
+	   	and 
+	   		i.target_id = h.target_id
+   		and 
+   			com1.set_code = 'SETTLEMENT_PERIOD'
+   		and 
+   			com1.item_code = h.settlement_period
+  	 	and 
+  	 		com2.set_code = 'SETTLEMENT_COMPANY'
+   		and 
+   			com2.item_code = h.company_id
+	   	AND 
+	   		h.settlement_id = aa.settlement_id
+	    <isEqual property="type" compareValue="1" prepend="and">
+	   		AA.SETTLEMENT_ID = #settlementId#
+	    </isEqual>
+	    <isEqual property="type" compareValue="2" prepend="and">
+	    	A.SUB_SETTLEMENT_ID = #subSettlementId#
+	    </isEqual>
+	    <isNotEmpty property="orderId" prepend="AND">
+			B.ORDER_ID  = #orderId#
+		</isNotEmpty>
+	    <isNotEmpty property="visitTimeBegin" prepend="AND">
+			B.VISIT_TIME &gt;= TRUNC(TO_DATE(#visitTimeBegin#,'YYYY-MM-DD'))
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd" prepend="AND">
+			B.VISIT_TIME &lt; TRUNC(TO_DATE(#visitTimeEnd#,'YYYY-MM-DD') + 1)
+		</isNotEmpty>
+	</select>
+	
+	<select id="searchOrdSubSettlementItemProductList" parameterClass="map" resultClass="com.lvmama.finance.settlement.ibatis.po.OrdSubSettlementItem">
+		select tbl1.*, tbl2.paymentTime from 
+		(SELECT 
+	      	AA.SETTLEMENT_ID,
+            g.create_time as createDate,
+            g.PAYMENT_TIME as payedTime,
+	       	B.Supplier_Id AS supplierId,
+	       	S.SUPPLIER_NAME AS supplierName,
+	       	B.ORDER_ID AS orderId,
+	       	B.VISIT_TIME AS visitDate,
+	       	C.PRODUCT_NAME AS productName,
+	       	C.PRODUCT_ID AS productId,
+	       	B.PRODUCT_NAME AS metaProductName,
+	       	B.META_PRODUCT_ID AS metaProductId,
+	       	B.PRODUCT_QUANTITY AS productQuantity,
+	       	B.QUANTITY AS quantity,
+	       	C.PRICE / 100 AS productPrice,
+	       	A.REAL_ITEM_PRICE / 100 AS realItemPrice,
+	       	g.actual_pay/100 as actualPay,
+	       	A.PAY_AMOUNT / 100 AS realItemPriceSum,
+	       	D.NAME AS pickTicketPerson,
+	       	h.target_name AS settlementTargetName,
+       		com1.item_name AS settlementPeriod,
+       		com2.item_name AS settlementCompanyName,
+	       	i.bank_name AS bankName,
+	       	i.bank_account_name AS bankAccountName,
+	       	i.bank_account AS bankAccount,
+	       	B.PAYED_AMOUNT/100 AS payedAmount,
+            t3.code as code,
+            t3.ext_id as extId,
+            t3.serialno as serialno,
+            tbl_user.real_name as manager,
+            com3.ITEM_NAME as productType,
+            com4.ITEM_NAME as subProductType,
+            COM5.ITEM_NAME AS filialeName
+	 	FROM 
+	    	ORD_SUB_SETTLEMENT AA,
+	      	ORD_SUB_SETTLEMENT_ITEM A,
+	       	ORD_ORDER_ITEM_META B,
+	       	ORD_ORDER_ITEM_PROD C,
+            PROD_PRODUCT D,
+	       	META_PRODUCT_BRANCH F,
+	       	ord_order g,
+	       	ord_settlement h,
+	       	sup_settlement_target i,
+	       	SUP_SUPPLIER S,
+	       	(SELECT OBJECT_ID, NAME FROM ORD_PERSON DT WHERE OBJECT_TYPE = 'ORD_ORDER' AND PERSON_TYPE = 'CONTACT') D,
+       		com_code com1,
+       		com_code com2,
+       		com_code com3,
+            com_code com4,
+            com_code com5,
+       		lvmama_pet.perm_user tbl_user,
+       		meta_product tbl_prod,
+            (SELECT * FROM PASS_CODE TBL WHERE TBL.OBJECT_TYPE = 'ORD_ORDER_ITEM_META' AND TBL.STATUS = 'SUCCESS') T3
+	    WHERE 
+	      	AA.SUB_SETTLEMENT_ID = A.SUB_SETTLEMENT_ID
+        AND 
+        	B.order_item_meta_id = t3.object_id(+)
+        AND 
+        	C.PRODUCT_ID = D.PRODUCT_ID
+        AND 
+        	COM4.SET_CODE = 'SUB_PRODUCT_TYPE'
+        AND 
+        	COM4.ITEM_CODE = D.SUB_PRODUCT_TYPE
+	    AND 
+	    	B.META_PRODUCT_ID = tbl_prod.META_PRODUCT_ID
+	    AND 
+	    	tbl_prod.MANAGER_ID = tbl_user.USER_ID
+	    AND 
+	    	C.PRODUCT_TYPE = COM3.ITEM_CODE
+	    AND 
+	    	COM3.SET_CODE = 'PRODUCT_TYPE'
+	    AND 
+	    	COM5.SET_CODE = 'FILIALE_NAME'
+	    AND 
+	    	COM5.ITEM_CODE = D.FILIALE_NAME
+	    AND
+	      	A.ORDER_ITEM_META_ID = B.ORDER_ITEM_META_ID
+		AND 
+			B.ORDER_ITEM_ID = C.ORDER_ITEM_PROD_ID
+	   	AND 
+	   		B.ORDER_ID = D.OBJECT_ID(+)
+	   	AND 
+	   		B.META_BRANCH_ID = F.META_BRANCH_ID
+	   	AND 
+	   		B.SUPPLIER_ID = S.SUPPLIER_ID
+	   	and 
+	   		g.order_id = b.order_id
+	   	and 
+	   		h.settlement_id = aa.settlement_id
+	   	and 
+	   		i.target_id = h.target_id
+   		and 
+   			com1.set_code = 'SETTLEMENT_PERIOD'
+   		and 
+   			com1.item_code = h.settlement_period
+  	 	and 
+  	 		com2.set_code = 'SETTLEMENT_COMPANY'
+   		and 
+   			com2.item_code = h.company_id
+	   	AND 
+	    <isEqual property="exporttype" compareValue="2">
+	   		AA.SETTLEMENT_ID IN ($settlementIds$)
+   		</isEqual>
+	    <isEqual property="type" compareValue="1">
+	    	AA.SETTLEMENT_ID = #settlementId#
+	    </isEqual>
+	    <isEqual property="type" compareValue="2">
+	    	A.SUB_SETTLEMENT_ID = #subSettlementId#
+	    </isEqual>
+	    <isNotEmpty property="orderId" prepend="AND">
+			B.ORDER_ID  = #orderId#
+		</isNotEmpty>
+	    <isNotEmpty property="visitTimeBegin" prepend="AND">
+			B.VISIT_TIME &gt;= TRUNC(TO_DATE(#visitTimeBegin#,'YYYY-MM-DD'))
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd" prepend="AND">
+			B.VISIT_TIME &lt; TRUNC(TO_DATE(#visitTimeEnd#,'YYYY-MM-DD') + 1)
+		</isNotEmpty>
+		) tbl1,
+       (select t.settlement_id, max(t.operatetime) as paymentTime from ord_settlement_payment t group by t.settlement_id) tbl2
+ 		where 
+ 			tbl1.settlement_id = tbl2.settlement_id(+)
+	</select>
+	
+	<select id="searchOrdSubSettlementItemModifyChangeRemark" parameterClass="long" resultClass="string">
+		SELECT 
+			REMARK AS remark
+  		FROM
+  			(SELECT 
+  				D.* 
+  			FROM 
+  				ORD_SETTLEMENT_CHANGE D 
+  			WHERE 
+  				CHANGETYPE = 'MODIFY' 
+  			AND 
+  				D.SUB_SETTLEMENT_ITEM_ID = #id# 
+  			ORDER BY 
+  				CREATETIME DESC)
+ 		WHERE ROWNUM = 1 
+	</select>
+ 	<!-- 查询结算子单项begin -->
+   <select id="searchOrdSubSettlementItem" parameterClass="map" resultMap="SubSettlementItemMap">
+		<include refid="pageSearchHead"/>
+		<include refid="searchOrdSubSettlementItem_sql"/>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<sql id="searchitem_countwheresql">
+	 FROM 
+	    <isEqual property="type" compareValue="1">
+	    	ORD_SUB_SETTLEMENT AA,
+	    </isEqual>
+	      ORD_SUB_SETTLEMENT_ITEM A,
+	      ORD_ORDER_ITEM_META B
+		WHERE 
+     	<isEqual property="type" compareValue="1">
+	      	AA.SUB_SETTLEMENT_ID = A.SUB_SETTLEMENT_ID
+	    AND
+	    </isEqual>
+	   		A.ORDER_ITEM_META_ID = B.ORDER_ITEM_META_ID
+	    AND
+	    <isEqual property="type" compareValue="1">
+	   		AA.SETTLEMENT_ID = #settlementId#
+	    </isEqual>
+	    <isEqual property="type" compareValue="2">
+	    	A.SUB_SETTLEMENT_ID = #subSettlementId#
+	    </isEqual>
+     	<isNotEmpty property="orderId" prepend="AND">
+			B.ORDER_ID  = #orderId#
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeBegin" prepend="AND">
+			B.VISIT_TIME &gt;= TRUNC(TO_DATE(#visitTimeBegin#,'YYYY-MM-DD'))
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd" prepend="AND">
+			B.VISIT_TIME &lt; TRUNC(TO_DATE(#visitTimeEnd#,'YYYY-MM-DD') + 1)
+		</isNotEmpty>
+	</sql>
+	<select id="searchOrdSubSettlementItemCount" parameterClass="map" resultClass="int">
+		SELECT 
+			COUNT(*) as count
+		<include refid="searchitem_countwheresql"/>
+	</select>
+	<!-- 查询结算子单项end -->
+	
+	
+	<select id="searchOrdSubSettlementItemSumprice" parameterClass="map" resultClass="java.lang.Double">
+		SELECT 
+			SUM(A.PAY_AMOUNT)/100 as sumprice
+		<include refid="searchitem_countwheresql"/>
+	</select>
+	
+	
+	<!-- 删除结算子单项begin -->
+	<delete id="deleteOrdSubSettlementItem" parameterClass="long">
+		DELETE FROM 
+			ORD_SUB_SETTLEMENT_ITEM
+		WHERE
+			PAY_AMOUNT &gt;= 0 
+		AND
+			SUB_SETTLEMENT_ID = #id#
+			
+	</delete>
+	<!-- 删除结算子单项end -->
+	<!-- 修改实际结算价begin -->
+ 	<update id="modifyPrice" parameterClass="OrdSubSettlementItem">
+   	UPDATE 
+   		ORD_SUB_SETTLEMENT_ITEM A
+   	SET
+   		REAL_ITEM_PRICE = #realItemPrice#*100,
+   		A.PAY_AMOUNT = (SELECT 
+							BT.QUANTITY*BT.PRODUCT_QUANTITY*#realItemPrice#*100
+						FROM 
+							ORD_ORDER_ITEM_META BT
+						WHERE 
+							BT.ORDER_ITEM_META_ID = A.ORDER_ITEM_META_ID
+						)
+   	WHERE	
+   		SUB_SETTLEMENT_ITEM_ID = #subSettlementItemId#
+   </update>
+   <!-- 修改实际结算价end -->
+   <!-- 批量修改结算价begin -->
+   <update id="batchModifyPrice" parameterClass="map">
+   	UPDATE 
+   		ORD_SUB_SETTLEMENT_ITEM  A 
+	SET 
+		A.REAL_ITEM_PRICE = #amount#*100,
+		A.PAY_AMOUNT = (SELECT 
+							BT.QUANTITY*BT.PRODUCT_QUANTITY*#amount#*100
+						FROM 
+							ORD_ORDER_ITEM_META BT
+						WHERE 
+							BT.ORDER_ITEM_META_ID = A.ORDER_ITEM_META_ID
+						)
+	WHERE  
+		A.SUB_SETTLEMENT_ID = #subSettlementId# 
+	AND
+		A.PAY_AMOUNT &gt;= 0
+	AND 
+		EXISTS (
+			SELECT 
+				'*' 
+			FROM 
+				ORD_ORDER_ITEM_META B 
+			WHERE 
+				A.ORDER_ITEM_META_ID = B.ORDER_ITEM_META_ID 
+			AND 
+				B.META_PRODUCT_ID = #metaProductId#
+		)
+   </update>
+   <!-- 批量修改结算价end -->
+   
+   
+   <delete id="batchDelete" parameterClass="map">
+   	DELETE FROM 
+   		ORD_SUB_SETTLEMENT_ITEM
+   	WHERE
+   		SUB_SETTLEMENT_ITEM_ID IN
+   	<iterate conjunction="," property="ids" open="(" close=")">
+   		#ids[]#
+   	</iterate>
+   </delete>
+   
+   <select id="searchOrder" parameterClass="map" resultClass="OrderSearchResult">
+ 	SELECT 
+ 		B.ORDER_ITEM_META_ID AS orderItemMetaId,
+        B.ORDER_ID AS orderId,
+        C.PRODUCT_ID AS productId,
+        C.PRODUCT_NAME AS productName,
+        B.META_PRODUCT_ID AS metaProductId,
+        B.PRODUCT_NAME AS metaProductName,
+        B.PRODUCT_QUANTITY AS productQuantity,
+        B.QUANTITY AS quantity,
+        D.NAME AS pickTicketPerson,
+        B.VISIT_TIME AS visitDate,
+        E.CREATE_TIME AS performTime,
+        B.ACTUAL_SETTLEMENT_PRICE/100 AS settlementPrice,
+        (B.ACTUAL_SETTLEMENT_PRICE/100)*B.QUANTITY*B.PRODUCT_QUANTITY AS settlementPriceSum,
+        F.STATUS,
+        F.SETTLEMENT_QUEUE_ITEM_ID AS settlementQueueItemId,
+        G.TARGET_ID as targetId,
+        H.ORDER_STATUS AS orderStatus,
+        B.SETTLEMENT_STATUS AS settlementStatus
+      FROM 
+	      ORD_ORDER_ITEM_META B,
+	      ORD_ORDER_ITEM_PROD C,
+	      ORD_PERSON D,
+	      ORD_PERFORM E,
+        ORD_SETTLEMENT_QUEUE_ITEM F,
+        META_SETTLEMENT G,
+        ORD_ORDER H,
+        ORD_SETTLEMENT I
+      WHERE
+		B.META_PRODUCT_ID = G.META_PRODUCT_ID
+		AND
+        B.ORDER_ID = H.ORDER_ID
+      AND
+	    B.ORDER_ITEM_ID = C.ORDER_ITEM_PROD_ID
+	  AND
+	      B.ORDER_ID = D.OBJECT_ID(+)
+	  AND 
+	      B.ORDER_ITEM_META_ID = E.ORDER_ITEM_META_ID(+)
+      AND 
+        B.ORDER_ITEM_META_ID = F.ORDER_ITEM_META_ID(+)
+	  AND 
+	      D.OBJECT_TYPE = 'ORD_ORDER'
+	  AND
+	      D.PERSON_TYPE = 'CONTACT'
+	  AND
+	  	I.TARGET_ID = G.TARGET_ID
+	  AND 
+		H.PAYMENT_STATUS = 'PAYED'
+      AND
+      	(H.TRAVEL_GROUP_CODE IS NULL OR EXISTS (SELECT 1 FROM OP_TRAVEL_GROUP OTG,PROD_ROUTE PR WHERE OTG.TRAVEL_GROUP_CODE = H.TRAVEL_GROUP_CODE AND OTG.PRODUCT_ID = PR.PRODUCT_ID AND PR.GROUP_TYPE = 'AGENCY'))
+      AND
+      	B.ORDER_ID = #orderId#
+      AND
+      	I.SETTLEMENT_ID = #settlementId#
+   </select>
+   
+   <update id="modifyTotalPrice" parameterClass="map">
+   		UPDATE 
+   			ORD_SUB_SETTLEMENT_ITEM 
+   		SET 
+   			PAY_AMOUNT = #realItemPriceSum#*100,
+   			REAL_ITEM_PRICE = #realItemPriceSum# / #totalQuantity# * 100
+   		WHERE 
+   			SUB_SETTLEMENT_ITEM_ID = #subSettlementItemId#
+   </update>
+   
+   <select id="queryPayAmount" parameterClass="long" resultClass="java.lang.Double">
+   		SELECT 
+   			SUM(A.PAY_AMOUNT) / 100 as sumprice
+  		FROM 
+  			ORD_SUB_SETTLEMENT      AA,
+       		ORD_SUB_SETTLEMENT_ITEM A
+ 		WHERE 
+ 			AA.SUB_SETTLEMENT_ID = A.SUB_SETTLEMENT_ID
+   		AND 
+   			AA.SETTLEMENT_ID = #settlementId#
+   </select>
+   
+   <update id="modifyPayAmount" parameterClass="map">
+   		UPDATE 
+   			ORD_SETTLEMENT 
+   		SET 
+   			PAY_AMOUNT = #amount# * 100
+   		WHERE 
+   			SETTLEMENT_ID = #settlementId#
+   </update>
+</sqlMap>
+   

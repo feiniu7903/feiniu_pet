@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="DISTRIBUTOR_INFO" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributorInfo" >
+    <result column="DISTRIBUTOR_INFO_ID" property="distributorInfoId" />
+    <result column="DISTRIBUTOR_CODE" property="distributorCode" />
+    <result column="DISTRIBUTOR_NAME" property="distributorName" />
+    <result column="DISTRIBUTOR_KEY" property="distributorKey" />
+    <result column="CHANNEL_CODE" property="channelCode" />
+    <result column="IS_REGISTER_USER" property="isRegisterUser" />
+    <result column="REMARK" property="remark" />
+    <result column="IS_PUSH_UPDATE" property="isPushUpdate" />
+    <result column="IS_ADD_NEWPROD" property="isAddNewprod"/>
+  </resultMap>
+  
+  
+  <select id="selectByDistributorId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  		SELECT * FROM DISTRIBUTOR_INFO DI WHERE DI.DISTRIBUTOR_INFO_ID =#distributorId#
+  </select>
+  <select id="selectByDistributorCode" resultMap="BaseResultMap" parameterClass="java.lang.String">
+  		SELECT * FROM DISTRIBUTOR_INFO DI WHERE DI.DISTRIBUTOR_CODE =#distributorCode#
+  </select>
+  
+   <select id="selectByDistributorChannel" resultMap="BaseResultMap" parameterClass="java.lang.String">
+  		SELECT * FROM DISTRIBUTOR_INFO DI WHERE DI.CHANNEL_CODE=#channelCode#
+  </select>
+  
+  <select id="selectByProductIdAndProductBranchId" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  		SELECT distinct DI.* 
+  		FROM DISTRIBUTOR_INFO DI , DISTRIBUTION_PRODUCT DP 
+		WHERE DI.DISTRIBUTOR_INFO_ID = DP.DISTRIBUTOR_INFO_ID
+		<isNotEmpty prepend="AND" property="productId">
+			DP.PRODUCT_ID =#productId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="productBranchId">
+			DP.PRODUCT_BRANCH_ID = #productBranchId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="volid">
+			DP.VOLID = #volid#
+		</isNotEmpty>
+  </select>
+  
+  <select id="getAllDistributors" resultMap="BaseResultMap">
+  		SELECT * FROM DISTRIBUTOR_INFO ORDER BY DISTRIBUTOR_INFO_ID ASC
+  </select>
+  
+  <sql id="queryDistributorInfoSQL">
+  		SELECT * FROM DISTRIBUTOR_INFO DI
+  		 WHERE 1=1
+  		<isNotEmpty property="distributorName" prepend="and">
+			DI.DISTRIBUTOR_NAME LIKE '%' ||#distributorName#|| '%' 
+		</isNotEmpty>
+		<isNotEmpty property="distributorInfoId" prepend="and">
+			DI.DISTRIBUTOR_INFO_ID = #distributorInfoId#
+		</isNotEmpty>  		 
+  		ORDER BY DISTRIBUTOR_INFO_ID ASC
+  </sql>
+  
+  <select id="queryDistributorInfoPageListOrderBy" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		SELECT * FROM (SELECT T.*,ROWNUM RN FROM ( 
+		<include refid="queryDistributorInfoSQL"/>
+		)T )TT WHERE TT.RN &gt;=#start# and TT.RN &lt;=#end#
+  </select>
+  
+  
+  <select id="queryDistributorInfoCount" parameterClass="java.util.Map" resultClass="java.lang.Integer" >
+  		SELECT COUNT(1) FROM(
+		<include refid="queryDistributorInfoSQL"/>
+		)
+  </select>
+    
+   <insert id="insert" parameterClass="com.lvmama.comm.bee.po.distribution.DistributorInfo">
+	  	<selectKey  keyProperty="distributorInfoId" resultClass="Long"> SELECT DISTRIBUTOR_INFO_ID_SEQ.NEXTVAL FROM DUAL</selectKey>
+		INSERT INTO DISTRIBUTOR_INFO(DISTRIBUTOR_INFO_ID,DISTRIBUTOR_CODE,DISTRIBUTOR_NAME,DISTRIBUTOR_KEY,CHANNEL_CODE,REMARK,IS_REGISTER_USER,IS_PUSH_UPDATE,IS_ADD_NEWPROD) 
+		VALUES (#distributorInfoId#,#distributorCode#,#distributorName#,#distributorKey#,#channelCode#,#remark#,#isRegisterUser#,#isPushUpdate#,#isAddNewprod#)
+  </insert>
+  
+  <update id="update" parameterClass="com.lvmama.comm.bee.po.distribution.DistributorInfo">
+		UPDATE DISTRIBUTOR_INFO DI
+		<dynamic prepend="SET">  
+			<isNotEmpty prepend="," property="distributorCode">
+				DI.DISTRIBUTOR_CODE=#distributorCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="distributorName">
+				DI.DISTRIBUTOR_NAME=#distributorName#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="distributorKey">
+				DI.DISTRIBUTOR_KEY=#distributorKey#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="channelCode">
+				DI.CHANNEL_CODE=#channelCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="remark">
+				DI.REMARK=#remark#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isRegisterUser">
+				DI.IS_REGISTER_USER=#isRegisterUser#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isPushUpdate">
+				DI.IS_PUSH_UPDATE=#isPushUpdate#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isAddNewprod">
+				DI.IS_ADD_NEWPROD=#isAddNewprod#
+			</isNotEmpty>
+		</dynamic>
+		WHERE DI.DISTRIBUTOR_INFO_ID=#distributorInfoId#
+  </update>
+  
+  <select id="selectByOrderId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+  		select * from distributor_info where channel_code =
+			(select channel from ord_order where order_id=#orderId#)
+  </select>
+</sqlMap>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EBK_HOUSE_PRICE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ebooking.EbkHousePrice" >
+    <result column="HOUSE_PRICE_ID" property="housePriceId"/>
+    <result column="SUPPLIER_ID" property="supplierId"/>
+    <result column="META_PRODUCT_ID" property="metaProductId"/>
+    <result column="META_BRANCH_ID" property="metaBranchId"/>
+    <result column="SUBJECT" property="subject"/>
+    <result column="START_DATE" property="startDate"/>
+    <result column="END_DATE" property="endDate"/>
+    <result column="APPLY_WEEK" property="applyWeek"/>
+    <result column="SETTLEMENT_PRICE" property="settlementPrice"/>
+    <result column="SUGGEST_PRICE" property="suggestPrice"/>
+    <result column="MARKET_PRICE" property="marketPrice"/>
+    <result column="BREAKFAST_COUNT" property="breakfastCount"/>
+    <result column="SUBMIT_USER" property="submitUser"/>
+    <result column="CREATE_TIME" property="createTime"/>
+    <result column="STATUS" property="status"/>
+    <result column="CONFIRM_USER" property="confirmUser"/>
+    <result column="CONFIRM_TIME" property="confirmTime"/>
+  	<result column="MEMO" property="memo"/>
+    <result column="STOCK_ADD_OR_MINUS" property="stockAddOrMinus"/>
+    <result column="IS_OVERSALE" property="isOverSale"/>
+    <result column="IS_ADD_DAYSTOCK" property="isAddDayStock"/>      
+    <result column="IS_STOCK_ZERO" property="isStockZero"/>
+    <result column="PRODUCT_TYPE" property="productType"/>
+    <result column="APPLY_TYPE" property="applyType"/>     
+   </resultMap>
+   
+   <resultMap id="BaseResultMap2" class="com.lvmama.comm.bee.po.ebooking.EbkHousePrice"  extends="BaseResultMap">
+       <result column="BRANCH_NAME" property="branchName"/>      
+       <result column="SUPPLIER_NAME" property="supplierName"/>
+       <result column="PRODUCT_NAME" property="productName"/>
+   </resultMap>
+  <sql id="Example_Where_Clause" >
+    <dynamic prepend="WHERE">
+       <isNotEmpty prepend="AND" property="housePriceId">
+             HOUSE_PRICE_ID = #housePriceId#
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="supplierId">
+             SUPPLIER_ID = #supplierId#
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="metaProductId">
+             META_PRODUCT_ID = #metaProductId#
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="submitUser">
+             SUBMIT_USER like '%'||#submitUser#||'%' 
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="confirmUser">
+             SUBMIT_USER like '%'||#confirmUser#||'%' 
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="subject">
+             SUBJECT like '%'||#subject#||'%' 
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="excludeAduitStatus">
+       	  <![CDATA[ STATUS not in ]]>
+          <iterate property="excludeAduitStatus" conjunction="," open="(" close=")">
+              #excludeAduitStatus[]#
+          </iterate>
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="includeAduitStatus">
+       	  <![CDATA[ STATUS in ]]>
+          <iterate property="includeAduitStatus" conjunction="," open="(" close=")">
+              #includeAduitStatus[]#
+          </iterate>
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="status">
+       	     STATUS = #status#
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="createTimeBegin">
+       	     CREATE_TIME  &gt;= to_date(#createTimeBegin#, 'yyyy-mm-dd')
+       </isNotEmpty>
+        <isNotEmpty prepend="AND" property="createTimeEnd">
+       	     CREATE_TIME  &lt;= to_date(#createTimeEnd#||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss')
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="confirmTimeBegin">
+       	     CREATE_TIME  &gt;= to_date(#confirmTimeBegin#, 'yyyy-mm-dd')
+       </isNotEmpty>
+        <isNotEmpty prepend="AND" property="confirmTimeEnd">
+       	     CREATE_TIME  &lt;= to_date(#confirmTimeEnd#||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss')
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="confirmTimeEnd">
+       	     CREATE_TIME  &lt;= to_date(#confirmTimeEnd#||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss')
+       </isNotEmpty>
+       <isNotEmpty prepend="AND" property="productType">      
+        	 PRODUCT_TYPE = #productType#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="productName">
+     	     PRODUCT_NAME = #productName#
+       </isNotEmpty>
+		<isNotEmpty prepend="AND" property="applyType">
+       	     APPLY_TYPE = #applyType#
+       </isNotEmpty>
+    </dynamic>	
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap2" parameterClass="java.util.Map" >
+    <include refid="pageSearchHead"/>
+     select * from (
+    select e.*,s.supplier_name,mp.product_name,mpb.branch_name
+    from EBK_HOUSE_PRICE e,SUP_SUPPLIER s ,meta_product mp,meta_product_branch mpb
+    where   e.supplier_id = s.supplier_id 
+    and e.meta_product_id=mp.meta_product_id 
+    and e.meta_branch_id=mpb.meta_branch_id
+    )
+    <include refid="EBK_HOUSE_PRICE.Example_Where_Clause" />
+    <include refid="pageSearchFoot"/>
+   </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select *
+    from EBK_HOUSE_PRICE
+    where HOUSE_PRICE_ID = #housePriceId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    delete from EBK_HOUSE_PRICE
+    where HOUSE_PRICE_ID = #housePriceId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkHousePrice" >
+    <selectKey keyProperty="housePriceId" resultClass="java.lang.Long">
+		SELECT EBK_HOUSE_PRICE_SEQ.NEXTVAL FROM DUAL
+	</selectKey>
+    insert into EBK_HOUSE_PRICE (HOUSE_PRICE_ID, SUPPLIER_ID, META_PRODUCT_ID, META_BRANCH_ID,
+      SUBJECT, START_DATE, END_DATE, APPLY_WEEK, SETTLEMENT_PRICE, SUGGEST_PRICE, MARKET_PRICE,
+      BREAKFAST_COUNT, SUBMIT_USER, CREATE_TIME, STATUS, CONFIRM_USER, CONFIRM_TIME, MEMO,
+      STOCK_ADD_OR_MINUS,IS_OVERSALE,IS_ADD_DAYSTOCK,IS_STOCK_ZERO,APPLY_TYPE,PRODUCT_TYPE)
+    values (#housePriceId#, #supplierId#, #metaProductId#,#metaBranchId#, #subject#, #startDate#,
+     #endDate#,#applyWeek#, #settlementPrice#, #suggestPrice#, #marketPrice#, #breakfastCount#,
+      #submitUser#, #createTime#, #status#,#confirmUser#, #confirmTime#, #memo#,#stockAddOrMinus#,
+      #isOverSale#,#isAddDayStock#,#isStockZero#,#applyType#,#productType#)
+  </insert>
+  <select id="countByExample" parameterClass="java.util.Map" resultClass="java.lang.Integer" >
+  select count(*) from (
+    select e.*,mp.product_name
+    from EBK_HOUSE_PRICE e,SUP_SUPPLIER s ,meta_product mp,meta_product_branch mpb
+   	where  e.supplier_id = s.supplier_id 
+    and e.meta_product_id=mp.meta_product_id 
+    and e.meta_branch_id=mpb.meta_branch_id
+    )v   
+    <include refid="EBK_HOUSE_PRICE.Example_Where_Clause" />
+  </select>
+  <update id="updateByExample" >
+    update EBK_HOUSE_PRICE
+    set HOUSE_PRICE_ID = #record.housePriceId#,
+      SUPPLIER_ID = #record.supplierId#,
+      META_PRODUCT_ID = #record.metaProductId#,
+      META_BRANCH_ID = #record.metaBranchId#,
+      SUBJECT = #record.subject#,
+      START_DATE = #record.startDate#,
+      END_DATE = #record.endDate#,
+      APPLY_WEEK = #record.applyWeek#,
+      SETTLEMENT_PRICE = #record.settlementPrice#,
+      SUGGEST_PRICE = #record.suggestPrice#,
+      MARKET_PRICE = #record.marketPrice#,
+      BREAKFAST_COUNT = #record.breakfastCount#,
+      SUBMIT_USER = #record.submitUser#,
+      CREATE_TIME = #record.createTime#,
+      STATUS = #record.status#,
+      CONFIRM_USER = #record.confirmUser#,
+      CONFIRM_TIME = #record.confirmTime#,
+      MEMO = #record.memo#
+    <isParameterPresent >
+      <include refid="EBK_HOUSE_PRICE.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkHousePrice" >
+    update EBK_HOUSE_PRICE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="supplierId" >
+        SUPPLIER_ID = #supplierId#
+      </isNotNull>
+      <isNotNull prepend="," property="metaProductId" >
+        META_PRODUCT_ID = #metaProductId#
+      </isNotNull>
+      <isNotNull prepend="," property="metaBranchId" >
+        META_BRANCH_ID = #metaBranchId#
+      </isNotNull>
+      <isNotNull prepend="," property="subject" >
+        SUBJECT = #subject#
+      </isNotNull>
+      <isNotNull prepend="," property="startDate" >
+        START_DATE = #startDate#
+      </isNotNull>
+      <isNotNull prepend="," property="endDate" >
+        END_DATE = #endDate#
+      </isNotNull>
+      <isNotNull prepend="," property="applyWeek" >
+        APPLY_WEEK = #applyWeek#
+      </isNotNull>
+      <isNotNull prepend="," property="settlementPrice" >
+        SETTLEMENT_PRICE = #settlementPrice#
+      </isNotNull>
+      <isNotNull prepend="," property="suggestPrice" >
+        SUGGEST_PRICE = #suggestPrice#
+      </isNotNull>
+      <isNotNull prepend="," property="marketPrice" >
+        MARKET_PRICE = #marketPrice#
+      </isNotNull>
+      <isNotNull prepend="," property="breakfastCount" >
+        BREAKFAST_COUNT = #breakfastCount#
+      </isNotNull>
+      <isNotNull prepend="," property="submitUser" >
+        SUBMIT_USER = #submitUser#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS = #status#
+      </isNotNull>
+      <isNotNull prepend="," property="confirmUser" >
+        CONFIRM_USER = #confirmUser#
+      </isNotNull>
+      <isNotNull prepend="," property="confirmTime" >
+        CONFIRM_TIME = #confirmTime#
+      </isNotNull>
+      <isNotNull prepend="," property="memo" >
+        MEMO = #memo#
+      </isNotNull>
+    </dynamic>
+    where HOUSE_PRICE_ID = #housePriceId#
+  </update>
+</sqlMap>

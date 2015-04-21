@@ -1,0 +1,406 @@
+@charset "utf-8";
+/* CSS Document */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,select,textarea,p,blockquote,th,td,hr,button,figure,menu
+{margin:0;padding:0; font:12px/1.5 Arial,"\5b8b\4f53";}
+h1,h2,h3,h4,h5,h6{font-size:100%;}
+table{border-collapse:collapse;border-spacing:0;}
+ol,ul{list-style:none outside;}
+i{font-style:normal;}
+a{ text-decoration:none; color:#0077cc;}
+a:hover{ color:#EE0088; text-decoration: underline; cursor:pointer}
+select,input{padding-left: 2px; height:20px; line-height:20px; *height:18px; *line-height:18px;}
+.B{font-weight:bold;}.tc{text-align:center}.tr{text-align:right}
+.snspt_Btn{display:inline-block; vertical-align:middle; padding:0 13px; height:22px; line-height:22px; background:url(http://pic.lvmama.com/img/msg_back/repeat_bg.jpg) repeat-x; border-radius:3px;}
+.snspt_Btn:hover{ text-decoration:none;}
+.snspt_init_input{ text-align:center; color:#333;}
+.f_red{ color:#ff4444;}
+.f_green{ color:#390;}
+.f_grey{color:#ccc;}
+.snspt_optwrap a{display:block;}
+.anspt_alR{ text-align:center;}
+.snspt_tit1{display:block; line-height:24px;margin-top:9px; text-align:left;font-weight:bold; color:#333;}
+/*页头*/
+
+.msg_wrap{border-top:4px solid #e8469d;}
+.header{ padding:10px 0; margin:0 auto; width:960px; height:50px;}
+.msg_snspt i{ font-style:normal;}
+.logotit{float:left;padding:0 13px 0 140px; font:bold 20px/46px "Microsoft YaHei"; background:url(http://pic.lvmama.com/img/msg_back/msg_logo.gif) no-repeat; color:#555;}
+.logotit:hover{ text-decoration:none;}
+.header_side{display:inline-block; padding-left:9px; border-left:1px solid #bfbfbf;}
+.header_side em{display:block; margin-bottom:4px; font:normal 18px/24px "Microsoft YaHei";}
+.header_side a{margin-left:9px; padding-left:9px; border-left:1px solid #bfbfbf;}
+.header_conn{margin-left:36px;}
+.header_conn i{margin-right:9px; font-style:normal;}
+
+/*导航条*/
+.nav_all{ margin:0 auto; width:960px; height:40px; background:url(http://pic.lvmama.com/img/ebooking/global.gif) no-repeat; position: relative; z-index:99;}
+.nav_left{ padding-left:10px;}
+.nav_left li{ float:left; height:40px;padding-left:15px; margin:0 2px; line-height:38px;   font-size:14px; font-weight:bold;}
+.nav_left li a{ color:#FFF; float:left; height:40px; display:inline-block; line-height:40px; padding-right:15px;outline:none; hide-focus:expression(this.hideFocus=true);}
+.nav_left li a:hover{ color:#FFF; text-decoration:none;}
+.nav_left .nav_left_li,.nav_left .nav_index_li{ background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat left 0 #FFF;}
+.nav_left .nav_left_li a,.nav_left .nav_index_li a{ color:#000; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat right 0 #FFF;}
+
+.nav_index_li b{font-weight:bold;}
+.nav_left .nav_left_li a:hover{color:#000; text-decoration:none;}
+.nav_left .nav_left_li .zhex{ width:15px; height:2px; background:#fff; position:absolute; left:0; top:-1px; z-index:199;}
+.nav_dd_r{ float:left; margin:9px 0 0 5px; height:20px; padding-left:4px; line-height:20px; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat 0 -93px;}
+.nav_dd_r span{ float: left; padding-right:4px; line-height:20px; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat right -93px #ea549d; color:#cc3300;}
+.nav_left_li .nav_dd_r span,.nav_index_li .nav_dd_r span{background: url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat right -93px #fff;}
+.nav_dd_b{ display: inline-block; position:absolute; top:39px; left:-1px; width:141px; padding:2px; border:#fb9bce solid 1px; background:#fff; display:none;}
+
+.nav_dd_b span{ padding:0 1px 0 3px;}
+.dd_l_txet{ float:left;}
+#body_ddgl .nav_ddgl .nav_dd_r span{background: url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat right -93px #fff;}
+.nav_left li.nav_left_li a{z-index:9;} 
+.nav_left_li .nav_dd_b{z-index:6;} 
+.nav_left li a{z-index:3;} 
+
+
+/*增加导航需要修改的地方*/
+.nav_left .nav_dd_b a,#body_ddgl .nav_dingdan .nav_dd_b a,#body_ftwh .nav_dingdan .nav_dd_b a,#body_sjgl .nav_dingdan .nav_dd_b a,#body_cpgl .nav_dingdan .nav_dd_b a{ display:block; width:130px; padding:0 0 0 11px; font-size:12px; background:none; border-top:#f0d5e3 solid 1px; line-height:29px; color:#0077cc; font-weight:normal; height:30px;}
+#body_ddgl .nav_left .nav_dd_b .nav_dd_b_a,#body_ftwh .nav_left .nav_dd_b .nav_dd_b_a,#body_sjgl .nav_left .nav_dd_b .nav_dd_b_a,#body_cpgl .nav_left .nav_dd_b .nav_dd_b_a{ border-top:none;}
+.nav_left .nav_dd_b a:hover,#body_ddgl .nav_dingdan .nav_dd_b a:hover,#body_ftwh .nav_dingdan .nav_dd_b a:hover,#body_sjgl .nav_dingdan .nav_dd_b a:hover,#body_cpgl .nav_dingdan .nav_dd_b a:hover{ color:#0077cc; background:#fffafd; font-weight:bold;}
+
+#body_index .nav_index,#body_ddgl .nav_ddgl,#body_ggxx .nav_ggxx,#body_fjwh .nav_fjwh,#body_ftwh .nav_ftwh,#body_yhgl .nav_yhgl,#body_sjgl .nav_sjgl,#body_cpgl .nav_cpgl{ background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat left 0 #FFF;}
+#body_index .nav_index a,#body_ddgl .nav_ddgl a,#body_ggxx .nav_ggxx a,#body_fjwh .nav_fjwh a,#body_ftwh .nav_ftwh a,#body_yhgl .nav_yhgl a,#body_sjgl .nav_sjgl a,#body_cpgl .nav_cpgl a{ color:#000; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat right 0 #FFF;}
+
+/*面包屑导航*/
+.breadcrumb{ width:960px; margin:0 auto; height:30px;}
+.breadcrumb_nav{ float:left; padding-left:10px;}
+.breadcrumb_nav li{float:left; height:30px; line-height:30px; padding-left:20px; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat -186px -304px; font-size:12px; color:#333;}
+.breadcrumb_nav li a{ color:#333;}
+.breadcrumb_nav li a:hover{ color:#EE0088;}
+.breadcrumb_nav .home{ background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat -186px -337px;}
+
+.ppt_xz{ float:right; padding:5px 10px 0 20px; background:url(http://pic.lvmama.com/img/msg_back/msg_icon.gif) no-repeat 4px 8px;}
+
+/*订单处理*/
+.order_nav{ width:950px; margin:8px auto 0; height:30px; line-height:30px; padding-left:10px; position:relative; z-index:1;}
+.order_nav dt{ float:left; padding-right:30px; line-height:30px; font-size:14px; font-weight:bold; color:#555;}
+.order_nav dd,.order_nav dd a,.order_nav dd span{ float:left; height:30px; line-height:34px; cursor:pointer; color:#000; overflow:hidden;}
+.order_nav dd{ margin-left:2px; padding-left:16px; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat 0 -41px;}
+.order_nav dd a,.order_nav dd span{  padding-right:16px; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat right -41px; outline:none; hide-focus:expression(this.hideFocus=true);}
+.order_nav dd a:hover{ text-decoration: none;}
+.order_nav .order_nav_dd{ background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat 0 -114px; position:relative; margin-top:0; height:32px;}
+.order_nav .order_nav_dd a,.order_nav .order_nav_dd span{ background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat right -114px; color:#ee0088; height:32px;}
+.order_nav .new_yh{ float: right; font-size:18px; font-weight:normal;}
+.order_nav .new_yh a{ font-size:12px; padding-left:3px;}
+.order_all{width:960px; margin:0 auto; _margin:-2px auto 0; border-top:#ccc solid 2px; position:relative; padding:15px 0;}
+
+.search_ul_t{overflow:hidden; *zoom:1;}
+.order_all .search_ul_t2{ width:860px;}
+.order_all .search_ul_t2 li select,.order_all .search_ul_t2 li input{ width:135px;}
+.search_ul_t li{float:left;padding-left:18px;}
+.search_ul_t input,.search_ul_t select{width:100px;}
+.snspt_srBtn{border:1px solid #e60;color:#fff; font-weight:bold;}
+.snspt_srBtn:hover{ background-position:0 -30px; color:#fff;}
+.snspt_sclist2{margin-left:100px;}
+.snspt_sclist2 li{width:400px; height:32px; overflow:hidden;}
+.snspt_sclist2 label{display:inline-block; vertical-align:middle; width:90px; text-align:right;}
+.snspt_sclist2 input{ width:130px;}
+
+.lv_pop_btnbox .lv_pop_btn_rl{ padding:0 20px;}
+
+/*table*/
+.order_all .tableWrap{ margin:0 auto;}
+.tableWrap{width:960px;margin:20px auto 0; color:#555; }
+.table01{border:1px solid #ddd;}
+.table01Header{height:34px; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) repeat-x 0 -147px; border-left:1px solid #ddd;border-right:1px solid #ddd;border-top:1px solid #ddd; font-size:14px;font-weight:700; line-height:34px;padding:0px 10px;}
+.table01Header a{float:right; padding-left:18px; font-size:12px;font-weight:500; background:url(http://pic.lvmama.com/img/msg_back/msg_icon.gif) no-repeat 0 10px;}
+.table01Header .snSpt_tabtitR{padding:0 13px;margin-top:7px;  height:18px; line-height:18px; background:#fefefe; border:1px solid #ddd; border-radius:3px;color:#555; cursor:pointer;}
+.table01 th,.table01 td{padding:8px 0; line-height:20px;border-bottom:1px solid #ddd; text-align:center;}
+#body_sjgl .table01 th,#body_sjgl .table01 td{padding:8px 3px;}
+.table01 th{font-weight:700; background:#f6f6f6;}
+.even{background:#fcfcfc}
+.hover{ background:#fff3dc;}
+.table01Footer{ height:36px; padding-left:10px; color:#666; background:#f6f6f6; border:#ddd solid 1px; border-top:none;}
+.table01Footer_l{ float:left; line-height:36px;}
+.footer_l_span{ font-weight:bold; padding:0 3px;}
+.snspt_optBtn{border:1px solid #ccc; background-position:0 -60px; color:#555;}
+.snspt_optBtn:hover{border:1px solid #abc; background-position:0 -90px;  color:#555;}
+/*.page{ float:right; line-height:18px;margin-top:8px; padding-right:10px; color:#666;}
+    .page i{ font-style:normal; float:left; display:block; border:1px solid #ccc; margin-right:10px; padding:0px 5px; color:#666;}
+	.page i a{color:#666;}
+	.page ul{ overflow:hidden;*zoom:1; float:left;}
+	.page li{display:block;float:left;margin-right:10px;}
+	.page li span{background:#ea549e; text-align:center; display:block; width:21px;height:19px; font-weight:700; color:#fff;}
+	.page li a {width:19px; display:block; text-align:center;height:17px;border:1px solid #ccc;}
+	.page input{  vertical-align:middle; width:38px;height:18px; border:1px solid #ccc;}
+	.page img { vertical-align:middle;}*/
+	
+/* Pages页码控制 默认橙色 */ 
+.gonggao_page .page{ line-height:18px; margin-top:0; padding-right:10px; color:#666;}
+.Pages{margin:5px 0 0;text-align:right; float:right; padding-right:10px;} 
+.Pages a,.Pages span{display:inline-block;zoom:1;*display:inline;margin-left:5px;padding:0 9px; height:25px; line-height:25px;} 
+.Pages a{border:1px solid #ddd;color:#333; color:#07c;background:#fff;} 
+.Pages .PageSel,.orangestyle .PageSel{font-weight:bold;color:#fff;border:1px solid #f80;background:#f80;} 
+.Pages .PageSel{ margin:0 0 0 5px;}
+.Pages a:hover,.orangestyle a:hover{ text-decoration:none;border-color:#f80;color:#f80;} 
+
+.Pages .PrevPage,.Pages .NextPage{ width:55px; padding:0; height:25px;/* color:#07c;*/ line-height:24px; background:url(http://pic.lvmama.com/img/new_v/newBtn_bg.gif) 1000px 1000px no-repeat} 
+.Pages .PrevPage{ background-position:0 -1817px; text-align:right; padding-right:10px;} 
+.Pages .NextPage{ background-position:-144px -1817px; text-align:left; padding-left:10px;} 
+.Pages span.PrevPage,.Pages span.NextPage{color:#ccc;border:1px solid #ddd;} 
+.Pages span.PrevPage{ background-position:0 -1776px;} 
+.Pages span.NextPage{ background-position:-144px -1776px;} 
+.rosestyle .PageSel{border:1px solid #df1a7a;background:#df1a7a;} 
+.rosestyle a:hover{ border-color:#df1a7a;color:#df1a7a;} 
+.orangestyle .PageSel{border:1px solid #f80;background:#f80;} 
+.orangestyle a:hover{ border-color:#f80;color:#f80;}
+	
+	
+.snspt_pageGo{padding:0 4px; height:18px; font:normal 14px/18px Arial, Helvetica, sans-serif;border:1px solid #e60;color:#fff;}	
+.snspt_pageGo:hover{ background-position:0 -30px; color:#fff;}
+
+.snspt_footer{width:960px; margin:10px auto;  border:1px solid #ddd; border-radius:5px; background: -moz-linear-gradient(top, #fcfcfc, #f6f6f6);
+background: -webkit-gradient(linear, 0 0, 0 100%, from(#fcfcfc), to(#f6f6f6));/* background:url(http://pic.lvmama.com/img/msg_back/repeat_bg.jpg) repeat 0 -120px\9;*/}
+.snspt_ftlist{overflow:hidden; *zoom:1; margin:5px 15px; }
+.snspt_ftlist li{float:left; width:auto; padding:0 47px; white-space:nowrap;}
+.snspt_ftlist em{display:block; font:bold 14px/2 "Microsoft YaHei";}
+.snspt_copyright{width:960px; margin:18px auto; text-align:center;}
+
+/*pop*/
+.snspt_poptab,.snspt_tab2,.snspt_tab3,.snspt_tab4{width:100%;}
+.snspt_poptab td,.snspt_poptab th{padding:4px;border:1px solid #ddd;}
+.snspt_poptab th{ text-align:center; font:bold 12px/18px 'Microsoft YaHei'; color:#000; background:#f2f2f2;}
+.snspt_tab2 th,.snspt_tab2 td{padding:0 6px; line-height:24px; border:1px solid #ddd; text-align:left;}
+.snspt_tab2 .snspt_tab2_l{width:100px; text-align:right; background:#f2f2f2;}
+.snspt_payhint{ padding:9px; margin:9px 0;font-size:14px; color:#ff4444; background:#fffae4; border:1px solid #fc6;}
+.snspt_payhint i{font-size:20px; font-style:normal;}
+.snspt_input_s{width:40px;height:20px;margin-right:4px;line-height:20px; border:1px solid #ccc;}
+.snspt_save{padding:0 7px; cursor:pointer; display:none;}
+.snspt_tab3 th,.snspt_tab3 td{border:1px solid #ddd; padding:4px; line-height:27px; text-align:center;}
+.snspt_tab3 th{font-weight:bold; color:#333; background:#f2f2f2;}
+.snspt_pop_txts{width:100%; height:50px; border:1px solid #abadb3; background:#ebebe4; resize:none;}
+.snspt_tab4 th,.snspt_tab4 td{border-top:1px solid #ddd; line-height:27px; text-align:center;}
+.snspt_tab4 th{margin-top:-1px;font-weight:bold; color:#333; background:#f2f2f2;}
+.snspt_tab4{border:1px solid #ddd; overflow:hidden;}
+.snspt_pop_contwrap,.snspt_pop_contwrap1{display:none;}
+
+/*other*/
+.snSpt_mainBox{width:960px; margin:9px auto; overflow:hidden; *zoom:1;}
+.snSpt_mainTit{padding-left:9px;font:bold 16px/2 'Microsoft YaHei'; border-bottom:2px solid #ccc;}
+.snspt_pwdlist{width:400px; margin:20px auto 40px;}
+.snspt_pwdlist li{padding:7px 0;}
+.snspt_pwdlist label{display:inline-block;width:100px;padding-right:4px; text-align:right;}
+.snSpt_err{margin-left:4px;}
+.snspt_pwd_btnbox{position:relative; *zoom:1;}
+.snspt_pwd_btnbox .snspt_srBtn{margin:0 7px 0 104px;}
+
+.snspt_arrow_pop{display:none;position:absolute; z-index:999;  width:210px; padding:4px; background:url(http://pic.lvmama.com/img/common_pop/pop_border_grey.png) repeat;}
+#re_pwd{top:-50px; left:18px;}
+.snspt_arrow_pop_txt{padding:9px; text-align:center; background:#fff; border:1px solid #ccc;}
+.snspt_arrow_pop_arr{display:block; position:absolute; width:15px; height:9px; left:105px; bottom:-4px;_bottom:-7px; background:url(http://pic.lvmama.com/img/msg_back/arr.png) no-repeat;}
+
+/*index*/
+.snSpt_indexBox{width:470px; border:1px solid #ddd;}
+.snSpt_indexBox_tit{display:block; padding-left:13px;font:bold 14px/32px "Microsoft YaHei"; background: -moz-linear-gradient(top, #f5f5f5, #e8e8e8);
+background: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#e8e8e8)); background:#efefef\9; border-bottom:1px solid #ddd;}
+.snSpt_fl{float:left;}
+.snSpt_fr{float:right;}
+.snSpt_todaylist{ overflow:hidden; *zoom:1;padding:9px 0 32px;}
+.snSpt_todaylist li{float:left; width:210px; height:38px; margin:5px 0 5px 15px;font-size:14px; line-height:38px; text-indent:18px; border:1px solid #ccc; border-radius:5px; background:#fff8e4; box-shadow:2px 2px 4px #ddd;}
+.snSpt_todaylist i{font-weight:bold; color:#07c; text-decoration:underline;}
+.snSpt_postlist{padding:10px 7px; min-height:170px;}
+.snSpt_postlist li{ white-space:nowrap; overflow:hidden; line-height:22px;}
+.snSpt_postlist i{color:#555;}
+
+/*用户管理*/
+.snSpt_userinfoBox{ width:666px; margin:27px auto;}
+.snSpt_userinfoBox_t{ position:relative; *zoom:1; padding-left:13px;font:bold 14px/32px "Microsoft YaHei"; background:#f6f6f6; border-bottom:1px solid #ddd;}
+.tjyh_top{overflow:hidden; zoom:1; padding:5px 0;}
+.snSpt_userinfo_tit{ display:block; float:right; text-align:right; padding-right:9px;}
+.snSpt_userinfoBox_s{width:330px; height:330px;border:1px solid #ddd;}
+.snSpt_userinfolist{padding:18px 18px 0;}
+.snSpt_userinfolist li{margin:9px 0;}
+.snSpt_userinfolist .snSpt_lb{display:inline-block;width:120px; text-align:right;}
+.snSpt_userinfolist  input{width:120px;}
+.snSpt_userinfolist .snSpt_radio {width:auto; margin:0 4px 0 -4px; vertical-align:middle;}
+.snSpt_titicon{position:absolute; z-index:9; left:-4px; top:4px; display:block; width:15px; height:23px; background:url(http://pic.lvmama.com/img/msg_back/msg_titarr.gif) no-repeat;}
+.snSpt_userpowers_box{ overflow:hidden; zoom:1;}
+.snSpt_userpowers_list{float:left; width:130px;overflow:hidden; *zoom:1; margin:20px 0 20px 20px;}
+.snSpt_userpowers_list li{margin:7px 0;}
+.snSpt_userpowers_list label{margin-left:4px;}
+.snSpt_userpowers_sublist{display:block; padding-left:14px;}
+.snSpt_userpowers_sublist li{width:auto; margin:4px 0;}
+.snSpt_hasSubli .snSpt_usersub_icon{padding-left:13px; background:url(http://pic.lvmama.com/img/msg_back/msg_listadd.gif) no-repeat 0 -49px; /*cursor:pointer;*/}
+.snSpt_hasSubli .snSpt_usersub_icon1{ background-position:0 2px;}
+
+.snSpt_btnR{clear:both; position:relative; *zoom:1; padding:9px 0; text-align:right;}
+#snSpt_savepop{top:-50px; right:-80px;}
+.snspt_disable{ background:#fcfcfc; color:#ccc;}
+
+
+/*订单管理最佳要求弹出层*/
+.yaoqiu_img{ margin-left:3px;}
+.yaoqiu_box{ position:absolute; width:205px; padding:7px; border:#ccc solid 1px; -moz-box-shadow:0 0 3px 2px #D8D8D8; 
+-webkit-box-shadow:0 0 3px 2px #D8D8D8; box-shadow:0 0 3px 2px #D8D8D8;
+ background:#FFF; display:none;}
+.yaoqiu{ overflow:hidden; zoom:1;}
+.yaoqiu dt{ float:left; width:65px; font-weight:bold; color:#ff6600;}
+.yaoqiu dd{ float:left; width:140px; color:#555;}
+.yaoqiu_jt{ display:block; width:50px; height:9px; position:absolute; top:-9px; right:7px; _right:13px; background:url(http://pic.lvmama.com/img/ebooking/yaoqiu_jt.gif) no-repeat right 0;}
+
+/*房态查询修改*/
+.roomStatus_fx{ width:600px;}
+.roomStatus_fx label{ float:left;}
+.roomStatus_b{border-top: 1px solid #CCCCCC; padding: 25px 0 15px;}
+.roomStatus_xg{ display:inline-block; margin-left: 80px; width:70px; height:22px; line-height:22px; text-align:center; color:#585858; font-weight:bold; background:url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat -50px -290px; border:#b5b5b5 solid 1px; cursor:pointer;}
+
+/*时间价格表样式修改*/
+.plug_calendar_d li.hover_bg{ background:#b7f9b9;}
+.t_width_500{ width:500px; margin-left:-250px;}
+.t_width_512{ width:512px; margin-left:-255px;}
+.t_xiugai_box{ padding-top:15px;}
+.t_width_500 li{ padding-bottom:8px; vertical-align:middle;}
+.t_width_500 li strong{ width:100px;}
+.t_width_500 .baoliu{ width:90px;}
+.t_chaomai{ width:210px; position:absolute; right:40px; bottom:63px;}
+.t_width_500 .roomStatus_cx{ margin:10px 0 0 100px; cursor:pointer;}
+.width_360{ width:360px;}
+
+
+/*新增产品管理*/
+.xinzeng{ padding:10px 0; color:#666;}
+.btn_xz{ display: inline-block; height:24px; line-height:24px; padding:0 10px; background: url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat -1px -183px; border: 1px solid #EE6600; color: #FFFFFF;}
+.btn_xz:hover{ color:#fff; text-decoration:none;}
+.xinzeng .btn_xz{ margin-right:20px;}
+.text_ts{ display:inline-block; margin-left:3px;}
+body .tooltip1{ border:none; background:none;}
+.order_all_list .order_all_li{ display:none;}
+.xzxx_box{ width:960px; margin:10px auto 0;}
+.xzxx_box .kcwh_btn_t{ display:none; height:26px; line-height:26px; font-size:14px;}
+.xzxx_box_tab{ margin-top:10px; overflow:hidden; zoom:1; border-left:#CCC solid 1px; position:relative; z-index:33;}
+.xzxx_box_tab li{ float:left; height:30px; line-height:30px; padding:0 15px; border:#CCC solid 1px; border-left:none; background:#eee; cursor:pointer;}
+.xzxx_box_tab li.tab_this{ background:#fff; border-bottom:#FFF solid 1px;}
+.xzxx_box_list{ padding:10px; border:#CCC solid 1px; position:relative; z-index:1; margin-top:-1px; display:none;}
+.xzxx_tab{ overflow:hidden; zoom:1; border-left:#CCC solid 1px; position:relative; z-index:33;}
+.xzxx_tab li{ float:left; height:30px; line-height:30px; padding:0 15px; border:#CCC solid 1px; border-left:none; background:#eee; cursor:pointer;}
+.xzxx_tab li.tab_this{ background:#fff; border-bottom:#FFF solid 1px;}
+.xzxx_list{ border:#CCC solid 1px; position:relative; margin-top:-1px; z-index:1;}
+.xzxx_list li{ padding:20px; display:none;}
+.jibenxinxi td{ padding:5px;}
+.jibenxinxi td input,.xzxx_list table td select{ width:150px;}
+.jibenxinxi td i{ color:#F00;}
+.jibenxinxi td b{ font-weight:normal; color:#999;}
+.lvyouquyu{ margin:20px 0 0;}
+.lvyouquyu td{ padding:5px; border:#CCC solid 1px;}
+.lvyouquyu td label{ margin-left:15px;}
+.lvyouquyu td label input{ margin-right:3px;}
+.xzxx_beizhu{ padding:15px 0 0; color:#999;}
+.jia_box{ width:600px; padding:5px 5px 10px; overflow:hidden;}
+.jia_box span{ float:left; height:16px; overflow:hidden; border:#CCC solid 1px; margin:5px 10px 0 0; padding:3px 0 3px 6px; background:#eee;}
+.jia_box samp{ display:inline-block; width:16px; height:16px; text-align:center; line-height:16px; cursor:pointer;}
+.fp_btn{ display:inline-block; height:20px; line-height:20px; padding:0 10px; text-align:center; background: url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat -1px -183px; border: 1px solid #EE6600; color: #FFFFFF; cursor:pointer;}
+.pingzheng{ margin-top:15px;}
+.pingzheng dt{ height:24px; padding-bottom:5px; font-size:14px; color:#333; font-weight:bold;}
+.pingzheng dd{ background:#F9F9F9; padding:0 5px 20px;}
+.pingzheng_t{ padding-top:20px;}
+.pz_table{ margin:10px 0 0 30px;}
+.pz_table th,.pz_table td{ border:#ccc solid 1px; padding:3px 10px; line-height:20px;text-align:center;}
+.dialog-body .pz_table{ margin:0;}
+.btn_bc{ display:inline-block; margin:10px auto 0;  height:24px; line-height:24px; padding:0 20px; text-align:center; background: url(http://pic.lvmama.com/img/ebooking/global01.gif) no-repeat -1px -183px; border: 1px solid #EE6600; color: #FFFFFF; cursor:pointer; font-size:14px;}
+.chanpintese{ width:800px;}
+.chanpintese td{ padding:5px 10px;}
+.chanpintese .bor_t{ border-top:#ddd solid 1px;}
+.chanpintese input{ width:350px; }
+.chanpintese textarea{ width:620px; height:100px; }
+.xcts_t input{ margin-left:10px;}
+.xcts_list{ border:#ddd solid 1px; margin-top:15px;}
+.xcts_list_first{ border-right:#ddd solid 1px;}
+.xcts_list td{ padding:5px;}
+.xcts_list label{ margin-right:15px;}
+.xcts_list label input{ margin-right:5px;}
+.xcts_list td input{ height:22px;}
+.fysm_t{ margin-top:10px;}
+.fysm_b{ margin-top:10px; overflow:hidden; zoom:1;}
+.fysm_b textarea{ float:left; width:600px; height:200px;}
+.fysm_b .text_ts{ float:left;}
+.cptp_t{ width:650px; padding:10px; background:#F5F5F5; overflow:hidden; zoom:1;}
+.cptp_t dd{ float:left; margin-left:20px; width:300px; display:inline;}
+.cptp_t dd p{ padding-bottom:10px;}
+.width_550{ width:550px;}
+.img_box{ padding-top:10px;}
+.img_list{ margin-top:10px; overflow:hidden; zoom:1;}
+.img_list img{ float:left; margin-right:10px; border:#ddd solid 1px;}
+.img_list p{ margin-bottom:20px;}
+.img_shear{ height:100px; margin-top:20px; background:#f8f8f8;}
+.fcxx_t b{ margin-right:10px;}
+.fcxx_t input{ margin-right:5px;}
+.fcxx_b{ margin:10px 0;}
+.fcxx_b th{ font-weight:bold;}
+.fcxx_b th,.fcxx_b td,.qttk_b th,.qttk_b td,.kcwh_table th,.kcwh_table td{ border:#ddd solid 1px; padding:3px; text-align:center;}
+.fcxx_b td input{ width:480px;}
+.qttk_b{ margin-top:10px;}
+.qttk_new{ margin-top:20px;}
+.qttk_new td{ padding:5px; vertical-align:top;}
+.qttk_new td textarea{ width:400px; height:150px;}
+.qttk_new td textarea,.qttk_new td .text_ts{ float:left;}
+.kcwh_name{ padding:5px; background:#f5f5f5;}
+.kcwh_zhu{ margin-top:10px;}
+.kcwh_new{ margin:10px 0 0 30px;}
+.kcwh_new input{ margin:0 20px 0 0;}
+.kcwh_table{ margin:10px 0 0 30px;}
+.jiazhong_box{ margin-top:20px; overflow:hidden; zoom:1; padding:0 0 0 80px;}
+.jiazhong_box span{ display:inline-block; margin-left:20px; padding:0 10px; height:24px; line-height:24px; text-align:center; border:#ddd solid 1px; cursor:pointer;}
+.time_updown{ overflow:hidden; zoom:1;}
+.btn_prev,.btn_next{ height:24px; line-height:24px; color:#333; cursor:pointer;}
+.btn_prev{ float:left;}
+.btn_next{ float:right;}
+.time_box_all{ margin-top:20px; overflow:hidden; zoom:1;}
+.time_table{ float:left; width:1086px;}
+.time_box{ overflow:hidden; zoom:1;}
+.time_box .plug_calendar_table{ overflow:hidden; zoom:1;}
+.time_box .plug_calendar_main{ width:1086px;}
+.time_box .plug_calendar_main ul{ margin-left:0;}
+.time_box .plug_calendar_d li{ width:154px; height:200px; border-right:none;}
+.time_box .plug_calendar_t{ border-left:#CCCCCC solid 1px;}
+.time_box .plug_calendar_t li{ width:154px; border-right:1px solid #ccc;}
+.time_updown{ overflow:hidden; zoom:1;}
+.time_new{ float:right; width:180px; padding-top:50px;}
+.time_new .fp_btn{ margin-top:10px;}
+.plug_calendar_d_box p{ line-height:14px; padding:2px 0 0 5px;}
+.plug_calendar_d_box p span{ display:inline-block; width:48px;}
+.plug_calendar_d_box p b{ display:inline-block; width:50px;font-weight:normal;}
+.menshijia{ color:#900;}
+.shoujia{ color:#090;}
+.jiesuanjia{ color:#06F;}
+.kucun{ color:#333;}
+.ziyuan{ color:#F00;}
+.date_bg{ border:#666 solid 1px;}
+.xzkc_1 input{ margin:0 3px 0 8px;}
+.xzkc_1 td{ padding:5px 0;}
+.xzkc_2{ margin-left:50px;}
+.xzkc_2 th,.xzkc_2 td{ text-align:center; padding:5px; border:#ddd solid 1px;}
+.xzkc_b{ text-align:right; padding:5px 100px 0 0;}
+.xgjg_t{ padding-left:20px;}
+.tan_fp_btn{ margin:10px 0 0 50px;}
+
+
+
+/*提示描述信息的样式*/
+.as-file{
+    position:relative;
+    display:inline-block;
+    *display:inline;
+    *zoom:1;
+    cursor:pointer;
+    overflow:hidden;
+    vertical-align:middle;
+}
+/* 影响 .ui-input-file 的样式 */
+.as-file .as-input-file{
+    position:absolute;
+    right:0;
+    top:0;
+    _font-size:100px; /* overwrite*/
+    _font-size:12px;
+    _zoom:10; /* overwrite */
+    height:100%;
+    _height:auto;
+    opacity:0;
+    filter:alpha(opacity=0);
+    -ms-filter:"alpha(opacity=0)";
+    cursor:pointer;
+}

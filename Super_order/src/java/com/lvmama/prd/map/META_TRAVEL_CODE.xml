@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_TRAVEL_CODE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.meta.MetaTravelCode" >
+    <result column="META_TRAVEL_CODE_ID" property="metaTravelCodeId" />
+    <result column="SUPPLIER_PRODUCT_ID" property="supplierProductId" />
+    <result column="SPEC_DATE" property="specDate" />
+    <result column="TRAVEL_CODE_ID" property="travelCodeId" />
+    <result column="TRAVEL_CODE" property="travelCode" />
+    <result column="SUPPLIER_CHANNEL" property="supplierChannel" />
+    <result column="PRODUCT_BRANCH" property="productBranch" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.meta.MetaTravelCode" >
+    select *
+    from META_TRAVEL_CODE
+    where META_TRAVEL_CODE_ID = #metaTravelCodeId#
+  </select>
+  
+  <select id="selectBySuppAndDate" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.meta.MetaTravelCode" >
+    select * from META_TRAVEL_CODE
+    where SUPPLIER_PRODUCT_ID = #supplierProductId# and SPEC_DATE = #specDate#
+  </select>
+  <select id="selectBySuppAndDateAndChannelAndBranch" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.meta.MetaTravelCode" >
+    select * from META_TRAVEL_CODE
+    where SUPPLIER_PRODUCT_ID = #supplierProductId# 
+    and SUPPLIER_CHANNEL = #supplierChannel#
+    and PRODUCT_BRANCH = #productBranch#
+    and SPEC_DATE = #specDate#
+  </select>
+  <select id="selectByCondition" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  	SELECT * FROM META_TRAVEL_CODE MTC 
+  	WHERE 1=1 
+  	<isNotEmpty prepend="AND" property="supplierProductId">
+  	MTC.SUPPLIER_PRODUCT_ID = #supplierProductId#
+  	</isNotEmpty>
+  	<isNotEmpty prepend="AND" property="specDate">
+  	MTC.SPEC_DATE = #specDate#
+  	</isNotEmpty>
+  	<isNotEmpty prepend="AND" property="travelCode">
+  	MTC.TRAVEL_CODE = #travelCode#
+  	</isNotEmpty>
+  	<isNotEmpty prepend="AND" property="productBranch">
+  	MTC.PRODUCT_BRANCH = #productBranch#
+  	</isNotEmpty>
+  	<isNotEmpty prepend="AND" property="supplierChannel">
+  	MTC.SUPPLIER_CHANNEL = #supplierChannel#
+  	</isNotEmpty>
+  	<isNotEmpty prepend="AND" property="travelCodeId">
+  	MTC.TRAVEL_CODE_ID = #travelCodeId#
+  	</isNotEmpty>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaTravelCode" >
+    delete from META_TRAVEL_CODE
+    where META_TRAVEL_CODE_ID = #metaTravelCodeId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.meta.MetaTravelCode" >
+    <selectKey resultClass="java.lang.Long" keyProperty="metaTravelCodeId" >
+      select META_TRAVEL_CODE_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into META_TRAVEL_CODE (META_TRAVEL_CODE_ID, SUPPLIER_PRODUCT_ID, SPEC_DATE,
+      TRAVEL_CODE_ID, TRAVEL_CODE,SUPPLIER_CHANNEL,PRODUCT_BRANCH)
+    values (#metaTravelCodeId#, #supplierProductId#, #specDate#,
+      #travelCodeId#, #travelCode#,#supplierChannel#,#productBranch#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.meta.MetaTravelCode" >
+    <selectKey resultClass="java.lang.Long" keyProperty="metaTravelCodeId" >
+      select META_TRAVEL_CODE_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into META_TRAVEL_CODE
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="metaTravelCodeId" >
+        META_TRAVEL_CODE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="supplierProductId" >
+        SUPPLIER_PRODUCT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="specDate" >
+        SPEC_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="travelCodeId" >
+        TRAVEL_CODE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="travelCode" >
+        TRAVEL_CODE
+      </isNotNull>
+      <isNotNull prepend="," property="supplierChannel">
+       	SUPPLIER_CHANNEL
+      </isNotNull>
+      <isNotNull prepend="," property="productBranch">
+        PRODUCT_BRANCH	
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="metaTravelCodeId" >
+        #metaTravelCodeId#
+      </isNotNull>
+      <isNotNull prepend="," property="supplierProductId" >
+        #supplierProductId#
+      </isNotNull>
+      <isNotNull prepend="," property="specDate" >
+        #specDate#
+      </isNotNull>
+      <isNotNull prepend="," property="travelCodeId" >
+        #travelCodeId#
+      </isNotNull>
+      <isNotNull prepend="," property="travelCode" >
+        #travelCode#
+      </isNotNull>
+      <isNotNull prepend="," property="supplierChannel">
+       	#supplierChannel#
+      </isNotNull>
+      <isNotNull prepend="," property="productBranch">
+        #productBranch#	
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.meta.MetaTravelCode" >
+    update META_TRAVEL_CODE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="supplierProductId" >
+        SUPPLIER_PRODUCT_ID = #supplierProductId#
+      </isNotNull>
+      <isNotNull prepend="," property="specDate" >
+        SPEC_DATE = #specDate#
+      </isNotNull>
+      <isNotNull prepend="," property="travelCodeId" >
+        TRAVEL_CODE_ID = #travelCodeId#
+      </isNotNull>
+      <isNotNull prepend="," property="travelCode" >
+        TRAVEL_CODE = #travelCode#
+      </isNotNull>
+    </dynamic>
+    where META_TRAVEL_CODE_ID = #metaTravelCodeId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaTravelCode" >
+    update META_TRAVEL_CODE
+    set SUPPLIER_PRODUCT_ID = #supplierProductId#,
+      SPEC_DATE = #specDate#,
+      TRAVEL_CODE_ID = #travelCodeId#,
+      TRAVEL_CODE = #travelCode#
+    where META_TRAVEL_CODE_ID = #metaTravelCodeId#
+  </update>
+</sqlMap>

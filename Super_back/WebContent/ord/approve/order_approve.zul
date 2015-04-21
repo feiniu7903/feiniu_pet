@@ -1,0 +1,24 @@
+<?page title="订单查询" contentType="text/html;charset=UTF-8"?>
+<?component name="lvmama_user" macroURI="/macors/user.zul"?>
+<?component name="orderApproveOrder" macroURI="/ord/approve/order_approve_order.zul" ?>
+<?component name="orderApproveResource" macroURI="/ord/approve/order_approve_resource.zul" ?>
+<zk>
+<zscript>
+	Long orderId=(Long)Executions.getCurrent().getArg().get("orderId");
+</zscript>
+<tabbox width="99%" tabscroll="false">
+		<tabs>
+			<tab id="orderConfirm" label="订单确认"/>
+			<tab id="resourceConfirm" label="资源确认"/>
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+				<orderApproveOrder orderId= "${arg.orderId }" action="approveOrder"/>
+			</tabpanel>
+			<tabpanel>
+				<orderApproveResource orderId= "${arg.orderId }" action="approveResource"/>
+			</tabpanel>
+		</tabpanels>
+	</tabbox>		
+
+</zk>

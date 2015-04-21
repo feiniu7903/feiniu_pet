@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>
+ <#if tagsType?? >
+      <#if tagsType=="1">
+                    优惠 
+      <#elseif tagsType=="2">
+       	抵扣
+      <#elseif tagsType=="3">
+                     返现
+      </#if>
+   </#if>
+</title>
+<#include "../common/define_v5.html">
+<link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/common_v4.css"/>
+</head>
+
+<body>
+<#if firstChannel?? && firstChannel=="CLIENT" >
+	<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/header.js"></script>
+</#if>
+<div id="wrapper">
+    <div id="content">
+        <section class="lv-product-explain">
+            <article class="t_content">
+                <#if cashRefundYuan?? && cashRefundYuan!="0" && cashRefundYuan!="">
+                    <h4>返现：购买成功并点评，返${cashRefundYuan!}元奖金
+                        <#if mobileCashRefundYuan?? && mobileCashRefundYuan !="0" >
+                            <span class="f-color-1">（比网站多返${mobileCashRefundYuan!}元）</span>
+                        </#if>
+                    </h4>
+                    <ol>
+                        <li>1. 写体验点评返奖金。 </li>
+                        <li>成功预订产品，游玩归来发表体验点评。审核通过后即可获得此点评奖金。 </li>
+                        <li>2. 如何发表体验点评？ </li>
+                        <li>登录我的驴妈妈-我的点评，即可发表点评。 </li>
+                    </ol>
+                </#if>
+
+                <#if helpTags?index_of("3") != -1>
+                    <h4>多订优惠</h4>
+                    <p> 1.产品订购数量越多，享受的优惠越多。   </p>
+                    <p> 2.在订单预订过程中选择游玩时间中的时间价格表中显示（选择具体日期后）。</p>
+                    <p> 3.该优惠可与优惠活动同时显示。  </p>
+                </#if>
+                <#if helpTags?index_of("2") != -1>
+                    <h4>早订早惠</h4>
+                    <p> 1.该产品订购时间越早，享受优惠越多；具体优惠金额请查看时间价格表。  </p>
+                    <p> 2.该优惠可与优惠活动同时使用。  </p>
+                </#if>
+                <#if helpTags?index_of("1") != -1>
+                    <h4>奖金抵扣</h4>
+                    <ol>
+                        <li>1.该产品支持奖金抵扣 。</li>
+                        <li>在线支付用户可使用奖金抵扣，在订单支付界面可使用奖金账户支付。 </li>
+                        <li>2.如何获得奖金？ </li>
+                        <li>游玩后发表点评体验，审核通过后即可获得返现奖金。 </li>
+                    </ol>
+                </#if>
+                <#if helpTags?index_of("4") != -1>
+                    <h4>积分抵用</h4>
+                    <ol>
+                        <li>1.该产品支持通过使用积分兑换优惠券，获得支付抵用。</li>
+                        <li>2.该优惠不能同其他优惠券以及优惠活动同时使用。  </li>
+                    </ol>
+                </#if>
+            </article>
+        </section>
+    </div>
+    <#if firstChannel?? && firstChannel=="CLIENT" >
+        <script type="text/javascript">
+            <!--
+            var contextPath = '${request.contextPath}';
+            //-->
+        </script>
+        <script src="${request.contextPath}/jquery.mobile/jquery-1.8.2.js"></script>
+        <script src="${request.contextPath}/js/base.js"></script>
+        <!-- footer -->
+        <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+    </#if>
+</div>
+
+</body>
+</html>

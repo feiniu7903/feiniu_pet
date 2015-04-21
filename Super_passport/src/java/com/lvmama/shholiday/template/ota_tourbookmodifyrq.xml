@@ -1,0 +1,36 @@
+<#import "sh_holiday_base.xml" as base>
+<@base.layout "BookModifyRQ">
+		<BookModifyInfo>
+			<OrderPackageId>${body.modifyInfo.orderPackageId}<!-- 打包订单ID String★ --></OrderPackageId>
+			<OrderElementId>0<!-- 部分订单ID String 预留字段 --></OrderElementId>
+			<ExternalOrderNo>0<!-- 外部订单号 String(100) 预留字段 --></ExternalOrderNo>
+			<ExternalModifyOrderNo><!--外部退改签单号 String(100) 预留字段 --></ExternalModifyOrderNo>
+			<ModifyType>${body.modifyInfo.modifyType}</ModifyType>
+			<GuestRequest><!-- 旅客特殊要求 --></GuestRequest>
+			<ImportantLevel>${body.modifyInfo.importantLevel}</ImportantLevel>
+			<IsSelfWill>${body.modifyInfo.isSelfWill}<!-- 是否自愿退改 Y:自愿退改 N:非自愿退该，默认为Y， 如:Y --></IsSelfWill>
+			<RefundAmountType>${body.modifyInfo.refundAmountType}<!--  R:表示需要退客人钱 P:表示客人需要补款 --></RefundAmountType>
+			<FactRefundAmount>${body.modifyInfo.factRefundAmount}<!-- 实(退/收)金额客人   填正数 --></FactRefundAmount>
+			<RefundReason><!-- 退改原因 --></RefundReason>
+			<Remark><!-- 备注 --></Remark>
+			<BookModifyPassengers><!-- 
+				退改签的旅客信息：暂时不提供新增旅客功能 -->
+			<#list body.orderPassengers as passenger>
+				<BookModifyPassenger OrderPassengerID="${passenger.uniqueId}"><!-- ★OrderPassengerID:订单旅客信息ID Long-->
+					<ApplyType>DELETE</ApplyType>
+					<PassengerName>${passenger.name}<#--旅客姓名 String(100)--></PassengerName>
+					<PassengerType>${passenger.passengerType}</PassengerType>
+					<IndentityCardType>${passenger.shholidayCardType}</IndentityCardType>
+					<IndentityCardNumber>${passenger.certNo}</IndentityCardNumber>
+					<Birth><#if passenger.brithday??>${passenger.brithday?string("yyyyMMdd")}</#if><#--生日 String，如：YYYYMMDD--></Birth>
+					<Sex>${passenger.sex}<#--性别 String(1):男：M，女：F--></Sex>
+					<Mobile>${passenger.mobile}<#--联系人手机String(200)--></Mobile>
+					<SingleRoom>N</SingleRoom>
+					<Remark><!-- 备注 --></Remark>
+					<RefundAmountType>${passenger.refundAmountType}<!--  R:表示需要退客人钱 P:表示客人需要补款 --></RefundAmountType>
+					<FactRefundAmount>${passenger.factRefundAmount}<!-- 实(退/收)金额客人   填正数 --></FactRefundAmount>					
+				</BookModifyPassenger>
+			</#list>
+			</BookModifyPassengers>
+		</BookModifyInfo>
+</@base.layout>

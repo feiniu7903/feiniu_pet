@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_TAG" >
+	<typeAlias alias="ProdTag" type="com.lvmama.comm.pet.po.prod.ProdTag"/>
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.prod.ProdTag" >
+    <result column="TAG_ID" property="tagId" />
+    <result column="TAG_GROUP_ID" property="tagGroupId" />
+    <result column="TAG_NAME" property="tagName" />
+    <result column="TAG_PINYIN" property="tagPinYin" />
+    <result column="TAG_SEQ" property="tagSEQ" />
+    <result column="CSS_ID" property="cssId" />
+    <result column="DESCRIPTION" property="description" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="ProdTag" >
+    select * from PROD_TAG
+    where TAG_ID = #tagId#
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="ProdTag" >
+    delete from PROD_TAG
+    where TAG_ID = #tagId#
+  </delete>
+ 
+  <insert id="insertSelective" parameterClass="ProdTag" >
+  	<selectKey resultClass="java.lang.Long" keyProperty="tagId">
+  		select PROD_TAG_ID_SEQ.nextval as tagId from DUAL
+	</selectKey>
+    insert into PROD_TAG
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="tagId" >
+        TAG_ID
+      </isNotNull>
+      <isNotNull prepend="," property="tagGroupId" >
+        TAG_GROUP_ID
+      </isNotNull>
+      <isNotNull prepend="," property="tagName" >
+        TAG_NAME
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="tagId" >
+        #tagId#
+      </isNotNull>
+      <isNotNull prepend="," property="tagGroupId" >
+        #tagGroupId#
+      </isNotNull>
+      <isNotNull prepend="," property="tagName" >
+        #tagName#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterClass="ProdTag" >
+    update PROD_TAG
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="tagGroupId" >
+        TAG_GROUP_ID = #tagGroupId#
+      </isNotNull>
+      <isNotNull prepend="," property="tagName" >
+        TAG_NAME = #tagName#
+      </isNotNull>
+    </dynamic>
+    where TAG_ID = #tagId#
+  </update>
+  
+  	<select id="selectByTagGroupId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select * from PROD_TAG where TAG_GROUP_ID = #tagGroupId#
+  	</select>
+  	
+  	<select id="selectByTagName" parameterClass="java.lang.String" resultMap="BaseResultMap">
+   	 select * from PROD_TAG where TAG_NAME = #tagName#
+    </select>
+  	
+  	<select id="selectByTagId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select * from PROD_TAG where TAG_ID = #tagId#
+  	</select>
+
+	<select id="selectByParams" parameterClass="java.util.Map" resultMap="BaseResultMap">
+	select * from (
+			select t.*, ROWNUM rn from (
+				select * from PROD_TAG
+				<dynamic prepend="where">
+					<isNotNull prepend="and" property="tagGroupId">
+						TAG_GROUP_ID = #tagGroupId#
+					</isNotNull>
+					<isNotNull prepend="and" property="tagId">
+						TAG_ID = #tagId#
+					</isNotNull>
+					<isNotNull prepend="and" property="tagName">
+						TAG_NAME = #tagName#
+					</isNotNull>
+				</dynamic>
+				order by TAG_SEQ
+			)t
+			<isNotNull prepend="where" property="_endRow">
+						ROWNUM &lt;= #_endRow#
+					</isNotNull>
+			)
+		<isNotNull prepend="where" property="_startRow">
+			rn &gt;= #_startRow#
+		</isNotNull>
+	</select>
+
+
+	<select id="selectByParamsCount" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+				select count(*) from PROD_TAG
+				<dynamic prepend="where">
+					<isNotNull prepend="and" property="tagGroupId">
+						TAG_GROUP_ID = #tagGroupId#
+					</isNotNull>
+					<isNotNull prepend="and" property="tagId">
+						TAG_ID = #tagId#
+					</isNotNull>
+					<isNotNull prepend="and" property="excludeTagId">
+						TAG_ID &lt;&gt; #excludeTagId#
+					</isNotNull>
+					<isNotNull prepend="and" property="tagName">
+						TAG_NAME = #tagName#
+					</isNotNull>
+				</dynamic>
+	</select>
+
+	<update id="update" parameterClass="ProdTag">
+		update PROD_TAG 
+			<dynamic prepend="set" >
+				CSS_ID = #cssId#,
+				<isNotNull prepend="," property="tagGroupId">
+					TAG_GROUP_ID = #tagGroupId#
+				</isNotNull>
+				<isNotNull prepend="," property="tagName">
+					TAG_NAME = #tagName#
+				</isNotNull>
+				<isNotNull prepend="," property="tagPinYin">
+					TAG_PINYIN = #tagPinYin#
+				</isNotNull>
+				<isNotNull prepend="," property="tagSEQ">
+					TAG_SEQ = #tagSEQ#
+				</isNotNull>
+				<isNotNull prepend="," property="description">
+					DESCRIPTION = #description#
+				</isNotNull>
+				where TAG_ID = #tagId#
+			</dynamic>
+  	</update>
+  	
+  	<delete id="deleteByTagId" parameterClass="java.lang.Long">
+  		delete from PROD_TAG where TAG_ID = #tagId#
+  	</delete>
+
+	<insert id="insert" parameterClass="ProdTag">
+	    <selectKey resultClass="java.lang.Long" keyProperty="tagId">
+	    	select PROD_TAG_ID_SEQ.nextval as tagId from DUAL
+	    </selectKey>
+	    insert into PROD_TAG(TAG_ID, TAG_GROUP_ID, TAG_NAME,TAG_PINYIN,TAG_SEQ,CSS_ID,DESCRIPTION) 
+	    values (#tagId#, #tagGroupId#, #tagName#,#tagPinYin#,#tagSEQ#,#cssId#,#description#)
+	</insert>
+	
+	<select id="selectTagsByProductId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select pt.* from prod_tag pt, prod_product_tag ppt
+		where pt.tag_id = ppt.tag_id
+		and ppt.product_id = #productId#
+		and sysdate between ppt.begin_time and ppt.end_time
+		order by pt.tag_seq asc
+	</select>
+</sqlMap>

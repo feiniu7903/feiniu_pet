@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_BATCH">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderBatch">
+		<result column="ORDER_BATCH_ID" property="batchId" />
+		<result column="PROD_PRODUCT_BRANCH_ID" property="productBranchId" />
+		<result column="PROD_PRODUCT_ID" property="productId" />
+		<result column="ORDER_CONTACTS" property="contacts" />
+		<result column="ORDER_CONTACTS_PHONE" property="contactsPhone" />
+		<result column="ORDER_BATCH_COUNT" property="batchCount" />
+		<result column="ORDER_BATCH_STATUS" property="status" />
+		<result column="ORDER_BATCH_RESON" property="reson" />
+		<result column="ORDER_BATCH_CREATOR" property="creator" />
+		<result column="valid_begin_time" property="validBeginDate" />
+		<result column="valid_end_time" property="validEndDate" />
+		<result column="IS_VALID" property="isValid" />
+		<result column="OPERATOR_NAME" property="operatorName" />
+		<result column="DISTRIBUTOR_TUAN_INFO_ID" property="distributorTuanInfo.distributorTuanInfoId" />
+		<result column="ORDER_BATCH_CREATETIME" property="createtime" />
+	</resultMap>
+	
+	<resultMap class="com.lvmama.comm.bee.po.ord.OrdOrderBatch" id="searchResultMap" extends="BaseResultMap">
+		<result column="BRANCH_NAME" property="productBranchName" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="DISTRIBUTOR_NAME" property="distributorTuanInfo.distributorName" />
+	</resultMap>
+	
+	<resultMap class="com.lvmama.comm.bee.po.ord.OrdOrderBatch" id="EXTBaseResultMap" extends="BaseResultMap">
+		<result column="BRANCH_NAME" property="productBranchName" />
+		<result column="PRODUCT_NAME" property="productName" />
+	</resultMap>
+	
+	<resultMap class="com.lvmama.comm.bee.po.ord.OrdOrderBatch" id="ListPasscodeResultMap" extends="EXTBaseResultMap">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="INVALID_TIME" property="invalidDate" />
+		<result column="ADD_CODE" property="addCode" />
+	</resultMap>
+	
+	<resultMap class="com.lvmama.comm.bee.po.ord.OrdOrderBatch" id="abandonOrderResultMap" extends="ListPasscodeResultMap">
+		<result column="ORDER_STATUS" property="orderStatus" />
+		<result column="PERFORM_STATUS" property="performStatus" />
+	</resultMap> 
+	
+	<resultMap class="com.lvmama.comm.bee.po.ord.OrdOrderBatch" id="cancelOrderResultMap" extends="BaseResultMap">
+		<result column="ORDER_STATUS" property="orderStatus" />
+		<result column="PERFORM_STATUS" property="performStatus" />
+		<result column="ORDER_ID" property="orderId" />
+	</resultMap> 
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderBatch">
+		<selectKey resultClass="java.lang.Long" keyProperty="batchId">
+			select ord_batch_id_seq.nextval as id from DUAL
+	    </selectKey>
+		insert into ord_batch (
+			ORDER_BATCH_ID,
+			PROD_PRODUCT_BRANCH_ID,
+			PROD_PRODUCT_ID,
+			ORDER_CONTACTS,
+			ORDER_CONTACTS_PHONE,
+			ORDER_BATCH_COUNT,
+			ORDER_BATCH_STATUS,
+			ORDER_BATCH_RESON,
+			ORDER_BATCH_CREATOR,
+			VALID_BEGIN_TIME,
+			VALID_END_TIME,
+			distributor_tuan_info_id,
+			is_valid,
+			OPERATOR_NAME,
+			ORDER_BATCH_CREATETIME
+		)
+		values (
+			#batchId#,
+			#productBranchId#,
+			#productId#,
+			#contacts#,
+			#contactsPhone#,
+			#batchCount#,
+			#status#,
+			#reson#,
+			#creator#,
+			#validBeginDate#,
+			#validEndDate#,
+			#distributorTuanInfo.distributorTuanInfoId#,
+			#isValid#,
+			#operatorName#,
+			#createtime#
+		)
+	</insert>
+	
+	<select id="listBatchPassCode" resultMap="ListPasscodeResultMap" parameterClass="java.lang.Long">
+		select 
+			ord_batch.*,
+			branch.branch_name,
+			prod.product_name,
+			order_.order_id,
+			passcode.add_code,
+			portcode.invalid_time,
+			prod.product_id PROD_PRODUCT_ID,
+			branch.prod_branch_id PROD_PRODUCT_BRANCH_ID
+		from 
+			ord_batch,
+			ord_batch_orders, 
+			ord_order order_,
+			prod_product prod,
+			prod_product_branch branch,
+			PASS_CODE passcode,
+			pass_port_code portcode 
+		where ord_batch.order_batch_id=#batchId# 
+			and order_.order_status = 'NORMAL'
+			and passcode.status='SUCCESS'  
+			and portcode.status='UNUSED'
+			and ord_batch.order_batch_id = ord_batch_orders.ord_batch_id
+			and order_.order_id = ord_batch_orders.ord_order_id
+			and branch.prod_branch_id = ord_batch.prod_product_branch_id
+			and prod.product_id = branch.product_id
+			and passcode.code_id = portcode.code_id
+			and passcode.order_id = order_.order_id
+	</select>
+	
+	<sql id="selectByParamsSql">
+		select 
+			bach.*,prod.product_name,branch.branch_name,distr.DISTRIBUTOR_NAME 
+    	from 
+      		ord_batch bach,
+      		prod_product prod,
+      		prod_product_branch branch ,
+      		DISTRIBUTOR_TUAN_INFO distr
+    	where 
+      		branch.product_id = prod.product_id and 
+      		bach.prod_product_branch_id= branch.prod_branch_id and 
+			bach.prod_product_id = prod.product_id and
+      		distr.distributor_tuan_info_id = bach.distributor_tuan_info_id
+		<dynamic>
+			<isNotEmpty property="batchId" prepend=" and ">
+				bach.ORDER_BATCH_ID=#batchId#
+			</isNotEmpty>
+			<isNotEmpty property="productBranchId" prepend=" and ">
+				bach.PROD_PRODUCT_BRANCH_ID=#productBranchId#
+			</isNotEmpty>
+			<isNotEmpty property="productId" prepend=" and ">
+				bach.PROD_PRODUCT_ID=#productId#
+			</isNotEmpty>
+			<isNotEmpty property="contacts" prepend=" and ">
+				bach.ORDER_CONTACTS=#contacts#
+			</isNotEmpty>
+			<isNotEmpty property="contactsPhone" prepend=" and ">
+				bach.ORDER_CONTACTS_PHONE=#contactsPhone#
+			</isNotEmpty>
+			<isNotEmpty property="creator" prepend=" and ">
+				bach.ORDER_BATCH_CREATOR=#creator#
+			</isNotEmpty>
+			<isNotEmpty property="createtimeStart" prepend=" and ">
+				bach.ORDER_BATCH_CREATETIME &gt;=#createtimeStart#
+			</isNotEmpty>
+			<isNotEmpty property="createtimeEnd" prepend=" and ">
+				bach.ORDER_BATCH_CREATETIME &lt;=#createtimeEnd#
+			</isNotEmpty>
+		</dynamic>
+		order by bach.ORDER_BATCH_ID desc
+	</sql>
+	
+	<select id="selectByBatchId" resultMap="BaseResultMap"  parameterClass="java.lang.Long">
+		select * from ord_batch bach
+		where bach.ORDER_BATCH_ID=#batchId#
+	</select>
+	
+	<select id="selectByParams" resultMap="searchResultMap" parameterClass="java.util.HashMap">
+		select * from (
+			select rownum rownums,b.* from(
+				<include refid="selectByParamsSql"/>
+			)b
+		)
+		where rownums &gt;=#start# and rownums &lt;=#end#
+	</select>
+	
+	<select id="selectByParamsCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		select count(1) from (
+			<include refid="selectByParamsSql"/>
+		)
+	</select>
+	
+	<sql id="listAbandonOrderSql">
+		select 
+      bach.*,
+      order_.order_status,
+      portcode.status perform_status,
+      branch.branch_name,
+      prod.product_name,
+      order_.order_id,
+      passcode.add_code,
+      portcode.invalid_time
+		from 
+			ord_batch bach,
+			ord_batch_orders, 
+			ord_order order_,
+			prod_product prod,
+			prod_product_branch branch,
+			PASS_CODE passcode,
+			pass_port_code portcode 
+		where 
+			order_.order_id = ord_batch_orders.ord_order_id 
+			and bach.order_batch_id = ord_batch_orders.ord_batch_id 
+			and branch.prod_branch_id = bach.prod_product_branch_id 
+			and prod.product_id = branch.product_id 
+			and order_.order_id = passcode.order_id(+) 
+			and passcode.code_id = portcode.code_id(+)
+		<dynamic>
+			<isNotEmpty property="batchId" prepend=" and ">
+				bach.ORDER_BATCH_ID=#batchId#
+			</isNotEmpty>
+			<isNotEmpty property="branchId" prepend=" and ">
+				bach.PROD_PRODUCT_BRANCH_ID=#branchId#
+			</isNotEmpty>
+			<isNotEmpty property="productId" prepend=" and ">
+				bach.PROD_PRODUCT_ID=#productId#
+			</isNotEmpty>
+			<isNotEmpty property="contacts" prepend=" and ">
+				bach.ORDER_CONTACTS=#contacts#
+			</isNotEmpty>
+			<isNotEmpty property="contactsPhone" prepend=" and ">
+				bach.ORDER_CONTACTS_PHONE=#contactsPhone#
+			</isNotEmpty>
+			<isNotEmpty property="creator" prepend=" and ">
+				bach.ORDER_BATCH_CREATOR=#creator#
+			</isNotEmpty>
+			<isNotEmpty property="createtimeStart" prepend=" and ">
+				bach.ORDER_BATCH_CREATETIME &gt;=#createtimeStart#
+			</isNotEmpty>
+			<isNotEmpty property="createtimeEnd" prepend=" and ">
+				bach.ORDER_BATCH_CREATETIME &lt;=#createtimeEnd#
+			</isNotEmpty>
+			<isNotEmpty property="addCode" prepend=" and ">
+				passcode.add_code = #addCode#
+			</isNotEmpty>
+			<isNotEmpty property="orderStatus" prepend=" and ">
+				order_.order_status = #orderStatus#
+			</isNotEmpty>
+			<isNotEmpty property="performStatus" prepend=" and ">
+				portcode.status = #performStatus#
+			</isNotEmpty>
+			<isNotEmpty property="productName" prepend=" and ">
+				prod.product_name like '%$productName$%'
+			</isNotEmpty>
+		</dynamic>
+		order by bach.order_batch_id desc
+	</sql>
+	
+	<select id="listAbandonOrder" resultMap="abandonOrderResultMap" parameterClass="java.util.HashMap">
+		SELECT * FROM (
+			select rownum rownums,b.* from(
+			<include refid="listAbandonOrderSql"/>
+		) b )
+		where rownums &gt;=#start# and rownums &lt;=#end#
+	</select>
+	<select id="listAbandonOrderCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		SELECT COUNT(1) FROM (
+			<include refid="listAbandonOrderSql"/>
+		)
+	</select>
+	
+	<select id="queryBatchOrdersForCancel" resultMap="cancelOrderResultMap" parameterClass="java.util.HashMap">
+	 select 
+      bach.*,
+      order_.order_status,
+      portcode.status perform_status,
+      order_.order_id
+		from 
+			ord_batch bach,
+			ord_batch_orders, 
+			ord_order order_,
+			PASS_CODE passcode,
+			pass_port_code portcode 
+		where 
+			order_.order_id = ord_batch_orders.ord_order_id 
+			and bach.order_batch_id = ord_batch_orders.ord_batch_id 
+			and order_.order_id = passcode.order_id(+) 
+			and passcode.code_id = portcode.code_id(+)
+		<dynamic>
+			<isNotEmpty property="batchId" prepend=" and ">
+				bach.ORDER_BATCH_ID=#batchId#
+			</isNotEmpty>
+			<isNotEmpty property="orderStatus" prepend=" and ">
+				order_.order_status = #orderStatus#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="selectNeedCreateOrder" resultMap="BaseResultMap"  parameterClass="java.lang.Long">
+		select * from ord_batch bach
+		where bach.is_valid='true'
+		and bach.ORDER_BATCH_STATUS='BATCHWAITTING'
+	</select>
+	
+	
+	<resultMap id="OrdOrderBatchOrdersMap" class="com.lvmama.comm.bee.po.ord.OrdOrderBatchOrder">
+		<result column="ORD_BATCH_ID" property="batchId" />
+		<result column="ORD_ORDER_ID" property="orderId" />
+	</resultMap>
+
+	<insert id="insertBatchOrder" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderBatchOrder">
+		insert into ord_batch_orders (
+			ORD_BATCH_ID,
+			ORD_ORDER_ID
+		)
+		values (
+			#batchId#,
+			#orderId#
+		)
+	</insert>
+	
+	<select id="getBatchOrderCount" resultClass="java.lang.Integer" parameterClass="java.lang.Long">
+		select 
+			count(ord.order_id) ordCount
+		from 
+			ord_batch_orders ords, 
+			ord_order ord
+		where 
+			ords.ord_order_id = ord.order_id
+			and ords.ord_batch_id = #batchId#
+	</select>
+	<select id="getBatchPassCodeCount" resultClass="java.lang.Integer" parameterClass="java.lang.Long">
+		select 
+			count(passcode.Code_Id)
+		from 
+			ord_batch_orders ords, 
+			pass_code passcode
+		where 
+			passcode.order_id = ords.ord_order_id
+			and passcode.status = 'SUCCESS'
+			and ords.ord_batch_id = #batchId#
+	</select>
+	
+	<select id="getBatchCanceledCount" resultClass="java.lang.Integer" parameterClass="java.lang.Long">
+		select count(1) from 
+			ord_batch_orders bo,
+			PASS_CODE passcode,
+			pass_port_code portcode 
+		where passcode.code_id = portcode.code_id
+		and passcode.order_id = bo.ord_order_id
+		and passcode.status = 'DESTROYED'
+      	and bo.ord_batch_id=#batchId#
+	</select>
+	
+	<select id="getBatchUsedCount" resultClass="java.lang.Integer" parameterClass="java.lang.Long">
+		select 
+			count(1)
+		from 
+			ord_batch,
+			ord_batch_orders, 
+			ord_order order_,
+			prod_product prod,
+			prod_product_branch branch,
+			PASS_CODE passcode,
+			pass_port_code portcode 
+		where ord_batch.order_batch_id=#batchId# 
+			and order_.order_status = 'NORMAL'
+			and passcode.status='SUCCESS'  
+			and portcode.status='USED'
+			and ord_batch.order_batch_id = ord_batch_orders.ord_batch_id
+			and order_.order_id = ord_batch_orders.ord_order_id
+			and branch.prod_branch_id = ord_batch.prod_product_branch_id
+			and prod.product_id = branch.product_id
+			and passcode.code_id = portcode.code_id
+			and passcode.order_id = order_.order_id
+	</select>
+	
+	<select id="getBatchcanCancelCount" resultClass="java.lang.Integer" parameterClass="java.lang.Long">
+		select 
+			count(1)
+		from 
+			ord_batch,
+			ord_batch_orders, 
+			ord_order order_,
+			prod_product prod,
+			prod_product_branch branch,
+			PASS_CODE passcode,
+			pass_port_code portcode 
+		where ord_batch.order_batch_id=#batchId# 
+			and order_.order_status = 'NORMAL'
+			and passcode.status='SUCCESS'  
+			and portcode.status='UNUSED'
+			and ord_batch.order_batch_id = ord_batch_orders.ord_batch_id
+			and order_.order_id = ord_batch_orders.ord_order_id
+			and branch.prod_branch_id = ord_batch.prod_product_branch_id
+			and prod.product_id = branch.product_id
+			and passcode.code_id = portcode.code_id
+			and passcode.order_id = order_.order_id
+	</select>
+	
+	<update id="updateBatchStatus" parameterClass="java.util.HashMap">
+		update ord_batch set order_batch_status=#status# where ORDER_BATCH_ID=#batchId#
+	</update>
+	<update id="updateBatchValid" parameterClass="java.util.HashMap">
+		update ord_batch set is_valid=#isValid# where ORDER_BATCH_ID=#batchId#
+	</update>
+	
+	<sql id="listAbandonOrderSql2">
+		select * from
+		(select
+		bach.*,
+		order_.order_status,
+		branch.branch_name,
+		prod.product_name,
+		order_.order_id
+		from ord_batch bach,
+		ord_batch_orders,
+		prod_product prod,
+		prod_product_branch branch ,
+		ord_order order_
+		where
+		bach.order_batch_id =
+		ord_batch_orders.ord_batch_id
+		and order_.order_id
+		=
+		ord_batch_orders.ord_order_id
+		and branch.prod_branch_id =
+		bach.prod_product_branch_id
+		and prod.product_id = branch.product_id
+		<dynamic>
+			<isNotEmpty property="batchId" prepend=" and ">
+				bach.ORDER_BATCH_ID=#batchId#
+			</isNotEmpty>
+			<isNotEmpty property="branchId" prepend=" and ">
+				bach.PROD_PRODUCT_BRANCH_ID=#branchId#
+			</isNotEmpty>
+			<isNotEmpty property="productId" prepend=" and ">
+				bach.PROD_PRODUCT_ID=#productId#
+			</isNotEmpty>
+			<isNotEmpty property="contacts" prepend=" and ">
+				bach.ORDER_CONTACTS=#contacts#
+			</isNotEmpty>
+			<isNotEmpty property="contactsPhone" prepend=" and ">
+				bach.ORDER_CONTACTS_PHONE=#contactsPhone#
+			</isNotEmpty>
+			<isNotEmpty property="creator" prepend=" and ">
+				bach.ORDER_BATCH_CREATOR=#creator#
+			</isNotEmpty>
+			<isNotEmpty property="createtimeStart" prepend=" and ">
+				bach.ORDER_BATCH_CREATETIME &gt;=#createtimeStart#
+			</isNotEmpty>
+			<isNotEmpty property="createtimeEnd" prepend=" and ">
+				bach.ORDER_BATCH_CREATETIME &lt;=#createtimeEnd#
+			</isNotEmpty>
+			<isNotEmpty property="orderStatus" prepend=" and ">
+				order_.order_status = #orderStatus#
+			</isNotEmpty>
+			<isNotEmpty property="productName" prepend=" and ">
+				prod.product_name like '%$productName$%'
+			</isNotEmpty>
+		</dynamic>
+		) main
+		left join
+		(select
+		passcode.order_id,
+		passcode.add_code,
+		portcode.status
+		perform_status,
+		portcode.invalid_time,
+		portcode.used_time
+		from PASS_CODE
+		passcode,
+		pass_port_code portcode
+		where
+		passcode.status in
+		('SUCCESS','DESTROYED','UNDESTROYED')
+		and passcode.code_id =
+		portcode.code_id
+		) portcode
+		on portcode.order_id = main.order_id
+		where
+		1=1
+		<dynamic>
+			<isNotEmpty property="addCode" prepend=" and ">
+				portcode.add_code =
+				#addCode#
+			</isNotEmpty>
+			<isNotEmpty property="performStatus" prepend=" and ">
+				portcode.perform_status = #performStatus#
+			</isNotEmpty>
+			<isNotEmpty property="dimPerformStatus" prepend=" and ">
+				(portcode.perform_status = #dimPerformStatus# or portcode.perform_status is null)
+			</isNotEmpty>	
+			<isNotEmpty property="usedtimeStart" prepend=" and ">
+				portcode.USED_TIME &gt;=#usedtimeStart#
+			</isNotEmpty>
+			<isNotEmpty property="usedtimeEnd" prepend=" and ">
+				portcode.USED_TIME &lt;=#usedtimeEnd#
+			</isNotEmpty>
+		</dynamic>
+		order by
+		main.order_batch_id desc
+	</sql>
+
+	<select id="listAbandonOrder2" resultMap="abandonOrderResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM (
+		select rownum rownums,b.* from(
+		<include refid="listAbandonOrderSql2" />
+		) b )
+		where rownums &gt;=#start# and rownums &lt;=#end#
+	</select>
+	<select id="listAbandonOrder2Count" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		SELECT COUNT(1) FROM (
+		<include refid="listAbandonOrderSql2" />
+		)
+	</select>
+</sqlMap>

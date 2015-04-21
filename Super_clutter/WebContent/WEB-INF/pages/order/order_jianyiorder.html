@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>我的预订单</title><link rel="apple-touch-icon" href="lvmama_v1_png.png" />
+<#include "../common/define.html">
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_back();"> <img src="http://pic.lvmama.com/img/mobile/touch/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="http://pic.lvmama.com/img/mobile/touch/img/operate_sep.png"></div>
+  <div class="lv-title">我的预约单</div>
+  <section class="header_alice">
+   		<a href="http://${hostName}" class="btn1"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a>
+   </section>
+</div>
+<div class="lv-wrapper lv-min-height lv-media-width myorder">
+	<a class="myorder_v3_list" style="margin:10px;" href="javascript:void(0);">
+    	预约单仅支持预约长途游和出境游,若客服已联系你并成功下单,请返回至我的订单查看。
+    </a>
+  <div class="lv-wrapper-container">
+  	<#if jianYiOrderList?? && jianYiOrderList?size&gt;0>
+  		<#list jianYiOrderList as orderJY>
+			<div class="lv-box clear">
+				<a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/order/my_jianyi_order_detail.htm?workOrderId=${orderJY.workOrderId!}');">
+					<div class="lv-order-title lv-padding-x10 lv-fontsize-12">编号：${orderJY.workOrderId!} <span class="lv-order-status lv-pull-right f_9f9f9f">${orderJY.orderJYStatus!}</span></div>
+					<div class="lv-order-content clear">
+				     <div class="lv-order-icon  lv-pull-left"><img src="${prefixPic!}${orderJY.orderJYImg!}"></div>
+				     <div class="lv-order-desc lv-pull-left lv-fontsize-12">
+				       <div>${orderJY.productName!}</div>
+				       <div>联系人：${orderJY.userName!}</div>
+				       <div>手机号码：${orderJY.userMobile!}</div>
+				     </div>
+				     <img class="lv-next-01 lv-redirect-next" src="http://pic.lvmama.com/img/mobile/touch/img/next.png"> </div>
+			 	</a>
+			 </div>
+		 </#list>
+	<#else>
+	     <#assign no_data_msg="还没有任何预订单">
+         <#include "../common/no_data_list.html">	 
+   	</#if>  
+  </div>
+</div>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+</body>
+</html>

@@ -1,0 +1,59 @@
+    <!-- 实体票收件人信息 -->
+    <h3>实体票收件人信息</h3>
+   	<div class="lv-box" style="margin-top:4px;">
+   	     <input id="expPersonType" name="mpi.personType" value="ADDRESS" type="hidden" >
+         <ul class="lv-proinfo-list">
+             <li>
+              	<span class='lv-span-01'><label for="personName">姓&nbsp;&nbsp;名</label></span>
+              	<input class="lv-input-text" id="expPersonName" name="mpi.personName" value="" type="text" placeholder="姓名">
+             </li>
+             <li>
+            	<span class='lv-span-01'><label for="tel">手机号码</label></span>
+            	<input class="lv-input-text"  id="expMobile" name="mpi.personMobile" value="" type="tel" placeholder="收件人手机号">
+             </li>
+             <li>
+            	<span class='lv-span-01'><label for="tel">省份</label></span> 
+            	<select class="sex" name="mpi.province" id="expProvince" onclick="getExpCites('expProvince')" onchange="getExpCites('expProvince')" >
+            	    <#if provinceTree?? && provinceTree?size &gt; 0>
+            	        <#list provinceTree as p>
+            	           <option  value="${p.value!}" data-key="${p.key!}">${p.value!}</option>
+            	        </#list>
+            	    </#if>
+	            </select>
+              </li>
+              <li>
+            	<span class='lv-span-01'><label for="tel">城市</label></span> 
+            	<select class="sex" name="mpi.city" id="expCity">
+	               <option  value="" >请选择</option>
+	            </select>
+             </li>
+             <li>
+            	<span class='lv-span-01'><label for="tel">详细地址</label></span>
+            	<input class="lv-input-text"  id="expAddress" name="mpi.address" value="" type="text" placeholder="填写详细地址">
+             </li>
+          </ul>
+     </div>
+     <#if provinceTree?? && provinceTree?size &gt; 0>
+	     <script >
+	          var provice = ${provinceTreeJson!};
+	          function getExpCites(id) {
+	        	  var key = $("#"+id+" option:selected").attr('data-key');
+	        	  var strArry = [];
+	        	  if(null != provice && provice.length > 0) {
+	        		  for(var i = 0 ;i < provice.length;i++) {
+	        			  var entity = provice[i];
+	        			  if(key == entity.key) {
+	        				  var t_en = entity.list;
+	        				  if(null != t_en && t_en.length > 0) {
+		        				  for(var j = 0; j < t_en.length ;j++) {
+		        					  var e = t_en[j];
+		        					  strArry.push("<option value=\""+e.value+"\" >"+e.value+"</option>");
+		        				  }
+	        				  }
+	        			  }
+	        		  }
+	        	  }
+	        	  $("#expCity").html(strArry.join(""));
+	          }
+	     </script>
+     </#if>

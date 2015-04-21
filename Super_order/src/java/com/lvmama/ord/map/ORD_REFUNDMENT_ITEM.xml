@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_REFUNDMENT_ITEM">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdRefundMentItem">
+		<result column="REFUNDMENT_ITEM_ID" property="refundmentItemId" />
+		<result column="REFUNDMENT_ID" property="refundmentId" />
+		<result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+		<result column="TYPE" property="type"/>
+		<result column="AMOUNT" property="amount"/>
+		<result column="MEMO" property="memo"/>
+		<result column="ACTUAL_LOSS" property="actualLoss"/>
+	</resultMap>
+
+	<select id="select" resultMap="BaseResultMap" parameterClass="java.util.HashMap" >
+		SELECT * FROM ORD_REFUNDMENT_ITEM
+		where 1=1
+		<isNotEmpty prepend=" and" property="orderItemMetaId">
+			ORDER_ITEM_META_ID= #orderItemMetaId#
+    </isNotEmpty>
+	</select>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdRefundMentItem">
+		<selectKey resultClass="java.lang.Long" keyProperty="refundmentItemId" >
+		  select ORD_REFUNDMENT_ITEM_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into ORD_REFUNDMENT_ITEM
+		(REFUNDMENT_ITEM_ID, REFUNDMENT_ID, ORDER_ITEM_META_ID, TYPE, AMOUNT, MEMO, ACTUAL_LOSS)
+		values (#refundmentItemId#, #refundmentId#, #orderItemMetaId#, #type#, #amount#, #memo#, #actualLoss#)
+	</insert>
+</sqlMap>

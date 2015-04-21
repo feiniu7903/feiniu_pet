@@ -1,0 +1,71 @@
+<zk>
+	<grid>
+		<columns>
+			<column width="35%"></column>
+			<column width="30%"></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>
+					有效时间：
+					<datebox id="beginTime"
+						value="@{saction.condition.beginTime, load-after='edit.onClick'}" />
+					<label value="至" />
+					<datebox id="endTime"
+						value="@{saction.condition.endTime, load-after='edit.onClick'}" />
+				</hbox>
+				<hbox>
+					提示类型：
+					<combobox id="conditionType"
+						model="@{saction.conditionTypeList}"
+						selectedItem="@{saction.condition.type, load-after='edit.onClick'}">
+						<comboitem self="@{each='condType'}"
+							label="@{condType.name}" value="@{condType.code}" />
+					</combobox>
+				</hbox>
+				<hbox>
+					<checkbox id="frontend"
+						checked="@{saction.condition.frontend, load-after='edit.onClick'}"
+						label="前台可见">
+					</checkbox>
+				</hbox>
+			</row>
+			<row spans="3">
+				<hbox>
+					<textbox id="content" maxlength="2048"
+						value="@{saction.condition.content, load-after='edit.onClick'}"
+						width="600px" rows="2" />
+					<button id="save" label="保存"
+						onClick="saction.save();" width="100px">
+					</button>
+					<button id="refresh" visible="false"></button>
+					<button id="edit" visible="false"></button>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+	<listbox id="box" fixedLayout="true" model="@{saction.conditionList,load-after='refresh.onClick'}">
+		<listhead>
+			<listheader label="序号" width="5%"/>
+			<listheader label="时间" width="20%"/>
+			<listheader label="内容"/>
+			<listheader label="类型" width="10%"/>
+			<listheader label="操作" width="10%"/>
+		</listhead>
+		<listitem self="@{each='condition'}" value="@{condition}" height="25px">
+			<listcell label="@{condition.conditionId}"/>
+			<listcell label="@{condition.timeDescription}"></listcell>	
+			<listcell label="@{condition.content}" />
+			<listcell label="@{condition.zhConditionType}" />
+			<listcell>
+				<a label="删除" style="color:blue" onClick='saction.remove(self.getAttribute("conditionId"));'>
+					<custom-attributes conditionId="@{condition.conditionId}" />
+				</a>
+				<a label="编辑" style="color:blue" onClick='saction.edit(self.getAttribute("conditionId"));'>
+					<custom-attributes conditionId="@{condition.conditionId}" />
+				</a>
+			</listcell>
+		</listitem>
+	</listbox>
+</zk>

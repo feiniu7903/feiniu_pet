@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_ORDER_TRAFFIC_TICKET_INFO" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderTrafficTicketInfo" >
+    <result column="TRAFFIC_TICKET_INFO_ID" property="trafficTicketInfoId" />
+    <result column="ORDER_TRAFFIC_ID" property="orderTrafficId" />
+    <result column="TICKET_CATEGORY" property="ticketCategory" />
+    <result column="SEAT" property="seat" />
+    <result column="PRICE" property="price" />
+    <result column="SEAT_NO" property="seatNo" />
+    <result column="ORD_PERSON_ID" property="ordPersonId" />
+    <result column="TICKET_ID" property="ticketId" />
+    <result column="TICKET_STATUS" property="ticketStatus" />
+    <result column="BILL_NO" property="billNo" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTrafficTicketInfo" >
+    select *
+    from ORD_ORDER_TRAFFIC_TICKET_INFO
+    where TRAFFIC_TICKET_INFO_ID = #trafficTicketInfoId#
+  </select>
+  <select id="queryOrderTrafficTicketInfoByOrderId" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select distinct ootti.*
+    from ORD_ORDER_TRAFFIC_TICKET_INFO ootti,ORD_ORDER_TRAFFIC oot,ord_order_item_meta ooim where oot.ORDER_ITEM_META_ID=ooim.ORDER_ITEM_META_ID
+  	and ooim.ORDER_ID=#orderId#
+  </select>
+  <select id="selectSumPriceByTraffic" resultClass="java.lang.Long" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTrafficTicketInfo" >
+    select sum(PRICE)
+    from ORD_ORDER_TRAFFIC_TICKET_INFO
+    where ORDER_TRAFFIC_ID = #orderTrafficId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTrafficTicketInfo" >
+    delete from ORD_ORDER_TRAFFIC_TICKET_INFO
+    where TRAFFIC_TICKET_INFO_ID = #trafficTicketInfoId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTrafficTicketInfo" >
+    <selectKey resultClass="java.lang.Long" keyProperty="trafficTicketInfoId" >
+      select ORDER_TRAFFIC_TICKET_INFO_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_ORDER_TRAFFIC_TICKET_INFO (TRAFFIC_TICKET_INFO_ID, ORDER_TRAFFIC_ID,
+      TICKET_CATEGORY, SEAT, PRICE, SEAT_NO, ORD_PERSON_ID, TICKET_ID, TICKET_STATUS)
+    values (#trafficTicketInfoId#, #orderTrafficId#, #ticketCategory#,
+      #seat#, #price#, #seatNo#, #ordPersonId#, #ticketId#, #ticketStatus#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTrafficTicketInfo" >
+    <selectKey resultClass="java.lang.Long" keyProperty="trafficTicketInfoId" >
+      select ORDER_TRAFFIC_TICKET_INFO_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_ORDER_TRAFFIC_TICKET_INFO
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="trafficTicketInfoId" >
+        TRAFFIC_TICKET_INFO_ID
+      </isNotNull>
+      <isNotNull prepend="," property="orderTrafficId" >
+        ORDER_TRAFFIC_ID
+      </isNotNull>
+      <isNotNull prepend="," property="ticketCategory" >
+        TICKET_CATEGORY
+      </isNotNull>
+      <isNotNull prepend="," property="seat" >
+        SEAT
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        PRICE
+      </isNotNull>
+      <isNotNull prepend="," property="seatNo" >
+        SEAT_NO
+      </isNotNull>
+      <isNotNull prepend="," property="ordPersonId" >
+        ORD_PERSON_ID
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="trafficTicketInfoId" >
+        #trafficTicketInfoId#
+      </isNotNull>
+      <isNotNull prepend="," property="orderTrafficId" >
+        #orderTrafficId#
+      </isNotNull>
+      <isNotNull prepend="," property="ticketCategory" >
+        #ticketCategory#
+      </isNotNull>
+      <isNotNull prepend="," property="seat" >
+        #seat#
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        #price#
+      </isNotNull>
+      <isNotNull prepend="," property="seatNo" >
+        #seatNo#
+      </isNotNull>
+      <isNotNull prepend="," property="ordPersonId" >
+        #ordPersonId#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTrafficTicketInfo" >
+    update ORD_ORDER_TRAFFIC_TICKET_INFO
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="orderTrafficId" >
+        ORDER_TRAFFIC_ID = #orderTrafficId#
+      </isNotNull>
+      <isNotNull prepend="," property="ticketCategory" >
+        TICKET_CATEGORY = #ticketCategory#
+      </isNotNull>
+      <isNotNull prepend="," property="seat" >
+        SEAT = #seat#
+      </isNotNull>
+      <isNotNull prepend="," property="price" >
+        PRICE = #price#
+      </isNotNull>
+      <isNotNull prepend="," property="seatNo" >
+        SEAT_NO = #seatNo#
+      </isNotNull>
+      <isNotNull prepend="," property="ordPersonId" >
+        ORD_PERSON_ID = #ordPersonId#
+      </isNotNull>
+    </dynamic>
+    where TRAFFIC_TICKET_INFO_ID = #trafficTicketInfoId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderTrafficTicketInfo" >
+    update ORD_ORDER_TRAFFIC_TICKET_INFO
+    set ORDER_TRAFFIC_ID = #orderTrafficId#,
+      TICKET_CATEGORY = #ticketCategory#,
+      SEAT = #seat#,
+      PRICE = #price#,
+      SEAT_NO = #seatNo#,
+      ORD_PERSON_ID = #ordPersonId#
+    where TRAFFIC_TICKET_INFO_ID = #trafficTicketInfoId#
+  </update>
+  
+  <select id="getAllTicketsByOrderId" parameterClass="java.lang.String" resultMap="BaseResultMap">
+  	<![CDATA[
+  		select ootti.*
+  		from ord_order_traffic_ticket_info ootti,ord_order_traffic oot
+  		where ootti.order_traffic_id = oot.order_traffic_id
+  		and oot.supplier_order_id = #supplierOrderId#
+  	]]>
+  </select>
+  
+  <update id="updateDrawbackTicketById" parameterClass="java.util.Map">
+  	<![CDATA[
+  		update ord_order_traffic_ticket_info ootti
+  	   	   set ootti.ticket_status = 'FALSE',
+  	   	       ootti.bill_no = #flowId#
+  	 	 where ootti.ticket_id in ($ticketIds$)
+  	 ]]>
+  </update>
+  
+  <select id="isFlowExistsInTickets" parameterClass="java.lang.String" resultMap="BaseResultMap">
+  	select * from ord_order_traffic_ticket_info ootti where ootti.bill_no = #billNo#
+  </select>
+  
+  <select id="getPayAccountByRefundId" parameterClass="java.lang.Long" resultClass="java.lang.String">
+  	select sum(ootti.price) from ord_order_traffic_ticket_info ootti where ootti.order_traffic_id = #orderTrafficId#
+  </select>
+  
+  <select id="getTicketInfoById" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+  	select * from ord_order_traffic_ticket_info ootti where ootti.ticket_id = #ticketId#
+  </select>
+  
+  <select id="getTicketNoRefundNumById" parameterClass="java.lang.Long" resultClass="java.lang.Integer">
+  	select count(ootti.traffic_ticket_info_id) 
+	from ord_order_traffic_ticket_info ootti 
+	where ootti.ticket_status = 'TRUE'
+	and ootti.order_traffic_id = #orderTrafficId# 
+  </select>
+  
+  <select id="getTicketPriceByTrafficId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+  	select * from ord_order_traffic_ticket_info ootti where ootti.order_traffic_id = #orderTrafficId#
+  </select>
+</sqlMap>

@@ -1,0 +1,34 @@
+<#if contactList?? && contactList?size &gt;0>
+   <#list contactList as contact>
+   		   <input type="hidden" name="receiver_id_${contact_index}" id="receiver_id_${contact_index}" value="${contact.receiverId!}"/>
+		   <input type="hidden" name="receiver_name_${contact_index}" id="receiver_name_${contact_index}" value="${contact.receiverName!}"/>
+		   <input type="hidden" name="mobile_mumber_${contact_index}" id="mobile_mumber_${contact_index}" value="${contact.mobileNumber!}"/>
+		   <input type="hidden" name="traveler_cert_type_${contact_index}" id="traveler_cert_type_${contact_index}" value="${contact.certType!}"/>
+		   <input type="hidden" name="traveler_cert_no_${contact_index}" id="traveler_cert_no_${contact_index}" value="${contact.certNo!}"/>
+		   <input type="hidden" name="traveler_birthday_${contact_index}" id="traveler_birthday_${contact_index}" value="${contact.birthday!}"/>
+		   <input type="hidden" name="traveler_gender_${contact_index}" id="traveler_gender_${contact_index}" value="${contact.gender!}"/>
+           <div class="common-order-line">
+               <div class="checkOption">
+                   <span class="ic_check_a"><i></i></span>
+                   <span>
+                       ${contact.receiverName!}<br>
+                       <em>
+	                       <#if contact.mobileNumber?? && contact.mobileNumber!="">
+	                       		手机号：${contact.mobileNumber?default(" ")}<br>
+	                       	</#if>
+	                       	<#if contact.certNo?? && contact.certNo!="">
+	                       		<#if contact.certType?? && contact.certType=="ID_CARD">
+	                       			身份证：
+	                       		<#else>
+	                       			护&nbsp;&nbsp;&nbsp;照：
+	                       		</#if>
+	                       		${contact.certNo?default(" ")}
+	                       	</#if>
+                       </em>
+                   </span>
+                   <!-- <span class="ic_ri"></span> -->
+               </div>
+               <span class="icon-pencil" onclick="editContact('${contact.receiverId!}','${contact.receiverName!}','${contact.mobileNumber!}','TRAVELLER','${contact.certType!}','${contact.certNo!}','${contact.birthday!}','${contact.gender!}');"></span>
+           </div>
+     </#list>
+  </#if>

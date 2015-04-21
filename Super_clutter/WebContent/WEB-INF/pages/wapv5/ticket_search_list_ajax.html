@@ -1,0 +1,41 @@
+<#assign prefix_pic_url="http://pic.lvmama.com/img/mobile/touch">
+<#setting number_format="#.##">
+<#assign hostName = reauestHostName/>
+<#if mplaceList?? && mplaceList?size&gt;0>
+	<#list mplaceList as product>
+           <article onclick="union_skip('http://${hostName}/ticket/piao-${product.id}/');">
+               <a href="javascript:void(0);" class="block">
+                   <div style="background-image: url(${prefixPic!}${product.middleImage!})"
+                        class="pro-pic">
+                        <#if product.canOrderToday?? && product.canOrderToday>
+        				<div class="flag">可订今日票</div>
+        			</#if>
+        		</div>
+                   <div class="pro-info">
+                       <h2>${product.name?default("")} </h2>
+                       <p>
+                           <span class="fr"><#if product.cmtStarts?? &&  product.cmtStarts!="" >${product.cmtStarts!}分</#if></span>
+                           <span class="pro-value"><small>&yen;</small> ${product.sellPriceYuan!} <i>起</i><del class="ml10">&yen; ${product.marketPriceYuan!}</del></span>
+                       </p>
+                       <p>
+                           <#if product.hasBusinessCoupon>
+                           	<span class="privilege">惠</span>
+                           </#if>
+                           <#if product.cashRefund?? && product.cashRefund>
+                            <span class="privilege rose">返&yen;${product.cashRefundY!}</span>
+                           </#if>
+                           <span class="fl">${product.subject!}</span>
+                       </p>
+                       <p class="f-size-10">${product.address!}</p>
+                   </div>
+               </a>
+           </article>
+        </#list>
+    <#else>	
+ 	<#assign no_data_msg="没有找到符合条件的结果">
+  	<#include "../common/no_data_list.html">	
+</#if> 
+<input id = "tmp_p" type ="hidden" value = "${page!}"/>
+<#if isLastPage>
+	<input id = "lastPage_flag" type ="hidden" value = "1"/>
+</#if>

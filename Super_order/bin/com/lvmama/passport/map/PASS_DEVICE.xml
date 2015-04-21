@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PASS_DEVICE">
+	<resultMap id="PassDevice_BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassDevice">
+		<result column="DEVICE_ID" property="deviceId" />
+		<result column="TARGET_ID" property="targetId" />
+		<result column="DEVICE_NO" property="deviceNo" />
+		<result column="MEMO" property="memo" />
+		<result column="PROVIDER_ID" property="providerId" />
+		<result column="DEVICE_TYPE" property="deviceType" />
+		<result column="CREATE_DATE" property="createDate" />
+	</resultMap>
+	
+    <resultMap id="Ext_BaseResultMap" extends="PassDevice_BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassDevice">
+		<result column="NAME" property="name" />
+	</resultMap>
+	
+	 <resultMap id="Ext_BaseResultMap_1" extends="PassDevice_BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassDevice">
+		<result column="PASSPORT_NAME" property="name" />
+		<result column="PROVIDER_NAME" property="providerName" />
+	</resultMap>
+	
+	<resultMap id="Ext_BaseResultMap_2" extends="PassDevice_BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassDevice">
+		<result column="ADD_CODE" property="addCode" />
+	</resultMap>
+	
+	<select id="selectPassDeviceByProviderIdAndCodeId"
+		resultMap="PassDevice_BaseResultMap"
+		parameterClass="java.util.HashMap">
+			SELECT A.* FROM PASS_DEVICE A 
+			WHERE  A.TARGET_ID IN(SELECT B.TARGET_ID FROM PASS_PORT_CODE B WHERE B.CODE_ID=#codeId# ) 
+			 and A.PROVIDER_ID=#providerId#
+	</select>
+	
+	<select id="getPaasDeviceByDeviceNoAndProviderId"
+		resultMap="Ext_BaseResultMap"
+		parameterClass="java.util.HashMap">
+		 select A.*,B.NAME from  PASS_DEVICE A , lvmama_pet.SUP_PERFORM_TARGET B 
+                   where A.TARGET_ID=B.TARGET_ID and A.PROVIDER_ID=#providerId# and A.DEVICE_NO = #deviceNo#
+	</select>
+
+	<select id="getPaasDeviceByDeviceId"
+		resultMap="PassDevice_BaseResultMap"
+		parameterClass="Long">
+		 select * from PASS_DEVICE where DEVICE_ID=#deviceId#
+	</select>
+	
+	<select id="searchPassDevice"
+		resultMap="Ext_BaseResultMap_1"
+		parameterClass="java.util.HashMap">
+		select T.* from(
+		 select A.*,B.NAME as PASSPORT_NAME ,C.NAME as PROVIDER_NAME,ROWNUM rn
+		  from  PASS_DEVICE A , lvmama_pet.SUP_PERFORM_TARGET B ,PASS_PROVIDER C
+                   where A.TARGET_ID=B.TARGET_ID and A.PROVIDER_ID=C.PROVIDER_ID
+         <isNotEmpty prepend=" and" property="providerId">
+			A.PROVIDER_ID=#providerId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="deviceNo">
+			A.DEVICE_NO=#deviceNo#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="targetId">
+			A.TARGET_ID=#targetId#
+		</isNotEmpty>
+		and ROWNUM &lt;=#_endRow#
+		) T where T.rn&gt;#_startRow#
+	</select>
+	
+	<select id="searchPassDeviceCount" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+		 select count(1)
+			  from  PASS_DEVICE A , SUP_PERFORM_TARGET B ,PASS_PROVIDER C
+	                   where A.TARGET_ID=B.TARGET_ID and A.PROVIDER_ID=C.PROVIDER_ID
+	         <isNotEmpty prepend=" and" property="providerId">
+				A.PROVIDER_ID=#providerId#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="deviceNo">
+				A.DEVICE_NO=#deviceNo#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="targetId">
+				A.TARGET_ID=#targetId#
+			</isNotEmpty>
+	</select>
+
+	<delete id="delDevice" parameterClass="Long">
+	   delete from PASS_DEVICE where DEVICE_ID=#deviceId# 
+	</delete>
+	
+    <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.pass.PassDevice" >
+    <selectKey resultClass="java.lang.Long" keyProperty="deviceId" >
+      select PASS_DEVICE_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PASS_DEVICE
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="deviceId" >
+        DEVICE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="targetId" >
+        TARGET_ID
+      </isNotNull>
+      <isNotNull prepend="," property="deviceNo" >
+        DEVICE_NO
+      </isNotNull>
+      <isNotNull prepend="," property="memo" >
+        MEMO
+      </isNotNull>
+      <isNotNull prepend="," property="providerId" >
+        PROVIDER_ID
+      </isNotNull>
+       <isNotNull prepend="," property="deviceType" >
+        DEVICE_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+        CREATE_DATE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+       <isNotNull prepend="," property="deviceId" >
+        #deviceId:LONG# 
+      </isNotNull>
+      <isNotNull prepend="," property="targetId" >
+        #targetId:LONG# 
+      </isNotNull>
+      <isNotNull prepend="," property="deviceNo" >
+       #deviceNo:LONG# 
+      </isNotNull>
+      <isNotNull prepend="," property="memo" >
+        #memo:VARCHAR#
+      </isNotNull>
+      
+       <isNotNull prepend="," property="providerId" >
+        #providerId:LONG#
+      </isNotNull>
+      
+      <isNotNull prepend="," property="deviceType" >
+         #deviceType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="createDate" >
+         sysdate
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.pass.PassDevice" >
+    update PASS_DEVICE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="targetId" >
+        TARGET_ID=#targetId:LONG# 
+      </isNotNull>
+      <isNotNull prepend="," property="deviceNo" >
+       DEVICE_NO=#deviceNo:LONG# 
+      </isNotNull>
+      <isNotNull prepend="," property="memo" >
+       MEMO=#memo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="providerId" >
+       PROVIDER_ID=#providerId:LONG#
+      </isNotNull>
+       <isNotNull prepend="," property="deviceType" >
+        DEVICE_TYPE=#deviceType:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where DEVICE_ID = #deviceId:LONG#
+  </update>
+
+
+	<select id="getDeviceListByCode" parameterClass="java.util.Map" resultMap="PassDevice_BaseResultMap">
+		select device.* from 
+			pass_code passcode,
+			pass_port_code passport,
+			pass_device device
+		where 
+			passcode.add_code = #code# and 
+			passcode.code_id = passport.code_id and 
+			passport.target_id = device.target_id
+			<isNotEmpty property="excludeDevices">
+			and device.target_id in (select d.target_id from pass_device d  where d.device_no=#excludeDevices#)
+			and device.device_no != #excludeDevices#
+			</isNotEmpty>
+	</select>
+	<select id="getDeviceListByOrderId" parameterClass="java.util.Map" resultMap="Ext_BaseResultMap_2">
+	  	select distinct
+	  		passcode.add_code,device.* 
+	  	from 
+			pass_device device,
+			pass_code passcode,
+			pass_port_code passport
+		
+		where 
+				passcode.order_id=#orderId#
+			and passcode.code_id = passport.code_id
+			and passport.target_id = device.target_id
+	  </select>
+	<resultMap id="SupPerformTarget_ResultMap" class="com.lvmama.comm.pet.po.sup.SupPerformTarget">
+		<result column="TARGET_ID" property="targetId" />
+		<result column="NAME" property="name" />
+		<result column="MEMO" property="memo" />
+		<result column="ADDRESS" property="address" />
+		<result column="OPEN_TIME" property="openTime" />
+		<result column="CLOSE_TIME" property="closeTime" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="PAYMENT_INFO" property="paymentInfo" />
+		<result column="PERFORM_INFO" property="performInfo" />
+		<result column="CERTIFICATE_TYPE" property="certificateType" />
+	</resultMap>
+	 <select id="getPerformTargetListByEBK" parameterClass="java.util.Map" resultMap="SupPerformTarget_ResultMap">
+		select target.*
+		from 
+			pass_device device,
+			sup_perform_target target
+			<isNotEmpty property="addCode">
+			,pass_port_code passport
+      		,pass_code passcode
+			</isNotEmpty>
+		where 
+				device.device_no=#udid#
+			 <isNotEmpty property="addCode">
+				and passcode.add_code = #addCode#
+      			and passport.code_id = passcode.code_id
+      			and passport.target_id = target.target_id
+			</isNotEmpty>
+			and device.target_id = target.target_id
+	  </select>
+	  <select id="getDeviceListByProviderId" parameterClass="Long" resultMap="PassDevice_BaseResultMap">
+	  	select * from pass_device device where device.provider_id=#providerId#
+	  </select>
+</sqlMap>

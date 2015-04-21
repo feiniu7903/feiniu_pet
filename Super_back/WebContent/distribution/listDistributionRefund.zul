@@ -1,0 +1,88 @@
+<?page title="分销商订单管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./listDistributorRefundWin"?>
+<?component name="listdistributorbox" extends="listbox" class="com.lvmama.back.web.distribution.ListboxCodeset"?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="label" extends="label" class="com.lvmama.back.utils.perm.PermLabel" ?>
+<zk>
+<window id="listDistributorRefundWin" title="分销订单管理" border="normal" closable="false" mode="embedded" apply="com.lvmama.back.web.distribution.ListDistributionRefundAction">
+	<grid>
+	<columns>
+		<column width="10%"></column>
+		<column width="30%"></column>
+		<column width="10%"></column>
+		<column width="30%"></column>
+	</columns>
+		<rows>
+			<row>
+				<hbox>订单ID:</hbox>
+				<hbox><longbox value="@{saction.searchConds.orderId}"/></hbox>
+				<hbox>退款状态：</hbox>
+				<hbox>
+					<listbox mold="select" selectedItem="@{saction.searchConds.refundStatus}">
+						<listitem label="请选择" />
+						<listitem label="成功" value="SUCCESS"></listitem>
+						<listitem label="失败" value="FAILED"></listitem>
+					</listbox>
+				</hbox>
+				<hbox><button id="doSearch" label="查询" width="100px" onClick="_paging.activePage=0;saction.doSearch();"></button></hbox>
+			</row>
+			<row>
+				<hbox>分销商:</hbox>
+				<hbox>
+					<listdistributorbox id="distributor" codeset="DISTRIBUTION" mold="select" selectedItem="@{saction.searchConds.distributorInfoId}" />
+				</hbox>
+				<hbox>创建时间：</hbox>
+				<hbox>
+					<datebox id="beginDate" value="@{saction.searchConds.beginDate}"></datebox>
+					<label value="~"/>
+					<datebox id="endDate" value="@{saction.searchConds.endDate}"></datebox>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+	<listbox id="box" fixedLayout="true" model="@{saction.refundList,load-after='doSearch.onClick,_paging.onPaging'}">
+		<listhead>
+			<listheader label="订单号" width="10%"/>
+			<listheader label="分销商订单号" width="15%"/>
+			<listheader label="分销商" width="10%"/>
+			<listheader label="退款状态" width="10%" />
+			<listheader label="订单金额" width="5%"/>
+			<listheader label="退款金额" width="5%"/>
+			<listheader label="手续费" width="10%"/>
+			<listheader label="退款时间" width="10%"/>
+			<listheader label="退款备注" width="15%"/>
+			<listheader label="操作" width="10%"/>
+		</listhead>
+		<listitem self="@{each='refund'}" height="25px">
+			<listcell label="@{refund.orderId}" />
+			<listcell label="@{refund.partnerOrderId}" />
+			<listcell label="@{refund.distributorName}" />
+			<listcell label="@{refund.zhRefundStatus}" />
+			<listcell label="@{refund.amountFloat}" />
+			<listcell label="@{refund.refundAmountFloat}" />
+			<listcell label="@{refund.factorageFloat}" />
+			<listcell label="@{refund.refundTime}" />
+			<listcell label="@{refund.remark}"/>
+			<listcell>
+				 <a visible="@{refund.isCanRefund}" label="重新申请退款" style="color:blue" onClick='saction.doResend(self.getAttribute("refund"))'>
+				 	<custom-attributes refund="@{refund}" />
+				 </a>
+			</listcell>
+		</listitem>
+	</listbox>
+	<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell width="200px">
+					<paging  id="_paging" pageSize = "15" onPaging='saction.doSearch();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+</window>
+</zk>

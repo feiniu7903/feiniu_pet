@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="INS_POLICY_INFO" >
+	<resultMap id="InsPolicyInfoMap" class="com.lvmama.comm.bee.po.insurance.InsPolicyInfo" >
+		<result column="policy_id" property="policyId"/>
+		<result column="order_id" property="orderId"/>
+		<result column="order_user_id" property="orderUserId"/>
+		<result column="meta_product_id" property="metaProductId"/>
+		<result column="meta_product_name" property="metaProductName"/>
+		<result column="meta_product_quantity" property="metaProductQuantity"/>
+		<result column="product_id_supplier" property="productIdSupplier"/>
+		<result column="product_type_supplier" property="productTypeSupplier"/>
+		<result column="actual_settlement_price" property="actualSettlementPrice"/>
+		<result column="insurance_day" property="insuranceDay"/>
+		<result column="effective_date" property="effectiveDate"/>
+		<result column="policy_status" property="policyStatus"/>
+		<result column="policy_result" property="policyResult"/>
+		<result column="pa_rslt_mesg" property="paRsltMesg"/>
+		<result column="policy_serial" property="policySerial"/>
+		<result column="policy_no" property="policyNo"/>
+		<result column="validate_code" property="validateCode"/>
+		<result column="manual" property="manual"/>
+		<result column="created_date" property="createdDate"/>
+		<result column="modified_date" property="modifiedDate"/>
+		<result column="valid" property="valid" />	
+		<result column="supplier_id" property="supplierId" />
+		
+		<result column="orderUserName" property="orderUserName"/>
+		<result column="orderUserMobile" property="orderUserMobile"/>
+		<result column="taken_operator" property="takenOperator"/>
+		<result column="visit_time" property="visitTime"/>
+	</resultMap>
+	
+	<sql id="reuse_query_sql"> 
+		FROM (SELECT i.*, u.mobile_number orderUserMobile, u.user_name orderUserName, o.taken_operator, o.visit_time FROM ins_policy_info i, user_user u, ord_order o WHERE i.order_user_id = u.user_no AND o.order_id = i.order_id
+		<isNotEmpty property="orderId" prepend=" AND "> i.order_id = #orderId# </isNotEmpty>
+		<isNotEmpty property="insurantName" prepend=" AND ">i.insurant_name = #insurantName#</isNotEmpty>
+		<isNotEmpty property="meta_product_id" prepend=" AND ">i.meta_product_id = #metaProductId#</isNotEmpty>
+		<isNotEmpty property="policyStatus">
+			<isEqual prepend=" AND " property="policyStatus" compareValue="VERIFIED"> i.policy_status != 'UNVERIFIED'</isEqual>
+			<isNotEqual prepend=" AND " property="policyStatus" compareValue="VERIFIED">i.policy_status = #policyStatus#</isNotEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="policyResultIsNull">policy_result is NULL</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="policyResult">policy_result = #policyResult#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="beginVisitTime">i.effective_date &gt;= #beginVisitTime#</isNotEmpty>
+		<isNotEmpty prepend=" AND " property="endVisitTime">i.effective_date &lt;= #endVisitTime#</isNotEmpty>
+		<isNotEmpty property="orderId" prepend=" AND ">i.order_id = #orderId#</isNotEmpty>
+		<isNotEmpty property="valid" prepend=" AND ">i.valid = #valid# </isNotEmpty>
+		<isNotEmpty property="bookerName" prepend=" AND ">(u.user_name = #bookerName# OR u.mobile_number = #bookerName# OR u.email = #bookerName#)</isNotEmpty>
+		<isNotEmpty property="supplierId" prepend=" AND ">supplier_id = #supplierId#</isNotEmpty>
+		<isNotEmpty property="notCancelOrder" prepend=" AND "> o.order_status != 'CANCEL'</isNotEmpty>
+		ORDER BY i.created_date DESC ) info
+    </sql>	
+  
+	<select id="count" parameterClass="java.util.Map" resultClass="long">
+		SELECT COUNT(policy_id)
+		<include refid="reuse_query_sql"/>  	  
+	</select>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="InsPolicyInfoMap">
+		<isNotEmpty property="skipResults">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT 
+			rownum r,
+			info.*
+		<include refid="reuse_query_sql"/>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="maxResults" >rownum &lt;= #maxResults# </isNotEmpty> 
+		</dynamic>
+		<isNotEmpty property="skipResults">
+			)
+		</isNotEmpty>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="skipResults" prepend=" AND "> r &gt; #skipResults# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.insurance.InsPolicyInfo">
+		<selectKey resultClass="java.lang.Long" keyProperty="policyId" >
+			select ins_policy_info_id_seq.nextval as policyId from DUAL
+		</selectKey>
+		INSERT INTO ins_policy_info
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="policyId" >policy_id</isNotNull>
+			<isNotNull prepend="," property="orderId" >order_id</isNotNull>
+			<isNotNull prepend="," property="orderUserId" >order_user_id</isNotNull>
+			<isNotNull prepend="," property="metaProductId" >meta_product_id</isNotNull>
+			<isNotNull prepend="," property="metaProductName" >meta_product_name</isNotNull>
+			<isNotNull prepend="," property="metaProductQuantity">meta_product_quantity</isNotNull>
+			<isNotNull prepend="," property="productIdSupplier" >product_id_supplier</isNotNull>
+			<isNotNull prepend="," property="productTypeSupplier" >product_type_supplier</isNotNull>
+			<isNotNull prepend="," property="actualSettlementPrice" >actual_settlement_price</isNotNull>
+			<isNotNull prepend="," property="insuranceDay" >insurance_day</isNotNull>
+			<isNotNull prepend="," property="effectiveDate" >effective_date</isNotNull>
+			<isNotNull prepend="," property="policyStatus">policy_status</isNotNull>
+			<isNotNull prepend="," property="policyResult">policy_result</isNotNull>
+			<isNotNull prepend="," property="paRsltMesg">pa_rslt_mesg</isNotNull>
+			<isNotNull prepend="," property="manual">manual</isNotNull>
+			<isNotNull prepend="," property="policySerial">policy_serial</isNotNull>
+			<isNotNull prepend="," property="policyNo">policy_no</isNotNull>
+			<isNotNull prepend="," property="validateCode">validate_code</isNotNull>
+			<isNotNull prepend="," property="valid">valid</isNotNull>
+			<isNotNull prepend="," property="supplierId">supplier_id</isNotNull>
+			,created_date
+			,modified_date
+		</dynamic>
+		) VALUES 
+		<dynamic prepend=" (">
+			<isNotNull prepend="," property="policyId" >#policyId#</isNotNull>
+			<isNotNull prepend="," property="orderId" >#orderId#</isNotNull>
+			<isNotNull prepend="," property="orderUserId" >#orderUserId#</isNotNull>
+			<isNotNull prepend="," property="metaProductId" >#metaProductId#</isNotNull>
+			<isNotNull prepend="," property="metaProductName" >#metaProductName#</isNotNull>
+			<isNotNull prepend="," property="metaProductQuantity">#metaProductQuantity#</isNotNull>
+			<isNotNull prepend="," property="productIdSupplier" >#productIdSupplier#</isNotNull>
+			<isNotNull prepend="," property="productTypeSupplier" >#productTypeSupplier#</isNotNull>
+			<isNotNull prepend="," property="actualSettlementPrice" >#actualSettlementPrice#</isNotNull>
+			<isNotNull prepend="," property="insuranceDay" >#insuranceDay#</isNotNull>
+			<isNotNull prepend="," property="effectiveDate" >#effectiveDate#</isNotNull>
+			<isNotNull prepend="," property="policyStatus">#policyStatus#</isNotNull>
+			<isNotNull prepend="," property="policyResult">#policyResult#</isNotNull>
+			<isNotNull prepend="," property="paRsltMesg">#paRsltMesg#</isNotNull>
+			<isNotNull prepend="," property="manual">#manual#</isNotNull>
+			<isNotNull prepend="," property="policySerial">#policySerial#</isNotNull>
+			<isNotNull prepend="," property="policyNo">#policyNo#</isNotNull>
+			<isNotNull prepend="," property="validateCode">#validateCode#</isNotNull>
+			<isNotNull prepend="," property="valid">#valid#</isNotNull>
+			<isNotNull prepend="," property="supplierId">#supplierId#</isNotNull>
+			,sysdate
+			,sysdate
+		)
+	   </dynamic>
+	</insert>
+
+	<update id="update" parameterClass="com.lvmama.comm.bee.po.insurance.InsPolicyInfo">
+		UPDATE ins_policy_info 
+		<dynamic prepend=" SET ">
+			<isNotNull prepend="," property="orderId" >order_id = #orderId#</isNotNull>
+			<isNotNull prepend="," property="orderUserId" >order_user_id = #orderUserId#</isNotNull>
+			<isNotNull prepend="," property="metaProductId" >meta_product_id = #metaProductId#</isNotNull>
+			<isNotNull prepend="," property="metaProductName" >meta_product_name = #metaProductName#</isNotNull>
+			<isNotNull prepend="," property="metaProductQuantity">meta_product_quantity = #metaProductQuantity#</isNotNull>
+			<isNotNull prepend="," property="productIdSupplier" >product_id_supplier = #productIdSupplier#</isNotNull>
+			<isNotNull prepend="," property="productTypeSupplier" >product_type_supplier = #productTypeSupplier#</isNotNull>
+			<isNotNull prepend="," property="actualSettlementPrice" >actual_settlement_price = #actualSettlementPrice#</isNotNull>			
+			<isNotNull prepend="," property="insuranceDay" >insurance_day = #insuranceDay#</isNotNull>
+			<isNotNull prepend="," property="effectiveDate" >effective_date = #effectiveDate#</isNotNull>
+			<isNotNull prepend="," property="policyStatus">policy_status = #policyStatus#</isNotNull>
+			<isNotNull prepend="," property="policyResult">policy_result = #policyResult#</isNotNull>
+			<isNull prepend="," property="policyResult">policy_result = null</isNull>
+			<isNotNull prepend="," property="paRsltMesg">pa_rslt_mesg = #paRsltMesg#</isNotNull>
+			<isNotNull prepend="," property="manual">manual=#manual#</isNotNull>
+			<isNotNull prepend="," property="policySerial">policy_serial = #policySerial#</isNotNull>
+			<isNotNull prepend="," property="policyNo">policy_no = #policyNo#</isNotNull>
+			<isNotNull prepend="," property="validateCode">validate_code = #validateCode#</isNotNull>
+			<isNotNull prepend="," property="valid">valid=#valid#</isNotNull>
+			<isNotNull prepend="," property="supplierId">supplier_id=#supplierId#</isNotNull>
+			, modified_date = sysdate
+		</dynamic>
+		WHERE policy_id = #policyId#
+	</update>
+
+	<select id="queryByPK" parameterClass="long" resultMap="InsPolicyInfoMap">
+		SELECT i.*, u.mobile_number orderUserMobile, u.user_name orderUserName, o.taken_operator, o.visit_time FROM ins_policy_info i, user_user u, ord_order o WHERE i.order_user_id = u.user_no AND o.order_id = i.order_id AND policy_id = #id#
+	</select>
+	
+	<delete id="delete" parameterClass="long">
+		DELETE FROM ins_policy_info WHERE  policy_id = #policyId#
+	</delete>	
+</sqlMap>

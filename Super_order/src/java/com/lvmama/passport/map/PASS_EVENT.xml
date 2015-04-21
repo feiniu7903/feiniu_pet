@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- ShiHui -->
+<sqlMap namespace="EVENT">
+	<resultMap id="Event_BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassEvent">
+		<result column="EVENT_ID" property="eventId" />
+		<result column="CODE_ID" property="codeId" />
+		<result column="APPLAY_TIME" property="applyTime" />
+		<result column="STATE" property="status" />
+		<result column="TYPE" property="type" />
+		<result column="TERMINAL_CONTENT" property="terminalContent" />
+		<result column="OUT_PORT_ID" property="outPortId" />
+	</resultMap>
+	
+	<select id="Event_selectByEventId" resultMap="Event_BaseResultMap"
+		parameterClass="long">
+		select * from PASS_EVENT where EVENT_ID=#eventId#
+	</select>
+	
+	<select id="Event_selectByParams" resultMap="Event_BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from PASS_EVENT e,PASS_CODE co where e.CODE_ID=co.CODE_ID
+		<isNotNull prepend=" and" property="status">
+			e.STATUS=#status#
+		</isNotNull>
+		<isNotNull prepend=" and" property="type">
+			e.TYPE=#type#
+		</isNotNull>
+	</select>
+	
+  <insert id="Event_insertSelective" parameterClass="com.lvmama.comm.bee.po.pass.PassEvent" >
+      <selectKey resultClass="java.lang.Long" keyProperty="eventId" >
+      select PASS_EVENT_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PASS_EVENT
+    <dynamic prepend="(" >
+       <isNotNull prepend="," property="eventId" >
+        EVENT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="codeId" >
+        CODE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="applyTime" >
+        APPLAY_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATE
+      </isNotNull>
+      <isNotNull prepend="," property="type" >
+        TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="terminalContent" >
+        TERMINAL_CONTENT
+      </isNotNull>
+      <isNotNull prepend="," property="outPortId" >
+        OUT_PORT_ID
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+       <isNotNull prepend="," property="eventId" >
+        #eventId:LONG# 
+       </isNotNull>
+       <isNotNull prepend="," property="codeId" >
+        #codeId:LONG# 
+      </isNotNull>
+      <isNotNull prepend="," property="applyTime" >
+       sysdate
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        #status:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="type" >
+        #type:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="terminalContent" >
+        #terminalContent:VARCHAR#
+      </isNotNull>
+       <isNotNull prepend="," property="outPortId" >
+        #outPortId:LONG# 
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  
+   <update id="Event_updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.pass.PassEvent" >
+    update PASS_EVENT
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="status" >
+       STATE= #status:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="type" >
+        TYPE=#type:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="terminalContent" >
+        TERMINAL_CONTENT=#terminalContent:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where CODE_ID = #codeId:LONG# and TYPE=#type:VARCHAR#
+  </update>
+  
+   <update id="updateBatchStauts" parameterClass="com.lvmama.comm.bee.po.pass.PassEvent" >
+    update PASS_EVENT
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="status" >
+       STATE= #status:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where CODE_ID = #codeId:LONG# and TYPE=#type:VARCHAR#
+  </update>
+  
+    <update id="updateStautsByEventId" parameterClass="com.lvmama.comm.bee.po.pass.PassEvent" >
+    update PASS_EVENT
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="status" >
+       STATE= #status:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where EVENT_ID = #eventId:LONG# 
+  </update>
+  
+</sqlMap>

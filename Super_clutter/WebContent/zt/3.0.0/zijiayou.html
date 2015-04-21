@@ -1,0 +1,404 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<!--<meta name="viewport" content="width=device-width,user-scalable=no,target-densitydpi=device-dpi" />-->
+<title>自驾游</title><link rel="apple-touch-icon" href="lvmama_v1_png.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="lvmama_v1_png.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="lvmama_v1_png.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="lvmama_v1_png.png" />
+<link rel="shortcut icon" href="http://www.lvmama.com/favicon.ico" type="image/x-icon" > 
+<link type="text/css" rel="stylesheet" href="../../css/cssreset.css">
+<link type="text/css" rel="stylesheet" href="../../css/common.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="../../js/base.js"></script>
+<script>
+$(function(){
+	$(document).scroll(function(e) {
+        if($(this).scrollTop()>189){//head高度+banner高度=189
+			$("#lv-fixdiv").addClass("lv-fixed");
+		}
+		if($(this).scrollTop() < 189){
+			$("#lv-fixdiv").removeClass("lv-fixed");
+		}
+    });	
+	
+	/*自驾游锚点*/
+	$("#lv-fixdiv ul.lv-biz-list li a").click(function(e){
+		//$(this).addClass("lv-narrow-current").siblings().removeClass("lv-narrow-current");
+		var aIndex = $(this).index(); 
+		var liIndex = $(this).parent().index();
+		var lvboxIndex = parseInt(liIndex)*4+aIndex;
+		var top = $(".lv-wrapper-container .lv-box").eq(lvboxIndex).offset().top;
+		$("html, body").animate({scrollTop:parseInt(top)-145}, 500);
+
+	});
+});
+
+</script>
+</head>
+
+<body>
+<!--<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="../../index.html"> <img src="http://pic.lvmama.com/img/mobile/touch/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="http://pic.lvmama.com/img/mobile/touch/img/operate_sep.png"></div>
+  <div class="lv-title">自驾游</div>
+</div>-->
+<div class="lv-banner lv-banner-specialsubject lv-media-width"> <img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/banner-zijiayou-01.jpg"> </div>
+<!--<div class="lv-wrapper lv-media-width">-->
+<!--<div id="lv-fixdiv">
+  <ul class="lv-biz-list">
+    <li><a href="javascript:void(0);"><span class="lv-biz-point">杭州</span></a><a href="javascript:void(0);"><span class="lv-biz-point">无锡</span></a><a href="javascript:void(0);"><span class="lv-biz-point">天目湖</span></a><a href="javascript:void(0);"><span class="lv-biz-point">千岛湖</span></a></li>
+    <li><a href="javascript:void(0);"><span class="lv-biz-point">黄山</span></a><a href="javascript:void(0);"><span class="lv-biz-point">常州</span></a><a href="javascript:void(0);"><span class="lv-biz-point">扬州</span></a><a href="javascript:void(0);"><span class="lv-biz-point">安吉</span></a></li>
+    <li><a href="javascript:void(0);"><span class="lv-biz-point">上海</span></a><a href="javascript:void(0);"><span class="lv-biz-point">绍兴</span></a><a href="javascript:void(0);"><span class="lv-biz-point">泰州</span></a><a href="javascript:void(0);"><span class="lv-biz-point">宁波</span></a></li>
+  </ul>
+</div>-->
+<!--</div>-->
+<div id="lv-fixed-after" class="lv-wrapper lv-media-width zzy_wrap">
+  <div class="lv-wrapper-container clear">
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="javascript:redirectSpecial('guide',100);" class="lv-displayblock">
+      <span class="zzy_ti">杭州</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="javascript:redirectSpecial('route',77465);">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-01.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游<非诚勿扰拍摄地>西溪湿地，观印象西湖秀，住西溪布...<div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',63755);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-02.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10 lv-three-line">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',77402);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-03.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+    
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="javascript:redirectSpecial('guide',83);" class="lv-displayblock"><span class="zzy_ti">无锡</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="javascript:redirectSpecial('route',72370);">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-04.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游太湖鼋头渚、自选古运河、三国城，住希尔顿逸林（新区）...
+            <div class="lv-color-02">&yen; 749</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',77093);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-05.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 519</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">游太湖鼋头渚、住最佳美洲锦亭酒店2人1晚</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',68184);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-06.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 799</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">游灵山大佛赏梵宫，住凯莱大饭店2人1晚</div>
+        </a> </div>
+    </div>
+    
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="javascript:redirectSpecial('guide',3915);" class="lv-displayblock"><span class="zzy_ti">天目湖</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="javascript:redirectSpecial('route',34918);">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-07.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">享山顶温泉、自选南山竹海，山水园，住溧阳涵田度假村山景...<div class="lv-color-02">&yen; 830</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',77264);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-08.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 299</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">游南山竹海，自选天目湖山水园、御水温泉，住米兰风尚酒店2人1晚</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',38444);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-09.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 449</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">享天目湖山水园，自选南山竹海、御水温泉，住华天度假村2人1晚</div>
+        </a> </div>
+    </div>
+    
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="javascript:redirectSpecial('guide',102);" class="lv-displayblock"><span class="zzy_ti">千岛湖</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="javascript:redirectSpecial('route',62444);">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-10.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">船游千岛湖中心湖，自选赏花骑行、有机鱼头、森林氧吧，住...
+            <div class="lv-color-02">&yen; 569</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',28042);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-11.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 819</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">船游千岛湖中心湖，自选森林氧吧、有机鱼头，住千岛湖绿城度假酒店2天1晚</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',72622);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-12.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 1379</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">船游千岛湖中心湖，自选森林氧吧、赏花骑行、新安江玉温泉，住滨江希尔顿酒店2人1晚</div>
+        </a> </div>
+    </div>
+    
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="javascript:redirectSpecial('guide',127);" class="lv-displayblock"><span class="zzy_ti">黄山</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="javascript:redirectSpecial('route',77051);">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-13.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">赏齐云山油菜花，自选醉温泉、西递，住黄山华美达豪华房2人1晚
+            <div class="lv-color-02">&yen; 508</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',76683);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-14.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 600</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">游唐模古村落、西递、观《徽韵》大型演出、住黄山香茗酒店2天1晚</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',77495);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-15.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 500</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">游翡翠谷(卧虎藏龙拍摄地)、逛屯溪老街，自选西递、徽州大峡谷/徽韵演出、住黄山轩辕国际大酒店2天1晚
+</div>
+        </a> </div>
+    </div>
+    
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="jjavascript:redirectSpecial('guide',86);" class="lv-displayblock"><span class="zzy_ti">常州</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="javascript:redirectSpecial('route',77415);">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-16.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">畅游常州恐龙园，住常州环球恐龙城维景大酒店酒店豪华房2人1晚
+			<div class="lv-color-02">&yen; 859</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',70089);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-17.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 629</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">畅游春秋城樱花节，住玛奇朵酒店湖塘花园店2人1晚</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',63050);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-18.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 759</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">【魔幻的冒险】游环球动漫嬉戏谷，住嬉戏谷开元度假村高级房2人1晚</div>
+        </a> </div>
+    </div>
+    
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="javascript:redirectSpecial('guide',92);" class="lv-displayblock"><span class="zzy_ti">扬州</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="javascript:redirectSpecial('route',39194);">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-19.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05 ">
+          	【休闲养生“最”温泉】享扬州瘦西湖温泉，自选瘦西湖，住扬州瘦西...
+            <div class="lv-color-02">&yen; 629</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',74619);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-20.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 639</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">【古韵扬州】赏扬州瘦西湖美景，自选景区个园、何园，住扬州古韵京华大酒店高级间2人1晚</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',77414);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-21.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 569</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">悠游个园，自选瘦西湖、何园、大明寺，住凯莎华美达酒店2人1晚</div>
+        </a> </div>
+    </div>
+    
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="javascript:redirectSpecial('guide',110);" class="lv-displayblock"><span class="zzy_ti">安吉</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="javascript:redirectSpecial('route',78482);">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-22.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">【世外茶园】 体验安吉采茶，品地道农家菜，自选百草园，住溪龙仙...
+            <div class="lv-color-02">&yen; 280</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',77173);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-23.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 480</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">游竹博园、观憨态大熊猫，自选中南百草原，住美林度假村2人1晚</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',77246);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-24.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 350</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">游中国大竹海、拍笋百态照，携手公益，自选中南百草原，住凯旋门大酒店2人1晚</div>
+        </a> </div>
+    </div>
+    
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="javascript:redirectSpecial('guide',79);" class="lv-displayblock"><span class="zzy_ti">上海</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="javascript:redirectSpecial('route',26807);">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-25.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游朱家角，住太阳岛度假别墅阳光豪华大床房2日游
+            <div class="lv-color-02">&yen; 760</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',76877);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-26.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 579</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">漫步上海东平国家森林公园、自选东滩湿地公园，住上海新崇大酒店 2日游（尊享VIP套餐）</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',77081);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-27.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 490</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">逛上海野生动物园、游新场古镇、游玩渔乐湾生态园，入住上海莎海国际酒店2日游</div>
+        </a> </div>
+    </div>
+    
+    
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="javascript:redirectSpecial('guide',111);" class="lv-displayblock"><span class="zzy_ti">绍兴</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="javascript:redirectSpecial('route',77276);">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-28.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">恋恋绍兴—畅游古城、住五星世茂假日酒店高级标准间2日游
+            <div class="lv-color-02">&yen; 658</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',78200);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-29.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 518</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">【赠送礼品】游柯岩、鉴湖、鲁镇、鲁迅故里、绍兴中金豪生酒店标准双人房2天1晚</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',78232);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-30.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 639</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">【赠送礼品含双人自助晚餐】游柯岩、鉴湖、鲁镇、鲁迅故里、夜游瓜渚湖美景，住绍兴金昌开元大酒店</div>
+        </a> </div>
+    </div>
+    
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="javascript:redirectSpecial('guide',94);" class="lv-displayblock"><span class="zzy_ti">泰州</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="javascript:redirectSpecial('route',72279);">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-31.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游溱湖湿地，住泰州华侨城奥思廷酒店豪华圆床房2人1晚
+            <div class="lv-color-02">&yen; 738</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',60114);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-32.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 779</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">游溱湖湿地会船节、享恒温泳池、住万达希尔顿逸林酒店2人1晚
+</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',71933);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-33.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 838</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">泡云海温泉，游古寿圣寺，体验高尔夫，享五星级自助晚餐，住泰州华侨城温泉奥思廷酒店 温泉房2人1晚</div>
+        </a> </div>
+    </div>
+    
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="javascript:redirectSpecial('guide',104);" class="lv-displayblock"><span class="zzy_ti">宁波</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="javascript:redirectSpecial('route',51386);">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-34.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">【文献名邦、东南名邑】游河姆渡遗址、住余姚阳明温泉山庄汽车旅...<div class="lv-color-02">&yen; 689</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',72245);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-35.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 720</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">赠送蓬山旅游度假区套票，住白金五星达蓬山酒店高级湖景标房2日游</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="javascript:redirectSpecial('route',72245);">
+        <div style="position:relative;"><img src="http://pic.lvmama.com/img/mobile/touch/img/specialsubject/spot-zijiayou-36.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 538</span></p>
+          </div>
+        </div>
+        <div class="lv-three-line" style="margin-bottom:10px;">【赠挖沙玩具1套】游松兰山海滨、石浦渔港古城，住松兰山海景大酒店2人1晚</div>
+        </a> </div>
+    </div>
+    
+  </div>
+</div>
+</body>
+</html>

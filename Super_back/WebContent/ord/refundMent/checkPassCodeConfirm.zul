@@ -1,0 +1,16 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./checkPassCodeConfirm"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="checkPassCodeConfirm" title="提示" closable="true" sizable="false" border="normal" mode="embedded" apply="com.lvmama.back.web.ord.sale.OrdSaleAddListAction">
+		<label value="                                        " />
+		<label value="@{saction.message}" />
+		<label value="                                        " />
+		<toolbar align="center">
+		    <button label="取消" width="100px" onClick="saction.closeWindow();" />
+		    <button label="通过审核" width="100px" onClick='saction.updateOrdRefundSuccess(self.getAttribute("refundmentId"), self.getAttribute("sysCode"))'>
+		    	<custom-attributes
+							refundmentId="@{saction.refundmentId}" />
+						<custom-attributes sysCode="@{saction.sysCode}" />
+			</button>
+        </toolbar>
+	</window>
+</zk>

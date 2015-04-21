@@ -1,0 +1,111 @@
+<?page title="EDM任务管理-新增页面" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<?component name="target_template" macroURI="/edm/template/target_template.zul"?>
+<?component name="target_userGroup" macroURI="/edm/userGroup/target_userGroup.zul"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.operate.util.ListboxCodeset" ?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./addEdmTask"?>
+	<window id="addEdmTask" title="EDM任务管理-新增页面" mode="embedded" apply="com.lvmama.operate.web.task.EditTaskAction">
+		<grid>
+			<columns>
+				<column width="120px"></column>
+				<column></column>
+			</columns>
+			<rows>
+			 	<row>
+					<hbox>任务名称：<label value="[*]" style="color:red;"/></hbox>
+					<hbox>
+						<textbox id="taskName" value="@{saction.task.taskName}" width="200px"/>
+						<image width="15px" height="15px" src="/img/qm.gif" tooltip="popup_taskName"/>
+						<popup id="popup_taskName" width="200px"> 
+								<label pre="true" value="名称长度小于100个字符"/> 
+						</popup>
+					</hbox>
+				</row>
+				<row>
+					<hbox>任务说明：</hbox>
+					<hbox>
+						<textbox id="taskDesc" value="@{saction.task.taskDesc}" rows="5" width="400px"/>
+						<image width="15px" height="15px" src="/img/qm.gif" tooltip="popup_taskDesc"/>
+						<popup id="popup_taskDesc" width="200px"> 
+								<label pre="true" value="说明长度小于1000个字符"/> 
+						</popup>
+					</hbox>
+				</row>
+				<row>
+					<hbox>任务组：<label value="[*]" style="color:red;"/></hbox>
+					<hbox><listbox id="groupId"  codeset="HQEDM_TASK_GROUP" mold="select" selectedItem="@{saction.task.groupId}" width="200px"/></hbox>
+				</row>
+				<row>
+					<hbox>任务类型：<label value="[*]" style="color:red;"/></hbox>
+					<hbox><listbox id="taskType"  codeset="EDM_TIMING_TYPE" mold="select" selectedItem="@{saction.task.taskType}" width="200px"/></hbox>
+				</row>
+				<row>
+					<hbox>邮件模板：<label value="[*]" style="color:red;"/></hbox>
+					<hbox>
+						<longbox id="tempId" value="@{saction.task.tempId}" visible="false"/>
+						<target_template id="template_component" tempName="${saction.task.tempName}"/>
+					</hbox>
+				</row>
+				<row>
+					<hbox>接收用户：<label value="[*]" style="color:red;"/></hbox>
+					<hbox>
+						<longbox id="userGroupId" value="@{saction.task.userGroupId}" visible="false"/>
+						<target_userGroup id="userGroup_component" userGroupName="${saction.task.userGroupName}"/>
+					</hbox>
+				</row>
+				<row>
+					<hbox>邮件标题：</hbox>
+					<hbox>
+						<textbox id="emailTitle" value="@{saction.task.emailTitle}" width="200px"/>
+						<image width="15px" height="15px" src="/img/qm.gif" tooltip="popup_emailTitle"/>
+						<popup id="popup_emailTitle" width="200px"> 
+								<label pre="true" value="邮件标题长度小于100个字符,可从模板中取得"/> 
+						</popup>
+					</hbox>
+				</row>
+				<row>
+					<hbox>发件人：</hbox>
+					<hbox>
+						<textbox id="sendUser" value="@{saction.task.sendUser}" width="200px"/>
+						<image width="15px" height="15px" src="/img/qm.gif" tooltip="popup_sendUser"/>
+						<popup id="popup_sendUser" width="200px"> 
+								<label pre="true" value="发件人名称长度小于30个字符,默认为驴妈妈旅游网"/> 
+						</popup>
+					</hbox>
+				</row>
+				<row>
+					<hbox>发件人邮箱：</hbox>
+					<hbox>
+						<textbox id="sendEmail" value="@{saction.task.sendEmail}" width="200px"/>
+						<image width="15px" height="15px" src="/img/qm.gif" tooltip="popup_sendEmail"/>
+						<popup id="popup_sendEmail" width="200px"> 
+								<label pre="true" value="邮箱长度小于60个字符,格式AAA@BBB.com,默认为webmaster@lvmama.com"/> 
+						</popup>
+					</hbox>
+				</row>
+				<row>
+					<hbox>发送时间：</hbox>
+					<hbox>
+					<listbox  width="100px" id="sendWeek"  mold="select" rows="1" model="@{saction.weekOptions, load-after=sendCycle.onSelect}" onSelect="saction.task.setSendDay(self.selectedItem.value);">
+						<listitem self="@{each='item'}" label="@{item.name }" value="@{item.code}"/>
+					</listbox>
+					<label value="[*]" style="color:red;"/><timebox id="sendTime" value="@{saction.sendTime}"/>
+					</hbox>
+				</row>
+				<row>
+					<hbox>发送频率：<label value="[*]" style="color:red;"/></hbox>
+					<hbox><listbox id="sendCycle"  codeset="EDM_TASK_SEND_CYCLE" mold="select" selectedItem="@{saction.task.sendCycle}" width="200px" onSelect="saction.changeCycle(self.selectedItem.value);"/></hbox>
+				</row>
+				<row>
+					<hbox>通道类型：<label value="[*]" style="color:red;"/></hbox>
+					<hbox><listbox id="channelType"  codeset="EDM_CHANNEL_TYPE" mold="select" selectedItem="@{saction.task.channelType}" width="200px"/></hbox>
+				</row>
+				<row spans="2">
+					<hbox><button id="save" label="保 存"
+							onClick='saction.save();'
+							width="100px"/></hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TAOBAO_TRAVEL_COMBO">
+	<!-- 别名 -->
+	<typeAlias alias="taobaoTravelCombo" type="com.lvmama.comm.bee.po.tmall.TaobaoTravelCombo" />
+
+	<resultMap id="taobaoTravelComboResultMap" class="taobaoTravelCombo">
+		<result column="ID" property="id" />
+		<result column="TB_PROD_SYNC_ID" property="tbProdSyncId" />
+		<result column="TB_PID" property="tbPid" />
+		<result column="TB_VID" property="tbVid" />
+		<result column="TB_COMBO_NAME" property="tbComboName" />
+		<result column="IS_SYNC" property="isSync" />
+        <result column="PRODUCT_ID" property="productId" />
+	</resultMap>
+	
+	<select id="selectSeq" resultClass="java.lang.Long">
+	
+		select taobao_travel_combo_seq.nextval from dual
+	</select>
+	
+	<select id="byTbProdSyncId" resultMap="taobaoTravelComboResultMap" parameterClass="java.lang.Long">
+		select * from taobao_travel_combo a where a.tb_prod_sync_id = #value#
+	</select>
+	
+	<select id="byId" resultMap="taobaoTravelComboResultMap" parameterClass="java.lang.Long">
+		select * from taobao_travel_combo a where a.id = #value#
+	</select>
+	
+	<select id="byMap" resultMap="taobaoTravelComboResultMap" parameterClass="java.util.Map">
+		select b.*
+		  from taobao_product_sync      a,
+		       taobao_travel_combo      b,
+		       taobao_travel_combo_type c
+		 where a.id = b.tb_prod_sync_id
+		   and b.id = c.travel_combo_id
+			<isNotEmpty property="id">
+				and b.id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="tbProdSyncId">
+				and a.id = #tbProdSyncId#
+			</isNotEmpty>
+			<isNotEmpty property="productId" >
+				and b.product_id = #productId#
+			</isNotEmpty>
+			<isNotEmpty property="prodBranchId" >
+				and c.prod_branch_id = #prodBranchId#
+			</isNotEmpty>
+	</select>
+	
+	<insert id="insert" parameterClass="taobaoTravelCombo">
+		insert into taobao_travel_combo
+		  (id, tb_prod_sync_id, tb_pid, tb_vid, tb_combo_name, is_sync, product_id)
+		values
+		  (#id#, #tbProdSyncId#, #tbPid#, #tbVid#, #tbComboName#, #isSync#, #productId#)
+	</insert>
+	
+	<update id="update" parameterClass="taobaoTravelCombo">
+		update taobao_travel_combo
+		   set id = #id#,
+		       tb_prod_sync_id = #tbProdSyncId#,
+		       tb_pid = #tbPid#,
+		       tb_vid = #tbVid#,
+		       tb_combo_name = #tbComboName#,
+		       is_sync = #isSync#,
+		       product_id = #productId#
+		 where id = #id#
+	</update>
+	
+	<delete id="delete" parameterClass="java.lang.Long">
+		delete taobao_travel_combo where id = #value#
+	</delete>
+	
+	<delete id="deleteByTbProdSyncId" parameterClass="java.lang.Long">
+		delete taobao_travel_combo where tb_prod_sync_id = #value#
+	</delete>
+</sqlMap>

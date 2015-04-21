@@ -1,0 +1,7 @@
+<#assign prefix_pic_url="http://pic.lvmama.com/img/mobile/touch">
+ <#setting number_format="#.##"> 
+    <#include "../order/order_myorder_list_temp.html">
+     <input id = "tmp_p" type ="hidden" value = "${page!}"/>
+	<#if isLastPage?? && isLastPage  >
+		<input id = "lastPage_flag" type ="hidden" value = "1"/>
+	</#if>

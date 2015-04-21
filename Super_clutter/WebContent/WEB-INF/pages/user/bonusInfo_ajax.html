@@ -1,0 +1,68 @@
+      <#setting number_format="#.##">
+      <#if bonusList?? && bonusList?size&gt;0>
+            <#if bonusType=="income">
+	       	    <#list bonusList as bonus >
+	       	        <dl class="inconme_li">
+		            	<dt><em>奖金帐户余额</em><b>￥${bonus.bonusYuan!}</b></dt>
+		                <dd>
+		                	<ul class="inconme_info">
+		                    	<li>
+		                        	<span class="income_ti1">时 间</span><em>${bonus.createDate!}</em>
+		                        </li>
+		                    	<li>
+		                        	<span class="income_ti1">资金类型</span><em>${bonus.comeFrom!}</em>
+		                        </li>
+		                    	<li>
+		                        	<span class="income_ti1">订 单 号</span><em>${bonus.orderId!}</em>
+		                        </li>
+		                    	<li>
+		                        	<span class="income_ti1">产品名称</span><em>${bonus.productName!}</em>
+		                        </li>
+		                    </ul>
+		                </dd>
+		            </dl>
+	       	    </#list>
+       	    <#elseif  bonusType=="pay">
+       	         <#list bonusList as bonus >
+		            <dl class="inconme_li">
+		            	<dt><em>奖金支出余额</em><b>￥${bonus.bonusYuan!}</b></dt>
+		                <dd>
+		                	<ul class="inconme_info">
+		                    	<li>
+		                        	<span class="income_ti1">时 间</span><em>${bonus.createDate!}</em>
+		                        </li>
+		                    	<li>
+		                        	<span class="income_ti1">订 单 号</span><em>${bonus.orderId!}</em>
+		                        </li>
+		                    	<li>
+		                        	<span class="income_ti1">产品名称</span><em>${bonus.productName!}</em>
+		                        </li>
+		                    </ul>
+		                </dd>
+		            </dl>
+        	    </#list>
+       	    <#elseif  bonusType=="refund">
+       	         <#list bonusList as bonus >
+		            <dl class="inconme_li">
+		            	<dt><em>奖金退款余额</em><b>￥${bonus.bonusYuan!}</b></dt>
+		                <dd>
+		                	<ul class="inconme_info">
+		                    	<li>
+		                        	<span class="income_ti1">时 间</span><em>${bonus.createDate!}</em>
+		                        </li>
+		                    	<li>
+		                        	<span class="income_ti1">订 单 号</span><em>${bonus.orderId!}</em>
+		                        </li>
+		                    	<li>
+		                        	<span class="income_ti1">产品名称</span><em>${bonus.productName!}</em>
+		                        </li>
+		                    </ul>
+		                </dd>
+		            </dl>
+        	    </#list>
+       	    </#if>
+       </#if>
+<input id = "tmp_p" type ="hidden" value = "${page}"/>
+<#if isLastPage?? && isLastPage  >
+	<input id = "${collectionType!}_lastPage_flag" type ="hidden" value = "1"/>
+</#if>

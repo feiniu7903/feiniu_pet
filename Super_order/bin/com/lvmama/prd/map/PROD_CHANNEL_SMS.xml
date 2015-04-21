@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_CHANNEL_SMS" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdChannelSms" >
+    <result column="CHANNEL_SMS_ID" property="channelSmsId" />
+    <result column="CHANNEL_ID" property="channelId" />
+    <result column="CONTENT" property="content" />
+    <result column="TEMPLATE_ID" property="templateId" />
+    <result column="CHANNEL_CODE" property="channelCode" />
+	<result column="CHANNEL" property="channel" />
+	<result column="CHANNEL_CMCC" property="channelCMCC" />
+	<result column="CHANNEL_CUC" property="channelCUC" />
+	<result column="CHANNEL_CT" property="channelCT" />
+  </resultMap>
+  <resultMap class="com.lvmama.comm.bee.po.prod.ProdChannelSms" id="ExtResultMap" extends="BaseResultMap">
+  	<result column="TEMPLATE_NAME" property="templateName" />
+  </resultMap>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdChannelSms">
+  	<selectKey resultClass="java.lang.Long" keyProperty="channelSmsId" >
+      select PROD_CHANNEL_SMS_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+  	insert into PROD_CHANNEL_SMS 
+  	(CHANNEL_SMS_ID, CHANNEL_ID, CONTENT, TEMPLATE_ID, CHANNEL_CODE, channel, channel_cmcc, channel_cuc, channel_ct) 
+  	values 
+  	(#channelSmsId#, #channelId#, #content#, #templateId#, #channelCode#, #channel#, #channelCMCC#, #channelCUC#, #channelCT#)
+  </insert>
+  
+  <delete id="deleteByPK" parameterClass="java.lang.Long">
+  	delete from PROD_CHANNEL_SMS where CHANNEL_SMS_ID=#channelSmsId#
+  </delete>
+  
+  <update id="update" parameterClass="com.lvmama.comm.bee.po.prod.ProdChannelSms">
+	update PROD_CHANNEL_SMS
+	set CONTENT = #content#	
+	where CHANNEL_SMS_ID=#channelSmsId#	
+  </update>
+  
+   <update id="updateProdChannelSms" parameterClass="com.lvmama.comm.bee.po.prod.ProdChannelSms">
+	update prod_channel_sms
+	   set channel_id   = #channelId#,
+	       content      = #content#,
+	       template_id  = #templateId#,
+	       channel_code = #channelCode#,
+	       channel      = #channel#,
+	       channel_cmcc = #channelCMCC#,
+	       channel_cuc  = #channelCUC#,
+	       channel_ct   = #channelCT#
+	 where channel_sms_id = #channelSmsId#
+  </update>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdChannelSms" >
+    select *
+    from PROD_CHANNEL_SMS
+    where CHANNEL_SMS_ID = #channelSmsId#
+  </select>
+  
+  <select id="selectByChannelId" parameterClass="java.lang.Long" resultMap="ExtResultMap">
+  	select pcs.*, cst.TEMPLATE_NAME
+    from PROD_CHANNEL_SMS pcs, COM_SMS_TEMPLATE cst
+    where pcs.CHANNEL_ID=#channelId# and cst.TEMPLATE_ID=pcs.TEMPLATE_ID
+  </select>
+  
+   <select id="selectByTemplateIdAndChannelCode" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdChannelSms" >
+    select *
+    from PROD_CHANNEL_SMS
+    where CHANNEL_CODE = #channelCode# and TEMPLATE_ID=#templateId#
+  </select>
+  
+  	<sql id="selectSqlWhere">
+  		<dynamic prepend="where">
+			<isNotEmpty property="channelSmsId" prepend="and">
+				t.CHANNEL_SMS_ID =	#channelSmsId#
+			</isNotEmpty>
+			<isNotEmpty property="channelId" prepend="and">
+				t.CHANNEL_ID =	#channelId#
+			</isNotEmpty>
+			<isNotEmpty property="templateId" prepend="and">
+				t.template_id =	#templateId#
+			</isNotEmpty>
+			<isNotEmpty property="templateName" prepend="and">
+				exists (select 1 from com_sms_template a where a.TEMPLATE_NAME like '%$templateName$%' and a.template_id = t.template_id)
+			</isNotEmpty>
+			<isNotEmpty property="content" prepend="and">
+				t.CONTENT like '%$content$%'
+			</isNotEmpty>
+			<isNotEmpty property="channelWhere" prepend="and">
+				t.channel = #channelWhere#
+			</isNotEmpty>
+			<isNotEmpty property="channelCMCCWhere" prepend="and">
+				t.channel_cmcc = #channelCMCCWhere#
+			</isNotEmpty>
+			<isNotEmpty property="channelCUCWhere" prepend="and">
+				t.channel_cuc = #channelCUCWhere#
+			</isNotEmpty>
+			<isNotEmpty property="channelCTWhere" prepend="and">
+				t.channel_ct = #channelCTWhere#
+			</isNotEmpty>
+		</dynamic>
+  	</sql>
+  	<sql id="selectSql">
+		select *
+    from PROD_CHANNEL_SMS t
+		<include refid="selectSqlWhere"/>
+	</sql>
+
+	<select id="getListByParams" parameterClass="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT * FROM (
+		SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select * from (
+
+		<include refid="selectSql" />
+
+		)) T 
+		<dynamic prepend="where">
+			<isNotEmpty property="maxResults">
+			ROWNUM &lt;= #maxResults#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend="where">
+			<isNotEmpty property="skipResults">
+			ROWNUM1 &gt;#skipResults#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getListCountByParams" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select count(*) from
+		(
+		<include refid="selectSql" />
+		)
+	</select>
+	<!-- 根据super短信模板同步产品销售渠道相关模板内容 -->
+	 <update id="updateProdChannelSmsBySmsTemplate" parameterClass="com.lvmama.comm.pet.po.pub.ComSmsTemplate">
+		update prod_channel_sms
+		   set content      = #content#
+		 where template_id  = #templateId#
+	 </update>
+	 
+	 <!-- 修改渠道 -->
+	<update id="updateChannelByMap" parameterClass="java.util.Map">
+		update PROD_CHANNEL_SMS t
+		<dynamic prepend="set">
+			<isEqual prepend="," property="channel" compareValue="THESAME">
+				channel = channel
+			</isEqual>
+			<isNotEqual prepend="," property="channel" compareValue="THESAME">
+				channel = #channel#
+			</isNotEqual>
+			<isEqual prepend="," property="channelCMCC" compareValue="THESAME">
+				channel_cmcc = channel_cmcc
+			</isEqual>
+			<isNotEqual prepend="," property="channelCMCC" compareValue="THESAME">
+				channel_cmcc = #channelCMCC#
+			</isNotEqual>
+			<isEqual prepend="," property="channelCUC" compareValue="THESAME">
+				channel_cuc = channel_cuc
+			</isEqual>
+			<isNotEqual prepend="," property="channelCUC" compareValue="THESAME">
+				channel_cuc = #channelCUC#
+			</isNotEqual>
+			<isEqual prepend="," property="channelCT" compareValue="THESAME">
+				channel_ct = channel_ct
+			</isEqual>
+			<isNotEqual prepend="," property="channelCT" compareValue="THESAME">
+				channel_ct = #channelCT#
+			</isNotEqual>
+		</dynamic>
+		<include refid="selectSqlWhere"/>
+	</update>
+   
+</sqlMap>

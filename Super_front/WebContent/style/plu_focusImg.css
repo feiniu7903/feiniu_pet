@@ -1,0 +1,59 @@
+@charset "utf-8";
+/*img slide Style*/
+.focusImg_p	{ position: relative; background: #ccc; zoom: 1;}
+.imgButtons_p .current	{ background: url(http://pic.lvmama.com/img/new_v/global.gif) no-repeat -161px 0;}
+.imgButtons_p .current p	{ color: #c06;}
+.imgButtons_p	{ position: absolute; top: 0px; left: 820px; width: 160px; overflow: hidden; z-index: 20;}
+.imgButtons_p li { font-family: "Microsoft YaHei", sans-serif; margin: 0 0 2px 0; padding: 2px 0 0 0; height: 43px; color: #fff; cursor: pointer;}
+.imgButtons_p p	{ text-indent: 0; font-size: 14px; font-weight: bold; text-align: center; line-height: 20px; height: 20px;}
+.imgButtons_p small	{ font-size: 12px; font-weight: normal;}
+.imgButtonsBg_p	{ position: absolute; top: 0px; left: 820px; width: 160px; overflow: hidden; z-index: 10;}
+.imgButtonsBg_p li	{ margin: 0 0 2px 0; height: 45px; background: #000; filter:alpha(opacity=45);/*IE*/-moz-opacity:0.45;/* Moz + FF */opacity: 0.45;}
+.imgButtonsBg_p .current { background: none;}
+.imgContainers_p	{ position:relative; height: 280px; overflow: hidden; zoom: 1;}
+.imgContent_p	{ position:absolute; top:0; left: 0; zoom: 1; z-index: 0;}
+.imgContent_p img	{display: block;}
+
+/*search form Style*/
+.searchCon_p	{ position: absolute; top: 10px; left: 10px; height: 260px; width: 260px; background: #f6f6f6; z-index: 30;}
+.searchCon_p h3	{ margin: 6px 0 0 0; padding:1px 15px; height: 26px; line-height: 26px; position:relative;font-weight: normal; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: #fff;overflow:hidden;zoom:1;}
+.searchCon_p h3 span.searchIcon	{display:block;float:left;:26px;width:26px;height:26px;background:#F8B3D0;}
+.searchCon_p h3 b	{ float:left;font-size:16px;color:#c06;}
+.searchCon_p h3 i 	{ float:right;background:url(http://pic.lvmama.com/img/new_v/global.gif) no-repeat -466px 0;height:14px;width:14px;display:block;position:absolute;top:7px;_top:6px;right:5px;}
+.searchCon_p h4	{ padding: 15px 0 5px 15px;font-family:"\5b8b\4f53";font-size:12px;font-weight:700;}
+.searchForm_p	{margin: 15px 0 0 15px; overflow: hidden; zoom: 1;}
+.searchForm_p li	{ padding: 5px 0 5px 0; display:block; overflow:hidden;zoom:1;}
+.searchForm_p label	{ float: left; display: block; width: 63px; padding: 7px 0 0 0; font-weight: bold;zoom: 1;}
+.searchForm_p .searchVal	{ float: left; width: 142px; margin: 0 0 3px 0; padding: 4px; vertical-align: middle; border: 1px solid #ddd; background: #f7ffbf;}
+.searchForm_p .searchSub	{ float: left; display: inline-block; width: 96px; height: 30px; text-indent: -999em; overflow: hidden; background: url(http://pic.lvmama.com/img/new_v/global.gif) no-repeat 0 -15px; border-style:none; cursor: pointer;}
+
+.abroadSF_p label	{ font-weight: normal; text-align: right; width: 50px; padding: 7px 13px 0 0;}
+.abroadSF_p select	{ float: left; width: 152px; margin: 0 0 3px 0; padding: 2px; vertical-align: middle; border: 1px solid #ddd;} 
+
+.hotSearchList_p	{ padding: 0 0 0 15px;}
+.hotSearchList_p li	{ float: left; width: 80px; height: 25px; line-height: 25px; font-size: 12px;}
+.suggestList_p	{ clear:both; margin: 0 15px 0 15px; padding: 5px 0 0 0; border-top: 1px dashed #ccc;}
+
+.searchRecommendCon_p	{ position: absolute; top: 95px; left: 78px; z-index: 99;}
+
+.searchSuggest_p	{ width: 270px; height: 125px; background: #fff; border: 1px solid #ddd;}
+.searchSuggest_p h5	{ padding: 0 0 0 10px; background: #d48; color: #fff; line-height: 25px; height: 25px;}
+.searchSuggest_p samp	{padding: 0 0 0 4px; font-weight: normal; color: #fff;}
+.searchSuggestCon_p	{ margin: 5px 10px 0 10px;}
+.searchSuggestTabs	{ height: 21px; margin: 5px 10px 0 10px; border-bottom: 1px solid #ddd;}
+.searchSuggestTabs li	{ color: #06c; height: 20px; line-height: 20px; padding: 1px 10px 0 10px; float: left; cursor: pointer;}
+.searchSuggestTabs li.current	{ color: #c06; padding: 0px 10px 0 10px; font-weight: bold; background:#fff; border: 1px solid #ddd; border-bottom: 1px solid #fff;}
+.searchSuggest_p	{ display: none; overflow: hidden;}
+.searchSuggestPanes	{ margin: 2px 10px 0 10px;}
+.searchSuggestPanes	li	{ color: #06c; padding: 5px 0 4px 0; width: 80px; float: left; overflow: hidden; cursor: pointer;}
+.searchSuggestPanes	li:hover	{ color: #c06; text-decoration: underline;}
+.searchSuggestPanes .citySuggest li	{ width: 50px;}
+.searchSuggestPanes .placeSuggest li	{ width: 120px;}
+.searchTypSuggest_p	{ display: none; width: 150px; background: #fff; border: 1px solid #ddd;}
+.searchTypSuggest_p h5	{ padding: 0 0 0 10px; background: #5b5b5b; color: #fff; font-weight: normal; line-height: 25px; height: 25px;}
+.searchTypSuggest_p ul	{ padding: 0 0 5px 0;}
+.searchTypSuggest_p li	{ padding: 5px 10px 2px 10px;}
+.searchTypSuggest_p span	{ font-size: 10px; font-family: Verdana;}
+.searchTypSuggest_p p 	{ text-align: center; text-indent: 0;}
+.searchTypSuggest_p p a	{ padding: 0 5px 0 5px; cursor: pointer;}
+.searchTypSuggest_p p a.current { color: #333; cursor: default;}

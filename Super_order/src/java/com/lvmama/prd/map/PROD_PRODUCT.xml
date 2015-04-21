@@ -1,0 +1,2618 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdProduct">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="BIZ_CODE" property="bizcode" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="ADDITIONAL" property="additional" />
+		<result column="ONLINE_TIME" property="onlineTime" />
+		<result column="OFFLINE_TIME" property="offlineTime" />
+		<result column="MARKET_PRICE" property="marketPrice" nullValue="0" />
+		<result column="SELL_PRICE" property="sellPrice" nullValue="0" />
+		<result column="SMS_CONTENT" property="smsContent" />
+		<result column="WRAP_PAGE" property="wrapPage" />
+		<result column="PAY_TO_LVMAMA" property="payToLvmama" />
+		<result column="PAY_TO_SUPPLIER" property="payToSupplier" />
+		<result column="PRICE_UNIT" property="priceUnit" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="SMALL_IMAGE" property="smallImage" />
+		<result column="CAN_PAY_BY_BONUS" property="canPayByBonus" nullValue="Y" />
+		<result column="MAX_CASH_REFUND" property="maxCashRefund" nullValue="0" />
+		<result column="PHYSICAL" property="physical" nullValue="false" />
+		<result column="SEND_SMS" property="sendSms" nullValue="false" />
+		<result column="NEAR_DATE" property="nearDate" />
+		<result column="VALID" property="valid" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="GROUP_MIN" property="groupMin" />
+		<result column="TRAVELLER_INFO_OPTIONS" property="travellerInfoOptions" />
+		<result column="ON_LINE" property="onLine" />
+		<result column="ORG_ID" property="orgId" />
+		<result column="MANAGER_ID" property="managerId" />
+		<result column="PAY_DEPOSIT" property="payDeposit" />
+		<result column="COUPON_ABLE" property="couponAble" />
+		<result column="RECOMMEND_INFO_FIRST" property="recommendInfoFirst" />
+		<result column="RECOMMEND_INFO_SECOND" property="recommendInfoSecond" />
+		<result column="RECOMMEND_INFO_THIRD" property="recommendInfoThird" />
+		<result column="COUPON_ACTIVITY" property="couponActivity" />
+		<result column="IS_REFUNDABLE" property="isRefundable" />
+		<result column="IS_FOREGIN" property="isForegin" />
+		<result column="REGION_NAME" property="regionName" />
+		<result column="IS_MANUAL_BONUS" property="isManualBonus" />
+		<result column="IS_ANNIVERARY_PRODUCT" property="isAnniveraryProduct" />
+		<result column="IS_APERIODIC" property="isAperiodic"/>
+		<result column="AHEAD_BOOKING_DAYS" property="aheadBookingDays"/>
+		<result column="IS_PREPAYMENT" property="prePaymentAble"/>
+		<result column="SHOW_SALE_DAYS" property="showSaleDays"/>
+		<result column="AUDITING_STATUS" property="auditingStatus"/>
+		<result column="HAS_SENSITIVE_WORD" property="hasSensitiveWord"/>
+		<result column="APPLICABLE_TRAVEL_DAYS_LIMIT" property="applicableTravelDaysLimit"/>
+		<result column="APPLICABLE_TRAVEL_DAYS_CAPS" property="applicableTravelDaysCaps"/>
+		<result column="APPLICABLE_SUB_PRODUCT_TYPE" property="applicableSubProductType"/>
+		<result column="BOUNS_SCALE" property="bounsScale"/>
+		<result column="BOUNS_REASON" property="bounsReason"/>
+		<result column="BOUNS_START" property="bounsStart"/>
+		<result column="BOUNS_END" property="bounsEnd"/>
+		<result column="BOUNS_LIMIT" property="bounsLimit"/>
+		<result column="FREE_BACKABLE" property="freeBackable"/>
+	</resultMap>
+	<resultMap class="com.lvmama.comm.bee.po.prod.ProdHotSellSeq" id="BaseResultMapByProdHotSell" > 
+        <result column="PROD_HOT_SELL_ID" property="prodHotSellId" />
+	    <result column="PRODUCT_ID" property="productId" />
+        <result column="PRODUCT_NAME" property="productName" />
+        <result column="DESCRIPTION" property="description" />
+        <result column="SELL_PRICE" property="sellPrice" />
+        <result column="MARKET_PRICE" property="marketPrice" />
+        <result column="IMG_URL" property="imgUrl" />
+        <result column="PROD_TYPE" property="prodType" />
+        <result column="SUB_PROD_TYPE" property="subProdType" />
+        <result column="ORDER_QUANTITY" property="orderQuantity"/>
+        <result column="CHANNEL" property="channel"/>
+        <result column="BASE_CHANNEL" property="baseChannel"/>
+	</resultMap>
+	
+	<resultMap class="com.lvmama.comm.bee.po.prod.ProdProduct" id="queryOrderCountByProduct" extends="BaseResultMap">
+	   <result column="ORDER_COUNT" property="orderCount" />
+	</resultMap>
+	
+	<resultMap class="com.lvmama.comm.bee.po.prod.ProdProduct" id="onlinePrdResultMap" extends="BaseResultMap">
+	  <result column="ORDER_COUNT" property="orderCount" />
+	  <result column="MANAGERRECOMMEND" property="managerRecommend" />
+	  <result column="PAGE_ID" property="pageId" />
+	</resultMap>
+	
+	<resultMap id="branchResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductBranch">
+		<result column="PROD_BRANCH_ID" property="prodBranchId" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="BRANCH_TYPE" property="branchType" />
+		<result column="BRANCH_NAME" property="branchName" />
+		<result column="ADULT_QUANTITY" property="adultQuantity" />
+		<result column="CHILD_QUANTITY" property="childQuantity" />
+		<result column="MINIMUM" property="minimum" />
+		<result column="MAXIMUM" property="maximum" />
+		<result column="PRICE_UNIT" property="priceUnit" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="ADDITIONAL" property="additional" />
+		<result column="DEFAULT_BRANCH" property="defaultBranch" />
+		<result column="ON_LINE" property="online" />
+		<result column="ICON" property="icon" />
+		<result column="BREAKFAST" property="breakfast" />
+		<result column="BROADBAND" property="broadband" />
+		<result column="BED_TYPE" property="bedType" />
+		<result column="SELL_PRICE" property="sellPrice" />
+		<result column="MARKET_PRICE" property="marketPrice" />
+		<result property="validBeginTime" column="VALID_BEGIN_TIME" />
+		<result property="validEndTime" column="VALID_END_TIME" />
+		<result column="TODAY_ORDER_ABLE" property="todayOrderAble" />
+		<result property="invalidDate" column="INVALID_DATE"/>
+		<result property="invalidDateMemo" column="INVALID_DATE_MEMO"/>
+	</resultMap>
+
+	<resultMap id="routeDateMap" class="com.lvmama.comm.bee.vo.ProdRouteDate">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="SPEC_DATE" property="specDate" />
+		<result column="DAYS" property="days" />
+	</resultMap>
+	<resultMap id="B2BResultMap" class="com.lvmama.comm.bee.po.prod.ProdProduct">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />	
+		<result column="PAY_TO_LVMAMA" property="payToLvmama" />
+		<result column="PAY_TO_SUPPLIER" property="payToSupplier" />		
+		<result column="IS_APERIODIC" property="isAperiodic" />
+		<result column="VALID" property="valid" />
+		<result column="ON_LINE" property="onLine" />
+		<result column="PLACE_ID" property="placeId" />
+		<result column="PLACE_NAME" property="placeName" />
+	</resultMap>
+	<sql id="condition">
+		<isNotEmpty prepend="and" property="managerId">
+			B.USER_ID=#managerId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productName">
+			A.PRODUCT_NAME LIKE
+			'%'||#productName#||'%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="placeId">
+			C.PLACE_ID = #placeId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productId">
+			A.PRODUCT_ID =
+			#productId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orgId">
+			A.org_id=#orgId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productTypeList">
+			<iterate property="productTypeList" open="(" close=")"
+				conjunction="OR">
+				A.PRODUCT_TYPE = #productTypeList[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="subProductTypeList">
+			<iterate property="subProductTypeList" open="(" close=")"
+				conjunction="OR">
+				A.SUB_PRODUCT_TYPE = #subProductTypeList[]#
+			</iterate>
+		</isNotEmpty>
+		<isEqual prepend="and" property="onlineStatus" compareValue="true">
+			A.ONLINE_TIME
+			<![CDATA[<]]>
+			sysdate and A.OFFLINE_TIME
+			<![CDATA[>]]>
+			sysdate
+		</isEqual>
+		<isEqual prepend="and" property="onlineStatus" compareValue="false">
+			A.OFFLINE_TIME
+			<![CDATA[<]]>
+			sysdate
+		</isEqual>
+	</sql>
+
+	<!--查询产品经理，产品类型目的地，商品名称 -->
+	<resultMap id="SaleManager" extends="BaseResultMap"
+		class="com.lvmama.comm.bee.po.prod.ProdProduct">
+		<result column="REAL_NAME" property="realName"></result>
+		<result column="NAME" property="placeName"></result>
+		<result column="DEPARTMENT_NAME" property="departmentName" />
+		<result column="DEPARTMENT_ID" property="departmentId" />
+	</resultMap>
+
+	<sql id="selectManagerSql">
+		SELECT B.REAL_NAME,
+		A.*,d.department_name,d.org_Id as
+		DEPARTMENT_ID,C.NAME FROM PROD_PRODUCT A
+		inner join
+		lvmama_pet.perm_organization d
+		on a.org_id=d.org_id LEFT
+		JOIN
+		lvmama_pet.PERM_USER
+		B ON A.MANAGER_ID=B.USER_ID
+		INNER JOIN (SELECT
+		C.PRODUCT_ID,C.PLACE_ID, D.NAME FROM
+		PROD_PRODUCT_PLACE C , Com_PLACE D
+		WHERE
+		D.PLACE_ID=C.PLACE_ID AND C."TO"='true' )
+		C
+		ON(C.PRODUCT_ID=A.PRODUCT_ID) where A.VALID='Y'
+		<include refid="condition" />
+
+	</sql>
+	<select id="selectManager" resultMap="SaleManager"
+		parameterClass="java.util.HashMap">
+		SELECT *
+		FROM
+		(SELECT T.*,
+		ROWNUM AS ROWNUM1
+		FROM
+		(
+		<include refid="selectManagerSql" />
+		) T)
+		WHERE ROWNUM1 &lt;=#maxResults#
+		and ROWNUM1 &gt; #skipResults#
+	</select>
+
+
+	<select id="selectAllGroupProdIds" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		SELECT *
+		FROM (SELECT T.*, ROWNUM RN
+		FROM (SELECT
+		PP.PRODUCT_ID
+		FROM PROD_PRODUCT PP,
+		PROD_PRODUCT_CHANNEL PPC
+		WHERE PPC.PRODUCT_ID = PP.PRODUCT_ID
+		AND PPC.PRODUCT_CHANNEL = 'TUANGOU'
+		AND PP.ON_LINE = 'true'
+		AND PP.ONLINE_TIME IS NOT NULL
+		AND PP.OFFLINE_TIME IS NOT NULL
+		) T
+		WHERE ROWNUM &lt;= #_endRow#)
+		WHERE RN &gt;= #_startRow#
+	</select>
+	
+	<select id="selectGroupProdIdCount" resultClass="java.lang.Long" >
+		SELECT COUNT(*)
+          FROM PROD_PRODUCT PP,
+		PROD_PRODUCT_CHANNEL PPC
+		WHERE PPC.PRODUCT_ID = PP.PRODUCT_ID
+		AND PPC.PRODUCT_CHANNEL = 'TUANGOU'
+		AND PP.ON_LINE = 'true'
+		AND PP.ONLINE_TIME IS NOT NULL
+		AND PP.OFFLINE_TIME IS NOT NULL
+	</select>
+	
+	
+	<select id="selectManagerCount" resultClass="java.lang.Integer"
+		parameterClass="java.util.HashMap">
+		select count(*) from (
+		<include refid="selectManagerSql" />
+		)
+	</select>
+
+	<resultMap id="ProdRoute" class="com.lvmama.comm.bee.po.prod.ProdRoute"
+		extends="BaseResultMap">
+		<result column="ROUTE_ID" property="routeId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="DAYS" property="days" />
+		<result column="INITIAL_NUM" property="initialNum" />
+		<result column="AHEAD_CONFIRM_HOURS" property="aheadConfirmHours" />
+		<result column="E_CONTRACT" property="eContract" />
+		<result column="TRAVEL_GROUP_CODE" property="travelGroupCode" />
+		<result column="ROUTE_CATEGORY" property="routeCategory" />
+		<result column="IS_PLAY" property="isPlay" />
+		<result column="ROUTE_TITLE" property="routeTitle" />
+		<result column="HOTEL_TYPE" property="hotelType" />
+		<result column="ROUTE_STANDARD" property="routeStandard" />
+		<result column="DEPART_AREA" property="departArea" />
+		<result column="SELF_PACK" property="selfPack" />
+		<result column="QI_FLAG" property="qiFlag" />
+		<result column="GROUP_TYPE" property="groupType" />
+		<result column="COUNTRY" property="country"/>
+	    <result column="CITY" property="city"/>
+	    <result column="VISA_TYPE" property="visaType"/>
+	    <result column="IS_MULTI_JOURNEY" property="isMultiJourney"/>
+	</resultMap>
+	<!-- shihui -->
+	<resultMap id="ProdRouteDateMap" class="java.util.HashMap">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="SPEC_DATE" property="specDate" />
+	</resultMap>
+	<resultMap id="ProdOther" class="com.lvmama.comm.bee.po.prod.ProdOther"
+		extends="BaseResultMap">
+		<result column="OTHER_ID" property="otherId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="VISA_TYPE" property="visaType"/>
+		<result column="VISA_SELF_SIGN" property="visaSelfSign"/>
+		<result column="VISA_MATERIAL_AHEAD_DAY" property="visaMaterialAheadDay"/>
+		<result column="VISA_VALID_TIME" property="visaValidTime"/>
+		<result column="COUNTRY" property="country"/>
+		<result column="CITY" property="city"/>
+	</resultMap>
+	<resultMap id="ProdTraffic" class="com.lvmama.comm.bee.po.prod.ProdTraffic" extends="BaseResultMap">
+	    <result column="PROD_TRAFFIC_ID" property="prodTrafficId" />
+	    <result column="PRODUCT_ID" property="productId" />
+	    <result column="GO_FLIGHT_ID" property="goFlightId" />
+    	<result column="BACK_FLIGHT_ID" property="backFlightId" />
+	    <result column="DIRECTION" property="direction" />
+	    <result column="DAYS" property="days" />
+	    <result column="LINE_INFO_ID" property="lineInfoId"/>
+	</resultMap>
+	<resultMap id="ProdTrain" class="com.lvmama.comm.bee.po.prod.ProdTraffic" extends="BaseResultMap">
+	    <result column="LINE_INFO_ID" property="lineInfoId"/>
+	</resultMap>
+	<resultMap id="ProdTicket" class="com.lvmama.comm.bee.po.prod.ProdTicket"
+		extends="BaseResultMap">
+		<result column="TICKET_ID" property="ticketId" />
+		<result column="PRODUCT_ID" property="productId" />
+	</resultMap>
+	<resultMap id="ProdHotel" class="com.lvmama.comm.bee.po.prod.ProdHotel"
+		extends="BaseResultMap">
+		<result column="HOTEL_ID" property="hotelId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="DAYS" property="days" />
+	</resultMap>
+
+	<resultMap id="TimePrice" class="com.lvmama.comm.bee.po.prod.TimePrice"
+		extends="BaseResultMap">
+		<result column="SPEC_DATE" property="specDate" />
+		<result column="PRODUCT_ID" property="productId" />
+	</resultMap>
+
+	<resultMap id="NewResultMap" class="java.util.HashMap"
+		extends="BaseResultMap">
+		<result column="PRO_GROUP_ID" property="proGroupId" />
+	</resultMap>
+
+	<resultMap id="RelatResultMap" class="java.util.HashMap">
+		<result column="RELAT_PRODUCT_ID" property="relatProductId" />
+		<result column="NECESSARY" property="necessary" />
+	</resultMap>
+
+	<resultMap id="AssemblyResultMap" class="com.lvmama.comm.pet.po.prod.ProdAssemblyPoint">
+		<result column="ASSEMBLY_POINT_ID" property="assemblyPointId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="ASSEMBLY_POINT" property="assemblyPoint" />
+	</resultMap>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct">
+		select * from PROD_PRODUCT where PRODUCT_ID =
+		#productId#
+	</select>
+
+	<!-- 判断产品是否可售，有上下线时间 -->
+	<select id="isExistProduct" resultClass="java.lang.Integer"
+		parameterClass="java.lang.Long">
+		SELECT COUNT(*) FROM PROD_PRODUCT PP
+		WHERE
+		PP.ONLINE_TIME IS NOT NULL
+		AND PP.OFFLINE_TIME IS NOT NULL
+		AND
+		PP.VALID='Y'
+		AND PP.ON_LINE='true'
+		AND PP.PRODUCT_ID = #productId#
+	</select>
+	<sql id="selectTrainProductSQL">
+		select distinct pp.*,pt.LINE_INFO_ID from prod_product_branch ppb,prod_product pp,prod_traffic pt,line_station_station lss
+		where ppb.product_id=pp.product_id
+		and lss.station_station_id = ppb.station_station_id
+		and pp.product_id = pt.product_id
+		and pp.product_type='TRAFFIC' AND pp.sub_product_type='TRAIN'
+		and pp.valid='Y' and pp.on_line='true' and ppb.on_line='true' and ppb.valid='Y'
+		<isNotEmpty property="stationKey" prepend="and">
+			lss.station_key = #stationKey#
+		</isNotEmpty>
+		<isNotEmpty property="cityKey" prepend="and">
+			lss.city_key = #cityKey#
+		</isNotEmpty>
+		<isNotEmpty property="lineName" prepend="and">
+			lss.line_name = #lineName#
+		</isNotEmpty>
+		<isNotEmpty property="visitTime" prepend="and">
+		exists(select 1 from prod_time_price ptp where ptp.spec_date=#visitTime# and ptp.prod_branch_id=ppb.prod_branch_id)
+		</isNotEmpty>
+	</sql>
+	<select id="selectTrainProductListByParams" parameterClass="java.util.HashMap" resultMap="ProdTrain">
+		select * from (
+		select ROWNUM rn,T.* from (<include refid="selectTrainProductSQL"/>
+		) T WHERE ROWNUM &lt;=#_endRow#
+		) WHERE rn &gt;=#_startRow#
+	</select>
+	<select id="selectTrainProductCountByParams" parameterClass="java.util.HashMap" resultClass="java.lang.Long">
+		select count(*) from (<include refid="selectTrainProductSQL"/>)
+	</select>
+	<select id="selectProductByProdBranchId" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		select * from PROD_PRODUCT pp,prod_product_branch ppb
+		where pp.product_id =
+		ppb.product_id and ppb.prod_branch_id =
+		#prodBranchId#
+	</select>
+
+	<select id="selectbyParam" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from PROD_PRODUCT where VALID='Y'
+		<isNotEmpty prepend="and" property="additional">
+			ADDITIONAL=#additional#
+		</isNotEmpty>
+	</select>
+	<select id="selectBizCode" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from PROD_PRODUCT where BIZ_CODE=#bizCode# and
+		VALID='Y'
+	</select>
+
+	<!-- 通过参数查询线路产品 -->
+	<select id="selectRouteProductByParam" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select p.* from PROD_PRODUCT p , PROD_ROUTE r where 1=1 and
+		p.PRODUCT_ID=r.PRODUCT_ID and p.VALID='Y'
+		<dynamic>
+			<isNotEmpty property="productName" prepend="and">
+				P.PRODUCT_NAME
+				like '%'||#productName#||'%'
+			</isNotEmpty>
+
+			<isNotEmpty property="sellPriceMin" prepend="and">
+				SELL_PRICE
+				<![CDATA[>]]>#sellPriceMin#
+			</isNotEmpty>
+			<isNotEmpty property="sellPriceMax" prepend="and">
+				SELL_PRICE
+				<![CDATA[<]]>#sellPriceMax#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="selectSuggestInfoByPlacesName" resultMap="BaseResultMap">
+		select * from (select pp.* from PROD_PRODUCT
+		pp,PROD_PRODUCT_PLACE ppp
+		where pp.PRODUCT_ID=ppp.PRODUCT_ID
+		<isNotEmpty prepend="and" property="productName">
+			pp.PRODUCT_NAME like
+			'%'||#productName#||'%'
+		</isNotEmpty>
+		order by pp.PRODUCT_ID desc) where rownum<![CDATA[<=50]]>
+	</select>
+
+	<select id="selectProdRouteByPrimaryKey" resultMap="ProdRoute"
+		parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct">
+		select * from PROD_PRODUCT p , PROD_ROUTE r where
+		p.PRODUCT_ID=r.PRODUCT_ID and p.PRODUCT_ID = #productId#
+		<isEmpty prepend="and" property="valid">
+			p.VALID='Y'
+		</isEmpty>
+	</select>
+	
+	<select id="selectProdTrafficByPrimaryKey" resultMap="ProdTraffic"
+		parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct">
+		select * from PROD_PRODUCT p , PROD_TRAFFIC r where
+		p.PRODUCT_ID=r.PRODUCT_ID and p.PRODUCT_ID = #productId#
+		<isEmpty prepend="and" property="valid">
+			p.VALID='Y'
+		</isEmpty>
+	</select>
+	
+	<select id="selectProdOtherByPrimaryKey" resultMap="ProdOther"
+		parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct">
+		select * from PROD_PRODUCT p , PROD_OTHER o where
+		p.PRODUCT_ID=o.PRODUCT_ID and p.PRODUCT_ID = #productId#
+		<isEmpty prepend="and" property="valid">
+			p.VALID='Y'
+		</isEmpty>
+	</select>
+	<select id="selectProdTicketByPrimaryKey" resultMap="ProdTicket"
+		parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct">
+		select * from PROD_PRODUCT p , PROD_TICKET t where
+		p.PRODUCT_ID=t.PRODUCT_ID and p.PRODUCT_ID = #productId#
+		<isEmpty prepend="and" property="valid">
+			p.VALID='Y'
+		</isEmpty>
+	</select>
+	<select id="selectProdHotelByPrimaryKey" resultMap="ProdHotel"
+		parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct">
+		select * from PROD_PRODUCT p , PROD_HOTEL h where
+		p.PRODUCT_ID=h.PRODUCT_ID and p.PRODUCT_ID = #productId#
+		<isEmpty prepend="and" property="valid">
+			p.VALID='Y'
+		</isEmpty>
+	</select>
+
+	<select id="selectProdHotelName" resultClass="java.lang.String"
+		parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct">
+		select product_name from PROD_PRODUCT where
+		product_id=#productId#
+	</select>
+
+    <sql id="selectprodOtherbyProductId" >
+		    select * from (select pp.* from PROD_PRODUCT
+		    pp,PROD_OTHER po
+		    where pp.PRODUCT_ID=po.PRODUCT_ID
+		    <isNotEmpty prepend="and" property="country">
+		       po.COUNTRY=#country#
+		    </isNotEmpty>
+		  	<isNotEmpty prepend="and" property="visaType">
+			   po.VISA_TYPE=#visaType#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="city">
+				po.CITY=#city#
+				</isNotEmpty>
+		    order by pp.PRODUCT_ID desc)
+    </sql>
+    
+	<select id="selectByNameTimeType" resultMap="BaseResultMap">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select pp.*
+		from
+		PROD_PRODUCT pp
+		<isNotNull property="placeId">
+			, PROD_PRODUCT_PLACE ppp
+		</isNotNull>
+		<isEqual property="choseDestFlag" compareValue="false">
+			<isNotEmpty property="destId">
+				, PROD_PRODUCT_PLACE ppp
+			</isNotEmpty>
+		</isEqual>
+
+		<isEqual property="choseDestFlag" compareValue="false">
+			<isNotEmpty property="selectedPlace">
+				, PROD_PRODUCT_PLACE ppp
+			</isNotEmpty>
+		</isEqual>
+
+		<isNotEmpty property="channelId">
+			, PROD_PRODUCT_CHANNEL ppc
+		</isNotEmpty>
+		<isEqual property="choseDestFlag" compareValue="true">
+			<isNotEmpty property="selectedPlace">
+				, PROD_PRODUCT_PLACE ppp
+			</isNotEmpty>
+		</isEqual>
+		<isNotEmpty property="selfPack">
+			, PROD_ROUTE pr
+		</isNotEmpty>
+		<isEqual property="subProductType" compareValue="VISA">
+		  ,(<include refid="selectprodOtherbyProductId"/>)po where pp.PRODUCT_ID=po.PRODUCT_ID
+		  and pp.VALID='Y'
+		</isEqual>
+		<isNotEqual  property="subProductType" compareValue="VISA">
+		  where pp.VALID='Y'
+		</isNotEqual>
+		<!-- 过滤不定期产品 add by shihui -->
+		<isNotEmpty prepend="and" property="isAperiodic">
+			<isEqual property="isAperiodic" compareValue="false" > (</isEqual>
+		    	IS_APERIODIC = #isAperiodic#
+		    <isEqual property="isAperiodic" compareValue="false" prepend="OR">
+				pp.IS_APERIODIC IS NULL
+				)
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="selfPack">
+			pr.PRODUCT_ID=pp.product_id AND pr.SELF_PACK=#selfPack#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productId">
+			pp.PRODUCT_ID=#productId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="freeBackable">
+			<isEqual property="freeBackable" compareValue="Y">
+				pp.FREE_BACKABLE=#freeBackable#
+			</isEqual>
+			<isEqual property="freeBackable" compareValue="N">
+				(pp.FREE_BACKABLE = #freeBackable# OR pp.FREE_BACKABLE IS NULL)
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productIds">
+			<iterate property="productIds" open="(" close=")"
+				conjunction="or">
+				pp.PRODUCT_ID=#productIds[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty property="filialeName" prepend="and">
+			pp.FILIALE_NAME=#filialeName#
+		</isNotEmpty>
+		<isEmpty property="twoRole">
+			<isNotEmpty prepend="and" property="managerIds">
+				(
+				<iterate property="managerIds" conjunction="," close=")"
+					open=" pp.MANAGER_ID in (">
+					#managerIds[]#
+				</iterate>
+				or pp.MANAGER_ID is null
+				)
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orgId">
+				(pp.ORG_ID=#orgId# or
+				pp.ORG_ID is null)
+			</isNotEmpty>
+		</isEmpty>
+		<isNotEmpty property="twoRole">
+			and (
+			pp.ORG_ID=#orgId#
+
+			<iterate property="managerIds" conjunction="," close=")"
+				open="or pp.MANAGER_ID in (">
+				#managerIds[]#
+			</iterate>
+			or pp.ORG_ID is null or pp.MANAGER_ID is null
+			)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="prodBranchId">
+			exists(select 1 from
+			prod_product_branch ppb where ppb.product_id=pp.product_id and
+			ppb.prod_branch_id=#prodBranchId#)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="sProductName">
+			pp.PRODUCT_NAME like
+			'%' || #sProductName# || '%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="bizcode">
+			pp.BIZ_CODE like
+			'%$bizcode$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="filialeName">
+			pp.FILIALE_NAME =
+			#filialeName#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productSearch">
+			(pp.PRODUCT_NAME like
+			'%$productSearch$%' or pp.BIZ_CODE
+			like
+			'%$productSearch$%'
+			<isNotEmpty prepend="or" property="productSearchId">
+				pp.PRODUCT_ID=#productSearchId#
+			</isNotEmpty>
+			)
+		</isNotEmpty>
+
+		<isNotNull prepend="and" property="sBeginTime">
+			pp.CREATE_TIME
+			<![CDATA[>=]]>
+			#sBeginTime#
+		</isNotNull>
+		<isNotNull prepend="and" property="sEndTime">
+			pp.CREATE_TIME
+			<![CDATA[<]]>
+			#sEndTime#+1
+		</isNotNull>
+		<isNotEmpty property="sellPriceMin" prepend="and">
+			pp.SELL_PRICE
+			<![CDATA[>=]]>#sellPriceMin#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMax" prepend="and">
+			pp.SELL_PRICE
+			<![CDATA[<=]]>#sellPriceMax#
+		</isNotEmpty>
+		<isEqual prepend="and" property="onlineStatus" compareValue="true">
+			pp.ONLINE_TIME
+			<![CDATA[<]]>
+			sysdate and pp.OFFLINE_TIME
+			<![CDATA[>]]>
+			sysdate
+		</isEqual>
+		<isEqual prepend="and" property="onlineStatus" compareValue="false">
+			pp.OFFLINE_TIME
+			<![CDATA[<]]>
+			sysdate
+		</isEqual>
+		<isNotEmpty prepend="and" property="productTypeList">
+			<iterate property="productTypeList" open="(" close=")"
+				conjunction="OR">
+				pp.PRODUCT_TYPE = #productTypeList[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="subProductTypeList">
+			<iterate property="subProductTypeList" open="(" close=")"
+				conjunction="OR">
+				pp.SUB_PRODUCT_TYPE = #subProductTypeList[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productId">
+			pp.PRODUCT_ID =
+			#productId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productType">
+			pp.PRODUCT_TYPE =
+			#productType#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="isAperiodic">
+		    <isEqual property="isAperiodic" compareValue="false" > (</isEqual>
+		    	IS_APERIODIC = #isAperiodic#
+		    <isEqual property="isAperiodic" compareValue="false" prepend="OR">
+				pp.IS_APERIODIC IS NULL
+				)
+			</isEqual>		    
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="subProductType">
+			pp.SUB_PRODUCT_TYPE =
+			#subProductType#
+		</isNotEmpty>
+		<isEqual property="productType" compareValue="OTHER">
+		<isNotEqual property="isVisaProduct" compareValue="true">
+		   and pp.SUB_PRODUCT_TYPE !='VISA'
+		</isNotEqual>
+		</isEqual>
+		<isNotEmpty prepend="and" property="onLine">
+			pp.ON_LINE = #onLine#
+		</isNotEmpty>
+		<isGreaterThan prepend="and" property="placeId"
+			compareValue="0">
+			pp.PRODUCT_ID=ppp.PRODUCT_ID and ppp.PLACE_ID=#placeId#
+		</isGreaterThan>
+		<isNotEmpty prepend="and" property="selectedPlace">
+			pp.PRODUCT_ID=ppp.PRODUCT_ID and
+			ppp.PLACE_ID=#selectedPlace#
+		</isNotEmpty>
+		<isEqual property="choseDestFlag" compareValue="true">
+			<isNotEmpty prepend="and" property="destId">
+				ppp.DEST_ID=#destId#
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="choseDestFlag" compareValue="false">
+			<isNotEmpty prepend="and" property="destId">
+				pp.PRODUCT_ID=ppp.PRODUCT_ID and ppp.DEST_ID=#destId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="additional">
+				pp.ADDITIONAL =
+				#additional#
+			</isNotEmpty>
+		</isEqual>
+		<isNotEmpty prepend="and" property="channelId">
+			pp.PRODUCT_ID=ppc.PRODUCT_ID and
+			ppc.PRODUCT_CHANNEL=#channelId#
+		</isNotEmpty>
+        <isNotEmpty prepend="and" property="isOfficial">
+            pp.PRODUCT_ID IN (SELECT PRODUCT_ID
+            FROM PROD_PRODUCT_CHANNEL
+            WHERE PRODUCT_CHANNEL IN ('BACKEND', 'FRONTEND', 'CLIENT') AND PRODUCT_ID IS NOT NULL)
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="notOfficial">
+            pp.PRODUCT_ID NOT IN (SELECT PRODUCT_ID
+            FROM PROD_PRODUCT_CHANNEL
+            WHERE PRODUCT_CHANNEL IN ('BACKEND', 'FRONTEND', 'CLIENT') AND PRODUCT_ID IS NOT NULL)
+        </isNotEmpty>
+		<isNotEmpty prepend="and" property="payToLvmama">
+			pp.PAY_TO_LVMAMA = #payToLvmama#
+		</isNotEmpty>
+
+        <isNotEmpty prepend="and" property="searchAuditingStatus">
+            pp.AUDITING_STATUS = #searchAuditingStatus#
+        </isNotEmpty>
+		<isNotEmpty prepend="and" property="isRefundable">
+			pp.IS_REFUNDABLE = #isRefundable#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="isManualBonus">
+			pp.IS_MANUAL_BONUS = #isManualBonus#
+		</isNotEmpty>
+
+        <isNotEmpty prepend="and" property="regionName">
+            pp.REGION_NAME = #regionName#
+        </isNotEmpty>
+
+        <isNotEmpty prepend="and" property="isForegin">
+            pp.IS_FOREGIN = #isForegin#
+        </isNotEmpty>
+
+        <isNotEmpty prepend="and" property="applicableTravelDays">
+            #applicableTravelDays# <![CDATA[ >= ]]> pp.APPLICABLE_TRAVEL_DAYS_LIMIT  and #applicableTravelDays# <![CDATA[ <= ]]> pp.APPLICABLE_TRAVEL_DAYS_CAPS
+        </isNotEmpty>
+
+		<isNotEmpty prepend="and" property="applicableSubProductType">
+            pp.APPLICABLE_SUB_PRODUCT_TYPE||',' like '%' || #applicableSubProductType# || ',%'
+        </isNotEmpty>
+
+		order by pp.PRODUCT_ID desc
+		) T
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow" prepend=""> ROWNUM &lt;=
+				#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=""> ROWNUM1
+				&gt;=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="selectChannelByProductId" parameterClass="java.lang.Long"
+		resultClass="java.lang.String">
+		select PRODUCT_CHANNEL from PROD_PRODUCT_CHANNEL pc where
+		PRODUCT_ID=#productId#
+	</select>
+
+	<select id="getChannelByProductId" parameterClass="java.lang.Long"
+		resultClass="com.lvmama.comm.pet.po.prod.ProdProductChannel">
+		select PRODUCT_CHANNEL_ID as productChannelId,
+		PRODUCT_CHANNEL
+		as productChannel, PRODUCT_ID as productId from
+		PROD_PRODUCT_CHANNEL where PRODUCT_ID=#productId#
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct">
+		delete from
+		PROD_PRODUCT where PRODUCT_ID = #productId#
+	</delete>
+
+	<select id="selectProductKey" resultClass="Long">
+		select
+		PROD_PRODUCT_ID_SEQ.nextVal FROM DUAL
+	</select>
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct">
+		insert into PROD_PRODUCT
+		(product_id, biz_code,
+		product_name, 
+		product_type,
+		additional,
+		create_time,online_time,
+		offline_time,MARKET_PRICE,SELL_PRICE,
+		IS_REFUNDABLE,
+		SMS_CONTENT, WRAP_PAGE, VALID,
+		SUB_PRODUCT_TYPE,SMALL_IMAGE,CAN_PAY_BY_BONUS,MAX_CASH_REFUND,PHYSICAL,SEND_SMS,PRICE_UNIT,
+		FILIALE_NAME,MANAGER_ID,ORG_ID,ON_LINE,GROUP_MIN,
+		TRAVELLER_INFO_OPTIONS,PAY_DEPOSIT,COUPON_ABLE,COUPON_ACTIVITY,
+		IS_FOREGIN,REGION_NAME,IS_APERIODIC,AHEAD_BOOKING_DAYS,IS_PREPAYMENT,SHOW_SALE_DAYS,AUDITING_STATUS,
+        APPLICABLE_TRAVEL_DAYS_LIMIT,APPLICABLE_TRAVEL_DAYS_CAPS,APPLICABLE_SUB_PRODUCT_TYPE,
+        BOUNS_SCALE,BOUNS_REASON,BOUNS_START,BOUNS_END,BOUNS_LIMIT,IS_MANUAL_BONUS,FREE_BACKABLE) values
+		(#productId#,
+		#bizcode#,
+		#productName#, 
+		#productType#,
+		#additional#,
+		sysdate,
+		#onlineTime#,
+		#offlineTime#,
+		#marketPrice#,#sellPrice#,#isRefundable#,#smsContent#,
+		#wrapPage#,
+		'Y',#subProductType#,#smallImage#,#canPayByBonus#,#maxCashRefund#,#physical#,#sendSms#,#priceUnit#,
+		#filialeName#,#managerId#,#orgId#,'false',#groupMin#,#travellerInfoOptions#,#payDeposit#,
+		#couponAble#,#couponActivity#,#isForegin#,#regionName#,#isAperiodic#,#aheadBookingDays#,#prePaymentAble#,#showSaleDays#,#auditingStatus#,
+        #applicableTravelDaysLimit#,#applicableTravelDaysCaps#,#applicableSubProductType#,
+        #bounsScale#,#bounsReason#,#bounsStart#,#bounsEnd#,#bounsLimit#,#isManualBonus#,#freeBackable#)
+	</insert>
+	
+	
+	
+	<resultMap id="BaseResultMap2" extends="BaseResultMap"
+		class="com.lvmama.comm.bee.po.prod.ProdProduct">
+		<result property="saleNumType" column="SALE_NUM_TYPE" />
+	</resultMap>
+
+	<select id="getProdProductByParamByRelation" parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct"
+		resultMap="BaseResultMap">
+		select p.* from PROD_PRODUCT p, PROD_RELATION r where
+		p.PRODUCT_ID=r.RELAT_PRODUCT_ID and p.VALID='Y'
+		<isNotEmpty prepend="and" property="additional">
+			ADDITIONAL=#additional#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productId">
+			r.PRODUCT_ID=#productId#
+			and r.relat_product_id!=#productId#
+		</isNotEmpty>
+	</select>
+
+	<!-- add by shihui -->
+	<select id="getProdProductByRelation" parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct"
+		resultMap="BaseResultMap">
+		select p.* from PROD_PRODUCT p, PROD_PRODUCT_RELATION r
+		where
+		p.PRODUCT_ID=r.RELAT_PRODUCT_ID
+		AND r.PRODUCT_ID=#productId#
+	</select>
+
+
+	<delete id="deleteChannelByProductId" parameterClass="java.lang.Long">
+		delete from
+		PROD_PRODUCT_CHANNEL where PRODUCT_ID=#productId#
+	</delete>
+
+	<insert id="insertChannel" parameterClass="com.lvmama.comm.pet.po.prod.ProdProductChannel">
+		<selectKey keyProperty="productChannelId" resultClass="Long">
+			select PROD_PRODUCT_CHANNEL_ID_SEQ.nextVal FROM DUAL
+		</selectKey>
+		insert into PROD_PRODUCT_CHANNEL (PRODUCT_CHANNEL_ID,
+		PRODUCT_ID,
+		PRODUCT_CHANNEL) values (#productChannelId#,
+		#productId#,
+		#productChannel#)
+	</insert>
+
+	<update id="updatePriceByProductId" parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct">
+		update
+		PROD_PRODUCT set MARKET_PRICE=#marketPrice#, SELL_PRICE=#sellPrice#,MAX_CASH_REFUND=#maxCashRefund#
+		where PRODUCT_ID = #productId#
+	</update>
+    <update id="updateAuditingStatus" parameterClass="java.util.Map">
+        update PROD_PRODUCT
+        set AUDITING_STATUS = #auditingStatus#
+        where PRODUCT_ID = #productId#
+	</update>
+
+
+	<sql id="selectAllProductIdSQL">
+		select pp.PRODUCT_ID,ROWNUM RN
+		from prod_product pp where valid='Y' and pp.sub_product_type not in('TRAIN') and exists(SELECT 1 FROM
+		PROD_PRODUCT_BRANCH ppb WHERE ppb.PRODUCT_ID=pp.PRODUCT_ID AND
+		ppb.DEFAULT_BRANCH='true' and ppb.ON_LINE='true')
+	</sql>
+	<select id="selectAllProductId" resultClass="java.lang.Long" parameterClass="java.util.Map">
+		select T.PRODUCT_ID from (<include refid="selectAllProductIdSQL"/>
+			AND ROWNUM &lt;=#maxResults#
+		)T where T.RN &gt;=#skipResults#
+	</select>
+	
+	<select id="selectAllProductIdCount" resultClass="java.lang.Long">
+		select count(*) from (<include refid="selectAllProductIdSQL"/>)
+	</select>
+
+	<select id="selectAllProductIdOnline" resultMap="BaseResultMap">
+		SELECT * FROM
+		(SELECT T.*,ROWNUM AS ROWNUM1 FROM
+		(select pp.* from
+		prod_product pp
+		where pp.valid ='Y' and pp.on_line='true') T)
+		WHERE
+		ROWNUM1
+		&lt;=#_endRow#
+		and ROWNUM1 &gt;#_startRow#
+	</select>
+
+	<select id="selectAllProductIdOnlineCount" resultClass="java.lang.Long">
+		select
+		count(*) from prod_product pp where pp.valid ='Y' and
+		pp.on_line='true'
+	</select>
+
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct">
+        update
+            PROD_PRODUCT
+        set BIZ_CODE = #bizcode#,
+            PRODUCT_NAME = #productName#,
+            ADDITIONAL =#additional#,
+            ONLINE_TIME =#onlineTime#,
+            OFFLINE_TIME = #offlineTime#,
+            MARKET_PRICE=#marketPrice#,
+            SELL_PRICE=#sellPrice#,
+            SMS_CONTENT=#smsContent#,
+            WRAP_PAGE=#wrapPage#,
+            SUB_PRODUCT_TYPE=#subProductType#,
+            SMALL_IMAGE=#smallImage#,
+            CAN_PAY_BY_BONUS=#canPayByBonus#,
+            PHYSICAL=#physical#,
+            SEND_SMS=#sendSms#,
+            PRICE_UNIT=#priceUnit#,
+            FILIALE_NAME=#filialeName#,
+            MANAGER_ID=#managerId#,
+            GROUP_MIN=#groupMin#,
+            TRAVELLER_INFO_OPTIONS=#travellerInfoOptions#,
+            PAY_DEPOSIT=#payDeposit#,
+            COUPON_ABLE=#couponAble#,
+            COUPON_ACTIVITY=#couponActivity#,
+            IS_REFUNDABLE=#isRefundable#,
+            IS_MANUAL_BONUS=#isManualBonus#,
+            MAX_CASH_REFUND=#maxCashRefund#,
+            IS_FOREGIN=#isForegin#,
+            REGION_NAME=#regionName#,
+            AHEAD_BOOKING_DAYS=#aheadBookingDays#,
+            SHOW_SALE_DAYS = #showSaleDays#,
+            IS_PREPAYMENT = #prePaymentAble#,
+            AUDITING_STATUS = #auditingStatus#,
+            APPLICABLE_TRAVEL_DAYS_LIMIT=#applicableTravelDaysLimit#,
+            APPLICABLE_TRAVEL_DAYS_CAPS=#applicableTravelDaysCaps#,
+            APPLICABLE_SUB_PRODUCT_TYPE=#applicableSubProductType#,
+            BOUNS_SCALE=#bounsScale#,
+            BOUNS_REASON=#bounsReason#,
+            BOUNS_START=#bounsStart#,
+            BOUNS_END=#bounsEnd#,
+            BOUNS_LIMIT=#bounsLimit#,
+            FREE_BACKABLE = #freeBackable#
+        where PRODUCT_ID = #productId#
+	</update>
+	
+	<update id="markIsValid" parameterClass="java.util.Map">
+		update PROD_PRODUCT set
+		VALID='N' where PRODUCT_ID=#productId#
+	</update>
+
+	<parameterMap class="map" id="swapParameters">
+		<parameter property="srcPrdId" javaType="java.lang.Long"
+			jdbcType="VARCHAR" mode="IN" />
+		<parameter property="copiedId" javaType="java.lang.Long"
+			jdbcType="VARCHAR" mode="OUT" />
+	</parameterMap>
+
+	<update id="updatePaymentTarget" parameterClass="java.util.Map">
+		update
+		PROD_PRODUCT set
+		PAY_TO_LVMAMA=#payToLvmama#,PAY_TO_SUPPLIER=#payToSupplier#
+		where
+		PRODUCT_ID=#productId#
+	</update>
+
+	<update id="updateProdRecommendWord" parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct">
+		update
+		PROD_PRODUCT set
+		RECOMMEND_INFO_FIRST
+		=#recommendInfoFirst#,RECOMMEND_INFO_SECOND=#recommendInfoSecond#,RECOMMEND_INFO_THIRD
+		=#recommendInfoThird#
+		where
+		PRODUCT_ID=#productId#
+	</update>
+
+	<select id="selectBizCodeByProductId" parameterClass="java.lang.Long">
+		select
+		BIZ_CODE from PROD_PRODUCT where Product_Id=#productId#
+	</select>
+
+	<update id="updateTimeById" parameterClass="java.util.Map">
+		update PROD_PRODUCT
+		set ONLINE_TIME =#onlineTime#, OFFLINE_TIME
+		= #offlineTime# where
+		Product_Id=#objectId#
+	</update>
+
+	<select id="selectRowCount" resultClass="java.lang.Integer">
+		select count(*) from PROD_PRODUCT pp
+		<isNotNull property="placeId">
+			, PROD_PRODUCT_PLACE ppp
+		</isNotNull>
+		<isEqual property="choseDestFlag" compareValue="false">
+			<isNotEmpty property="destId">
+				, PROD_PRODUCT_PLACE ppp
+			</isNotEmpty>
+		</isEqual>
+
+		<isEqual property="choseDestFlag" compareValue="false">
+			<isNotEmpty property="selectedPlace">
+				, PROD_PRODUCT_PLACE ppp
+			</isNotEmpty>
+		</isEqual>
+
+
+		<isNotEmpty property="channelId">
+			, PROD_PRODUCT_CHANNEL ppc
+		</isNotEmpty>
+		<isEqual property="choseDestFlag" compareValue="true">
+			<isNotEmpty property="selectedPlace">
+				, PROD_PRODUCT_PLACE ppp
+			</isNotEmpty>
+		</isEqual>
+		<isNotEmpty property="selfPack">
+			, PROD_ROUTE pr
+		</isNotEmpty>
+		<isEqual property="subProductType" compareValue="VISA">
+		  ,(<include refid="selectprodOtherbyProductId"/>)po where pp.PRODUCT_ID=po.PRODUCT_ID
+		  and pp.VALID='Y'
+		</isEqual>
+		<isNotEqual  property="subProductType" compareValue="VISA">
+		  where pp.VALID='Y'
+		</isNotEqual>
+		<!-- 过滤不定期产品 add by shihui -->
+		<isNotEmpty prepend="and" property="isAperiodic">
+			<isEqual property="isAperiodic" compareValue="false" > (</isEqual>
+		    	IS_APERIODIC = #isAperiodic#
+		    <isEqual property="isAperiodic" compareValue="false" prepend="OR">
+				pp.IS_APERIODIC IS NULL
+				)
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="selfPack">
+			pr.product_id=pp.product_id and pr.SELF_PACK=#selfPack#
+		</isNotEmpty>
+		<isEmpty property="twoRole">
+			<isNotEmpty prepend="and" property="managerIds">
+				(
+				<iterate property="managerIds" conjunction="," close=")"
+					open=" pp.MANAGER_ID in (">
+					#managerIds[]#
+				</iterate>
+				or pp.MANAGER_ID is null
+				)
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orgId">
+				(pp.ORG_ID=#orgId# or
+				pp.ORG_ID is null)
+			</isNotEmpty>
+		</isEmpty>
+		<isNotEmpty property="twoRole">
+			and (
+			pp.ORG_ID=#orgId#
+
+			<iterate property="managerIds" conjunction="," close=")"
+				open="or pp.MANAGER_ID in (">
+				#managerIds[]#
+			</iterate>
+			or pp.ORG_ID is null or pp.MANAGER_ID is null
+			)
+		</isNotEmpty>
+
+		<isNotEmpty prepend="and" property="sProductName">
+			pp.PRODUCT_NAME like
+            '%' || #sProductName# || '%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="bizcode">
+			pp.BIZ_CODE like
+			'%$bizcode$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="prodBranchId">
+			exists(select 1 from
+			prod_product_branch ppb where ppb.product_id=pp.product_id and
+			ppb.prod_branch_id=#prodBranchId#)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productSearch">
+			(pp.PRODUCT_NAME like
+			'%$productSearch$%' or pp.BIZ_CODE
+			like '%$productSearch$%')
+		</isNotEmpty>
+
+		<isNotNull prepend="and" property="sBeginTime">
+			pp.CREATE_TIME
+			<![CDATA[>=]]>
+			#sBeginTime#
+		</isNotNull>
+		<isNotNull prepend="and" property="sEndTime">
+			pp.CREATE_TIME
+			<![CDATA[<]]>
+			#sEndTime#+1
+		</isNotNull>
+		<isNotEmpty property="sellPriceMin" prepend="and">
+			pp.SELL_PRICE
+			<![CDATA[>]]>#sellPriceMin#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMax" prepend="and">
+			pp.SELL_PRICE
+			<![CDATA[<]]>#sellPriceMax#
+		</isNotEmpty>
+		<isNotEmpty property="filialeName" prepend="and">
+			pp.FILIALE_NAME
+			= #filialeName#
+		</isNotEmpty>
+		<isEqual prepend="and" property="onlineStatus" compareValue="true">
+			pp.ONLINE_TIME
+			<![CDATA[<]]>
+			sysdate and pp.OFFLINE_TIME
+			<![CDATA[>]]>
+			sysdate
+		</isEqual>
+		<isEqual prepend="and" property="onlineStatus" compareValue="false">
+			pp.OFFLINE_TIME
+			<![CDATA[<]]>
+			sysdate
+		</isEqual>
+		<isNotEmpty prepend="and" property="productTypeList">
+			<iterate property="productTypeList" open="(" close=")"
+				conjunction="OR">
+				pp.PRODUCT_TYPE = #productTypeList[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="subProductTypeList">
+			<iterate property="subProductTypeList" open="(" close=")"
+				conjunction="OR">
+				pp.SUB_PRODUCT_TYPE = #subProductTypeList[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="onLine">
+			pp.ON_LINE = #onLine#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productId">
+			pp.PRODUCT_ID =
+			#productId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productIds">
+			<iterate property="productIds" open="(" close=")"
+				conjunction="or">
+				pp.PRODUCT_ID=#productIds[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productType">
+			pp.PRODUCT_TYPE =
+			#productType#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="isAperiodic">
+		   	<isEqual property="isAperiodic" compareValue="false" > (</isEqual>
+		    	IS_APERIODIC = #isAperiodic#
+		    <isEqual property="isAperiodic" compareValue="false" prepend="OR">
+				pp.IS_APERIODIC IS NULL
+				)
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="subProductType">
+			pp.SUB_PRODUCT_TYPE =
+			#subProductType#
+		</isNotEmpty>
+		<isEqual property="productType" compareValue="OTHER">
+		<isNotEqual property="isVisaProduct" compareValue="true">
+		   and pp.SUB_PRODUCT_TYPE !='VISA'
+		</isNotEqual>
+		</isEqual>
+		<isGreaterThan prepend="and" property="placeId"
+			compareValue="0">
+			pp.PRODUCT_ID=ppp.PRODUCT_ID and ppp.PLACE_ID=#placeId#
+		</isGreaterThan>
+		<isNotEmpty prepend="and" property="selectedPlace">
+			pp.PRODUCT_ID=ppp.PRODUCT_ID and
+			ppp.PLACE_ID=#selectedPlace#
+		</isNotEmpty>
+		<isEqual property="choseDestFlag" compareValue="true">
+			<isNotEmpty prepend="and" property="destId">
+				ppp.DEST_ID=#destId#
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="choseDestFlag" compareValue="false">
+			<isNotEmpty prepend="and" property="destId">
+				pp.PRODUCT_ID=ppp.PRODUCT_ID and ppp.DEST_ID=#destId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="additional">
+				pp.ADDITIONAL =
+				#additional#
+			</isNotEmpty>
+		</isEqual>
+		<isNotEmpty prepend="and" property="channelId">
+			pp.PRODUCT_ID=ppc.PRODUCT_ID and
+			ppc.PRODUCT_CHANNEL=#channelId#
+		</isNotEmpty>
+        <isNotEmpty prepend="and" property="isOfficial">
+            pp.PRODUCT_ID IN (SELECT PRODUCT_ID
+            FROM PROD_PRODUCT_CHANNEL
+            WHERE PRODUCT_CHANNEL IN ('BACKEND', 'FRONTEND', 'CLIENT') AND PRODUCT_ID IS NOT NULL)
+		</isNotEmpty>
+        <isNotEmpty prepend="and" property="notOfficial">
+            pp.PRODUCT_ID NOT IN (SELECT PRODUCT_ID
+            FROM PROD_PRODUCT_CHANNEL
+            WHERE PRODUCT_CHANNEL IN ('BACKEND', 'FRONTEND', 'CLIENT') AND PRODUCT_ID IS NOT NULL)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="payToLvmama">
+			pp.PAY_TO_LVMAMA = #payToLvmama#
+		</isNotEmpty>
+        <isNotEmpty prepend="and" property="searchAuditingStatus">
+            pp.AUDITING_STATUS = #searchAuditingStatus#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="isRefundable">
+			pp.IS_REFUNDABLE = #isRefundable#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="isManualBonus">
+			pp.IS_MANUAL_BONUS = #isManualBonus#
+		</isNotEmpty>
+        <isNotEmpty prepend="and" property="regionName">
+            pp.REGION_NAME = #regionName#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="isForegin">
+            pp.IS_FOREGIN = #isForegin#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="applicableTravelDays">
+            #applicableTravelDays# <![CDATA[ >= ]]> pp.APPLICABLE_TRAVEL_DAYS_LIMIT  and #applicableTravelDays# <![CDATA[ <= ]]> pp.APPLICABLE_TRAVEL_DAYS_CAPS
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="applicableSubProductType">
+            pp.APPLICABLE_SUB_PRODUCT_TYPE||',' like '%' || #applicableSubProductType# || ',%'
+        </isNotEmpty>
+	</select>
+
+	<!-- add by shihui -->
+	<select id="getProdProductAndGroup" parameterClass="com.lvmama.comm.bee.po.prod.ProdProduct"
+		resultMap="NewResultMap">
+		select p.*,r.pro_group_id from PROD_PRODUCT p, PROD_RELATION r
+		where
+		p.PRODUCT_ID=r.RELAT_PRODUCT_ID and p.VALID='Y'
+		<isNotEmpty prepend="and" property="additional">
+			ADDITIONAL=#additional#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productType">
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productId">
+			r.PRODUCT_ID=#productId#
+		</isNotEmpty>
+	</select>
+
+	<select id="selectHotelProductByPlaceIdAndParam" parameterClass="java.util.HashMap"
+		resultMap="ProdHotel">
+		Select Pp.*,ph.* From Prod_Product_Place Ppp,Prod_Product
+		Pp,Prod_Hotel Ph Where Ppp.Place_Id=#placeId# And
+		ppp.product_id =
+		pp.product_id and ph.product_id = pp.product_id
+		<isNotEmpty property="productType" prepend="and">
+			pp.product_type=#productType#
+		</isNotEmpty>
+		<isNotEmpty property="subProductType" prepend="and">
+			pp.SUB_PRODUCT_TYPE=#subProductType#
+		</isNotEmpty>
+		<isNotEmpty property="size" prepend="and">
+			rownum<![CDATA[<=]]>#size#
+		</isNotEmpty>
+
+	</select>
+
+	<sql id="queryProductByTagAndProductTypeSql">
+		select * from PROD_PRODUCT
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="productIds">
+				PRODUCT_ID in
+				($productIds$)
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="productType">
+				PRODUCT_TYPE in
+				($productType$)
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="productName">
+				PRODUCT_NAME like
+				'%'||#productName#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="tagId">
+				PRODUCT_ID in(
+				select
+				PRODUCT_ID from PROD_PRODUCT_TAG ppt where ppt.TAG_ID=#tagId#
+				)
+			</isNotEmpty>
+			<isEmpty property="tagId">
+				<isNotEmpty prepend="and" property="tagGroupId">
+					PRODUCT_ID IN(
+					SELECT
+					PPT.PRODUCT_ID FROM PROD_PRODUCT_TAG PPT,PROD_TAG PT WHERE
+					PPT.TAG_ID=PT.TAG_ID AND PT.TAG_GROUP_ID=#tagGroupId#
+					)
+				</isNotEmpty>
+			</isEmpty>
+
+		</dynamic>
+	</sql>
+
+	<select id="queryProductByTagAndProductTypeCount" resultClass="java.lang.Integer"
+		parameterClass="java.util.HashMap">
+		select count(*) from (
+		<include refid="queryProductByTagAndProductTypeSql" />
+		)
+	</select>
+
+	<select id="queryProductByTagAndProductType" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select * from (
+		select t.*, ROWNUM ROWNUM1 from (
+		<include refid="queryProductByTagAndProductTypeSql" />
+		) t
+		<isNotNull prepend="where" property="_endRow">
+			ROWNUM &lt;= #_endRow#
+		</isNotNull>
+		)
+		<isNotNull prepend="where" property="_startRow">
+			ROWNUM1 &gt;=
+			#_startRow#
+		</isNotNull>
+	</select>
+
+
+	<select id="getMinPriceByPlaceIdAndStage" resultClass="java.util.HashMap"
+		parameterClass="java.util.HashMap">
+		select min(market_price) as MARKETPRICE,min(sell_price) as SELLPRICE
+		from PROD_PRODUCT
+		pp,PRODUCT_PRODUCT_PLACE ppp,PROD_PRODUCT_CHANNEL ppc
+		where pp.PRODUCT_ID=ppp.PRODUCT_ID and pp.PRODUCT_ID=ppc.PRODUCT_ID
+		and ppp.place_id=#placeId#
+		and market_price!=0 and sell_price!=0
+		and
+		pp.market_price is not null and pp.sell_price is not null
+		and
+		pp.market_price !=0 and pp.sell_price !=0 and pp.VALID='Y'
+		<isNotEmpty property="stage">
+			<isEqual property="stage" compareValue="2">
+				and
+				pp.PRODUCT_TYPE='TICKET'
+			</isEqual>
+			<isEqual property="stage" compareValue="3">
+				and
+				pp.PRODUCT_TYPE='HOTEL'
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty property="channel" prepend="and">
+			ppc.PRODUCT_CHANNEL=#channel#
+		</isNotEmpty>
+	</select>
+
+	<!-- 查询渠道在线产品以及销售量Map -->
+	<resultMap class="java.util.HashMap" id="baseProductByChannelMap">
+		<result column="PRODUCT_ID" property="PRODUCT_ID" javaType="java.lang.Long" />
+		<result column="PRODUCT_NAME" property="PRODUCT_NAME" />
+		<result column="SELL_PRICE" property="SELL_PRICE" javaType="java.lang.Long" />
+		<result column="MARKET_PRICE" property="MARKET_PRICE" javaType="java.lang.Long" />
+		<result column="SUB_PRODUCT_TYPE" property="SUB_PRODUCT_TYPE" />
+		<result column="OFFLINE_TIME" property="OFFLINE_TIME" />
+		<result column="ONLINE_TIME" property="ONLINE_TIME" />
+		<result column="PRODUCT_TYPE" property="PRODUCT_TYPE" />
+		<result column="MANAGERRECOMMEND" property="MANAGERRECOMMEND"
+			javaType="java.lang.String" />
+		<result column="TAG_NAME" property="TAG_NAME" javaType="java.lang.String" />
+		<result column="ORDER_COUNT" property="ORDER_COUNT" javaType="java.lang.Long" />
+		<result column="CITY" property="CITY" />
+		<result column="MIN_GROUP_SIZE" property="MIN_GROUP_SIZE"
+			javaType="java.lang.Long" />
+		<result column="SMALL_IMAGE" property="SMALL_IMAGE" javaType="java.lang.String" />
+	</resultMap>
+	<resultMap class="java.util.HashMap" id="queryOnlineProductByChannelMap"
+		extends="baseProductByChannelMap">
+		<result column="PAGE_ID" property="PAGE_ID" javaType="java.lang.Long" />
+		<result column="IMPORTMENT_CLEW" property="IMPORTMENT_CLEW"
+			javaType="java.lang.String" />
+	</resultMap>
+	<resultMap class="java.util.HashMap" id="queryOnlineAndOfflineProductByChannelMap"
+		extends="baseProductByChannelMap">
+		<result column="COMPLETE_FLAG" property="COMPLETE_FLAG"
+			javaType="java.lang.String" />
+
+	</resultMap>
+
+	<!-- 查询渠道在线产品以及销售量 -->
+	<select id="queryOnlineProductByProductId" parameterClass="java.util.Map"
+		resultMap="queryOnlineProductByChannelMap">
+		SELECT PRD.*,
+		(SELECT
+		nvl(sum(op.quantity),0)
+		FROM ORD_ORDER
+		OD, ORD_ORDER_ITEM_PROD OP
+		WHERE OD.ORDER_ID = OP.ORDER_ID
+		AND
+		OP.PRODUCT_ID = PRD.PRODUCT_ID) AS ORDER_COUNT,
+		(SELECT
+		WM_CONCAT(PT.TAG_NAME)
+		FROM PROD_TAG PT, PROD_PRODUCT_TAG PPT
+		WHERE
+		PPT.TAG_ID = PT.TAG_ID
+		AND PPT.PRODUCT_ID=PRD.PRODUCT_ID
+		GROUP BY
+		PPT.PRODUCT_ID) as TAG_NAME,
+		( SELECT VC.CONTENT
+		FROM VIEW_PAGE VP,
+		VIEW_CONTENT VC
+		WHERE VP.PAGE_ID = VC.PAGE_ID
+		AND VP.PRODUCT_ID =
+		PRD.PRODUCT_ID
+		AND VC.CONTENT_TYPE = 'MANAGERRECOMMEND'
+		AND
+		ROWNUM&lt;=1) AS MANAGERRECOMMEND,
+		( SELECT VP.PAGE_ID
+		FROM VIEW_PAGE VP
+		WHERE VP.PRODUCT_ID=PRD.PRODUCT_ID
+		AND ROWNUM&lt;=1) AS PAGE_ID,
+		(
+		SELECT CP.NAME FROM COM_PLACE CP,PROD_PRODUCT_PLACE PPP WHERE
+		CP.PLACE_ID=PPP.PLACE_ID AND PPP."TO"='true' AND
+		PPP.PRODUCT_ID=PRD.PRODUCT_ID AND rownum&lt;=1) as CITY,
+		nvl(prd.GROUP_MIN,0) as MIN_GROUP_SIZE,
+		'N' as COMPLETE_FLAG,
+		(select
+		vc.content
+		from view_content vc, view_page vp
+		where vp.page_id =
+		vc.page_id
+		and vc.content_type = 'IMPORTMENTCLEW' and rownum&lt;=1 and
+		vp.product_id=PRD.PRODUCT_ID) as IMPORTMENT_CLEW
+		FROM PROD_PRODUCT PRD,
+		PROD_PRODUCT_CHANNEL PRDC
+		WHERE PRD.PRODUCT_ID = PRDC.PRODUCT_ID
+		AND
+		PRDC.PRODUCT_CHANNEL = #productChannel#
+		AND PRD.ONLINE_TIME &lt;=
+		SYSDATE
+		AND PRD.OFFLINE_TIME &gt;(SYSDATE-1)
+		AND PRD.VALID='Y'
+		AND
+		PRD.on_line='true'
+		AND EXISTS
+		(SELECT *
+		FROM PROD_TIME_PRICE PTP
+		WHERE
+		PTP.SPEC_DATE >= SYSDATE
+		AND
+		PTP.PRODUCT_ID = PRD.PRODUCT_ID)
+		AND
+		PRD.PRODUCT_ID=#productId#
+	</select>
+	<select id="countOrderByProduct" parameterClass="java.util.Map"
+		resultClass="java.lang.Long">
+		SELECT
+		nvl(sum(op.quantity),0)
+		FROM ORD_ORDER OD,
+		ORD_ORDER_ITEM_PROD OP
+		WHERE OD.ORDER_ID = OP.ORDER_ID
+		AND
+		OP.PRODUCT_ID=#productId#
+	</select>
+	<!-- 查询当日其他团购产品 -->
+	<select id="queryOnlineOtherProductByChannel" parameterClass="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT PRD.*
+		FROM PROD_PRODUCT PRD, PROD_PRODUCT_CHANNEL PRDC
+		WHERE PRD.PRODUCT_ID = PRDC.PRODUCT_ID
+		AND PRDC.PRODUCT_CHANNEL =
+		#productChannel#
+		AND PRD.ONLINE_TIME &lt;= SYSDATE
+		AND PRD.OFFLINE_TIME
+		&gt;= SYSDATE
+		AND EXISTS (SELECT '*'
+		FROM PROD_TIME_PRICE PTP
+		WHERE
+		PTP.SPEC_DATE >= SYSDATE
+		AND PTP.PRODUCT_ID = PRD.PRODUCT_ID)
+		and rownum
+		&lt;=#rowNum#
+	</select>
+
+	<!-- 统计产品参与团购人数 -->
+	<select id="countJoinUsersByProd" parameterClass="java.util.Map"
+		resultClass="java.lang.Long">
+		SELECT
+		count(OP.ORDER_ID)
+		FROM ORD_ORDER OD,
+		ORD_ORDER_ITEM_PROD OP
+		WHERE OD.ORDER_ID = OP.ORDER_ID
+		AND OP.PRODUCT_ID
+		= #productId#
+	</select>
+	<!--查询团购产品参与用户 -->
+	<select id="queryJoinUsersByProd" parameterClass="java.util.Map"
+		resultClass="java.util.HashMap" remapResults="true">
+		SELECT R.* FROM
+		(
+		select t.*,ROWNUM AS RN
+		from (
+		SELECT
+		OD.USER_ID,
+		to_char(OP.PRICE/100) as PRICE,
+		to_char(OP.QUANTITY) as QUANTITY,
+		P.PRODUCT_NAME,
+		to_char(OD.CREATE_TIME,'yyyy-mm-dd hh24:mi:ss') as
+		CREATE_TIME
+		FROM
+		ORD_ORDER OD, ORD_ORDER_ITEM_PROD OP,PROD_PRODUCT P
+		WHERE OD.ORDER_ID =
+		OP.ORDER_ID
+		AND P.PRODUCT_ID= OP.PRODUCT_ID
+		AND OP.PRODUCT_ID =
+		#productId#
+		ORDER BY
+		OD.CREATE_TIME DESC
+		) t
+		where ROWNUM&lt;=#endIndex#
+		)R
+		WHERE
+		R.RN&gt;=#beginIndex#
+	</select>
+	<select id="queryPrdTagByProductId" parameterClass="java.util.Map"
+		resultClass="java.util.HashMap">
+		select pt.TAG_NAME
+		from prod_product_tag ppt, prod_tag pt
+		where pt.tag_id = ppt.tag_id
+		and ppt.product_id=#productId#
+	</select>
+	<!-- 查询进行中的团购以及已经结束的团购 -->
+	<select id="queryOnlineAndOffelineProductByChannel"
+		parameterClass="java.util.Map" resultMap="queryOnlineAndOfflineProductByChannelMap">
+		select * from (select
+		t.*,decode(p,0,'N','Y') as COMPLETE_FLAG,rownum
+		as ROWNUM1 from (select
+		*
+		from (select prd.*,
+		(SELECT
+		nvl(sum(op.quantity),0)
+		FROM ORD_ORDER OD,
+		ORD_ORDER_ITEM_PROD OP
+		WHERE OD.ORDER_ID = OP.ORDER_ID
+		AND OP.PRODUCT_ID
+		= prd.PRODUCT_ID) as order_count,
+		(select wm_concat(pt.tag_name)
+		from
+		prod_tag pt, prod_product_tag ppt
+		where ppt.tag_id = pt.tag_id
+		and
+		ppt.product_id = prd.product_id
+		group by ppt.product_id) as tag_name,
+		(select vc.content
+		from view_page vp, view_content vc
+		where vp.page_id =
+		vc.page_id
+		and vp.product_id = prd.product_id
+		and vc.content_type =
+		'MANAGERRECOMMEND'
+		and rownum &lt;= 1) as managerrecommend,
+		(select
+		cp.city
+		from com_place cp, prod_product_place ppp
+		where cp.PLACE_ID =
+		ppp.place_id
+		and ppp."TO" = 'true'
+		and ppp.product_id = prd.product_id
+		and rownum &lt;= 1) as city,
+		5 as min_group_size,
+		(case
+		when
+		prd.online_time &lt;= sysdate and
+		prd.offline_time &gt; sysdate then
+		0
+		else
+		1
+		end) as p
+		from prod_product prd, prod_product_channel prdc
+		where
+		prd.product_id = prdc.product_id
+		and prd.valid='Y'
+		and prd.online_time
+		&lt;=sysdate
+		and prdc.product_channel = 'TUANGOU') r
+		order by p asc
+		,r.online_time desc ) t
+		where rownum&lt;=#endIndex#)rr
+		where
+		rr.ROWNUM1&gt;=#beginIndex#
+	</select>
+	<!-- 统计团购产品总数量 -->
+	<select id="countOnlineAndOffelineProductByChannel"
+		parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select
+		count(1)
+		from
+		prod_product prd, prod_product_channel prdc
+		where prd.product_id =
+		prdc.product_id
+		and prdc.product_channel = 'TUANGOU'
+		and prd.valid='Y'
+		and prd.online_time &lt;=sysdate
+	</select>
+
+	<insert id="insertAssembly" parameterClass="com.lvmama.comm.pet.po.prod.ProdAssemblyPoint">
+		<selectKey keyProperty="assemblyPointId" resultClass="Long">
+			select
+			PROD_ASSEMBLY_POINT_ID_SEQ.nextVal FROM DUAL
+		</selectKey>
+		insert into PROD_ASSEMBLY_POINT (product_id, assembly_point_id,
+		assembly_point
+		) values (#productId#,
+		#assemblyPointId#,#assemblyPoint#)
+	</insert>
+
+	<select id="selectAssembly" resultMap="AssemblyResultMap"
+		parameterClass="java.lang.Long">
+		select * from PROD_ASSEMBLY_POINT where
+		product_id=#productId# order by ASSEMBLY_POINT_ID asc
+	</select>
+
+	<delete id="delAssembly" parameterClass="java.lang.Long">
+		DELETE FROM
+		PROD_ASSEMBLY_POINT WHERE assembly_point_id = #id#
+	</delete>
+
+	<select id="selectAssemblyByPrimaryKey" resultMap="AssemblyResultMap"
+		parameterClass="com.lvmama.comm.pet.po.prod.ProdAssemblyPoint">
+		select * from PROD_ASSEMBLY_POINT where
+		ASSEMBLY_POINT_ID = #assemblyPointId#
+	</select>
+
+	<update id="markIsSellable" parameterClass="java.util.Map">
+		update PROD_PRODUCT
+		set ON_LINE =#onLine# where Product_Id=#productId#
+	</update>
+
+	<!-- 批量修改销售产品的销售经理ID -->
+	<update id="updateManager" parameterClass="java.util.HashMap">
+		update PROD_PRODUCT 
+		set MANAGER_ID=#managerId#, ORG_ID=#orgId# 
+		where
+		<iterate property="productIds" conjunction="," close=")"
+			open=" PRODUCT_ID in (">
+			#productIds[]#
+		</iterate>
+	</update>
+
+	<!-- 批量修改销售产品的组织ID -->
+	<update id="updateOrgIds" parameterClass="java.util.Map">
+		update PROD_PRODUCT set ORG_ID = #orgId# where
+		<iterate property="productIds" conjunction="," close=")"
+			open=" PRODUCT_ID in (">
+			#productIds[]#
+		</iterate>
+	</update>
+
+	<!-- 批量修改销售产品组织ID -->
+	<update id="updateOrgId" parameterClass="java.util.HashMap">
+		update PROD_PRODUCT set ORG_ID = #orgId# where
+		ORG_ID is null
+
+		<isNotEmpty property="productIds" prepend=" and ">
+			<iterate property="productIds" conjunction="," close=")"
+				open=" PRODUCT_ID in (">
+				#productIds[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty property="productId" prepend=" and ">
+			PRODUCT_ID=#productId#
+		</isNotEmpty>
+	</update>
+
+	<!-- 确保采购的时间价格表和销售的时间价格表同步 -->
+	<sql id="checkMetaTimePrice">
+		(select count(*)
+           from meta_time_price mtp, prod_product_branch_item pi
+          where pi.meta_branch_id = mtp.meta_branch_id
+            and pi.prod_branch_id = branch.prod_branch_id
+            and mtp.spec_date = price.spec_date) =
+        (select count(*)
+           from prod_product_branch_item pi
+          where pi.prod_branch_id = branch.prod_branch_id)
+          and 
+          (select count(*) 
+           from prod_product_branch_item pi
+          where pi.prod_branch_id = branch.prod_branch_id) != 0
+	</sql>
+
+	<!-- 线路搜索共用sql -->
+	<sql id="selectRouteListByParamsSql">
+		and prod.product_id=branch.product_id and
+		branch.prod_branch_id=price.prod_branch_id and
+		<include refid="checkMetaTimePrice" />
+          and branch.on_line='true'
+		and branch.default_branch='true'
+		<!-- 如果产品id列表不为空，则不需再判断产品条件 -->
+		<isNotEmpty property="prodIds" prepend="and">
+			<iterate property="prodIds" open="(" close=")" conjunction="or">
+				prod.product_id=#prodIds[]#
+			</iterate>
+		</isNotEmpty>
+		<!-- 否则要加产品条件 -->
+		<isEmpty property="prodIds" prepend="and">
+			prod.ONLINE_TIME &lt;= SYSDATE and prod.OFFLINE_TIME
+			&gt;= SYSDATE
+			and prod.valid='Y'
+			and (prod.IS_APERIODIC is null or prod.IS_APERIODIC != 'true')
+			<isEqual property="onLine" compareValue="true" prepend="and">
+				prod.on_line='true'
+			</isEqual>
+			<isNotEmpty prepend="and" property="productType">
+				prod.product_type=#productType#
+			</isNotEmpty>
+			<isNotEmpty property="productName" prepend="and">
+				prod.product_name like '%'||#productName#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="filialeName" prepend="and">
+				prod.filiale_name=#filialeName#
+			</isNotEmpty>
+			<isNotEmpty property="productId" prepend="and">
+				prod.product_id=#productId#
+			</isNotEmpty>
+			<isNotEmpty property="subProdTypes" prepend="and">
+				<iterate property="subProdTypes" open="(" close=")"
+					conjunction="or">
+					prod.sub_product_type=#subProdTypes[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty property="fromPlaceName" prepend="and">
+				exists
+				(select
+				1
+				from prod_product_place place,com_place cp
+				where
+				prod.product_id=place.product_id and cp.PLACE_ID=place.place_id
+				and cp.name
+				like '%'||#fromPlaceName#||'%' and place."FROM"='true')
+			</isNotEmpty>
+			<isNotEmpty property="placeName" prepend="and">
+				exists (select 1
+				from prod_product_place place,com_place cp
+				where
+				prod.product_id=place.product_id and cp.PLACE_ID=place.place_id
+				and cp.name
+				like '%'||#placeName#||'%' and place."TO"='true')
+			</isNotEmpty>
+		</isEmpty>
+		<isNotEmpty property="visitDay" prepend="and">
+			route.days=#visitDay#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMin" prepend="and">
+			price.price
+			<![CDATA[>=]]>#sellPriceMin#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMax" prepend="and">
+			price.price
+			<![CDATA[<=]]>#sellPriceMax#
+		</isNotEmpty>
+		<isNotEmpty property="beginVisitDate" prepend="and">
+			price.spec_date
+			<![CDATA[>=]]>to_date(#beginVisitDate#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty property="endVisitDate" prepend="and">
+			price.spec_date
+			<![CDATA[<=]]>to_date(#endVisitDate#,'YYYY-MM-DD')
+		</isNotEmpty>
+	</sql>
+
+	<!-- shihui:线路符合条件的产品数量************************************* -->
+	<select id="selectCountRouteListByParams" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		SELECT COUNT(*)
+		FROM
+		(select DISTINCT(prod.product_id) from
+		prod_product
+		prod,prod_product_branch branch,prod_time_price price
+		<isNotEmpty property="visitDay" prepend=",">
+			prod_route route
+		</isNotEmpty>
+		where 1=1
+		<isNotEmpty property="visitDay" prepend="and">
+			prod.product_id=route.product_id
+		</isNotEmpty>
+		<include refid="selectRouteListByParamsSql" />
+		group by
+		prod.product_id,price.spec_date
+		)
+	</select>
+
+	<!-- shihui:线路符合条件的产品id列表************************************* -->
+	<select id="selectRouteProductIdsByParams" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		select
+		DISTINCT(prod.product_id) from prod_product
+		prod,prod_product_branch
+		branch,prod_time_price price
+		<isNotEmpty property="visitDay" prepend=",">
+			prod_route route
+		</isNotEmpty>
+		where 1=1
+		<isNotEmpty property="visitDay" prepend="and">
+			prod.product_id=route.product_id
+		</isNotEmpty>
+		<include refid="selectRouteListByParamsSql" />
+		group by
+		prod.product_id,price.spec_date
+		) T
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow" prepend=""> ROWNUM &lt;=
+				#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=""> ROWNUM1
+				&gt;=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<!-- shihui:线路符合条件的销售产品列表查询 -->
+	<select id="selectRouteProductListByParams" resultMap="routeDateMap"
+		parameterClass="java.util.Map">
+		select
+		prod.product_id,prod.product_name,prod.sub_product_type,price.spec_date,route.days
+		from prod_product
+		prod,prod_product_branch branch,prod_time_price
+		price,
+		prod_route route
+		where prod.product_id=route.product_id
+		<include refid="selectRouteListByParamsSql" />
+		order by prod.product_id,price.spec_date
+	</select>
+
+	<sql id="selectHotelProductCommonSql">
+		and branch.on_line='true'
+		<!-- 如果产品id列表不为空，则不需再判断产品条件 -->
+		<isNotEmpty property="prodIds" prepend="and">
+			<iterate property="prodIds" open="(" close=")" conjunction="or">
+				prod.product_id=#prodIds[]#
+			</iterate>
+		</isNotEmpty>
+		<!-- 否则要加产品条件 -->
+		<isEmpty property="prodIds">
+			<isNotEmpty property="placeName" prepend="and">
+				exists (select 1
+				from prod_product_place place,com_place cp
+				where
+				prod.product_id=place.product_id and cp.PLACE_ID=place.place_id
+				and
+				cp.name
+				like '%'||#placeName#||'%' and place."TO"='true')
+			</isNotEmpty>
+			and prod.ONLINE_TIME &lt;= SYSDATE and prod.OFFLINE_TIME
+			&gt;= SYSDATE
+			and
+			prod.valid='Y'
+			and
+			prod.product_type='HOTEL'
+			<isEqual property="onLine" compareValue="true" prepend="and">
+				prod.on_line='true'
+			</isEqual>
+			<isNotEmpty property="productName" prepend="and">
+				prod.product_name like '%'||#productName#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="filialeName" prepend="and">
+				prod.filiale_name=#filialeName#
+			</isNotEmpty>
+			<isNotEmpty property="productId" prepend="and">
+				prod.product_id=#productId#
+			</isNotEmpty>
+		</isEmpty>
+	</sql>
+
+	<!-- shihui:查询符合条件的酒店单房型的类别 -->
+	<sql id="selectSingleHotelProductListByParamsSql">
+		select branch.product_id,branch.prod_branch_id from
+		prod_product
+		prod,prod_product_branch branch where
+		prod.product_id=branch.product_id
+		and EXISTS (
+		select prod_branch_id
+		from prod_time_price
+		where branch.prod_branch_id=prod_branch_id
+		and	branch.valid='Y' and (prod.IS_APERIODIC is null or prod.IS_APERIODIC != 'true')
+		<isNotEmpty property="beginVisitDate" prepend="and">
+			spec_date
+			<![CDATA[>=]]>to_date(#beginVisitDate#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty property="beginVisitDate" prepend="and">
+			spec_date
+			<![CDATA[<]]>to_date(#beginVisitDate#,'YYYY-MM-DD')+#visitDay#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMin" prepend="and">
+			price
+			<![CDATA[>=]]>#sellPriceMin#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMax" prepend="and">
+			price
+			<![CDATA[<=]]>#sellPriceMax#
+		</isNotEmpty>
+		group by prod_branch_id having count(*)=#visitDay#
+		)
+		<include refid="selectHotelProductCommonSql" />
+		and prod.sub_product_type='SINGLE_ROOM'
+	</sql>
+
+	<!-- shihui:查询符合条件的酒店套餐的类别 -->
+	<sql id="selectSuitHotelProductListByParamsSql">
+		select prod.product_id,branch.prod_branch_id from prod_product
+		prod,prod_product_branch branch,prod_time_price price
+		where
+		prod.product_id = branch.product_id
+		and branch.valid='Y'
+		and (prod.IS_APERIODIC is null or prod.IS_APERIODIC != 'true') and
+		branch.prod_branch_id =
+		price.prod_branch_id
+		<isNotEmpty property="beginVisitDate" prepend="and">
+			price.spec_date
+			<![CDATA[>=]]>to_date(#beginVisitDate#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty property="beginVisitDate" prepend="and">
+			price.spec_date
+			<![CDATA[<=]]>to_date(#beginVisitDate#,'YYYY-MM-DD')+#visitDay#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMin" prepend="and">
+			price.price
+			<![CDATA[>=]]>#sellPriceMin#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMax" prepend="and">
+			price.price
+			<![CDATA[<=]]>#sellPriceMax#
+		</isNotEmpty>
+		<include refid="selectHotelProductCommonSql" />
+		and <include refid="checkMetaTimePrice" />
+		and prod.sub_product_type='HOTEL_SUIT'
+		group by
+		prod.product_id,branch.prod_branch_id
+	</sql>
+
+	<!-- shihui:酒店列表查询,查询出酒店产品信息 -->
+	<select id="selectHotelProductListByParams" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		select
+		* from
+		prod_product pp where exists (select distinct(product_id) from(
+		<include refid="selectSingleHotelProductListByParamsSql" />
+		union
+		<include refid="selectSuitHotelProductListByParamsSql" />
+		) where pp.product_id=product_id
+		) order by product_id desc
+		) T
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow" prepend=""> ROWNUM &lt;=
+				#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=""> ROWNUM1
+				&gt;=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="selectCountHotelProductListByParams" resultClass="java.lang.Long">
+		select count(distinct(product_id)) from(
+		<include refid="selectSingleHotelProductListByParamsSql" />
+		union
+		<include refid="selectSuitHotelProductListByParamsSql" />
+		)
+	</select>
+
+	<!-- shihui:酒店列表查询,查询出酒店类别价格信息 -->
+	<select id="selectHotelBranchListByParams" resultMap="branchResultMap"
+		parameterClass="java.util.Map">
+		select
+		* from
+		prod_product_branch where prod_branch_id in (select
+		distinct(prod_branch_id) from(
+		<include refid="selectSingleHotelProductListByParamsSql" />
+		union
+		<include refid="selectSuitHotelProductListByParamsSql" />
+		))
+	</select>
+
+	<!-- shihui:门票产品列表查询 -->
+	<select id="selectTicketProductListByParams" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		select prod.* from
+		prod_product prod where prod.ONLINE_TIME &lt;= SYSDATE and
+		prod.OFFLINE_TIME
+		&gt;= SYSDATE
+		and
+		prod.valid='Y'
+		<isEqual property="onLine" compareValue="true" prepend="and">
+			prod.on_line='true'
+		</isEqual>
+		<isNotEmpty property="productType" prepend="and">
+			prod.product_type=#productType#
+		</isNotEmpty>
+		<isNotEmpty property="productName" prepend="and">
+			prod.product_name like '%'||#productName#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="filialeName" prepend="and">
+			prod.filiale_name=#filialeName#
+		</isNotEmpty>
+		<isNotEmpty property="productId" prepend="and">
+			prod.product_id=#productId#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMin" prepend="and">
+			prod.sell_price 
+			<![CDATA[>=]]>#sellPriceMin#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMax" prepend="and">
+			prod.sell_price 
+			<![CDATA[<=]]>#sellPriceMax#
+		</isNotEmpty>
+		<isNotEmpty property="placeName" prepend="and">
+			exists (select 1
+			from prod_product_place place,com_place cp
+			where
+			prod.product_id=place.product_id and cp.PLACE_ID=place.place_id
+			and cp.name
+			like '%'||#placeName#||'%' and place."TO"='true')
+		</isNotEmpty>
+		) T
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow" prepend=""> ROWNUM &lt;=
+				#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=""> ROWNUM1
+				&gt;=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="selectCountTicketProductListByParams" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select count(*) from prod_product prod where
+		prod.ONLINE_TIME &lt;=
+		SYSDATE and prod.OFFLINE_TIME
+		&gt;= SYSDATE and
+		prod.valid='Y' and (prod.IS_APERIODIC is null or prod.IS_APERIODIC != 'true')
+		<isEqual property="onLine" compareValue="true" prepend="and">
+			prod.on_line='true'
+		</isEqual>
+		<isNotEmpty property="productType" prepend="and">
+			prod.product_type=#productType#
+		</isNotEmpty>
+		<isNotEmpty property="productName" prepend="and">
+			prod.product_name like '%'||#productName#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="filialeName" prepend="and">
+			prod.filiale_name=#filialeName#
+		</isNotEmpty>
+		<isNotEmpty property="productId" prepend="and">
+			prod.product_id=#productId#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMin" prepend="and">
+			prod.sell_price 
+			<![CDATA[>=]]>#sellPriceMin#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMax" prepend="and">
+			prod.sell_price 
+			<![CDATA[<=]]>#sellPriceMax#
+		</isNotEmpty>
+		<isNotEmpty property="placeName" prepend="and">
+			exists (select 1
+			from prod_product_place place,com_place cp
+			where
+			prod.product_id=place.product_id and cp.PLACE_ID=place.place_id
+			and cp.name
+			like '%'||#placeName#||'%' and place."TO"='true')
+		</isNotEmpty>
+	</select>
+
+	<!-- shihui:门票列表查询,查询出门票类别价格信息 -->
+	<select id="selectTicketBranchListByParams" resultMap="branchResultMap"
+		parameterClass="java.util.Map">
+		select branch.* from prod_product_branch branch where
+		branch.on_line='true'
+		and branch.valid='Y'
+		<isNotEmpty property="prodIds" prepend="and">
+			<iterate property="prodIds" open="(" close=")" conjunction="or">
+				branch.product_id=#prodIds[]#
+			</iterate>
+		</isNotEmpty>
+	</select>
+
+	<select id="selectROUTEListByProdJourney" parameterClass="java.lang.Long"
+		resultMap="ProdRoute">
+		select * from prod_product pp,prod_route pr 
+		where pp.product_id = pr.product_id 
+		and	  pp.valid = 'Y'
+		AND exists (select 1 from
+			prod_product_branch
+			ppb where exists (select 1 from
+			prod_journey_product pjp where
+			pjp.prod_branch_id
+			= ppb.prod_branch_id
+			and pjp.PROD_JOURENY_ID = #prodJourneyId#) and
+			ppb.product_id=pp.product_id)
+		and pp.product_type='ROUTE'
+	</select>
+	<select id="selectTICKETListByProdJourney" parameterClass="java.lang.Long"
+		resultMap="ProdTicket">
+		select * from prod_product pp,prod_ticket pr 
+		where pp.product_id = pr.product_id 
+		and	  pp.valid = 'Y'
+		AND exists (select 1 from
+			prod_product_branch
+			ppb where exists (select 1 from
+			prod_journey_product pjp where
+			pjp.prod_branch_id
+			= ppb.prod_branch_id
+			and pjp.PROD_JOURENY_ID = #prodJourneyId#) and
+			ppb.product_id=pp.product_id)
+		and pp.product_type='TICKET'
+	</select>
+	<select id="selectHOTELListByProdJourney" parameterClass="java.lang.Long"
+		resultMap="ProdHotel">
+		select * from prod_product pp,prod_hotel pr 
+		where pp.product_id = pr.product_id 
+		and	  pp.valid = 'Y'
+		AND exists (select 1 from
+			prod_product_branch
+			ppb where exists (select 1 from
+			prod_journey_product pjp where
+			pjp.prod_branch_id
+			= ppb.prod_branch_id
+			and pjp.PROD_JOURENY_ID = #prodJourneyId#) and
+			ppb.product_id=pp.product_id)
+		and pp.product_type='HOTEL'
+	</select>
+	<select id="selectTRAFFICListByProdJourney" parameterClass="java.lang.Long"
+		resultMap="ProdTraffic">
+		select * from prod_product pp,prod_traffic pr 
+		where pp.product_id = pr.product_id 
+		and	  pp.valid = 'Y'
+		AND exists (select 1 from
+			prod_product_branch
+			ppb where exists (select 1 from
+			prod_journey_product pjp where
+			pjp.prod_branch_id
+			= ppb.prod_branch_id
+			and pjp.PROD_JOURENY_ID = #prodJourneyId#) and
+			ppb.product_id=pp.product_id)
+		and pp.product_type='TRAFFIC'
+	</select>
+	<select id="selectListByProdJourney" parameterClass="java.lang.Long"
+		resultMap="BaseResultMap">
+		select * from prod_product pp where exists (select 1 from
+		prod_product_branch
+		ppb where exists (select 1 from
+		prod_journey_product pjp where
+		pjp.prod_branch_id
+		= ppb.prod_branch_id
+		and pjp.PROD_JOURENY_ID = #prodJourneyId#) and
+		ppb.product_id=pp.product_id)
+	</select>
+
+	<select id="selectCountOtherProductListByParams" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select count(*) from prod_product prod where
+		prod.ONLINE_TIME &lt;=
+		SYSDATE and prod.OFFLINE_TIME
+		&gt;= SYSDATE
+		and prod.valid='Y' and (prod.IS_APERIODIC is null or prod.IS_APERIODIC != 'true')
+		<isEqual property="onLine" compareValue="true" prepend="and">
+			prod.on_line='true'
+		</isEqual>
+		<isNotEmpty property="productType" prepend="and">
+			prod.product_type=#productType#
+		</isNotEmpty>
+		<isNotEmpty property="productName" prepend="and">
+			prod.product_name like '%'||#productName#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="productId" prepend="and">
+			prod.product_id=#productId#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMin" prepend="and">
+			prod.sell_price 
+			<![CDATA[>=]]>#sellPriceMin#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMax" prepend="and">
+			prod.sell_price 
+			<![CDATA[<=]]>#sellPriceMax#
+		</isNotEmpty>
+	</select>
+
+	<!-- shihui:其他产品列表查询 -->
+	<select id="selectOtherProductListByParams" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		select prod.* from
+		prod_product prod where prod.ONLINE_TIME &lt;= SYSDATE and
+		prod.OFFLINE_TIME
+		&gt;= SYSDATE
+		and prod.valid='Y'
+		<isEqual property="onLine" compareValue="true" prepend="and">
+			prod.on_line='true'
+		</isEqual>
+		<isNotEmpty property="productType" prepend="and">
+			prod.product_type=#productType#
+		</isNotEmpty>
+		<isNotEmpty property="productName" prepend="and">
+			prod.product_name like '%'||#productName#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="productId" prepend="and">
+			prod.product_id=#productId#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMin" prepend="and">
+			prod.sell_price 
+			<![CDATA[>=]]>#sellPriceMin#
+		</isNotEmpty>
+		<isNotEmpty property="sellPriceMax" prepend="and">
+			prod.sell_price 
+			<![CDATA[<=]]>#sellPriceMax#
+		</isNotEmpty>
+		) T
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow" prepend=""> ROWNUM &lt;=
+				#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=""> ROWNUM1
+				&gt;=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<!-- shihui:其他产品列表查询,查询出其他产品类别价格信息 -->
+	<select id="selectOtherBranchListByParams" resultMap="branchResultMap"
+		parameterClass="java.util.Map">
+		select branch.* from prod_product_branch branch where
+		branch.on_line='true'
+		and branch.valid='Y'
+		<isNotEmpty property="prodIds" prepend="and">
+			<iterate property="prodIds" open="(" close=")" conjunction="or">
+				branch.product_id=#prodIds[]#
+			</iterate>
+		</isNotEmpty>
+	</select>
+
+   <select id="selectTimePriceByProductIdCount" resultClass="java.lang.Integer"
+		parameterClass="java.util.HashMap">
+     SELECT count(*) FROM prod_time_price ptp where ptp.product_id=#productId#
+     and ptp.spec_date>sysdate+ptp.ahead_hour/60/24
+     <isEqual property="isSelfSign" compareValue="true" prepend="and">
+     ptp.price&gt;0
+     </isEqual>
+     <isNotEqual property="isSelfSign" compareValue="true" prepend="and">
+     ptp.price&lt;0
+     </isNotEqual>
+   </select>
+   
+	<select id="selectProductIdsByLikeProductName" resultClass="java.lang.Long"
+		parameterClass="java.lang.String">
+		SELECT PRODUCT_ID FROM PROD_PRODUCT WHERE PRODUCT_NAME
+		LIKE '%'||#productName#||'%'
+		ORDER BY PRODUCT_ID DESC
+	</select>
+
+	<select id="selectProductByMetaBranchId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		SELECT PP.*
+		  FROM PROD_PRODUCT  PP,
+		       PROD_PRODUCT_BRANCH PPB,
+		       PROD_PRODUCT_BRANCH_ITEM PPBI
+		 WHERE PP.PRODUCT_ID = PPB.PRODUCT_ID
+		   AND PPB.PROD_BRANCH_ID = PPBI.PROD_BRANCH_ID
+		   AND PPBI.META_BRANCH_ID = #metaBranchId#
+	</select>
+
+    <select id="queryOnlineProductInProductIds" parameterClass="java.util.HashMap" resultMap="onlinePrdResultMap">
+	SELECT prd.*,
+(SELECT
+    nvl(sum(op.quantity),0)
+    FROM ORD_ORDER OD,
+    ORD_ORDER_ITEM_PROD OP
+		WHERE OD.ORDER_ID = OP.ORDER_ID
+		AND OP.PRODUCT_ID
+		= prd.PRODUCT_ID) as order_count,
+( SELECT VC.CONTENT
+		FROM VIEW_PAGE VP,
+		VIEW_CONTENT VC
+		WHERE VP.PAGE_ID = VC.PAGE_ID
+		AND VP.PRODUCT_ID =
+		PRD.PRODUCT_ID
+		AND VC.CONTENT_TYPE = 'MANAGERRECOMMEND'
+		AND
+		ROWNUM &lt;=1) AS MANAGERRECOMMEND,
+		( SELECT VP.PAGE_ID
+		FROM VIEW_PAGE VP
+		WHERE VP.PRODUCT_ID=PRD.PRODUCT_ID
+		AND ROWNUM&lt;=1) AS PAGE_ID
+  FROM PROD_PRODUCT PRD, PROD_PRODUCT_CHANNEL PRDC
+ WHERE PRD.PRODUCT_ID = PRDC.PRODUCT_ID
+   AND PRDC.PRODUCT_CHANNEL = 'TUANGOU'
+   AND PRD.ONLINE_TIME &lt;= SYSDATE
+   AND PRD.OFFLINE_TIME &gt;= (SYSDATE - 1)
+   AND PRD.VALID = 'Y'
+   AND PRD.on_line = 'true'
+   AND EXISTS (SELECT *
+          FROM PROD_TIME_PRICE PTP
+         WHERE PTP.SPEC_DATE &gt;= SYSDATE
+           AND PTP.PRODUCT_ID = PRD.PRODUCT_ID)
+   <isNotEmpty property="productIdList" prepend="and">
+	      PRD.PRODUCT_ID in 
+	    <iterate property="productIdList" conjunction="," open="(" close=")">
+					#productIdList[]# 
+		</iterate>
+	</isNotEmpty>
+    <isNotEmpty property="productType" prepend="and">
+		  prd.product_type=#productType#
+    </isNotEmpty>
+     <isNotEmpty property="subProductTypeList" prepend="and">
+	      PRD.sub_product_type in 
+	    <iterate property="subProductTypeList" conjunction="," open="(" close=")">
+					#subProductTypeList[]# 
+		</iterate>
+	</isNotEmpty>
+     <isEqual property="createTimeSort" compareValue="desc" >
+		 order by prd.create_time desc
+    </isEqual>
+	</select>
+
+	<insert id="updateProductSearchInfoByProductId" parameterClass="Long">
+		INSERT INTO COM_SEARCH_INFO_UPDATE(UPDATE_ID,UPDATE_TYPE,CREATE_TIME)VALUES(#id#,'PRODUCT_SEARCH_INFO',SYSDATE)
+	</insert>
+	  
+	<!-- shihui:期票有效期的校验 -->
+	<sql id="qipiaoValidTimeSql">
+         and branch.valid_begin_time is not null and branch.valid_end_time is not null and (branch.valid_end_time >= sysdate 
+         <isNotEmpty property="validBeginTime">
+             <isNotEmpty property="validEndTime" prepend="and">
+                 (
+               (branch.valid_begin_time <![CDATA[>=]]>to_date(#validBeginTime#,'YYYY-MM-DD') and branch.valid_begin_time <![CDATA[<=]]> to_date(#validEndTime#,'YYYY-MM-DD'))
+               or (branch.valid_end_time <![CDATA[>=]]>to_date(#validBeginTime#,'YYYY-MM-DD') and branch.valid_end_time <![CDATA[<=]]> to_date(#validEndTime#,'YYYY-MM-DD'))
+               or (branch.valid_begin_time <![CDATA[<=]]>to_date(#validBeginTime#,'YYYY-MM-DD') and branch.valid_end_time <![CDATA[>=]]> to_date(#validEndTime#,'YYYY-MM-DD'))
+           )
+             </isNotEmpty>
+         </isNotEmpty>
+        )
+	</sql>
+	<sql id="qipiaoProductListCommonSql">
+		<!-- 如果产品id列表不为空，则不需再判断产品条件 -->
+		<isNotEmpty property="prodIds" prepend="and">
+			<iterate property="prodIds" open="(" close=")" conjunction="or">
+				prod.product_id=#prodIds[]#
+			</iterate>
+		</isNotEmpty>
+		<!-- 否则要加产品条件 -->
+		<isEmpty property="prodIds">
+		    and prod.ONLINE_TIME &lt;= SYSDATE and prod.OFFLINE_TIME &gt;= SYSDATE
+			and prod.valid='Y'
+			and prod.IS_APERIODIC = 'true'
+			<isEqual property="onLine" compareValue="true" prepend="and">
+				prod.on_line='true'
+			</isEqual>
+			<isNotEmpty property="productType" prepend="and">
+				prod.product_type=#productType#
+			</isNotEmpty>
+			<isNotEmpty property="productName" prepend="and">
+				prod.product_name like '%'||#productName#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="filialeName" prepend="and">
+				prod.filiale_name=#filialeName#
+			</isNotEmpty>
+			<isNotEmpty property="productId" prepend="and">
+				prod.product_id=#productId#
+			</isNotEmpty>
+			<isNotEmpty property="sellPriceMin" prepend="and">
+				prod.sell_price 
+				<![CDATA[>=]]>#sellPriceMin#
+			</isNotEmpty>
+			<isNotEmpty property="sellPriceMax" prepend="and">
+				prod.sell_price 
+				<![CDATA[<=]]>#sellPriceMax#
+			</isNotEmpty>
+			<isNotEmpty property="subProdTypes" prepend="and">
+				<iterate property="subProdTypes" open="(" close=")"
+					conjunction="or">
+					prod.sub_product_type=#subProdTypes[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty property="fromPlaceName" prepend="and">
+				exists
+				(select
+				1
+				from prod_product_place place,com_place cp
+				where
+				prod.product_id=place.product_id and cp.PLACE_ID=place.place_id
+				and cp.name
+				like '%'||#fromPlaceName#||'%' and place."FROM"='true')
+			</isNotEmpty>
+			<isNotEmpty property="placeName" prepend="and">
+				exists (select 1
+				from prod_product_place place,com_place cp
+				where
+				prod.product_id=place.product_id and cp.PLACE_ID=place.place_id
+				and cp.name
+				like '%'||#placeName#||'%' and place."TO"='true')
+			</isNotEmpty>
+		</isEmpty>
+		and branch.on_line='true'
+		and branch.valid='Y'
+		<include refid="qipiaoValidTimeSql" />
+	</sql>
+	<select id="selectQiPiaoProductListByParams" parameterClass="java.util.Map" resultMap="BaseResultMap">
+	    SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+	    	select * from prod_product pp where exists (
+				select distinct(prod.product_id) from prod_product prod, prod_product_branch branch where
+			    prod.product_id = branch.product_id
+			    <include refid="qipiaoProductListCommonSql"/>
+				and pp.product_id=branch.product_id
+			) order by product_id desc
+		) T
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow" prepend=""> ROWNUM &lt;=
+				#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=""> ROWNUM1
+				&gt;=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="selectQiPiaoBranchListByParams" parameterClass="java.util.Map" resultMap="branchResultMap">
+	    select branch.* from prod_product prod, prod_product_branch branch where prod.product_id = branch.product_id
+	    <include refid="qipiaoProductListCommonSql"/>
+	</select>
+	<select id="selectCountQiPiaoProductListByParams" resultClass="java.lang.Long" parameterClass="java.util.Map">
+	    select count(distinct(prod.product_id)) from prod_product prod, prod_product_branch branch where
+	    prod.product_id = branch.product_id
+	    <include refid="qipiaoProductListCommonSql"/>
+	</select>
+
+    <select id="selectProdToPlaceProduct" parameterClass="java.util.Map" resultMap="BaseResultMap">
+       select * from (select p.*,ROWNUM
+	   from prod_product_place pp, PROD_PRODUCT p,prod_product_channel ppc
+	   where pp.product_id = p.product_id
+	   and ppc.product_id = p.product_id 
+	   and p.on_line = 'true'
+	   and p.VALID = 'Y'
+	   <isNotEmpty property="productChannel" prepend="and">
+           ppc.product_channel = '$productChannel$'
+       </isNotEmpty>
+       <isNotEqual property="placeId" compareValue="0" prepend="and">
+           pp.place_id = #placeId#
+       </isNotEqual>
+       <isNotEmpty property="productId" prepend="and">
+           pp.product_Id != #productId#
+       </isNotEmpty>
+        <isNotEmpty property="prodIds" prepend="and">
+           pp.product_id in ($prodIds$)
+       </isNotEmpty>
+       <isEqual property="TO" compareValue="true" prepend="and">
+           pp."TO" = 'true'
+       </isEqual>
+	   <isNotEmpty property="_endRow" prepend="and"> 
+	       ROWNUM &lt;= #_endRow#
+       </isNotEmpty>
+       )
+   </select>
+   
+	<update id="updateHasSensitiveWordByProductId" parameterClass="java.util.Map">
+		update prod_product set has_sensitive_word=#hasSensitiveWord# where product_id=#productId# 
+	</update>
+	<update id="updateRefundByProductIds" parameterClass="java.util.Map">
+		<isNotEmpty property="productIds">
+			update prod_product set
+			<isNotEmpty property="isRefundable">
+				IS_REFUNDABLE=#isRefundable#
+			</isNotEmpty>
+			<isNotEmpty property="isManualBonus">
+				IS_MANUAL_BONUS=#isManualBonus#
+			</isNotEmpty>
+		 	where 
+			<iterate property="productIds" open="(" close=")"
+				conjunction="or">
+				PRODUCT_ID=#productIds[]#
+			</iterate>
+		</isNotEmpty>
+	</update>
+
+	
+	<select id="selectProdWithToPlaceById" resultClass="java.lang.Long" resultMap="B2BResultMap">
+	   select 
+	   p.PRODUCT_ID,p.PRODUCT_NAME,p.PRODUCT_TYPE,p.PAY_TO_LVMAMA,p.PAY_TO_SUPPLIER,P.IS_APERIODIC,p.VALID,p.ON_LINE,
+	   cp.PLACE_ID,cp.NAME as PLACE_NAME
+	   from  PROD_PRODUCT p,PROD_PRODUCT_PLACE pp,COM_PLACE cp
+	   where 
+	   p.product_id = pp.product_id(+)
+	   and pp.place_id = cp.place_id(+)
+	   and pp."TO"(+) = 'true'
+	   and  p.product_Id = #productId# 
+	</select>
+	
+	<select id="queryHotSeqByProdTypeAndPlaceId" parameterClass="java.util.Map" resultMap="queryOrderCountByProduct">
+    select * from (SELECT prd.*,
+    (SELECT 
+    nvl(sum(op.quantity),0) 
+    FROM lvmama_super.ORD_ORDER OD, 
+    lvmama_super.ORD_ORDER_ITEM_PROD OP 
+    WHERE OD.ORDER_ID = OP.ORDER_ID 
+    and od.order_status != 'CANCEL'
+    <isNotEmpty prepend="and" property="orderCreateTime">
+    od.create_time > sysdate- #orderCreateTime#
+    </isNotEmpty>
+    AND OP.PRODUCT_ID = prd.PRODUCT_ID) as ORDER_COUNT
+    FROM lvmama_super.PROD_PRODUCT PRD
+    WHERE PRD.VALID = 'Y' 
+    AND PRD.on_line = 'true' 
+    <isNotEmpty prepend="and" property="prodPlaceIds">
+    PRD.PRODUCT_ID IN (
+    select distinct product_id from lvmama_super.prod_product_place ppp  where ppp.place_id in ($prodPlaceIds$)
+    <isNotEmpty prepend="and" property="groupType">
+    ppp."FROM" = 'true'
+    </isNotEmpty>
+    )
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="productType">
+    PRD.PRODUCT_TYPE = '$productType$'
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="subProductType">
+    PRD.SUB_PRODUCT_TYPE = '$subProductType$'
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="regionName">
+    PRD.REGION_NAME = '$regionName$'
+    </isNotEmpty>
+    ORDER BY ORDER_COUNT DESC
+    )
+    <isNotEmpty prepend="where" property="endRow">
+     rownum &lt;= #endRow#
+    </isNotEmpty>
+    </select>
+
+    <insert id="insertProdHotSell" parameterClass="com.lvmama.comm.bee.po.prod.ProdHotSellSeq">
+      <selectKey keyProperty="prodHotSellId" resultClass="Long">
+           select PROD_HOT_SELL_ID_seq.Nextval FROM DUAL
+      </selectKey>
+    insert into PROD_HOT_SELL_SEQ (
+    PROD_HOT_SELL_ID,
+    PRODUCT_ID,
+    PRODUCT_NAME,
+    DESCRIPTION,
+    SELL_PRICE,
+    MARKET_PRICE,
+    PROD_TYPE,
+    SUB_PROD_TYPE,
+    IMG_URL,
+    ORDER_QUANTITY,
+    CHANNEL,
+    BASE_CHANNEL 
+    ) VALUES
+    (#prodHotSellId#,
+     #productId#,
+     '$productName$',
+     '$description$',
+     #sellPrice#,
+     #marketPrice#,
+     '$prodType$',
+     '$subProdType$',
+     '$imgUrl$',
+     #orderQuantity#,
+     '$channel$',
+     '$baseChannel$'
+     )
+    </insert>
+    
+    <delete id="deleteProdHotSell" parameterClass="com.lvmama.comm.bee.po.prod.ProdHotSellSeq">
+        delete from PROD_HOT_SELL_SEQ
+    </delete>
+   
+    <select id="queryProdHotSell" resultMap="BaseResultMapByProdHotSell" parameterClass="java.util.Map" >
+      select * from (select * from PROD_HOT_SELL_SEQ 
+      <dynamic prepend=" WHERE ">
+         <isNotEmpty property="channel" prepend=" and "> 
+            CHANNEL = '$channel$'
+         </isNotEmpty>
+         <isNotEmpty property="baseChannel" prepend=" and "> 
+            BASE_CHANNEL = '$baseChannel$'
+         </isNotEmpty>
+         <isNotEmpty prepend=" and " property="endRow">
+	        rownum &lt;= #endRow#
+	    </isNotEmpty>
+     </dynamic>
+      ORDER BY ORDER_QUANTITY DESC
+      ) phss 
+       <isNotEmpty prepend=" where " property="sellNotEmpty">
+           phss.ORDER_QUANTITY != 0 
+        </isNotEmpty>
+    </select>
+    
+</sqlMap>

@@ -1,0 +1,100 @@
+<?page title="meta_first_aud" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./window"?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<zk>
+	<window id="window" title="采购产品初审" border="normal" closable="false"
+		apply="com.lvmama.back.web.audit.PermTaskFirstAudAction">
+		<grid width="100%">
+			<columns>
+				<column width="10%"></column>
+				<column width="30%"></column>
+				<column width="10%"></column>
+				<column width="30%"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>修改人登陆名：</hbox>
+					<hbox>
+						<textbox
+							value="@{saction.params.createUserName }" />
+					</hbox>
+					<hbox>采购产品ID：</hbox>
+					<hbox>
+						<longbox id="objectIdText" value="@{saction.params.objectId }" />
+					</hbox>
+					<hbox>
+						<button label="领审核任务" id="getTaskBtn"
+							onClick="saction.doGetTask();" />
+					</hbox>
+					<hbox>
+						<button permCode="2011" label="值班领审核任务" id="getAllTaskBtn"
+							onClick="saction.doGetAllTask();" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox
+			model="@{saction.auditTaskList,load-after='getTaskBtn.onClick,getAllTaskBtn.onClick,initButton.onClick,search.onClick'}"
+			width="100%">
+			<listhead>
+				<listheader label="选择" width="5%" />
+				<listheader label="初审ID" width="5%" />
+				<listheader label="产品ID" width="5%" />
+				<listheader label="产品名称" width="20%" />
+				<listheader label="产品状态" width="5%" />
+				<listheader label="创建时间" width="12%" />
+				<listheader label="操作人" width="8%" />
+				<listheader label="操作内容" />
+				<listheader label="操作" width="8%" />
+			</listhead>
+			<listitem height="25px" self="@{each='permAuditTask' }">
+				<listcell>
+					<checkbox
+						onCheck='saction.onCheckboxEvent(self.getAttribute("taskId"), self.checked);'>
+						<custom-attributes
+							taskId="@{permAuditTask.taskId }" />
+					</checkbox>
+				</listcell>
+				<listcell label="@{permAuditTask.taskId }" />
+				<listcell label="@{permAuditTask.objectId }" />
+				
+				<listcell>
+					<a label="@{permAuditTask.productName}" onClick="saction.doPreview(self.getAttributes());" style="color:blue">
+						<custom-attributes metaProductId="@{permAuditTask.objectId}"/>
+					</a>
+				</listcell>
+				<listcell label="@{permAuditTask.strValid }" />
+				<listcell label="@{permAuditTask.createTime }" />
+				<listcell label="@{permAuditTask.createUserName }" />
+				<listcell label="@{permAuditTask.description }" />
+				<listcell>
+					<a permCode="2003" style="color:blue" label="拒绝"
+						onClick='saction.doUnPass(self.getAttribute("taskId"));'>
+						<custom-attributes
+							taskId="@{permAuditTask.taskId }" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+		<button permCode="1918" label="审核通过" onClick='saction.doOpenDialog();'></button>
+		<button style="display:none;" onClick="saction.doInit();"
+			id="initButton" />
+		<button style="display:none;" onClick="saction.doQuery();"
+			id="search" />
+		系统目前有
+		<label style="color:red;" pre="" id="countLabel1">
+		</label>
+		条待审核任务
+		<label value="                                                                                               " pre="true"></label>
+		本部门目前有
+		<label style="color:red;" id="countLabel2">
+		</label>
+		条待审核任务
+		<label value="                                                                                               " pre="true"></label>
+		当前用户可领
+		<label style="color:red;" id="countLabel3">
+		</label>
+		条待审核任务
+	</window>
+</zk>

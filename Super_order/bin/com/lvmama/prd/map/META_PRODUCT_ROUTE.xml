@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_PRODUCT_ROUTE" >
+<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.meta.MetaProductRoute">
+		<result column="META_ROUTE_ID" property="metaRouteId" />
+		<result column="META_PRODUCT_ID" property="metaProductId" />
+	</resultMap>
+	<select id="selectByProductId" resultMap="BaseResultMap">
+	  select *
+	    from META_PRODUCT_ROUTE
+	    where META_PRODUCT_ID = #productId#  
+  	</select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductRoute" >
+    delete from META_PRODUCT_ROUTE
+    where META_ROUTE_ID = #metaRouteId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductRoute" >
+    <selectKey resultClass="java.lang.Long" keyProperty="metaRouteId" >
+              select META_PRODUCT_ROUTE_ID_SEQ.nextval  as id  from  DUAL 
+    </selectKey>
+    insert into META_PRODUCT_ROUTE (META_ROUTE_ID, META_PRODUCT_ID)
+    values (#metaRouteId#, #metaProductId#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductRoute" >
+    update META_PRODUCT_ROUTE
+    set META_PRODUCT_ID = #metaProductId#
+    where META_ROUTE_ID = #metaRouteId#
+  </update>
+</sqlMap>

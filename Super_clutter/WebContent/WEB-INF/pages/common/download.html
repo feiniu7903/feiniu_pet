@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>下载页</title>
+<script type="text/javascript">
+function getUrlParam(name) {
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+	var r = window.location.search.substr(1).match(reg); // 匹配目标参数
+	if (r != null)
+		return unescape(r[2]);
+	return null; // 返回参数值
+}
+</script>
+<style>
+body {
+	background:#f6f6f6; text-align:center; margin:0; padding:0;	font: normal 100% "宋体";
+}
+img {width:100%; display:block;}
+.dl_con { width:90%; margin:0 auto;}
+#download, #download img { margin:0 auto;}
+.lv-line {
+	background:url(img/seprator-line.png) repeat-x left center;
+	height:2px;
+	width:100%;
+}
+.fl { float:left;}
+.fr { float:right;}
+.cl { clear:both;}
+.iphone, .android { width:50%; margin:0 auto;}
+.iphone img, .android img{ display:inline;}
+.iphone { text-align:right;}
+.android { text-align:left;}
+.footer_v1 { background-color:#ececec; border-top:1px solid #bfbfbf; padding:0 0.5em;}
+</style>
+<script type="text/javascript">
+       
+        var browser={
+        versions:function(){
+            var u = navigator.userAgent, app = navigator.appVersion;
+            return {
+                trident: u.indexOf('Trident') > -1, //IE内核
+                presto: u.indexOf('Presto') > -1, //opera内核
+                webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+                mobile: !!u.match(/AppleWebKit.*Mobile.*/)||!!u.match(/AppleWebKit/), //是否为移动终端
+                ios: !!u.match(/(i[^;]+;(U;)? CPU.+Mac OS X)/), //ios终端
+                android: u.indexOf('Android') > -1,//android终端
+                iPhone: u.indexOf('iPhone') > -1, //是否为iPhone
+                iPad: u.indexOf('iPad') > -1, //是否iPad
+                webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
+                };
+            }(),
+            language:(navigator.browserLanguage || navigator.language).toLowerCase()
+            }
+       
+        
+        if(browser.versions.ios){
+        	window.location.href = "http://itunes.apple.com/cn/app/id443926246?mt=8 ";
+        }
+        var Ch = getUrlParam("Ch");
+        if(browser.versions.android&&Ch!="1"){
+        	window.location.href = "http://www.lvmama.com/client/android/lvmama27.apk";
+        }
+        if(browser.versions.iPhone){
+        	window.location.href = "http://itunes.apple.com/cn/app/id443926246?mt=8 ";
+        }
+</script>
+<#assign hostName = reauestHostName/>
+<script type="text/javascript">
+	var hostName=window.location.host;
+	if(hostName!=null && hostName=="qing.lvmama.com"){
+		hostName="qing.lvmama.com";
+	}
+</script>
+</head>
+
+<body>
+<div id="download">
+	<div class="dl_con">
+        <img src="${prefix_pic_url!}/img/download/lv_dl_01.jpg" />
+    </div>
+    <div class="lv-line"></div>
+    <div class="dl_con">
+       <div class="fl iphone"><a href="http://itunes.apple.com/cn/app/id443926246?mt=8 " target="_blank" title="下载iphone版"><img src="${prefix_pic_url!}/img/download/lv_dl_iphone.jpg" /></a></div>
+        <div class="fl android"><a href="http://${hostName}/rewrite/d.php?Ch=1" target="_blank" title="下载android版"><img src="${prefix_pic_url!}/img/download/lv_dl_android.jpg" /></a></div>
+		<div class="cl"></div>
+        <img src="${prefix_pic_url!}/img/download/lv_dl_03.jpg" />
+    </div>
+  <div class="footer_v1">
+  	<div class="dl_con">
+        <img src="${prefix_pic_url!}/img/download/lv_dl_04.jpg" />
+    </div>
+   </div>
+</div>
+</body>
+</html>

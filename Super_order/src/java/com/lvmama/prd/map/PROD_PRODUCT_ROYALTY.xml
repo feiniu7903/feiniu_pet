@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_ROYALTY" >
+  
+  <resultMap id="ProdProductRoyaltyResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductRoyalty" >
+    <result column="ROYALTY_ID" property="royaltyId" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="ROYALTY_TYPE" property="royaltyType" />
+    <result column="PERCENTAGE" property="percentage" />
+	<result column="PAYEE_ACCOUNT" property="payeeAccount" />
+    <result column="MEMO" property="memo" />
+  </resultMap>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductRoyalty" >
+    insert into PROD_PRODUCT_ROYALTY (
+	    ROYALTY_ID, 
+	    PRODUCT_ID, 
+	    ROYALTY_TYPE, 
+	    PERCENTAGE,
+	    PAYEE_ACCOUNT,
+	    MEMO)
+    values (
+	    PROD_PRODUCT_ROYALTY_SEQ.NEXTVAL, 
+	    #productId#, 
+	    #royaltyType#,
+	    #percentage#,
+	    #payeeAccount#,
+	    #memo#
+	)
+  </insert>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    delete from PROD_PRODUCT_ROYALTY where ROYALTY_ID = #royaltyId#
+  </delete>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductRoyalty" >
+    update PROD_PRODUCT_ROYALTY set
+    PRODUCT_ID=#productId#,
+    ROYALTY_TYPE=#royaltyType#,
+    PERCENTAGE=#percentage#,
+    PAYEE_ACCOUNT=#payeeAccount#,
+    MEMO=#memo#
+    where ROYALTY_ID = #royaltyId#
+  </update>
+ 
+  <select id="selectAllByProductId" parameterClass="java.lang.Long" resultMap="ProdProductRoyaltyResultMap">
+  	select * from PROD_PRODUCT_ROYALTY where PRODUCT_ID=#productId#  
+  </select>
+  
+  <select id="selectAllProdProductIds"  resultClass="java.lang.Long">
+  	select PRODUCT_ID from PROD_PRODUCT_ROYALTY 
+  </select>
+
+</sqlMap>

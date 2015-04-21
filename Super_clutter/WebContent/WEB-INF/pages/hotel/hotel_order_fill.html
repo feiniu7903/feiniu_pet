@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>填写订单</title>
+    <#include "../common/define_v4.html">
+	<link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/order.css">
+	<script src="${request.contextPath}/js/hotel.js"></script>
+	<script>
+		//获取 referer 后退按钮用到
+		var referer;
+		$(function(){
+			referer = document.referrer;
+			/* if(referer != null&&referer.indexOf("login")>0){
+				$("#hotel_detal_back").attr("href","javascript:window.history.go(-2);");
+			} */
+		});
+	</script>
+</head>
+
+<body>
+<div id="container">
+    <header class="header">
+        <a href="javascript:hotel_order_back();" id="hotel_detal_back" class="back"><span class="ic_back"></span></a>
+        <h1>填写订单</h1>
+    </header>
+	<div id="content">	
+	    <#if mobileHotelRule??>
+		    <section class="common-order">
+		        <div class="common-order-title">
+		            <h2 id="hotelName"><!-- 酒店名称 --></h2>
+		            <p>共 ${mobileHotelRule.countDays!}晚 ${arrivalDate!}入住  ${departureDate!}离店</p>
+		        </div>
+		        <article>
+		            <div class="common-order-line">
+		                <span class="fl f-color-2" id="hotelTypeName"><!--酒店类型--></span>
+		                <span class="count">
+		                    <!-- 添加减少房间 -->
+		                    <i data-value="0" data-opt="reduce" class="lv-reduce disable" onclick="hotelNumberDec('${arrivalDate!}','${departureDate!}','${hotelId!}','${roomTypeId!}',${ratePlanId!});"></i>
+		                    	<i class="lv-num"><em id="hotelRoomNumber">${numberOfRooms!}</em>间</i>
+		                    <i data-value="0" data-opt="plus" class="lv-plus" onclick="hotelNumberAdd('${arrivalDate!}','${departureDate!}','${hotelId!}','${roomTypeId!}',${ratePlanId!})"></i>
+		                </span>
+		            </div>
+		            <#if mobileHotelRule.guaranteeRules?? && mobileHotelRule.guaranteeRules?size&gt;0>
+			            <div class="common-order-line" id="arraveTime">
+			                <span class="fl t_l1 f-color-2">到店时间</span>
+			                	
+				                	<!--点击到店时间如果 guaranteeRule.needGuarantee为FALSE则说明不用担保直接提交
+				                		如果为true则下面“提交订单”按钮变为担保，点击担保到担保页面
+				                	 -->
+				                	 <select class="sex fr" name="expProvince" id="expProvince">
+				                        <#list mobileHotelRule.guaranteeRules as guaranteeRule>
+				                              <option class="expProvinceOpion" optionValue="${guaranteeRule.option!}" txt="${mobileHotelRule.guaranteeDescription!}" boolean="${guaranteeRule.needGuarantee?string!}" data-key="">${guaranteeRule.option!}<!-- <#if guaranteeRule.needGuarantee>(需担保)</#if> --></option>
+				                        </#list>
+				                    </select>
+			                	
+			            </div>
+		            </#if>
+		        </article>
+		        <div class="common-order-title mt10">入住人</div>
+		        <article id="customerNamesList">
+		        	<#if mobileHotelRule.visitorJsonArray?? && mobileHotelRule.visitorJsonArray?size&gt;0>
+		        		<#list mobileHotelRule.visitorJsonArray as visitorJson>
+		        			<#if visitorJson.mobile?? && visitorJson.name?? && visitorJson.mobile!="" && visitorJson.name!="">
+				        		<div class="common-order-line">
+					                <label>
+					                    <span class="t_l1">入住人</span>
+					                    <input type="text" class="lv-text-input customertext" placeholder="请填写姓名" value="${visitorJson.name!}">
+					                </label>
+				            	</div>
+				            	<div class="common-order-line">
+					                <label>
+					                    <span class="t_l1">手机号</span>
+					                    <input type="tel" class="lv-text-input" id="contactMobile" placeholder="用于接收订单通知" value="${visitorJson.mobile!}">
+					                </label>
+				            	</div>
+			            	</#if>
+		        		</#list>
+		        	<#else>
+		        		<div class="common-order-line">
+		                <label>
+		                    <span class="t_l1">入住人</span>
+		                    <input type="text" class="lv-text-input customertext" placeholder="请填写姓名" value="">
+		                </label>
+			            </div>
+			            <div class="common-order-line">
+			                <label>
+			                    <span class="t_l1">手机号</span>
+			                    <input type="tel" class="lv-text-input" id="contactMobile" placeholder="用于接收订单通知" value="">
+			                </label>
+			            </div>
+		        	</#if>
+		        </article>
+		        <!-- 担保说明 -->
+		        <#if mobileHotelRule.guaranteeRules?? && mobileHotelRule.guaranteeRules?size&gt;0>
+			        <article class="box-sp-1" style="display:none;" id="guaranteeDescription">
+			            <div class="common-order-line" >
+					        <!-- 担保预付说明 -->
+			            </div>
+			        </article>
+			    <#else>
+			        <article class="box-sp-1">
+			            <div class="common-order-line" >
+					        ${mobileHotelRule.guaranteeDescription!}
+			            </div>
+			        </article>
+		        </#if>
+		        <!-- 温馨提示 -->
+		        <#if mobileHotelRule.tips?? && mobileHotelRule.tips!="">
+			        <article class="box-sp-1">
+			            <div class="common-order-line">
+					                温馨提示:<br>
+						  ${mobileHotelRule.tips!}
+			            </div>
+			        </article>
+			    </#if>
+			    <div class="common-order-result">
+			        <div class="fl">订单总额：<span class="f-size-20">&yen;<em id="hotelTotalPrice">${mobileHotelRule.totalPrice!}</em></span></div>
+			        <!-- <input  value="${mobileHotelRule.guaranteeType!}"  type="hidden" name="guaranteeType" id="guaranteeType">
+			        <input  value="${mobileHotelRule.guaranteePrice!}"  type="hidden" name="guaranteePrice" id="guaranteePrice"> -->
+			        <#if mobileHotelRule.guaranteeRules?? && mobileHotelRule.guaranteeRules?size&gt;0>
+				        <div class="btn_style_1 fr" id="hotelOrderSubmit" onclick="hotelOrderSubmit('${arrivalDate!}','${departureDate!}','${hotelId!}','${roomTypeId!}',${ratePlanId!},'${mobileHotelRule.customerType!}','${customerIPAddress!}',0);">提交订单</div>
+			        	<div class="btn_style_1 fr" id="guaranteeOrder" onclick="hotelOrderSubmit('${arrivalDate!}','${departureDate!}','${hotelId!}','${roomTypeId!}',${ratePlanId!},'${mobileHotelRule.customerType!}','${customerIPAddress!}',1);" style="display:none;">下一步</div>
+				    <#else>
+			        	<div class="btn_style_1 fr" id="guaranteeOrder" onclick="hotelOrderSubmit('${arrivalDate!}','${departureDate!}','${hotelId!}','${roomTypeId!}',${ratePlanId!},'${mobileHotelRule.customerType!}','${customerIPAddress!}',1);">下一步</div>
+			        </#if>
+			    </div>
+		    </section>
+	   <#else>
+	        <#assign no_data_msg="没有可预订的酒店">
+	        <#include "../common/no_data_list.html">
+	   </#if>
+	</div>
+   <#include "../common/order_footer.html"/>
+</div>
+<script>
+function arrivalDateSelect(obj){
+	obj.find("option").each(function(index){
+		$(this).val(index);
+	})		
+	obj.change(function(){
+		var index = $(this).val(),
+			a = $(this).find("option").eq(index).attr("boolean"),
+			b = $(this).find("option").eq(index).attr("txt");
+		arriveDate(a,b);
+	});
+}
+$(function(){
+	arrivalDateSelect($("#expProvince"));
+	$("#hotelName").text(getLocalStorage("hotel_name_text"));
+	$("#hotelTypeName").text(getLocalStorage("hotel_type_name_text"));
+});
+</script>
+</body>
+</html>

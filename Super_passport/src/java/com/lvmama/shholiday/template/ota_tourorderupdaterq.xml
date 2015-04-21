@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OTRequest Version=""><#--Version:1.0-->
+	<#include "header.xml"/>
+<OrderUpdateRQ UniqueID="${body.uniqueID}">
+	<#include "external_user_info.xml"/>
+		<OrderPackageBaseInfo>
+			<OrderStatus><!-- 预订状态修改：预留转正常预定-PRC, 如：PRC --></OrderStatus>
+			<GuestRequest><!-- 特殊要求 String(4000) --></GuestRequest>
+			<ReceiptHead><!-- 发票头 --></ReceiptHead>
+		</OrderPackageBaseInfo>
+		<OrderContactInfo UniqueID="${body.contact.uniqueId}"><#--UniqueID:"联系人信息ID 执行结果返回时使用"-->
+			<Name>${body.contact.name}<#--联系人姓名String(200)--></Name>
+			<Tel>${body.contact.tel}<#--联系人电话String(200)--></Tel>
+			<Mobile>${body.contact.mobile}<#--联系人手机String(200):如果不需要上航假期直接发短信给旅客请不要填写旅客的手机号码--></Mobile>
+			<Fax>${body.contact.fax}<#--联系人传真String(200)--></Fax>
+			<Mail>${body.contact.mail}<#--联系人邮箱String(200)--></Mail>
+			<ContactMethod>MOBILE<#--
+				通知方式,如果需要多种联系方式用竖线分开;
+				MOBILE：手机联系，TEL：电话联系，MAIL：邮件联系，FAX：传真联系
+			--></ContactMethod>
+			<Addr><#--联系人地址String(200)--></Addr>
+			<DeliveryAddr><#--配送地址--></DeliveryAddr>
+			<DeliveryContactName><#--/配送联系人姓名--></DeliveryContactName>
+			<DeliveryContactTel><#--配送联系人电话--></DeliveryContactTel>
+			<DeliveryContactMobile><#--配送联系人手机--></DeliveryContactMobile>
+			<DeliveryRequest><#--配送特殊要求，配送其它信息格式：配送信息{联系人地址邮编:3444234,配送地址邮编:33224455,发票内容:[发票类别名称],是否需要发票:[需要，不需要]}--></DeliveryRequest>
+			<DeliveryWeekFit><#--配送适用周几  SUNDAY = 1;MONDAY = 2; TUESDAY = 3; WEDNESDAY = 4;THURSDAY = 5; FRIDAY = 6; SATURDAY = 7;--></DeliveryWeekFit>
+			<ArriveReqTimeSpan><#--到达时间要求：AM:上午 PM:下午 ALL_DAY:全天--></ArriveReqTimeSpan>
+			<ArriveReqDate><#--到达指定日期YYYYMMdd--></ArriveReqDate>
+		</OrderContactInfo>
+		<OrderPassengers><!--  旅客信息，只需要传递修改的信息点-->
+			<#list body.orderPassengers as passenger>
+			<OrderPassenger UniqueID="${passenger.uniqueId}"><#--UniqueID:"订单旅客信息关联ID 执行结果返回时使用"-->
+				<PassengerName>${passenger.name}<#--旅客姓名 String(100)--></PassengerName>
+				<IndentityCardType>${passenger.shholidayCardType}</IndentityCardType>
+				<IndentityCardNumber>${passenger.certNo}</IndentityCardNumber>
+				<Birth><#if passenger.brithday??>${passenger.brithday?string("yyyyMMdd")}</#if><#--生日 String，如：YYYYMMDD--></Birth>
+				<Sex>${passenger.sex}<#--性别 String(1):男：M，女：F--></Sex>
+				<Mobile>${passenger.mobile}<#--联系人手机String(200)--></Mobile>
+			</OrderPassenger>
+			</#list>
+		</OrderPassengers>
+</OrderUpdateRQ>
+</OTRequest>

@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- ShiHui -->
+<sqlMap namespace="PASS_PORT_CODE">
+	<resultMap id="PassPortCode_BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassPortCode">
+		<result column="TARGET_ID" property="targetId" />
+		<result column="CODE_ID" property="codeId" />
+		<result column="STATUS" property="status" />
+		<result column="USED_TIME" property="usedTime"/>
+		<result column="TERMINAL_CONTENT" property="terminalContent" />
+		<result column="VALID_TIME" property="validTime" />
+		<result column="INVALID_TIME" property="invalidTime" />
+		
+		<result column="STATUS_NO" property="statusNo" />
+		<result column="STATUS_EXPLANATION" property="statusExplanation" />
+		<result column="INVALID_DATE" property="invalidDate"/>
+		<result column="INVALID_DATE_MEMO" property="invalidDateMemo"/>
+	</resultMap>
+	
+      <resultMap class="com.lvmama.comm.bee.po.pass.PassPortCode" id="Ext_BaseResultMap_1" extends="PassPortCode_BaseResultMap">
+	    <result column="SERIALNO" property="serialNo" />
+	    <result column="PROVIDER_NAME" property="providerName" />
+	    <result column="NAME" property="portName" />
+	  </resultMap>
+	  <resultMap class="com.lvmama.comm.bee.po.pass.PassPortCode" id="Ext_BaseResultMap_2" extends="PassPortCode_BaseResultMap">
+	    <result column="PROVIDER_ID" property="providerId" />
+		<result column="PROVIDER_NAME" property="providerName" />
+		<result column="PROCESSOR" property="processor" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="SUPPLER_THREAD" property="supplierThread" />
+		
+	  </resultMap>
+	  
+	   <resultMap class="com.lvmama.comm.bee.po.pass.PassPortCode" id="Ext_BaseResultMap_3" extends="PassPortCode_BaseResultMap">
+	    <result column="NAME" property="name" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="SUPPLIER_ID" property="supplierId"/>
+		<result column="mergesms" property="mergesms"/>
+		<result column="re_apply_way" property="reApplayWay"/>
+	  </resultMap>
+	  
+	    <resultMap class="com.lvmama.comm.bee.po.pass.PassPortCode" id="Ext_BaseResultMap_4" extends="PassPortCode_BaseResultMap">
+	    <result column="PROVIDER_ID" property="providerId" />
+		<result column="PROVIDER_NAME" property="providerName" />
+		<result column="mergesms" property="mergesms"/>
+	  </resultMap>
+	  
+	  <resultMap class="com.lvmama.comm.bee.po.pass.PassPortCode" id="Ext_BaseResultMap_5" extends="PassPortCode_BaseResultMap">
+	  	<result column="ORDER_ID" property="orderId"/>
+	  </resultMap>
+	  
+	  <select id="selectAllMergeSms" resultMap="Ext_BaseResultMap_4" parameterClass="java.util.HashMap">
+		select distinct passportcode.*, provider.provider_id, provider.name as PROVIDER_NAME,provider.mergesms
+		  from pass_port_code passportcode,
+		       pass_device    device,
+		       pass_provider  provider,
+		       pass_code      passcode
+		 where passportcode.target_id = device.target_id
+		   and device.provider_id = provider.provider_id
+		   
+		   and passportcode.status = 'UNUSED'
+       	   and passcode.status = 'SUCCESS'
+		   <isNotEmpty prepend="AND" property="checkSmsContent">
+		   	   passcode.sms_content is not null
+<!-- 		   and provider.send_sms != 'true' -->
+		   and provider.separate = 'true'
+		   and provider.mergesms = 'true'
+		   </isNotEmpty>
+		   and passportcode.code_id = passcode.code_id
+		   and passcode.order_id = #orderId#
+	  </select>
+	  
+	 <select id="searchPassPortByCodeId"
+		resultMap="Ext_BaseResultMap_3"
+		parameterClass="java.util.HashMap">
+		select A.*, C.NAME, C.SUPPLIER_ID, B.ORDER_ID,provider.mergesms,provider.re_apply_way
+		  from PASS_PORT_CODE     A,
+		       PASS_CODE          B,
+		       SUP_PERFORM_TARGET C,
+		       pass_device        device,
+		       pass_provider      provider
+		 where B.CODE_ID = A.CODE_ID
+		   and C.TARGET_ID = A.TARGET_ID
+		   and B.CODE_ID  = #codeId#
+		   and a.target_id = device.target_id
+		   and device.provider_id = provider.provider_id
+	</select>
+	
+	<select id="searchPassPortByOrderId"
+		resultMap="Ext_BaseResultMap_5"
+		parameterClass="java.util.HashMap">
+		select A.*, B.ORDER_ID
+		  from PASS_PORT_CODE     A,
+		       PASS_CODE          B		     
+		 where B.CODE_ID = A.CODE_ID
+       	   and B.STATUS = 'SUCCESS'
+		   and B.Order_Id=#orderId#
+	</select>
+	
+	<select id="getPassPortByCodeId"
+		resultMap="PassPortCode_BaseResultMap"
+		parameterClass="Long">
+		select * from PASS_PORT_CODE where  CODE_ID=#codeId#
+	</select>
+	
+	<select id="selectPassPortCodeByObjectIdAndTargetId"
+		resultMap="PassPortCode_BaseResultMap"
+		parameterClass="java.util.HashMap">
+	    select B.* from PASS_CODE A , PASS_PORT_CODE B where 
+		A.Code_Id=B.Code_Id and A.Object_Id in
+			<iterate property="objectId"  conjunction="," open="(" close=")"  > 
+       			#objectId[]# 
+   			</iterate> 
+		 and B.Target_Id=#targetId#
+ 		 and B.Status='UNUSED'
+ 	 </select>
+ 	 
+	<select id="PassPortCode_selectByParams"
+		resultMap="Ext_BaseResultMap_1"
+		parameterClass="java.lang.Long">
+		 	SELECT DISTINCT A.*,E.SERIALNO,B.NAME ,C.NAME AS PROVIDER_NAME 
+		    FROM PASS_PORT_CODE A ,
+		    SUP_PERFORM_TARGET B ,
+		    PASS_PROVIDER C, 
+		    PASS_DEVICE D ,
+		    PASS_CODE E
+		    WHERE A.TARGET_ID=B.TARGET_ID 
+		    AND D.PROVIDER_ID=C.PROVIDER_ID  
+		    AND A.TARGET_ID=D.TARGET_ID  
+		    AND A.CODE_ID=E.CODE_ID
+		    AND E.CODE_ID=#codeId#
+	</select>
+
+	<select id="PassPortCode_selectByPortId"
+		resultClass="java.lang.Long" parameterClass="java.lang.Long">
+		select count(*) from PASS_PORT_CODE where PORT_ID=#portId#
+	</select>
+	
+	<select id="PassPortCode_selectProviderByCode"
+		resultMap="Ext_BaseResultMap_2"
+		parameterClass="java.util.HashMap">
+		 SELECT DISTINCT A.*,B.SUPPLIER_ID,C.SUPPLER_THREAD,C.PROVIDER_ID,C.NAME AS PROVIDER_NAME ,C.PROCESSOR
+	    FROM PASS_PORT_CODE A ,
+	    SUP_PERFORM_TARGET B ,
+	    PASS_PROVIDER C, 
+	    PASS_DEVICE D
+	    WHERE A.TARGET_ID=B.TARGET_ID 
+	    AND A.TARGET_ID=D.TARGET_ID
+	    AND D.PROVIDER_ID=C.PROVIDER_ID  AND A.CODE_ID=#codeId#
+	</select>
+
+	<select id="getPassPortCodeByCodeIdAndPortId"
+		resultMap="PassPortCode_BaseResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM PASS_PORT_CODE WHERE  CODE_ID = #codeId# and TARGET_ID=#targetId#
+	</select>
+	
+  <insert id="PassPortCode_insertPassPortCode" parameterClass="com.lvmama.comm.bee.po.pass.PassPortCode" >
+    insert into PASS_PORT_CODE
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="targetId" >
+        TARGET_ID
+      </isNotNull>
+      <isNotNull prepend="," property="codeId" >
+        CODE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS
+      </isNotNull>
+      <isNotNull prepend="," property="usedTime" >
+        USED_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="terminalContent" >
+        TERMINAL_CONTENT
+      </isNotNull>
+      <isNotNull prepend="," property="validTime" >
+        VALID_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="invalidTime" >
+        INVALID_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="statusNo" >
+        STATUS_NO
+      </isNotNull>
+      <isNotNull prepend="," property="statusExplanation" >
+        STATUS_EXPLANATION
+      </isNotNull>
+      <isNotNull prepend="," property="invalidDate" >
+      	INVALID_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="invalidDateMemo">
+      	INVALID_DATE_MEMO
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+       <isNotNull prepend="," property="targetId" >
+        #targetId# 
+      </isNotNull>
+      <isNotNull prepend="," property="codeId" >
+        #codeId# 
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        #status#
+      </isNotNull>
+      <isNotNull prepend="," property="usedTime" >
+        sysdate
+      </isNotNull>
+      <isNotNull prepend="," property="terminalContent" >
+        #terminalContent#
+      </isNotNull>
+      <isNotNull prepend="," property="validTime" >
+        #validTime#
+      </isNotNull>
+       <isNotNull prepend="," property="invalidTime" >
+        #invalidTime#
+      </isNotNull>
+      <isNotNull prepend="," property="statusNo" >
+        #statusNo#
+      </isNotNull>
+      <isNotNull prepend="," property="statusExplanation" >
+        #statusExplanation#
+      </isNotNull>
+      <isNotNull prepend="," property="invalidDate">
+      	#invalidDate#
+      </isNotNull>
+      <isNotNull prepend="," property="invalidDateMemo">
+      	#invalidDateMemo#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="PassPortCode_updatePassPortCode" parameterClass="com.lvmama.comm.bee.po.pass.PassPortCode" >
+    update PASS_PORT_CODE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="terminalContent" >
+        TERMINAL_CONTENT=#terminalContent#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+       STATUS= #status#
+      </isNotNull>
+       <isNotNull prepend="," property="usedTime" >
+       USED_TIME=#usedTime#
+      </isNotNull>
+      <isNotNull prepend="," property="statusNo" >
+       STATUS_NO=#statusNo#
+      </isNotNull>
+    </dynamic>
+    where CODE_ID = #codeId# and TARGET_ID=#targetId#
+  </update>
+  
+  <update id="PassPortCode_updatePassPortCodeByCodeId" parameterClass="com.lvmama.comm.bee.po.pass.PassPortCode" >
+    update PASS_PORT_CODE
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="status" >
+       STATUS= #status#
+      </isNotNull>
+      <isNotNull prepend="," property="usedTime" >
+        USED_TIME=sysdate
+      </isNotNull>
+      <isNotNull prepend="," property="statusNo" >
+       STATUS_NO=#statusNo#
+      </isNotNull>
+      <isNotNull prepend="," property="statusExplanation" >
+        STATUS_EXPLANATION=#statusExplanation#
+      </isNotNull>
+      <isNotNull prepend="," property="validTime">
+      	VALID_TIME=#validTime#
+      </isNotNull>
+      <isNotNull prepend="," property="invalidTime">
+      	INVALID_TIME=#invalidTime#
+      </isNotNull>
+      <isNotNull prepend="," property="invalidDate">
+      	INVALID_DATE=#invalidDate#
+      </isNotNull>
+      <isNotNull prepend="," property="invalidDateMemo">
+      	INVALID_DATE_MEMO=#invalidDateMemo#
+      </isNotNull>
+    </dynamic>
+    where CODE_ID = #codeId# 
+  </update>
+	
+	
+	<!-- 别名 -->
+    <typeAlias alias="passPortCode" type="com.lvmama.comm.bee.po.pass.PassPortCode"/>
+	<!-- 查询结果集 -->
+    <resultMap id="passPortCodeResult" class="passPortCode">
+        <result property="targetId" column="TARGET_ID"/>
+        <result property="codeId" column="CODE_ID"/>
+        <result property="status" column="STATUS"/>
+        <result property="usedTime" column="USED_TIME"/>
+        <result property="terminalContent" column="TERMINAL_CONTENT"/>
+        <result property="validTime" column="VALID_TIME"/>
+        <result property="invalidTime" column="INVALID_TIME"/>
+        <result property="extId" column="EXT_ID"/>
+        <result property="statusNo" column="STATUS_NO"/>
+        <result property="statusExplanation" column="STATUS_EXPLANATION"/>
+        <result property="invalidDate" column="INVALID_DATE"/>
+        <result property="invalidDateMemo" column="INVALID_DATE_MEMO"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	TARGET_ID ,
+        	CODE_ID ,
+        	STATUS ,
+        	USED_TIME ,
+        	TERMINAL_CONTENT ,
+        	VALID_TIME ,
+        	INVALID_TIME ,
+        	EXT_ID ,
+        	STATUS_NO ,
+        	STATUS_EXPLANATION,
+        	INVALID_DATE,
+        	INVALID_DATE_MEMO
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="targetId">
+	             TARGET_ID = #targetId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="codeId">
+	             CODE_ID = #codeId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="status">
+	             STATUS = #status#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="usedTime">
+	             USED_TIME = #usedTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="terminalContent">
+	             TERMINAL_CONTENT = #terminalContent#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="validTime">
+	             VALID_TIME = #validTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="invalidTime">
+	             INVALID_TIME = #invalidTime#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="extId">
+	             EXT_ID = #extId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="statusNo">
+	             STATUS_NO = #statusNo#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="statusExplanation">
+	             STATUS_EXPLANATION = #statusExplanation#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="and" property="invalidDate">
+	       		INVALID_DATE = #invalidDate#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="and" property="invalidDateMemo">
+	       		INVALID_DATE_MEMO = #invalidDateMemo#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 查询记录 根据特定条件 -->
+    <select id="queryPassPortCodeByParam"  resultMap="passPortCodeResult" parameterClass="passPortCode">
+       select <include refid="commonColumns"/> from PASS_PORT_CODE 
+		<include refid="dynamicWhere"/>    
+    </select>
+
+</sqlMap>

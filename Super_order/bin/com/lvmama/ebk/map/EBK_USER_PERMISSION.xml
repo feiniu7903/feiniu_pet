@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="EBK_USER_PERMISSION">
+	<!-- 别名 -->
+    <typeAlias alias="ebkUserPermission" type="com.lvmama.comm.bee.po.eplace.EbkUserPermission"/>
+	<!-- 查询结果集 -->
+    <resultMap id="ebkUserPermissionResult" class="ebkUserPermission">
+        <result property="userPermissionId" column="USER_PERMISSION_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="permissionId" column="PERMISSION_ID"/>
+    </resultMap>
+    
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	USER_PERMISSION_ID ,
+        	USER_ID ,
+        	PERMISSION_ID 
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="userPermissionId">
+	             USER_META_ID = #userPermissionId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="userId">
+	             USER_ID = #userId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="permissionId">
+	             META_BRANCH_ID = #permissionId#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<insert id="insert" parameterClass="ebkUserPermission">
+		<selectKey keyProperty="userPermissionId" resultClass="java.lang.Long">
+			SELECT EBK_USER_PERMISSION_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	    <![CDATA[
+	        INSERT INTO
+	        EBK_USER_PERMISSION (
+	        	USER_PERMISSION_ID ,
+	        	USER_ID ,
+	        	PERMISSION_ID 
+	        ) VALUES (
+	        	#userPermissionId# ,
+	        	#userId# ,
+	        	#permissionId# 
+	        )
+	    ]]>
+	</insert>
+	
+	<delete id="deleteByUserId" parameterClass="long">
+		delete ebk_user_permission where user_id = #value#
+	</delete>
+	
+</sqlMap>

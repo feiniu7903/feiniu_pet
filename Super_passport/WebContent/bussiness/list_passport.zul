@@ -1,0 +1,79 @@
+<?page title="通关点管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./passportList"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.passport.utils.ListboxProviderSet"?>
+<?component name="lvmama_passPort" macroURI="passport.zul"?>
+<zk>
+	<window id="passportList" title="通关点管理" border="normal"
+		apply="com.lvmama.passport.web.pass.ListPassPortAction">
+		<zscript>
+		<![CDATA[
+			public void checkValues() {
+				saction.doQuery();
+			}
+		]]>			
+		</zscript>
+		<grid>
+			<columns>
+				<column width="110px"></column>
+				<column></column>
+				<column width="110px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>通关点编号：</hbox>
+					<hbox>
+					<longbox id="targetId" visible="false" value="@{saction.queryOption.targetId}" constraint="no empty:通关点名称不能为空！"/>
+					<lvmama_passPort id="lvmama_passPort"></lvmama_passPort>
+					</hbox>
+					<hbox>通关点名称：</hbox>
+					<hbox>
+						<textbox value="@{saction.queryOption.name }" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>服务商名称：</hbox>
+					<hbox>
+						<listbox mold="select"
+							selectedItem="@{saction.queryOption.providerId}" />
+					</hbox>
+					<hbox>
+						<button label="查询" id="search" width="100px"
+							onClick="checkValues();" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox
+			model="@{saction.passPortList,load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader label="通关点名称" />
+				<listheader label="服务商名称" />
+				<listheader label="履行对象编号" />
+				<listheader label="产品供应商编号" />
+			</listhead>
+			<listitem height="25px" self="@{each='passport'}">
+				<listcell label="@{passport.name}" />
+				<listcell label="@{passport.providerName}" />
+				<listcell label="@{passport.targetId}" />
+				<listcell label="@{passport.supplierId}" />
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="20" onPaging='saction.doQuery();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	</window>
+</zk>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="EBK_PROD_PLACE" >
+
+  <typeAlias alias="ebkProdPlaceDO" type="com.lvmama.comm.bee.po.ebooking.EbkProdPlace" />
+
+  <resultMap id="ebkProdPlaceDOResultMap" class="ebkProdPlaceDO" >
+    <result property="productPlaceId" column="PRODUCT_PLACE_ID" />
+    <result property="productId" column="PRODUCT_ID" />
+    <result property="placeId" column="PLACE_ID" />
+  </resultMap>
+
+  <sql id="ebkProdPlace_columns" >
+    a1.PRODUCT_PLACE_ID, a1.PRODUCT_ID, a1.PLACE_ID
+  </sql>
+
+  <sql id="ebkProdPlace_do_columns" >
+    a1.PRODUCT_PLACE_ID, a1.PRODUCT_ID, a1.PLACE_ID
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="productPlaceId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_PLACE_ID = #productPlaceId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="placeId" prepend="AND" >
+        <![CDATA[  
+        PLACE_ID = #placeId#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <sql id="doQueryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="productPlaceId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_PLACE_ID = #productPlaceId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="placeId" prepend="AND" >
+        <![CDATA[  
+        PLACE_ID = #placeId#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <insert id="insert" parameterClass="ebkProdPlaceDO" >
+  	<selectKey keyProperty="productPlaceId" resultClass="java.lang.Long" >
+       SELECT EBK_PROD_PRODUCT_PLACE_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO EBK_PROD_PLACE( PRODUCT_PLACE_ID, PRODUCT_ID, PLACE_ID)
+     VALUES ( #productPlaceId#, #productId#, #placeId#)
+  </insert>
+
+  <update id="update" parameterClass="ebkProdPlaceDO" >
+    UPDATE EBK_PROD_PLACE   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="productPlaceId" prepend="," >
+        <![CDATA[  
+        PRODUCT_PLACE_ID = #productPlaceId#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="productId" prepend="," >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="placeId" prepend="," >
+        <![CDATA[  
+        PLACE_ID = #placeId#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE PRODUCT_PLACE_ID = #productPlaceId#  
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="ebkProdPlaceDOResultMap" >
+     SELECT 
+    <include refid="ebkProdPlace_do_columns" />
+    <![CDATA[  
+     FROM EBK_PROD_PLACE a1 WHERE PRODUCT_PLACE_ID = #productPlaceId#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_PLACE WHERE PRODUCT_PLACE_ID = #productPlaceId#
+    ]]>  
+  </delete>
+ <delete id="deleteListByEbkProductId" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_PLACE WHERE PRODUCT_ID = #value#
+    ]]>  
+  </delete>
+  <select id="countByDOExample" parameterClass="ebkProdPlaceDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(PRODUCT_PLACE_ID) AS num FROM EBK_PROD_PLACE 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="ebkProdPlaceDOResultMap" parameterClass="ebkProdPlaceDO" >
+     SELECT 
+    <include refid="ebkProdPlace_do_columns" />
+     FROM EBK_PROD_PLACE a1 
+    <include refid="doQueryParams" />
+  </select>
+</sqlMap>

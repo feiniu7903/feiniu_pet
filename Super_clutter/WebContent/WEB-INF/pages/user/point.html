@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>积分兑换-驴妈妈手机站</title>
+<#include "../common/define_v3.html">
+<style>
+	.inte_note { border:1px solid #e8d9b3; background:#fef8e7; padding:10px; margin:10px 10px 20px 10px;}
+	.inte_note b{ display:block;}
+	.inte_note span{ color:#666666;}
+	.integral_list dt, .integral_produce dt{ font-size:16px;padding-bottom:10px;}
+	.integral_list, .integral_produce{margin:0 10px;}
+	.integral_list dd{ 
+		display:-webkit-box;
+		display:-ms-box;
+		display:-o-box;
+		display:-moz-box;
+		display:box; padding-bottom:20px;
+	}
+	.integral_list dd a{ 
+		-webkit-box-flex:2;
+		-ms-box-flex:2;
+		-o-box-flex:2;
+		-moz-box-flex:2;
+		box-flex:2;
+		width:100%;
+		display:block; color:#fff; text-align:center; padding:5px 4px;
+	}
+	.integral_list dd a em, .integral_list dd a span{ display:block;}
+	.integral_f1 { background:#a1df64;}
+	.integral_f2 { background:#fe7302; margin:0 10px;}
+	.integral_f3 { background:#a2a2a2;}
+	.integral_list dd a em { font-size:16px;}
+	.integral_produce dd{ width:50%; float:left; margin-bottom:10px;}
+	.integral_produce dd h3 { font-size:14px; color:#000; font-weight:100; padding:5px 5px 0 5px; text-align:left; height:45px; overflow:hidden;}
+	.nthh3{ height:24px !important;}
+	.integral_produce dd a{ display:block; margin:0 5px; background:#fff; text-align:center;}
+	.integral_produce dd a img{ width:140px; height:89px;}
+	.integral_produce dd em i{ color:#ec328e; font-weight:bold; display:inline-block; padding-right:5px;}
+	.integral_produce dd em{padding:0 5px 5px 5px; display:block; text-align:left;}
+	.income_note2 { display:block; clear:both; width:100%; padding:5px 10px 10px 10px;}
+	.integral_ads { text-align:center;}
+	.inte_note a:link, .inte_note a:visited, .income_note2 a:link, .income_note2 a:visited{ color:#255cf9; text-decoration:underline;}
+	.inte_note a:hover, .income_note2 a:hover { color:#333;}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+	<header class="header">
+    	<a href="javascript:union_back();" class="back"><span class="ic_back"></span></a>
+        <h1>积分兑换</h1>
+    </header>
+    <section class="integral">
+		<p class="inte_note">
+        	<b>温馨提示:</b>
+            <span>积分商城年末促销火热进行中！详情请登录驴妈妈官网积分商城<a href="http://www.lvmama.com/points">(www.lvmama.com/points)</a>查询 </span>
+        </p>
+        <dl class="integral_list">
+        	<dt>我的积分清单</dt>
+            <dd>	
+            	<a href="javascript:void(0);" class="integral_f1">
+                	<em>${currentPoint!}</em>
+                    <span>我的积分余额</span>
+                </a>
+            	<a href="javascript:void(0);" class="integral_f2">
+                	<em>${aboutToExpiredPoint!}</em>
+                    <span>年末到期积分</span>
+                </a>
+            	<a href="javascript:void(0);" class="integral_f3">
+                	<em>${usedPoint!}</em>
+                    <span>已使用积分</span>
+                </a>
+            </dd>
+        </dl>
+        <dl class="integral_produce">
+        	<dt>
+            	支持积分抵用的旅游产品
+            </dt>
+             <#if pointProductList?? && pointProductList?size&gt;0>
+             	 <#list pointProductList as product>
+             	 	 <dd>
+	            		<a href="http://${hostName}/product/${product.productId!}/">
+		                	<img src="${prefixPic!}${product.smallImage!}">
+		                    <h3 title="${product.productName!}">${product.productName!}</h3>
+		                    <em><i>&yen;${product.sellPriceYuan!}</i>起</em>
+                		</a>
+            		</dd>
+             	 </#list>
+             </#if>
+             <#if pointPlaceList?? && pointPlaceList?size&gt;0>
+             	 <#list pointPlaceList as place>
+             	 	<dd>
+	            		<a href="http://${hostName}/ticket/piao-${place.placeId!}/">
+		                	<img src="${prefixPic!}${place.smallImage!}">
+		                    <h3 title="${place.name!}" class="nthh3">${place.name!}</h3>
+		                    <em><i>&yen;${place.productsPrice!}</i>起</em>
+                		</a>
+            		</dd>
+             	 </#list>
+             </#if>
+        </dl>
+         <p class="income_note2">
+		           更多支持积分抵用的旅游产品，<br/>
+		            请前往&nbsp;&nbsp;&nbsp;<a href="http://${hostName}">首页</a>&nbsp;&nbsp;&nbsp;查询产品详情页中含有“积分抵用”<br/>
+		            或在门票、度假首页直接搜索&nbsp;&nbsp;&nbsp;<a href="http://${hostName}/clutter/holiday/holiday_search.htm?keyword=&fromDest=&toDest=%25E7%25A7%25AF%25E5%2588%2586%25E6%258A%25B5%25E7%2594%25A8%2520%2520%25E6%25B8%25A9%25E6%25B3%2589&subProductType=&stage=1">积分抵用&nbsp;&nbsp;温泉</a><br/>
+        </p>
+    </section>
+    <#include "../common/footer_v3.html"/>
+</div>
+</body>
+</html>

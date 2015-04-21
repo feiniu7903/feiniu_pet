@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+<head>
+    <title>订单信息</title>
+    <#include "../common/define_v5.html">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/order.css">
+    <script type="text/javascript" src="http://cloudaapi.duapp.com/runtime.js"></script> 
+    <#if order??>
+	    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/min/base/pay.js"></script>
+    </#if>
+    <script>
+		globe.message="${jsonStr!}";
+	</script>
+	<script>
+		var loginStatusNo='${loginStatus!}';
+		$(function(){
+			//用户未登录
+			if(loginStatusNo!=null && loginStatusNo=="no"){
+				var callUrl=contextPath + "/bdorder/baidu_order_success.htm?orderId=${orderId!}";
+				//globe.lvToast(false,"页面尚未加载完，请耐心等待...",LT_LOADING_CLOSE);
+				setTimeout(function() {
+					bookBaiduLoginStatus(callUrl);
+				},0); 
+			}
+		});
+	</script>
+</head>
+<body>
+
+
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/header.js"></script>
+<div id="wrapper">
+    <div id="content">
+    	<input type="hidden" value="http://qing.lvmama.com" id="callUrlBaidu" name="callUrlBaidu">
+    	<#if order??>
+        <div class="common-order pb48">
+          <#if order.canToPay>
+	      		<#if order.paymentChannel?? && order.paymentChannel =="BAIDU_PAY">
+	        		 <div class="common-order-title" id="countDown" data-time="${countDownTime!}">
+		                 <span class="fl countDown">请在<i class="f-color-1">0分0秒</i>内完成支付，否则需要重新抢票</span>
+		             </div>
+        		</#if>
+		  <#elseif order.needResourceConfirm>
+	     		 <!-- 如果需要资源审核 --> 
+				<#if order.orderViewStatus =="UNVERIFIED"> <!-- 待审核  -->
+					<div class="common-order-title">
+		                <span class="fl countDown">订单已提交，等待客服审核</span>
+		           	 </div>
+				<#elseif order.orderViewStatus =="VERIFIED"><!-- 审核通过  -->
+					<!--  <p>订单提交成功，<br> 
+				             请赶紧支付吧，以免影响您的行程！</p> -->
+				<#elseif order.orderViewStatus =="CANCEL"><!-- 审核不通过  -->
+		            <div class="common-order-title">
+		                <span class="fl countDown">抱歉，订单已取消或未审核通过。</span>
+		           	 </div>
+				<#else>
+					 <div class="common-order-title">
+		                <span class="fl countDown">恭喜您，订单预订成功！取票人手机将收到驴妈妈订单确认短信，按短信说明可顺利入园。</span>
+		           	 </div>
+				</#if>
+		  <#elseif order.orderViewStatus?? && order.orderViewStatus =="CANCEL"> 
+				<div class="common-order-title">
+	                <span class="fl countDown">订单已取消。</span>
+	           	 </div>
+		  <#else>
+			   <div class="common-order-title">
+                <span class="fl countDown">恭喜您，订单预订成功！取票人手机将收到驴妈妈订单确认短信，按短信说明可顺利入园。</span>
+           	 </div>
+	      </#if>
+            <!--判断匿名下单查看订单详情  -->
+            <article onclick="union_skip('${request.contextPath}/order/order_detail.htm?orderId=${order.orderId}');">
+                <a href="javascript:void(0);" class="common-order-line">
+                    <div class="line"><span class="t_l1 f-color-0">订单号：</span><span>${order.orderId!}</span></div>
+                    <div class="line"><h5 id="ordername" class="only-line">${order.productName!}</h5></div>
+                    <!-- 景点门票 特有 -->
+                    <!-- 优惠券 -->
+                    <span class="ic_ri"></span>
+                </a>
+	            <#if order.orderItem?? && order.orderItem?size&gt;0 >
+	            	<#list order.orderItem as item >
+		                <div class="common-order-line">
+		                    <p>
+		                        <span class="t_l1">${item.shortName!}</span>
+		                        <span class="f-color-1">${item.quantity!}</span>
+		                    </p>
+		                    <p>
+		                    	<#if marketPriceYuan?? && marketPriceYuan&gt;0>
+			                        <span class="t_l1">原价</span>
+			                        <del data-value="579" id="sell_Price_0">&yen;${marketPriceYuan!}</del>
+		                    	</#if>
+		                    </p>
+		                    <p>
+		                        <span class="t_l1">百度支付价</span>
+		                        <span class="f-color-1">&yen;${item.price!}</span>
+		                    </p>
+		                </div>
+	               </#list>
+               	</#if>
+               	<!-- 优惠券 -->
+               	<#if order.paymentChannel?? && order.paymentChannel =="BAIDU_PAY">
+               		<!--百度活动下单不显示优惠券-->
+               	<#else>
+	               	 <#if order.couponUsageAmount?? && order.couponUsageAmount&gt;0>
+	               	 	 <div class="common-order-line">
+	               	 		<p>
+		                        <span class="t_l1">优惠券</span>
+		                        <span class="f-color">&yen;-${order.couponUsageAmount!}</span>
+		                    </p>
+		                 </div>
+		            </#if>
+               	</#if>
+               	<!-- 景点支付 -->
+               	<#if order.mainProductType =="TICKET" && order.earliestPassTime?? && order.earliestPassTime != "">
+               		 <div class="common-order-line">
+	                    <p>
+	                        <span class="t_l1">最早入园：</span>
+	                        <span class="f-color">${order.earliestPassTime!}</span>
+	                    </p>
+	                     <p>
+	                        <span class="t_l1">最晚入园：</span>
+	                        <span class="f-color">${order.latestPassTime!}</span>
+	                    </p>
+	                 </div>
+		        </#if>
+            </article>
+            <#if order.canToPay>
+	            <div class="common-order-title">
+	                <span class="fl">选择支付方式</span>
+	            </div>
+	            <!--  门票直接去支付 ，线路现在app支付 ，其它支付按钮灰色 -->
+	            <article id="payment_pattern_id">
+	                <div onclick="chose_payment_pattern('span_unionPay','pay-unionPay');" class="common-order-line radioOption">
+	                    <span class="ic_baidu"><i></i></span><span>百度支付</span>
+	                    <span id="span_unionPay" class="ic_radio_a selected"><i></i></span>
+	                    <input type="radio" style="display:none" name="paypath" value="DEBITCARD" id="pay-unionPay">
+	                </div>
+	                <#if order.paymentChannel?? && order.paymentChannel =="BAIDU_PAY">
+		                <div class="common-order-pan">
+		                    <span>每个百度钱包账号活动期间内只能享受一次优惠，最多购买1张</span>
+		                </div>
+	                </#if>
+	            </article>
+            </#if>
+            <div class="common-order-result">
+                <div class="fl"><span>应付总额：</span>
+	                <strong>
+		                <i id="order_price">
+		                    ${order.amount?number!}
+		                </i>
+	                </strong>
+                </div>
+                <!-- 如果可以支付 -->
+                 <#if order.canToPay>
+			      		<#if order.needResourceConfirm>
+		                 	<#if order.orderViewStatus =="UNPAY" || order.orderViewStatus =="PARTPAY"> 
+		                 		<a onclick="payNow('${order.orderId!}','${objectName!}','${objectDesc!}','${objectPageUrl!}');" href="javascript:void(0)" class="btn_style_1 fr">确认支付</a>
+		                 	<#elseif order.orderViewStatus =="UNVERIFIED">
+		                 		<a href="javascript:void(0)" class="btn_style_1 fr disable">正在审核中</a>
+		                 	</#if>
+		                 <#else>
+			                <a onclick="payNow('${order.orderId!}','${objectName!}','${objectDesc!}','${objectPageUrl!}');" href="javascript:void(0)" class="btn_style_1 fr">确认支付</a>
+		                 </#if>
+			     </#if>
+            </div>
+        </div>
+        </#if>
+    </div>
+</div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+<script src="${request.contextPath}/js/order_back.js"></script>
+<script src="${request.contextPath}/js/baidu_login.js"></script>
+<script type="text/javascript">
+
+$(function(){
+    $("#countDown").countdown({
+        rewrite : function(){
+            return '请在<i class="f-color-1">'+this.m+'分'+this.s+'秒'+'</i>内完成支付，否则需要重新抢票';
+        },
+        rewriteEnd : function(){
+        	$(".btn_style_1").hide();
+            return '已超时';
+        }
+    })
+})
+</script>
+</body>
+</html>

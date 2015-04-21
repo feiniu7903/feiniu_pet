@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <!-- START SNIPPET: xfire -->
+    <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="urlMap">
+            <map>
+                <entry key="/gmediaPassPortService">
+                    <ref bean="gmediaPassPortServiceExporter" />
+                </entry>
+                <entry key="/dinosaurTownService">
+                    <ref bean="dinosaurTownServiceExporter" />
+                </entry>
+                <entry key="/yanChengService">
+                    <ref bean="yanChengServiceExporter" />
+                </entry>
+                <entry key="/yongliguolvService">
+                    <ref bean="yongliguolvServiceExporter" />
+                </entry>
+                <entry key="/passportPerformCallback">
+                    <ref bean="passportPerformCallbackServiceExporter" />
+                </entry>
+                <entry key="/trainNotifyService">
+                	<ref bean="trainNotifyServiceExporter"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    
+    <!-- Declare a parent bean with all properties common to both services -->
+    <bean id="gmediaPassPortServiceExporter" class="org.codehaus.xfire.spring.remoting.XFireExporter">
+        <property name="serviceFactory">
+            <ref bean="xfire.serviceFactory" />
+        </property>
+        <property name="xfire">
+            <ref bean="xfire"/>
+        </property>
+        <property name="serviceBean">
+            <ref bean="gmediaPassPortService" />
+        </property>
+        <property name="serviceClass">
+            <value>com.lvmama.passport.callback.ws.IGmediaPassPortService</value>
+        </property>
+        <property name="namespace">
+        	<value>http://service.itf.server.passport.lvmama.com</value>
+        </property>
+    </bean>
+    
+    <bean id="trainNotifyServiceExporter" class="org.codehaus.xfire.spring.remoting.XFireExporter">
+        <property name="serviceFactory">
+            <ref bean="xfire.serviceFactory" />
+        </property>
+        <property name="xfire">
+            <ref bean="xfire"/>
+        </property>
+        <property name="serviceBean">
+            <ref bean="trainNotifyService" />
+        </property>
+        <property name="serviceClass">
+            <value>com.lvmama.train.service.NotifyMessageService</value>
+        </property>
+        <property name="namespace">
+        	<value>http://service.itf.server.passport.lvmama.com</value>
+        </property>
+    </bean>
+    <bean id="dinosaurTownServiceExporter" class="org.codehaus.xfire.spring.remoting.XFireExporter">
+        <property name="serviceFactory">
+            <ref bean="xfire.serviceFactory" />
+        </property>
+        <property name="xfire">
+            <ref bean="xfire" />
+        </property>
+        <property name="serviceBean">
+            <ref bean="dinosaurTownService" />
+        </property>
+        <property name="serviceClass">
+            <value>com.lvmama.passport.callback.ws.IDinosaurTownService</value>
+        </property>
+        <property name="namespace">
+        	<value>http://service.itf.server.passport.lvmama.com</value>
+        </property>
+    </bean>
+    
+    <!-- 提供给对方淹城调用的Webservice服务 -->
+    <bean id="yanChengServiceExporter" class="org.codehaus.xfire.spring.remoting.XFireExporter">
+    	<property name="serviceFactory">
+            <ref bean="xfire.serviceFactory" />
+        </property>
+        <property name="xfire">
+            <ref bean="xfire" />
+        </property>
+        <property name="serviceBean">
+            <ref bean="yanChengService" />
+        </property>
+        <property name="serviceClass">
+            <value>com.lvmama.passport.callback.ws.IYanChengService</value>
+        </property>
+        <property name="namespace">
+        	<value>http://service.itf.server.passport.lvmama.com</value>
+        </property>
+    </bean>
+    
+    <!-- 提供给对方永利国旅调用的Webservice服务 -->
+    <bean id="yongliguolvServiceExporter" class="org.codehaus.xfire.spring.remoting.XFireExporter">
+    	<property name="serviceFactory">
+            <ref bean="xfire.serviceFactory" />
+        </property>
+        <property name="xfire">
+            <ref bean="xfire" />
+        </property>
+        <property name="serviceBean">
+            <ref bean="yongliguolvService" />
+        </property>
+        <property name="serviceClass">
+            <value>com.lvmama.passport.callback.ws.IYongliguolvService</value>
+        </property>
+        <property name="namespace">
+        	<value>http://service.itf.server.passport.lvmama.com</value>
+        </property>
+    </bean>
+    
+     <!-- 提供给鼓浪屿调用的Webservice服务 -->
+    <bean id="passportPerformCallbackServiceExporter" class="org.codehaus.xfire.spring.remoting.XFireExporter">
+    	<property name="serviceFactory">
+            <ref bean="xfire.serviceFactory" />
+        </property>
+        <property name="xfire">
+            <ref bean="xfire" />
+        </property>
+        <property name="serviceBean">
+            <ref bean="passportPerformCallbackService" />
+        </property>
+        <property name="serviceClass">
+            <value>com.lvmama.passport.callback.ws.IPassportPerformCallbackService</value>
+        </property>
+        <property name="namespace">
+        	<value>http://service.itf.server.passport.lvmama.com</value>
+        </property>
+    </bean>
+    <!-- END SNIPPET: xfire -->
+</beans>

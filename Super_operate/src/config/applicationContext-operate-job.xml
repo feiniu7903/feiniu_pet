@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!-- EDM根据订单发送地区攻略邮件
+	<bean id="edmSendGuideService" class="com.lvmama.operate.job.EdmSendGuideJob">
+		<property name="onlineMarketingService" ref="onlineMarketingService"></property>
+		<property name="edmSubscribeBatchService" ref="edmSubscribeBatchService"></property>
+	</bean>
+	<bean id="edmSendGuideJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="edmSendGuideService" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="edmSendGuideJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="edmSendGuideJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${edmSendGuideJob.timer.cronExpression}</value> 
+		</property>
+	</bean> -->
+	<!-- EDM根据创建任务发送邮件 -->
+	<bean id="edmSendTaskJob" class="com.lvmama.operate.job.EdmSendTaskJob">
+		<property name="edmSubscribeBatchService" ref="edmSubscribeBatchService"/>
+		<property name="edmSubscribeTaskService" ref="edmSubscribeTaskService"/>
+		<property name="edmSubscribeTemplateService" ref="edmSubscribeTemplateService"/>
+		<property name="edmSubscribeUserGroupService" ref="edmSubscribeUserGroupService"/>
+	</bean>
+	<bean id="edmSendTaskJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="edmSendTaskJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="edmSendTaskJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="edmSendTaskJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${edmSendTaskJob.timer.cronExpression}</value> 
+		</property>
+	</bean>
+	
+	
+	<!-- EDM批次定时发邮件 -->
+	<bean id="edmBatchJob" class="com.lvmama.operate.job.EdmBatchJob">
+		<property name="edmSubscribeBatchJobService" ref="edmSubscribeBatchJobService"/>
+	</bean>
+	<bean id="edmBatchJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="edmBatchJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="edmBatchTaskJobTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="edmBatchJobFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${edmSendTaskJob.timer.cronExpression}</value> 
+		</property>
+	</bean>
+
+	<!-- 合同文件导出到文件系统 临时 -->
+	<bean id="ordEContractTempJob" class="com.lvmama.operate.job.OrdEContractTempJob">
+		<property name="ordContractTempDAO" ref="ordContractTempDAO"/>
+		<property name="fsClient" ref="fsClient"/>
+	</bean>
+	<bean id="ordEContractTempFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="ordEContractTempJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="ordEContractTempTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="ordEContractTempFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 1 22-31 * ? *</value>
+		</property>
+	</bean>
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list> 
+	         <!--  <ref local="edmSendGuideJobTimes"/> -->  
+	            <ref local="edmSendTaskJobTimes"/> 
+	            <ref local="ordEContractTempTimes"/>
+	            <ref local="edmBatchTaskJobTimes"/>
+			</list>
+		</property>
+	</bean>
+</beans>

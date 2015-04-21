@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="reviewproduce" >
+
+   <parameterMap class="map" id="swapParameters">  
+         <parameter property="keyword_b"  javaType="java.lang.String" jdbcType="VARCHAR" mode="IN"/>   
+         <parameter property="keyword_e"  javaType="java.lang.String" jdbcType="VARCHAR" mode="IN"/>  
+         <parameter property="param_b"  javaType="java.lang.String" jdbcType="VARCHAR" mode="IN"/>   
+         <parameter property="param_e"  javaType="java.lang.String" jdbcType="VARCHAR" mode="IN"/>   
+         <parameter property="param_r1"  javaType="java.lang.Integer" jdbcType="VARCHAR" mode="IN"/>   
+         <parameter property="param_r2"  javaType="java.lang.Integer" jdbcType="VARCHAR" mode="IN"/>  
+         <parameter property="count"  javaType="java.lang.Integer" jdbcType="VARCHAR" mode="OUT"/>
+    </parameterMap>
+   
+      <procedure  id="exeScanningForumPost" parameterMap="swapParameters">  
+            <![CDATA[{call test_forum_post(?,?,?,?,?,?,?)}]]>
+      </procedure >
+       <procedure  id="exeScanningForumThread" parameterMap="swapParameters">  
+            <![CDATA[{call test_forum_thread(?,?,?,?,?,?,?)}]]>
+      </procedure >
+       <procedure  id="exeScanningGlArticle" parameterMap="swapParameters">  
+            <![CDATA[{call test_gl_article(?,?,?,?,?,?,?)}]]>
+      </procedure >
+       <procedure  id="exeScanningGlComment" parameterMap="swapParameters">  
+            <![CDATA[{call test_gl_comment(?,?,?,?,?,?,?)}]]>
+      </procedure >
+       <procedure  id="exeScanningPhpcmsComment" parameterMap="swapParameters">  
+            <![CDATA[{call test_phpcms_comment(?,?,?,?,?,?,?)}]]>
+      </procedure >
+       <procedure  id="exeScanningPhpcmsC_1" parameterMap="swapParameters">  
+            <![CDATA[{call test_phpcms_c_down(?,?,?,?,?,?,?)}]]>
+      </procedure >
+       <procedure  id="exeScanningPhpcmsC_2" parameterMap="swapParameters">  
+            <![CDATA[{call test_phpcms_c_guide(?,?,?,?,?,?,?)}]]>
+      </procedure >
+       <procedure  id="exeScanningPhpcmsC_3" parameterMap="swapParameters">  
+            <![CDATA[{call test_phpcms_c_info(?,?,?,?,?,?,?)}]]>
+      </procedure >
+       <procedure  id="exeScanningPhpcmsC_4" parameterMap="swapParameters">  
+            <![CDATA[{call test_phpcms_c_ku6video(?,?,?,?,?,?,?)}]]>
+      </procedure >
+       <procedure  id="exeScanningPhpcmsC_5" parameterMap="swapParameters">  
+            <![CDATA[{call test_phpcms_c_minisite(?,?,?,?,?,?,?)}]]>
+      </procedure >
+       <procedure  id="exeScanningPhpcmsC_6" parameterMap="swapParameters">  
+            <![CDATA[{call test_phpcms_c_news(?,?,?,?,?,?,?)}]]>
+      </procedure >
+      <procedure  id="exeScanningPhpcmsC_7" parameterMap="swapParameters">  
+            <![CDATA[{call test_phpcms_c_picture(?,?,?,?,?,?,?)}]]>
+      </procedure >
+          <procedure  id="exeScanningPhpcmsC_8" parameterMap="swapParameters">  
+            <![CDATA[{call test_phpcms_c_product(?,?,?,?,?,?,?)}]]>
+      </procedure >
+       <procedure  id="exeScanningPhpcmsC_9" parameterMap="swapParameters">  
+            <![CDATA[{call test_phpcms_c_video(?,?,?,?,?,?,?)}]]>
+      </procedure >
+</sqlMap>

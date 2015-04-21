@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EBK_PRODUCT_REPORT" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.vo.report.EbkProductVisitorReportVo" >
+	<result column="META_PRODUCT_NAME" property="metaProductName" />
+	<result column="META_PRODUCT_ID" property="metaProductId" />
+	<result column="PROD_PRODUCT_NAME" property="prodProductName" />
+	<result column="PROD_PRODUCT_ID" property="prodProductId" />
+  </resultMap>
+  <resultMap id="BaseResultMapProduct" extends="BaseResultMap" class="com.lvmama.comm.bee.vo.report.EbkProductVisitorReportVo" >
+	<result column="SUPPLIER_NAME" property="supplierName" />
+	<result column="PRICE" property="price" />
+	<result column="SETTLEMENT_PRICE" property="settlementPrice" />
+	<result column="PLACE_NAME" property="placeName" />
+	<result column="TRAVEL_TIME" property="travelTime" />
+	<result column="DAYS" property="days" />
+	<result column="ONLINE_TIME" property="onlineTime" />
+	<result column="OFFLINE_TIME" property="offlineTime" />
+	<result column="JOURNEY_HOTEL" property="journeyHotel" />
+	<result column="JOURNEY_FEATURE" property="journeyFeature" />
+	<result column="JOURNEY_RECOMMEND" property="journeyRecommend" />
+	<result column="PRODUCT_PLACE" property="productPlace" />
+  </resultMap>
+  <resultMap id="BaseResultMapSales" extends="BaseResultMap" class="com.lvmama.comm.bee.vo.report.EbkProductVisitorReportVo" >
+	<result column="MANAGER" property="manager" />
+	<result column="PLACE_NAME" property="placeName" />
+	<result column="VISIT_TIME" property="visitTime" />
+	<result column="PAYED_ADULT_QUANTITY" property="payedAdultQuantity" />
+	<result column="PAYED_CHILD_QUANTITY" property="payedChildQuantity" />
+	<result column="UNPAY_ADULT_QUANTITY" property="unpayAdultQuantity" />
+	<result column="UNPAY_CHILD_QUANTITY" property="unpayChildQuantity" />
+  </resultMap>
+  <resultMap id="BaseResultMapVisitor" extends="BaseResultMap" class="com.lvmama.comm.bee.vo.report.EbkProductVisitorReportVo" >
+	<result column="ORDER_ID" property="orderId" />
+	<result column="QUANTITY" property="quantity" />
+	<result column="SETTLEMENT_PRICE" property="settlementPrice" />
+	<result column="TOTAL_SETTLEMENT_PRICE" property="totalSettlementPrice" />
+	<result column="PAY_STATUS" property="payStatus" />
+	<result column="CONTACT" property="contact" />
+	<result column="MOBILE" property="mobile" />
+	<result column="MEMO" property="memo" />
+	<result column="USER_MEMO" property="userMemo" />
+	<result column="PAY_TIME" property="payTime" />
+	<result column="VISIT_TIME" property="visitTime" />
+	<result column="MANAGER" property="manager" />
+	<result column="FILIALE_NAME" property="filialeName" />
+  </resultMap>
+  
+  <sql id="findOnSaleProduct_sql" >
+		from prod_product pp, prod_product_branch ppb, prod_product_branch_item ppbi, 
+		meta_product_branch mpb, meta_product mp,PROD_ROUTE pr,
+		(select t.product_id,t.place_id,c.name place_name
+		  from prod_product_place t, com_place c where t.place_id = c.place_id and t."TO" = 'true'
+		) ppp,
+		(select pi.prod_branch_id, pi.meta_branch_id, min(pt.price) price, min(mt.settlement_price) settlement_price
+		  from prod_time_price pt , prod_product_branch_item pi, meta_time_price mt
+		  where pt.prod_branch_id = pi.prod_branch_id and mt.meta_branch_id = pi.meta_branch_id and mt.spec_date = pt.spec_date
+		  and mt.spec_date &lt; sysdate + 60 and mt.spec_date &gt; sysdate
+		  group by pi.prod_branch_id, pi.meta_branch_id
+		) price
+		where pp.product_id = ppb.product_id
+		and ppb.prod_branch_id = ppbi.prod_branch_id
+		and ppbi.meta_branch_id = mpb.meta_branch_id
+		and mpb.meta_product_id = mp.meta_product_id
+		and pp.sub_product_type in ('GROUP','SELFHELP_BUS')
+		and mpb.branch_type = 'ADULT'
+		and ppbi.prod_branch_id = price.prod_branch_id(+)
+		and ppbi.meta_branch_id = price.meta_branch_id(+)
+		and pp.product_id = pr.product_id
+		and pp.product_id = ppp.product_id(+)
+	    and pp.on_line = 'true'
+	    and ppb.on_line = 'true'
+	    and mpb.valid = 'Y'
+	    and ppb.valid = 'Y'
+	    and mp.valid = 'Y'
+	    and pp.valid = 'Y'
+	<isNotEmpty prepend="AND" property="supplierId">
+		mp.supplier_id = #supplierId#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="metaProductName">
+		mp.product_name like '%'||#metaProductName#||'%'
+	</isNotEmpty>
+	<isNotEmpty property="prodProductIds" prepend="and">
+		pp.product_id in
+           <iterate property="prodProductIds" conjunction="," open="(" close=")">
+             #prodProductIds[]#
+           </iterate>
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="metaProductId">
+		mp.meta_product_id = #metaProductId#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="prodProductName">
+		pp.product_name like '%'||#prodProductName#||'%'
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="prodProductId">
+		pp.product_id = #prodProductId#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="subProductType">
+		pp.sub_product_type = #subProductType#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="placeName">
+		ppp.place_name = #placeName#
+	</isNotEmpty>
+	<isNotEmpty property="onlineTimeStart" prepend="and">
+		pp.online_time &gt;= TO_DATE(#onlineTimeStart#, 'YYYY-MM-DD HH24:MI:SS')
+	</isNotEmpty>
+	<isNotEmpty property="onlineTimeEnd" prepend="and">
+		pp.online_time &lt;= TO_DATE(#onlineTimeEnd#, 'YYYY-MM-DD HH24:MI:SS')
+	</isNotEmpty>
+	<isNotEmpty property="offlineTimeStart" prepend="and">
+		pp.offline_time &gt;= TO_DATE(#offlineTimeStart#, 'YYYY-MM-DD HH24:MI:SS')
+	</isNotEmpty>
+	<isNotEmpty property="offlineTimeEnd" prepend="and">
+		pp.offline_time &lt;= TO_DATE(#offlineTimeEnd#, 'YYYY-MM-DD HH24:MI:SS')
+	</isNotEmpty>
+  </sql>
+  <select id="findOnSaleProductCount" resultClass="java.lang.Integer" parameterClass="java.util.Map" >
+    select count(1) 
+    <include refid="EBK_PRODUCT_REPORT.findOnSaleProduct_sql" />
+  </select>
+  <select id="findOnSaleProductList" resultMap="BaseResultMapProduct" parameterClass="java.util.Map" >
+    <include refid="pageSearchHead" />
+	select pp.product_id prod_product_id,
+	       pp.product_name||'('||ppb.branch_name||')' prod_product_name,
+	       mp.meta_product_id,
+	       mp.product_name||'('||mpb.branch_name||')' meta_product_name,
+	       (select ss.supplier_name from sup_supplier ss where ss.supplier_id = mp.supplier_id)supplier_name,
+	       price.price,
+	       price.settlement_price,
+	       ppp.place_name,
+	       (case when pr.travel_time='AUTO_TIME_UPDATE' then '' else pr.travel_time end) travel_time,
+	       pr.days,
+	       pp.online_time,pp.offline_time,
+	       (select wm_concat('第'||seq||'天：'||hotel) from (select * from VIEW_JOURNEY order by product_id, seq) v where v.product_id = pp.product_id)JOURNEY_HOTEL,
+	       pp.recommend_info_second JOURNEY_RECOMMEND,
+	       (select wm_concat(c.name) from prod_product_place t, com_place c 
+	               where t.place_id = c.place_id and t."FROM" is null and t."TO" is null and t.product_id = pp.product_id) PRODUCT_PLACE,
+	       (select mp.property from PROD_MODEL_PROPERTY mp, PROD_PRODUCT_MODEL_PROPERTY pmp, prod_model_type pmt
+	               where mp.id = pmp.model_property_id and mp.second_model_id = pmt.id
+	               and pmt.model_name = '特色旅游' and pmp.product_id = pp.product_id) JOURNEY_FEATURE
+    <include refid="EBK_PRODUCT_REPORT.findOnSaleProduct_sql" />
+    order by pp.offline_time
+    <include refid="pageSearchFoot" />
+  </select>
+  
+  <sql id="findProductSales_sql" >
+		from prod_product pp, meta_product mp,lvmama_pet.perm_user pu,
+		(select t.product_id,t.place_id,c.name place_name
+		  from prod_product_place t, com_place c where t.place_id = c.place_id and t."TO" = 'true'
+		) ppp,
+		(select ooip.product_id prod_product_id,
+		       ooim.meta_product_id,
+		       oo.visit_time,
+		       sum((case when oo.payment_status = 'PAYED' then 1 else 0 end)*ooim.quantity*ooim.product_quantity*ooim.adult_quantity) payed_adult_quantity,
+		       sum((case when oo.payment_status = 'PAYED' then 1 else 0 end)*ooim.quantity*ooim.product_quantity*ooim.child_quantity) payed_child_quantity,
+		       sum((case when oo.payment_status = 'PAYED' then 0 else 1 end)*ooim.quantity*ooim.product_quantity*ooim.adult_quantity) unpay_adult_quantity,
+		       sum((case when oo.payment_status = 'PAYED' then 0 else 1 end)*ooim.quantity*ooim.product_quantity*ooim.child_quantity) unpay_child_quantity
+		from ord_order oo, ord_order_item_prod ooip, ord_order_item_meta ooim
+		where oo.order_id = ooip.order_id
+		and oo.order_id = ooim.order_id
+		and ooim.order_item_id = ooip.order_item_prod_id
+		and ooip.sub_product_type in ('GROUP','SELFHELP_BUS')
+		and ooim.branch_type in ('ADULT','CHILD')
+		and oo.ORDER_STATUS != 'CANCEL'
+		and nvl(oo.test_order_flag , 'false') = 'false'
+		<isNotEmpty prepend="AND" property="supplierId">
+			ooim.supplier_id = #supplierId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="metaProductId">
+			ooim.meta_product_id = #metaProductId#
+		</isNotEmpty>
+		<isNotEmpty property="prodProductIds" prepend="and">
+			ooip.product_id in
+	           <iterate property="prodProductIds" conjunction="," open="(" close=")">
+	             #prodProductIds[]#
+	           </iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="prodProductId">
+			ooip.product_id = #prodProductId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="subProductType">
+			ooip.sub_product_type = #subProductType#
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeStart" prepend="and">
+			oo.visit_time &gt;= TO_DATE(#visitTimeStart#, 'YYYY-MM-DD HH24:MI:SS')
+		</isNotEmpty>
+		<isNotEmpty property="visitTimeEnd" prepend="and">
+			oo.visit_time &lt;= TO_DATE(#visitTimeEnd#, 'YYYY-MM-DD HH24:MI:SS')
+		</isNotEmpty>
+		group by ooip.product_id,ooim.meta_product_id,oo.visit_time
+		) ord
+		where pp.product_id = ord.prod_product_id
+		and mp.meta_product_id = ord.meta_product_id
+		and pp.product_id = ppp.product_id(+)
+		and nvl(pp.manager_id,-1) = pu.user_id(+)
+		<isNotEmpty prepend="AND" property="metaProductName">
+			mp.product_name like '%'||#metaProductName#||'%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="prodProductName">
+			pp.product_name like '%'||#prodProductName#||'%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="placeName">
+			ppp.place_name = #placeName#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="manager">
+			pu.real_name = #manager#
+		</isNotEmpty>
+  </sql>
+  <select id="findProductSalesCount" resultClass="java.lang.Integer" parameterClass="java.util.Map" >
+    select count(1) 
+    <include refid="EBK_PRODUCT_REPORT.findProductSales_sql" />
+  </select>
+  <select id="findProductSalesList" resultMap="BaseResultMapSales" parameterClass="java.util.Map" >
+    <include refid="pageSearchHead" />
+	select ord.*,
+	       pp.product_name prod_product_name,
+	       mp.product_name meta_product_name,
+	       ppp.place_name,
+	       pu.real_name manager
+    <include refid="EBK_PRODUCT_REPORT.findProductSales_sql" />
+    order by ord.visit_time DESC
+    <include refid="pageSearchFoot" />
+  </select>
+  
+  <sql id="findProductVisitor_sql" >
+	FROM ORD_ORDER oo, ORD_ORDER_ITEM_PROD ooip, prod_product pp, ord_order_item_meta ooim
+	WHERE oo.ORDER_ID = ooip.ORDER_ID
+	AND ooim.order_id = oo.order_id
+	AND ooip.PRODUCT_ID = pp.PRODUCT_ID
+	AND ooip.order_item_prod_id = ooim.order_item_id
+	AND nvl(oo.test_order_flag , 'false') = 'false'
+	AND oo.ORDER_STATUS != 'CANCEL'
+	AND oo.PAYMENT_TARGET = 'TOLVMAMA'
+	AND ooip.sub_product_type in ('GROUP','SELFHELP_BUS')
+	<isNotEmpty prepend="AND" property="orderId">
+		oo.order_id = #orderId#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="payStatus">
+		(case when oo.payment_status = 'PAYED' then 'PAYED' else 'UNPAY' end) = #payStatus#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="supplierId">
+		ooim.supplier_id = #supplierId#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="metaProductId">
+		ooim.meta_product_id = #metaProductId#
+	</isNotEmpty>
+	<isNotEmpty property="prodProductIds" prepend="and">
+		ooip.product_id in
+           <iterate property="prodProductIds" conjunction="," open="(" close=")">
+             #prodProductIds[]#
+           </iterate>
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="prodProductId">
+		ooip.product_id = #prodProductId#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="metaProductName">
+		ooim.product_name like '%'||#metaProductName#||'%'
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="prodProductName">
+		ooip.product_name like '%'||#prodProductName#||'%'
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="subProductType">
+		ooip.sub_product_type = #subProductType#
+	</isNotEmpty>
+	<isNotEmpty property="visitTimeStart" prepend="and">
+		oo.visit_time &gt;= TO_DATE(#visitTimeStart#, 'YYYY-MM-DD HH24:MI:SS')
+	</isNotEmpty>
+	<isNotEmpty property="visitTimeEnd" prepend="and">
+		oo.visit_time &lt;= TO_DATE(#visitTimeEnd#, 'YYYY-MM-DD HH24:MI:SS')
+	</isNotEmpty>
+  </sql>
+  <select id="findProductVisitorCount" resultClass="java.lang.Integer" parameterClass="java.util.Map" >
+    select count(1) 
+    <include refid="EBK_PRODUCT_REPORT.findProductVisitor_sql" />
+  </select>
+  <select id="findProductVisitorList" resultMap="BaseResultMapVisitor" parameterClass="java.util.Map" >
+    <include refid="pageSearchHead" />
+	select oo.ORDER_ID,
+	   ooip.PRODUCT_ID PROD_PRODUCT_ID,
+	   ooip.PRODUCT_NAME PROD_PRODUCT_NAME,
+	   ooim.meta_product_id,
+	   ooim.product_name META_PRODUCT_NAME,
+	   oo.payment_time PAY_TIME,
+	   oo.VISIT_TIME,
+	   oo.user_memo,
+	   (ooim.quantity * ooim.product_quantity) QUANTITY,
+	   ooim.settlement_price,
+	   ooim.total_settlement_price,
+	   oo.payment_status pay_status,
+	   pp.filiale_name,
+	   (select real_name from lvmama_pet.perm_user u where u.user_id = pp.manager_id) MANAGER,
+	   (select case when sum(length(nvl(m.content, ' '))) &lt; 1000 then wmsys.wm_concat(m.content)
+	           else  wmsys.wm_concat(substr(m.content,0,200)||'...') end
+	    FROM lvmama_super.ORD_ORDER_MEMO M where m.order_id=oo.order_id group by m.order_id
+	   ) MEMO,
+	   (select p.name from lvmama_super.ord_person p
+	    where P.person_type='CONTACT' AND P.object_type = 'ORD_ORDER'
+	    and oo.order_id = p.object_id and rownum = 1) CONTACT,
+	   (select p.mobile from lvmama_super.ord_person p
+	    where P.person_type='CONTACT' AND P.object_type = 'ORD_ORDER'
+	    and oo.order_id = p.object_id and rownum = 1) MOBILE
+    <include refid="EBK_PRODUCT_REPORT.findProductVisitor_sql" />
+    order by oo.visit_time, oo.order_id
+    <include refid="pageSearchFoot" />
+  </select>
+</sqlMap>

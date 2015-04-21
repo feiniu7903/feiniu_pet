@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDSUBSETTLEMENT" >
+	 
+   <typeAlias alias="OrdSubSettlement" type="com.lvmama.finance.settlement.ibatis.po.OrdSubSettlement"/>
+   
+   <!-- 根据结算单id查询结算子单 -->
+   <select id="getOrdSubSettlementBySettlementId" 
+   		parameterClass="long" 
+   		resultClass="OrdSubSettlement">
+   		SELECT
+   			SUB_SETTLEMENT_ID AS subSettlementId,
+   			SETTLEMENT_ID AS settlementId,
+   			META_PRODUCT_ID AS metaProductId,
+   			PAY_AMOUNT AS payAmount,
+   			RECEIVE_AMOUNT AS receiveAmount,
+   			BEGIN_DATE AS beginDate,
+   			END_DATE AS endDate,
+   			MEMO AS memo,
+   			OPERATOR_NAME AS operatorName,
+   			CREATE_TIME AS createTime,
+   			META_BRANCH_ID AS metaBranchId
+   		FROM 
+   			ORD_SUB_SETTLEMENT
+   		WHERE
+   			SETTLEMENT_ID = #value#
+   </select>
+   
+   <!-- 根据id查询结算子单 -->
+   <select id="getOrdSubSettlementById" parameterClass="long" resultClass="OrdSubSettlement">
+   		SELECT
+   			SUB_SETTLEMENT_ID AS subSettlementId,
+   			SETTLEMENT_ID AS settlementId,
+   			META_PRODUCT_ID AS metaProductId,
+   			PAY_AMOUNT AS payAmount,
+   			RECEIVE_AMOUNT AS receiveAmount,
+   			BEGIN_DATE AS beginDate,
+   			END_DATE AS endDate,
+   			MEMO AS memo,
+   			OPERATOR_NAME AS operatorName,
+   			CREATE_TIME AS createTime,
+   			META_BRANCH_ID AS metaBranchId
+   		FROM 
+   			ORD_SUB_SETTLEMENT
+   		WHERE
+   			SUB_SETTLEMENT_ID = #value#
+   </select>
+   <!-- 根据结算单id，采购产品ID，查询结算子单 -->
+   <select id="getOrdSubSettlementBySettlementIdMetaProductId" parameterClass="map" resultClass="OrdSubSettlement">
+   		SELECT
+   			SUB_SETTLEMENT_ID AS subSettlementId,
+   			SETTLEMENT_ID AS settlementId,
+   			META_PRODUCT_ID AS metaProductId,
+   			PAY_AMOUNT AS payAmount,
+   			RECEIVE_AMOUNT AS receiveAmount,
+   			BEGIN_DATE AS beginDate,
+   			END_DATE AS endDate,
+   			MEMO AS memo,
+   			OPERATOR_NAME AS operatorName,
+   			CREATE_TIME AS createTime,
+   			META_BRANCH_ID AS metaBranchId
+   		FROM 
+   			ORD_SUB_SETTLEMENT
+   		WHERE
+   			SETTLEMENT_ID = #settlementId#
+   		AND
+   			META_PRODUCT_ID = #metaProductId#
+   		AND
+   			META_BRANCH_ID = #metaBranchId#
+   </select>
+   
+   <!-- 更新结算子单 -->
+   <update id="updateOrdSubSettlement" parameterClass="OrdSubSettlement">
+   		UPDATE
+   			ORD_SUB_SETTLEMENT
+   		SET 
+   			SUB_SETTLEMENT_ID = #subSettlementId#,
+   			SETTLEMENT_ID = #settlementId#,
+   			META_PRODUCT_ID = #metaProductId#,
+   			PAY_AMOUNT = #payAmount#,
+   			RECEIVE_AMOUNT = #receiveAmount#,
+   			BEGIN_DATE = #beginDate#,
+   			END_DATE = #endDate#,
+   			MEMO = #memo#,
+   			OPERATOR_NAME = #operatorName#,
+   			CREATE_TIME = #createTime#,
+   			META_BRANCH_ID = #metaBranchId#
+   		WHERE
+   			SUB_SETTLEMENT_ID = #subSettlementId#
+   </update>
+   
+   <!-- 插入结算子单 -->
+   <insert id="insertOrdSubSettlement" parameterClass="OrdSubSettlement">
+   		<selectKey resultClass="long" keyProperty="subSettlementId" >
+         	SELECT 
+         		ORD_SUB_SETTLEMENT_ID_SEQ.NEXTVAL AS subSettlementId 
+         	FROM 
+         		DUAL
+     	</selectKey>
+     	INSERT INTO
+     		ORD_SUB_SETTLEMENT
+     	(
+     		SUB_SETTLEMENT_ID,
+   			SETTLEMENT_ID,
+   			META_PRODUCT_ID,
+   			PAY_AMOUNT,
+   			RECEIVE_AMOUNT,
+   			BEGIN_DATE,
+   			END_DATE,
+   			MEMO,
+   			OPERATOR_NAME,
+   			CREATE_TIME,
+   			META_BRANCH_ID
+     	)
+     	VALUES
+     	(
+     		#subSettlementId#,
+     		#settlementId#,
+     		#metaProductId#,
+     		#payAmount#,
+     		#receiveAmount#,
+     		#beginDate#,
+     		#endDate#,
+     		#memo#,
+     		#operatorName#,
+     		#createTime#,
+     		#metaBranchId#
+     	)
+   </insert>
+   
+   <!-- 插入结算子单With id -->
+   <insert id="insertOrdSubSettlementWithId" parameterClass="OrdSubSettlement">
+     	INSERT INTO
+     		ORD_SUB_SETTLEMENT
+     	(
+     		SUB_SETTLEMENT_ID,
+   			SETTLEMENT_ID,
+   			META_PRODUCT_ID,
+   			PAY_AMOUNT,
+   			RECEIVE_AMOUNT,
+   			BEGIN_DATE,
+   			END_DATE,
+   			MEMO,
+   			OPERATOR_NAME,
+   			CREATE_TIME,
+   			META_BRANCH_ID
+     	)
+     	VALUES
+     	(
+     		#subSettlementId#,
+     		#settlementId#,
+     		#metaProductId#,
+     		#payAmount#,
+     		#receiveAmount#,
+     		#beginDate#,
+     		#endDate#,
+     		#memo#,
+     		#operatorName#,
+     		#createTime#,
+     		#metaBranchId#
+     	)
+   </insert>
+   
+   <!-- 查询结算子单begin -->
+   <select id="searchOrdSubSettlement" parameterClass="map" resultClass="OrdSubSettlement">
+		<include refid="pageSearchHead"/>
+		SELECT 
+			A.SETTLEMENT_ID AS SETTLEMENTID,
+			A.SUB_SETTLEMENT_ID AS SUBSETTLEMENTID,
+			A.META_PRODUCT_ID AS METAPRODUCTID,
+			B.PRODUCT_NAME AS METAPRODUCTNAME,
+			A.PAY_AMOUNT/100 AS PAYAMOUNT ,
+			C.STATUS,
+			A.META_BRANCH_ID AS METABRANCHID,
+			D.BRANCH_NAME  AS BRANCHNAME
+		FROM 
+			ORD_SUB_SETTLEMENT A,
+			META_PRODUCT B ,
+			ORD_SETTLEMENT C,
+			META_PRODUCT_BRANCH D
+		WHERE 
+			A.META_PRODUCT_ID = B.META_PRODUCT_ID
+		AND
+			A.SETTLEMENT_ID = C.SETTLEMENT_ID
+		AND
+			A.META_BRANCH_ID = D.META_BRANCH_ID
+		AND
+			A.SETTLEMENT_ID = #settlementId#
+		<isNotEmpty property="subSettlementId" prepend="AND">
+			A.SUB_SETTLEMENT_ID = #subSettlementId#
+		</isNotEmpty>
+		<isNotNull property="metaProductId" prepend="AND">
+			A.META_PRODUCT_ID = #metaProductId#
+		</isNotNull>
+		<isNotEmpty property="metaBranchId" prepend="AND">
+			A.META_BRANCH_ID = #metaBranchId#
+		</isNotEmpty>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="searchOrdSubSettlementCount" parameterClass="map" resultClass="int">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			ORD_SUB_SETTLEMENT A,
+			META_PRODUCT B 
+		WHERE 
+			A.META_PRODUCT_ID = B.META_PRODUCT_ID
+		AND
+			A.SETTLEMENT_ID = #settlementId#
+		<isNotEmpty property="subSettlementId" prepend="AND">
+			A.SUB_SETTLEMENT_ID = #subSettlementId#
+		</isNotEmpty>
+		<isNotNull property="metaProductId" prepend="AND">
+			A.META_PRODUCT_ID = #metaProductId#
+		</isNotNull>
+		<isNotEmpty property="metaBranchId" prepend="AND">
+			A.META_BRANCH_ID = #metaBranchId#
+		</isNotEmpty>
+	</select>
+	<!-- 查询结算子单end -->
+	
+	<!-- 删除结算子单begin -->
+	<delete id="deleteOrdSubSettlement" parameterClass="long">
+		DELETE FROM 
+			ORD_SUB_SETTLEMENT A
+		WHERE 
+			NOT EXISTS(SELECT '*' FROM ORD_SUB_SETTLEMENT_ITEM B WHERE A.SUB_SETTLEMENT_ID = B.SUB_SETTLEMENT_ID)
+		AND
+			SUB_SETTLEMENT_ID = #subSettlementId#
+	</delete>
+	<!-- 删除结算子单end -->
+	
+	<update id="updatePayAmount" parameterClass="long">
+		UPDATE 
+			ORD_SUB_SETTLEMENT 
+		SET 
+			PAY_AMOUNT = (
+				SELECT 
+					NVL(SUM(A.PAY_AMOUNT),0)
+				FROM 
+					ORD_SUB_SETTLEMENT_ITEM A
+				WHERE 
+			  	  	A.SUB_SETTLEMENT_ID = #id#
+			)
+		WHERE 
+			SUB_SETTLEMENT_ID = #id#
+	</update>
+	
+</sqlMap>

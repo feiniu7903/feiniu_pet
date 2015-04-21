@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_PRODUCT">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.meta.MetaProduct">
+		<result column="META_PRODUCT_ID" property="metaProductId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="BIZ_CODE" property="bizCode" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="SUPPLIER_ID" property="supplierId" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="PAY_TO_LVMAMA" property="payToLvmama" />
+		<result column="PAY_TO_SUPPLIER" property="payToSupplier" />
+		<result column="TERMINAL_CONTENT" property="terminalContent" />
+		<result column="VALID_DAYS" property="validDays" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="MANAGER_ID" property="managerId" />	
+		<result column="IS_RESOURCE_SENDFAX" property="isResourceSendFax"/>
+		<result column="CURRENCY" property="currencyType"/>
+		<result column="CONTRACT_ID" property="contractId"/>
+		<result column="WORK_GROUP_ID" property="workGroupId"/>
+		<result column="IS_APERIODIC" property="isAperiodic"/>
+		<result column="SUPPLIER_CHANNEL" property="supplierChannel"/>
+		<result column="CONTROL_TYPE" property="controlType"/>
+		<result column="FILIALE_NAME" property="filialeName"/>
+	</resultMap>
+	<resultMap class="com.lvmama.comm.bee.po.meta.MetaProduct" extends="BaseResultMap" 
+			id="BaseResultMapValid">
+		<result column="VALID" property="valid"/>
+	</resultMap>
+	
+	<resultMap id="BaseResultMapWithManager" extends="BaseResultMap"
+		class="com.lvmama.comm.bee.po.meta.MetaProduct">
+		<result column="USER_NAME" property="managerName" />
+		<result column="ORG_ID" property="orgId"  />
+	</resultMap>
+	<resultMap id="RelateResultMap" extends="BaseResultMap"
+		class="com.lvmama.comm.bee.po.meta.MetaProduct">
+		<result column="BRANCH_NAME" property="branchName"/>
+		<result column="MANAGER_NAME" property="managerName"/>
+	</resultMap>
+	<!-- 为增加状态字段而建 -->
+	<resultMap id="BaseResultMapWithList"
+		extends="BaseResultMap"
+		class="com.lvmama.comm.bee.po.meta.MetaProduct">
+		<result column="VALID" property="valid" />
+		<result column="DEPARTMENT_NAME" property="departmentName"/>
+		<result column="DEPARTMENT_ID" property="departmentId"/>
+	</resultMap>
+
+
+	<resultMap id="BaseResultMapTicket"
+		extends="BaseResultMapWithManager"
+		class="com.lvmama.comm.bee.po.meta.MetaProductTicket">
+		<result column="META_TICKET_ID" property="metaTicketId" />
+		<result column="CREATE_USER" property="createUserId"  />
+		<result column="TODAY_ORDER_ABLE" property="todayOrderAble" />
+		<result column="LAST_TICKET_TIME" property="lastTicketTime" />
+		<result column="LAST_PASS_TIME" property="lastPassTime" />
+	</resultMap>
+	<resultMap id="BaseResultMapHotel"
+		extends="BaseResultMapWithManager"
+		class="com.lvmama.comm.bee.po.meta.MetaProductHotel">
+		<result column="META_HOTEL_ID" property="metaHotelId" />
+		<result column="CREATE_USER" property="createUserId"  />
+		<result column="NIGHTS" property="nights"  />
+	</resultMap>
+	<resultMap id="BaseResultMapRoute"
+		extends="BaseResultMapWithManager"
+		class="com.lvmama.comm.bee.po.meta.MetaProductRoute">
+		<result column="META_ROUTE_ID" property="metaRouteId" />
+		<result column="CREATE_USER" property="createUserId"  />
+	</resultMap>
+	<resultMap class="com.lvmama.comm.bee.po.meta.MetaProductTraffic" id="BaseResultMapTraffic"
+		extends="BaseResultMapWithManager">
+		<result column="META_TRAFFIC_ID" property="metaTrafficId" />
+	    <result column="DIRECTION" property="direction" />
+	    <result column="DAYS" property="days" />
+	    <result column="GO_FLIGHT" property="goFlight" />
+	    <result column="BACK_FLIGHT" property="backFlight" />
+	    <result column="LINE_INFO_ID" property="lineInfoId"/>
+	</resultMap>
+	<resultMap id="BaseResultMapOther"
+		extends="BaseResultMapWithManager"
+		class="com.lvmama.comm.bee.po.meta.MetaProductOther">
+		<result column="META_OTHER_ID" property="metaOtherId" />
+		<result column="INSURANCE_DAY" property="insuranceDay" />
+		<result column="CREATE_USER" property="createUserId"  />
+	</resultMap>
+	
+	<resultMap id="EbkMetaProductMap" class="com.lvmama.comm.bee.po.meta.MetaProduct">
+		<result column="META_PRODUCT_ID" property="metaProductId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+	</resultMap>
+	
+	<sql id="condition">
+		<dynamic>			
+			<isNotEmpty prepend="and" property="productTypeList">
+				<iterate property="productTypeList" open="(" close=")"
+					conjunction="OR">
+					META_PRODUCT.PRODUCT_TYPE = #productTypeList[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="subProductTypeList">
+				<iterate property="subProductTypeList" open="("
+					close=")" conjunction="OR">
+					META_PRODUCT.SUB_PRODUCT_TYPE =
+					#subProductTypeList[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="metaProductId">
+				META_PRODUCT.META_PRODUCT_ID = #metaProductId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="bizCode">
+				META_PRODUCT.BIZ_CODE = #bizCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="productType">
+				META_PRODUCT.PRODUCT_TYPE = #productType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="subProductType">
+				META_PRODUCT.SUB_PRODUCT_TYPE = #subProductType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="productName">
+			(
+				META_PRODUCT.PRODUCT_NAME like '%' || #productName# || '%'
+				<isNotEmpty prepend="or" property="orProductId">
+					META_PRODUCT.META_PRODUCT_ID = #orProductId#			
+				</isNotEmpty>
+			)
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="productType">
+				META_PRODUCT.PRODUCT_TYPE = #productType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="valid">
+				META_PRODUCT.valid = #valid#
+			</isNotEmpty>
+			<isGreaterThan prepend="and" property="supplierId"
+				compareValue="0">
+				META_PRODUCT.SUPPLIER_ID = #supplierId#
+			</isGreaterThan>
+			<isNotEmpty prepend="and" property="beginDate">
+				<![CDATA[
+  			META_PRODUCT.CREATE_TIME >=to_date(#beginDate#,'yyyy-MM-dd hh24:mi:ss')
+  			]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="endDate">
+				<![CDATA[
+  			META_PRODUCT.CREATE_TIME <=to_date(#endDate#,'yyyy-MM-dd hh24:mi:ss')
+  			]]>
+			</isNotEmpty>
+			<isEqual prepend="and" property="validY" compareValue="true">
+				META_PRODUCT.valid = 'Y'
+		   </isEqual>
+		   <isEqual prepend="and" property="validY" compareValue="false">
+				META_PRODUCT.valid = 'N'
+		   </isEqual>
+		   <isNotEmpty prepend="and" property="isAperiodic">
+		       META_PRODUCT.IS_APERIODIC = #isAperiodic#		       
+		   </isNotEmpty>
+		    <isNotEmpty prepend="and" property="filialeName">
+		       META_PRODUCT.FILIALE_NAME = #filialeName#		       
+		   </isNotEmpty>
+		</dynamic>
+	</sql>
+	<sql id="maxResults">
+		<dynamic prepend="where">
+			<isNotEmpty property="maxResults">
+				<![CDATA[
+  			rownum<= #maxResults#
+  		]]>
+			</isNotEmpty>
+			<!-- 
+				<isNotPropertyAvailable property="maxResults">
+				<![CDATA[
+				rownum<= 50
+				]]>
+				</isNotPropertyAvailable>
+			-->
+		</dynamic>
+	</sql>
+
+
+	<select id="countByParams" resultClass="java.lang.Integer"
+		parameterClass="java.util.HashMap">
+		select count(*) from META_PRODUCT,SUP_SUPPLIER where
+		META_PRODUCT.SUPPLIER_ID=SUP_SUPPLIER.SUPPLIER_ID and
+		META_PRODUCT.VALID='Y'
+		<include refid="condition" />
+	</select>
+
+
+	<!-- 此处为增加状态功能将META_PRODUCT.valid限制去掉 -->
+	<select id="selectByParams" resultMap="BaseResultMapWithList"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select *
+		from (select META_PRODUCT.*,PERM_ORGANIZATION.DEPARTMENT_NAME ,PERM_ORGANIZATION.ORG_ID as DEPARTMENT_ID from
+		META_PRODUCT,lvmama_pet.PERM_ORGANIZATION PERM_ORGANIZATION where
+		META_PRODUCT.ORG_ID=PERM_ORGANIZATION.ORG_ID
+
+		<isEmpty property="twoRole">
+			<isNotEmpty prepend="and" property="managerIds">
+				<iterate property="managerIds" conjunction="," close=")" open=" META_PRODUCT.MANAGER_ID in (">
+					#managerIds[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orgId">
+				META_PRODUCT.ORG_ID=#orgId#
+			</isNotEmpty>
+		</isEmpty>
+		<isNotEmpty property="twoRole">
+			and (
+				META_PRODUCT.ORG_ID=#orgId#
+				
+				<iterate property="managerIds" conjunction="," close=")" open="or META_PRODUCT.MANAGER_ID in (">
+					#managerIds[]#
+				</iterate>
+			)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="managerId">
+			META_PRODUCT.MANAGER_ID = #managerId#
+		</isNotEmpty>
+		<include refid="condition" />
+		<isNotEmpty prepend="and" property="orgId">
+				META_PRODUCT.ORG_ID=#orgId#
+			</isNotEmpty>
+		order by META_PRODUCT_ID DESC )
+		<include refid="maxResults" />
+		) T WHERE ROWNUM &lt;= #_endRow# ) WHERE ROWNUM1
+		&gt;=#_startRow#
+	</select>
+		
+	<select id="selectMetaProductByIds" resultMap="BaseResultMap" parameterClass="java.util.List">
+		select * from META_PRODUCT 
+		<dynamic prepend="where">
+			META_PRODUCT_ID IN 
+			<iterate prepend="and" open="(" close=")" conjunction=",">
+			#[]#
+			</iterate>
+		</dynamic>
+		ORDER BY META_PRODUCT_ID DESC
+	</select>
+
+	<select id="getMetaProductByProductId"
+		parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		SELECT distinct MP.* FROM PROD_PRODUCT_BRANCH_ITEM
+		PPI,PROD_PRODUCT_BRANCH PPB,META_PRODUCT_BRANCH MPB, META_PRODUCT MP
+		WHERE
+		MPB.META_PRODUCT_ID=MP.META_PRODUCT_ID AND MPB.META_BRANCH_ID=PPI.META_BRANCH_ID AND MPB.VALID='Y' AND
+		PPB.PROD_BRANCH_ID=PPI.PROD_BRANCH_ID AND
+		PPB.PRODUCT_ID=#productId# and MP.VALID='Y' AND PPB.VALID='Y'
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="com.lvmama.comm.bee.po.meta.MetaProduct">
+		select META_PRODUCT.*,SUP_SUPPLIER.SUPPLIER_NAME from
+		META_PRODUCT,SUP_SUPPLIER where
+		META_PRODUCT.SUPPLIER_ID=SUP_SUPPLIER.SUPPLIER_ID and
+		META_PRODUCT.META_PRODUCT_ID = #metaProductId# and
+		META_PRODUCT.VALID='Y'
+	</select>
+	<select id="selectMetaProductTicketDetailByPrimaryKey"
+		resultMap="BaseResultMapTicket" parameterClass="java.lang.Long">
+		 select A.*,B.REAL_NAME as USER_NAME
+	     from (select META_PRODUCT.*,
+	           META_PRODUCT_TICKET.META_TICKET_ID,
+	           META_PRODUCT_TICKET.TODAY_ORDER_ABLE,
+	           META_PRODUCT_TICKET.LAST_TICKET_TIME,
+	           META_PRODUCT_TICKET.LAST_PASS_TIME
+	      from META_PRODUCT, META_PRODUCT_TICKET
+	     where META_PRODUCT.META_PRODUCT_ID =
+	           META_PRODUCT_TICKET.META_PRODUCT_ID
+	       and META_PRODUCT.META_PRODUCT_ID = #metaProductId#) A
+	     LEFT JOIN lvmama_pet.PERM_USER B ON A.MANAGER_ID = B.USER_ID
+	</select>
+
+	<select id="selectMetaProductDetailByPrimaryKey"
+		resultMap="BaseResultMapTicket" parameterClass="java.lang.Long">
+		select META_PRODUCT.*,PROD_PRODUCT.* from
+		META_PRODUCT,SUP_SUPPLIER,META_PRODUCT_TICKET where
+		META_PRODUCT.SUPPLIER_ID=SUP_SUPPLIER.SUPPLIER_ID and
+		META_PRODUCT.META_PRODUCT_ID=META_PRODUCT_TICKET.META_PRODUCT_ID
+		and META_PRODUCT.META_PRODUCT_ID = #metaProductId# and
+		META_PRODUCT.VALID='Y'
+	</select>
+
+	<select id="selectMetaProductHotelDetailByPrimaryKey"
+		resultMap="BaseResultMapHotel" parameterClass="java.lang.Long">
+		 select A.*, B.REAL_NAME as USER_NAME
+	     from (select META_PRODUCT.*,
+	                  META_PRODUCT_HOTEL.META_HOTEL_ID,
+					  META_PRODUCT_HOTEL.NIGHTS	
+	             from META_PRODUCT, META_PRODUCT_HOTEL
+	            where META_PRODUCT.META_PRODUCT_ID =
+	                  META_PRODUCT_HOTEL.META_PRODUCT_ID
+	              and META_PRODUCT.META_PRODUCT_ID = #metaProductId#) A
+	     LEFT JOIN lvmama_pet.PERM_USER B ON A.MANAGER_ID = B.USER_ID
+	</select>
+	<select id="selectMetaProductRouteDetailByPrimaryKey"
+		resultMap="BaseResultMapRoute" parameterClass="java.lang.Long">
+		select A.*,b.REAL_NAME as USER_NAME
+		from (select mp.*,
+				mpr.META_ROUTE_ID
+			from META_PRODUCT mp, META_PRODUCT_ROUTE mpr
+		where mp.META_PRODUCT_ID = mpr.META_PRODUCT_ID
+			and mp.META_PRODUCT_ID = #metaProductId#) A
+		LEFT JOIN lvmama_pet.PERM_USER B ON A.MANAGER_ID = B.USER_ID
+	</select>
+	<select id="selectMetaProductTrafficDetailByPrimaryKey"
+		resultMap="BaseResultMapTraffic" parameterClass="java.lang.Long">
+		select A.*,b.REAL_NAME as USER_NAME
+		from (select mp.*,
+				mpr.META_TRAFFIC_ID,
+				mpr.DIRECTION,
+				mpr.DAYS,
+				mpr.GO_FLIGHT,
+				mpr.BACK_FLIGHT,
+				mpr.LINE_INFO_ID
+			from META_PRODUCT mp, META_PRODUCT_TRAFFIC mpr
+		where mp.META_PRODUCT_ID = mpr.META_PRODUCT_ID
+			and mp.META_PRODUCT_ID = #metaProductId#) A
+		LEFT JOIN lvmama_pet.PERM_USER B ON A.MANAGER_ID = B.USER_ID
+	</select>
+	<select id="selectMetaProductOtherDetailByPrimaryKey"
+		resultMap="BaseResultMapOther" parameterClass="java.lang.Long">
+		 select A.*, B.REAL_NAME as USER_NAME
+	     from (select META_PRODUCT.*,
+	                  META_PRODUCT_OTHER.META_OTHER_ID,
+	                  META_PRODUCT_OTHER.INSURANCE_DAY
+	             from META_PRODUCT, META_PRODUCT_OTHER
+	            where META_PRODUCT.META_PRODUCT_ID = META_PRODUCT_OTHER.META_PRODUCT_ID
+	              and META_PRODUCT.META_PRODUCT_ID = #metaProductId#) A
+	     LEFT JOIN lvmama_pet.PERM_USER B ON A.MANAGER_ID = B.USER_ID
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.meta.MetaProduct">
+		delete from META_PRODUCT where META_PRODUCT_ID = #metaProductId#
+	</delete>
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.bee.po.meta.MetaProduct">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="metaProductId">
+			select META_PRODUCT_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into META_PRODUCT (META_PRODUCT_ID,
+		BIZ_CODE,PRODUCT_NAME,
+		PRODUCT_TYPE,SUPPLIER_ID,PAY_TO_LVMAMA,PAY_TO_SUPPLIER,
+		TERMINAL_CONTENT,VALID_DAYS,
+		SUB_PRODUCT_TYPE,CREATE_TIME,VALID,ORG_ID,CREATE_USER,MANAGER_ID,IS_RESOURCE_SENDFAX,CONTROL_TYPE,CURRENCY,CONTRACT_ID,WORK_GROUP_ID,IS_APERIODIC,SUPPLIER_CHANNEL,FILIALE_NAME)
+		values (#metaProductId#, #bizCode#, #productName#,
+		#productType#,#supplierId#,#payToLvmama#,#payToSupplier#,
+		#terminalContent#,#validDays#,
+		#subProductType#,sysdate,'N',#orgId#,#createUserId#,#managerId#,#isResourceSendFax#,#controlType#,
+		<isNotNull property="currencyType">
+			#currencyType#
+		</isNotNull>
+		<isNull property="currencyType">
+			'CNY'
+		</isNull>
+		,#contractId#,#workGroupId#,#isAperiodic#,#supplierChannel#,#filialeName#
+		)
+	</insert>
+	<update id="updateByPrimaryKey"
+		parameterClass="com.lvmama.comm.bee.po.meta.MetaProduct">
+		update META_PRODUCT set BIZ_CODE = #bizCode#, PRODUCT_NAME =
+		#productName#, PRODUCT_TYPE =
+		#productType#, SUPPLIER_ID = #supplierId#, PAY_TO_LVMAMA =
+		#payToLvmama#, PAY_TO_SUPPLIER = #payToSupplier#,
+		TERMINAL_CONTENT = #terminalContent#,
+		VALID_DAYS=#validDays#,
+		SUB_PRODUCT_TYPE=#subProductType#,
+		MANAGER_ID=#managerId#,
+		CONTROL_TYPE = #controlType#,
+		FILIALE_NAME = #filialeName#,
+		IS_RESOURCE_SENDFAX=#isResourceSendFax#
+		<isNotNull property="currencyType">
+			,CURRENCY=#currencyType#
+		</isNotNull>
+		,CONTRACT_ID = #contractId#,WORK_GROUP_ID=#workGroupId#,SUPPLIER_CHANNEL=#supplierChannel#
+		where META_PRODUCT_ID = #metaProductId#
+	</update>
+
+	<!-- 修改状态 -->
+	<update id="markIsValid" parameterClass="java.util.Map">
+		update META_PRODUCT set VALID=#valid# where META_PRODUCT_ID =
+		#metaProductId#
+	</update>
+
+	<!-- 查询 -->
+	<select id="selectMetaProductByPk"
+		resultMap="BaseResultMapValid"
+		parameterClass="com.lvmama.comm.bee.po.meta.MetaProduct">
+		SELECT 
+			*
+		FROM 
+			META_PRODUCT
+		WHERE
+			META_PRODUCT_ID = #metaProductId#
+	</select>
+
+	<parameterMap class="map" id="swapParameters">
+		<parameter property="srcPrdId" javaType="java.lang.Long"
+			jdbcType="VARCHAR" mode="IN" />
+		<parameter property="copiedId" javaType="java.lang.Long"
+			jdbcType="VARCHAR" mode="OUT" />
+	</parameterMap>
+
+
+	<select id="checkResourceNeddConfirm" resultMap="BaseResultMap">
+		select * from PROD_PRODUCT_ITEM ppi,meta_product mp,prod_product
+		pp where ppi.product_id = pp.product_id and mp.meta_product_id =
+		ppi.meta_product_id and pp.product_id=#productId#
+	</select>
+
+	<select id="selectRowCount" resultClass="java.lang.Integer">
+		select count(1) from
+		META_PRODUCT,lvmama_pet.PERM_ORGANIZATION PERM_ORGANIZATION where
+		META_PRODUCT.ORG_ID=PERM_ORGANIZATION.ORG_ID
+		<isEmpty property="twoRole">
+			<isNotEmpty prepend="and" property="managerIds">
+				<iterate property="managerIds" conjunction="," close=")" open=" META_PRODUCT.MANAGER_ID in (">
+					#managerIds[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orgId">
+				META_PRODUCT.ORG_ID=#orgId#
+			</isNotEmpty>
+		</isEmpty>
+		<isNotEmpty property="twoRole">
+			and (
+				META_PRODUCT.ORG_ID=#orgId#
+				
+				<iterate property="managerIds" conjunction="," close=")" open="or META_PRODUCT.MANAGER_ID in (">
+					#managerIds[]#
+				</iterate>
+			)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="managerId">
+			META_PRODUCT.MANAGER_ID = #managerId#
+		</isNotEmpty>
+		<include refid="condition" />
+		<isNotEmpty prepend="and" property="orgId">
+			META_PRODUCT.ORG_ID=#orgId#
+		</isNotEmpty>
+	</select>
+	
+	<update id="updateManager" parameterClass="java.util.HashMap">
+		update META_PRODUCT 
+		set MANAGER_ID=#managerId#, ORG_ID=#orgId#
+		where 
+		<iterate property="metaProductIds" conjunction="," close=")" open=" META_PRODUCT_ID in (">
+				#metaProductIds[]#
+		</iterate>
+	</update>
+	<!-- 批量修改采购产品的组织ID -->
+	<update id="updateOrgIds" parameterClass="java.util.Map">
+		update META_PRODUCT set ORG_ID = #orgId# where
+		<iterate property="metaProductIds" conjunction="," close=")"
+			open=" META_PRODUCT_ID in (">
+			#metaProductIds[]#
+		</iterate>
+	</update>
+
+	<sql id="relateMetaProductSql">
+		select mp.*, mpb.branch_name as BRANCH_NAME, pu.real_name as MANAGER_NAME
+		  from meta_product mp, meta_product_branch mpb,lvmama_pet.PERM_USER pu
+		 where mp.meta_product_id = mpb.meta_product_id and mp.manager_id=pu.USER_ID
+		and mp.meta_product_id in (select distinct(meta_product_id) from meta_settlement where target_id=#targetId#)
+	</sql>
+	<select id="getMetaProductListByTargetId" resultMap="RelateResultMap" parameterClass="java.util.HashMap">
+		SELECT * FROM 
+		(SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+			<include refid="relateMetaProductSql"/>
+		) T WHERE ROWNUM &lt;= #_endRow#
+		)
+		WHERE ROWNUM1 &gt;=#_startRow#
+	</select>
+	
+	<select id="getMetaProductListByTargetIdCount" resultClass="java.lang.Integer"
+		parameterClass="java.util.HashMap">
+		select count(*) from (<include refid="relateMetaProductSql"/>)
+	</select>
+	
+	
+	
+	<!-- 
+	EBK USER BINDING TO PERFORM TARGET BY ZHANGKEXING 
+	-->
+	<sql id="relateMetaProductByPerformTarget">
+		select mp.*, mpb.branch_name as BRANCH_NAME, pu.real_name as MANAGER_NAME
+		  from meta_product mp, meta_product_branch mpb,lvmama_pet.PERM_USER pu
+		 where  (mp.product_type='TICKET' OR mp.sub_product_type='FREENESS') and mp.meta_product_id = mpb.meta_product_id and mp.manager_id=pu.USER_ID
+		and mp.meta_product_id in (select distinct(meta_product_id) from meta_perform where target_id=#targetId#)
+	</sql>
+	<select id="getMetaProductListByPerformTargetId" resultMap="RelateResultMap" parameterClass="java.util.HashMap">
+		SELECT * FROM 
+		(SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+			<include refid="relateMetaProductByPerformTarget"/>
+		) T WHERE ROWNUM &lt;= #_endRow#
+		)
+		WHERE ROWNUM1 &gt;=#_startRow#
+	</select>
+	
+	<select id="getMetaProductListByPerformTargetIdCount" resultClass="java.lang.Integer"
+		parameterClass="java.util.HashMap">
+		select count(*) from (<include refid="relateMetaProductByPerformTarget"/>)
+	</select>
+	
+	<select id="getEbkUserMetaProductsByParam" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+		select * from 
+			meta_product product, 
+			ebk_user_target usertarget, 
+			meta_perform perform
+		where 
+			(product.product_type='TICKET' OR product.sub_product_type='FREENESS') and 
+			perform.target_id = usertarget.sup_perform_target_id and 
+			perform.meta_product_id = product.meta_product_id and 
+			usertarget.user_id=#userId#
+	</select>
+	
+	<select id="getEbkMetaProductByBranchIds" parameterClass="list" resultMap="EbkMetaProductMap">
+    	select distinct m.meta_product_id,m.product_name,m.PRODUCT_TYPE
+    	 from meta_product_branch b,meta_product m
+    	 where b.meta_product_id = m.meta_product_id
+    	 and b.meta_branch_id in (
+    	 	<iterate conjunction=" , ">
+    	 		#value[]#
+    	 	</iterate>
+    	 )
+    </select>
+    <select id="getEbkMetaProductByProductId" parameterClass="long" resultMap="EbkMetaProductMap">
+    	SELECT META_PRODUCT.PRODUCT_NAME,META_PRODUCT.META_PRODUCT_ID, META_PRODUCT.PRODUCT_TYPE FROM META_PRODUCT WHERE META_PRODUCT.META_PRODUCT_ID=#value#
+    </select>
+	<select id="selectMetaProductCountByCertificateTargetId" parameterClass="java.lang.Long" resultClass="java.lang.Long">
+     select count(distinct(mp.meta_product_id)) from META_B_CERTIFICATE mbc, meta_product mp
+ 	where mbc.meta_product_id = mp.meta_product_id and mbc.target_id=#targetId# and mp.is_aperiodic='true'
+  </select>
+  <select id="selectMetaProductCountBySettlementTargetId" parameterClass="java.lang.Long" resultClass="java.lang.Long">
+     select count(distinct(mp.meta_product_id)) from META_SETTLEMENT ms, meta_product mp
+ 	where ms.meta_product_id = mp.meta_product_id and ms.target_id=#targetId# and mp.is_aperiodic='true'
+  </select>
+  <select id="selectMetaProductCountByPerformTargetId" parameterClass="java.lang.Long" resultClass="java.lang.Long">
+      select count(distinct(mp.meta_product_id)) from META_PERFORM ms, meta_product mp
+ 	where ms.meta_product_id = mp.meta_product_id and ms.target_id=#targetId# and mp.is_aperiodic='true'
+  </select>
+  <select id="getMetaProductByBranchId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+	    select mp.* from meta_product mp,meta_product_branch mpb where mp.meta_product_id=mpb.meta_product_id
+		and mpb.meta_branch_id=#metaBranchId#
+  </select>
+  <select id="getMetaProductsByProductId"
+		parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		SELECT distinct MP.* FROM PROD_PRODUCT_BRANCH_ITEM
+		PPI,PROD_PRODUCT_BRANCH PPB,META_PRODUCT_BRANCH MPB, META_PRODUCT MP
+		WHERE
+		MPB.META_PRODUCT_ID=MP.META_PRODUCT_ID AND MPB.META_BRANCH_ID=PPI.META_BRANCH_ID AND
+		PPB.PROD_BRANCH_ID=PPI.PROD_BRANCH_ID AND
+		PPB.PRODUCT_ID=#productId# AND PPB.VALID='Y'
+		AND PPB.ON_LINE='true'
+	</select>
+	
+	<select id="getMetaProductsByProdBranchId" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+	 SELECT distinct MP.*
+	  FROM PROD_PRODUCT_BRANCH_ITEM PPI,
+	       META_PRODUCT_BRANCH      MPB,
+	       META_PRODUCT             MP
+	 WHERE MPB.META_PRODUCT_ID = MP.META_PRODUCT_ID
+	   AND MPB.META_BRANCH_ID = PPI.META_BRANCH_ID
+	   AND ppi.prod_branch_id =#prodBranchId#
+	</select>
+	
+	<select id="getTrainMetaProduct" parameterClass="java.lang.String" resultMap="BaseResultMapTraffic">
+		select * from
+		(select A.*,b.REAL_NAME as USER_NAME
+		from (select mp.*,
+				mpr.META_TRAFFIC_ID,
+				mpr.DIRECTION,
+				mpr.DAYS,
+				mpr.GO_FLIGHT,
+				mpr.BACK_FLIGHT,
+				mpr.LINE_INFO_ID
+			from META_PRODUCT mp, META_PRODUCT_TRAFFIC mpr
+		where mp.META_PRODUCT_ID = mpr.META_PRODUCT_ID
+			and mp.BIZ_CODE = #fullName#) A
+		LEFT JOIN lvmama_pet.PERM_USER B ON A.MANAGER_ID = B.USER_ID)
+    where rownum = 1
+	</select>
+	
+	<update id="signIsSendEmail" parameterClass="java.util.HashMap">
+		update meta_time_price mtp set
+		mtp.STOCK_FLAG=#stokflag# where mtp.TIME_PRICE_ID=#priceId#
+	</update>
+</sqlMap>

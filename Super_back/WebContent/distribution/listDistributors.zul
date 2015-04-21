@@ -1,0 +1,43 @@
+<?page title="分销商管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./listDistributorWin"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset"?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="label" extends="label" class="com.lvmama.back.utils.perm.PermLabel" ?>
+<zk>
+<window id="listDistributorWin" title="分销商管理" border="normal" closable="false" mode="embedded" apply="com.lvmama.back.web.distribution.ListDistributorAction">
+	<button label="新增" onClick='saction.showWindow("/distribution/editDistributor.zul",null)' />
+	<listbox id="box" fixedLayout="true" model="@{saction.distributorList,load-after='doSearch.onClick'}">
+		<listhead>
+			<listheader label="分销商ID" width="5%"/>
+			<listheader label="分销商编号" width="10%"/>
+			<listheader label="分销商名称" width="10%"/>
+			<listheader label="分销商密钥" width="20%"/>
+			<listheader label="分销商渠道" width="20%"/>
+			<listheader label="备注" width="10%" />
+			<listheader label="是否允许注册用户" width="10%"/>
+			<listheader label="是否推送更新" width="10%"/>
+			<listheader label="操作" width="10%" />
+		</listhead>
+		<listitem self="@{each='distributor'}" value="@{distributor}" height="25px">
+			<listcell label="@{distributor.distributorInfoId}" />
+			<listcell label="@{distributor.distributorCode}" />
+			<listcell label="@{distributor.distributorName}" />
+			<listcell label="@{distributor.distributorKey}" />
+			<listcell label="@{distributor.channelCode}" />
+			<listcell label="@{distributor.remark}" />
+			<listcell label="@{distributor.isRegisterUser}" />
+			<listcell label="@{distributor.isPushUpdate}" />
+			<listcell>
+				<a label="修改" style="color:blue" onClick='saction.showWindow("/distribution/editDistributor.zul", self.getAttributes());'>
+					<custom-attributes distributor="@{distributor}" />
+				</a>
+				<label value="|" />
+				<a label="IP管理" style="color:blue" onClick='saction.showWindow("/distribution/listDistributorIp.zul", self.getAttributes());'>
+					<custom-attributes distributorId="@{distributor.distributorInfoId}" />
+				</a>
+			</listcell>
+		</listitem>
+	</listbox>
+	<button id="doSearch" visible="false" onClick="saction.doSearch()" />
+</window>
+</zk>

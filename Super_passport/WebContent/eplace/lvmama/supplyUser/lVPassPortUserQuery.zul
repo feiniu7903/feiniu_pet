@@ -1,0 +1,90 @@
+<?page title="list PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_sale"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_sale" mode="embedded"
+		apply="com.lvmama.eplace.web.lvmama.supplyUser.PassPortUserQueryAction">
+		<grid>
+			<columns>
+				<column width="150px"></column>
+				<column width="200px"></column>
+				<column width="150px"></column>
+				<column width="200px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>登陆用户：</hbox>
+					<hbox>
+						<textbox id="userId"
+							value="@{saction.serachMap.userId}">
+						</textbox>
+					</hbox>
+					<hbox>真实姓名：</hbox>
+					<hbox>
+						<textbox id="user_name"
+							value="@{saction.serachMap.name}">
+						</textbox>
+					</hbox>
+					<hbox>
+						<button label="查询" id="search" width="100px"
+							onClick="saction.search()" />
+						<button label="新增" id="add" width="100px"
+							onClick='saction.showWindow("/eplace/lvmama/supplyUser/lVPassPortUserAdd.zul",self.getAttributes());'>
+							<custom-attributes
+								userType="@{saction.userType}" />
+						</button>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<space></space>
+		<listbox
+			model="@{saction.passPortUserList,load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader label="LV登陆名" width="12%" />
+				<listheader label="真实姓名" width="18%" />
+				<listheader label="用户类型" />
+				<listheader label="状态" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem height="25px" self="@{each='passPortUser'}">
+				<listcell label="@{passPortUser.userId}" />
+				<listcell label="@{passPortUser.name}" />
+				<listcell label="@{passPortUser.ZKUserType}" />
+				<listcell label="@{passPortUser.status}" />
+				<listcell>
+					<a style="color:blue" label="修改"
+						onClick='saction.showWindow("/eplace/lvmama/supplyUser/lVPassPortUserEdit.zul",self.getAttributes());'>
+						<custom-attributes
+							passPortUserId="@{passPortUser.passPortUserId}" />
+						<custom-attributes
+							userType="@{saction.userType}" />
+					</a>
+					<a style="color:blue" label="删除"
+						onClick='saction.delPassPortUser(self.getAttribute("passPortUserId"))'>
+						<custom-attributes
+							passPortUserId="@{passPortUser.passPortUserId}" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="20"
+								onPaging='saction.search()' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	</window>
+</zk>

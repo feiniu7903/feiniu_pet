@@ -1,0 +1,401 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>自驾游</title>
+<#include "../common/define.html">
+<script>
+$(function(){
+	$(document).scroll(function(e) {
+        if($(this).scrollTop()>189){//head高度+banner高度=189
+			$("#lv-fixdiv").addClass("lv-fixed");
+		}
+		if($(this).scrollTop() < 189){
+			$("#lv-fixdiv").removeClass("lv-fixed");
+		}
+    });	
+	
+	/*自驾游锚点*/
+	$("#lv-fixdiv ul.lv-biz-list li a").click(function(e){
+		//$(this).addClass("lv-narrow-current").siblings().removeClass("lv-narrow-current");
+		var aIndex = $(this).index(); 
+		var liIndex = $(this).parent().index();
+		var lvboxIndex = parseInt(liIndex)*4+aIndex;
+		var top = $(".lv-wrapper-container .lv-box").eq(lvboxIndex).offset().top;
+		$("html, body").animate({scrollTop:parseInt(top)-148}, 500);
+
+	});
+});
+
+</script>
+</head>
+
+<body>
+<!--<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="${request.contextPath}/index.htm"> <img src="${request.contextPath}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${request.contextPath}/img/operate_sep.png"></div>
+  <div class="lv-title">自驾游</div>
+</div>-->
+<div class="lv-banner lv-banner-specialsubject lv-media-width"> <img src="${request.contextPath}/img/specialsubject/banner-zijiayou-01.jpg"> </div>
+<!--<div class="lv-wrapper lv-media-width">-->
+<div id="lv-fixdiv">
+  <ul class="lv-biz-list">
+    <li><a href="javascript:void(0);"><span class="lv-biz-point">杭州</span></a><a href="javascript:void(0);"><span class="lv-biz-point">千岛湖</span></a><a href="javascript:void(0);"><span class="lv-biz-point">无锡</span></a><a href="javascript:void(0);"><span class="lv-biz-point">黄山</span></a></li>
+    <li><a href="javascript:void(0);"><span class="lv-biz-point">天目湖</span></a><a href="javascript:void(0);"><span class="lv-biz-point">宁波</span></a><a href="javascript:void(0);"><span class="lv-biz-point">常州</span></a><a href="javascript:void(0);"><span class="lv-biz-point">扬州</span></a></li>
+    <li><a href="javascript:void(0);"><span class="lv-biz-point">安吉</span></a><a href="javascript:void(0);"><span class="lv-biz-point">上海</span></a><a href="javascript:void(0);"><span class="lv-biz-point">绍兴</span></a><a href="javascript:void(0);"><span class="lv-biz-point">泰州</span></a></li>
+  </ul>
+</div>
+<!--</div>-->
+<div id="lv-fixed-after" class="lv-wrapper lv-media-width">
+  <div class="lv-wrapper-container clear">
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="type://GUIDE_100" class="lv-displayblock"><span class="lv-paddingleft-10 lv-fontsize-15 lv-fontweight-bold">杭州</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="type://ROUTE_77465">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-01.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游
+            <非诚勿扰拍摄地>
+            西溪湿地，观印象西湖秀，住西溪布鲁克酒店2人1晚
+            <div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_63755">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-02.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_77402">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-03.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="type://GUIDE_102" class="lv-displayblock"><span class="lv-paddingleft-10 lv-fontsize-15 lv-fontweight-bold">千岛湖</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="type://ROUTE_62444">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-04.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游
+            <非诚勿扰拍摄地>
+            西溪湿地，观印象西湖秀，住西溪布鲁克酒店2人1晚
+            <div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_28042">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-05.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_72622">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-06.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="type://GUIDE_83" class="lv-displayblock"><span class="lv-paddingleft-10 lv-fontsize-15 lv-fontweight-bold">无锡</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="type://ROUTE_72370">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-01.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游
+            <非诚勿扰拍摄地>
+            西溪湿地，观印象西湖秀，住西溪布鲁克酒店2人1晚
+            <div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_77093">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-02.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_68184">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-03.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="type://GUIDE_127" class="lv-displayblock"><span class="lv-paddingleft-10 lv-fontsize-15 lv-fontweight-bold">黄山</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="type://ROUTE_77051">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-01.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游
+            <非诚勿扰拍摄地>
+            西溪湿地，观印象西湖秀，住西溪布鲁克酒店2人1晚
+            <div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_76683">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-02.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_77495">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-03.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="type://GUIDE_3915" class="lv-displayblock"><span class="lv-paddingleft-10 lv-fontsize-15 lv-fontweight-bold">天目湖</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="type://ROUTE_34918">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-01.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游
+            <非诚勿扰拍摄地>
+            西溪湿地，观印象西湖秀，住西溪布鲁克酒店2人1晚
+            <div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_77264">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-02.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_38444">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-03.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="type://GUIDE_104" class="lv-displayblock"><span class="lv-paddingleft-10 lv-fontsize-15 lv-fontweight-bold">宁波</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="type://ROUTE_51386">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-01.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游
+            <非诚勿扰拍摄地>
+            西溪湿地，观印象西湖秀，住西溪布鲁克酒店2人1晚
+            <div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_72245">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-02.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_72245">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-03.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="jtype://GUIDE_86" class="lv-displayblock"><span class="lv-paddingleft-10 lv-fontsize-15 lv-fontweight-bold">常州</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="type://ROUTE_77415">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-01.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游
+            <非诚勿扰拍摄地>
+            西溪湿地，观印象西湖秀，住西溪布鲁克酒店2人1晚
+            <div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_70089">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-02.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_63050">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-03.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="type://GUIDE_92" class="lv-displayblock"><span class="lv-paddingleft-10 lv-fontsize-15 lv-fontweight-bold">扬州</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="type://ROUTE_39194">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-01.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游
+            <非诚勿扰拍摄地>
+            西溪湿地，观印象西湖秀，住西溪布鲁克酒店2人1晚
+            <div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_74619">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-02.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_77414">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-03.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="type://GUIDE_110" class="lv-displayblock"><span class="lv-paddingleft-10 lv-fontsize-15 lv-fontweight-bold">安吉</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="type://ROUTE_78482">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-01.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游
+            <非诚勿扰拍摄地>
+            西溪湿地，观印象西湖秀，住西溪布鲁克酒店2人1晚
+            <div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_77173">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-02.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_77246">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-03.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="type://GUIDE_79" class="lv-displayblock"><span class="lv-paddingleft-10 lv-fontsize-15 lv-fontweight-bold">上海</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="type://ROUTE_26807">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-01.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游
+            <非诚勿扰拍摄地>
+            西溪湿地，观印象西湖秀，住西溪布鲁克酒店2人1晚
+            <div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_76877">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-02.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_77081">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-03.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="type://GUIDE_111" class="lv-displayblock"><span class="lv-paddingleft-10 lv-fontsize-15 lv-fontweight-bold">绍兴</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="type://ROUTE_77276">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-01.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游
+            <非诚勿扰拍摄地>
+            西溪湿地，观印象西湖秀，住西溪布鲁克酒店2人1晚
+            <div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_78200">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-02.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_78232">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-03.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+    <div class="lv-box clear">
+      <div class="lv-paddingtop-10"><a href="type://GUIDE_94" class="lv-displayblock"><span class="lv-paddingleft-10 lv-fontsize-15 lv-fontweight-bold">泰州</span><span class="lv-pull-right lv-paddingright-10 lv-fontsize-12">查看攻略>></span></a></div>
+      <div> <a href="type://ROUTE_72279">
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-left:10px;padding-top:10px;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-01.jpg"> </div>
+        <div class="lv-spesub-spot01 lv-pull-left" style="padding-top:10px;">
+          <div class="lv-spesubspotdesc-bg05">游
+            <非诚勿扰拍摄地>
+            西溪湿地，观印象西湖秀，住西溪布鲁克酒店2人1晚
+            <div class="lv-color-02">&yen; 858</div>
+          </div>
+        </div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_60114">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-02.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02 lv-padding-y10">&yen; 876</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游美丽村庄山沟沟双溪漂流、住陆羽山庄</div>
+        </a> </div>
+      <div class="lv-spesub-spot01 lv-pull-left lv-paddingtop-10 lv-paddingleft-10"> <a href="type://ROUTE_71933">
+        <div style="position:relative;"><img src="${request.contextPath}/img/specialsubject/spot-zijiayou-03.jpg">
+          <div class="lv-spesubspot-desc01 lv-spesubspotdesc-bg06">
+            <p><span class="lv-color-02">&yen; 870</span></p>
+          </div>
+        </div>
+        <div class="lv-fontsize-12 lv-paddingbottom-10">游大明山、青山湖，住五星酒店2人1晚</div>
+        </a> </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

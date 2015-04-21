@@ -1,0 +1,35 @@
+<html>
+<head>
+<title></title>
+<style type="text/css">
+	table tr {
+		height:30px;
+	}
+	table tr span {
+		display:inline-block;
+	}
+	.input_style {
+		border: solid 1px #999;
+		height: 10px;
+		width: 60px;
+	}
+	.date_width {
+		width:120px;
+	}
+	.span_label {
+		width:90px;
+	}
+</style>
+</head>
+<body>
+<div style="text-align: center;">
+	<br/>
+	<p style="font-size:14px;font-family: '微软雅黑';">如果按日使用日库存,可以批量添加预控信息</p>
+	<br/>
+	<br/>
+	<input style="width: 180px;height: 25px;" type="button" value="使用总库存,不批量添加" onclick="showConfirmControlDialog(false)">
+	<br/><br/>
+	<input style="width: 180px;height: 25px;margin-left: -5px;" type="button" value="按日预控,批量添加 " onclick="showConfirmControlDialog(true)">
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>驴妈妈管理后台-产品售卖日期临近过期时系统邮件提醒</title>
+<style>
+	*{margin:0;padding:0;}
+	.wrapper{width:620px;margin:0 auto;padding:20px 40px;font:12px '宋体';}
+	.content{background:#fcf0f6;border:1px solid #eee;padding:20px 30px;font-size:14px; letter-spacing:1px;margin:10px 0;color:#333;}
+	.content h1{font-size:16px;text-align:center;border-bottom:1px solid #ccc;padding-bottom:19px;}
+	.content a{font-size:16px;}
+	.content strong,.content a{color:#05e;}
+	.content dl{border-top:1px solid #f8f4f4;line-height:20px;}
+	.content dl dt{margin:20px 0;}
+	.content dl dd{margin-bottom:20px;margin-left:24px;}
+	.footer{text-align:center;color:#666;}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+	<div class="logo">
+		<a title="驴妈妈旅游网" href="http://www.lvmama.com"><img alt="驴妈妈旅游网" src="http://pic.lvmama.com/img/lvmamalogo.gif"></a>
+        <img alt="订购热线 400-666-6699" src="http://pic.lvmama.com/img/20800102/phone.gif">
+	</div>
+    <div class="content">
+    <table>
+    	<tr><td>产品名称（含URL）</td><td>ID号</td><td>类别ID</td><td>类别名称</td><td>最后销售日期</td></tr>
+    	${productList}
+    </table>
+    </div>
+    <div class="footer">
+    	<p>Copyright &copy; 2011 www.lvmama.com. 上海景域文化传播有限公司版权所有　沪ICP备07509677</p>
+        <!-- <p>驴友交流QQ群：96095886　意见/建议QQ群：76888566</p> -->
+    </div>
+</div>
+</body>
+</html>

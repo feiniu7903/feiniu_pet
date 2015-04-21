@@ -1,0 +1,37 @@
+<?page title="prod_product" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?component name="new_route" macroURI="/products/new_route.zul" inline="true"?>
+	<?component name="new_ticket" macroURI="/products/new_ticket.zul" inline="true"?>
+	<?component name="new_hotel" macroURI="/products/new_hotel.zul" inline="true"?>
+	<?component name="new_other" macroURI="/products/new_other.zul" inline="true"?>
+	<window id="win_editprod" title="新增销售产品" border="normal" closable="true">
+		<tabbox width="100%" tabscroll="true">
+			<tabs>
+				<tab id="tab_new_ticket" label="门票" />
+				<tab id="tab_new_route" label="线路" />
+				<tab id="tab_new_hotel" label="酒店" />
+				<tab id="tab_new_other" label="其它" />
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<custom-attributes productType="TICKET"/>
+					<new_ticket />
+				</tabpanel>
+				<tabpanel>
+					<custom-attributes productType="ROUTE"/>
+					<new_route />
+				</tabpanel>
+				<!-- <tabpanel fulfill="tab_new_other.onSelect"> -->
+				<tabpanel>
+					<custom-attributes productType="HOTEL"/>
+					<new_hotel />
+				</tabpanel>
+				<tabpanel>
+					<custom-attributes productType="OTHER"/>
+					<new_other />
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</window>
+</zk>

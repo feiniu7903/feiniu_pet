@@ -1,0 +1,28 @@
+<?page title="通关点" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./passportList"?>
+<zk>
+	<window id="passportList" title="通关点" border="normal"
+		apply="com.lvmama.back.web.passport.ListPassportAction">
+		<listbox
+			model="@{saction.passPortList}">
+			<listhead>
+				<listheader label="订单编号" />
+				<listheader label="履行对象名称" />
+				<listheader label="使用状态" />
+				<listheader label="刷卡时间" />
+				<listheader label="游玩时间" />
+				<listheader label="有效期" />
+				<listheader label="打印信息" />
+			</listhead>
+			<listitem height="25px" self="@{each='passport'}">
+				<listcell label="@{passport.orderId}" />
+				<listcell label="@{passport.name}" />
+				<listcell label="@{passport.status}" />
+				<listcell label="@{passport.usedTime}" />
+				<listcell label="@{passport.validTime}" />
+				<listcell label="@{passport.invalidTime}" />
+				<listcell label="@{passport.terminalContent}" />
+			</listitem>
+		</listbox>
+	</window>
+</zk>

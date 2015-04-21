@@ -1,0 +1,21 @@
+<?page title="投保管理" contentType="text/html;charset=UTF-8"?>
+<?component name="listunapprovedpolicy" macroURI="/insurance/listunapprovedpolicy.zul" faxType="CURRENT"?>
+<?component name="listapprovedpolicy" macroURI="/insurance/listapprovedpolicy.zul" faxType="ALL"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_listpolicy" mode="embedded">
+	<tabbox width="99%" tabscroll="false">
+		<tabs>
+			<tab id="tab_listunapprovedpolicy" label="投保审核"/>
+			<tab id="tab_listapprovedpolicy" label="保单管理"/>
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+				<listunapprovedpolicy/>
+			</tabpanel>
+			<tabpanel fulfill="tab_listapprovedpolicy.onSelect">
+				<listapprovedpolicy/>
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+</window>
+</zk>

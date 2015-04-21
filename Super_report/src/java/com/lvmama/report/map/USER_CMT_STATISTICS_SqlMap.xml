@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_CMT_STATISTICS">
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.UserCmtStatistics">
+		<result column="NAME" property="userName" />
+		<result column="NUM" property="cmtNum" />
+	</resultMap>
+
+	<sql id="queryCmtByParamSql">
+		select NUM NUM,user_name NAME
+		from
+		(select count(p.place_id) NUM,p.user_name from
+		lvmama_pc.place,
+		lvmama_pc.CMT_COMMENT p where place.id= p.place_id
+		<isNotEmpty prepend="and" property="startDate">
+			p.CREATED_DATE<![CDATA[>=]]>#startDate#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="endDate">
+			p.CREATED_DATE<![CDATA[<]]>#endDate#+1
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="isAudit">
+			p.IS_AUDIT = #isAudit#
+		</isNotEmpty>
+		<isEqual prepend="and" property="recomend" compareValue="best">
+			p.IS_BEST = 'Y'
+			</isEqual>
+		<isEqual prepend="and" property="recomend" compareValue="recomend">
+			p.IS_RECOMEND='Y'
+			</isEqual>
+		<isNotEmpty prepend="and" property="cmtType">
+			p.CMT_TYPE = #cmtType#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="stage">
+			place.STAGE = #stage#
+		</isNotEmpty>
+		group by p.user_name ) 
+		<dynamic prepend=" WHERE ">
+			<isEqual prepend="and" property="region" compareValue="greater">NUM
+				&gt; #queryNum#</isEqual>
+			<isEqual prepend="and" property="region" compareValue="equal">NUM =
+				#queryNum#</isEqual>
+			<isEqual prepend="and" property="region" compareValue="less">NUM
+				&lt; #queryNum#</isEqual>
+		</dynamic>
+		<dynamic prepend=" order by ">
+			<isNotEmpty prepend="" property="sortTypeName">
+				$sortTypeName$
+				$sortAscOrDesc$
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+
+	<select id="queryUserCmtByParam" parameterClass="java.util.Map"
+		resultMap="BaseResultMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT
+		rownum r,
+		info.*
+		from (
+		<include refid="queryCmtByParamSql" />
+		) info
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow">rownum &lt;= #_endRow#
+			</isNotEmpty>
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+			</isNotEmpty>
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;=
+				#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="countUserCmtByParam" parameterClass="java.util.Map"
+		resultClass="java.lang.Long">
+		select count(*) from (
+		<include refid="queryCmtByParamSql" />
+		)
+	</select>
+</sqlMap>

@@ -1,0 +1,26 @@
+<ul id="payment_pattern_id">
+	<li onclick="chose_payment_pattern('span_alipayWap','pay-alipayWap');">
+	   	<span class="ic_aipay"><i></i></span><span class="reward_ti2" id="ALIPAY_ID">支付宝支付</span>
+	       <span class="ic_radio_right" id="span_alipayWap"><i></i></span>
+	       <input id="pay-alipayWap" type="radio" checked value="alipaywap" name="paypath" 
+	       data-payurl="${order.alipayWapUrl!}?orderId=${order.orderId!}"  style="display:none">
+	   </li>
+	<li onclick="chose_payment_pattern('span_creditCard','pay-creditCard');">
+	   	<span class="ic_credit"><i></i></span><span class="reward_ti2">信用卡支付</span>
+	       <span class="ic_radio2_right" id="span_creditCard"><i></i></span>
+	       <input id="pay-creditCard" type="radio" value="CREDITCARD" name="paypath" style="display:none" >
+	   </li>
+	<li onclick="chose_payment_pattern('span_unionPay','pay-unionPay');">
+	   	<span class="ic_deposit"><i></i></span><span class="reward_ti2">储蓄卡支付</span>
+	       <span class="ic_radio2_right" id="span_unionPay"><i></i></span>
+	       <input id="pay-unionPay" type="radio" value="DEBITCARD" name="paypath" style="display:none">
+	</li>
+	<#if tenpayWapUrl??>
+	   <li onclick="chose_payment_pattern('span_tenpayWap','pay-tenpayWap');">
+	   	<span class="ic_tenpay"><i></i></span><span class="reward_ti2" id="TENPAY_ID">财付通支付</span>
+	       <span class="ic_radio2_right" id="span_tenpayWap"><i></i></span>
+	       <input id="pay-tenpayWap" type="radio" value="TENPAYWAP" name="paypath" 
+	       data-payurl="${tenpayWapUrl!}?orderId=${order.orderId!}"  style="display:none">
+	   </li>
+	</#if>
+ </ul>

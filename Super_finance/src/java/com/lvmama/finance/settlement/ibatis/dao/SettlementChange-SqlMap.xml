@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SETTLEMENTCHANGE" >
+  <resultMap id="abatorgenerated_OrdSettlementChangeResult" class="com.lvmama.finance.settlement.ibatis.po.OrdSettlementChange" >
+    <result column="SETTLEMENT_CHANGE_ID" property="settlementChangeId" jdbcType="DECIMAL" />
+    <result column="ORDER_ITEM_META_ID" property="orderItemMetaId" jdbcType="DECIMAL" />
+    <result column="SUB_SETTLEMENT_ITEM_ID" property="subSettlementItemId" jdbcType="DECIMAL" />
+    <result column="CHANGETYPE" property="changetype" jdbcType="VARCHAR" />
+    <result column="AMOUNT_BEFORE_CHANGE" property="amountBeforeChange" jdbcType="DECIMAL" />
+    <result column="AMOUNT_AFTER_CHANGE" property="amountAfterChange" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATOR" property="creator" jdbcType="DECIMAL" />
+    <result column="CREATETIME" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <typeAlias alias="OrdSettlementChange" type="com.lvmama.finance.settlement.ibatis.po.OrdSettlementChange"/>
+  <typeAlias alias="SettlementDeduction" type="com.lvmama.finance.settlement.ibatis.vo.SettlementDeduction"/>
+  
+  
+  <insert id="insert" parameterClass="OrdSettlementChange">
+  	INSERT INTO 
+  		ORD_SETTLEMENT_CHANGE
+	(
+  		SETTLEMENT_CHANGE_ID,
+  		ORDER_ITEM_META_ID,
+  		SETTLEMENT_ID,
+  		SUB_SETTLEMENT_ID,
+  		SUB_SETTLEMENT_ITEM_ID,
+  		CHANGETYPE,
+  		AMOUNT_BEFORE_CHANGE,
+  		AMOUNT_AFTER_CHANGE,
+  		REMARK,
+  		CREATOR,
+  		CREATETIME
+  	)VALUES(
+  		ORD_SETTLEMENT_CHANGE_ID_SEQ.NEXTVAL,
+  		#orderItemMetaId#,
+  		#settlementId#,
+  		#subSettlementId#,
+  		#subSettlementItemId#,
+  		#changetype#,
+  		#amountBeforeChange#*100,
+  		#amountAfterChange#*100,
+  		#remark#,
+  		#creator#,
+  		SYSDATE
+  	)
+  </insert>
+  <!-- 插入结算单修改记录 -->
+  <insert id="insertOrdSettlementChange" parameterClass="OrdSettlementChange">
+  	<selectKey keyProperty="settlementChangeId" resultClass="long">
+  		SELECT 
+  			ORD_SETTLEMENT_CHANGE_ID_SEQ.NEXTVAL AS settlementChangeId
+  		FROM
+  			DUAL
+  	</selectKey>
+  	INSERT INTO 
+  		ORD_SETTLEMENT_CHANGE
+	(
+  		SETTLEMENT_CHANGE_ID,
+  		ORDER_ITEM_META_ID,
+  		SETTLEMENT_ID,
+  		SUB_SETTLEMENT_ID,
+  		SUB_SETTLEMENT_ITEM_ID,
+  		CHANGETYPE,
+  		AMOUNT_BEFORE_CHANGE,
+  		AMOUNT_AFTER_CHANGE,
+  		REMARK,
+  		CREATOR,
+  		CREATETIME
+  	)VALUES(
+  		#settlementChangeId#,
+  		#orderItemMetaId#,
+  		#settlementId#,
+  		#subSettlementId#,
+  		#subSettlementItemId#,
+  		#changetype#,
+  		#amountBeforeChange#,
+  		#amountAfterChange#,
+  		#remark#,
+  		#creator#,
+  		SYSDATE
+  	)
+  </insert>
+  
+  <insert id="insertBatch" parameterClass="map">
+  	INSERT INTO 
+  		ORD_SETTLEMENT_CHANGE
+	(
+  		SETTLEMENT_CHANGE_ID,
+  		ORDER_ITEM_META_ID,
+  		SETTLEMENT_ID,
+  		SUB_SETTLEMENT_ID,
+  		SUB_SETTLEMENT_ITEM_ID,
+  		CHANGETYPE,
+  		AMOUNT_BEFORE_CHANGE,
+  		AMOUNT_AFTER_CHANGE,
+  		REMARK,
+  		CREATOR,
+  		CREATETIME
+  	)
+  	SELECT 
+  		ORD_SETTLEMENT_CHANGE_ID_SEQ.NEXTVAL,
+  		A.ORDER_ITEM_META_ID,
+  		C.SETTLEMENT_ID,
+  		A.SUB_SETTLEMENT_ID,
+  		A.SUB_SETTLEMENT_ITEM_ID,
+  		'MODIFY',
+  		A.REAL_ITEM_PRICE,
+  		#amount#*100,
+  		#remark#,
+  		#creator#,
+  		SYSDATE 
+	FROM 
+		ORD_SUB_SETTLEMENT_ITEM A,
+		ORD_ORDER_ITEM_META B,
+		ORD_SUB_SETTLEMENT C
+	WHERE 
+		A.ORDER_ITEM_META_ID = B.ORDER_ITEM_META_ID  
+	AND 
+		A.SUB_SETTLEMENT_ID = C.SUB_SETTLEMENT_ID  
+	AND 
+		A.SUB_SETTLEMENT_ID = #subSettlementId# 
+	AND 
+		B.META_PRODUCT_ID = #metaProductId#
+
+  </insert>
+  
+  <select id="searchBySettlement" parameterClass="long" resultClass="OrdSettlementChange">
+	SELECT 
+		D.USER_NAME AS CREATORNAME,
+		C.ORDER_ID AS ORDERID,
+		A.CHANGETYPE,
+		B.META_PRODUCT_ID AS METAPRODUCTID,
+		A.AMOUNT_AFTER_CHANGE AS AMOUNTAFTERCHANGE,
+		A.AMOUNT_BEFORE_CHANGE AS AMOUNTBEFORECHANGE,
+		A.CREATETIME,
+		A.REMARK
+	FROM 
+		ORD_SETTLEMENT_CHANGE A,
+		ORD_ORDER_ITEM_META C,
+		lvmama_pet.PERM_USER D
+	WHERE 
+		A.ORDER_ITEM_META_ID = C.ORDER_ITEM_META_ID 
+	AND 
+		A.CREATOR = D.USER_ID 
+  	AND
+	    A.SETTLEMENT_ID = #id#
+  </select>
+  <select id="searchBySubSettlement" parameterClass="long" resultClass="OrdSettlementChange">
+	SELECT 
+		D.USER_NAME AS CREATORNAME,
+		C.ORDER_ID AS ORDERID,
+		A.CHANGETYPE,
+		C.META_PRODUCT_ID AS METAPRODUCTID,
+		A.AMOUNT_AFTER_CHANGE/100 AS AMOUNTAFTERCHANGE,
+		A.AMOUNT_BEFORE_CHANGE/100 AS AMOUNTBEFORECHANGE,
+		A.CREATETIME
+	FROM 
+		ORD_SETTLEMENT_CHANGE A,
+		ORD_ORDER_ITEM_META C,
+		lvmama_pet.PERM_USER D
+	WHERE 
+		A.ORDER_ITEM_META_ID = C.ORDER_ITEM_META_ID 
+	AND 
+		A.CREATOR = D.USER_ID 
+	AND  
+		A.SUB_SETTLEMENT_ID=#id#
+  </select>
+  <!-- 删除结算子单时生成change记录begin -->
+  <insert id="insertBatchDelBySubSettlementId" parameterClass="map">
+	INSERT INTO 
+  		ORD_SETTLEMENT_CHANGE
+	(
+  		SETTLEMENT_CHANGE_ID,
+  		ORDER_ITEM_META_ID,
+  		SETTLEMENT_ID,
+  		SUB_SETTLEMENT_ID,
+  		SUB_SETTLEMENT_ITEM_ID,
+  		CHANGETYPE,
+  		AMOUNT_BEFORE_CHANGE,
+  		AMOUNT_AFTER_CHANGE,
+  		REMARK,
+  		CREATOR,
+  		CREATETIME
+  	)SELECT 
+  		ORD_SETTLEMENT_CHANGE_ID_SEQ.NEXTVAL,
+  		A.ORDER_ITEM_META_ID,
+  		C.SETTLEMENT_ID,
+  		A.SUB_SETTLEMENT_ID,
+  		A.SUB_SETTLEMENT_ITEM_ID,
+  		'DEL',
+  		A.REAL_ITEM_PRICE,
+  		0,
+  		'',
+  		#creator#,
+  		SYSDATE
+ 	FROM 
+ 		ORD_SUB_SETTLEMENT_ITEM A ,
+ 		ORD_SUB_SETTLEMENT C
+	WHERE 
+		A.SUB_SETTLEMENT_ID = C.SUB_SETTLEMENT_ID
+	AND
+		C.SUB_SETTLEMENT_ID = #subSettlementId#
+	AND
+		A.PAY_AMOUNT &gt;= 0
+  </insert>
+    <!-- 删除结算子单时生成change记录end -->
+   <!-- 批量删除结算子单项时生成change记录begin -->
+  <insert id="insertBatchDel" parameterClass="map">
+	INSERT INTO 
+  		ORD_SETTLEMENT_CHANGE
+	(
+  		SETTLEMENT_CHANGE_ID,
+  		ORDER_ITEM_META_ID,
+  		SETTLEMENT_ID,
+  		SUB_SETTLEMENT_ID,
+  		SUB_SETTLEMENT_ITEM_ID,
+  		CHANGETYPE,
+  		AMOUNT_BEFORE_CHANGE,
+  		AMOUNT_AFTER_CHANGE,
+  		REMARK,
+  		CREATOR,
+  		CREATETIME
+  	)SELECT 
+  		ORD_SETTLEMENT_CHANGE_ID_SEQ.NEXTVAL,
+  		A.ORDER_ITEM_META_ID,
+  		C.SETTLEMENT_ID,
+  		A.SUB_SETTLEMENT_ID,
+  		A.SUB_SETTLEMENT_ITEM_ID,
+  		'DEL',
+  		A.REAL_ITEM_PRICE,
+  		0,
+  		'',
+  		#creator#,
+  		SYSDATE
+ 	FROM 
+ 		ORD_SUB_SETTLEMENT_ITEM A ,
+ 		ORD_SUB_SETTLEMENT C
+	WHERE 
+		A.SUB_SETTLEMENT_ID = C.SUB_SETTLEMENT_ID
+	AND
+		SUB_SETTLEMENT_ITEM_ID IN
+	<iterate property="ids" conjunction="," open="(" close=")">
+	  	#ids[]#  
+	</iterate>
+  </insert>
+  <!-- 批量删除结算子单项时生成change记录end -->
+  <!-- 查询结算单的差额（负值）begin  -->
+  <select id="searchSettlementDeduction" parameterClass="long" resultClass="int">
+  	SELECT SUM( (AB- AF)*E.QUANTITY*E.PRODUCT_QUANTITY)  as amount FROM (
+	       SELECT SUB_SETTLEMENT_ITEM_ID,
+	              ORDER_ITEM_META_ID, 
+	              SUM(A.AMOUNT_BEFORE_CHANGE) AS AB,
+	              SUM(A.AMOUNT_AFTER_CHANGE)  AS AF
+	              FROM ORD_SETTLEMENT_CHANGE A 
+	        WHERE A.SETTLEMENT_ID = #id# AND A.CHANGETYPE = 'MODIFY' GROUP BY A.SUB_SETTLEMENT_ITEM_ID ,ORDER_ITEM_META_ID
+	  ) TMP,
+	  ORD_SUB_SETTLEMENT_ITEM SA,
+	  ORD_ORDER_ITEM_META E
+	  WHERE 
+	  	TMP.SUB_SETTLEMENT_ITEM_ID = SA.SUB_SETTLEMENT_ITEM_ID
+	  AND
+	  	 SA.ORDER_ITEM_META_ID = E.ORDER_ITEM_META_ID 
+  </select>
+   <!-- 查询结算单的差额（负值）end  -->
+   
+   <!-- 查询结算单的调低价格的流水记录begin -->
+   <select id="searchSettlementDeductionList" parameterClass="long" resultClass="SettlementDeduction">
+  	SELECT 
+		TMP.SUB_SETTLEMENT_ITEM_ID  AS subSettlementItemId,
+		TMP.ORDER_ITEM_META_ID AS orderItemMetaId,
+		AMOUNT*E.QUANTITY*E.PRODUCT_QUANTITY AS amount
+	FROM (
+			SELECT 
+	           	SUB_SETTLEMENT_ITEM_ID,
+	               ORDER_ITEM_META_ID,
+	               SUM(A.AMOUNT_BEFORE_CHANGE) - SUM(A.AMOUNT_AFTER_CHANGE) AS AMOUNT
+			FROM 
+	           	ORD_SETTLEMENT_CHANGE A 
+	           WHERE 
+	             	A.SETTLEMENT_ID = #id#
+	           AND 
+	              	A.CHANGETYPE = 'MODIFY' 
+	         	GROUP BY  
+	            A.SUB_SETTLEMENT_ITEM_ID ,
+	            ORDER_ITEM_META_ID 
+	           HAVING 
+	             	SUM(A.AMOUNT_BEFORE_CHANGE) > SUM(A.AMOUNT_AFTER_CHANGE)
+	  	) TMP,
+	    ORD_SUB_SETTLEMENT_ITEM SA,
+	    ORD_SUB_SETTLEMENT B,
+	    ORD_ORDER_ITEM_META E
+	   WHERE 
+		TMP.SUB_SETTLEMENT_ITEM_ID = SA.SUB_SETTLEMENT_ITEM_ID
+	AND 
+		SA.SUB_SETTLEMENT_ID = B.SUB_SETTLEMENT_ID 
+	AND
+		SA.ORDER_ITEM_META_ID = E.ORDER_ITEM_META_ID 
+   </select>
+   <!-- 查询结算单的调低价格的流水记录end -->
+   
+   <!-- 查询价格调低的修改记录begin -->
+   <select id="searchModifyOrDelChange" resultClass="OrdSettlementChange" parameterClass="long">
+  		SELECT * FROM (
+	  		SELECT 
+				CE.ORDER_ITEM_META_ID AS ORDERITEMMETAID,
+				CE.SETTLEMENT_CHANGE_ID AS SETTLEMENTCHANGEID,
+				CE.SUB_SETTLEMENT_ID AS SUBSETTLEMENTID,
+				CE.SETTLEMENT_ID AS SETTLEMENTID
+	   		FROM 
+	     		ORD_SETTLEMENT_CHANGE CE 
+	   		WHERE 
+	     		CE.AMOUNT_BEFORE_CHANGE &gt; CE.AMOUNT_AFTER_CHANGE  
+			AND 
+	     		(CE.CHANGETYPE = 'MODIFY' OR CE.CHANGETYPE = 'DEL' OR CE.CHANGETYPE = 'CANCEL_ORDER_DEL' OR CE.CHANGETYPE = 'MODIFY_TOTAL_PRICE' )
+	  		AND 
+	    		CE.SETTLEMENT_ID = #settlementId# 
+	  		ORDER BY CREATETIME DESC
+  		) WHERE ROWNUM = 1
+   </select>
+   <!-- 查询价格调低的修改记录end -->
+</sqlMap>

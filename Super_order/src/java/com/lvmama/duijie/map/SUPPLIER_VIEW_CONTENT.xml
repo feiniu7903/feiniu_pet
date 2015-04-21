@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="SUPPLIER_VIEW_CONTENT">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.duijie.SupplierViewContent">
+		<result column="CONTENT_ID" property="contentId"/>
+		<result column="PRODUCT_ID" property="productId"/>
+		<result column="CONTENT_TYPE" property="contentType"/>
+		<result column="CONTENT" property="content"/>
+	</resultMap>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.duijie.SupplierViewContent">
+		<selectKey keyProperty="contentId" resultClass="Long">
+			SELECT SUPPLIER_VIEW_CONTENT_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO SUPPLIER_VIEW_CONTENT(CONTENT_ID,PRODUCT_ID,CONTENT_TYPE,CONTENT)
+		VALUES(
+		#contentId#,#productId#,#contentType#,#content#
+		)
+	</insert>
+	
+	<update id="update" parameterClass="com.lvmama.comm.bee.po.duijie.SupplierViewContent">
+		UPDATE SUPPLIER_VIEW_CONTENT SVC
+		SET SVC.CONTENT = #content#
+		WHERE SVC.CONTENT_ID = #contentId#
+	</update>
+	
+	<select id="selectSupplierViewContentByCondition" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		SELECT * FROM SUPPLIER_VIEW_CONTENT SVC
+		WHERE 1=1
+		<isNotEmpty property="productId" prepend="AND"> 
+		SVC.PRODUCT_ID = #productId#
+		</isNotEmpty>
+		<isNotEmpty property="contentId" prepend="AND">
+		SVC.CONTENT_ID = #contentId#
+		</isNotEmpty>
+		<isNotEmpty property="contentType" prepend="AND">
+		SVC.CONTENT_TYPE = #contentType#
+		</isNotEmpty>
+	</select>
+</sqlMap>

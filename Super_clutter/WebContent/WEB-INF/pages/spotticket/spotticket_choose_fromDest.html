@@ -1,0 +1,175 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>选择出发城市</title>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/comm.js"></script>
+<script src="${request.contextPath}/js/spotTicket.js?_version=20130812"></script>
+<script type="text/javascript">
+/*搜索*/
+function btnClick(){
+	$("#search_success").hide();
+	var keyword = $("#citykeyword").val();
+	if(null == keyword || $.trim(keyword)=='') {
+		// 请输入景点目的地或关键词
+		lvToast(false,"请输入城市名称",LT_LOADING_CLOSE);
+		return false;
+	}
+	$("input[name='keyword']").val(encodeURI(keyword));
+	var a = $("#key_search").serialize();
+	$("#key_search").submit();
+	$("input[name='keyword']").val("");
+	$("input[name='hidden_keyword']").val("");
+}
+
+$(function(){
+	/*input 框变色*/
+	$("input.lv-input-search").focus(function(e) {
+		$("input.lv-input-search").parent().parent().addClass("lv-input-focus");
+	});
+	$("input.lv-input-search").blur(function(e) {
+		$("input.lv-input-search").parent().parent().removeClass("lv-input-focus");
+	});	
+	
+	// 自动补全查询
+	/* $("#citykeyword").keyup(function() {
+		initCityAutoCompletePlaceDatas();
+	}); */
+	
+	var currentCity = getLocalStorage(LOCAL_STRTORAGE_CURRENT_CITY);
+	if(currentCity==""||currentCity==null ||typeof(currentCity) == "undefined"){
+		$("#currentCity a").html("上海");
+		$("#currentCity").click(function(){
+			chooseCity('上海','');
+		});
+	}else{
+		$("#currentCity a").html(currentCity);
+		$("#currentCity").click(function(){
+			chooseCity(currentCity,'');
+		});
+	}
+	
+	// 自动补全查询
+	$("#citykeyword").keyup(function() {
+		initCityAutoCompletePlaceDatas();
+		var _clearVal = $(this).val();
+		if(_clearVal != ''){
+			$('#clear_password').show();
+		}else {
+			$('#clear_password').hide();
+		}
+	});
+	var _clearValload = $('#citykeyword').val();
+	if(_clearValload != ''){
+		$('#clear_password').show();
+	}else {
+		$('#clear_password').hide();
+	}
+	$('#clear_password').live('click',function(){
+		if(_clearValload != ''){
+			$('#clear_password').show();
+		}else {
+			$('#clear_password').hide();
+		}
+	});
+	
+	// keyword关键字搜索 
+	/* $("#citykeyword").keypress(function(e) {
+		var key = e.which;
+		if( key == 13) {
+			chooseCity($("#holiday_search #citykeyword").val());
+		}
+	}); */
+});
+
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_back();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">选择城市</div>
+</div>
+<div class="lv-search search">
+  <div class="lv-div-search">
+   <form method="get" action="${request.contextPath}/place"  id="key_search" >
+      <span class="lv-clear-icon01" onclick="union_clear_context('citykeyword');"  style="display:none" id="clear_password">
+      <img src="${prefix_pic_url!}/img/clear.png"></span>
+      <input type="hidden" name="keyword" id="hidden_keyword" value="${keyword!}" data-name="">
+      <input type="button" class="btn_sub" value="" onclick="btnClick()" />
+    </form>
+	<input class="lv-input-search" id="citykeyword" type="text" value="${keyword!}" placeholder="请输入城市名称" autocomplete="off">
+  </div>
+</div>
+        <div  id="search_autocomplete" style="display:none;">
+           <ul class="search_auto_complete" id="search_success"> </ul>
+        </div>
+<div class="lv-wrapper lv-primary lv-media-width">
+	<div class="lv-wrapper-container" style="width:100%;">
+		<ul class="lv-city-list">
+        	<li onclick="chooseCity('','')"><a style="display: block;" href="javascript:void(0)；">全部城市</a></li>
+            <div class="lv-seprator-lined2"></div>
+        </ul>
+    </div>
+	<div class="lv-wrapper-container" style="width:100%;">
+		<div class="lv-city-title">当前城市</div>
+		<ul class="lv-city-list">
+        	<li id="currentCity"><a style="display: block;" href="javascript:void(0)；">上海</a></li>
+            <div class="lv-seprator-lined2"></div>
+        </ul>
+    </div>
+	
+    <#if cityList?? && cityList?size&gt;0>
+       <#if charList?? && charList?size&gt;0>
+           <#list charList as char>
+	         <div class="lv-wrapper-container" style="width:100%;">
+	    	    <div class="lv-city-title">${char!}</div>
+				<ul class="lv-city-list">
+			        <#list cityList as city>
+			            <#if city.pinyin[0..0] == "${char!}">
+				        	<li onclick="chooseCity('${city.name!}','${city.pinyin!}')"><a style="display: block;" href="javascript:void(0)；">${city.name!}</a></li>
+				            <div class="lv-seprator-lined2"></div>
+				        </#if>
+			        </#list>
+		        </ul>
+		    </div>
+	      </#list>
+	    </#if>
+    </#if>
+    
+    <div class="lv-primary-narrow lv-narrow-right">
+      <ul class="lv-narrow-list">
+         <#if charList?? && charList?size&gt;0>
+           <#list charList as char>
+           	  <#if char_index == 0>
+           	  	<li class="lv-narrow-li lv-narrow-current" onclick="charClick(this);">${char!}</li>
+           	  <#else>
+           	  	<li class="lv-narrow-li" onclick="charClick(this);">${char!}</li>
+           	  </#if>
+              
+           </#list>
+	    </#if>
+      </ul>
+    </div>
+</div>
+
+ <script >
+	 //点击自动补全列表. 
+	 function searchTip(id,name,stage) {
+	 	$('#search_autocomplete').hide();
+	 	lvToast(CONTENT_LOGDING,LT_LOADING_MSG,LT_LOADING_TIME);
+	 	
+	 	setLocalStorage(LOCAL_STRTORAGE_ROUTE_CITY,name);
+	 	$("input[name='keyword']").val(encodeURI(name));
+		$("#key_search").submit();
+	 }
+	 
+	 var cityListJson = ${cityListJson!};
+ </script>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+ 
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>我的收藏</title>
+<#include "../common/define.html">
+<script src="${request.contextPath!}/js/my.js"></script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a  href="javascript:union_back();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">我的收藏</div>
+  <section class="header_alice">
+   		<a href="http://${hostName}" class="btn1"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a>
+   </section>
+</div>
+<div class="lv-search lv-media-width lv-seach-mheight">
+  <ul class="lv-cascade-search">
+    <li class="lv-li-row2"><a href="javascript:void(0);">
+      <div class="lv-cascade-icongrey"></div>
+      <span class="lv-change-color lv-color-01">景点</span><img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a></li>
+    <li class="lv-li-row2"><a href="javascript:void(0);">
+      <div class="lv-cascade-icongrey" style="display:none;"></div>
+      <span class="lv-change-color">度假线路</span><img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a></li>
+    <!--<li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-cascade-icongrey" style="display:none;"></div>
+      <span>攻略</span></a></li>-->
+  </ul>
+</div>
+<div class="lv-wrapper lv-min-height lv-media-width"> 
+  
+  <!--景点-->
+  <div class="lv-tab">
+    <div class="lv-wrapper-container">
+      <input type="hidden" name="page" id="PLACEPage" value="1">
+      <ul class="lv-spotticket-list jd_wrap" id="PLACE_data_list">
+       <#if placeList ?? && placeList?size&gt;0>
+          <#list placeList as place>
+		        <li class="lv-spotticket-li clear"><a href="javascript:void(0);" onclick="union_skip('http://${hostName}/ticket/piao-${place.objectId}/');">
+		        	<div class="lv-spotticket-img lv-pull-left">
+		        	 <#if place.todayOrderAble?? && place.todayOrderAble>
+	        			<img class="lv-today-book" src="${prefix_pic_url!}/img/today-book.png">
+	        		</#if>
+		        	<img src="${prefixPic!}${place.objectImageUrl!}"">
+		        	</div>
+		            <div class="lv-spotticket-info lv-pull-right">
+		            	<ul>
+		                	<li class="lv-spotticket-title">
+			                    <div class="jd_title">
+										${place.objectName?default("")}
+								</div>
+		                   </li>
+		                   <li><span class="lv-color">&yen; ${place.sellPriceYuan!}</span><i>起</i> 
+			              <span class="lv-proto-price">&yen; ${place.marketPriceYuan!}</span>
+			              <span class="lv-pull-right"><#if avgScore?? && avgScore !="">${place.avgScore!}分</#if></span></li>
+			              <li>
+		                  	<span class="scenic_info_3">${place.subject!}</span>
+		                  	<span class="scenic_info_2">
+		                  		<#if place.hasBusinessCoupon?? &&  place.hasBusinessCoupon >
+		                  		<i class="ic_hui"></i>
+		                  		</#if>
+		                  		<!-- <i class="ic_xiang"></i> -->
+		                  		<#if place.cashRefund?? &&  place.cashRefund >
+		                  		<i class="ic_fan"></i>
+		                  		</#if>
+		                  		<#if place.cashRefund>
+		                  		<em>&yen; ${place.cashRefundY!}</em>
+		                  		</#if>
+		                  	</span>
+		                  </li>
+			              <li class="lv-ellipsis jd_info">${place.address!}</li>
+		                </ul>
+		            </div>
+		            </a>
+		        </li>
+       		    <div class="lv-seprator-line"></div>
+	        </#list>
+	   <#else>
+	       <#assign no_data_msg="还没有收藏任何景点">
+		   <#include "../common/no_data_list.html">
+       </#if>
+      </ul>
+      
+    </div>
+       <!-- 如果不是最后一页  -->
+	   <#if isLastPage?? && !isLastPage>
+		   <div class="lv-nav-li lv-btn-03" id="PLACE_show_more">
+		        <a href="javascript:void(0);" onclick="getData('PLACE')">
+		           <span>查看更多</span>
+		        </a>
+		    </div>
+	    </#if>
+  </div>
+  
+  <!--度假线路-->
+  <div class="lv-tab" style="display:none;">
+    <div class="lv-wrapper-container">
+      <input type="hidden" name="page" id="PRODUCTPage" value="1">
+      <ul class="lv-spotticket-list jd_wrap"  id="PRODUCT_data_list">
+        <#if productList ?? && productList?size&gt;0>
+          <#list productList as product>
+	          <li class="lv-spotticket-li clear"><a href="javascript:void(0);" onclick="union_skip('http://${hostName}/product/${product.objectId}/');">
+	        	  <div class="lv-spotticket-img lv-pull-left"><img src="${prefixPic!}${product.objectImageUrl!}"></div>
+		          <div class="lv-spotticket-info lv-pull-right">
+			             <ul>
+			              <li class="lv-spotticket-title">${product.objectName!}</li>
+			              <li>
+			              	<span class="lv-pull-left">
+			              		<#if product.cmtNum?? && product.cmtNum&gt;0>
+               						${product.cmtNum!}人点评
+               			 		<#else>
+               						无人点评
+               			 		</#if>
+			              	</span>
+			              	<span class="jd_fl_1 lv-color">&yen; ${product.sellPriceYuan!} <i>起</i></span></li>
+		                  <li><span class="scenic_info_3">${product.zhSubProductType!}${product.visitDay!}天</span>
+			                   <span class="scenic_info_2">
+			                       <#if product.hasBusinessCoupon>
+				                   	  <i class="ic_hui"></i>
+				                   </#if>
+				                   <#if product.cashRefund>
+					                   <i class="ic_fan"></i>
+					                   <em>￥${product.cashRefundY!}</em>
+				                   </#if>
+			                   </span>
+		                   </li>
+			            </ul>
+		            </div>
+		            </a>
+		        </li>
+		        <div class="lv-seprator-line"></div>
+	        </#list>
+	   <#else>
+		   <#assign no_data_msg="还没有收藏任何度假线路">
+		   <#include "../common/no_data_list.html">
+       </#if>
+      </ul>
+      
+    </div>
+      <!-- 如果不是最后一页  -->
+      <#if  isUsedLastPage?? && !isUsedLastPage>
+	   <div class="lv-nav-li lv-btn-03" id="PRODUCT_show_more">
+	        <a href="javascript:void(0);" onclick="getData('PRODUCT')">
+	          <span>查看更多</span>
+	        </a>
+	    </div>
+     </#if>
+  </div>
+  <!--攻略-->
+  <div class="lv-tab" style="display:none;">
+  </div>
+</div>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+</body>
+</html>

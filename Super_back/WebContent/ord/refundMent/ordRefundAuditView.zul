@@ -1,0 +1,248 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?component name="ordRefundAddComponent" macroURI="/ord/sale/ordSaleDealAdd.zul" ?>
+<?component name="ordProtree" macroURI="/ord/refundMent/ordProTree.zul" ?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_refund_Audit"?>
+	<window id="win_refund_Audit" title="退款服务处理" border="normal"
+		apply="com.lvmama.back.web.ord.refundMent.OrdRefundAuditAction">
+		<groupbox style="border: none">
+			<caption label="申请售后服务" />
+			<grid>
+				<columns>
+					<column width="100px" align="right"></column>
+					<column></column>
+					<column width="100px"></column>
+					<column></column>
+					<column width="100px"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label width="150px" value="订单号:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.historyOrderDetail.orderId}" />
+						</hbox>
+						<hbox>
+							<label width="150px" value="下单时间:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.historyOrderDetail.zhCreateTime}" />
+						</hbox>
+						<hbox>
+							<label width="150px" value="下单人:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.historyOrderDetail.userName}" />
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label width="150px" value="应付金额:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.historyOrderDetail.oughtPayYuan}" />
+						</hbox>
+						<hbox>
+							<label width="150px" value="实付金额:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.historyOrderDetail.actualPayYuan}" />
+						</hbox>
+						<hbox>
+							<label width="150px" value="支付状态:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.historyOrderDetail.zhPaymentStatus}" />
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label width="150px" value="支付等待时间:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.historyOrderDetail.zhWaitPayment}" />
+						</hbox>
+						<hbox>
+							<label width="150px" value="订单状态:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.historyOrderDetail.zhOrderStatus}" />
+						</hbox>
+						<hbox>
+							<label width="150px" value="订单来源渠道:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.historyOrderDetail.zhProductChannel}" />
+						</hbox>
+					</row>
+					<row spans="1,3">
+						<hbox>
+							<label width="150px" value="用户备注:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.historyOrderDetail.userMemo}" />
+						</hbox>
+						
+						<hbox>
+							<label width="150px" value="奖金抵扣金额:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.historyOrderDetail.bonusPaidAmountYuan}" />
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<space />
+		<ordRefundAddComponent
+			saleServiceId="${saction.saleServiceId}" canCloseWin="N"  visible="${not empty saction.saleServiceId}">
+		</ordRefundAddComponent>
+		<space />
+		
+		<zscript>
+			List items = saction.historyOrderDetail.allOrdOrderItemMetas; 
+		</zscript>
+		<groupbox style="border: none;">
+			<caption label="采购产品"></caption>
+			<listbox id="ordItemMetaListbox">
+				<listhead>
+					<listheader style="width:100px;" label="采购产品ID"></listheader>
+					<listheader label="采购产品名称"></listheader>
+					<listheader label="结算状态"></listheader>
+					<listheader label=""></listheader>
+				</listhead>
+				<listitem forEach="${items}" selected="${each.checkFlag}">
+					<listcell> 
+						<label value="${each.metaProductId}" id="${each.orderItemMetaId}" />
+					</listcell>
+					<listcell> <label value="${each.productName}" /> </listcell>
+					<listcell> <label value="${each.settlementStatusStr}" /></listcell>
+					<listcell> 
+						<listbox mold="select" if='${each.amountType=="VISITOR_LOSS"}' disabled="true">
+							<listitem label="游客损失" value="VISITOR_LOSS" selected="true"/>
+							<listitem label="供应商承担金额" value="SUPPLIER_BEAR"/>
+						</listbox> 
+						<listbox mold="select" if='${each.amountType=="SUPPLIER_BEAR"}' disabled="true">
+							<listitem label="游客损失" value="VISITOR_LOSS"/>
+							<listitem label="供应商承担金额" value="SUPPLIER_BEAR" selected="true"/>
+						</listbox>
+						<label value="${each.amountValueYuan}" ></label> 
+						<label value="，实际损失:" if="${each.actualLoss!=null}" />
+						<label value="${each.actualLossYuan}" if="${each.actualLoss!=null}" />
+					</listcell>
+				</listitem>
+			</listbox>
+		</groupbox>
+		
+		<groupbox style="border: none;"
+			if='@{saction.allOrdOrderItemMetas.size>0}'>
+			<caption label="附加产品"></caption>
+			<listbox model="@{saction.allOrdOrderItemMetas}"
+				if='${orderItem.productType=="OTHER"}'>
+				<listhead>
+					<listheader label="序号"></listheader>
+					<listheader label="产品名称"></listheader>
+					<listheader label="数量"></listheader>
+					<listheader label="游玩时间"></listheader>
+					<listheader label="选择部分退款"></listheader>
+				</listhead>
+				<listitem self="@{each='orderItem'}">
+					<listcell label="@{orderItem.orderItemMetaId}">
+					</listcell>
+					<listcell label="@{orderItem.productName}"></listcell>
+					<listcell label="@{orderItem.quantity}"></listcell>
+					<listcell label="@{orderItem.StrVisitTime}"></listcell>
+					<listcell>
+						<checkbox checked="@{orderItem.checkItem}" />
+					</listcell>
+				</listitem>
+			</listbox>
+		</groupbox>
+		<space />
+		<groupbox style="border: none">
+			<caption label="添加退款服务内容" />
+			<grid>
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+					<column width="100px" align="right"></column>
+					<column></column>
+					<column width="100px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label width="150px" value="退款金额:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.ordRefundment.amountYuan}">
+							</label>
+						</hbox>
+						<hbox>
+							<label width="100px" value="违约金:" />
+						</hbox>
+						<hbox>
+							<label 
+								value="@{saction.ordRefundment.penaltyAmountYuan}">
+							</label>
+						</hbox>
+						<hbox>
+							<label width="150px" value="退款类型:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.ordRefundment.refundTypeName}">
+							</label>
+						</hbox>
+					</row>
+					<row spans="1,5">
+						<hbox>
+							<label value="退款要求及备注:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<label 
+								value="@{saction.ordRefundment.memo}" >
+							</label>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+
+		<!--toolbar align="center">
+			<button id="refundMent" width="100px" label="审核通过"
+				onClick='saction.auditOrdRefund(self.getAttribute("auidtStatus"));win_refund_Audit.detach()'>
+				<custom-attributes auidtStatus="VERIFIED" />
+				<custom-attributes
+					refundmentId="@{saction.ordRefundment.refundmentId}" />
+			</button>
+			<button id="s" width="100px" label="驳回退款"
+				onClick='saction.auditOrdRefund(self.getAttribute("auidtStatus"));win_refund_Audit.detach()'>
+				<custom-attributes auidtStatus="REJECTED" />
+				<custom-attributes
+					refundmentId="@{saction.ordRefundment.refundmentId}" />
+			</button>
+			<button label="关闭" width="100px"
+				onClick="win_refund_Audit.detach()">
+			</button>
+		</toolbar-->
+	</window>
+</zk>

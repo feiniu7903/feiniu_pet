@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="NC_COMPLAINT_RESULT">
+    <resultMap id="ComplaintResultMap" class="com.lvmama.comm.bee.po.ord.NcComplaintResult">
+    	<result column="RESULT_ID" property="resultId"/>
+        <result column="COMPLAINT_ID" property="complaintId"/>
+        <result column="TREATMENT_TYPE" property="treatmentType"/>
+        <result column="INTEGRAL_COMPENSATION" property="integralCompensation"/>
+        <result column="GIFT_COMPENSATION" property="gifiCompendation"/>
+        <result column="GIFTS_WORTH" property="gifisWorth"/>
+        <result column="CASH_COMPENSATION" property="cashCompensation"/>
+        <result column="REMARK" property="remark"/>
+    </resultMap>
+
+    <insert id="insertNcComplaintResult" parameterClass="com.lvmama.comm.bee.po.ord.NcComplaintResult">
+        <selectKey resultClass="java.lang.Long" keyProperty="resultId">
+            select NC_COMPLAINT_RESULT_ID_SEQ.nextval as id from DUAL
+        </selectKey>
+        insert into NC_COMPLAINT_RESULT (RESULT_ID,COMPLAINT_ID ,TREATMENT_TYPE,INTEGRAL_COMPENSATION,GIFT_COMPENSATION,GIFTS_WORTH,CASH_COMPENSATION,REMARK)
+        values (
+        #resultId#,#complaintId#,#treatmentType#,#integralCompensation#,#gifiCompendation#,#gifisWorth#,#cashCompensation#,#remark#)
+    </insert>
+     <update id="updateNcComplaintResult" parameterClass="com.lvmama.comm.bee.po.ord.NcComplaintResult">
+         update NC_COMPLAINT_RESULT
+         set
+             TREATMENT_TYPE=#treatmentType#,
+             INTEGRAL_COMPENSATION=#integralCompensation#,
+             GIFT_COMPENSATION=#gifiCompendation#,
+             GIFTS_WORTH=#gifisWorth#,
+             CASH_COMPENSATION=#cashCompensation#,
+             REMARK=#remark#
+
+         where RESULT_ID = #resultId#
+     </update>
+    <select id="selectComplaintResultBycomplaintId" resultMap="ComplaintResultMap" parameterClass="java.lang.Long">
+		select
+			RESULT_ID,
+			COMPLAINT_ID,
+			TREATMENT_TYPE,
+			INTEGRAL_COMPENSATION,
+			GIFT_COMPENSATION,
+			GIFTS_WORTH,
+			CASH_COMPENSATION,
+			REMARK
+		from NC_COMPLAINT_RESULT
+		where COMPLAINT_ID=#complaintId#
+    </select>
+</sqlMap>

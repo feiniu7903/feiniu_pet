@@ -1,0 +1,50 @@
+<?page title="Show PassPortLog" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_showpassportlog"?>
+<zk>
+<window id="win_showpassportlog" border="normal" title="通关日志" mode="embedded" apply="com.lvmama.eplace.web.lvmama.ListShowPassPortLogAction">
+
+<groupbox style="border:none;">
+			<grid style="border:none;">
+				<rows>
+					<row style="border:none;" spans="2">
+								<listbox id="passPortLogListBox" model="@{saction.passPortLogList}">
+									<listhead>
+										<listheader label="操作人ID" />
+										<listheader label="操作时间" />
+										<listheader label="动作" />
+										<listheader label="操作人" />
+										<listheader label="操作人名称" />
+									</listhead>
+									<listitem height="25px"
+										self="@{each='list'}" >
+										<listcell
+											label="@{list.passPortUserId}">
+										</listcell>
+										<listcell
+										label="@{list.createDate}">
+										</listcell>
+										<listcell
+											label="@{list.content}">
+										</listcell>
+										<listcell
+											label="@{list.user.userId}">
+										</listcell>
+										<listcell
+											label="@{list.user.name}">
+										</listcell>
+									</listitem>
+								</listbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<space />
+
+		<toolbar align="center">
+			<button label="关闭窗口" width="100px"
+				onClick="win_showpassportlog.detach()">
+			</button>
+		</toolbar>
+
+</window>
+</zk>

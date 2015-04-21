@@ -1,0 +1,17 @@
+	<groupbox style="border: none">
+		<caption label="联系人" />
+		<listbox id="contactList"  model="@{saction.contactRelationList}">
+			<listhead>
+				<listheader label="名称" width="80px"/>
+				<listheader label="联系电话"/>
+				<listheader label="公司名称"/>
+				<listheader label="类型"/>
+			</listhead>
+			<listitem height="25px" self="@{each='com' }" value="@{com}">
+				<listcell label="@{com.name }"></listcell>
+				<listcell label="@{com.mobilephone }"></listcell>
+				<listcell label="@{com.company }"></listcell>
+				<listcell label="@{com.zhContactTypes}"></listcell>
+			</listitem>
+		</listbox>
+	</groupbox>

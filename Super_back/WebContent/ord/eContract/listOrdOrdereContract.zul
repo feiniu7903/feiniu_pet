@@ -1,0 +1,127 @@
+<?page title="订单电子合同列表" contentType="text/html;charset=UTF-8"?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?> 
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_listOrdOrdereContract"?>
+<zk>
+<window title="订单电子合同列表" border="normal" id="win_listOrdOrdereContract" apply="com.lvmama.back.web.ord.eContract.ListOrdEContractAction">
+
+	<grid>
+		<rows>
+			<row>
+				<hbox>订单编号：<textbox value="@{saction.searchConds.orderId}"/></hbox>
+				<hbox>
+					游玩时间:<datebox value="@{saction.searchConds.visitTimeStart}"/>~
+							<datebox value="@{saction.searchConds.visitTimeEnd}"/>			
+				</hbox>
+			</row>
+			<row>
+				<hbox>合同状态：
+				<listbox mold="select" rows="1" model="@{saction.statusList}" onSelect='saction.setContractStatus(self.selectedItem.value);'>
+					<listitem self="@{each='status'}" label="@{status.name }" value="@{status.code}"/>
+				</listbox>
+				</hbox>
+				<hbox><button label="查询" onClick="saction.search()" id="search"/></hbox>
+			</row>
+		</rows>
+	</grid>
+	<span/>
+	<listbox model="@{saction.orderEcontractsList,load-after='search.onClick,_paging.onPaging'}" width="100%">
+		<listhead>
+			<listheader label="编号" width="30px"/>
+			<listheader label="订单编号" width="70px"/>
+			<listheader label="合同编号" width="130px"/>
+			<listheader label="联系人姓名" width="80px"/>
+			<listheader label="联系人电话" width="80px"/>
+			<listheader label="email" width="180px"/>
+			<listheader label="产品名称" width="180px"/>
+			<listheader label="游玩时间" width="100px"/>
+			<listheader label="合同状态" width="60px"/>
+			<listheader label="签约方式" width="60px"/>
+			<listheader label="邮件/短信状态" width="60px"/>
+			<listheader label="操作"/>
+		</listhead>
+		<listitem  self="@{each='model'}" >
+			<listcell><label value="@{model.id }"/></listcell>
+			<listcell><a label="@{model.ordOrder.orderId}" style="color:blue">
+				<attribute name="onClick">		<![CDATA[
+					Clients.evalJavaScript("window.open('/super_back/ord/order_monitor_list!doOrderQuery.do?pageType=monitor&orderId="+self.getLabel()+"');");   
+					]]>			
+				</attribute>
+			</a></listcell>
+			<listcell><label value="@{model.ordEContract.econtractNo}"/></listcell>
+			<listcell><label value="@{model.contact.name}"/></listcell>
+			<listcell><label value="@{model.contact.mobile}"/></listcell>
+			<listcell><label value="@{model.contact.email}"/></listcell>
+			<listcell><label value="@{model.ordOrder.mainProduct.productName}"/></listcell>
+			<listcell><label value="@{model.ordOrder.visitTime,converter='com.lvmama.back.utils.DateZKConverter'}"/></listcell>
+			<listcell><label value="@{model.confirmed}"/></listcell>
+			<listcell><label value="@{model.zhSignMode}"/></listcell>
+			<listcell><label value="@{model.sendStatus}"/></listcell>
+			<listcell>
+				<a label="备注" style="color:blue" disabled="@{model.writeComment}" onClick='saction.showWindow("/ord/eContract/editComment.zul",self.getAttributes())' permCode="3160">
+					<custom-attributes eContractId="@{model.ordEContract.econtractId}" />
+				</a>
+				
+				<a label="签约方式" style="color:blue" onClick='saction.showWindow("/ord/eContract/signContract.zul",self.getAttributes())'  permCode="3161">
+					<custom-attributes econtractId="@{model.ordEContract.econtractId}" />
+					<custom-attributes econtractNo="@{model.ordEContract.econtractNo}" />
+					<custom-attributes orderId="@{model.ordOrder.orderId}" />
+					<custom-attributes signMode="@{model.signMode}" />
+				</a>
+				
+				<a label="修改合同" style="color:blue" disabled="@{model.unUpdated}" permCode="3162">
+					<custom-attributes eContractId="@{model.ordEContract.econtractId}"/>
+					<custom-attributes orderId="@{model.ordOrder.orderId}" />
+					<attribute name="onClick">		<![CDATA[
+						Clients.evalJavaScript("window.open('/super_back/ordEcontract/detailEcontract.do?contractId="+self.getAttribute("eContractId")+"&orderId="+self.getAttribute("orderId")+"');");   
+					]]>			
+					</attribute>
+				</a>
+				
+				<a label="下载合同" style="color:blue" disabled="@{!model.unConfirm}" onClick='saction.viewPdfContractDetail(self.getAttribute("orderId"))' permCode="3163">
+					<custom-attributes orderId="@{model.ordOrder.orderId}" />
+				</a>
+				
+				<a label="补充条款" style="color:blue" disabled="@{!model.unConfirm}" onClick='saction.viewAdditionDetail(self.getAttribute("orderId"))' permCode="3164">
+					<custom-attributes orderId="@{model.ordOrder.orderId}" />
+				</a>
+				
+				<a label="下载行程" style="color:blue" onClick='saction.viewOrderTravel(self.getAttribute("orderId"),self.getAttribute("productId"))' permCode="3165">
+					<custom-attributes orderId="@{model.ordOrder.orderId}" />
+					<custom-attributes productId="@{model.ordOrder.mainProduct.productId}" />
+				</a>
+				
+				<a label="补发合同" style="color:blue"  disabled="@{model.send}" onClick='saction.sendContractEmail(self.getAttribute("orderId"))' permCode="3166">
+					<custom-attributes orderId="@{model.ordOrder.orderId}" />
+				</a>
+				
+				<a label="上传文件" style="color:blue" onClick='saction.showWindow("/ord/eContract/uploadContractBackup.zul",self.getAttributes())' permCode="3167">
+					<custom-attributes orderId="@{model.ordOrder.orderId}" />
+				</a>
+				
+				<a label="查看日志" style="color:blue" onClick='saction.showWindow("/ord/eContract/listEcontractLog.zul",self.getAttributes())' permCode="3168">
+					<custom-attributes orderId="@{model.ordOrder.orderId}" />
+				</a>
+			</listcell>
+		</listitem>
+	</listbox>
+	<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="15"
+								onPaging='saction.search();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	<span/>
+</window>
+</zk>

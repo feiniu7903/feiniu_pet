@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:log4j.properties</value>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:jms.properties</value>
+				<value>classpath:const.properties</value>
+			</list>
+		</property>
+	</bean>
+	<import resource="applicationContext-order-database.xml" />
+	<import resource="applicationContext-order-dao.xml" />
+	<import resource="applicationContext-order-service.xml" />
+	<import resource="applicationContext-order-trigger.xml" />
+	<import resource="applicationContext-order-jobs.xml" />
+	<import resource="applicationContext-order-aop.xml" />
+	<import resource="applicationContext-workOrder-jobs.xml" />
+	<import resource="applicationContext-lvmama-comm-remote.xml"/>
+	<import resource="applicationContext-lvmama-comm-jms.xml"/>
+	<import resource="applicationContext-lvmama-comm-client.xml"/>
+	<import resource="applicationContext-lvmama-passport-remote.xml"/>
+	<import resource="applicationContext-lvmama-comm-remote-vst.xml"/>
+    <import resource="applicationContext-lvmama-comm-remote-edm.xml"/>
+</beans>

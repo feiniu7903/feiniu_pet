@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="distributionProcesser" class="com.lvmama.distribution.message.DistributionPushProcesser">
+		<property name="distributionCommonService" ref="distributionCommonService"/>
+		<property name="prodProductService" ref="prodProductService"/>
+        <property name="prodProductBranchService" ref="prodProductBranchService"/>
+	</bean>
+	<bean id="distributionProdProcesser" class="com.lvmama.distribution.message.DistributionProdProcesser">
+		<property name="distributionCommonService" ref="distributionCommonService"></property>
+		<property name="prodProductService" ref="prodProductService"></property>
+	</bean>
+	<bean id="baiduTuangouProcessor" class="com.lvmama.fenxiao.message.BaiduTuangouProcessor">
+		<property name="baiduTuangouService" ref="baiduTuangouService" />
+		<property name="ordOrderChannelService" ref="ordOrderChannelService" />
+	</bean>
+	<bean id="orderMessageProcesser" class="com.lvmama.clutter.message.OrderMessageProcesser">
+		<property name="mobileClientService" ref="mobileClientService" />
+		<property name="clientUserService" ref="api_com_user" />
+	</bean>
+	<!-- 百度5.1活动 -->
+	<bean id="baiduOrderMessageProcesser" class="com.lvmama.clutter.message.BaiduOrderMessageProcesser">
+		<property name="mobileClientService" ref="mobileClientService" />
+		<property name="orderServiceProxy" ref="orderServiceProxy" />
+		<property name="userUserProxy" ref="userUserProxy" />
+	</bean>
+	
+	<!-- 消息接收 -->
+	<bean id="productTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.PRODUCT.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+				<ref bean="distributionProcesser"/>
+				<ref bean="distributionProdProcesser"/>
+				<ref bean="baiduTuangouProcessor" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 订阅 -->
+	<bean id="productMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="productTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+	
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="productTopicListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="PRODUCT_TOPIC" />
+		<property name="messageListener" ref="productMessageListener" />
+	</bean>
+
+
+	<!-- 消息接收 -->
+	<bean id="orderTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.ORDER.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+				<ref bean="distributionProcesser"/>
+				<ref bean="baiduTuangouProcessor" />
+				<ref bean="orderMessageProcesser"/>
+				<ref bean="baiduOrderMessageProcesser"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 订阅 -->
+	<bean id="orderMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="orderTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+	
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="orderTopicListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="ORDER_TOPIC" />
+		<property name="messageListener" ref="orderMessageListener" />
+	</bean>
+
+
+</beans>

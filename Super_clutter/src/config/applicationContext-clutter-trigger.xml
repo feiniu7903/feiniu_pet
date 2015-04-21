@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+    <bean id="distributionPushJobService" class="com.lvmama.distribution.job.DistributionPushJob">
+        <property name="distributionCommonService" ref="distributionCommonService"/>
+        <property name="taobaoProductSyncService" ref="taobaoProductSyncService"/>
+    </bean>
+
+    <bean id="distributionPushJobFactory"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="distributionPushJobService" />
+        </property>
+        <property name="targetMethod">
+            <value>run</value>
+        </property>
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+
+    <bean id="distributionPushJobTimes"
+          class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="distributionPushJobFactory" />
+        </property>
+        <property name="cronExpression">
+            <value>${distributionpush.time}</value>
+        </property>
+    </bean>
+
+    <bean id="distributionForJingdongJobService" class="com.lvmama.distribution.job.DistributionForJingdongJob">
+        <property name="distributionForJingdongService" ref="distributionForJingdongService"></property>
+    </bean>
+
+    <bean id="distributionForJingdongJobFactory"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="distributionForJingdongJobService" />
+        </property>
+        <property name="targetMethod">
+            <value>pushForJingdongJob</value>
+        </property>
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+
+    <bean id="distributionForJingdongJobTimes"
+          class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="distributionForJingdongJobFactory" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0 4 ? * *</value>
+        </property>
+    </bean>
+
+
+    <bean id="distributionForQihooJob" class="com.lvmama.distribution.job.DistributionForQihooJob">
+        <property name="distributionForQiHooService" ref="distributionForQiHooService"></property>
+    </bean>
+
+    <bean id="distributionForQihooJobFactory"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="distributionForQihooJob" />
+        </property>
+        <property name="targetMethod">
+            <value>run</value>
+        </property>
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+    <bean id="distributionForQihooJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="distributionForQihooJobFactory" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0 1 * * ?</value>
+        </property>
+    </bean>
+
+    <!-- 艺龙酒店订单状态更新 start -->
+    <bean id="mobileHotelOrderLogJob" class="com.lvmama.clutter.job.MobileHotelOrderLogJob">
+        <property name="mobileHotelService" ref="mobileHotelService"></property>
+        <property name="clientHotelService" ref="clientHotelService"></property>
+        <property name="userUserProxy" ref="userUserProxy"></property>
+        <property name="cashAccountService" ref="cashAccountService"></property>
+    </bean>
+    <bean id="mobileHotelOrderRelationJob" class="com.lvmama.clutter.job.MobileHotelOrderRelationJob">
+        <property name="mobileHotelService" ref="mobileHotelService"></property>
+        <property name="clientHotelService" ref="clientHotelService"></property>
+    </bean>
+    <!-- 百度活动 -->
+    <bean id="mobileBaiduActJob" class="com.lvmama.clutter.job.MobileBaiduActJob">
+        <property name="mobileClientService" ref="mobileClientService"></property>
+        <property name="baiduActivityService" ref="baiduActivityService"></property>
+    </bean>
+    <!-- 百度活动  request请求数-->
+    <bean id="mobileBaiduReqJob" class="com.lvmama.clutter.job.MobileBaiduReqJob">
+        <property name="baiduActivityService" ref="baiduActivityService"></property>
+    </bean>
+    <!-- 百度活动 ,生成xml文件-->
+    <bean id="mobileBaiduXmlJob" class="com.lvmama.clutter.job.MobileBaiduXmlJob">
+        <property name="baiduActivityService" ref="baiduActivityService"></property>
+    </bean>
+
+    <bean id="mobileHotelOrderLogJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref local="mobileHotelOrderLogJob"/>
+        </property>
+        <property name="targetMethod">
+            <value>updateOrderStatus</value>
+        </property>
+    </bean>
+    <bean id="mobileHotelOrderRelationJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref local="mobileHotelOrderRelationJob"/>
+        </property>
+        <property name="targetMethod">
+            <value>initOrderRelation</value>
+        </property>
+    </bean>
+    <!-- 百度活动 -->
+    <bean id="mobileBaiduActJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref local="mobileBaiduActJob"/>
+        </property>
+        <property name="targetMethod">
+            <value>initActMemcachedInfo</value>
+        </property>
+    </bean>
+    <!-- 百度活动 Request最大请求数  -->
+    <bean id="mobileBaiduReqJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref local="mobileBaiduReqJob"/>
+        </property>
+        <property name="targetMethod">
+            <value>initBdMaxReqAmount</value>
+        </property>
+    </bean>
+    <!-- 百度活动 生成xml文件-->
+    <bean id="mobileBaiduXmlJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref local="mobileBaiduXmlJob"/>
+        </property>
+        <property name="targetMethod">
+            <value>initBaidXmlInfo</value>
+        </property>
+    </bean>
+
+
+    <!-- 每两小时更新状态 -->
+    <bean id="mobileHotelOrderLogJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref local="mobileHotelOrderLogJobTask" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0 */2 * * ?</value>
+        </property>
+    </bean>
+
+    <!-- 每天凌晨1点30分更新orderRelation -->
+    <bean id="mobileHotelOrderRelationJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref local="mobileHotelOrderRelationJobTask" />
+        </property>
+        <property name="cronExpression">
+            <value>0 30 2 * * ?</value>
+        </property>
+    </bean>
+    <!-- 艺龙酒店订单状态更新 end -->
+
+    <!-- 百度活动初始化预定数据 - 每天7,20点执行 -->
+    <bean id="mobileBaiduActJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref local="mobileBaiduActJobTask" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0 7,20 * * ?</value>
+        </property>
+    </bean>
+
+    <!-- 百度活动request最大请求数初始化  每小时 5,15,30,45执行一次-->
+    <bean id="mobileBaiduReqJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref local="mobileBaiduReqJobTask" />
+        </property>
+        <property name="cronExpression">
+            <value>0 3,6,10,15,20,30,40,55 * * * ?</value>
+        </property>
+    </bean>
+
+
+    <!-- 百度活動 ,生成xml文件  -->
+    <bean id="mobileBaiduXmlJobCronTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+        <property name="jobDetail">
+            <ref local="mobileBaiduXmlJobTask" />
+        </property>
+        <!-- 服务启动5分钟后执行  1*1000*60 毫秒-->
+        <property name="startDelay">
+            <value>300000</value>
+        </property>
+        <property name="repeatInterval">
+            <!-- 每隔4小时执行一次毫秒 5*60*60*1000 -->
+            <value>14400000</value>
+        </property>
+    </bean>
+
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref local="distributionForQihooJobTimes"/>
+                <ref local="distributionForJingdongJobTimes"/>
+                <ref local="distributionPushJobTimes"/>
+                <!-- 	        <ref local="mobileHotelOrderLogJobCronTrigger"/>
+                            <ref local="mobileHotelOrderRelationJobCronTrigger"/>
+                            <ref local="mobileBaiduActJobCronTrigger"/>百度活动
+                            <ref local="mobileBaiduXmlJobCronTrigger"/>百度活动  生成xml文件
+                            <ref local="mobileBaiduReqJobCronTrigger"/>百度活动 初始化最大请求数
+                 -->
+            </list>
+        </property>
+    </bean>
+</beans>

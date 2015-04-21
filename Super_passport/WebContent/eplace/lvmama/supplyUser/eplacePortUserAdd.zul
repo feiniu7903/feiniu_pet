@@ -1,0 +1,154 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_eplace_user_add"?>
+	<window id="win_eplace_user_add" title="开通账号" border="normal"
+		apply="com.lvmama.eplace.web.lvmama.supplyUser.EplacePortUserAddAction">
+		<groupbox style="border: none">
+			<caption label="添加权限配置" />
+			<grid>
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label value="登录名:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox id="lv_userId"
+								value="@{saction.passPortUser.userId}"
+								constraint="no empty:用户登陆名不能为空" width="150px">
+							</textbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="密码:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox id="lv_password" type="password"
+								value="@{saction.passPortUser.password}"
+								constraint="no empty:密码不能为空" width="150px">
+							</textbox>
+							<label id="reply_length_msg"
+								value="密码长度不能少于6位" visible="false">
+							</label>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="重复密码:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox id="reply_password" type="password"
+								constraint="no empty:重复密码不能为空" width="150px">
+							</textbox>
+							<label id="reply_msg" value="密码与重复密码不同"
+								visible="false">
+							</label>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="真实姓名:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox id="real_userName"
+								value="@{saction.passPortUser.name}"
+								constraint="no empty:真实姓名不能为空" width="150px">
+							</textbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="菜单权限:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<listbox
+								model="@{saction.passPortAuthResourcesList}">
+								<listitem
+									self="@{each='passPortResources'}">
+									<listcell>
+										<checkbox
+											checked="@{passPortResources.checked}"
+											label="@{passPortResources.resourceName}">
+										</checkbox>
+									</listcell>
+								</listitem>
+							</listbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="采购产品权限:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<listbox
+								model="@{saction.supplierRelateProductList}">
+								<listitem
+									self="@{each='supplyProduct'}">
+									<listcell>
+										<checkbox
+											checked="@{supplyProduct.checked}"
+											label="@{supplyProduct.metaProductBranch.branchName}">
+										</checkbox>
+									</listcell>
+								</listitem>
+							</listbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox></hbox>
+						<hbox>
+							<button id="btnSaleDealAdd" width="100px"
+								label="新增" onClick='chk_value();'>
+								<custom-attributes
+									supplierId="@{saction.supplierId}" />
+							</button>
+							<button id="btnClose" width="100px"
+								label="关闭" onClick="win_eplace_user_add.detach()" />
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<zscript><![CDATA[
+	public void chk_value() {
+		if (lv_userId.getValue() == "") {
+			return;
+		}
+		if (lv_password.getValue() == "") {
+			return;
+		}
+		if (lv_password.getValue().length() < 6) {
+			reply_length_msg.setVisible(true);
+			return;
+		} else {
+			reply_length_msg.setVisible(false);
+		}
+		if (reply_password.getValue() == "") {
+			return;
+		}
+		if (!lv_password.getValue().equals(reply_password.getValue())) {
+			reply_msg.setVisible(true);
+			return;
+		} else {
+			reply_msg.setVisible(false);
+		}
+		if (real_userName.getValue() == "") {
+			return;
+		}
+		saction.addPassPortUser(self.getAttribute("supplierId"));
+	}
+]]>
+</zscript>
+	</window>
+</zk>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EBK_PROD_RELATION" >
+
+  <typeAlias alias="ebkProdRelationDO" type="com.lvmama.comm.bee.po.ebooking.EbkProdRelation" />
+
+  <resultMap id="ebkProdRelationDOResultMap" class="ebkProdRelationDO" >
+    <result property="relationId" column="RELATION_ID" />
+    <result property="saleNumType" column="SALE_NUM_TYPE" />
+    <result property="ebkProductId" column="EBK_PRODUCT_ID" />
+    <result property="relateProductId" column="RELATE_PRODUCT_ID" />
+    <result property="relateProdBranchId" column="RELATE_PROD_BRANCH_ID" />
+    <result property="relateProductName" column="RELATE_PRODUCT_NAME" />
+    <result property="relateProdBranchName" column="RELATE_PROD_BRANCH_NAME" />
+    <result property="relateProductType" column="RELATE_PRODUCT_TYPE"/>
+  </resultMap>
+  <sql id="ebkProdRelation_columns" >
+    A1.RELATION_ID,A1.SALE_NUM_TYPE,A1.EBK_PRODUCT_ID,A1.RELATE_PRODUCT_ID,A1.RELATE_PROD_BRANCH_ID,A1.RELATE_PRODUCT_NAME,A1.RELATE_PROD_BRANCH_NAME,A1.RELATE_PRODUCT_TYPE
+  </sql>
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="ebkProductId" prepend="AND" >
+        <![CDATA[  
+        EBK_PRODUCT_ID = #ebkProductId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="relateProdBranchId" prepend="AND" >
+        <![CDATA[  
+        RELATE_PROD_BRANCH_ID = #relateProdBranchId#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+  <insert id="insert" parameterClass="ebkProdRelationDO" >
+  	<selectKey keyProperty="relationId" resultClass="java.lang.Long" >
+       SELECT EBK_PROD_RELATION_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO EBK_PROD_RELATION(RELATION_ID,SALE_NUM_TYPE,EBK_PRODUCT_ID,RELATE_PRODUCT_ID,RELATE_PROD_BRANCH_ID,RELATE_PRODUCT_NAME,RELATE_PROD_BRANCH_NAME,RELATE_PRODUCT_TYPE)
+     VALUES ( #relationId#, #saleNumType#, #ebkProductId#, #relateProductId#, #relateProdBranchId#,#relateProductName#,#relateProdBranchName#,#relateProductType#)
+  </insert>
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="ebkProdRelationDOResultMap" >
+     SELECT 
+    <include refid="ebkProdRelation_columns" />
+    <![CDATA[  
+     FROM EBK_PROD_RELATION a1 WHERE RELATION_ID = #relationId#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_RELATION WHERE RELATION_ID = #relationId#
+    ]]>  
+  </delete>
+  <select id="countByDOExample" parameterClass="ebkProdRelationDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(RELATION_ID) AS num FROM EBK_PROD_RELATION 
+    <include refid="queryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="ebkProdRelationDOResultMap" parameterClass="ebkProdRelationDO" >
+     SELECT 
+    <include refid="ebkProdRelation_columns" />
+     FROM EBK_PROD_RELATION a1 
+    <include refid="queryParams" />
+  </select>
+</sqlMap>

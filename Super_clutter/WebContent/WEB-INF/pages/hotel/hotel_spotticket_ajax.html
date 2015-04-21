@@ -1,0 +1,41 @@
+<#if placelist?? && placelist?size&gt;0>
+<#assign hostName = reauestHostName/>
+		<#list placelist as place>
+		  <article onclick="union_skip('http://${hostName}/ticket/piao-${place.id}/');">
+	                  <div class="pro-pic" style="background-image: url(${prefixPic!}${place.middleImage!})">
+	                      <#if place.canOrderToday>
+	                          <img src="${prefix_pic_url!}/img/today-book.png">
+	                      </#if>
+	                  </div>				            
+	                  <div class="pro-info">
+	                      <h2>${place.name?default("")}</h2>
+	                      <p>
+	                          <span class="f-color-1 value fl">&yen; ${place.sellPriceYuan!} <i>起</i></span><del class="fl ml10">&yen; ${place.marketPriceYuan!}</del>
+	                          <span class="fr"><#if place.cmtStarts?? &&  place.cmtStarts!="" >${place.cmtStarts!}分</#if></span>
+	
+	                      </p>
+	                      <p>
+	                          <span class="fl">${place.subject!}</span>
+	                          <span class="fr f-color-1 rebate">
+	                              <#if place.hasBusinessCoupon?? &&  place.hasBusinessCoupon >
+	                                  <i class="ic_hui"></i>
+	                              </#if>
+	                              <#if place.cashRefund?? &&  place.cashRefund >
+	                                  <i class="ic_fan"></i></#if>
+	                              <#if place.cashRefund>
+	                                  <em>&yen;${place.cashRefundY!}</em>
+	                              </#if>
+	                          </span>
+	                      </p>
+	                      <p class="f-size-10">${place.address!}</p>
+	                  </div>
+	        </article>
+	     </#list>
+   <#else>
+   <#assign no_data_msg="没有找到合适的景点">
+   <#include "../common/no_data_list.html">
+</#if>
+<input id = "tmp_p" type ="hidden" value = "${pageIndex!}"/>
+<#if isLastPage?? && isLastPage  >
+    <input id="lastPage_flag" type="hidden" value="1"/>
+</#if>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDSETTLEMENTPAYMENT" >
+	<typeAlias alias="OrdSettlementPayment" type="com.lvmama.finance.settlement.ibatis.po.OrdSettlementPayment"/>
+	
+	<resultMap id="abatorgenerated_OrdSettlementPaymentResult" class="com.lvmama.finance.settlement.ibatis.po.OrdSettlementPayment" >
+	  <result column="SETTLEMENT_PAYMENT_ID" property="settlementPaymentId" jdbcType="DECIMAL" />
+	  <result column="TARGET_ID" property="targetId" jdbcType="DECIMAL" />
+	  <result column="SETTLEMENT_ID" property="settlementId" jdbcType="DECIMAL" />
+	  <result column="PAYTYPE" property="paytype" jdbcType="VARCHAR" />
+	  <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+	  <result column="BANK" property="bank" jdbcType="VARCHAR" />
+	  <result column="SERIAL" property="serial" jdbcType="VARCHAR" />
+	  <result column="OPERATETIME" property="operatetime" jdbcType="TIMESTAMP" />
+	  <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	  <result column="CREATOR" property="creator" jdbcType="DECIMAL" />
+	  <result column="CREATETIME" property="createtime" jdbcType="TIMESTAMP" />
+	  <result column="TARGET_NAME" property="targetName" />
+	  <result column="travelGroupCode" property="travelGroupCode" />
+	  <result column="branchName" property="branchName" />
+	  <result column="productName" property="productName" />
+	</resultMap>
+  
+  <!-- 查询供应商的预存款支付记录 begin-->
+  <select id="searchAdvancedepositsPayment" parameterClass="long" resultClass="OrdSettlementPayment">
+  	SELECT
+  		A.TARGET_ID as targetId,
+  		SETTLEMENT_ID as settlementId,
+  		TRAVEL_GROUP_CODE AS travelGroupCode,
+  		OPERATETIME as operatetime,
+  		AMOUNT/100 AS amount,
+  		B.NAME AS targetName
+  	FROM
+  		ORD_SETTLEMENT_PAYMENT A,
+  		SUP_SETTLEMENT_TARGET B
+  	WHERE
+  		A.TARGET_ID = B.TARGET_ID(+)
+  	AND
+  		A.PAYTYPE = 'ADVANCEDEPOSITS'
+  	AND
+  		B.SUPPLIER_ID = #supplierId#
+  </select>
+  <!-- 查询预存款支付记录 end-->
+  
+  <!-- 添加供应商的预存款支付记录 begin-->
+  <insert id="insertPayment" parameterClass="OrdSettlementPayment">
+  	INSERT INTO 
+  		ORD_SETTLEMENT_PAYMENT
+  	(
+  		SETTLEMENT_PAYMENT_ID,
+  		TARGET_ID,
+  		SETTLEMENT_ID,
+  		PAYTYPE,
+  		AMOUNT,
+  		BANK,
+  		SERIAL,
+  		OPERATETIME,
+  		REMARK,
+  		CREATOR,
+  		CREATETIME,
+  		CURRENCY,
+  		TRAVEL_GROUP_CODE,
+  		INVOICE_RETDATE,
+  		RATE,
+  		GROUP_SETTLEMENT_ID
+  	)VALUES(
+  		SETTLEMENT_PAYMENT_ID_SEQ.NEXTVAL,
+  		#targetId#,
+  		#settlementId#,
+  		#paytype#,
+		#amount#*100,	
+  		#bank#,
+  		#serial#,
+  		#operatetime#,
+  		#remark#,
+  		#creator#,
+  		#createtime#,
+  		#currency#,
+  		#travelGroupCode#,
+  		#invoiceRetdate#,
+  		#rate#,
+  		#groupSettlementId#
+  	)
+  </insert>
+  <!-- 添加供应商的预存款支付记录 begin-->
+  
+  <!-- 根据供应商名称、支付平台查询支付记录 -->
+  <select id="getOrdSettlementPaymentHistory" parameterClass="map" resultClass="OrdSettlementPayment">
+  	<include refid="pageSearchHead"/>
+  		SELECT 
+			T1.TRAVEL_GROUP_CODE AS travelGroupCode,
+           	T1.SETTLEMENT_ID AS settlementId,
+           	T1.BANK AS bank,
+           	T1.SERIAL AS serial,
+           	T1.AMOUNT AS amount,
+           	T1.OPERATETIME AS operatetime,
+           	T1.CREATETIME AS createtime,
+           	T3.SUPPLIER_NAME AS supplierName,
+           	C.CURRENCY_NAME AS currency
+       	FROM 
+       		ORD_SETTLEMENT_PAYMENT T1,
+           	SUP_SETTLEMENT_TARGET  T2,
+           	SUP_SUPPLIER           T3,
+       		FIN_CURRENCY 			C
+       	WHERE 
+       		T1.TARGET_ID = T2.TARGET_ID
+       	AND 
+       		T2.SUPPLIER_ID = T3.SUPPLIER_ID
+       	AND
+       		T1.CURRENCY = C.CURRENCY
+  	<isNotEmpty property="settlementId">
+  		AND
+  			T1.SETTLEMENT_ID = #settlementId#
+  	</isNotEmpty>
+  	<isNotEmpty property="currency">
+  		AND
+  			T1.CURRENCY = #currency#
+  	</isNotEmpty>
+  	<isNotEmpty property="supplierId">
+  		AND
+  			T3.SUPPLIER_ID = #supplierId#
+  	</isNotEmpty>
+  	<isNotEmpty property="platform">
+	  	AND
+	  		T1.BANK like #platform#
+  	</isNotEmpty>
+  	<isNotEmpty property="payTimeStart">
+  		AND	
+			T1.OPERATETIME &gt;= TRUNC(TO_DATE(#payTimeStart#,'YYYY-MM-DD'))
+  	</isNotEmpty>
+  	<isNotEmpty property="payTimeEnd">
+	  	AND	
+			T1.OPERATETIME &lt; TRUNC(TO_DATE(#payTimeEnd#,'YYYY-MM-DD') + 1)
+  	</isNotEmpty>
+  	<isNotEmpty property="groupId">
+  		AND 
+  			T1.TRAVEL_GROUP_CODE = #groupId#
+  	</isNotEmpty>
+ 	ORDER BY 
+ 		T1.CREATETIME DESC
+  	<include refid="pageSearchFoot"/>
+  </select>
+  <select id="getOrdSettlementPaymentHistoryCount" parameterClass="map" resultClass="int">
+  			SELECT 
+  			   	COUNT(T1.SETTLEMENT_PAYMENT_ID)
+        	FROM ORD_SETTLEMENT_PAYMENT T1,
+               	SUP_SETTLEMENT_TARGET  T2,
+               	SUP_SUPPLIER           T3,
+       			FIN_CURRENCY 			C
+         	WHERE 
+         		T1.TARGET_ID = T2.TARGET_ID
+           	AND 
+           		T2.SUPPLIER_ID = T3.SUPPLIER_ID
+	       	AND
+	       		T1.CURRENCY = C.CURRENCY
+  	<isNotEmpty property="settlementId">
+  		AND
+  			T1.SETTLEMENT_ID = #settlementId#
+  	</isNotEmpty>
+  	<isNotEmpty property="currency">
+  		AND
+  			T1.CURRENCY = #currency#
+  	</isNotEmpty>
+  	<isNotEmpty property="supplierId">
+  		AND
+  			T3.SUPPLIER_ID = #supplierId#
+  	</isNotEmpty>
+  	<isNotEmpty property="platform">
+	  	AND
+	  		T1.BANK like #platform#
+  	</isNotEmpty>
+  	<isNotEmpty property="payTimeStart">
+  		AND	
+			T1.OPERATETIME &gt;= TRUNC(TO_DATE(#payTimeStart#,'YYYY-MM-DD'))
+  	</isNotEmpty>
+  	<isNotEmpty property="payTimeEnd">
+	  	AND	
+			T1.OPERATETIME &lt; TRUNC(TO_DATE(#payTimeEnd#,'YYYY-MM-DD') + 1)
+  	</isNotEmpty>
+  	<isNotEmpty property="groupId">
+  		AND 
+  			T1.TRAVEL_GROUP_CODE = #groupId#
+  	</isNotEmpty>
+  </select>
+  <select id="searchAllCurrency" resultClass="com.lvmama.comm.vo.Currency">
+		SELECT 
+			A.CURRENCY AS currency, 
+			A.CURRENCY_NAME AS currencyName 
+		FROM 
+			FIN_CURRENCY A
+	</select>
+	
+	<select id="searchLastCurrency" parameterClass="long" resultClass="string">
+		SELECT 
+			CURRENCY 
+		FROM (
+			SELECT 
+				A.CURRENCY 
+			FROM 
+				LVMAMA_PET.SET_SETTLEMENT_PAYMENT A,
+				SUP_SETTLEMENT_TARGET B
+			WHERE 
+				A.TARGET_ID = B.TARGET_ID 
+			AND
+				B.SUPPLIER_ID =#id#  
+			ORDER BY 
+				CREATETIME 
+			DESC 
+			) 
+		WHERE  
+			ROWNUM &lt;=1
+	</select>
+	
+</sqlMap>

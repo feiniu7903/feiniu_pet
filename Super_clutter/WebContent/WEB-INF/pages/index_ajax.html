@@ -1,0 +1,28 @@
+  <#assign prefix_pic_url="http://pic.lvmama.com/img/mobile/touch">
+   <#setting number_format="#.##"> 
+  <#if recommendList?? && recommendList?size&gt;0>
+			<#list recommendList as rec>           
+            	<li>
+                  	<#if rec.url?index_of("?")!=-1>
+				    	<a href="${rec.url}&channel=wap" >
+				    <#else>
+				    <a href="${rec.url}?channel=wap" >
+				    </#if>
+                  	<img src="${rec.absoluteRecommendImageUrl!}" alt="${rec.recommendTitle?default("")}" />
+                    <h3>${rec.recommendTitle?default("")}</h3>
+                    <p>
+                    	<#-- if rec.recommendContent?? && rec.recommendContent?length &gt; 40 > 
+									${rec.recommendContent[0..40]?default("")} ...
+							<#else>
+									${rec.recommendContent?default("")}
+							</#if -->
+						${rec.recommendContent?default("")}
+                    </p>
+                  </a>
+                </li>
+            	</#list> 
+	   		  </#if>
+    <input id = "tmp_p" type ="hidden" value = "${page}"/>
+	<#if isLastPage  >
+		<input id = "lastPage_flag" type ="hidden" value = "1"/>
+	</#if>

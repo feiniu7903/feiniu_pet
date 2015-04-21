@@ -1,0 +1,73 @@
+<?page title="list PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_sale"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?> 
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_sale" title="公共信息提醒设置" mode="embedded"
+		apply="com.lvmama.back.web.log.MessageReceiversQueryAction">
+		<grid>
+			<columns>
+				<column width="80px"></column>
+				<column ></column>
+				<column ></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>项目名称：</hbox>
+					<hbox>
+						<textbox id="ordOrderId"
+							value="@{saction.searchMessageMap.messageName}">
+						</textbox>
+					</hbox>
+					<hbox >
+						<button label="查询" id="search" width="100px"
+							onClick="saction.queryMsgReceiver();" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<button visible="false" id="refreshDataBtn" />
+		<listbox
+			model="@{saction.comMessageReceiverList,load-after='search.onClick,_paging.onPaging,refreshDataBtn.onClick'}">
+			<listhead>
+				<listheader label="指定项目" width="15%" />
+				<listheader label="指定人(组)"  />
+				<listheader label="操作" width="20%"/>
+			</listhead>
+			<listitem height="25px" self="@{each='msg'}">
+				<listcell label="@{msg.messageName}" />
+				<listcell label="@{msg.messageReceivers}" />
+				<listcell >
+					<a permCode="1105" style="color:blue" label="指定"
+						onClick='saction.showWindow("/log/message/messageReceiverAdd.zul",self.getAttributes());'>
+						<custom-attributes
+							messageTypeId="@{msg.messageTypeId}" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="10"
+								onPaging='saction.queryMsgReceiver();' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	</window>
+</zk>
+
+
+

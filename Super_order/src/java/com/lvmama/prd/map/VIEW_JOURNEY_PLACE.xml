@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VIEW_JOURNEY_PLACE">
+	<delete id="deleteByJourneyId" parameterClass="java.lang.Long">
+		delete VIEW_JOURNEY_PLACE
+		where JOURNEY_ID = #journeyId#
+	</delete>
+	
+  <select id="select_sup_prod_target" parameterClass="java.lang.Long" resultClass="com.lvmama.comm.pet.po.pub.CodeItem">
+		select 
+		  	t5.place_id as "code", 
+		  	t5.NAME as "name"
+		from view_product_group  t1,
+	         prod_product_place t2,
+		     COM_PLACE     t5
+		 where t1.page_id = #pageId#
+		   and t1.product_id=t2.product_id
+		   and t2.place_id=t5.place_id
+   </select>
+   
+  <resultMap class="com.lvmama.comm.bee.po.prod.ViewJourneyPlace" id="BaseResultMap">
+    <result column="JOURNEY_PLACE_ID" property="journeyPlaceId" />
+    <result column="PLACE_ID" property="placeId" />
+    <result column="JOURNEY_ID" property="journeyId" />
+  </resultMap>
+  <select id="selectByJourneyId" parameterClass="java.lang.Long" resultClass="com.lvmama.comm.bee.po.prod.ViewJourneyPlace">
+    select 
+    	t.JOURNEY_PLACE_ID as "journey_place_id", 
+    	t.PLACE_ID as "placeId", 
+    	t.JOURNEY_ID as "journeyId" ,
+     	t2.name as "placeName"
+    from VIEW_JOURNEY_PLACE t, com_place t2
+    where t.place_id=t2.place_id
+    and t.JOURNEY_ID = #journeyId#
+  </select>
+  <select id="selectByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourneyPlace" resultMap="BaseResultMap">
+    select JOURNEY_PLACE_ID, PLACE_ID, JOURNEY_ID
+    from VIEW_JOURNEY_PLACE
+    where JOURNEY_PLACE_ID = #journeyPlaceId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourneyPlace">
+    delete from VIEW_JOURNEY_PLACE
+    where JOURNEY_PLACE_ID = #journeyPlaceId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourneyPlace">
+    <selectKey keyProperty="journeyPlaceId" resultClass="Long">
+  		select VIEW_JOURNEY_PLACE_ID_SEQ.nextVal FROM DUAL
+  	</selectKey> 
+    insert into VIEW_JOURNEY_PLACE (JOURNEY_PLACE_ID, PLACE_ID, JOURNEY_ID)
+    values ( #journeyPlaceId#, #placeId#, #journeyId#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ViewJourneyPlace">
+    update VIEW_JOURNEY_PLACE
+    set PLACE_ID = #placeId#,
+      JOURNEY_ID = #journeyId#
+    where JOURNEY_PLACE_ID = #journeyPlaceId#
+  </update>
+</sqlMap>

@@ -1,0 +1,16 @@
+<?page title="修复二维码数据" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./myWin"?>
+<zk>
+<window id="myWin" title="修复二维码数据" border="normal" apply="com.lvmama.passport.web.pass.FixedPassCodeStatusAction">
+<zscript>
+		<![CDATA[
+			public void FixedDates() {
+				saction.doFixedDate();
+			}
+		]]>			
+</zscript>
+<hbox>
+<button label="点击修复"  id="fixed" width="100px" onClick='FixedDates();'/>
+</hbox>
+</window>
+</zk>

@@ -1,0 +1,155 @@
+<?page title="目的地 批量添加标签" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./place_tagbatch"?>
+<zk>
+	<window id="place_tagbatch" title="目的地 批量添加标签" border="normal"
+		apply="com.lvmama.back.web.tag.PlaceTagAction">
+		<groupbox style="border: none">
+			<groupbox
+				style="margin-top:10px;margin-bottom:10px;padding:10px;">
+				
+				<hbox>
+					小组名：
+					<listbox mold="select" id="tagGroup"
+						model="@{saction.groupsList}"
+						onSelect='saction.selectTagesInGroups(self.selectedItem.value);saction.getProdTag().setTagId(null);'
+						style="width:100px;">
+						<listitem self="@{each=prodTagGroup}"
+							value="@{prodTagGroup.tagGroupId}"
+							label="@{prodTagGroup.tagGroupName}">
+						</listitem>
+					</listbox>
+
+					标签名：
+					
+					<listbox id="tagListbox"
+							model="@{saction.prodTagList,load-after='tagGroup.onSelect'}"
+							mold="select" style="width:90px"
+							onSelect="saction.prodTag.setTagId(self.selectedItem.value);">
+							<listitem self="@{each=prodTag}"
+								label="@{prodTag.tagName}" value="@{prodTag.tagId}" />
+					</listbox>
+					
+					目的地 编号：
+						<textbox id="placeIds" rows="2" onChange="saction.setPlaceIds(self.value)" width="500px">
+						</textbox>
+					</hbox>
+					
+					<hbox style="padding:5px;">
+						类型：
+						<radiogroup id="placeStageRadio" onCheck="saction.place.setStage(self.selectedItem.value)">
+							<radio value="2" label="景点"/>
+							<radio value="3" label="酒店"/>
+						</radiogroup>
+						<textbox id="placeNameText" onChange="saction.place.setName(self.value)" width="200px">
+						</textbox>
+					</hbox>
+					
+					<hbox style="padding-left:400px;">
+						<button label="查询" width="100px"
+							id="queryPlaceByTagAndPlaceType"
+							onClick='saction.queryPlaceByTagAndPlaceType();saction.selectedPlaceList.clear();_paging.activePage=0;'>
+						</button>
+					</hbox>
+			</groupbox>
+
+			<grid>
+				<columns>
+					<column></column>
+					<column width="60px"></column>
+					<column></column>
+					<column width="100px"></column>
+				</columns>
+				<rows>
+					<row valign="top">
+						<vbox>
+							<vbox>
+								<hbox>
+									<listbox id="searchListbox"
+										multiple="true" checkmark="true" mold="paging" 
+										model="@{saction.searchPlaceList,load-after='queryPlaceByTagAndPlaceType.onClick,_paging.onPaging'}"  >
+										<listhead>
+											<listheader label="编号"
+												width="30%" />
+											<listheader width="60%" label="目的地名称" />
+											<listheader  width="10%"  label="操作" />
+										</listhead>
+										<listitem height="25px"
+											self="@{each=place}" value="@{place}">
+											<listcell
+												label="@{place.placeId }">
+											</listcell>
+											<listcell
+												label="@{place.name}">
+											</listcell>
+											<listcell
+												label="">
+													<a  style="color:blue" label="标签" onClick='saction.showWindow("/tag/place_tag.zul", self.getAttributes());'>
+														<custom-attributes placeId="@{place.placeId}" />
+												   </a>
+											</listcell>
+										</listitem>
+									</listbox>
+								</hbox>
+								<hbox>
+								<paging id="_paging" pageSize="20" onPaging="saction.queryPlaceByTagAndPlaceType();"></paging>
+								</hbox>
+							</vbox>
+						</vbox>
+						<vbox width="60px">
+							<vbox>
+								<button  label="添加"
+									id="addSelectedPlaceList"
+									onClick="saction.addSelectedPlaceList(searchListbox.getSelectedItems());" />
+								<button  label="删除"
+									id="delSelectedPlaceList"
+									onClick="saction.delSelectedPlaceList(selectedSearchPlaceList.getSelectedItems());" />
+								<button id="refreshBtn"
+									visible="false">
+								</button>
+							</vbox>
+						</vbox>
+						<vbox>
+							<hbox>
+								<listbox id="selectedSearchPlaceList"
+									multiple="true" checkmark="true" mold="paging" pageSize="20"
+									model="@{saction.selectedPlaceList,load-after='addSelectedPlaceList.onClick,delSelectedPlaceList.onClick,queryPlaceByTagAndPlaceType.onClick'}">
+									<listhead>
+										<listheader label="编号"
+											width="20%" />
+										<listheader label="目的地名称" />
+									</listhead>
+									<listitem height="25px"
+										self="@{each=place}" value="@{place}">
+										<listcell
+											label="@{place.placeId }">
+										</listcell>
+										<listcell
+											label="@{place.name }">
+										</listcell>
+									</listitem>
+								</listbox>
+							</hbox>
+						</vbox>
+						<vbox style="text-align:center;">
+							<hbox>
+								<button label="添加标签"
+									onClick='saction.showWin("/tag/place_tagaddordel.zul");'>
+								</button>
+								
+							</hbox>
+							<hbox>
+								<button label="删除标签关联"
+									onClick='saction.showWin("/tag/del_place_tag.zul");'>
+								</button>
+								
+							</hbox>
+						</vbox>
+					</row>
+				</rows>
+			</grid>
+			<toolbar align="center"></toolbar>
+
+
+		</groupbox>
+	</window>
+</zk>

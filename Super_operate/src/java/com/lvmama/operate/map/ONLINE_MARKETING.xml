@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ONLINE_MARKETING" >
+  <resultMap id="orderPlaceGuide" class="com.lvmama.comm.pet.po.edm.EdmOrderPlaceGuide" >
+    <result column="PLACE_ID" property="placeId" />
+	<result column="PLACE_NAME" property="placeName" />
+    <result column="EMAIL" property="email" />
+  </resultMap>
+	<select id="getPlaceEmail" resultMap="orderPlaceGuide">
+		SELECT DISTINCT (CASE
+		                  WHEN REGEXP_LIKE(REGEXP_REPLACE(SPID,
+		                                                  '^-(\d+)-(\d+)-(\d+).*$$',
+		                                                  '\3'),
+		                                   '^(79|1|2|277|398|400)$$') OR
+		                       REGEXP_LIKE(SPID, '^-(\d+)-(\d+)-(\d+)$$') THEN
+		                   REGEXP_REPLACE(SPID, '^-(\d+)-(\d+)-(\d+).*$$', '\3')
+		                  WHEN REGEXP_REPLACE(SPID,
+		                                      '^-(\d+)-(\d+)-(\d+)-(\d+).*$$',
+		                                      '\4') NOT LIKE '-%' THEN
+		                   REGEXP_REPLACE(SPID,
+		                                  '^-(\d+)-(\d+)-(\d+)-(\d+).*$$',
+		                                  '\4')
+		                  ELSE
+		                   NULL
+		                END) PLACE_ID,
+		                (CASE
+		                  WHEN REGEXP_LIKE(REGEXP_REPLACE(SPID,
+		                                                  '^-(\d+)-(\d+)-(\d+).*$$',
+		                                                  '\3'),
+		                                   '^(79|1|2|277|398|400)$$') OR
+		                       REGEXP_LIKE(SPID, '^-(\d+)-(\d+)-(\d+)$$') THEN
+		                   REGEXP_REPLACE(SPNAME,
+		                                  '^,([^,]+),([^,]+),([^,]+).*$$',
+		                                  '\3')
+		                  WHEN REGEXP_REPLACE(SPID,
+		                                      '^-(\d+)-(\d+)-(\d+)-(\d+).*$$',
+		                                      '\4') NOT LIKE '-%' THEN
+		                   REGEXP_REPLACE(SPNAME,
+		                                  '^,([^,]+),([^,]+),([^,]+),([^,]+).*$$',
+		                                  '\4')
+		                  ELSE
+		                   NULL
+		                END) PLACE_NAME,
+		                S.EMAIL EMAIL
+		  FROM (SELECT LEVEL LL,
+		               ID,
+		               SYS_CONNECT_BY_PATH(P.ID, '-') SPID,
+		               SYS_CONNECT_BY_PATH(P.NAME, ',') SPNAME
+		          FROM LVMM_LAND.P_PLACE P
+		         WHERE P.IS_VALID = 'Y'
+		         START WITH P.DEST_ID IS NULL
+		                AND P.IS_VALID = 'Y'
+		        CONNECT BY PRIOR P.ID = P.DEST_ID) A,
+		       LVMM_LAND.S_PROD_PRODUCT_PLACE P,
+		       LVMM_LAND.S_PROD_PRODUCT T1,
+		       LVMM_LAND.S_ORD_ORDER O,
+		       LVMM_LAND.S_ORD_PERSON S,
+		       (SELECT ORDER_ID, PRODUCT_ID
+		          FROM (SELECT I.ORDER_ID,
+		                       I.PRODUCT_ID,
+		                       ROW_NUMBER() OVER(PARTITION BY ORDER_ID ORDER BY(CASE
+		                         WHEN I.WRAP_PAGE =
+		                              'true' AND
+		                              I.ADDITIONAL =
+		                              'false' THEN
+		                          1
+		                         WHEN (I.WRAP_PAGE !=
+		                              'true' OR
+		                              I.WRAP_PAGE IS NULL) AND
+		                              I.ADDITIONAL =
+		                              'false' THEN
+		                          2
+		                         ELSE
+		                          3 +
+		                          ROWNUM
+		                       END) ASC) RN
+		                  FROM LVMM_LAND.S_ORD_ORDER_ITEM_PROD I) A
+		         WHERE A.RN = 1) I
+		 WHERE REGEXP_REPLACE(SPID, '^(.*)-(\d+)$$', '\2') = P.PLACE_ID
+		   AND P.PRODUCT_ID = T1.PRODUCT_ID
+		   AND T1.SUB_PRODUCT_TYPE NOT IN ('FREENESS_FOREIGN', 'GROUP_FOREIGN')
+		   AND P.TO_PLACE = 'true'
+		   AND O.ORDER_ID = S.OBJECT_ID
+		   AND O.ORDER_ID = I.ORDER_ID
+		   AND I.PRODUCT_ID = T1.PRODUCT_ID
+		   AND O.PAYMENT_STATUS = 'PAYED'
+		   AND O.CREATE_TIME >= TRUNC(SYSDATE - 1)
+		   AND O.CREATE_TIME &lt; TRUNC(SYSDATE)
+		   AND S.OBJECT_TYPE = 'ORD_ORDER'
+		   AND S.PERSON_TYPE IN ('BOOKER', 'CONTACT')
+		   AND S.EMAIL IS NOT NULL
+	  </select>
+	 <sql id="searchMetaTable">
+	 	SELECT e.email
+  		  FROM LVMM_LAND.S_EDM_SUBSCRIBE E, LVMM_LAND.S_EDM_SUBSCRIBE_INFO I
+	 </sql>
+	 <sql id="searchMetaFilter">
+	 	 WHERE E.ID = I.EDM_USER_ID
+   		   AND I.IS_VALID = 'Y'
+   		 <dynamic>
+   		 	<isNotNull prepend=" AND " property="userSubscribeType">I.TYPE=#userSubscribeType#</isNotNull>
+   		 	
+   		 </dynamic>
+	 </sql>
+	 <sql id="dwUserValueSql">
+	 	, USER_RATE R 
+	 </sql>
+	 <sql id="dwSubFilterSql">
+			<isNotNull property="sensitiveFrom" prepend=" AND "> R.SENSITIVE_VALUE &gt;=#sensitiveFrom# </isNotNull>
+			<isNotNull property="sensitiveTo" prepend=" AND "> R.SENSITIVE_VALUE &lt;#sensitiveTo# </isNotNull>
+			<isNotNull property="userType" prepend=" AND "> R.USER_TYPE =#userType# </isNotNull>
+	 </sql>
+	 <sql id="dwUserFilterSql">
+	 	AND U.USER_NO = R.USER_ID 
+	 	<dynamic>
+	 		<isNull property="userType" prepend=" AND ">R.USER_TYPE!='DEAD' </isNull>
+			<include refid="dwSubFilterSql"/>
+	 	</dynamic>
+	 </sql>
+	 <sql id="dwSubscribeFilterSql">
+	 	AND E.EMAIL = R.EMAIL 
+	 	<dynamic>
+	 		<isNull property="userType" prepend=" AND ">R.USER_TYPE!='DEAD' </isNull>
+			<include refid="dwSubFilterSql"/>
+	 	</dynamic>
+	 </sql>
+	 <sql id="searchEdmProvinceFilter">
+		 <dynamic>
+		 	<isNotNull prepend="," property="provinceArray">
+	   		 		LVMM_STAGE.PROVINCE_MAP M,LVMM_DW.GEOGRAPHY G
+	   		</isNotNull>
+	   	 </dynamic>
+	 </sql>
+	 <sql id="dwEdmProvinceFilterSql">
+	 	<isNotNull prepend=" AND " property="provinceArray">
+   		 		M.PROVINCE =E.PROVINCE AND M.GEOGRAPHY_KEY = G.GEOGRAPHY_KEY
+   		 		AND G.PROVINCE IN 
+   		 		<iterate property="provinceArray" conjunction="," open="(" close=")">
+						#provinceArray[]# 
+				</iterate>
+   		</isNotNull>
+	 </sql>
+	 <sql id="searchUserProvinceFilter">
+	 	<dynamic>
+		 	<isNotNull prepend="," property="provinceArray">
+	   		 		LVMM_DW.USER_GEOGRAPHY M,LVMM_DW.GEOGRAPHY G
+	   		</isNotNull>
+   		</dynamic>
+	 </sql>
+	 <sql id="dwUserProvinceFilterSql">
+	 	<isNotNull prepend=" AND " property="provinceArray">
+   		 		U.USER_ID =M.USER_ID AND M.GEOGRAPHY_KEY = G.GEOGRAPHY_KEY
+   		 		AND G.PROVINCE IN 
+   		 		<iterate property="provinceArray" conjunction="," open="(" close=")">
+						#provinceArray[]# 
+				</iterate>
+   		</isNotNull>
+	 </sql>
+	 <sql id="searchUserParantSql">
+	 	<include refid="searchMetaTable"/>
+		<include refid="searchEdmProvinceFilter"/>
+		<include refid="dwUserValueSql"/>
+		<include refid="searchMetaFilter"/>
+		<include refid="dwSubscribeFilterSql"/>
+		<include refid="dwEdmProvinceFilterSql"/>
+		AND E.USER_ID IS NULL
+		UNION
+		<include refid="searchMetaTable"/>
+		<include refid="dwUserValueSql"/>
+		,LVMM_LAND.PT_USER_USER U
+		<dynamic>
+			<isNotNull prepend="," property="loginDateFrom">LVMM_LAND.U_USER_ACTION_COLLECTION L</isNotNull>
+			<isNull property="loginDateFrom">
+				<isNotNull prepend="," property="loginDateTo">LVMM_LAND.U_USER_ACTION_COLLECTION L</isNotNull>
+			</isNull>
+			<isNotNull prepend="," property="orderCreateFrom">LVMM_LAND.S_ORD_ORDER O</isNotNull>
+			<isNull property="orderCreateFrom">
+				<isNotNull prepend="," property="orderCreateTo">LVMM_LAND.S_ORD_ORDER O</isNotNull>
+			</isNull>
+		</dynamic>
+		<include refid="searchUserProvinceFilter"/>
+		<include refid="searchMetaFilter"/>
+		<include refid="dwUserFilterSql"/>
+		AND E.USER_ID IS NOT NULL
+		AND E.USER_ID = U.USER_NO
+		<include refid="dwUserProvinceFilterSql"/>
+		<dynamic>
+			<isNotNull prepend=" AND " property="emailIsValid"> U.IS_EMAIL_CHECKED =#emailIsValid# </isNotNull>
+			<isNotNull prepend=" AND " property="mobileIsValid"> U.IS_MOBILE_CHECKED =#mobileIsValid# </isNotNull>
+			<isNotNull prepend=" AND " property="userSubscribeType">I.TYPE=#userSubscribeType#</isNotNull>
+			<isNotNull prepend=" AND " property="registerDateFrom">U.CREATED_DATE  &gt;= #registerDateFrom#</isNotNull>
+			<isNotNull prepend=" AND " property="registerDateTo">U.CREATED_DATE &lt;=#registerDateTo#</isNotNull>
+			<isNotNull prepend=" AND " property="lastLoginFrom"> U.LAST_LOGIN_DATE  &gt;= #lastLoginFrom#</isNotNull>
+			<isNotNull prepend=" AND " property="lastLoginTo">U.LAST_LOGIN_DATE &lt;=#lastLoginTo#</isNotNull>
+			<isNotNull prepend=" AND " property="loginDateFrom">U.USER_ID = L.USER_ID AND L.CREATED_DATE  &gt;= #loginDateFrom#</isNotNull>
+			<isNotNull prepend=" AND " property="loginDateTo">U.USER_ID = L.USER_ID AND L.CREATED_DATE &lt;=#loginDateTo#</isNotNull>
+			<isNotNull prepend=" AND " property="orderCreateFrom">U.USER_NO = O.USER_ID AND O.CREATE_TIME  &gt;= #orderCreateFrom#</isNotNull>
+			<isNotNull prepend=" AND " property="orderCreateTo">U.USER_NO = O.USER_ID AND O.CREATE_TIME &lt;=#orderCreateTo#</isNotNull>
+			<isEqual prepend=" AND " property="emailOrMobile" compareValue="Y"> U.MOBILE_NUMBER IS NOT NULL	</isEqual>
+		</dynamic>
+	 </sql>
+	<select id="searchUserCount" parameterClass="com.lvmama.comm.pet.po.edm.EdmSubscribeUserGroup" resultClass="java.lang.Long">
+		SELECT COUNT(*) FROM (<include refid="searchUserParantSql"/>) T 
+	</select>
+	<select id="searchUser" parameterClass="com.lvmama.comm.pet.po.edm.EdmSubscribeUserGroup" resultClass="java.util.HashMap">
+		SELECT * FROM (SELECT T.*,ROWNUM RN FROM (<include refid="searchUserParantSql"/>) T WHERE ROWNUM&lt;=endRow) T WHERE T.RN&gt;=startRow
+	</select>
+	<select id="searchUserBySqlCount" parameterClass="java.lang.String" resultClass="java.lang.Long" remapResults="true">
+		SELECT COUNT(*) FROM ($value$) A
+	</select>
+	<select id="searchUserBySql" parameterClass="java.lang.String" resultClass="java.util.HashMap" remapResults="true">
+		$value$
+	</select>
+</sqlMap>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_ECONTRACT" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.prod.ProdEContract" >
+    <result column="ECONTRACT_ID" property="eContractId" />
+	<result column="PRODUCT_ID" property="productId" />
+	<result column="ECONTRACT_TEMPLATE" property="eContractTemplate" />
+	<result column="TRAVEL_FORMALITIES" property="travelFormalities" />
+	<result column="OTHER_TRAVELFORMALITIES" property="otherTravelFormalities" />
+	<result column="GUIDE_SERVICE" property="guideService" />
+	<result column="GROUP_TYPE" property="groupType" />
+	<result column="AGENCY" property="agency" />
+	<result column="AGENCY_ADDRESS" property="agencyAddress" />
+	<result column="PATHWAY" property="pathway" />
+	<result column="COMPLEMENT" property="complement" />
+	<result column="MARGIN"     property="margin"/>
+   </resultMap>
+
+
+  <select id="selectByProductId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+	SELECT * FROM PROD_ECONTRACT WHERE PRODUCT_ID = #productId#
+  </select>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.pet.po.prod.ProdEContract" >
+    <selectKey keyProperty="eContractId" resultClass="Long">
+  		select PROD_ECONTRACT_ID_SEQ.nextVal FROM DUAL
+  	</selectKey>
+    INSERT INTO PROD_ECONTRACT (ECONTRACT_ID, PRODUCT_ID, ECONTRACT_TEMPLATE, TRAVEL_FORMALITIES, OTHER_TRAVELFORMALITIES,GUIDE_SERVICE,GROUP_TYPE,AGENCY,AGENCY_ADDRESS,PATHWAY,COMPLEMENT,MARGIN)
+    values (#eContractId#, #productId#, #eContractTemplate#, #travelFormalities#, #otherTravelFormalities#,#guideService#,#groupType#,#agency#,#agencyAddress#,#pathway#,#complement#,#margin#)
+  </insert>
+
+  <update id="updateByProductId" parameterClass="com.lvmama.comm.pet.po.prod.ProdEContract" >
+    UPDATE 
+		PROD_ECONTRACT
+    SET 
+    	ECONTRACT_TEMPLATE = #eContractTemplate#,
+		TRAVEL_FORMALITIES = #travelFormalities#, 
+		OTHER_TRAVELFORMALITIES = #otherTravelFormalities#,
+		GUIDE_SERVICE = #guideService#,
+		GROUP_TYPE = #groupType#,
+		AGENCY = #agency#,
+		AGENCY_ADDRESS = #agencyAddress#,
+		PATHWAY = #pathway#,
+		COMPLEMENT = #complement#,
+		MARGIN=#margin#
+     WHERE PRODUCT_ID = #productId#
+  </update>
+</sqlMap>

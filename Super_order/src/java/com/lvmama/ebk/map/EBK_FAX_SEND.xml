@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EBK_FAX_SEND" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ebooking.EbkFaxSend" >
+    <result column="EBK_FAX_SEND_ID" property="ebkFaxSendId" />
+    <result column="EBK_FAX_TASK_ID" property="ebkFaxTaskId" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="SEND_TIME" property="sendTime" />
+    <result column="TO_FAX" property="toFax" />
+    <result column="SEND_STATUS" property="sendStatus" />
+    <result column="OPERATOR_NAME" property="operatorName" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select *
+    from EBK_FAX_SEND
+    where EBK_FAX_SEND_ID = #ebkFaxSendId#
+  </select>
+  <sql id="selectEbkFaxSendByParamsSeq">
+   select * from EBK_FAX_SEND
+    <dynamic prepend="where">
+   		<isNotEmpty property="ebkFaxSendId" prepend="and">
+   			EBK_FAX_SEND_ID = #ebkFaxSendId#
+   		</isNotEmpty>    
+   		<isNotEmpty property="ebkFaxTaskId" prepend="and">
+   			EBK_FAX_TASK_ID = #ebkFaxTaskId#
+   		</isNotEmpty>    
+    </dynamic>
+  </sql>
+  
+  <select id="getEbkFaxSendCountByParams" resultClass="java.lang.Integer" parameterClass="java.util.Map" >
+    select count(*) from (<include refid="selectEbkFaxSendByParamsSeq" />)
+  </select>
+  
+  <select id="queryEbkFaxSendByParams" resultMap="BaseResultMap" parameterClass="java.util.Map" >
+    <include refid="pageSearchHead" />
+    <include refid="selectEbkFaxSendByParamsSeq" />
+    <include refid="pageSearchFoot" />
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkFaxSend" >
+    delete from EBK_FAX_SEND
+    where EBK_FAX_SEND_ID = #ebkFaxSendId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkFaxSend" >
+    <selectKey resultClass="java.lang.Long" keyProperty="ebkFaxSendId" >
+      select EBK_FAX_SEND_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into EBK_FAX_SEND (EBK_FAX_SEND_ID, EBK_FAX_TASK_ID, CREATE_TIME, SEND_TIME, TO_FAX,
+      SEND_STATUS, OPERATOR_NAME)
+    values (#ebkFaxSendId#, #ebkFaxTaskId#, #createTime#, #sendTime#,
+      #toFax#, #sendStatus#, #operatorName#)
+  </insert>
+  
+   <insert id="insertRepair" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkFaxSend" >
+    insert into EBK_FAX_SEND (EBK_FAX_SEND_ID, EBK_FAX_TASK_ID, CREATE_TIME, SEND_TIME, TO_FAX,
+      SEND_STATUS, OPERATOR_NAME)
+    values (#ebkFaxSendId#, #ebkFaxTaskId#, #createTime#, #sendTime#,
+      #toFax#, #sendStatus#, #operatorName#)
+  </insert>
+  
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkFaxSend" >
+    <selectKey resultClass="java.lang.Long" keyProperty="ebkFaxSendId" >
+      select EBK_FAX_SEND_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into EBK_FAX_SEND
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="ebkFaxSendId" >
+        EBK_FAX_SEND_ID
+      </isNotNull>
+      <isNotNull prepend="," property="ebkFaxTaskId" >
+        EBK_FAX_TASK_ID
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="sendTime" >
+        SEND_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="toFax" >
+        TO_FAX
+      </isNotNull>
+      <isNotNull prepend="," property="sendStatus" >
+        SEND_STATUS
+      </isNotNull>
+      <isNotNull prepend="," property="operatorName" >
+        OPERATOR_NAME
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="ebkFaxSendId" >
+        #ebkFaxSendId#
+      </isNotNull>
+      <isNotNull prepend="," property="ebkFaxTaskId" >
+        #ebkFaxTaskId#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="sendTime" >
+        #sendTime#
+      </isNotNull>
+      <isNotNull prepend="," property="toFax" >
+        #toFax#
+      </isNotNull>
+      <isNotNull prepend="," property="sendStatus" >
+        #sendStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="operatorName" >
+        #operatorName#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkFaxSend" >
+    update EBK_FAX_SEND
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="ebkFaxTaskId" >
+        EBK_FAX_TASK_ID = #ebkFaxTaskId#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="sendTime" >
+        SEND_TIME = #sendTime#
+      </isNotNull>
+      <isNotNull prepend="," property="toFax" >
+        TO_FAX = #toFax#
+      </isNotNull>
+      <isNotNull prepend="," property="sendStatus" >
+        SEND_STATUS = #sendStatus#
+      </isNotNull>
+      <isNotNull prepend="," property="operatorName" >
+        OPERATOR_NAME = #operatorName#
+      </isNotNull>
+    </dynamic>
+    where EBK_FAX_SEND_ID = #ebkFaxSendId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ebooking.EbkFaxSend" >
+    update EBK_FAX_SEND
+    set EBK_FAX_TASK_ID = #ebkFaxTaskId#,
+      CREATE_TIME = #createTime#,
+      SEND_TIME = #sendTime#,
+      TO_FAX = #toFax#,
+      SEND_STATUS = #sendStatus#,
+      OPERATOR_NAME = #operatorName#
+    where EBK_FAX_SEND_ID = #ebkFaxSendId#
+  </update>
+</sqlMap>

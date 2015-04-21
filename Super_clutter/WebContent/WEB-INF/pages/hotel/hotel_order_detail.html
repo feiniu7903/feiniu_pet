@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>酒店订单详情</title>
+    <#include "../common/define_v4.html">
+	<link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/order.css">    
+	<script src="${request.contextPath}/js/hotel.js"></script>
+</head>
+
+<body>
+<div id="container">
+    <header class="header">
+        <a href="javascript:union_back();" class="back"><span class="ic_back"></span></a>
+        <h1>酒店订单详情</h1>
+    </header>
+	<div id="content">
+	    <#if orderDetailResult??>
+		    <section class="common-order">
+		        <!-- <article class="box-sp-1">
+		            <div class="common-order-line tc">
+		                目前只支持显示在手机端预订的酒店订单
+		            </div>
+		        </article> -->
+		        <article>
+		            <div class="common-order-pan t_title">
+		                <h3>订单号：${orderDetailResult.orderId!}</h3>
+		                <#if orderDetailResult.statusCode?? && (
+		            	orderDetailResult.statusCode=="N" || 
+		            	orderDetailResult.statusCode=="V" || 
+		            	orderDetailResult.statusCode=="G" || 
+		            	orderDetailResult.statusCode=="U" || 
+		            	orderDetailResult.statusCode=="O" || 
+		            	orderDetailResult.statusCode=="Z" || 
+		            	orderDetailResult.statusCode=="H" || 
+		            	orderDetailResult.statusCode=="B1"
+		            	)>
+		            	<span> ${orderDetailResult.status!}</span>
+		            	<#else>
+		                	<span class="disable"> ${orderDetailResult.status!}</span>
+		            	</#if>
+		            </div>
+		            <div class="common-order-pan">
+		                <span class="f-color-2">${orderDetailResult.name!}<br>
+							${orderDetailResult.placeType!}${orderDetailResult.numberOfRooms!}间</span>
+		            </div>
+		            <div class="common-order-pan"><a href="tel:${orderDetailResult.phone!}"><span class="icon-tel"></span>酒店电话：<span class="f-color-2">${orderDetailResult.phone!}</span></a>
+		            </div>
+		            <div class="common-order-pan" onclick="hotelMap('${orderDetailResult.name!}','${orderDetailResult.address!}','${orderDetailResult.latitude!}','${orderDetailResult.longitude!}');">
+		            	<span class="icon-map"></span>酒店地址：<span class="f-color-2">${orderDetailResult.address!}</span>
+		            	<span class="ic_ri"></span>
+		            </div>
+		            <div class="common-order-line">
+		               	 总　　额：<span class="f-color-1">&yen;${orderDetailResult.totalPrice!}</span><br>
+		               	 预订日期：<span class="f-color-2">${orderDetailResult.creationDate!}</span><br>
+						入住日期：<span class="f-color-2">${orderDetailResult.arrivalDate!}</span><br>
+						离店日期：<span class="f-color-2">${orderDetailResult.departureDate!}</span>
+		            </div>
+		            <div class="common-order-line">
+		            	<#if orderDetailResult.canCancel>
+		            		<a href="javascript:void(0);" onclick="cancelHotelOrder(${orderDetailResult.orderId!},1);" class="btn_style_2 mr10">取消订单</a>
+		            	</#if>
+		            	<a href="${request.contextPath!}/hotel/hotelDetail.htm?arrivalDate=${arrivalDate!}&departureDate=${departureDate!}&hotelId=${orderDetailResult.hotelId!}" class="btn_style_1 mr10">再次预订</a>
+		            </div>
+		        </article>
+		         <article>
+		            <div class="common-order-line t_title">
+		                <h3>联系人</h3>
+		            </div>
+		            <div class="common-order-line">
+						姓　名：<span class="f-color-2">${orderDetailResult.contact.name!}</span><br>
+						手机号：<span class="f-color-2">${orderDetailResult.contact.mobile!}</span>
+		            </div>
+		        </article>
+		    </section>
+		</#if>   
+	</div>
+    <#include "../common/footer_v4.html"/>
+</div>
+</body>
+</html>

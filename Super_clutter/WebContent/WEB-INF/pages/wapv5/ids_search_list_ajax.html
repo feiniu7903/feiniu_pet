@@ -1,0 +1,83 @@
+<#assign prefix_pic_url="http://pic.lvmama.com/img/mobile/touch">
+<#assign hostName = reauestHostName/>
+ <#setting number_format="#.##">
+ <!-- 线路 -->
+<#if searchStatus?? && searchStatus=="ROUTE">
+	<#if mobileProductList?? && mobileProductList?size&gt;0>
+	 	<#list mobileProductList as product>
+	      <article  onclick="union_skip('http://${hostName}/product/${product.productId}/');">
+	         <a href="javascript:void(0);" class="block">
+	             <div style="background-image: url(http://pic.lvmama.com/pics/super/2011/07/5JBRF.jpg)"
+	                  class="pro-pic"></div>
+	              <div class="pro-info">
+	                  <h2>${product.productName?default("")} </h2>
+                       <p>
+                           <span class="fr pro-value"><small>&yen;</small>${product.sellPriceYuan!}  <i>起</i></span>
+                           <span>${product.zhSubProductType!}${product.visitDay!}天</span>
+                       </p>
+                       <p>
+                       	<#if product.tagList?? && product.tagList?size&gt;0>
+	                            <span class="flag">${product.tagList[0].tagName!}</span>
+                       	</#if>
+                       	<#if product.mobileAlone?? && product.mobileAlone>
+                       		<span class="flag">手机独享</span>
+                       	</#if>
+                           <#if product.cashRefundY?? && product.cashRefundY &gt; 0>
+                            <span class="privilege rose">返&yen;${product.cashRefundY!}</span>
+                           </#if>
+                           <#if product.canDeduction>
+                            <span class="privilege">抵</span>
+                           </#if>
+                           <#if product.hasBusinessCoupon>
+                           	<span class="privilege">惠</span>
+                           </#if>
+                       </p>
+	              </div>
+	          </a>
+	      </article>
+	 	</#list>
+	 <#else>	
+	 	<#assign no_data_msg="没有找到合适的度假列表">
+   		<#include "../common/no_data_list.html">	
+	</#if>
+<#else>
+	<!-- 门票 -->
+	 <#if mobileProductList?? && mobileProductList?size&gt;0>
+		   <#list mobileProductList as place>
+		  	 <article onclick="union_skip('http://${hostName}/ticket/piao-${place.id!}/');">
+		           <a href="javascript:void(0);" class="block">
+		               <div style="background-image: url(${prefixPic!}${place.middleImage!})" class="pro-pic">
+		                <#if place.canOrderToday?? && place.canOrderToday>
+		                	<div class="flag">可订今日票</div>
+		                </#if>
+		               	<!-- <div class="flag phone">手机独享</div> -->
+		                </div>
+		                <div class="pro-info">
+		                    <h2>${place.name?default("")}</h2>
+		                    <p>
+		                        <span class="fr"><#if place.cmtStarts?? &&  place.cmtStarts!="" >${place.cmtStarts!}分</#if></span>
+		                        <span class="pro-value"><small>&yen;</small>${place.sellPriceYuan!}<i>起</i><del class="ml10">&yen; ${place.marketPriceYuan!}</del></span>
+		                    </p>
+		                    <p>
+		                    	<#if place.hasBusinessCoupon?? &&  place.hasBusinessCoupon >
+		               		 <span class="fr privilege rose">惠</span>
+		               	</#if>
+		                    	<#if place.cashRefund?? &&  place.cashRefund >
+		               		 <span class="fr privilege rose">返&yen;${place.cashRefundY!}</span>
+		               	</#if>
+		                       <span class="fl">${place.subject!}</span>
+		                    </p>
+		                    <p class="f-size-10">${place.address!}</p>
+		                </div>
+		            </a>
+		        </article>
+		    </#list>
+	 <#else>
+	 	<#assign no_data_msg="没有找到合适的景点">
+   		<#include "../common/no_data_list.html">	    
+  	 </#if>
+</#if>
+<input id = "tmp_p" type ="hidden" value = "${page!}"/>
+<#if isLastPage>
+	<input id = "lastPage_flag" type ="hidden" value = "1"/>
+</#if>

@@ -1,0 +1,47 @@
+<?page title="资源维护" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./resourceEdit"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.passport.utils.ListboxResourceGroup"?>
+
+<zk>
+<window id = "resourceEdit" title="资源维护" border="normal" apply="com.lvmama.passport.web.passportauth.ResourceEditAction">
+<grid>
+	<rows>
+		<row>
+			<hbox width="100px">资源名称</hbox>
+			<hbox>
+				<textbox maxlength="50" value="@{saction.resource.resourceName}" />
+			</hbox>
+			<hbox>资源组</hbox>
+			<hbox>
+				<listbox codeset="PASSPORT_RESOURCE_GROUP" mold="select" selectedItem="@{saction.resource.category}" />
+			</hbox>	
+		</row>
+		<row>
+			<hbox>URL路径</hbox>
+			<hbox>
+				<textbox  width="300px" maxlength="100" value="@{saction.resource.fileName}" />
+			</hbox>	
+			<hbox>序号</hbox>
+			<hbox>
+				<textbox maxlength="10" value="@{saction.resource.seq}" />
+			</hbox>	
+		</row>
+		<row spans="1,3">
+			<hbox>Img路径</hbox>
+			<hbox>
+				<textbox width="300px" maxlength="50" value="@{saction.resource.image}" />
+			</hbox>
+		</row>
+		<row spans="1,3">
+			<hbox>描述</hbox>
+			<hbox>
+				<textbox width="300px" maxlength="50" value="@{saction.resource.description}" />
+			</hbox>
+		</row>
+		<row spans="4">
+			<button label="保存" width="100px" onClick="saction.doSave()"/>
+		</row>
+	</rows>
+</grid>
+</window>
+</zk>

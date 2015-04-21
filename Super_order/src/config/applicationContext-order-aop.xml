@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<bean id="validityCheck" class="com.lvmama.order.aop.ValidityCheck" />
+
+	<bean id="validityCheckPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+		<property name="pattern" value=".*" />
+	</bean>
+	<bean id="validityCheckAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="advice" ref="validityCheck" />
+		<property name="pointcut" ref="validityCheckPointcut" />
+	</bean>
+
+	<bean id="orderServiceProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="orderServiceImpl" />
+		<property name="interceptorNames" value="validityCheckAdvisor" />
+		<property name="proxyInterfaces" value="com.lvmama.comm.bee.service.ord.OrderService" />
+	</bean>
+
+	<bean id="materialAround" class="com.lvmama.order.aop.MaterialAround" />
+	<bean id="materialAroundPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+		<property name="pattern" value=".*" />
+	</bean>
+	<bean id="materialAroundAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="advice" ref="materialAround" />
+		<property name="pointcut" ref="materialAroundPointcut" />
+	</bean>
+	
+	
+	<bean id="orderTrackMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="orderTrackMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="orderStatusMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="orderStatusMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="orderContentMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="orderContentMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="excludedContentMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="excludedContentMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="orderTimeRangeMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="orderTimeRangeMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="orderIdentityMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="orderIdentityMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="sortTypeEnumMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="sortTypeEnumMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="pageIndexMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="pageIndexMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="invoiceRelateMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="invoiceRelateMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+
+	<bean id="saleServiceRelateMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="saleServiceRelateMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="settlementQueueRelateMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="settlementQueueRelateMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="settlementItemRelateMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="settlementItemRelateMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="finishSettlementItemRelateMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="finishSettlementItemRelateMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="ordSettlementRelateMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="ordSettlementRelateMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="metaPerformRelateMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="metaPerformRelateMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="performDetailRelateMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="performDetailRelateMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="performDetailSortTypeEnumMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="performDetailSortTypeEnumMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="passPortDetailRelateMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="passPortDetailRelateMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="passPortSummaryRelateMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="passPortSummaryRelateMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+	<bean id="toursMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="toursMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+
+	<bean id="orderEContractRelateMaterialBuilderProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="orderEContractRelateMaterialBuilder" />
+		<property name="interceptorNames" value="materialAroundAdvisor" />
+		<property name="proxyInterfaces"
+			value="com.lvmama.order.service.impl.builder.IMaterialBuilder" />
+	</bean>
+
+
+	<!-- 订单创建参数校验 -->
+	<bean id="validityOrderInfoAround" class="com.lvmama.order.aop.ValidityOrderInfoAround">
+		<property name="prodProductDAO" ref="prodProductDAO"></property>
+		<property name="prodTimePriceDAO" ref="prodTimePriceDAO"></property>
+		<property name="prodProductBranchDAO" ref="prodProductBranchDAO"></property>
+		<property name="metaProductDAO" ref="metaProductDAO"/>
+		<property name="prodProductBranchItemDAO" ref="prodProductBranchItemDAO"/>
+	</bean>
+	<!-- 订单创建校验通告 -->
+	<bean id="validityOrderInfoAroundAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="advice" ref="validityOrderInfoAround" />
+		<property name="pointcut" ref="validityCheckPointcut" />
+	</bean>
+	<!-- 订单创建服务代理 -->
+	<bean id="orderBuildServiceProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="orderBuildServiceImpl" />
+		<property name="interceptorNames" value="validityOrderInfoAroundAdvisor" />
+		<property name="proxyInterfaces" value="com.lvmama.order.service.OrderCreateService" />
+	</bean>
+</beans>

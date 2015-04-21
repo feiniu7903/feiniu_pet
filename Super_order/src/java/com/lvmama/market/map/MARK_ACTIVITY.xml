@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_ACTIVITY">
+
+    <typeAlias alias="markActivity" type="com.lvmama.comm.pet.po.mark.MarkActivity"/>
+
+    <resultMap id="MarkActivityMap" class="markActivity">
+        <result column="ACT_ID" property="actId"/>
+        <result column="ACTIVITY_NAME" property="activityName"/>
+        <result column="STATUS" property="status"/>
+        <result column="PERSON_CHARGE" property="personCharge"/>
+        <result column="CREATE_TIME" property="createTime"/>
+    </resultMap>
+
+    <insert id="insertMarkActivity" parameterClass="markActivity">
+        <selectKey keyProperty="actId" resultClass="java.lang.Long">
+            SELECT MARK_ACTIVITY_ID_SEQ.nextval FROM DUAL
+        </selectKey>
+        insert into MARK_ACTIVITY (ACT_ID,ACTIVITY_NAME,STATUS,PERSON_CHARGE,CREATE_TIME)
+        VALUES(#actId#,#activityName#,#status#,#personCharge#,#createTime#)
+    </insert>
+
+    <delete id="deleteMarkActivity" parameterClass="java.lang.Long">
+        DELETE FROM MARK_ACTIVITY
+        WHERE ACT_ID = #actId#
+    </delete>
+
+    <update id="updateMarkActivity" parameterClass="markActivity">
+        update MARK_ACTIVITY
+        <dynamic prepend="set">
+            <isNotEmpty prepend="," property="activityName">
+                ACTIVITY_NAME = #activityName#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="status">
+                STATUS = #status#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="personCharge">
+                PERSON_CHARGE = #personCharge#
+            </isNotEmpty>
+        </dynamic>
+        WHERE ACT_ID = #actId#
+    </update>
+
+    <select id="selectMarkActivityCount" parameterClass="java.util.Map" resultClass="java.lang.Long">
+        SELECT count(1) ct
+        FROM MARK_ACTIVITY
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="keyword">
+                ACTIVITY_NAME like '%'||#keyword#||'%'
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="status">
+                STATUS = #status#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <select id="selectMarkActivityList" parameterClass="java.util.Map" resultMap="MarkActivityMap">
+        SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+        SELECT ACT_ID,ACTIVITY_NAME,STATUS,PERSON_CHARGE,CREATE_TIME
+        FROM MARK_ACTIVITY
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="keyword">
+                ACTIVITY_NAME like '%'||#keyword#||'%'
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="status">
+                STATUS = #status#
+            </isNotEmpty>
+        </dynamic>
+        order by ACT_ID desc
+        )T
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="_endRow" prepend="">
+                ROWNUM &lt;= #_endRow#
+            </isNotEmpty>
+        </dynamic>
+        )
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="_startRow" prepend="">
+                ROWNUM1 &gt;= #_startRow#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <select id="selectMarkActivity" parameterClass="java.lang.Long" resultMap="MarkActivityMap">
+        SELECT
+            ACT_ID,
+            ACTIVITY_NAME,
+            STATUS,
+            PERSON_CHARGE,
+            CREATE_TIME
+        FROM MARK_ACTIVITY
+        WHERE ACT_ID = #actId#
+    </select>
+    <select id="selectSendList" resultMap="MarkActivityMap">
+        SELECT
+            a.ACT_ID,
+            a.ACTIVITY_NAME,
+            a.STATUS,
+            a.PERSON_CHARGE,
+            a.CREATE_TIME
+        FROM MARK_ACTIVITY a, mark_activity_item i
+        WHERE a.act_id = i.act_id
+              AND a.STATUS = 'ACTIVATING'
+              AND i.send_way = 'AUTOMATIC'
+              AND (
+                       (i.cycle = 'DAY')
+                    OR (i.cycle = 'MONTH' AND TO_CHAR(i.send_time,'DD') = TO_CHAR(SYSDATE,'DD'))
+                    OR (i.cycle = 'WEEK' AND i.week LIKE '%' || DECODE(TO_CHAR(SYSDATE,'D'), 1,'SUNDAY', 2,'MONDAY', 3,'TUESDAY', 4,'WEDNESDAY', 5,'THURSDAY', 6,'FRIDAY', 7,'SATURDAY')||'%')
+                  )
+              AND (    i.last_send_time IS NULL
+                    OR TO_CHAR(i.last_send_time, 'yyyy-mm-dd') <![CDATA[ < ]]>  TO_CHAR(SYSDATE,'yyyy-mm-dd')
+                  )
+              AND SYSDATE > TO_DATE(TO_CHAR(SYSDATE,'yyyy-mm-dd') ||' '|| TO_CHAR(i.send_time,'hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+    </select>
+</sqlMap>

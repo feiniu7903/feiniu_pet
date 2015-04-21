@@ -1,0 +1,334 @@
+<?page title="new product" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./newprodroute"?>
+<?component name="editbase" macroURI="/products/edit_base.zul" inline="true"?>
+<?component name="lvmama_prodtarget" macroURI="/macors/prodtarget.zul"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodesetWu"?>
+<?component name="listbox1" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset"?>
+<zk>
+<window id="newprodroute" border="normal" width="100%" apply="com.lvmama.back.web.product.EditProductAction">
+	<zscript><![CDATA[//@DECLARATION
+	   
+		public void route_checkValue(){
+			if (days.getValue() == null || days.getValue() < 0) {
+				alert("行程天数不能为空或者小于0");
+				return;
+			}
+			//针对出境，长线，自助巴士班，等子类型时需要判断团号,成团时间
+			if(!saction.checkTravelGroupCode(subProductType,preConfirmDays.getValue(),travelGroupCode.getValue()))
+			{
+				//alert("选择出境、长线、自助巴士班时团号不可以为空");
+				return;
+			}
+			if(null== route_cateGory.getSelectedItem()){
+				alert("线路产品-线路分类不能为空！");
+				return;	
+			}
+			if(null== route_isPlay.getSelectedItem()){
+				alert("线路产品-是否纯玩不能为空！");
+				return;	
+			}
+			if(null== route_standard.getSelectedItem()){
+				alert("线路产品-线路标准不能为空！");
+				return;	
+			}
+			if(subProductType.getSelectedItem().getValue().length()>0){
+				if("GROUP_FOREIGN".equals(subProductType.getSelectedItem().getValue())||"FREENESS_FOREIGN".equals(subProductType.getSelectedItem().getValue())){
+					if(saction.checkDepartAreaList.size()==0){
+						alert("当前线路产品信息-线路类型选择【出境跟团游】或【出境自由行】时,线路产品-出境区域不能为空！");
+						return;	
+					}
+				}
+			}
+			if(null== route_title_one.getSelectedItem()||route_title_one.getSelectedItem().getValue().length()==0){
+				alert("线路产品-线路主题[1]不能为空！");
+				return;	
+			}
+			if(route_title_two.getSelectedItem()!=null&&route_title_two.getSelectedItem().getValue()!=null&&route_title_one.getSelectedItem().getValue().equals(route_title_two.getSelectedItem().getValue())){
+				alert("线路产品-线路主题[1]和线路主题[2]不能重复！");
+				return;	
+			}
+			if(!checkProdEcontract(newprodroute)){
+				return;
+			}
+			checkValue();	
+		}
+		public void show_departArea(String value){
+			route_departArea.setDisabled(false);
+		}
+		]]>
+	</zscript>
+	<space />
+	<editbase/>
+	<space />
+	<groupbox style="border: none">
+		<caption label="线路产品信息" />
+		<grid fixedLayout="true">
+			<columns>
+				<column width="100px" align="right"></column>
+				<column></column>
+				<column width="100px" align="right"></column>
+				<column></column>
+				<column width="140px" align="right"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row spans="1,4,1">
+					<hbox>
+						线路类型：
+						<label value="[*]" style="color:red;" />
+					</hbox>
+					<hbox>
+						<radiogroup id="subProductType" selectedItem="@{saction.product.subProductType}">
+						<radio label="短途跟团游" value="GROUP" onCheck='saction.routeCheckEvent("GROUP")'/>
+						<radio label="长途跟团游" value="GROUP_LONG" onCheck='saction.routeCheckEvent("GROUP_LONG")'/>
+						<radio label="出境跟团游" value="GROUP_FOREIGN" onCheck='saction.routeCheckEvent("GROUP_FOREIGN")'/>
+						<radio label="目的地自由行" value="FREENESS" onCheck='saction.routeCheckEvent("FREENESS")'/>
+						<radio label="长途自由行" value="FREENESS_LONG" onCheck='saction.routeCheckEvent("FREENESS_LONG")'/>
+						<radio label="出境自由行" value="FREENESS_FOREIGN" onCheck='saction.routeCheckEvent("FREENESS_FOREIGN")'/>
+						<radio label="自助巴士班" value="SELFHELP_BUS" onCheck='saction.routeCheckEvent("SELFHELP_BUS")'/>
+						</radiogroup>
+					</hbox>
+					<hbox>
+						<checkbox label="是否签约" style="display:none;" value="@{saction.product.eContract}" onClick="eContract.visible=self.checked"/>
+					</hbox>
+				</row>
+				<row>
+					<hbox>
+						行程天数：
+						<label value="[*]" style="color:red;" />
+					</hbox>
+					<hbox>
+						<longbox id="days" value="@{saction.product.days}"/>
+					</hbox>
+					<hbox>
+						最少成团人数：
+					</hbox>
+					<hbox>
+						<longbox id="initial_num" value="@{saction.product.initialNum}"/>
+					</hbox>
+					<hbox>
+						提前确定成团小时数：
+					</hbox>
+					<hbox>
+						<intbox id="preConfirmDays" value="@{saction.product.aheadConfirmHours}" disabled="true"/>
+					</hbox>
+				</row>
+				<row spans="1,3">
+					<hbox>
+						团号前辍:
+					</hbox>
+					<hbox>
+						<textbox id="travelGroupCode" value="@{saction.product.travelGroupCode}"/>
+					</hbox>
+					<hbox>
+						定金:
+					</hbox>	
+					<hbox>
+						<longbox id="payDeposit" value="@{saction.product.payDeposit}"/>
+					</hbox>
+				</row>
+				<row spans="1,5">
+					<hbox>
+						线路分类：
+						<label value="[*]" style="color:red;" />
+					</hbox>
+					<hbox>
+					<radiogroup id="route_cateGory"  selectedItem="@{saction.product.routeCategory}">
+					<radio forEach="${saction.routeCateGoryList}" checked="${each.checked}"
+							name="${each.name}"  label="${each.name}" value="${each.code}"   onCheck='saction.checkRadioRouteInfo("routeCategory",self.value)'/>
+							</radiogroup>
+					</hbox>
+				</row>
+				<row spans="1,1,1,3">
+					<hbox>
+						是否纯玩：
+						<label value="[*]" style="color:red;" />
+					</hbox>
+					<hbox>
+					<radiogroup id="route_isPlay"  />
+					<radio forEach="${saction.isPlayList}" checked="${each.checked}"
+							name="${each.name}"  label="${each.name}" value="${each.code}" radiogroup="route_isPlay" onCheck='saction.checkRadioRouteInfo("isPlay",self.value)'/>
+					</hbox>
+					<hbox>线路标准:<label value="[*]" style="color:red;" />
+					</hbox>
+					<hbox>
+					<radiogroup id="route_standard"  />
+					<radio forEach="${saction.routeStandardList}" checked="${each.checked}"
+							name="${each.name}"  label="${each.name}" value="${each.code}" radiogroup="route_standard" onCheck='saction.checkRadioRouteInfo("routeStandard",self.value)'/>
+					</hbox>
+				</row>
+				<row spans="1,5" id="rowDepartArea" visible="false">
+					<hbox>
+						出境区域：
+						<label value="[*]" style="color:red;" />
+					</hbox>
+					<hbox>
+					<checkbox  name="route_departArea" forEach="${saction.departAreaList}"   checked="${each.checked}"
+							  label="${each.name}" value="${each.code}" onCheck='saction.checkDepartArea(self.value,self.checked)'/>
+					</hbox>
+				</row>
+				<row spans="1,5">
+					<hbox>
+						线路主题(最多2项)：
+						<label value="[*]" style="color:red;" />
+					</hbox>
+					<hbox>
+						主题1：
+						<listbox mold="select" id="route_title_one" model="@{saction.comPcSubjectList}"
+							selectedItem="@{comPcSubject.subjectName}"
+							onSelect='saction.checkRadioRouteInfo("routeTitle1",self.selectedItem.value)'
+							style="width:100px;">
+							<listitem self="@{each=comPcSubject}" value="@{comPcSubject.subjectName}"
+								label="@{comPcSubject.subjectName}"></listitem>
+						</listbox>
+						主题2:
+						<listbox mold="select" id="route_title_two" model="@{saction.comPcSubjectList}"
+							selectedItem="@{comPcSubject.subjectName}"
+							onSelect='saction.checkRadioRouteInfo("routeTitle2",self.selectedItem.value)'
+							style="width:100px;">
+							<listitem self="@{each=comPcSubject}" value="@{comPcSubject.subjectName}"
+								label="@{comPcSubject.subjectName}"></listitem>
+						</listbox>
+								注：请勿重复选择主题
+					</hbox>
+				</row>
+				<row spans="1,5">
+					<hbox>
+						房型特色：
+					</hbox>
+					<hbox>
+					<radiogroup id="route_hotelType"  >
+						<radio forEach="${saction.hotelTypeList}" checked="${each.checked}"
+								name="${each.name}"  label="${each.name}" value="${each.code}" radiogroup="route_hotelType" onCheck='saction.checkRadioRouteInfo("hotelType",self.value)'/>
+					</radiogroup>
+					</hbox>
+					<hbox>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</groupbox>
+	
+	<space />
+	<grid>
+		<rows>
+		<row>
+			<hbox><label value="电子合同签约："/><checkbox id="eContractCheckBox" label="是" checked="@{saction.product.isEContract()}" onClick="saction.checkEContract(self.checked);eContract.visible=self.checked"/></hbox>
+		</row>
+		<row><hbox>
+	<groupbox style="border: none" id="eContract" visible="false">
+		<caption label="合同基本信息"/>
+		<grid fixedLayout="true">
+			<columns>
+				<column width="150px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						电子合同范本：
+						<label value="[*]" style="color:red;" />
+					</hbox>	
+					<hbox >
+							<listbox1 id="eContractTemplate" codeset="ECONTRACT_TEMPLATE"
+								mold="select" selectedItem="@{saction.prodEContract.eContractTemplate}"/>
+					</hbox>
+				</row>
+				<row spans="2"><hbox>旅行手续<label value="[*]" style="color:red;" />:由旅游者自行办理的旅游手续</hbox></row>
+				<row spans="2">
+					<hbox id="travel_hbox">
+						<checkbox forEach="${saction.travelFormalitiesList}" name="${each.code}" label="${each.name}" checked="${each.checked}" onCheck="saction.checkTravelFormalities(self.name, self.checked);"/><textbox value="@{saction.prodEContract.otherTravelFormalities}" id="otherTravelFormalities"/>
+					</hbox>
+				</row>
+				<row>
+					<hbox>
+						导游服务<!-- <label value="[*]" style="color:red;" /> -->：
+					</hbox>	
+					<hbox id="guideservice_hbox">
+						<checkbox forEach="${saction.guideServiceList}" name="${each.code}" label="${each.name}" checked="${each.checked}" onCheck="saction.checkGuideService(self.name, self.checked);"/>
+					</hbox>	
+				</row>
+				<row>
+					<hbox>
+						组团方式<label value="[*]" style="color:red;" />：
+					</hbox>	
+					<hbox id="grouptype_hbox">
+						<checkbox forEach="${saction.groupTypeList}" name="${each.code}" label="${each.name}" checked="${each.checked}" onCheck="saction.checkGroupType(self.name, self.checked);"/>
+						(被委托方<textbox maxlength="200" value="@{saction.prodEContract.agency}" id="tb_agency" disabled="true"/>)
+					</hbox>	
+				</row>
+				<row spans="2"><hbox>地接社名称/地址/联系人/联系方式/电话<label value="[*]" style="color:red;" />:</hbox></row>
+				<row spans="2"><hbox><textbox width="800px" id="eAgencyAddress" maxlength="500" value="@{saction.prodEContract.agencyAddress}"/></hbox></row>
+				<!-- 
+				<row>
+					<hbox>
+						途径地点<label value="[*]" style="color:red;" />：
+					</hbox>	
+					<hbox>
+						<textbox width="600px" id="ePathway" maxlength="300" value="@{saction.prodEContract.pathway}"/>
+					</hbox>	
+				</row>
+				 -->
+				<row>
+					<hbox>
+						其他补充条款：
+					</hbox>	
+					<hbox>
+						<textbox rows="5" cols="100" maxlength="1000" value="@{saction.prodEContract.complement}"/>
+					</hbox>	
+				</row>
+			</rows>
+		</grid>
+	</groupbox>
+	</hbox></row></rows>
+	</grid>
+	<space />
+	<groupbox style="border: none">
+	<caption label="标的信息" />
+	<groupbox style="border: true">
+		<longbox id="placeId" visible="false"/>
+		<lvmama_prodtarget />
+		<button id="doAddPlace" width="100px" label="新增" onClick="saction.doInsertPlace(placeId.value);"/>
+		<button id="refreshPlaceList" visible="false" />
+		<listbox fixedLayout="true" model="@{saction.placeList,load-after='refreshPlaceList.onClick'}">
+		<listhead>
+			<listheader label="编号" width="5%"/>
+			<listheader label="名称" />
+			<listheader label="出发地" width="8%"/>	
+			<listheader label="目的地" width="8%"/>
+			<listheader label="操作" />
+		</listhead>
+		<listitem self="@{each='place'}" value="@{place}" height="25px">
+			<listcell label="@{place.placeId}" />
+			<listcell label="@{place.placeName}"/>
+			<listcell label="@{place.from}"/>
+			<listcell label="@{place.to}"/>
+			<listcell>
+				<a label="删除" style="color:blue"
+					onClick='saction.doDeletePlace(self.getAttribute("placeId"));'>
+					<custom-attributes placeId="@{place.placeId}" />
+				</a>
+				|
+				<a label="出发地" style="color:blue" onClick='saction.setPlaceFrom(self.getAttribute("placeId"));'>
+					<custom-attributes placeId="@{place.placeId}" />
+				</a>
+				|
+				<a label="目的地" style="color:blue"
+					onClick='saction.setPlaceTo(self.getAttribute("placeId"));'>
+					<custom-attributes placeId="@{place.placeId}" />
+				</a>
+			</listcell>
+		</listitem>
+
+	</listbox>
+	
+	</groupbox>
+	</groupbox>
+	
+	<space />
+		<toolbar id="bottomTool" align="center">
+			<button id="save" width="100px" onClick='route_checkValue();' label="提交" />
+			<button id="cancel" width="100px" label="取消" onClick="win_editprod.detach();"/>
+		</toolbar>
+</window>
+</zk>

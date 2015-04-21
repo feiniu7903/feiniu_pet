@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="WEEK_ANALYSIS_TV">
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.WeekAnalysisTV">
+		<result column="CREATE_TIME" property="createTime"/>
+		<result column="WEEK_TOTAL_USER" property="weekTotalUser" />
+		<result column="WEEK_TECH_USER" property="weekTechUser" />
+		<result column="WEEK_BACK_USER" property="weekBackUser" />
+		<result column="WEEK_TAOBAO_USER" property="weekTaobaoUser" />
+		<result column="WEEK_PAGE_USER" property="weekPageUser" />
+		<result column="WEEK_SEM_USER" property="weekSemUser" />
+		<result column="WEEK_WAPPHONE_USER" property="weekWapphoneUser" />
+		<result column="WEEK_PT_USER" property="weekPtUser" />
+		<result column="WEEK_KZ_USER" property="weekKzUser" />
+		<result column="WEEK_EMAIL_CHECK" property="weekEmailCheck" />
+		<result column="WEEK_MOBILE_CHECK" property="weekMobileCheck" />
+		<result column="WEEK_AREA" property="weekArea" />
+		<result column="WEEK_PT_EMAIL" property="weekPtEmail" />
+		<result column="WEEK_PT_MOBILE" property="weekPtMobile" />
+		<result column="WEEK_KZ_EMAIL" property="weekKzEmail" />
+		<result column="WEEK_KZ_MOBILE" property="weekKzMobile" />
+		<result column="WEEK_LOGIN_USER" property="weekLoginUser" />
+		<result column="WEEK_LOGIN_COUNT" property="weekLoginCount" />
+		<result column="WEEK_CMT_USER" property="weekCmtUser" />
+		<result column="WEEK_ORDER_USER" property="weekOrderUser" />
+		<result column="WEEK_ORDER_COUNT" property="weekOrderCount" />
+		<result column="WEEK_REPEAT_ORDER" property="weekRepeatOrder" />
+		<result column="WEEK_JC_ORDER" property="weekJcOrder" />
+		<result column="WEEK_SEM_ORDER" property="weekSemOrder" />
+		<result column="WEEK_PAY_USER" property="weekPayUser" />
+		<result column="WEEK_PAY_COUNT" property="weekPayCount" />
+		<result column="WEEK_REPEAT_PAY" property="weekRepeatPay" />
+		<result column="WEEK_JC_PAY" property="weekJcPay" />
+		<result column="WEEK_SEM_PAY" property="weekSemPay" />
+	</resultMap>
+
+	<select id="selectObjAll" parameterClass="java.util.HashMap"
+		resultMap="BaseResultMap">
+		SELECT WEEK_DATA.*
+		FROM (
+				SELECT PO.* , ROWNUM AS RN
+				FROM (
+					SELECT
+							wmsys.wm_concat(to_char(CREATE_TIME,'YYyy-mm-dd')) CREATE_TIME,
+							 wmsys.wm_concat(WEEK_TOTAL_USER) WEEK_TOTAL_USER,
+							wmsys.wm_concat(WEEK_TECH_USER) WEEK_TECH_USER,
+							wmsys.wm_concat(WEEK_BACK_USER) WEEK_BACK_USER,
+							wmsys.wm_concat(WEEK_TAOBAO_USER) WEEK_TAOBAO_USER,
+							wmsys.wm_concat(WEEK_PAGE_USER) WEEK_PAGE_USER,
+							wmsys.wm_concat(WEEK_SEM_USER) WEEK_SEM_USER,
+							wmsys.wm_concat(WEEK_WAPPHONE_USER) WEEK_WAPPHONE_USER,
+							wmsys.wm_concat(WEEK_PT_USER) WEEK_PT_USER,
+							wmsys.wm_concat(WEEK_KZ_USER) WEEK_KZ_USER,
+							wmsys.wm_concat(WEEK_EMAIL_CHECK) WEEK_EMAIL_CHECK,
+							wmsys.wm_concat(WEEK_MOBILE_CHECK) WEEK_MOBILE_CHECK,
+							wmsys.wm_concat(replace(WEEK_AREA,',',' ')) WEEK_AREA,
+							wmsys.wm_concat(WEEK_PT_EMAIL) WEEK_PT_EMAIL,
+							wmsys.wm_concat(WEEK_PT_MOBILE) WEEK_PT_MOBILE,
+							wmsys.wm_concat(WEEK_KZ_EMAIL) WEEK_KZ_EMAIL,
+							wmsys.wm_concat(WEEK_KZ_MOBILE) WEEK_KZ_MOBILE,
+							wmsys.wm_concat(WEEK_LOGIN_USER) WEEK_LOGIN_USER,
+							wmsys.wm_concat(WEEK_LOGIN_COUNT) WEEK_LOGIN_COUNT,
+							wmsys.wm_concat(WEEK_CMT_USER) WEEK_CMT_USER,
+							wmsys.wm_concat(WEEK_ORDER_USER) WEEK_ORDER_USER,
+							wmsys.wm_concat(WEEK_ORDER_COUNT) WEEK_ORDER_COUNT,
+							wmsys.wm_concat(WEEK_REPEAT_ORDER) WEEK_REPEAT_ORDER,
+							wmsys.wm_concat(WEEK_JC_ORDER) WEEK_JC_ORDER,
+							wmsys.wm_concat(WEEK_SEM_ORDER) WEEK_SEM_ORDER,
+							wmsys.wm_concat(WEEK_PAY_USER) WEEK_PAY_USER,
+							wmsys.wm_concat(WEEK_PAY_COUNT) WEEK_PAY_COUNT,
+							wmsys.wm_concat(WEEK_REPEAT_PAY) WEEK_REPEAT_PAY,
+							wmsys.wm_concat(WEEK_JC_PAY) WEEK_JC_PAY,
+							wmsys.wm_concat(WEEK_SEM_PAY) WEEK_SEM_PAY
+					FROM 
+							(SELECT * FROM DATA_WEEK_ANALYSIS_TV
+							WHERE CREATE_TIME &gt;= #endDate# - 98
+							AND CREATE_TIME &lt;= #endDate#
+							ORDER BY CREATE_TIME DESC)
+				) PO
+			) WEEK_DATA
+	</select>
+</sqlMap>

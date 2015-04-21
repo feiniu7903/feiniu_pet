@@ -1,0 +1,24 @@
+<TransactionName>${header.transactionName}<#--必填项:指令名称，固定值预定指令： OTA_TourBookRQ/预订检查：OTA_TourBookCheckRQ(预订检查时返回的数据为OTA_TourBookCheckRS.xml) ★--></TransactionName>
+	<Header>
+		<SessionID><#--预留字段，不填--></SessionID>
+		<Invoker><#--调用者 不填--></Invoker>
+		<Encoding>UTF-8</Encoding>
+		<Locale><#--区域 不填--></Locale>
+		<SerialNo><#--预留字段，不填--></SerialNo>
+		<TimeStamp>${header.timeStamp}<#--时间戳 YYYY-mm-DD HH:MM:SS--></TimeStamp>
+		<Application>travelpkg<#--子系统名称 String类型 填写"travelpkg" ★--></Application>
+	</Header>
+	<DestinationSystemCodes>
+		<UniqueID><#--String 不填--></UniqueID>
+	</DestinationSystemCodes>
+	<IdentityInfo>
+		<OfficeID><#--代理Office号 预留字段不填--></OfficeID>
+		<UserID>${header.userId}<#--接口用户名 ★--></UserID>
+		<Password>${header.password}<#--接口用户密码 ★--></Password>
+		<Role><#--角色 预留字段 不填--></Role>
+	</IdentityInfo>
+	<Source>
+		<OfficeCode><#--代理Office号 String类型 预留字段,不填--></OfficeCode>
+		<UniqueID>${header.uniqueID}<#--供应商Code String ★--></UniqueID>
+		<BookingChannel>HOTELBE<#--预定渠道代码(默认填写:HOTELBE) 预留字段,不填--></BookingChannel>
+	</Source>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="EBK_PROD_TARGET" >
+
+  <typeAlias alias="ebkProdTargetDO" type="com.lvmama.comm.bee.po.ebooking.EbkProdTarget" />
+
+  <resultMap id="ebkProdTargetDOResultMap" class="ebkProdTargetDO" >
+    <result property="productTargetId" column="PRODUCT_TARGET_ID" />
+    <result property="targetId" column="TARGET_ID" />
+    <result property="productId" column="PRODUCT_ID" />
+    <result property="targetType" column="TARGET_TYPE" />
+  </resultMap>
+
+  <sql id="ebkProdTarget_columns" >
+    a1.PRODUCT_TARGET_ID, a1.TARGET_ID, a1.PRODUCT_ID, a1.TARGET_TYPE
+  </sql>
+
+  <sql id="ebkProdTarget_do_columns" >
+    a1.PRODUCT_TARGET_ID, a1.TARGET_ID, a1.PRODUCT_ID, a1.TARGET_TYPE
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="productTargetId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_TARGET_ID = #productTargetId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="targetId" prepend="AND" >
+        <![CDATA[  
+        TARGET_ID = #targetId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="targetType" prepend="AND" >
+        <![CDATA[  
+        TARGET_TYPE = #targetType#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <sql id="doQueryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="productTargetId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_TARGET_ID = #productTargetId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="targetId" prepend="AND" >
+        <![CDATA[  
+        TARGET_ID = #targetId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="targetType" prepend="AND" >
+        <![CDATA[  
+        TARGET_TYPE = #targetType#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <insert id="insert" parameterClass="ebkProdTargetDO" >
+  	<selectKey keyProperty="productTargetId" resultClass="java.lang.Long" >
+      SELECT EBK_PROD_PRODUCT_TARGET_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO EBK_PROD_TARGET( PRODUCT_TARGET_ID, TARGET_ID, PRODUCT_ID, TARGET_TYPE)
+     VALUES ( #productTargetId#, #targetId#, #productId#, #targetType#)
+  </insert>
+
+  <update id="update" parameterClass="ebkProdTargetDO" >
+    UPDATE EBK_PROD_TARGET   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="productTargetId" prepend="," >
+        <![CDATA[  
+        PRODUCT_TARGET_ID = #productTargetId#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="targetId" prepend="," >
+        <![CDATA[  
+        TARGET_ID = #targetId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="," >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="targetType" prepend="," >
+        <![CDATA[  
+        TARGET_TYPE = #targetType#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE PRODUCT_TARGET_ID = #productTargetId#  
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="ebkProdTargetDOResultMap" >
+     SELECT 
+    <include refid="ebkProdTarget_do_columns" />
+    <![CDATA[  
+     FROM EBK_PROD_TARGET a1 WHERE PRODUCT_TARGET_ID = #productTargetId#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_TARGET WHERE PRODUCT_TARGET_ID = #productTargetId#
+    ]]>  
+  </delete>
+
+  <delete id="deleteByProductID" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_TARGET WHERE PRODUCT_ID = #productID#
+    ]]>  
+  </delete>
+
+  <select id="countByDOExample" parameterClass="ebkProdTargetDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(PRODUCT_TARGET_ID) AS num FROM EBK_PROD_TARGET 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="ebkProdTargetDOResultMap" parameterClass="ebkProdTargetDO" >
+     SELECT 
+    <include refid="ebkProdTarget_do_columns" />
+     FROM EBK_PROD_TARGET a1 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByProductId" resultMap="ebkProdTargetDOResultMap" parameterClass="java.lang.Long" >
+     SELECT 
+    <include refid="ebkProdTarget_do_columns" />
+     FROM EBK_PROD_TARGET a1 WHERE PRODUCT_ID = #productID#
+  </select>
+</sqlMap>

@@ -1,0 +1,134 @@
+<div class="lv-toast lv-toast-success" style="display:none;">
+	<div class="lv-toast-div"><img src="${prefix_pic_url!}/img/smile-grey.png"></div>
+    <p></p>
+</div>
+<div class="lv-toast lv-toast-fail" style="display:none;">
+	<div class="lv-toast-div"><img src="${prefix_pic_url!}/img/sad-big.png"></div>
+    <p></p>
+</div>
+<div class="lv-toast-loading" style="display:none;"><img style="width:32px;" src="${prefix_pic_url!}/img/3.gif"></div>
+<div id="loadingP" style="display:none;height: 100px; line-height: 100px; width:320px; position: absolute; top:50%; left:50%; margin:-50px 0 0 -160px; text-align: center; font-size: 12px; font-weight: 100;">加载中，请稍后…</div>
+<div class="lv-footer lv-media-width">
+		<#if hostName?? && hostName=="m.lvmama.com">
+		<div class="lv-footer-banner">
+			<img src="${hmtPixel!}" style="display:none" width="0" name="baiduExpand" id="baiduExpand" height="0"  />
+		    <#if user??>
+			<!-- <span><a href="javascript:void(0);">已登录</a></span> -->
+			<a href="http://${hostName}/user/" class='user_name'>
+				<#if user.nickName?? && user.nickName !="">
+	              ${user.nickName!}
+	            <#else>
+	              ${user.userName!}
+	            </#if>
+			
+			</a>
+			<a class='wap_tuichu' href="javascript:log_out();" >退出</a> 
+			<#else>
+				<span><a href="${request.contextPath}/reg.htm">免费注册</a></span>
+				<span><a href="${request.contextPath}/login.htm">登录</a></span> 
+			</#if>
+				<span class="lv-back-top lv-pull-right">
+				<a href="javascript:void(0);" class="backtrack">TOP</a>
+		      </span> 
+		</div>
+		</#if>
+		<div class="lv-footer-link">
+			<a href="${request.contextPath}/wap_to_lvmama.htm">电脑版</a>
+				<#if hostName?? && hostName=="m.lvmama.com">
+					<span>|</span><a href="http://itunes.apple.com/cn/app/id443926246?mt=8" target="_blank">iPhone版下载</a>
+					<span>|</span><a href="http://m.lvmama.com/rewrite/d.php?Ch=1" target="_blank">Android版本下载</a>
+				</#if>
+		
+		
+			<a href="http://${hostName}/channel/about/about_us/">关于我们</a><span>|</span><a
+				href="${request.contextPath}/aboutus/contact_us.htm">联系我们</a> <span>|</span><a
+				href="http://${hostName}/channel/about/suggestion/">意见反馈</a> <span>|</span><a
+				href="http://${hostName}">首页</a>
+		</div>
+		<div class="lv-footer-link lv-footer-copyright">Copyright &copy;2014 lvmama.com </br>
+		  <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow" hidefocus="false">沪ICP备13011172号-3</a>
+        </div>
+	</div>
+	<!--电话弹出层 end-->
+	<div class='model'></div>
+	<!-- 新弹出层 -->
+	<div class="modal" _modal=''></div>
+	<div _popup='' class="popup_wrap">
+	    <section class="popup find_popup">
+	        <header>提示信息</header>
+	        <article>
+	            <p>
+	                提示信息
+	            </p>
+	        </article>
+	        <footer>
+	            <a href="javascript:void(0);" class="ic_yellow" _disappear_cancel="">取消</a><a href="javascript:void(0);" class="ic_roseo" _disappear=''>确定</a>
+	        </footer>
+	    </section>
+	</div>
+	<script type="text/javascript" src="http://pic.lvmama.com/js/common/losc.js" charset="utf-8"></script> 
+		<script src="${request.contextPath!}/js/moudle_v3.js?_version=20130826"></script>
+	<script type="text/javascript">
+	<!--
+	    try {
+	    	$(".lv-toast-loading").hide();
+	    }catch(e){
+	    	
+	    }
+	    
+	  //注销
+		function log_out() {
+			window.localStorage.removeItem("loginMsg");
+			$.getJSON("http://login.lvmama.com/nsso/mobileAjax/logout.do?jsoncallback=?",function(data) {
+				// 微信相关
+	        	var c_url = window.location.href;
+	        	if(null != c_url && c_url.indexOf("wx_auto_login=true") != -1) {
+	        		c_url = c_url.replace("wx_auto_login=true","wx_auto_login=false");
+	        		window.location.href = c_url;
+	        	} else {
+	        		window.location.reload(true);
+	        	}
+			}); 
+		}
+		 $(function() {
+			 //百度推广
+			 $.ajax({
+			        type: "post",
+			        url: '${request.contextPath!}/html5/baidu_expand.htm',
+			        success: function (data) {
+			        	//console.info(data.hmtPixel);
+			        	$("#baiduExpand").attr("src",data.hmtPixel);
+			        },
+			        error: function () {
+			        }
+			    });
+
+				//关闭下载banner
+				$('.del').bind('click', function(){
+					$('#downPush').fadeOut(500);
+					
+					//关闭下载banner--存入COOKIE标志,其他页面读取COOKIE如果读取到则说明用户点击过关闭按钮，则在页面就不显示banner
+					var closeBanner=getCookie("closeDownLoadBanner");
+			    	if(closeBanner==null || closeBanner==''){
+				    	setcookie('closeDownLoadBanner', 'closeDownLoadBanner', 30*60*1000, '/', ".lvmama.com",false); //设置cookie 30分钟
+			    	}
+				});
+				//读取关闭BANNER  cookie
+				var getBannerCookie=getCookie("closeDownLoadBanner");
+				if(getBannerCookie!=null &&　getBannerCookie!=''){
+					$("#downPush").hide();
+				}
+		 });
+		//读取Cookie
+		function getCookie(objName) {
+			var arrStr = document.cookie.split("; ");
+			for (var i = 0; i < arrStr.length; i++) {
+				var temp = arrStr[i].split("=");
+				if (temp[0] == objName) {
+					return temp[1];
+				}
+			}
+			return null;
+		}
+	//-->
+	</script>

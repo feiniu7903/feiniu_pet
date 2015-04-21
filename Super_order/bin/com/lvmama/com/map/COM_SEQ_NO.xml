@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="COM_SEQ_NO" >
+
+   <parameterMap class="map" id="swapParameters">  
+   		<parameter property="type"  javaType="java.lang.String" jdbcType="VARCHAR" mode="IN"/>   
+    	<parameter property="seqNo"  javaType="java.lang.String" jdbcType="VARCHAR" mode="OUT"/>   
+   </parameterMap>
+   
+   <procedure  id="getSeqNo" parameterMap="swapParameters">  
+		<![CDATA[{call SP_GET_SEQ_NO(?, ?)}]]>
+   </procedure >
+
+</sqlMap>

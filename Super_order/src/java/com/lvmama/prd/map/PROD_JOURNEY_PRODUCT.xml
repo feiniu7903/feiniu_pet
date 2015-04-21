@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_JOURNEY_PRODUCT" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdJourneyProduct" >
+    <result column="JOURNEY_PRODUCT_ID" property="journeyProductId" />
+    <result column="REQUIRE" property="require" />
+    <result column="DEFAULT_PRODUCT" property="defaultProduct" />
+    <result column="DISCOUNT" property="discount" />
+    <result column="PROD_JOURENY_ID" property="prodJourenyId" />
+    <result column="PROD_BRANCH_ID" property="prodBranchId" />
+  </resultMap>
+  <resultMap class="com.lvmama.comm.bee.po.prod.ProdJourneyProduct" id="BaseResultAndProductMap" extends="BaseResultMap">
+  	<result column="PRODUCT_ID" property="productId"/>
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdJourneyProduct" >
+    select *
+    from PROD_JOURNEY_PRODUCT
+    where JOURNEY_PRODUCT_ID = #journeyProductId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdJourneyProduct" >
+    delete from PROD_JOURNEY_PRODUCT
+    where JOURNEY_PRODUCT_ID = #journeyProductId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdJourneyProduct" >
+  	<selectKey keyProperty="journeyProductId" resultClass="java.lang.Long">
+  		select PROD_JOURNEY_PRODUCT_ID_SEQ.nextval from dual
+  	</selectKey>
+    insert into PROD_JOURNEY_PRODUCT (JOURNEY_PRODUCT_ID, REQUIRE, DEFAULT_PRODUCT, DISCOUNT,
+      PROD_JOURENY_ID, PROD_BRANCH_ID)
+    values (#journeyProductId#, #require#, #defaultProduct#, #discount#,
+      #prodJourenyId#, #prodBranchId#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdJourneyProduct" >
+    insert into PROD_JOURNEY_PRODUCT
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="journeyProductId" >
+        JOURNEY_PRODUCT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="require" >
+        REQUIRE
+      </isNotNull>
+      <isNotNull prepend="," property="defaultProduct" >
+        DEFAULT_PRODUCT
+      </isNotNull>
+      <isNotNull prepend="," property="discount" >
+        DISCOUNT
+      </isNotNull>
+      <isNotNull prepend="," property="prodJourenyId" >
+        PROD_JOURENY_ID
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchId" >
+        PROD_BRANCH_ID
+      </isNotNull>      
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="journeyProductId" >
+        #journeyProductId#
+      </isNotNull>
+      <isNotNull prepend="," property="require" >
+        #require#
+      </isNotNull>
+      <isNotNull prepend="," property="defaultProduct" >
+        #defaultProduct#
+      </isNotNull>
+      <isNotNull prepend="," property="discount" >
+        #discount#
+      </isNotNull>
+      <isNotNull prepend="," property="prodJourenyId" >
+        #prodJourenyId#
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchId" >
+        #prodBranchId#
+      </isNotNull>      
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdJourneyProduct" >
+    update PROD_JOURNEY_PRODUCT
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="require" >
+        REQUIRE = #require#
+      </isNotNull>
+      <isNotNull prepend="," property="defaultProduct" >
+        DEFAULT_PRODUCT = #defaultProduct#
+      </isNotNull>
+      <isNotNull prepend="," property="discount" >
+        DISCOUNT = #discount#
+      </isNotNull>
+      <isNotNull prepend="," property="prodJourenyId" >
+        PROD_JOURENY_ID = #prodJourenyId#
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchId" >
+        PROD_BRANCH_ID = #prodBranchId#
+      </isNotNull>      
+    </dynamic>
+    where JOURNEY_PRODUCT_ID = #journeyProductId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdJourneyProduct" >
+    update PROD_JOURNEY_PRODUCT
+    set REQUIRE = #require#,
+      DEFAULT_PRODUCT = #defaultProduct#,
+      DISCOUNT = #discount#,
+      PROD_JOURENY_ID = #prodJourenyId#,
+      PROD_BRANCH_ID = #prodBranchId#
+    where JOURNEY_PRODUCT_ID = #journeyProductId#
+  </update>
+  <select id="selectByParam" parameterClass="java.util.Map" resultMap="BaseResultMap">
+  	select * from PROD_JOURNEY_PRODUCT
+  	<dynamic prepend="where">
+  		<isNotEmpty property="prodJourenyId" prepend="and">
+  			PROD_JOURENY_ID = #prodJourenyId#
+  		</isNotEmpty>
+  		<isNotEmpty property="prodBranchId" prepend="and">
+  			PROD_BRANCH_ID = #prodBranchId#
+  		</isNotEmpty>
+  		<isNotEmpty property="journeyProductId" prepend="and">
+  			JOURNEY_PRODUCT_ID = #journeyProductId#
+  		</isNotEmpty>
+  	</dynamic>
+  </select>
+  <delete id="deleteAllByJourney" parameterClass="com.lvmama.comm.bee.po.prod.ProdJourneyProduct">
+  	delete from PROD_JOURNEY_PRODUCT where PROD_JOURENY_ID = #prodJourenyId#
+  </delete>
+  <select id="selectJourneyProductListByJourneyId" parameterClass="com.lvmama.comm.bee.po.prod.ProdJourneyProduct" resultMap="BaseResultMap">
+  	select pjp.* from PROD_JOURNEY_PRODUCT pjp,PROD_PRODUCT_BRANCH ppb where ppb.PROD_BRANCH_ID=pjp.PROD_BRANCH_ID AND ppb.VALID='Y' AND pjp.PROD_JOURENY_ID=#prodJourenyId#
+  </select>
+  <select id="selectJourneyProductUniqueListByJourneyId" parameterClass="java.util.Map" resultMap="BaseResultAndProductMap">
+	select pjp2.*,tmp.PRODUCT_ID from PROD_JOURNEY_PRODUCT pjp2,(select
+	  b.PRODUCT_ID,min(pjp.journey_product_id) as journey_product_id from PROD_JOURNEY_PRODUCT
+	  pjp,PROD_PRODUCT_BRANCH b where pjp.PROD_BRANCH_ID=b.PROD_BRANCH_ID and b.VALID='Y' and
+	  pjp.PROD_JOURENY_ID=#prodJourenyId#
+  	<isNotEmpty property="productType" prepend="and">
+  		exists(select 1 from PROD_PRODUCT pp WHERE b.PRODUCT_ID=pp.PRODUCT_ID AND pp.PRODUCT_TYPE=#productType#)
+  	</isNotEmpty>
+  		group by b.PRODUCT_ID
+  	) tmp where pjp2.journey_product_id=tmp.journey_product_id  
+  </select> 
+  
+  <select id="selectJourneyProductListByJourneyIdAndPackId" parameterClass="java.util.Map" resultMap="BaseResultMap">
+  	select   pjp.* from PROD_JOURNEY_PRODUCT pjp,PROD_PRODUCT_BRANCH ppb,PROD_PACK_JOURNEY ppjp where 
+  		ppb.PROD_BRANCH_ID=pjp.PROD_BRANCH_ID  and  pjp.prod_branch_id=ppjp.prod_branch_id AND ppb.VALID='Y' 
+  		and ppjp.journey_product_id=pjp.journey_product_id 
+		AND pjp.prod_joureny_id=#prodJourneyId# and ppjp.PROD_JOURNEY_PACK_ID=#packId#
+  </select>
+   	
+  <select id="selectAllAndProductIdByParam" parameterClass="java.util.Map" resultMap="BaseResultAndProductMap">
+  <!-- 该sql包含对branch当中的PRODUCT_ID查询 -->
+  	select pjp.*,b.PRODUCT_ID from PROD_JOURNEY_PRODUCT pjp,PROD_PRODUCT_BRANCH b 
+  		where pjp.PROD_BRANCH_ID=b.PROD_BRANCH_ID and b.VALID='Y'
+  		<isNotEmpty property="prodBranchId" prepend="and">
+  			PROD_BRANCH_ID = #prodBranchId#
+  		</isNotEmpty>
+  		<isNotEmpty property="journeyProductId">
+  			JOURNEY_PRODUCT_ID = #journeyProductId#
+  		</isNotEmpty>
+  </select>
+  <select id="selectByProductType" parameterClass="java.util.Map" resultMap="BaseResultAndProductMap">
+	select pjp.*,b.PRODUCT_ID from PROD_JOURNEY_PRODUCT pjp,
+		PROD_PRODUCT_BRANCH b
+		where pjp.PROD_BRANCH_ID=b.PROD_BRANCH_ID and b.valid='Y' and pjp.PROD_JOURENY_ID=#prodJourenyId# and exists (select 1 from
+		PROD_PRODUCT pp where pp.PRODUCT_TYPE=#productType# and
+		pp.PRODUCT_ID=b.PRODUCT_ID)
+  </select>
+  
+  <update id="updateDefault" parameterClass="java.util.Map"><!-- 更新除了指定的打包产品的所有同类型一个行程当中的产品 -->
+	UPDATE PROD_JOURNEY_PRODUCT pjp SET pjp.DEFAULT_PRODUCT='false' WHERE
+	pjp.PROD_JOURENY_ID = #prodJourenyId# and pjp.JOURNEY_PRODUCT_ID!=#journeyProductId# and pjp.DEFAULT_PRODUCT='true'
+	AND exists
+	(select 1
+	from prod_product pp
+	inner join prod_product_branch ppb ON pp.product_id =
+	ppb.product_id where
+    ppb.prod_branch_id=pjp.prod_branch_id
+	and pp.product_type = #productType#)  	
+  </update>
+  
+  <update id="clearRequireFlag" parameterClass="java.util.Map"><!-- 更新除了指定的打包产品的所有同类型一个行程当中的产品 -->
+	UPDATE PROD_JOURNEY_PRODUCT pjp SET pjp.REQUIRE='false' WHERE
+	pjp.PROD_JOURENY_ID = #prodJourenyId# and pjp.REQUIRE='false'
+	AND exists
+	(select 1
+	from prod_product pp
+	inner join prod_product_branch ppb ON pp.product_id =
+	ppb.product_id where
+    ppb.prod_branch_id=pjp.prod_branch_id
+	and pp.product_type = #productType#)  	
+  </update>
+</sqlMap>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean name="/edmSubscribeService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="edmSubscribeService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.edm.EdmSubscribeService" />
+	</bean>
+	<bean name="/edmSubscribeInfoService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="edmSubscribeInfoService" />
+		<property name="serviceInterface" value="com.lvmama.comm.pet.service.edm.EdmSubscribeInfoService" />
+	</bean>
+	<bean name="/hqEMailSenderService"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hqEMailSenderService" />
+		<property name="serviceInterface" value="com.lvmama.comm.edm.IHqEMailSenderService" />
+	</bean>
+</beans>

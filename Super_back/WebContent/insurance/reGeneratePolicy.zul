@@ -1,0 +1,21 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./reGeneratePolicyWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="reGeneratePolicyWin" visible="false" title="再次生成保单" closable="true" sizable="false" border="normal" mode="embedded" apply="com.lvmama.back.web.insurance.ReGeneratePolicyAction">
+		<grid>
+			<columns>
+				<column width="30%"></column>
+				<column width="70%"></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>订单号：</hbox>
+					<hbox><textbox value="@{saction.orderId}"/></hbox>
+				</row>							
+			</rows>						
+		</grid>
+		<toolbar align="end">
+		    <button label="生成" width="100px" onClick="saction.submit()" />
+		    <button label="关闭" width="100px" onClick="reGeneratePolicyWin.detach()" />
+	    </toolbar>
+	</window>					
+</zk>

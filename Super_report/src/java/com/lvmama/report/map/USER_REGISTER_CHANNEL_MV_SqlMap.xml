@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_REGISTER_CHANNEL_MV" >
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.UserRegisterChannelMV">
+		<result column="channel_id" property="channelId" />
+		<result column="channel_name" property="channelName" />
+		<result column="channel_code" property="channelCode" />
+		<result column="father_Id" property="fatherId" />
+		<result column="layer" property="layer" />
+	</resultMap>
+
+	<select id="getUserRegisterChannelMV" resultMap="BaseResultMap">
+		SELECT * FROM USER_REGISTER_CHANNEL_MV
+	</select>
+</sqlMap>

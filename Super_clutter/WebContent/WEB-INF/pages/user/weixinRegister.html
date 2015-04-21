@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>微信注册-驴妈妈手机站</title>
+<#include "../common/define_v3.html">
+<script src="${request.contextPath}/jquery.mobile/jquery.cookie.js"></script>
+<script src="${request.contextPath}/js/comm.js"></script>
+<script src="${request.contextPath}/js/login.js?_version=20120806"></script>
+<style type="text/css">
+.lv-toast {
+	background:#000000;
+	position:absolute;
+	width:200px;
+	border-radius:6px;
+	text-align:center;
+	z-index:1002;
+}
+.lv-toast-div {
+	width:42px;
+	height:42px;
+	margin:20px auto;
+}
+.lv-toast-loading {
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin-left: -16px;
+}
+.lv-toast p {
+	padding:0 10px 20px 10px;
+	color:#ffffff;
+	font-size:16px;
+	font-weight:bold;
+}
+</style>
+<script type="text/javascript">
+$(function(){
+	inputClear();
+	
+	$("#btn_weixin_register").click(function(){
+		var mobile = $("#mobile").val();
+	   	var password = $("#password").val();
+	   	var againPassword = $("#againPassword").val();
+		if(mobile==null||$.trim(mobile) == ""){
+			lvToast(false,"手机号不能为空！",LT_LOADING_CLOSE);
+			return;
+	   	}else{
+	   		if(!isMobile(mobile)){
+	   			lvToast(false,"手机号不正确！",LT_LOADING_CLOSE);
+				return;
+	   		}
+	   	}
+	   	if(password==null||$.trim(password) == ""){
+	   		lvToast(false,"密码不能为空！",LT_LOADING_CLOSE);
+	   		return;
+	   	}else{
+	   		if(password.length < 6){
+	   			lvToast(false,"密码不能少于6位！",LT_LOADING_CLOSE);
+		   		return;
+	   		}
+	   		if(password!=againPassword){
+	   			lvToast(false,"两次输入的密码不一致！",LT_LOADING_CLOSE);
+		   		return;
+	   		}
+	   	}
+	   	
+	   	var data = {
+	   			"mobile":	mobile,
+	   			"password":	password
+	   	}
+	   	
+	   	$.getJSON(_nssoUrl+"mobileAjax/weixinRegisterLoginMobile.do?mobile="+mobile+"&password="+password+"&jsoncallback=?", function(msg) {
+	   		if(msg.success) {
+	   		   	lvToast(true, "恭喜您注册成功<br \>请重新登录", 3000);
+		   		setTimeout(function() {
+		   			window.location.href=contextPath+"/weixinLogin.htm";
+				}, 3000);
+			} else {
+			   lvToast(false,msg.errorText);
+			}
+		});
+		/*$.ajax({
+		   type: "get",
+		   url: _nssoUrl+"mobileAjax/weixinRegisterLoginMobile.do",
+		   data: data,
+		   dataType: "json",
+		   success: function(msg){
+			   if(msg.success) {
+				   window.location.href=contextPath+"/weixinBindSuccess.htm";
+				} else {
+					lvToast(false,msg.errorText);
+				}
+		   }
+		});*/
+	});
+});
+/*
+input clear
+@inputVal is input val
+@inputPlaceholder is input attribute
+@_inputObj is obj
+*/
+function inputClear(){
+	var inputVal, inputPlaceholder, _inputObj;
+	_inputObj = $('input');
+	inputVal = _inputObj.val();
+	inputPlaceholder = _inputObj.attr('placeholder');
+	if(inputVal !='' && inputVal != inputPlaceholder){
+		_inputObj.each(function(i) {
+			var _index = i;
+			var numObj = _inputObj.eq(_index);
+			var _valI = _inputObj.eq(_index).val();
+			if(_valI !=''){
+				numObj.next('.ic_delete').show();
+			}
+			$('body').delegate('input', 'keyup',function(){
+				inputVal = numObj.val();
+				if(inputVal != ''){
+					numObj.next('.ic_delete').show();
+				}else {
+					numObj.next('.ic_delete').hide();
+				}
+			});
+			$('body').delegate('input', 'keydown',function(){
+				inputVal = numObj.val();
+				if(inputVal == ''){
+					numObj.next('.ic_delete').hide();
+				}else {
+					numObj.next('.ic_delete').show();
+				}
+			});
+			
+		});
+	  $('body').delegate('.ic_delete', 'click',function(){
+		   $(this).hide();
+		   $(this).prev('input').val('');
+	  });
+	}
+}
+</script>
+</head>
+
+<body>
+<div class="wrap">
+    <section class="coupon_main wechat">
+    	<article class="find_pass">
+        	<div class="wechat_con">
+            <form action="#" method="post">
+                <p>
+                    亲爱的微信会员<br/>
+                    请填写以下信息注册成为驴妈妈会员:
+                </p>
+                <ul>
+                    <li><input type="tel" name="mobile" id="mobile" placeholder="手机号" value="" /><i class="ic_delete"></i></li>
+                    <li><input type="password" name="password" id="password" placeholder="输入密码" value="" /><i class="ic_delete"></i></li>
+                    <li><input type="password" name="againPassword" id="againPassword" placeholder="再次输入" value="" /><i class="ic_delete"></i></li>
+                </ul>
+                <a id="btn_weixin_register" href="javascript:void(0);" class="btn_se_sub1">提交注册</a>
+            </form>
+              </div>
+              <a href="/clutter/weixinLogin.htm" class="wechat_b">登录>></a>  <a href="/clutter/weixinForgetPassword.htm" class="wechat_c">用短信找回密码</a>
+        </article>
+    </section>
+</div>
+<div class="lv-toast lv-toast-success" style="display:none;">
+	<div class="lv-toast-div"><img src="${prefix_pic_url!}/img/smile-grey.png"></div>
+    <p></p>
+</div>
+<div class="lv-toast lv-toast-fail" style="display:none;">
+	<div class="lv-toast-div"><img src="${prefix_pic_url!}/img/sad-big.png"></div>
+    <p></p>
+</div>
+<div class="lv-toast-loading" style="display:none;"><img style="width:32px;" src="${prefix_pic_url!}/img/3.gif"></div>
+ <script >
+   var _nssoUrl = "${nssoUrl!}" +"/";
+ </script>
+</body>
+</html>

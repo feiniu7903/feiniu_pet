@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="EDM_USR_USERS">
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.user.UserUser">
+    <result column="CITY_ID" property="cityId" />
+    <result column="USER_NAME" property="userName" />
+    <result column="EMAIL" property="email" />
+    <result column="GENDER" property="gender" />
+    <result column="MOBILE_NUMBER" property="mobileNumber"/>
+  </resultMap>
+  
+  <sql id="DataUserLoginCollectSQL">
+  	select 1 from LVMM_LAND.U_USER_ACTION_COLLECTION ul where ul.USER_ID=U.USER_ID and
+  </sql>
+  <sql id="OrdOrderSQL">
+  	select 1 from LVMM_LAND.S_ORD_ORDER ord where ord.USER_ID=U.USER_NO and
+  </sql>
+  
+   <sql id="dwUserValueSql">
+   		, USER_RATE R 
+	 </sql>
+	 <sql id="dwSubFilterSql">
+			<isNotNull property="sensitiveFrom" prepend=" AND "> R.SENSITIVE_VALUE &gt;=#sensitiveFrom# </isNotNull>
+			<isNotNull property="sensitiveTo" prepend=" AND "> R.SENSITIVE_VALUE &lt;#sensitiveTo# </isNotNull>
+			<isNotNull property="userType" prepend=" AND "> R.USER_TYPE =#userType# </isNotNull>
+	 </sql>
+	 <sql id="dwUserFilterSql">
+	 	AND  U.USER_NO = R.USER_ID 
+	 	<dynamic>
+	 		<isNull property="userType" prepend=" AND ">R.USER_TYPE!='DEAD' </isNull>
+			<include refid="dwSubFilterSql"/>
+	 	</dynamic>
+	 </sql>
+  
+  <sql id="SearchEdmSQL">
+  	(select u.USER_NAME,C.GEOGRAPHY_KEY city_id,u.gender,u.email,u.MOBILE_NUMBER,ROWNUM rn
+  			from LVMM_LAND.PT_USER_USER u
+		<include refid="dwUserValueSql"/>
+		<isNotNull property="city" prepend=",">
+			LVMM_DW.USER_GEOGRAPHY C,LVMM_DW.GEOGRAPHY G
+		</isNotNull>
+  		<isNull property="city">
+  			<isNotEmpty property="capital" prepend=",">
+  				LVMM_DW.USER_GEOGRAPHY C,LVMM_DW.GEOGRAPHY G
+	  		</isNotEmpty> 
+	  		<isEmpty property="capital" prepend=",">
+  				LVMM_DW.USER_GEOGRAPHY C,LVMM_DW.GEOGRAPHY G
+	  		</isEmpty> 
+  		</isNull>
+   		<!-- 有邮箱并且是前台注册的帐号 
+  			where u.is_valid='Y' AND u.GROUP_ID NOT IN('GP_PLACE','GP_PHONE')
+  		-->
+  		<dynamic prepend=" WHERE ">	
+  			<isNotNull property="city" prepend=" AND ">
+				 U.USER_ID = C.USER_ID AND C.GEOGRAPHY_KEY=G.GEOGRAPHY_KEY
+			</isNotNull> 	
+	  		<isNull property="city">
+	  			<isNotEmpty property="capital" prepend=" AND ">
+	  				U.USER_ID = C.USER_ID AND C.GEOGRAPHY_KEY=G.GEOGRAPHY_KEY
+		  		</isNotEmpty> 
+		  		<isEmpty property="capital" prepend=" AND ">
+	  				U.USER_ID = C.USER_ID AND C.GEOGRAPHY_KEY=G.GEOGRAPHY_KEY
+		  		</isEmpty> 
+	  		</isNull>
+  			<isNotEmpty prepend=" and " property="checkMobile">
+  				<isEqual property="checkMobile" compareValue="true">
+  				u.MOBILE_NUMBER IS NOT NULL
+  				</isEqual>
+  				<isEqual property="checkMobile" compareValue="false">
+  				u.EMAIL IS NOT NULL
+  				</isEqual>
+  			</isNotEmpty>
+  			<isNotNull property="mobileNumber" prepend=" and ">
+  				u.MOBILE_NUMBER=#mobileNumber#
+  			</isNotNull>
+  			<isNotNull property="email" prepend=" and ">
+  				u.EMAIL LIKE '%$email$%'
+  			</isNotNull>	
+  			<!-- 注册时间 -->
+  			<isNotNull property="regStart" prepend=" and ">
+  				<isNotNull property="regEnd">
+  					 (u.CREATED_DATE between #regStart# and #regEnd#)
+  				</isNotNull>
+  				<isNull property="regEnd">
+  					 u.CREATED_DATE &gt;= #regStart#
+  				</isNull>
+  			</isNotNull>
+  			<isNull property="regStart">
+  				<isNotNull property="regEnd" prepend=" and ">
+  					u.CREATE_DATE &lt;= #regEnd#
+  				</isNotNull>
+  			</isNull>
+  			
+  			<!-- 最后登录时间 -->
+  			<isNotNull property="loginStart" prepend=" and ">
+  				<isNotNull property="loginEnd">
+  					(u.LAST_LOGIN_DATE between #loginStart# and #loginEnd#)
+  				</isNotNull>
+  				<isNull property="loginEnd">
+  					u.LAST_LOGIN_DATE &gt;= #loginStart#
+  				</isNull>
+  			</isNotNull>
+  			<isNull property="loginStart">
+  				<isNotNull property="loginEnd" prepend=" and ">
+  					u.LAST_LOGIN_DATE &lt;= #loginEnd#
+  				</isNotNull>
+  			</isNull>
+  			
+  			<!-- 手机号是否验证过 -->
+	  		<isNotNull property="isCheckMobile" prepend=" and ">
+	  			u.IS_MOBILE_CHECKED = #isCheckMobile#
+	  		</isNotNull>
+	  		<!-- 邮箱是否验证过 -->
+	  		<isNotNull property="isCheckEmail" prepend=" and ">
+	  			u.IS_EMAIL_CHECKED = #isCheckEmail#
+	  		</isNotNull>
+	  		<!-- 邮件类型 -->
+	  		<isNotNull property="emailType" prepend=" and ">
+	  				<!-- 订阅邮箱不为无效 -->
+  				 EXISTS (SELECT 1 FROM  LVMM_LAND.S_EDM_SUBSCRIBE e,LVMM_LAND.S_EDM_SUBSCRIBE_info i WHERE e.id=i.edm_user_id AND E.EMAIL=U.EMAIL AND i.Is_Valid='Y' AND I.TYPE=#emailType#)
+	  		</isNotNull>
+  			<!-- 包含省市的查询 -->
+  			<isNotNull property="city" prepend=" and ">
+  				G.GEOGRAPHY_KEY=#city#
+  			</isNotNull>
+  			<isNull property="city">
+  				<isNotNull property="capital" prepend=" and ">
+  					G.PROVINCE=#capital#
+  				</isNotNull>
+  			</isNull>
+  			
+  			<!-- 包含登录时间 -->
+  			<isNotNull property="loginStartNote" prepend=" and ">
+  				exists(<include refid="DataUserLoginCollectSQL"/>
+	  			<isNotNull property="loginEndNote">
+	  				(UL.CREATED_DATE between #loginStartNote# and #loginEndNote#)
+	  			</isNotNull>
+	  			<isNull property="loginEndNote">
+	  				UL.CREATED_DATE &gt;=#loginStartNote#
+	  			</isNull>
+	  			)
+	  		</isNotNull>	  		
+	  		<isNull property="loginStartNote">
+	  			
+	  			<isNotNull property="loginEndNote" prepend=" and ">
+	  				exists (<include refid="DataUserLoginCollectSQL"/> UL.CREATED_DATE &lt;=#loginEndNote#)
+	  			</isNotNull>
+	  		</isNull>
+	  		
+	  		<include refid="dwUserFilterSql" />
+	  		<!-- 包含订单时间 -->
+	  		<isNotNull property="orderStart" prepend=" and ">
+	  			exists (<include refid="OrdOrderSQL"/>
+	  			<isNotNull property="orderEnd">
+	  				(ord.CREATE_TIME between #orderStart# and #orderEnd#)
+	  			</isNotNull>
+	  			<isNull property="orderEnd">
+	  				ord.CREATE_TIME &gt;=#orderEnd#
+	  			</isNull>
+	  			)
+	  		</isNotNull>
+	  		<isNull property="orderStart">
+	  			<isNotNull property="orderEnd" prepend="and">
+	  				exists (<include refid="OrdOrderSQL"/> ord.CREATE_TIME &lt;=#orderEnd#)
+	  			</isNotNull>
+	  		</isNull>
+	  		<isNotEmpty property="_endRow" prepend=" and ">
+	  			 ROWNUM &lt;= #_endRow#
+	  		</isNotEmpty>
+  		</dynamic>	
+  	)
+  </sql>
+  
+  <select id="selectEdmAll" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+  		select * from <include refid="SearchEdmSQL"/>
+  		<dynamic prepend="where">
+	  		<isNotNull property="_startRow">
+	  			rn &gt; #_startRow#
+	  		</isNotNull>
+  		</dynamic>
+   </select>
+   <select id="selectEdmCount" parameterClass="java.util.HashMap" resultClass="long">
+   		select count(*) from <include refid="SearchEdmSQL"/>
+   </select>
+</sqlMap>

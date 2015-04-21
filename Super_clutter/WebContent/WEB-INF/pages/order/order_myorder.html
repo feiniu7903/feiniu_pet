@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>我的门票和度假订单</title>
+<#include "../common/define.html">
+</head>
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="union_back();"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">我的门票和度假订单</div>
+   <section class="header_alice">
+   		<a href="http://${hostName}" class="btn1"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a>
+   </section>
+</div>   
+<div class="lv-wrapper lv-min-height lv-media-width  myorder">
+  <div class="lv-wrapper-container"  id="data_list">
+  	<!-- <a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/order/my_jianyi_order.htm');" class="myorder_v3_list">
+    	<span>查看我的预约单</span>
+        <img class="lv-next-01 lv-redirect-next" src="http://pic.lvmama.com/img/mobile/touch/img/next.png"> 
+    </a> -->
+    <input type="hidden" name="page" id="page" value="${page!}">
+    <#include "../order/order_myorder_list_temp.html">
+  </div>
+  
+      <!-- 如果不是最后一页  -->
+    <#if isLastPage?? && !isLastPage>
+	   <div class="lv-nav-li lv-btn-03" id="show_more">
+	        <a href="javascript:void(0);" onclick="getData()">
+	           <span>查看更多</span>
+	        </a>
+	    </div>
+     </#if>
+</div>
+<script src="${request.contextPath}/js/order.js?version=20131023"></script>
+<script type="text/javascript">
+  var jsonData = [];
+  var currentOrderId  = '';
+  //取消订单 弹出层 . 
+  function popCancelOrder(orderId) {
+	  currentOrderId = orderId;
+  	var _height = $(document).height();
+  	var _width = $(document).width();
+  	var _top = $(document).scrollTop() + 200;
+  	$(".telBox .p span").html($(this).attr("_tel"));
+  	$(".telBox").fadeIn();
+  	$(".telBox").css({top: _top});
+  	$(".model").css({
+  		width : _width,
+  		height : _height,
+  	}).show();
+  }
+  
+  // 点击确定按钮 
+  function promt_cancel_order(type) {
+	    $(".telBox").fadeOut();
+		$(".model").hide();
+		if(null == currentOrderId || "" == currentOrderId) {
+			lvToast(false,LT_ORDER_CANCLE_ERROR,LT_LOADING_CLOSE);
+		}
+		if(type == '2') {
+			cancelOrder(currentOrderId);
+			currentOrderId = ''; 
+		}
+  }
+</script>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+    <!--取消弹出层 st-->
+	<div class="telBox telBox_logout">
+    	<div class="telBox_con"></div>
+        <div class="p">
+            <span>您确定要取消该订单吗!</span>
+            <a href="javascript:void(0);" class="ic_ret" onclick="promt_cancel_order(1);"></a>
+            <a href="javascript:void(0);" class="ic_logout" onclick="promt_cancel_order(2);"></a>
+        </div>
+    </div>
+    
+</body>
+</html>

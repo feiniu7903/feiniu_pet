@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PHP_REVIEW_KEYWORD" >
+    <!-- 详细内容  -->
+    <typeAlias alias="keyWord" type="com.lvmama.comm.businesses.po.review.KeyWord"/>
+    <resultMap id="baseMap" class="keyWord" >
+	     <result column="K_Id" property="kId" />
+	     <result column="K_Content" property="kContent" />
+	     <result column="K_Date" property="kDate" />
+    </resultMap>
+      <insert id="batchInsertKeyWord" parameterClass="keyWord">
+         INSERT INTO review_keyword (kcontent,kdate) 
+         VALUES  <dynamic prepend="(" >  <isNotNull prepend="," property="kContent" >  #kContent# </isNotNull> ,now() )   </dynamic>
+     </insert>
+      <update id="updateKeyWord" parameterClass="java.util.Map">
+       UPDATE review_keyword SET 
+          kcontent = #newContent#
+        where kcontent=#oldContent#
+     </update>
+      <delete id="deleteKeyWord" parameterClass="keyWord">
+        DELETE FROM review_keyword 
+        where kcontent = #kContent#
+     </delete>
+  
+</sqlMap>

@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TAOBAO_PRODUCT">
+	<resultMap id="productResultMap" class="com.lvmama.comm.bee.po.prod.ProdProduct">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="BIZ_CODE" property="bizcode" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="ADDITIONAL" property="additional" />
+		<result column="ONLINE_TIME" property="onlineTime" />
+		<result column="OFFLINE_TIME" property="offlineTime" />
+		<result column="MARKET_PRICE" property="marketPrice" nullValue="0" />
+		<result column="SELL_PRICE" property="sellPrice" nullValue="0" />
+		<result column="SMS_CONTENT" property="smsContent" />
+		<result column="WRAP_PAGE" property="wrapPage" />
+		<result column="PAY_TO_LVMAMA" property="payToLvmama" />
+		<result column="PAY_TO_SUPPLIER" property="payToSupplier" />
+		<result column="PRICE_UNIT" property="priceUnit" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="SMALL_IMAGE" property="smallImage" />
+		<result column="CAN_PAY_BY_BONUS" property="canPayByBonus" nullValue="Y" />
+		<result column="MAX_CASH_REFUND" property="maxCashRefund" nullValue="0" />
+		<result column="PHYSICAL" property="physical" nullValue="false" />
+		<result column="SEND_SMS" property="sendSms" nullValue="false" />
+		<result column="NEAR_DATE" property="nearDate" />
+		<result column="VALID" property="valid" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="GROUP_MIN" property="groupMin" />
+		<result column="TRAVELLER_INFO_OPTIONS" property="travellerInfoOptions" />
+		<result column="ON_LINE" property="onLine" />
+		<result column="ORG_ID" property="orgId" />
+		<result column="MANAGER_ID" property="managerId" />
+		<result column="PAY_DEPOSIT" property="payDeposit" />
+		<result column="COUPON_ABLE" property="couponAble" />
+		<result column="RECOMMEND_INFO_FIRST" property="recommendInfoFirst" />
+		<result column="RECOMMEND_INFO_SECOND" property="recommendInfoSecond" />
+		<result column="RECOMMEND_INFO_THIRD" property="recommendInfoThird" />
+		<result column="COUPON_ACTIVITY" property="couponActivity" />
+		<result column="IS_REFUNDABLE" property="isRefundable" />
+		<result column="IS_FOREGIN" property="isForegin" />
+		<result column="REGION_NAME" property="regionName" />
+		<result column="IS_MANUAL_BONUS" property="isManualBonus" />
+		<result column="IS_ANNIVERARY_PRODUCT" property="isAnniveraryProduct" />
+		<result column="IS_APERIODIC" property="isAperiodic"/>
+		<result column="AHEAD_BOOKING_DAYS" property="aheadBookingDays"/>
+		<result column="IS_PREPAYMENT" property="prePaymentAble"/>
+		<result column="SHOW_SALE_DAYS" property="showSaleDays"/>
+	</resultMap>
+	
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.market.TaobaoProduct">
+		<result column="TB_PRODUCT_INTERFACE_ID" property="tbProductInterfaceId" />
+		<result column="TB_PRODUCT_RETURN_ID" property="tbProductReturnId" />
+		<result column="CATE_NAME" property="cateName" />
+		<result column="CATE_ID" property="cateId" />
+		<result column="PID_VID" property="pidVid" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="TB_PUSH_DATE" property="tbPushDate" />
+		<result column="TB_STATUS" property="tbStatus" />
+		<result column="IS_TB_ONLINE" property="isTbOnline" />
+		<result column="IS_MAPED" property="isMaped" />
+		<result column="JHS_PUSH_DATE" property="jhsPushDate" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="MODIFY_DATE" property="modifyDate" />
+		<!-- <result column="{productId=PRODUCT_ID}" property="prodProduct" select="TAOBAO_PRODUCT.getProdProductById" /> -->
+	</resultMap>
+	
+	<select id="getProdProductById" parameterClass="java.util.HashMap" resultMap="productResultMap"> 
+  		select p.* from PROD_PRODUCT p where p.PRODUCT_ID = #productId# 
+  	</select>  
+	
+	<select id="selectByParam" resultMap="BaseResultMap">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM ( select 
+			tp.TB_PRODUCT_INTERFACE_ID,		
+			tp.TB_PRODUCT_RETURN_ID,			
+			tp.CATE_NAME,									
+			tp.CATE_ID,
+			tp.PID_VID,				
+			tp.TB_PUSH_DATE,							
+			tp.TB_STATUS,									
+			tp.IS_TB_ONLINE,
+			tp.IS_MAPED,						
+			tp.JHS_PUSH_DATE,							
+			tp.CREATE_DATE,								
+			tp.MODIFY_DATE,
+			pp.PRODUCT_ID 
+		from
+		PROD_PRODUCT pp, taobao_product_interface tp
+		<isNotNull property="placeId">
+			, PROD_PRODUCT_PLACE ppp
+		</isNotNull>
+		where 1=1
+		<isNotEmpty prepend="and" property="isTbOnline">
+			tp.IS_TB_ONLINE=#isTbOnline#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="tbStatus">
+			tp.TB_STATUS=#tbStatus#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productId">
+			pp.PRODUCT_ID=#productId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productIds">
+			<iterate property="productIds" open="(" close=")"
+				conjunction="or">
+				pp.PRODUCT_ID=#productIds[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty property="filialeName" prepend="and">
+			pp.FILIALE_NAME=#filialeName#
+		</isNotEmpty>
+		<isEmpty property="twoRole">
+			<isNotEmpty prepend="and" property="managerIds">
+				(
+				<iterate property="managerIds" conjunction="," close=")"
+					open=" pp.MANAGER_ID in (">
+					#managerIds[]#
+				</iterate>
+				or pp.MANAGER_ID is null
+				)
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orgId">
+				(pp.ORG_ID=#orgId# or
+				pp.ORG_ID is null)
+			</isNotEmpty>
+		</isEmpty>
+		<isNotEmpty property="twoRole">
+			and (
+			pp.ORG_ID=#orgId#
+
+			<iterate property="managerIds" conjunction="," close=")"
+				open="or pp.MANAGER_ID in (">
+				#managerIds[]#
+			</iterate>
+			or pp.ORG_ID is null or pp.MANAGER_ID is null
+			)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="prodBranchId">
+			exists(select 1 from
+			prod_product_branch ppb where ppb.product_id=pp.product_id and
+			ppb.prod_branch_id=#prodBranchId#)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="sProductName">
+			pp.PRODUCT_NAME like
+			'%$sProductName$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="bizcode">
+			pp.BIZ_CODE like
+			'%$bizcode$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="filialeName">
+			pp.FILIALE_NAME =
+			#filialeName#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productSearch">
+			(pp.PRODUCT_NAME like
+			'%$productSearch$%' or pp.BIZ_CODE
+			like
+			'%$productSearch$%'
+			<isNotEmpty prepend="or" property="productSearchId">
+				pp.PRODUCT_ID=#productSearchId#
+			</isNotEmpty>
+			)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="startTime">
+			tp.CREATE_DATE
+			<![CDATA[>=]]>
+			#startTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="endTime">
+			tp.CREATE_DATE
+			<![CDATA[<=]]>
+			#endTime#
+		</isNotEmpty><isNotEmpty prepend="and" property="uploadJhsTimeStart">
+			tp.JHS_PUSH_DATE
+			<![CDATA[>=]]>
+			#uploadJhsTimeStart#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="uploadJhsTimeEnd">
+			tp.JHS_PUSH_DATE
+			<![CDATA[<=]]>
+			#uploadJhsTimeEnd#
+		</isNotEmpty>
+		<isEqual prepend="and" property="onlineStatus" compareValue="true">
+			pp.ONLINE_TIME
+			<![CDATA[<]]>
+			sysdate and pp.OFFLINE_TIME
+			<![CDATA[>]]>
+			sysdate
+		</isEqual>
+		<isEqual prepend="and" property="onlineStatus" compareValue="false">
+			pp.OFFLINE_TIME
+			<![CDATA[<]]>
+			sysdate
+		</isEqual>
+		<isNotEmpty prepend="and" property="productTypeList">
+			<iterate property="productTypeList" open="(" close=")"
+				conjunction="OR">
+				pp.PRODUCT_TYPE = #productTypeList[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productId">
+			pp.PRODUCT_ID =
+			#productId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productType">
+			pp.PRODUCT_TYPE =
+			#productType#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="isAperiodic">
+		    <isEqual property="isAperiodic" compareValue="false" > (</isEqual>
+		    	IS_APERIODIC = #isAperiodic#
+		    <isEqual property="isAperiodic" compareValue="false" prepend="OR">
+				pp.IS_APERIODIC IS NULL
+				)
+			</isEqual>		    
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="onLine">
+			pp.ON_LINE = #onLine#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="payToLvmama">
+			pp.PAY_TO_LVMAMA = #payToLvmama#
+		</isNotEmpty>
+		<isGreaterThan prepend="and" property="placeId"
+			compareValue="0">
+			pp.PRODUCT_ID=ppp.PRODUCT_ID and ppp.PLACE_ID=#placeId#
+		</isGreaterThan>
+		and pp.product_id = tp.product_id(+) 
+		<isNotEmpty prepend="" property="sort1">
+			order by pp.PRODUCT_ID desc
+		</isNotEmpty>
+		<isNotEmpty prepend="" property="sort2">
+			order by tp.TB_PRODUCT_RETURN_ID desc nulls last
+		</isNotEmpty>
+		) T
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow" prepend=""> ROWNUM &lt;=
+				#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=""> ROWNUM1
+				&gt;=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	
+	
+	
+
+	<select id="selectRowCount" resultClass="java.lang.Integer">
+		select count(pp.PRODUCT_ID) from 
+		PROD_PRODUCT pp, taobao_product_interface tp
+		<isNotNull property="placeId">
+			, PROD_PRODUCT_PLACE ppp
+		</isNotNull>
+		where 1=1
+		<isNotEmpty prepend="and" property="isTbOnline">
+			tp.IS_TB_ONLINE=#isTbOnline#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="tbStatus">
+			tp.TB_STATUS=#tbStatus#
+		</isNotEmpty>
+		<isEmpty property="twoRole">
+			<isNotEmpty prepend="and" property="managerIds">
+				(
+				<iterate property="managerIds" conjunction="," close=")"
+					open=" pp.MANAGER_ID in (">
+					#managerIds[]#
+				</iterate>
+				or pp.MANAGER_ID is null
+				)
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orgId">
+				(pp.ORG_ID=#orgId# or
+				pp.ORG_ID is null)
+			</isNotEmpty>
+		</isEmpty>
+		<isNotEmpty property="twoRole">
+			and (
+			pp.ORG_ID=#orgId#
+
+			<iterate property="managerIds" conjunction="," close=")"
+				open="or pp.MANAGER_ID in (">
+				#managerIds[]#
+			</iterate>
+			or pp.ORG_ID is null or pp.MANAGER_ID is null
+			)
+		</isNotEmpty>
+
+		<isNotEmpty prepend="and" property="sProductName">
+			pp.PRODUCT_NAME like
+			'%$sProductName$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="bizcode">
+			pp.BIZ_CODE like
+			'%$bizcode$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="prodBranchId">
+			exists(select 1 from
+			prod_product_branch ppb where ppb.product_id=pp.product_id and
+			ppb.prod_branch_id=#prodBranchId#)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productSearch">
+			(pp.PRODUCT_NAME like
+			'%$productSearch$%' or pp.BIZ_CODE
+			like '%$productSearch$%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="startTime">
+			tp.CREATE_DATE
+			<![CDATA[>=]]>
+			#startTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="endTime">
+			tp.CREATE_DATE
+			<![CDATA[<=]]>
+			#endTime#
+		</isNotEmpty>
+		<isNotEmpty property="filialeName" prepend="and">
+			pp.FILIALE_NAME
+			= #filialeName#
+		</isNotEmpty>
+		<isEqual prepend="and" property="onlineStatus" compareValue="true">
+			pp.ONLINE_TIME
+			<![CDATA[<]]>
+			sysdate and pp.OFFLINE_TIME
+			<![CDATA[>]]>
+			sysdate
+		</isEqual>
+		<isEqual prepend="and" property="onlineStatus" compareValue="false">
+			pp.OFFLINE_TIME
+			<![CDATA[<]]>
+			sysdate
+		</isEqual>
+		<isNotEmpty prepend="and" property="productTypeList">
+			<iterate property="productTypeList" open="(" close=")"
+				conjunction="OR">
+				pp.PRODUCT_TYPE = #productTypeList[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="onLine">
+			pp.ON_LINE = #onLine#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productId">
+			pp.PRODUCT_ID =
+			#productId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productIds">
+			<iterate property="productIds" open="(" close=")"
+				conjunction="or">
+				pp.PRODUCT_ID=#productIds[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="productType">
+			pp.PRODUCT_TYPE =
+			#productType#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="isAperiodic">
+		   	<isEqual property="isAperiodic" compareValue="false" > (</isEqual>
+		    	IS_APERIODIC = #isAperiodic#
+		    <isEqual property="isAperiodic" compareValue="false" prepend="OR">
+				pp.IS_APERIODIC IS NULL
+				)
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="payToLvmama">
+			pp.PAY_TO_LVMAMA = #payToLvmama#
+		</isNotEmpty>
+		<isGreaterThan prepend="and" property="placeId"
+			compareValue="0">
+			pp.PRODUCT_ID=ppp.PRODUCT_ID and ppp.PLACE_ID=#placeId#
+		</isGreaterThan>
+		and pp.product_id = tp.product_id(+) 
+	</select>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.market.TaobaoProduct">
+		<selectKey keyProperty="tbProductInterfaceId" resultClass="long">
+			SELECT
+				taobao_product_interface_SEQ.NEXTVAL
+			FROM
+				DUAL
+		</selectKey>
+		INSERT INTO
+			taobao_product_interface
+		(
+			TB_PRODUCT_INTERFACE_ID, 
+			TB_PRODUCT_RETURN_ID, 
+			CATE_NAME, 
+			CATE_ID, 
+			PID_VID,
+			PRODUCT_ID, 
+			TB_PUSH_DATE, 
+			TB_STATUS, 
+			IS_TB_ONLINE, 
+			IS_MAPED, 
+			JHS_PUSH_DATE, 
+			CREATE_DATE, 
+			MODIFY_DATE
+		)
+		VALUES
+		(
+			#tbProductInterfaceId#,
+			#tbProductReturnId#,
+			#cateName#,
+			#cateId#,
+			#pidVid#,
+			#productId#,
+			#tbPushDate#,
+			#tbStatus#,
+			#isTbOnline#,
+			#isMaped#,
+			#jhsPushDate#,
+			#createDate#,
+			#modifyDate#
+		)
+	</insert>
+	
+	<select id="getProductByInterfaceId" parameterClass="java.lang.Long" resultMap="BaseResultMap"> 
+  		select * from taobao_product_interface tpi
+		where tpi.TB_PRODUCT_INTERFACE_ID=#interfaceId#
+  	</select>
+  	
+  	<update id="updateByParam" parameterClass="java.util.HashMap">
+  		UPDATE
+			taobao_product_interface
+		SET
+			MODIFY_DATE = SYSDATE
+			<isNotEmpty prepend="," property="status">
+				TB_STATUS = #status#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isMaped">
+				IS_MAPED = #isMaped#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="jhsPushDate">
+				JHS_PUSH_DATE = #jhsPushDate#
+			</isNotEmpty>
+		<dynamic prepend="where">
+			<isNotEmpty prepend=" and" property="taobaoId">
+				TB_PRODUCT_RETURN_ID = #taobaoId#
+			</isNotEmpty>
+			<isNotEmpty prepend=" and" property="tbProductInterfaceId">
+				TB_PRODUCT_INTERFACE_ID = #tbProductInterfaceId#
+			</isNotEmpty>
+		</dynamic>
+  	</update>
+
+</sqlMap>

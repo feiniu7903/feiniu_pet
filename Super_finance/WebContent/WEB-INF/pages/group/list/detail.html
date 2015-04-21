@@ -1,0 +1,250 @@
+<#if type == 'BUDGET'>
+	<#assign title="团预算">
+<#elseif type =='COST'>
+	<#assign title="团实际成本">
+<#else>
+	<#assign title="团核算">
+</#if>
+<#if budget??>
+<style>
+<!--
+@media print{.noprint{display:none}}
+-->
+</style>
+<!--startprint-->
+   <div class="rad5 mt10 wapper_list wapper_list_cash">
+	<h3 class="order_check">${title}</h3>
+	<div class="tb_model_cont">
+		<#if type == 'BUDGET'>
+			<table class="rad5 tabw100 blue_skin_tb" border="0" cellpadding="0" cellspacing="0">
+				<thead>
+					<tr>
+						<th>预算人数</th>
+						<th>预算总成本</th>
+						<th>预算收入</th>
+						<th>预算毛利润</th>
+						<th>预算毛利率</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>${budget.bgPersons}人</td>
+						<td>${(budget.bgTotalCosts/100)?string(",##0.00")}</td>
+						<td>${(budget.bgIncoming/100)?string(",##0.00")}</td>
+						<td>${(budget.bgProfit/100)?string(",##0.00")}</td>
+						<td>${budget.bgProfitRate?string(",##0.00")}%</td>
+					</tr>
+				</tbody>
+			</table>
+		<#elseif type =='COST'>
+			<table class="rad5 tabw100 blue_skin_tb" border="0" cellpadding="0" cellspacing="0">
+				<thead>
+					<tr>
+						<th>实际人数</th>
+						<th>实际成本</th>
+						<th>实际收入</th>
+						<th>实际折让</th>
+						<th>实际毛利润</th>
+						<th>实际毛利率</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><#if budget.actPersons??>${budget.actPersons}人</#if></td>
+						<td><#if budget.actTotalCosts??>${(budget.actTotalCosts/100)?string(",##0.00")}</#if></td>
+						<td><#if budget.actIncoming??>${(budget.actIncoming/100)?string(",##0.00")}</#if></td>
+						<td><#if budget.actAllowance??>${(budget.actAllowance/100)?string(",##0.00")}</#if></td>
+						<td><#if budget.actProfit??>${(budget.actProfit/100)?string(",##0.00")}</#if></td>
+						<td><#if budget.actProfitRate??>${budget.actProfitRate?string(",##0.00")}%</#if></td>
+					</tr>
+				</tbody>
+			</table>
+			<h4>附加收入</h4>
+			<table class="rad5 tabw100 blue_skin_tb" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<th>金额</th>
+					<th>内容</th>
+					<th>添加时间</th>
+					<th>添加人</th>
+					<th>备注</th>
+				</tr>
+				<#list otherIncomingList as var11>
+					<tr>
+						<td>${var11.amount?string(",##0.00")}</td>
+						<td>${var11.costsItemName!""}</td>
+						<td>${var11.createtimeStr!""}</td>
+						<td>${var11.creator!""}</td>
+						<td>${var11.remark!""}</td>
+					</tr>
+				</#list>
+			</table>
+		<#else>
+			<ul class="list accounting_list">
+				<li>
+					<strong>团号：</strong><span id="check_group_code">${group.travelGroupCode}</span>	
+				</li>
+				<li style="width: 280px;">
+					<strong>产品名称：</strong><span>${group.productName}</span>	
+				</li>
+				<li >
+					<strong>出团日期：</strong><span>${group.visitTimeStr}</span>	
+				</li>
+				<li>
+					<strong>回团日期：</strong><span>${group.backTimeStr!""}</span>	
+				</li>
+			</ul>
+			<h3>合计：</h3>
+			<table class="rad5 tabw100 blue_skin_tb" border="0" cellpadding="0" cellspacing="0">
+				<thead>
+					<tr>
+						<th>预算成本</th>
+						<th>预算收入</th>
+						<th>预算毛利润</th>
+						<th>预算毛利率</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><#if budget.bgTotalCosts??>${(budget.bgTotalCosts/100)?string(",##0.00")}</#if></td>
+						<td><#if budget.bgIncoming??>${(budget.bgIncoming/100)?string(",##0.00")}</#if></td>
+						<td><#if budget.bgProfit??>${(budget.bgProfit/100)?string(",##0.00")}</#if></td>
+						<td><#if budget.bgProfitRate??>${budget.bgProfitRate?string(",##0.00")}%</#if></td>
+					</tr>
+					<tr>
+						<th>实际成本</th>
+						<th>实际收入</th>
+						<th>实际毛利润</th>
+						<th>实际毛利率</th>
+					</tr>
+					<tr>
+						<td><#if budget.actTotalCosts??>${(budget.actTotalCosts/100)?string(",##0.00")}</#if></td>
+						<td><#if budget.actIncoming??>${(budget.actIncoming/100)?string(",##0.00")}</#if></td>
+						<td><#if budget.actProfit??>${(budget.actProfit/100)?string(",##0.00")}</#if></td>
+						<td><#if budget.actProfitRate??>${budget.actProfitRate?string(",##0.00")}%</#if></td>
+					</tr>
+				</tbody>
+			</table>
+		</#if>
+		<h3>成本项：</h3>
+		<div class="tb_sort_cont">
+			<h4>产品成本</h4>
+			<table class="rad5 tabw100 blue_skin_tb" border="0" cellpadding="0" cellspacing="0">
+				<thead>
+					<tr>
+						<th>预算成本项</th>
+						<th>类别</th>
+						<th>预算成本</th>
+						<th>数量</th>
+						<th>币种</th>
+						<th>汇率</th>
+						<th>单项总成本（元）</th>
+						<th>单项总成本（币种）</th>
+						<th>供应商/ID</th>
+						<th>结算对象/结算ID</th>
+						<th>付款方式</th>
+						<th>打款金额</th>
+						<th>付款状态</th>
+						<#if type == 'COST' || type == 'CHECK' >
+							<th>操作</th>
+						</#if>
+					</tr>
+				</thead>
+				<tbody>
+					<#list budgetProdList as var>
+						<tr>
+							<td>${var.productName}</td>
+							<td>${var.branchName}</td>
+							<td>${var.bgCosts?string(",##0.00")}</td>
+							<td>${var.quantity}</td>
+							<td>${var.currency}</td>
+							<td>${var.exchangeRate?string("0.######")}</td>
+							<td>${var.subTotalCosts?string(",##0.00")}元</td>
+							<td>${var.subTotalCostsFc?string(",##0.00")}(${var.currencySymbol})</td>
+							<td>${var.supplierName}/${var.supplierId}</td>
+							<td>${var.targetName}/${var.targetId}</td>
+							<td>
+								<#if var.paymentType??>
+									<#if var.paymentType == 'CASH'>
+										现金
+									<#elseif var.paymentType == 'TRANSFER'>
+										银行转账
+									<#else>
+										${var.paymentType}
+									</#if>
+								</#if>
+							</td>
+							<td><#if var.payAmount??>${var.payAmount?string(",##0.00")}</#if></td>
+							<td><#if var.payStatus??>${var.payStatusZH}</#if></td>
+							<#if type =='COST' || type == 'CHECK' >
+							<td><a href="javascript:void(0);" class="orderDetails" travelGroupCode="${budget.travelGroupCode}" prodBranchId="${var.prodBranchId}">查看明细</a></td>
+							</#if>
+						</tr>
+					</#list>
+				</tbody>
+			</table>
+			<h4>固定成本</h4>
+			<table class="rad5 tabw100 blue_skin_tb" border="0" cellpadding="0" cellspacing="0">
+				<thead>
+					<tr>
+						<th>预算成本项</th>
+						<th>预算成本</th>
+						<th>数量</th>
+						<th>币种</th>
+						<th>汇率</th>
+						<th>单项总成本（元）</th>
+						<th>单项总成本（币种）</th>
+						<th>供应商/ID</th>
+						<th>结算对象/结算ID</th>
+						<th>付款方式</th>
+						<th>打款金额</th>
+						<th>付款状态</th>
+						<th>备注</th>
+					</tr>
+				</thead>
+				<tbody>
+					<#list budgetFixedList as var>
+						<tr>
+							<td>${var.costsItemName}</td>
+							<td>${var.bgCosts?string(",##0.00")}</td>
+							<td>${var.quantity}</td>
+							<td>${var.currency}</td>
+							<td>${var.exchangeRate?string("0.######")}</td>
+							<td>${var.subTotalCosts?string(",##0.00")}元</td>
+							<td>${var.subTotalCostsFc?string(",##0.00")}(${var.currencySymbol})</td>
+							<td>${var.supplierName}/${var.supplierId}</td>
+							<td>${var.targetName}/${var.targetId}</td>
+							<td>
+								<#if var.paymentType??>
+									<#if var.paymentType == 'CASH'>
+										现金
+									<#elseif var.paymentType == 'TRANSFER'>
+										银行转账
+									<#else>
+										${var.paymentType}
+									</#if>
+								</#if>
+							</td>
+							<td><#if var.payAmount??>${var.payAmount?string(",##0.00")}</#if></td>
+							<td><#if var.payStatus??>${var.payStatusZH}</#if></td>
+							<td>${var.remark!""}</td>
+						</tr>
+					</#list>
+				</tbody>
+			</table>
+			<#if type=='CHECK' && group.settlementStatus !='CHECKED' >
+				<p class="t_c mt20">
+					<input id="groupcheck_btn" type="button" value="核算" class="btn_sub noprint" />
+					<!-- <input id="group_print_btn" type="button" value="打 印" class="btn_sub noprint" group_code="<#if groupCode??>${groupCode}</#if>" group_type="CHECK"/> -->
+				</p>
+			<#else>
+			<p class="t_c mt20">
+					<input id="group_print_btn" type="button" value="打 印" class="btn_sub noprint"  group_code="<#if groupCode??>${groupCode}</#if>"  group_type="COST"/>
+			</p>
+			</#if>
+		</div>
+	</div>
+</div>
+<!--endprint-->
+<#else>
+${title}信息不存在！！
+</#if>

@@ -1,0 +1,109 @@
+<?page title="EDM任务管理-查询页面" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./listTask"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.operate.util.ListboxCodeset" ?>
+	<window id="listTask" title="EDM任务管理-查询页面" mode="embedded" apply="com.lvmama.operate.web.task.EdmSubscribeTaskAction">
+		<grid>
+			<columns>
+				<column width="120px"></column>
+				<column></column>
+				<column width="120px"></column>
+				<column></column>
+				<column></column>
+			</columns>
+			<rows>
+			 <row>
+					<hbox>任务名称：</hbox>
+					<hbox><textbox id="taskName" value="@{saction.searchConds.taskName}"/></hbox>
+					<hbox>任务类型：</hbox>
+					<hbox><listbox id="taskType"  codeset="EDM_TIMING_TYPE" mold="select" selectedItem="@{saction.searchConds.taskType}"/></hbox>
+				    <hbox>
+						<button label="查 询" id="search" width="100px" onClick='_paging.activePage=0;saction.search()'/>
+						<button label="新 增" id="add" width="100px"  onClick='saction.showWindow("/edm/task/new_task.zul",self.getAttributes())'/>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox model="@{saction.list, load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+			    <listheader label="序号" width="50px"/>
+				<listheader label="任务名称" width="200px"/>
+				<listheader label="任务类型" width="150px"/>
+				<listheader label="邮件模板" width="200px"/>
+				<listheader label="接收用户组" width="200px"/>
+				<listheader label="发送时间" width="100px"/>
+				<listheader label="发送频率" width="100px"/>
+				<listheader label="下次执行时间" width="150px"/>
+				<listheader label="任务状态" width="100px"/>
+				<listheader label="操作" width="200px"/>
+			</listhead>
+		
+			<listitem  height="25px" self="@{each='each'}">
+				<listcell label="@{each.taskId}"></listcell>
+				<listcell>
+					<label value="@{each.taskName}"/>
+					<image width="15px" height="15px" src="/img/qm.gif" tooltip='@{each.taskName}'/>
+					<popup id='@{each.taskName}' width="200px"> 
+								<label pre="true" value="@{each.taskDesc}"/> 
+					</popup>
+				</listcell>
+				<listcell label="@{each.zhTaskType}"></listcell>
+				<listcell>
+					<label value="@{each.tempName}"/>
+					[<label value="@{each.tempId}"/>]
+				</listcell>
+				<listcell>
+					<label value="@{each.userGroupName}"/>
+					[<label value="@{each.userGroupId}"/>]
+				</listcell>
+				<listcell label="@{each.zhSendTime}"></listcell>
+				<listcell label="@{each.zhSendCycle}"></listcell>
+				<listcell label="@{each.nextExecuteDateStr}"></listcell>
+				<listcell label="@{each.chTaskStatus}"></listcell>
+				<listcell>
+					<a style="color:blue" onClick='saction.showWindow("/edm/task/update_task.zul", self.getAttributes());' label="修改">
+						<custom-attributes taskId="@{each.taskId}"/>
+					</a> 
+					|
+					<a style="color:blue"  onClick='saction.updateTaskStatus(self.getAttributes());' label="暂 停">
+						 <custom-attributes taskId="@{each.taskId}"/>
+						 <custom-attributes taskName="@{each.taskName}"/>
+						 <custom-attributes taskStatus="S"/>
+					</a>
+					|
+					<a style="color:blue"  onClick='saction.updateTaskStatus(self.getAttributes());' label="恢 复">
+						 <custom-attributes taskId="@{each.taskId}"/>
+						 <custom-attributes taskName="@{each.taskName}"/>
+						 <custom-attributes taskStatus="Y"/>
+					</a>
+					|
+					<a style="color:blue"  onClick='saction.updateTaskStatus(self.getAttributes());' label="删 除">
+						 <custom-attributes taskId="@{each.taskId}"/>
+						 <custom-attributes taskName="@{each.taskName}"/>
+						 <custom-attributes taskStatus="N"/>
+					</a>
+					|
+					<a style="color:blue"  onClick='saction.updateTaskStatus(self.getAttributes());' label="重 置">
+						 <custom-attributes taskId="@{each.taskId}"/>
+						 <custom-attributes taskName="@{each.taskName}"/>
+						 <custom-attributes taskStatus="R"/>
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell>
+					<paging  id="_paging" pageSize ="10" onPaging='saction.search();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+	</window>
+</zk>

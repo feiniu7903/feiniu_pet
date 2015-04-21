@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+ <head> 
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+ <title> 通知函  </title> 
+ <style>
+	* {margin:0;padding:0;}
+	body{font-family: SimSun;padding:0 40px;font-size:14px;line-height:1.6;}
+	.wrap{width:600px;margin:20px auto; position:relative;}
+	h1 { font-size: 2.6em;}
+	h2 { font-size: 2.0em;}
+	h3 { font-size: 1.6em;}
+	h4 { font-size: 1.3em;}
+	h5 { font-size: 1em;}
+	h6 { font-size: 12px;}
+	p { margin: 0.8em 0 0.6em;}
+	.textline{display:inline-block;min-width:100px;_width:100px;border-bottom:1px solid #000;padding:0 10px;}
+	.content{padding-left:2em}
+	.tc{text-align:center;}
+	.tr{text-align:right;}
+	.fr{float:right;}
+</style>
+ </head> 
+
+ <body> 
+ <div class="wrap">
+    <h1 class="tc">通知函</h1>
+	<p>尊敬的用户：</p>
+    <p>　　感谢您参与驴妈妈旅游网五周年庆大促活动， 恭喜您抢购到<span class="textline">${productName}</span>,该订单订购产品使用规则如下：</p>
+    <div class="content">
+        <p>1、此订单需要您在2小时内完成支付才代表抢购成功。</p>
+        <p>2、此订单订购的产品出游日期有相应限制，请提前致电1010-6060确定具体出游日期并签署相应旅游合同。如未按此产品详情描述页面规定的时间致电预订并签订合同的，即视为用户自动放弃该出游机会 。</p>
+        <p>3、此订单如有需用户另行支付的自理费用（包括但不限于飞机燃油税、机场建设费、房差、保险等费用），请在签订合同时支付。</p>
+        <p>4、此订单均不予退换，并不可转让使用。</p>
+        <p>5、使用此订单须同时遵守《驴妈妈五周年亲活动规则》。</p>
+        <p>特此告知！</p>
+    </div>
+    
+    <p class="tr">驴妈妈旅游网　　　　　　</p>
+    <p class="tr">（上海驴妈妈兴旅国际旅行社有限公司）</p>
+    <div style="position:absolute; right:50px;z-index:-1; bottom:-50px;"> <img src="http://pic.lvmama.com/img/order/stamp/SH_ECONTRACT.png" id="stamp_img" template="${template}"/>  </div>
+</div>
+ </body> 
+ </html>

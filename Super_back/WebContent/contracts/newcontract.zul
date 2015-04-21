@@ -1,0 +1,116 @@
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./contractWindow"?>
+	<?component name="lvmama_supplier" macroURI="/macors/supplier.zul"?>
+	<window id="contractWindow" title="新增合同信息" border="normal"
+		apply="com.lvmama.back.web.contract.EditContractAction">
+		<space />
+		<groupbox style="border: none">
+			<caption label="合同基本信息" />
+			<grid>
+				<columns>
+					<column width="100px" align="right"></column>
+					<column></column>
+					<column width="100px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label value="供应商:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<longbox id="supplierId" visible="false" value="@{saction.supContract.supplierId }" />
+							<lvmama_supplier id="supplier_component"></lvmama_supplier>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="合同名称:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox id="contractId" visible="false" value="@{saction.supContract.contractId }"></textbox>
+							<textbox width="200px;" id="contractName" maxlength="40" value="@{saction.supContract.contractName }"></textbox>
+						</hbox>
+						<hbox>
+							<label value="合同编号:" />
+						</hbox>
+						<hbox>
+							<textbox width="200px;" id="contractNo" maxlength="30" value="@{saction.supContract.contractNo }">
+							</textbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="驴妈妈经办人:" />
+						</hbox>
+						<hbox>
+							<textbox width="200px;" id="arranger" maxlength="20" value="@{saction.supContract.arranger }"></textbox>
+						</hbox>
+						<hbox>
+							<label value="合同签定日期:" />
+						</hbox>
+						<hbox>
+							<datebox width="200px;" id="signDate" value="@{saction.supContract.signDate }"></datebox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		
+		<space />
+		<groupbox style="border: none">
+			<caption label="合作详情" />
+			<grid>
+				<columns>
+					<column width="100px;" align="right"></column>
+					<column></column>
+					<column width="100px;" align="right"></column>
+					<column></column>
+				</columns>	
+				<rows>
+					<row>
+						<hbox>
+							<label value="合同有效期:" />
+						</hbox>
+						<hbox>
+							<datebox id="beginDate" value="@{saction.supContract.beginDate }"></datebox>
+							~
+							<datebox id="endDate" value="@{saction.supContract.endDate }"></datebox>
+						</hbox>
+							<hbox>
+							<label value="合同类型:" />
+						</hbox>
+						<hbox>
+								<radiogroup id="radiogroup" selectedItem="@{saction.supContract.contractType}" >
+								<vbox>
+									<radio id="COOPERATION" value="COOPERATION"  label="合作协议"></radio>
+								</vbox>
+								<vbox>
+									<radio id="PRODALTERING"  value="PRODALTERING"  label="产品变更单"></radio>
+								</vbox>
+								</radiogroup>
+
+						</hbox>
+					</row>
+					<row spans="1,3">
+						<hbox>
+							<label value="合同概要:" />
+						</hbox>
+						<hbox>
+							<textbox id="summary" width="680px" rows="2" maxlength="1024" value="@{saction.supContract.summary}"
+								height="80px;">
+							</textbox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		
+		<toolbar align="center" id="toolBar">
+			<button id="addContract" label="提交" width="100px"/><space /><button label="取消" onClick="contractWindow.detach()" width="100px"></button>
+		</toolbar>
+	</window>
+</zk>

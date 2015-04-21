@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+	<bean id="hotelSearchService" class="com.lvmama.elong.service.impl.HotelSearchServiceImpl" />
+	<bean id="hotelDetailService" class="com.lvmama.elong.service.impl.HotelDetailServiceImpl" />
+	
+	<bean id="orderValidateService" class="com.lvmama.elong.service.impl.OrderValidateServiceImpl" />
+	<bean id="orderCreateService" class="com.lvmama.elong.service.impl.OrderCreateServiceImpl" />
+	<bean id="orderListService" class="com.lvmama.elong.service.impl.OrderListServiceImpl" />
+	<bean id="orderDetailService" class="com.lvmama.elong.service.impl.OrderDetailServiceImpl" />
+	<bean id="orderCancelService" class="com.lvmama.elong.service.impl.OrderCancelServiceImpl" />
+	<bean id="hotelBrandService" class="com.lvmama.elong.service.impl.HotelBrandServiceImpl" />
+	<bean id="creditCardValidateService" class="com.lvmama.elong.service.impl.CreditCardValidateServiceImpl" />
+	<bean id="hotelCommentService" class="com.lvmama.elong.service.impl.HotelCommentServiceImpl" />
+	<bean id="orderRelationService" class="com.lvmama.elong.service.impl.OrderRelationServiceImpl" />
+	
+</beans>

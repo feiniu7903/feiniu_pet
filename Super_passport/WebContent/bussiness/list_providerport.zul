@@ -1,0 +1,18 @@
+<?page title="通关点信息" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./portportList"?>
+<zk>
+	<window id="portportList" title="通关点信息" border="normal"
+		apply="com.lvmama.passport.web.pass.ListPassPortAction">
+		<listbox
+			model="@{saction.passPortList}">
+			<listhead>
+				<listheader label="通关点编号" />
+				<listheader label="通关点名称" />
+			</listhead>
+			<listitem height="25px" self="@{each='passport'}">
+				<listcell label="@{passport.targetId}" />
+				<listcell label="@{passport.name}" />
+			</listitem>
+		</listbox>
+	</window>
+</zk>

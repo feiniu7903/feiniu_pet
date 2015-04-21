@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_TRANSFORM_BASIC_MV">
+	<resultMap id="OrderTransfrom" class="com.lvmama.report.po.OrderTransformBasiceMV">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="FQUANTITY" property="frontOrder" />
+		<result column="FPAYEDQUANTITY" property="frontPayed" />
+		<result column="BQUANTITY" property="backOrder" />
+		<result column="BPAYEDQUANTITY" property="backPayed" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="REAL_NAME" property="realName" />
+	</resultMap>
+
+	<sql id="queryOrderTransformBasicSql">
+		from (SELECT
+		PRODUCT_ID PRODUCT_ID,PRODUCT_NAME
+		PRODUCT_NAME,PRODUCT_TYPE
+		PRODUCT_TYPE,nvl(SUM(FQUANTITY),0)
+		FQUANTITY,nvl(SUM(FPAYEDQUANTITY),0)
+		FPAYEDQUANTITY,nvl(SUM(BQUANTITY),0)
+		BQUANTITY,nvl(SUM(BPAYEDQUANTITY),0)
+		BPAYEDQUANTITY,
+		FILIALE_NAME,
+		REAL_NAME
+		FROM(
+		select
+		nvl(f.filiale_name,b.filiale_name)
+		FILIALE_NAME,
+		nvl(f.real_name,b.real_name)
+		REAL_NAME,
+		nvl(f.pay_time,b.pay_time)
+		PAY_TIME,nvl(f.product_id,b.product_id)
+		PRODUCT_ID,nvl(f.product_name,b.product_name)
+		PRODUCT_NAME,nvl(f.sub_product_type,b.sub_product_type)
+		SUB_PRODUCT_TYPE,nvl(f.product_type,b.product_type)
+		PRODUCT_TYPE,F.QUANTITY FQUANTITY,F.PAYEDQUANTITY
+		FPAYEDQUANTITY,B.QUANTITY BQUANTITY,B.PAYEDQUANTITY BPAYEDQUANTITY
+		FROM order_transform_FRONT_basic_mv f
+		full outer join
+		order_transform_BACK_basic_mv b on (
+		f.pay_time = b.pay_time
+		AND
+		F.PRODUCT_ID =B.PRODUCT_ID AND
+		F.PRODUCT_NAME = B.PRODUCT_NAME AND
+		F.PRODUCT_TYPE =B.PRODUCT_TYPE AND
+		F.FILIALE_NAME =B.FILIALE_NAME
+		AND
+		F.REAL_NAME = B.REAL_NAME
+		and f.sub_product_type = b.sub_product_type
+		)
+		)
+		where 1=1
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="productName">
+			PRODUCT_NAME like
+			'%$productName$%'
+		</isNotNull>
+		<isNotNull prepend="AND" property="productId">
+			PRODUCT_ID =
+			#productId#
+		</isNotNull>
+		<isNotNull prepend="and" property="startDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[<]]>#endDate#+1
+		</isNotNull>
+		<isNotNull prepend="and" property="filialeName">
+			FILIALE_NAME =
+			#filialeName#
+		</isNotNull>
+		<isNotNull prepend="and" property="realName">
+			real_name like
+			'%$realName$%'
+		</isNotNull>
+		GROUP BY
+		PRODUCT_ID,PRODUCT_NAME,PRODUCT_TYPE,FILIALE_NAME,REAL_NAME
+		<dynamic prepend=" order by ">
+			<isNotNull prepend="" property="sortTypeName">
+				$sortTypeName$
+				$sortAscOrDesc$
+			</isNotNull>
+		</dynamic>
+		)info
+	</sql>
+	<select id="countOrderTransformBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		select count(*)
+		<include refid="queryOrderTransformBasicSql" />
+	</select>
+
+	<select id="sumFOrderQuantityOrderTransformBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(FQUANTITY)
+		<include refid="queryOrderTransformBasicSql" />
+	</select>
+
+	<select id="sumBOrderQuantityOrderTransformBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(BQUANTITY)
+		<include refid="queryOrderTransformBasicSql" />
+	</select>
+
+	<select id="sumFPayedQuantityOrderTransformBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(FPAYEDQUANTITY)
+		<include refid="queryOrderTransformBasicSql" />
+	</select>
+
+	<select id="sumBPayedQuantityOrderTransformBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(BPAYEDQUANTITY)
+		<include refid="queryOrderTransformBasicSql" />
+	</select>
+
+	<select id="queryOrderTransformBasicMV" parameterClass="java.util.Map"
+		resultMap="OrderTransfrom">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT
+		rownum r,
+		info.*
+		<include refid="queryOrderTransformBasicSql" />
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow">rownum &lt;=#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;
+				=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<resultMap id="ProductTransform" class="com.lvmama.report.po.ProductTransformBasicMV">
+		<result column="FEEDBACKTIME" property="time" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="QUANTITY" property="order" />
+		<result column="PAYEDQUANTITY" property="payedOrder" />
+		<result column="CALLS" property="callCount" />
+	</resultMap>
+
+	<sql id="queryProductTransformBasicSql">
+		from (select feedbacktime FEEDBACKTIME, PRODUCT_TYPE
+		PRODUCT_TYPE,nvl(SUM(QUANTITY),0)
+		QUANTITY,nvl(SUM(PAYEDQUANTITY),0)
+		PAYEDQUANTITY,nvl(sum(CALLS),0)
+		CALLS
+		FROM
+		product_transform_basic_mv
+		where PRODUCT_TYPE is not null
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="startDate">
+			to_date(feedbacktime,'yyyy-mm-dd')<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			to_date(feedbacktime,'yyyy-mm-dd')<![CDATA[<]]>#endDate#+1
+		</isNotNull>
+		GROUP BY PRODUCT_TYPE,FEEDBACKTIME
+		<dynamic prepend=" order by ">
+			<isNotNull prepend="" property="sortTypeName">
+				$sortTypeName$
+				$sortAscOrDesc$
+			</isNotNull>
+		</dynamic>
+
+		)info
+	</sql>
+
+
+	<select id="countProductTransformBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		select count(*)
+		<include refid="queryProductTransformBasicSql" />
+	</select>
+
+	<select id="sumOrderQuantityProductTransformBasicMV"
+		resultClass="java.lang.Long" parameterClass="java.util.Map">
+		select sum(QUANTITY)
+		<include refid="queryProductTransformBasicSql" />
+	</select>
+
+	<select id="sumPayedQuantityProductTransformBasicMV"
+		resultClass="java.lang.Long" parameterClass="java.util.Map">
+		select sum(PAYEDQUANTITY)
+		<include refid="queryProductTransformBasicSql" />
+	</select>
+
+	<select id="sumCallQuantityProductTransformBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(CALLS)
+		<include refid="queryProductTransformBasicSql" />
+	</select>
+
+	<select id="avgProductTransformBasicMV" resultClass="java.lang.Double"
+		parameterClass="java.util.Map">
+		select
+		avg((case WHEN sum(CALLS) = 0 then 0 else
+		sum(QUANTITY)/sum(CALLS) END
+		))
+		CHANAGE
+		<include refid="queryProductTransformBasicSql" />
+		group by CALLS
+	</select>
+
+	<select id="avgPayedProductTransformBasicMV" resultClass="java.lang.Double"
+		parameterClass="java.util.Map">
+		select
+		avg((case WHEN sum(QUANTITY) = 0 then 0 else
+		sum(PAYEDQUANTITY)/sum(QUANTITY)
+		END
+		)) CHANGAGE
+		<include refid="queryProductTransformBasicSql" />
+		group by QUANTITY
+	</select>
+
+
+	<select id="queryProductTransformBasicMV" parameterClass="java.util.Map"
+		resultMap="ProductTransform">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT
+		rownum r,
+		info.*
+		<include refid="queryProductTransformBasicSql" />
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow">rownum &lt; =#_endRow#
+			</isNotEmpty>
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;
+				=#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+</sqlMap>

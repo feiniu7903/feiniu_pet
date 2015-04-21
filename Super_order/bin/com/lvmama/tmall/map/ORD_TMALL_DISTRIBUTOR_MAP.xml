@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_TMALL_DISTRIBUTOR_MAP" >
+  <!-- 别名 -->
+  <typeAlias alias="ordTmallDistributorMap" type="com.lvmama.comm.bee.po.tmall.OrdTmallDistributorMap"/>
+  
+  <resultMap id="OrdTmallDistributorMapResult" class="ordTmallDistributorMap" >
+    <result column="ORD_TMALL_DISTRIBUTOR_MAP_ID" property="ordTmallDistributorMapId" />
+    <result column="FEN_XIAO_ID" property="fenXiaoId" />
+    <result column="DISTRIBUTOR_NO" property="distributorNo"/>
+    <result column="TC_ORDER_ID" property="tcOrderId"/>
+    <result column="DISTRIBUTOR_USER_NAME" property="distributorUserName" />
+    <result column="BUYER_MOBILE" property="buyerMobile" />
+    <result column="TITLE" property="title" />
+    <result column="PRODUCT_ID" property="productId"  />
+    <result column="CATEGORY_ID" property="categoryId" />
+    <result column="PRICE" property="price" />
+     <result column="NUM" property="num" />
+    <result column="LV_ORDER_ID" property="lvOrderId" />
+    <result column="SYSTEM_ORDER" property="systemOrder" />
+    <result column="STATUS" property="status" />
+    <result column="TMALL_MEMO" property="tmallMemo"  />
+    <result column="SELLER" property="seller"/>
+    <result column="FAILED_REASON" property="failedReason" />
+    <result column="OPERATOR_NAME" property="operatorName"  />
+    <result column="PROCESS_TIME" property="processTime" />
+    <result column="CREATE_TIME" property="createTime"  />
+    <result column="PROCESS_STATUS" property="processStatus" />
+    <result column="IS_CERTIFICATE" property="isCertificate" />
+    <result column="RESOURCE_CONFIRM_STATUS" property="resourceConfirmStatus" />
+    <result column="GT_MAXNUM" property="gtMaxNum"  />
+    <result column="PRODUCT_TYPE" property="productType" />
+    <result column="ALIPAY_NO" property="alipayNo" />
+  </resultMap>
+ 
+ <!-- 用于select查询公用抽取的列 =========Begin=======-->
+ <sql id="commonColumns">
+ 	<![CDATA[
+ 		ORD_TMALL_DISTRIBUTOR_MAP_ID,
+ 		FEN_XIAO_ID,
+ 		DISTRIBUTOR_NO,
+ 		TC_ORDER_ID,
+ 		DISTRIBUTOR_USER_NAME,
+ 		BUYER_MOBILE,
+ 		TITLE,
+ 		PRODUCT_ID,
+ 		CATEGORY_ID,
+ 		PRICE,
+ 		NUM,
+ 		LV_ORDER_ID,
+ 		SYSTEM_ORDER,
+ 		STATUS,
+ 		TMALL_MEMO,
+ 		SELLER,
+ 		FAILED_REASON,
+ 		OPERATOR_NAME,
+ 		PROCESS_TIME,
+ 		CREATE_TIME,
+ 		PROCESS_STATUS,
+ 		IS_CERTIFICATE,
+ 		RESOURCE_CONFIRM_STATUS,
+ 		GT_MAXNUM,
+ 		PRODUCT_TYPE,
+ 		ALIPAY_NO,
+ 		PAY_TIME
+ 	]]>
+ </sql>
+ <!-- 用于select查询公用抽取的列 =========End=========-->
+ 
+ <!-- 动态查询条件=========Begin=========-->
+ <sql id="dynamicWhere">
+ 	<dynamic>
+ 		<isNotEmpty prepend="AND" property="ordTmallDistributorMapId">
+ 			ORD_TMALL_DISTRIBUTOR_MAP_ID = #ordTmallDistributorMapId#
+ 		</isNotEmpty>
+ 		<isNotEmpty prepend="AND" property="fenXiaoId">
+ 			FEN_XIAO_ID = #fenXiaoId#
+ 		</isNotEmpty>
+ 		<isNotEmpty prepend="AND" property="distributorNo">
+ 			DISTRIBUTOR_NO = #distributorNo#
+ 		</isNotEmpty>
+ 		<isNotEmpty prepend="AND" property="tcOrderId">
+ 			TC_ORDER_ID = #tcOrderId#
+ 		</isNotEmpty>
+ 		<isNotEmpty prepend="AND" property="distributorUserName">
+ 			DISTRIBUTOR_USER_NAME = #distributorUserName#
+ 		</isNotEmpty>
+ 		<isNotEmpty prepend="AND" property="buyerMobile">
+ 			BUYER_MOBILE = #buyerMobile#
+ 		</isNotEmpty>
+ 		<isNotEmpty prepend="AND" property="title">
+ 			TITLE = #title#
+ 		</isNotEmpty>
+ 		<isNotEmpty prepend="AND" property="productId">
+ 			PRODUCT_ID = #productId#
+ 		</isNotEmpty>
+ 		<isNotEmpty prepend="AND" property="categoryId">
+ 			CATEGORY_ID = #categoryId#
+ 		</isNotEmpty>
+ 		<isNotEmpty prepend="AND" property="systemOrder">
+	        SYSTEM_ORDER = #systemOrder#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="AND" property="status">
+	        STATUS = #status#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="AND" property="productType">
+	        PRODUCT_TYPE = #productType#
+	   </isNotEmpty>
+	   <isNotEmpty prepend="AND" property="createTimeStart">
+	   		LV_ORDER_ID In(Select order_id From ord_order Where TRUNC(CREATE_TIME)= TO_DATE(#createTimeStart#,'yyyy-mm-dd'))
+	   </isNotEmpty>
+	   <isNotEmpty prepend="AND" property="failStatus">
+	   		STATUS in ('failure','unpay')
+	   </isNotEmpty>
+ 	</dynamic>
+ </sql>
+ <!-- 动态查询条件=========End===========-->
+ 
+ <!-- INSERT =========Begin=============-->
+ <insert id="insert" parameterClass="ordTmallDistributorMap">
+ 	<selectKey keyProperty="ordTmallDistributorMapId" resultClass="java.lang.Long">
+ 		SELECT ORD_TMALL_DISTRIBU_MAP__ID_SEQ.nextval from dual
+ 	</selectKey>
+ 	INSERT INTO ORD_TMALL_DISTRIBUTOR_MAP (
+ 		<include refid="commonColumns"/>
+ 	)VALUES(
+ 		#ordTmallDistributorMapId#,#fenXiaoId#,#distributorNo#,#tcOrderId#,#distributorUserName#,#buyerMobile#,#title#,#productId#,#categoryId#,
+ 		#price#,#num#,#lvOrderId#,#systemOrder#,#status#,#tmallMemo#,#seller#,#failedReason#,#operatorName#,#processTime#,
+ 		#createTime#,#processStatus#,#isCertificate#,#resourceConfirmStatus#,#gtMaxNum#,#productType#,#alipayNo#,#payTime#
+ 	)
+ </insert>
+ <!-- INSERT =========End===============-->
+ 
+ <!-- UPDATE ALL =========Begin===============-->
+ <update id="updateAllByPrimaryKey" parameterClass="ordTmallDistributorMap" >
+ 	UPDATE ORD_TMALL_DISTRIBUTOR_MAP
+ 	   SET FEN_XIAO_ID = #fenXiaoId#,
+ 	       DISTRIBUTOR_NO = #distributorNo#,
+ 	   	   TC_ORDER_ID = #tcOrderId#,
+ 	       DISTRIBUTOR_USER_NAME=#distributorUserName#,
+ 	       BUYER_MOBILE = #buyerMobile#,
+	       TITLE = #title#,
+	       PRODUCT_ID = #productId#,
+	       CATEGORY_ID=#categoryId#,
+	       PRICE = #price#,
+	       NUM = #num#,
+	       LV_ORDER_ID = #lvOrderId#,
+	       SYSTEM_ORDER = #systemOrder#,
+	       STATUS = #status#,
+	       TMALL_MEMO = #tmallMemo#,
+	       SELLER = #seller#,
+	       FAILED_REASON = #failedReason#,
+	       OPERATOR_NAME = #operatorName#,
+	       PROCESS_TIME = #processTime#,
+	       CREATE_TIME = #createTime#,
+	       IS_CERTIFICATE=#isCertificate#,
+	       RESOURCE_CONFIRM_STATUS=#resourceConfirmStatus#,
+	       GT_MAXNUM=#gtMaxNum#,
+	       PRODUCT_TYPE=#productType#,
+	       ALIPAY_NO=#alipayNo#,
+	       PAY_TIME=#payTime#
+    WHERE ORD_TMALL_DISTRIBUTOR_MAP_ID = #ordTmallDistributorMapId#
+ </update>
+ <!-- UPDATE ALL =========End=================-->
+ 
+ <!-- 根据条件查询 =========Begin=================-->
+ <select id="selectByParam" resultMap="OrdTmallDistributorMapResult" parameterClass="java.util.HashMap">
+ 	 SELECT * FROM (
+ 	 	SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+ 	 		SELECT *
+ 	 		  FROM ORD_TMALL_DISTRIBUTOR_MAP
+ 	 		 WHERE 1=1
+ 	 		 <include refid="dynamicWhere"/>
+ 	 		 order by CREATE_TIME <![CDATA[ DESC ]]>
+ 	 	) T
+ 	 	<dynamic prepend=" WHERE">
+ 	 		<isNotEmpty property="_endRow">ROWNUM &lt;= #_endRow#</isNotEmpty>
+ 	 	</dynamic>
+ 	 )
+ 	 <dynamic prepend=" WHERE">
+	 		<isNotEmpty property="_startRow">ROWNUM1 &gt;=#_startRow#</isNotEmpty>
+	  </dynamic>
+ </select>
+ <!-- 根据条件查询 =========End===================-->
+ 
+ <!-- 根据条件查询记录数 =========Begin===================-->
+ 	<select id="selectCountByParam" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+		SELECT COUNT(1)
+ 		  FROM ORD_TMALL_DISTRIBUTOR_MAP
+ 		 WHERE 1=1
+	  	 <include refid="dynamicWhere"/> 
+ 	</select>
+ <!-- 根据条件查询 =========End===========================-->
+ 
+ <!-- 根据OrderId查询是否是实体票=============Begin============= -->
+   <select id="selectCertificateType" resultClass="java.lang.Long"  parameterClass="java.lang.Long">
+       SELECT count(1) from ord_order_item_meta o LEFT JOIN meta_product m ON o.meta_product_id=m.meta_product_id LEFT JOIN meta_perform me ON m.meta_product_id=me.meta_product_id
+       LEFT JOIN sup_perform_target su ON me.target_id=su.target_id WHERE o.order_id=#orderId#  and su.certificate_type = 'ENTITY'
+  </select>
+ <!-- 根据OrderId查询是否是实体票=============End=============== -->
+ 
+ <!-- 查询状态为CREATE的订单 =============Begin=============== -->
+  <select id="selectOrdOfCreate" resultClass="java.lang.String">
+    <![CDATA[select distinct FEN_XIAO_ID from  ORD_TMALL_DISTRIBUTOR_MAP  where  STATUS = 'create']]>
+  </select>
+  <!-- 查询状态为CREATE的订单 =============End=============== -->
+  
+  <!-- 根据主键查询对象 =============Begin=============== -->
+   <select id="selectByPK" resultMap="OrdTmallDistributorMapResult" parameterClass="java.lang.Long">
+   		Select <include refid="commonColumns"/> From ORD_TMALL_DISTRIBUTOR_MAP Where ORD_TMALL_DISTRIBUTOR_MAP_ID = #ordTmallDistributorMapId#
+   </select>
+  <!-- 根据主键查询对象 =============End================= -->
+</sqlMap>

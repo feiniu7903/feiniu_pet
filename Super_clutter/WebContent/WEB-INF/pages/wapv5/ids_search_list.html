@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title><#if searchStatus?? && searchStatus=="ROUTE">度假<#else>门票</#if></title>
+    <meta name="description" content="">
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/font-icons.css">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/global.css">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/list.css">
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/lib/zepto.min.js"></script>
+    <script type="text/javascript" name="baidu-tc-cerfication" src="http://apps.bdimg.com/cloudaapi/lightapp.js#70e91d9156558b74286c45bf640cff9e"></script>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/globe.js"></script>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/base.js"></script>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/ui/filtrateTab.js"></script>
+    <script src="${request.contextPath}/jquery.mobile/jquery-1.8.2.js"></script>
+	<script src="${request.contextPath}/jquery.mobile/jquery.cookie.js"></script>
+    <script src="${request.contextPath}/js/search_v5.js" type="text/javascript"></script>
+    <#setting number_format="#.##">
+    <script type="text/javascript">
+		var contextPath = '${request.contextPath}';
+		$(function(){
+		});
+	</script>
+		<#assign hostName = reauestHostName/>
+<script type="text/javascript">
+	var hostName=window.location.host;
+	if(hostName!=null && hostName=="qing.lvmama.com"){
+		hostName="qing.lvmama.com";
+	}
+</script>
+</head>
+<body>
+
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/header.js"></script>
+<!-- 数据列表 -->
+<div id="wrapper">
+    <div id="content">        
+       	<!-- IDS搜索数据 -->
+        <form method="get" action="${request.contextPath}/search/ids_search_list.htm"  id="ids_search_list" >
+	       	<!--区分门票和线路  -->
+	       	<input  value="${searchStatus!}"  type="hidden" name="searchStatus" id="searchStatus">
+        	<input  value="${ids!}"  type="hidden" name="ids" id="ids"><!--ID列表  -->
+            <input  value="1"  type="hidden" name="page" id="page"><!--分页第几页  -->
+            <input  value="10"  type="hidden" name="pageSize" id="pageSize"><!--分页大小  -->
+            <input  value="false"  type="hidden" name="ajax" id="ajax"><!--是否是AJAX查询  -->
+        </form>
+        <div class="lv-project-list bg-white">
+         	<ul id="data_list">
+	        	<!-- 线路 -->
+	        	<#if searchStatus?? && searchStatus=="ROUTE">
+		        	<#if mobileProductList?? && mobileProductList?size&gt;0>
+			        	<#list mobileProductList as product>
+				            <article  onclick="union_skip('http://${hostName}/product/${product.productId}/');">
+				                <a href="javascript:void(0);" class="block">
+			                    <div style="background-image: url(${prefixPic!}${product.smallImage!})"
+			                         class="pro-pic"></div>
+			                    <div class="pro-info">
+			                        <h2>${product.productName?default("")} </h2>
+			                        <p>
+			                            <span class="fr pro-value"><small>&yen;</small>${product.sellPriceYuan!}  <i>起</i></span>
+			                            <span>${product.zhSubProductType!}${product.visitDay!}天</span>
+			                        </p>
+			                        <p>
+			                        	<#if product.tagList?? && product.tagList?size&gt;0>
+					                            <span class="flag">${product.tagList[0].tagName!}</span>
+			                        	</#if>
+			                        	<#if product.mobileAlone?? && product.mobileAlone>
+			                        		<span class="flag">手机独享</span>
+			                        	</#if>
+			                            <#if product.cashRefundY?? && product.cashRefundY &gt; 0>
+				                            <span class="privilege rose">返&yen;${product.cashRefundY!}</span>
+			                            </#if>
+			                            <#if product.canDeduction>
+				                            <span class="privilege">抵</span>
+			                            </#if>
+			                            <#if product.hasBusinessCoupon>
+			                            	<span class="privilege">惠</span>
+			                            </#if>
+			                        </p>
+				               </div>
+				                </a>
+				            </article>
+			        	</#list>
+		        	</#if>
+	        	<#else>
+	        		<!-- 门票 -->
+				       	 <#if mobileProductList?? && mobileProductList?size&gt;0>
+					         <#list mobileProductList as place>
+					        	 <article onclick="union_skip('http://${hostName}/ticket/piao-${place.id!}/');">
+					                 <a href="javascript:void(0);" class="block">
+					                     <div style="background-image: url(${prefixPic!}${place.middleImage!})" class="pro-pic">
+						                     <#if place.canOrderToday?? && place.canOrderToday>
+						                     	<div class="flag">可订今日票</div>
+						                     </#if>
+					                     	<!-- <div class="flag phone">手机独享</div> -->
+					                     </div>
+					                     <div class="pro-info">
+					                         <h2>${place.name?default("")}</h2>
+					                         <p>
+					                             <span class="fr"><#if place.cmtStarts?? &&  place.cmtStarts!="" >${place.cmtStarts!}分</#if></span>
+					                             <span class="pro-value"><small>&yen;</small>${place.sellPriceYuan!}<i>起</i><del class="ml10">&yen; ${place.marketPriceYuan!}</del></span>
+					                         </p>
+					                         <p>
+					                         	<#if place.hasBusinessCoupon?? &&  place.hasBusinessCoupon >
+							                  		 <span class="fr privilege rose">惠</span>
+							                  	</#if>
+					                         	<#if place.cashRefund?? &&  place.cashRefund >
+							                  		 <span class="fr privilege rose">返&yen;${place.cashRefundY!}</span>
+							                  	</#if>
+					                            <span class="fl">${place.subject!}</span>
+					                         </p>
+					                         <p class="f-size-10">${place.address!}</p>
+					                     </div>
+					                 </a>
+					             </article>
+					         </#list>
+			         	 </#if>
+			       	 
+	        	</#if>
+        	</ul>
+        	<#if isLastPage?? && !isLastPage>
+	            <a href="javascript:void(0);" onclick="getData()" id="show_more" class="view_more">查看更多产品</a>
+        	</#if>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+</div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+
+</body>
+</html>

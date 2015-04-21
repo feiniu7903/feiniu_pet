@@ -1,0 +1,208 @@
+<?page title="订单管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./fulfillList"?>
+<?component name="suppliserBox" extends="listbox" class="com.lvmama.passport.utils.ListboxSupplierProductSet"?>
+<?component name="toolbar_user" macroURI="/eplace/supplier/toolbar_user.zul" ?>
+<zk>
+	<window id="fulfillList" title="订单管理" border="normal"
+		apply="com.lvmama.eplace.web.lvmama.ListOrderFillAction">
+		<toolbar_user/>
+		<grid>
+			<columns>
+				<column width="110px"></column>
+				<column width="240px"></column>
+				<column width="110px"></column>
+				<column width="250px"></column>
+				<column width="110px"></column>
+				<column width="160px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>游玩时间：</hbox>
+					<hbox>
+						<datebox id="playTimeStart"
+							value="@{saction.queryOption.playTimeStart}">
+						</datebox>
+						<label value="~" />
+						<datebox id="playTimeEnd"
+							value="@{saction.queryOption.playTimeEnd}">
+						</datebox>
+					</hbox>
+					<hbox>产品名称：</hbox>
+					<hbox>
+						<suppliserBox id="metaProductBranchId" mold="select" selectedItem="@{saction.queryOption.metaProductBranchId}" />
+					</hbox>
+					<hbox>履行状态：</hbox>
+					<hbox>
+						<listbox rows="1" mold="select" id="status"
+							model="@{saction.statusList}"
+							onSelect="saction.changeStatus(self.selectedItem.value);">
+							<listitem id="iterateItem"
+								self="@{each='status'}" label="@{status.name}"
+								value="@{status.code}">
+							</listitem>
+						</listbox>
+					</hbox>
+					<hbox>
+						<checkbox
+							checked="@{saction.orderStatus}"
+							label="订单取消">
+						</checkbox>
+					</hbox>
+				</row>
+				<row>
+					<hbox>订单号：</hbox>
+					<hbox>
+						<textbox id="orderId"
+							value="@{saction.queryOption.orderId}" />
+					</hbox>
+					<hbox>联系人姓名:</hbox>
+					<hbox>
+						<textbox id="travellerName"
+							value="@{saction.queryOption.travellerName}" />
+					</hbox>
+					<hbox>手机号：</hbox>
+					<hbox>
+						<textbox id="MoblieNumber"
+							value="@{saction.queryOption.MoblieNumber}" />
+					</hbox>
+					<hbox></hbox>
+				</row>
+				<row spans="7" align="center">
+					<hbox>
+						<button label="查询" id="search" width="100px"
+							onClick="_paging.activePage=0;saction.doQuery()" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<listbox id="fulFillListBox" multiple="true"
+			model="@{saction.fulfillList,load-after='search.onClick,order_Id.onClick,prodName.onClick,traveller.onClick,_paging.onPaging,ckAll.onClick'}">
+			<listhead>
+				<listheader width="25px" >
+					<checkbox id="ckAll" checked="" onClick="saction.chkListChecked(self.isChecked())"/>
+				</listheader>
+				<listheader width="60px" label="订单号▲"  id='order_Id' onClick="saction.doSort(self.getAttributes())"><custom-attributes sortType="orderId"/></listheader>
+				<listheader width="200px" label="产品名称" id='prodName'><custom-attributes sortType="prod"/></listheader>
+				<listheader width="60px" label="游玩人数" />
+				<listheader width="50px" label="成人" />
+				<listheader width="50px" label="儿童" />
+				<listheader width="60px" label="通关人数" />
+				<listheader width="60px" label="金额" />
+				<!-- <listheader width="80px" label="实际金额" /> -->
+				<listheader width="80px" label="联系人姓名" id='traveller'><custom-attributes sortType="traveller"/></listheader>
+				<listheader width="100px" label="手机号" />
+				<listheader width="150px" label="身份证号" />
+				<listheader width="80px" label="游玩时间" />
+				<listheader width="80px" label="信息备注" />
+				<listheader width="80px" label="实际游玩时间" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem height="25px" self="@{each='list'}">
+				<listcell ><checkbox disabled="@{list.isDisabledPass}" checked="@{list.checked}"></checkbox></listcell>
+				<listcell label="@{list.orderId}" />
+				<listcell label="@{list.branchName}" />
+				<listcell label="@{list.visitorQuantity}" />
+				<listcell label="@{list.adultQuantity}" />
+				<listcell label="@{list.childQuantity}" />
+				<listcell label="@{list.performPassedQuantity}" />
+				<listcell label="@{list.amountYuan}" />
+				<!-- <listcell label="@{list.actualQuantity}" /> -->
+				<listcell label="@{list.contactName}" />
+				<listcell label="@{list.contactMobile}" />
+				<listcell label="@{list.contactCertNo}" />
+				<listcell label="@{list.strDeadlineTime}" />
+				<listcell>
+					<a style="color:blue"
+						onClick='saction.showWindow("/eplace/lvmama/list_faxmemo.zul", self.getAttributes());'
+						label="信息备注">
+						<custom-attributes faxMemo="@{list.faxMemo}" />
+					</a>
+				</listcell>
+				<listcell label="@{list.performTime}" />
+				<listcell visible='@{list.isShowPass}'>
+					<a style="color:blue"
+						onClick='saction.passByParam(self.getAttributes());' label="通关">
+						<custom-attributes orderId="@{list.orderId}"
+							targetId="@{list.targetId}" adultQuantity="@{list.adultQuantity}"
+							childQuantity="@{list.childQuantity}" orderItemMetaId="@{list.orderItemMetaId}" />
+					</a>
+					<label value="|" visible='@{list.isPayToSupplier}'/>
+					<a style="color:blue"
+						onClick='saction.showWindow("/eplace/lvmama/list_showpassportlog.zul", self.getAttributes());'
+						label="查看日志">
+						<custom-attributes
+							ordItemMetaId="@{list.orderItemMetaId}" />
+					</a>
+					<a	style="color:blue"
+						onClick='saction.showWindow("/eplace/lvmama/listOrderPerson.zul",self.getAttributes())'
+						label="查看订单游玩人"
+					>
+						<custom-attributes orderId="@{list.orderId}" />
+					</a>
+				</listcell>
+				<listcell visible='@{list.isCanceled}'>
+					<label value="已取消 |"/>
+					<a style="color:blue"
+						onClick='saction.showWindow("/eplace/lvmama/list_showpassportlog.zul", self.getAttributes());'
+						label=" 查看日志">
+						<custom-attributes
+							ordItemMetaId="@{list.orderItemMetaId}" />
+					</a>
+					<a	style="color:blue"
+						onClick='saction.showWindow("/eplace/lvmama/listOrderPerson.zul",self.getAttributes())'
+						label="查看订单游玩人"
+					>
+						<custom-attributes orderId="@{list.orderId}" />
+					</a>
+				</listcell>
+				<listcell visible='@{list.isPass}'>
+					<label value="已通关 |"/>
+					<a style="color:blue"
+						onClick='saction.showWindow("/eplace/lvmama/list_showpassportlog.zul", self.getAttributes());'
+						label=" 查看日志 |">
+						<custom-attributes
+							ordItemMetaId="@{list.orderItemMetaId}" />
+					</a>
+					<a	style="color:blue"
+						onClick='saction.showWindow("/eplace/lvmama/listOrderPerson.zul",self.getAttributes())'
+						label="查看订单游玩人"
+					>
+						<custom-attributes orderId="@{list.orderId}" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="15"
+								onPaging='saction.doQuery()' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+
+		<panel border="normal">
+			<toolbar>
+				<button label="打印搜索日通关表" width="150px"
+					onClick="saction.doPrint(fulfillList,saction.fulfillList)" />
+				<button label="下载搜索日通关表" width="150px"
+					onClick="saction.doExcel()" />
+					<!-- <button label="批量通关" width="150px"
+					onClick='saction.passByChk(saction.fulfillList)' >
+					</button> -->
+					<button label="导出游客信息" width="150px"
+					onClick="saction.exportPersonInfo()" />
+			</toolbar>
+		</panel>
+	</window>
+</zk>

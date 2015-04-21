@@ -1,0 +1,145 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_eplaceSupply_add"?>
+	<window id="win_eplaceSupply_add" title="供应商添加权限" border="normal"
+		apply="com.lvmama.eplace.web.lvmama.supplyUser.EplaceSupplerAddAction">
+		<groupbox style="border: none">
+			<caption label="供应商基本信息" />
+			<grid>
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+					<column></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row spans="1,3">
+						<hbox>
+							<label width="150px" value="供应商" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.supSupplier.supplierName}">
+							</label>
+						</hbox>
+					</row>
+
+					<row>
+						<hbox>
+							<label width="150px" value="电话:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.supSupplier.telephone}">
+							</label>
+						</hbox>
+						<hbox>
+							<label width="150px" value="地址:" />
+						</hbox>
+						<hbox>
+							<label
+								value="@{saction.supSupplier.address}">
+							</label>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<groupbox style="border: none">
+			<caption label="供应商权限添置" />
+			<grid>
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+					<column></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label width="150px" value="是否显示订票人电话:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<checkbox  onClick="saction.chkIsChekced(self.isChecked())">
+							</checkbox>
+						</hbox>
+						<hbox>
+							<label value="履行对象ID:" />
+						</hbox>
+						<hbox>
+							<longbox id="performTargetId" value="@{saction.targetId}"/>
+							<button id="selectProducts" onClick="saction.selectMetaProduct()" label="查询" />
+						</hbox>
+					</row>
+
+					<row>
+						<hbox>
+							<label width="150px" value="产品经理:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox
+								value="@{saction.eplaceSupplier.productManager}">
+							</textbox>
+						</hbox>
+						<hbox>
+							<label width="150px" value="联系方式:" />
+						</hbox>
+						<hbox>
+							<textbox
+								value="@{saction.eplaceSupplier.mobile}">
+							</textbox>
+						</hbox>
+					</row>
+					<row spans="1,3">
+						<hbox>
+							<label value="产品权限:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<listbox
+								model="@{saction.metaProductBranchList,load-after='selectProducts.onClick'}">
+								<listitem
+									self="@{each='metaProductBranch'}">
+									<listcell>
+										<checkbox
+											label="@{metaProductBranch.branchName}"
+											onClick='saction.chkVlaue(self.getAttribute("metaBranchId"));'>
+											<custom-attributes
+												metaBranchId="@{metaProductBranch.metaBranchId}" />
+										</checkbox>
+									</listcell>
+									<listcell>
+										<a style="color:blue"
+											onClick='saction.showWindow("/eplace/lvmama/supplyUser/listSupPerformTarget.zul", self.getAttributes());'
+											label="履行对象">
+											<custom-attributes
+												productId="@{metaProductBranch.metaProductId}" />
+										</a>
+									</listcell>
+								</listitem>
+							</listbox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+
+		<toolbar align="center">
+			<button id="refundMent" width="100px" label="开通"
+				onClick='saction.addEplaceSupplier();'>
+				<custom-attributes
+					supplierId="@{saction.supSupplier.supplierId}" />
+			</button>
+			<button label="关闭" width="100px"
+				onClick="win_eplaceSupply_add.detach()">
+			</button>
+		</toolbar>
+		<zscript>
+		</zscript>
+	</window>
+</zk>

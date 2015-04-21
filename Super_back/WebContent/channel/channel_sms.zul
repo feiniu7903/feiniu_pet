@@ -1,0 +1,36 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./channelSmsWin"?>
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?> 
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<zk>
+<window  id="channelSmsWin" title="渠道短信管理" border="normal" apply="com.lvmama.back.web.channel.ChannelSmsAction">
+	<listbox mold="select" rows="1" model="@{saction.smsTemplateList}" onSelect="saction.changeTemplate(self.selectedItem.value)">
+		<listitem self="@{each='template'}" label="@{template.templateName }" value="@{template.templateId}"/>
+	</listbox>
+	<button permCode="1492" id="addTemplate" label="添加该短信模板"  onClick='saction.addTempalte(); Events.sendEvent(new Event("onClick", refreshList));'/>
+	<button id="refreshList" visible="false"/>
+	<listbox id="box" fixedLayout="true" model="@{saction.prodChannelSmsList,load-after='refreshList.onClick'}">
+		<listhead>
+			<listheader label="短信编号" width="15%"/>
+			<listheader label="短信名称" width="20%"/>
+			<listheader label="内容" />
+			<listheader label="操作" width="15%"/>
+		</listhead>
+		<listitem self="@{each='channelSms'}" value="@{channelSms}" height="25px">
+			<listcell label="@{channelSms.templateId}" />
+			<listcell label="@{channelSms.templateName}" />
+			<listcell>
+				<textbox value="@{channelSms.content}" rows="5" width="380px" maxlength="512"></textbox>
+			</listcell>
+			<listcell>
+				<a permCode="1493" onClick='saction.doDelete(self.getAttribute("channelSmsId")); Events.sendEvent(new Event("onClick", refreshList));'  style="color:blue" label="删除 ">
+					<custom-attributes channelSmsId="@{channelSms.channelSmsId}"/>
+				</a>
+				<a permCode="1494" onClick='saction.doSave(self.getAttribute("channelSmsId")); Events.sendEvent(new Event("onClick", refreshList));' style="color:blue" label="保存 ">
+					<custom-attributes channelSmsId="@{channelSms.channelSmsId}"/>
+				</a>
+			</listcell>
+		</listitem>
+	</listbox>
+</window>
+</zk>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EDM_SUBSCRIBE_BATCH">
+	<typeAlias alias="edmBatch"
+		type="com.lvmama.comm.pet.po.edm.EdmSubscribeBatch" />
+	<insert id="insert" parameterClass="edmBatch">
+		<selectKey keyProperty="batchId" resultClass="java.lang.Long">
+			SELECT EDM_SEND_BATCH_PK_ID.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO EDM_SUBSCRIBE_BATCH
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="batchId">BATCH_ID</isNotNull>
+			<isNotNull prepend="," property="emailSubject">EMAIL_SUBJECT</isNotNull>
+			<isNotNull prepend="," property="sendUserId">SEND_USER_ID</isNotNull>
+			<isNotNull prepend="," property="sendUserEmail">SEND_USER_EMAIL</isNotNull>
+			<isNotNull prepend="," property="receiveEmailContent">RECEIVE_EMAIL_CONTENT</isNotNull>
+			<isNotNull prepend="," property="receiveEmailUrl">RECEIVE_EMAIL_URL</isNotNull>
+			<isNotNull prepend="," property="taskId">TASK_ID</isNotNull>
+			<isNotNull prepend="," property="emailContentUrl">EMAIL_CONTENT_URL</isNotNull>
+			<isNotNull prepend="," property="emailAttachmentUrl">EMAIL_ATTACHMENT_URL</isNotNull>
+			<isNotNull prepend="," property="emailType">EMAIL_TYPE</isNotNull>
+			<isNotNull prepend="," property="sendType">SEND_TYPE</isNotNull>
+			<isNotNull prepend="," property="emailSendType">EMAIL_SEND_TYPE</isNotNull>
+			<isNotNull prepend="," property="emailSendTime">EMAIL_SEND_TIME</isNotNull>
+			<isNotNull prepend="," property="createDate">CREATE_DATE</isNotNull>
+			<isNotNull prepend="," property="success">SEND_SUCCESS</isNotNull>
+			<isNotNull prepend="," property="msg">RETURN_MSG</isNotNull>
+			<isNotNull prepend="," property="count">SUCCESS_COUNT</isNotNull>
+			<isNotNull prepend="," property="groupId">GROUP_ID</isNotNull>
+			<isNotNull prepend="," property="channel">channel</isNotNull>
+		</dynamic>
+		<dynamic prepend=") VALUES (">
+			<isNotNull prepend="," property="batchId">#batchId#</isNotNull>
+			<isNotNull prepend="," property="emailSubject">#emailSubject#</isNotNull>
+			<isNotNull prepend="," property="sendUserId">#sendUserId#</isNotNull>
+			<isNotNull prepend="," property="sendUserEmail">#sendUserEmail#</isNotNull>
+			<isNotNull prepend="," property="receiveEmailContent">#receiveEmailContent#</isNotNull>
+			<isNotNull prepend="," property="receiveEmailUrl">#receiveEmailUrl#</isNotNull>
+			<isNotNull prepend="," property="taskId">#taskId#</isNotNull>
+			<isNotNull prepend="," property="emailContentUrl">#emailContentUrl#</isNotNull>
+			<isNotNull prepend="," property="emailAttachmentUrl">#emailAttachmentUrl#</isNotNull>
+			<isNotNull prepend="," property="emailType">#emailType#</isNotNull>
+			<isNotNull prepend="," property="sendType">#sendType#</isNotNull>
+			<isNotNull prepend="," property="emailSendType">#emailSendType#</isNotNull>
+			<isNotNull prepend="," property="emailSendTime">#emailSendTime#</isNotNull>
+			<isNotNull prepend="," property="createDate">#createDate#</isNotNull>
+			<isNotNull prepend="," property="success">#success#</isNotNull>
+			<isNotNull prepend="," property="msg">#msg#</isNotNull>
+			<isNotNull prepend="," property="count">#count#</isNotNull>
+			<isNotNull prepend="," property="groupId">#groupId#</isNotNull>
+			<isNotNull prepend="," property="channel">#channel#</isNotNull>
+		</dynamic>
+		)
+	</insert>
+</sqlMap>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_CUSTOMER_BASIC_MV">
+
+	<resultMap id="OrderCustomerResultMap" class="com.lvmama.report.po.OrderCustomerBasicMV">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="PROD_PRODUCT_ID" property="prodProductId" />
+		<result column="PROD_PRODUCT_NAME" property="prodProductName" />
+		<result column="PAY_TIME" property="payTime" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="START_FROM" property="startFrom" />
+		<result column="DEST" property="dest" />
+		<result column="PRODUCT_AMOUNT" property="productAmount" />
+		<result column="QUANTITY" property="quantity" />
+		<result column="AMOUNT" property="amount" />
+		<result column="PROFIT" property="profit" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="CHANNEL_NAME" property="channelName" />
+		<result column="SUPPLIER_NAME" property="supplierName" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="REAL_NAME" property="realName" />
+		<result column="USER_NAME" property="userName" />
+		<result column="CITY_NAME" property="cityName" />
+		<result column="CAPITAL_NAME" property="capitalName" />
+	</resultMap>
+
+	<sql id="queryOrderCustomerBasicMVByTimeSql">
+		from (select ORDER_ID, PROD_PRODUCT_ID, prod_product_name, PAY_TIME,
+		CREATE_TIME, VISIT_TIME,
+		START_FROM, DEST, PRODUCT_AMOUNT, QUANTITY, SUB_PRODUCT_TYPE, SUPPLIER_NAME,
+		FILIALE_NAME, REAL_NAME, USER_NAME , CAPITAL_NAME,AMOUNT, PROFIT,
+		CHANNEL_NAME, CITY_NAME
+		from ORDER_CUSTOMER_BASIC_MV
+		where 1=1
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotEmpty prepend="and" property="managerIds">
+			<iterate property="managerIds" conjunction="," close=")"
+				open=" MANAGER_ID in (">
+				#managerIds[]#
+			</iterate>
+		</isNotEmpty>
+		<isNotNull prepend="and" property="createStartDate">
+			to_date(CREATE_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#createStartDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="createEndDate">
+			to_date(CREATE_TIME,'yyyy-mm-dd')<![CDATA[<]]>#createEndDate#
+			+ 1
+		</isNotNull>
+		<isNotNull prepend="and" property="payStartDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#payStartDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="payEndDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[<]]>#payEndDate#
+			+ 1
+		</isNotNull>
+		<isNotNull prepend="and" property="visitStartDate">
+			to_date(VISIT_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#visitStartDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="visitEndDate">
+			to_date(VISIT_TIME,'yyyy-mm-dd')<![CDATA[<]]>#visitEndDate#
+			+ 1
+		</isNotNull>
+		<isNotNull prepend="and" property="prodName">
+			PROD_PRODUCT_NAME like
+			'%$prodName$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="dest">
+			DEST like '%$dest$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="birthland">
+			START_FROM like
+			'%$birthland$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="filialeName">
+			FILIALE_NAME =
+			#filialeName#
+		</isNotNull>
+		<isNotNull prepend="and" property="orderId">
+			ORDER_ID = #orderId#
+		</isNotNull>
+		<isNotNull prepend="and" property="prodProductId">
+			PROD_PRODUCT_ID =
+			#prodProductId#
+		</isNotNull>
+		<isNotNull prepend="and" property="capitalName">
+			CAPITAL_NAME like
+			'%$capitalName$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="realName">
+			real_name like
+			'%$realName$%'
+		</isNotNull>
+		order by PAY_TIME
+		) info
+	</sql>
+
+	<select id="countOrderCustomerBasicMVByTime" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select count(ORDER_ID)
+		<include refid="queryOrderCustomerBasicMVByTimeSql" />
+	</select>
+
+	<select id="sumAmountOrderCustomerBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select sum(AMOUNT)
+		<include refid="queryOrderCustomerBasicMVByTimeSql" />
+	</select>
+
+	<select id="sumProfitOrderCustomerBasicMV" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		select sum(PROFIT)
+		<include refid="queryOrderCustomerBasicMVByTimeSql" />
+	</select>
+
+	<select id="queryOrderCustomerBasicMVByTime" parameterClass="java.util.Map"
+		resultMap="OrderCustomerResultMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT
+		rownum r,
+		info.*
+		<include refid="queryOrderCustomerBasicMVByTimeSql" />
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_endRow">rownum &lt;= #_endRow#
+			</isNotEmpty>
+		</dynamic>
+		<isNotEmpty property="_startRow">
+			)
+		</isNotEmpty>
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="_startRow" prepend=" AND "> r &gt;=
+				#_startRow# </isNotEmpty>
+		</dynamic>
+	</select>
+	<resultMap id="VsitorResultMap" class="com.lvmama.report.po.VistorDetailBasicMV">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="PROD_PRODUCT_ID" property="prodProductId" />
+		<result column="PROD_PRODUCT_NAME" property="prodProductName" />
+		<result column="PAY_TIME" property="payTime" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="QUANTITY" property="quantity" />
+		<result column="FILIALE_NAME" property="filialeName" />
+		<result column="REAL_NAME" property="realName" />
+		<result column="USER_NAME" property="userName" />
+		<result column="MOBILE_NUMBER" property="mobileNumber" />
+		<result column="VISTORMEMO" property="vistorMemo" />
+		<result column="CONTENT" property="csMemo" />
+	</resultMap>
+	<sql id="queryVistorBasicMVByTimeSql">
+		from vistor_detail_basic_mv
+		where 1=1
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="payStartDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#payStartDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="payEndDate">
+			to_date(PAY_TIME,'yyyy-mm-dd')<![CDATA[<]]>#payEndDate#
+			+ 1
+		</isNotNull>
+		<isNotNull prepend="and" property="visitStartDate">
+			to_date(VISIT_TIME,'yyyy-mm-dd')<![CDATA[>=]]>#visitStartDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="visitEndDate">
+			to_date(VISIT_TIME,'yyyy-mm-dd')<![CDATA[<]]>#visitEndDate#
+			+ 1
+		</isNotNull>
+		<isNotNull prepend="and" property="prodName">
+			PROD_PRODUCT_NAME like
+			'%$prodName$%'
+		</isNotNull>
+		<isNotNull prepend="and" property="filialeName">
+			FILIALE_NAME =
+			#filialeName#
+		</isNotNull>
+		<isNotNull prepend="and" property="orderId">
+			ORDER_ID = #orderId#
+		</isNotNull>
+		<isNotNull prepend="and" property="prodProductId">
+			PROD_PRODUCT_ID =
+			#prodProductId#
+		</isNotNull>
+		<isNotNull prepend="and" property="prodProductIds">
+			PROD_PRODUCT_ID in
+			<iterate property="prodProductIds" conjunction="," open="(" close=")">
+              #prodProductIds[]#
+            </iterate>
+		</isNotNull>
+		<isNotNull prepend="and" property="realName">
+			real_name like
+			'%$realName$%'
+		</isNotNull>
+		
+	</sql>
+	<select id="countVistorBasicMVByTime" resultClass="java.lang.Long"
+		parameterClass="java.util.Map">
+		select count(ORDER_ID)
+		<include refid="queryVistorBasicMVByTimeSql" />
+	</select>
+	<select id="queryVistorBasicMVByTime" parameterClass="java.util.Map" resultMap="VsitorResultMap">
+		<isNotEmpty property="_startRow">
+			SELECT * FROM (SELECT T.*,ROWNUM RN FROM ( 
+		</isNotEmpty>
+		select ORDER_ID, PROD_PRODUCT_ID, PROD_PRODUCT_NAME, PAY_TIME,
+		VISIT_TIME,USER_MEMO VISTORMEMO, QUANTITY,USER_NAME USER_NAME,content CONTENT ,
+		FILIALE_NAME, REAL_NAME ,MOBILE_NUMBER
+		<include refid="queryVistorBasicMVByTimeSql" />
+		order by PAY_TIME,VISIT_TIME
+		<isNotEmpty property="_startRow">	
+		)T )TT
+			WHERE TT.RN &gt;=#_startRow# and TT.RN &lt;=#_endRow#
+		</isNotEmpty>	
+	</select>
+</sqlMap>

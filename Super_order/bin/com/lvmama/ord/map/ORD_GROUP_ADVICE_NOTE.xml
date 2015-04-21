@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ORD_GROUP_ADVICE_NOTE" >
+	<typeAlias alias="OrdOrderItemProd" type="com.lvmama.comm.bee.po.ord.OrdOrderItemProd"/>
+	<typeAlias alias="OrdOrderRoute" type="com.lvmama.comm.bee.po.ord.OrdOrderRoute"/>
+	
+	<!-- 根据订单号，查询销售产品 -->
+	<select id="getOrderItemProdByOrderId" parameterClass="long" resultClass="OrdOrderItemProd">
+		SELECT 
+			 t1.PRODUCT_ID as productId,
+			 t1.ORDER_ID as orderId,
+			 t2.PRODUCT_NAME as productName
+		FROM 
+			ORD_ORDER_ITEM_PROD t1,PROD_PRODUCT t2
+		WHERE 
+			t1.PRODUCT_ID = t2.PRODUCT_ID
+		AND
+			t1.ORDER_ID = #value#
+		AND
+			ROWNUM = 1
+	</select>
+	
+	<!-- 更据订单号查询出团通知书状态 -->
+	<select id="getOrderRouteByOrderId" parameterClass="long" resultClass="OrdOrderRoute">
+		SELECT
+			ORDER_ID as orderId,
+			GROUP_WORD_STATUS as groupWordStatus
+		FROM
+			ORD_ORDER_ROUTE
+		WHERE
+			ORDER_ID = #value#
+	</select>
+	
+	<!-- 更新出团通知书状态 -->
+	<update id="updateOrderGroupWordStatus" parameterClass="map">
+		UPDATE 
+			ORD_ORDER_ROUTE
+		SET
+			GROUP_WORD_STATUS = #status#
+		WHERE
+			ORDER_ID = #orderId#
+	</update>
+</sqlMap>

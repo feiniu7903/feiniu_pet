@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>提交成功-驴妈妈手机站</title>
+<#include "../common/define_v3.html">
+<meta content="telephone=no" name="format-detection" />
+<style type="text/css">
+	.view_more{ margin: 10px 0; } 
+	.view_more a{ display: block; height: 38px; border-radius: 2px; line-height: 36px; text-align: center; color: #666; font-size: 16px; background-color: #E7188E; 
+	border: 1px solid #C4006E; color:#fff; }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+	<header class="header">
+    	<!--<a href="papers_v3.html" class="back"><span class="ic_back"></span></a>-->
+        <h1>订单信息</h1>
+        <section class="header_alice">
+        	<a href="javascript:void(0);" onclick="union_skip('http://${hostName}');" class="btn1"><img src="http://pic.lvmama.com/img/mobile/touch/img/index/home.png"></a>
+        </section>
+    </header>
+    <section class="order_info">
+         <section class="stday_succ_con simplenes">
+        	<span class="ic_neddy"></span><em class="staday_f1">预约单完成！</em>
+             <b>亲，预约单已经成功提交！</b> 
+			<p>
+				<#if limitTimeText?? && limitTimeText=='true'>
+					 由于需要核实相关产品资源信息，驴妈妈专职旅游顾问将尽快会与您联系，请到时保持电话畅通。 
+				<#else>
+					驴妈妈专职旅游顾问会在今天尽快会与您联系，请保持电话畅通。
+				</#if>
+			</p>
+        </section>   
+        <dl class="stday_succ"> 
+        	<dt><h3>${jianYiOrder.productName!}</h3></dt>
+        	<a href="javascript:void(0);"  onclick="union_skip('${request.contextPath}/order/my_jianyi_order_detail.htm?workOrderId=${jianYiOrder.workOrderId!}');">
+	            <dd style="position: relative;">
+	            	 <#list jianYiOrder.jianYiProductList as JianYiProduct>
+	            	    	  <div class="shortname"><span>${JianYiProduct.shortName!}</span><i>${JianYiProduct.priceAndNum!}</i></div>
+	            	 </#list>
+				     <span> 游玩时间</span>：${jianYiOrder.visitTime!}<br/>
+				     <span> 联系人</span>：${jianYiOrder.userName!}  <br/>
+				     <span>联系电话</span>：${jianYiOrder.userMobile!}
+				     <img style="right:10px;height: 15px;position: absolute;right: 20px;top: 63%;width: 9px;" src="http://pic.lvmama.com/img/mobile/touch/img/next.png" class="lv-next-01">
+	            </dd>
+            </a>
+        </dl>
+        <div class="view_more"><a  href="javascript:void(0);" onclick="union_skip('http://${hostName}');">返回首页</a></div>
+    </section>
+    <!-- footer -->
+	<#include "../common/order_footer.html"/>
+</div>
+</body>
+</html>

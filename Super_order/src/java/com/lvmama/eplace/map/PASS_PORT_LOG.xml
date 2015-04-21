@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PASS_PORT_LOG">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassPortLog">
+		<result column="PASS_PORT_LOG_ID" property="passPortLogId" />
+		<result column="PASS_PORT_USER_ID" property="passPortUserId" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="ORDER_ITEM_META_ID" property="orderItemMetaId" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="CONTENT" property="content" />
+	</resultMap>
+	
+	<resultMap id="ext_BaseResultMap" extends="BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.PassPortLog">
+		<result column="USER_ID" property="user.userId" />
+		<result column="NAME" property="user.name" />
+	</resultMap>
+	
+	<select id="PassPortLog_selectByOrderItemMetaId"
+		resultMap="ext_BaseResultMap"
+		parameterClass="java.lang.Long">
+	select A.*,B.USER_ID,B.Name from PASS_PORT_LOG A,PASS_PORT_USER B WHERE 
+    A.PASS_PORT_USER_ID=B.Pass_Port_User_Id and ORDER_ITEM_META_ID = #ordOrderItemMetaId#
+	</select>
+	
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.bee.po.pass.PassPortLog">
+		<selectKey resultClass="java.lang.Long" keyProperty="passPortLogId">
+			select PASS_PORT_LOG_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into PASS_PORT_LOG (PASS_PORT_LOG_ID,
+		PASS_PORT_USER_ID, ORDER_ID, ORDER_ITEM_META_ID, CREATE_DATE,
+		CONTENT) values (#passPortLogId#, #passPortUserId#,#orderId#, #orderItemMetaId#, #createDate#, #content# )
+	</insert>
+</sqlMap>

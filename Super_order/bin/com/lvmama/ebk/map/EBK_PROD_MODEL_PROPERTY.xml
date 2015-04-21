@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="EBK_PROD_MODEL_PROPERTY" >
+
+  <typeAlias alias="ebkProdModelPropertyDO" type="com.lvmama.comm.bee.po.ebooking.EbkProdModelProperty" />
+
+  <resultMap id="ebkProdModelPropertyDOResultMap" class="ebkProdModelPropertyDO" >
+    <result property="productId" column="PRODUCT_ID" />
+    <result property="modelPropertyId" column="MODEL_PROPERTY_ID" />
+    <result property="ebkPropertyType" column="EBK_PROPERTY_TYPE" />
+  </resultMap>
+  
+  <resultMap id="ebkProdModelPropertyDOResultMapTwo" class="ebkProdModelPropertyDO" >
+    <result property="productId" column="PRODUCT_ID" />
+    <result property="modelPropertyId" column="MODEL_PROPERTY_ID" />
+    <result property="ebkPropertyType" column="EBK_PROPERTY_TYPE" />
+    <result property="modelPropertyName" column="PROPERTY" />
+  </resultMap>
+
+  <sql id="ebkProdModelProperty_columns" >
+    a1.PRODUCT_ID, a1.MODEL_PROPERTY_ID,a1.EBK_PROPERTY_TYPE
+  </sql>
+
+  <sql id="ebkProdModelProperty_do_columns" >
+    a1.PRODUCT_ID, a1.MODEL_PROPERTY_ID,a1.EBK_PROPERTY_TYPE
+  </sql>
+  
+  <sql id="ebkProdModelProperty_do_columns_two" >
+    a1.PRODUCT_ID, a1.MODEL_PROPERTY_ID,a1.EBK_PROPERTY_TYPE,a2.PROPERTY
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="modelPropertyId" prepend="AND" >
+        <![CDATA[  
+        MODEL_PROPERTY_ID = #modelPropertyId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="ebkPropertyType" prepend="AND" >
+        <![CDATA[  
+        EBK_PROPERTY_TYPE = #ebkPropertyType#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <sql id="doQueryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="modelPropertyId" prepend="AND" >
+        <![CDATA[  
+        MODEL_PROPERTY_ID = #modelPropertyId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="ebkPropertyType" prepend="AND" >
+        <![CDATA[  
+        EBK_PROPERTY_TYPE = #ebkPropertyType#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <insert id="insert" parameterClass="ebkProdModelPropertyDO" >
+    INSERT INTO EBK_PROD_MODEL_PROPERTY( PRODUCT_ID, MODEL_PROPERTY_ID,EBK_PROPERTY_TYPE)
+     VALUES ( #productId#, #modelPropertyId#,#ebkPropertyType#)
+  </insert>
+
+  <update id="update" parameterClass="ebkProdModelPropertyDO" >
+    UPDATE EBK_PROD_MODEL_PROPERTY   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="modelPropertyId" prepend="," >
+        <![CDATA[  
+        MODEL_PROPERTY_ID = #modelPropertyId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="," >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      -->
+    </dynamic>
+     WHERE MODEL_PROPERTY_ID = #modelPropertyId#,PRODUCT_ID = #productId#  
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="map" resultMap="ebkProdModelPropertyDOResultMap" >
+     SELECT 
+    <include refid="ebkProdModelProperty_do_columns" />
+    <![CDATA[  
+     FROM EBK_PROD_MODEL_PROPERTY a1 WHERE MODEL_PROPERTY_ID = #modelPropertyId# AND PRODUCT_ID = #productId#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="map" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_MODEL_PROPERTY WHERE MODEL_PROPERTY_ID = #modelPropertyId# AND PRODUCT_ID = #productId#
+    ]]>  
+  </delete>
+
+  <delete id="deleteByProductID" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_MODEL_PROPERTY WHERE  PRODUCT_ID = #productId#
+    ]]>  
+  </delete>
+
+  <select id="countByDOExample" parameterClass="ebkProdModelPropertyDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(*) AS num FROM EBK_PROD_MODEL_PROPERTY 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="ebkProdModelPropertyDOResultMap" parameterClass="ebkProdModelPropertyDO" >
+     SELECT 
+    <include refid="ebkProdModelProperty_do_columns" />
+     FROM EBK_PROD_MODEL_PROPERTY a1 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByProductId" resultMap="ebkProdModelPropertyDOResultMapTwo" parameterClass="java.lang.Long" >
+     SELECT 
+    <include refid="ebkProdModelProperty_do_columns_two" />
+     FROM EBK_PROD_MODEL_PROPERTY a1 , PROD_MODEL_PROPERTY a2 where a1.MODEL_PROPERTY_ID = a2.ID and a1.PRODUCT_ID = #productId#  
+  </select>
+  
+</sqlMap>

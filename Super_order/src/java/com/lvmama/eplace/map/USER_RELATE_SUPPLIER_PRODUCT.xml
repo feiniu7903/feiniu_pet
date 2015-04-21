@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_RELATE_SUPPLIER_PRODUCT">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.pass.UserRelateSupplierProduct">
+		<result column="USER_RELATE_SUPPLIER_PRODUC_ID"
+			property="userRelateSupplierProducId" />
+		<result column="PASS_PORT_USER_ID" property="passPortUserId" />
+		<result column="META_PRODUCT_ID" property="metaProductId" />
+		<result column="META_BRANCH_ID" property="metaProductBranchId" />
+	</resultMap>
+
+	<resultMap id="BaseResultMapFull" extends="BaseResultMap" class="com.lvmama.comm.bee.po.pass.UserRelateSupplierProduct">
+		<!-- <result column="productName" property="metaProduct.productName" /> -->
+		<result column="branchName" property="metaProductBranch.branchName" />
+	</resultMap>
+	<resultMap id="ext_BaseResultMap" extends="BaseResultMap" class="com.lvmama.comm.bee.po.pass.UserRelateSupplierProduct">
+		<result column="TARGET_ID" property="supPerformTarget.targetId" />
+		<result column="CERTIFICATE_TYPE" property="supPerformTarget.certificateType" />
+	</resultMap>
+	
+    <resultMap id="BaseResultMapFull_1" extends="BaseResultMap" class="com.lvmama.comm.bee.po.pass.UserRelateSupplierProduct">
+		<result column="productName" property="metaProduct.productName" />
+		<result column="PAY_TO_LVMAMA" property="metaProduct.payToLvmama" />
+		<result column="PAY_TO_SUPPLIER" property="metaProduct.payToSupplier" />
+	</resultMap>
+	
+   <select id="selectSupplierUserProductByUserId"  resultMap="BaseResultMapFull"
+		parameterClass="java.util.HashMap">
+	select A.* ,B.BRANCH_NAME as branchName 
+	from USER_RELATE_SUPPLIER_PRODUCT A ,META_PRODUCT_BRANCH B 
+	where A.META_BRANCH_ID=B.META_BRANCH_ID and A.PASS_PORT_USER_ID=#userId#
+	</select>
+	
+	<select id="selectSupplierUserForTargetId" resultMap="ext_BaseResultMap" parameterClass="Long">
+        select distinct A.Target_Id ,B.Certificate_Type,
+        0 as USER_RELATE_SUPPLIER_PRODUC_ID,
+        0 as PASS_PORT_USER_ID,
+        0 as META_PRODUCT_ID,
+        0 as META_BRANCH_ID
+         from META_PERFORM A ,SUP_PERFORM_TARGET B where 
+  		 A.Target_Id=B.Target_Id and  A.META_PRODUCT_ID in
+    (SELECT MPB.META_PRODUCT_ID FROM USER_RELATE_SUPPLIER_PRODUCT URSP , META_PRODUCT_BRANCH MPB WHERE MPB.META_BRANCH_ID = URSP.META_BRANCH_ID AND URSP.PASS_PORT_USER_ID=#userId# )
+    </select>
+    
+    <select id="selectSupplierUserTargetIdTotal" resultClass="Long" parameterClass="Long">
+    	select  count(*) from(
+        select distinct A.Target_Id ,B.Certificate_Type,
+        0 as USER_RELATE_SUPPLIER_PRODUC_ID,
+        0 as PASS_PORT_USER_ID,
+        0 as META_PRODUCT_ID
+         from META_PERFORM A ,SUP_PERFORM_TARGET B where 
+  		 A.Target_Id=B.Target_Id and  A.META_PRODUCT_ID in
+    (select META_PRODUCT_ID from USER_RELATE_SUPPLIER_PRODUCT where PASS_PORT_USER_ID=#userId# )
+    ) A
+    </select>
+    
+	<select id="selectSupplierUser" resultMap="BaseResultMapFull_1"
+		parameterClass="Long">
+			select u.*,m.product_name as productName ,m.PAY_TO_LVMAMA,m.PAY_TO_SUPPLIER 
+  			from USER_RELATE_SUPPLIER_PRODUCT u,META_PRODUCT m 
+  			where m.meta_product_id=u.meta_product_id and u.PASS_PORT_USER_ID= #userId#
+	</select>
+
+	<select id="selectFull" resultMap="BaseResultMapFull"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+		select u.*, MPB.BRANCH_NAME as branchName
+        from USER_RELATE_SUPPLIER_PRODUCT u, META_PRODUCT_BRANCH MPB
+        where MPB.META_BRANCH_ID = U.META_BRANCH_ID
+		<isNotEmpty prepend=" and" property="passPortUserId">
+			u.PASS_PORT_USER_ID= #passPortUserId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="metaProductId">
+			u.META_BRANCH_ID= #metaProductBranchId#
+		</isNotEmpty>
+		) T WHERE ROWNUM &lt;= #_endRow# ) WHERE ROWNUM1
+		&gt;=#_startRow#
+	</select>
+
+	<select id="selectFullCount" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		SELECT count(*), ROWNUM AS ROWNUM1 FROM ( select *from
+		USER_RELATE_SUPPLIER_PRODUCT u where 1=1
+		<isNotEmpty prepend=" and" property="passPortUserId">
+			u.PASS_PORT_USER_ID= #passPortUserId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="metaProductId">
+			u.META_PRODUCT_ID= #metaProductId#
+		</isNotEmpty>
+		<isNotEmpty prepend=" and" property="">
+			u.META_BRANCH_ID=#metaProductBranchId#
+		</isNotEmpty>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterClass="java.lang.Long">
+		delete from USER_RELATE_SUPPLIER_PRODUCT where PASS_PORT_USER_ID
+		= #passPortUserId#
+	</delete>
+
+	<insert id="insert"
+		parameterClass="com.lvmama.comm.bee.po.pass.UserRelateSupplierProduct">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="userRelateSupplierProducId">
+			select USER_RELATE_PRODUC_ID_ESQ.nextval as id from DUAL
+		</selectKey>
+		insert into USER_RELATE_SUPPLIER_PRODUCT
+		(USER_RELATE_SUPPLIER_PRODUC_ID,PASS_PORT_USER_ID,META_PRODUCT_ID,META_BRANCH_ID)
+		values
+		(#userRelateSupplierProducId#,#passPortUserId#,#metaProductId#,#metaProductBranchId#)
+	</insert>
+
+</sqlMap>

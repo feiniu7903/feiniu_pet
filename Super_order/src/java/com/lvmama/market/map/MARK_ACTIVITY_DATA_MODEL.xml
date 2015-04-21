@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="MARK_ACTIVITY_DATA_MODEL">
+
+    <typeAlias alias="markActivityDataModel" type="com.lvmama.comm.pet.po.mark.MarkActivityDataModel"/>
+    <typeAlias alias="markActivityUserData" type="com.lvmama.comm.pet.po.mark.MarkActivityUserData"/>
+
+    <resultMap id="MarkActivityDataModelMap" class="markActivityDataModel">
+        <result column="GUID" property="guid"/>
+        <result column="SEGMENT_PATH" property="segmentPath"/>
+        <result column="DATE_TIME" property="dateTime"/>
+        <result column="SRS_COUNT" property="srsCount"/>
+    </resultMap>
+
+    <resultMap id="MarkActivityUserDataMap" class="markActivityUserData">
+        <result column="GUID" property="guid"/>
+        <result column="TARGET_LEVEL_ID" property="userId"/>
+        <result column="TAG_01" property="email"/>
+        <result column="TAG_02" property="mobile"/>
+        <result column="TAG_03" property="registerDate"/>
+        <result column="TAG_04" property="integral"/>
+        <result column="TAG_05" property="bonus"/>
+        <result column="TAG_06" property="grade"/>
+        <result column="TAG_07" property="birthday"/>
+        <result column="TAG_08" property="couponAmount"/>
+        <result column="TAG_09" property="productPrice"/>
+        <result column="TAG_10" property="productName"/>
+        <result column="TAG_11"	property="couponEndTime"/>
+        <result column="TAG_12"	property="productCashRefund"/>
+        <result column="TAG_13"	property="integralEndTime"/>
+        <result column="TAG_14"	property="bonusEndTime"/>
+        <result column="TAG_15"	property="productSaleAmount"/>
+    </resultMap>
+
+    <select id="selectMarkActivityDataModelList" resultMap="MarkActivityDataModelMap">
+      SELECT  guid AS GUID,
+              segment_path AS SEGMENT_PATH,
+              date_time AS DATE_TIME,
+              srs_count AS SRS_COUNT
+      FROM  m_sr_header
+      WHERE guid IN ( SELECT MAX (h.guid) AS guid
+                      FROM  m_sr_header h,
+                            ( SELECT  a.segment_path,
+                                      MAX (a.date_time) AS date_time
+                              FROM m_sr_header a
+                              GROUP BY a.segment_path) g
+                      WHERE h.segment_path = g.segment_path
+                            AND h.date_time = g.date_time
+                            AND h.segment_path LIKE '/shared/Marketing/%'
+                      GROUP BY h.segment_path)
+    </select>
+    <select id="selectDataModelLastGuid" parameterClass="java.lang.String" resultClass="java.lang.String">
+        SELECT h.GUID AS guid
+        FROM M_SR_HEADER h,
+            (SELECT a.SEGMENT_PATH,
+                    MAX(a.DATE_TIME) date_time
+             FROM   M_SR_HEADER a
+             GROUP BY a.SEGMENT_PATH
+            ) g
+        WHERE h.SEGMENT_PATH = g.SEGMENT_PATH
+              AND h.DATE_TIME = g.DATE_TIME
+              AND h.SEGMENT_PATH = #dataModel#
+              AND ROWNUM = 1
+    </select>
+
+    <select id="selectDataModelTotal" parameterClass="java.lang.String" resultClass="java.lang.Long">
+        SELECT COUNT(1) C
+            FROM M_SR_USER_ID
+            WHERE GUID =#guid# AND TAG_01 IS NOT NULL
+    </select>
+    <select id="selectMailListByGuid" parameterClass="java.util.Map" resultMap="MarkActivityUserDataMap">
+        SELECT GUID,TARGET_LEVEL_ID,
+        TAG_01,TAG_02,TAG_03,TAG_04,TAG_05,
+        TAG_06,TAG_07,TAG_08,TAG_09,TAG_10,
+        TAG_11,TAG_12,TAG_13,TAG_14,TAG_15
+        FROM (
+          SELECT T.*, ROWNUM AS ROWNUM1
+          FROM (
+                SELECT *
+                FROM M_SR_USER_ID
+                WHERE GUID = #guid#
+                  AND TAG_01 IS NOT NULL
+                ORDER BY TAG_01
+          ) T
+          WHERE ROWNUM  <![CDATA[ <= ]]> #endRow#
+        )
+        WHERE ROWNUM1  <![CDATA[ >= ]]> #startRow#
+    </select>
+</sqlMap>

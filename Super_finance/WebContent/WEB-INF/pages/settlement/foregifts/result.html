@@ -1,0 +1,22 @@
+<#assign lvf=JspTaglibs["/META-INF/finance-tags.tld"] /> 
+<div  class="order_list_main">
+<table width="100%" border="0">
+	<tr class="title_table cash_titie">
+		<td>供应商名称</td>
+		<td>押金金额</td>
+		<td>操作</td>
+	</tr>
+	<#list page.result as item>
+	<tr class="list_contant list_contant0${item_index%2+1}">
+		<td class="list_contant_border">${item.supplierName}</td>
+		<td class="list_contant_border">${item.foregiftsBal}</td>
+		<td class="list_contant_border"><a href="#" class="seach_info">添加</a>
+			<a href="#" class="dariy_yajin"> 流水记录</a><a href="#"
+			class="zhuangh_money"> 转为预存款</a></td>
+	</tr>
+	</#list>
+</table>
+<div class="list_nums_right">
+	<@lvf.pagebar page = page  urlPattern ="/finance/settlement/foregifts/search.htm?supplier=${supplier}&type=0"/>
+</div>
+</div>

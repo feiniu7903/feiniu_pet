@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+
+	<settings enhancementEnabled="true" maxTransactions="40"
+		maxRequests="32" maxSessions="10" cacheModelsEnabled="false"
+		classInfoCacheEnabled="false" useStatementNamespaces="true" />
+	<!-- EDM -->
+	<sqlMap resource="com/lvmama/operate/map/EDM_SUBSCRIBE_BATCH.xml" />
+	<sqlMap resource="com/lvmama/operate/map/EDM_SUBSCRIBE_BATCH_JOB.xml" />
+	<sqlMap resource="com/lvmama/operate/map/EDM_SUBSCRIBE_USER_GROUP.xml" />
+	<sqlMap resource="com/lvmama/operate/map/EDM_SUBSCRIBE_TEMPLATE.xml" />
+	<sqlMap resource="com/lvmama/operate/map/EDM_SUBSCRIBE_TASK.xml" />
+	<sqlMap resource="com/lvmama/operate/map/EDM_SUBSCRIBE.xml" />
+	<sqlMap resource="com/lvmama/operate/map/EDM_SUBSCRIBE_INFO.xml" />
+	<!-- BASE -->
+	<sqlMap resource="com/lvmama/operate/map/COM_CODESET.xml" />
+	<!-- 临时 -->
+	<sqlMap resource="com/lvmama/operate/map/ORD_CONTRACT_TEMP.xml" />
+</sqlMapConfig>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  - Application context definition for JPetStore's business layer.
+	- Contains bean references to the transaction manager and to the DAOs in
+	- dataAccessContext-local/jta.xml (see web.xml's "contextConfigLocation").
+	-->
+<beans>
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:const.properties</value>
+				<value>classpath:mail.properties</value>
+				<value>classpath:jms.properties</value>
+				<value>classpath:insurance.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	
+	<import resource="classpath*:applicationContext-back-processer.xml"/>
+	<import resource="classpath*:applicationContext-back-trigger.xml"/>
+	<import resource="classpath*:applicationContext-back-xfire.xml"/>
+
+	<import resource="classpath*:applicationContext-lvmama-comm-bee-remote.xml"/>
+	<import resource="classpath*:applicationContext-product-head-remote.xml"/>
+	<import resource="classpath*:applicationContext-lvmama-comm-client.xml"/>
+	<import resource="classpath*:applicationContext-lvmama-comm-jms.xml"/>
+	<import resource="classpath*:applicationContext-lvmama-comm-remote.xml"/>
+	<import resource="classpath*:applicationContext-lvmama-abroadhotel.xml"/>
+	<import resource="classpath*:applicationContext-lvmama-comm-remote-dest.xml"/>
+	<import resource="classpath*:applicationContext-lvmama-comm-clutter-remote.xml"/>
+	
+	<import resource="classpath*:applicationContext-lvmama-comm-remote-ebk.xml"/>
+	<import resource="classpath*:applicationContext-lvmama-comm-remote-vst.xml"/> 
+</beans>

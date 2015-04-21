@@ -1,0 +1,95 @@
+<?page title="驴妈妈信息管理系统" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./bl_com"?>
+	<window id="bl_com" height="100%"
+		apply="com.lvmama.passport.web.auth.SuperMenuAction">
+		<borderlayout>
+			<north size="80px">
+				<grid width="100%" style="border: none">
+					<columns>
+						<column width="160px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column width="68px" align="center"></column>
+						<column valign="bottom"></column>
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<button id="refreshCategory"
+									visible="false">
+								</button>
+								<image style="padding:0 10px;"
+									src="/img/logo.gif" />
+							</hbox>
+							<hbox
+								if="${saction.passportMemuVisible==true}">
+								<toolbarbutton id="businessBtn"
+									label="电子通关" visible="@{saction.passportMemuVisible}"
+									image="/img/Centigrade-Widget-Icons/FormsAndInputs-48x48.png"
+									onClick='saction.changeCategory("PASSPORT")'>
+								</toolbarbutton>
+							</hbox>
+							<hbox
+								if="${saction.eplaceMemuVisible==true}">
+								<toolbarbutton id="iBtn"
+									visible="@{saction.eplaceMemuVisible}" label="通关"
+									image="/img/Centigrade-Widget-Icons/GridsAndTrees-48x48.png"
+									onClick='saction.changeCategory("EPLACE")'>
+								</toolbarbutton>
+							</hbox>
+							<hbox
+								if="${saction.systemMemuVisible==true}">
+								<toolbarbutton id="systemBtn"
+									label="系统管理" visible="@{saction.systemMemuVisible}"
+									image="/img/Centigrade-Widget-Icons/GridsAndTrees-48x48.png"
+									onClick='saction.changeCategory("SYSTEM")'>
+								</toolbarbutton>
+							</hbox>
+							<hbox>
+								<space />
+								<a onClick="saction.logout();">登出</a>
+							</hbox>
+						</row>
+					</rows>
+				</grid>
+			</north>
+
+			<!-- Side bar -->
+			<west width="150px" border="0" flex="true" splittable="true"
+				collapsible="true" margins="0,5,0,0">
+				<div height="100%">
+					<tree id="tree" zclass="z-dottree"></tree>
+					<!--<panel width="100%" height="100%" border="none" title="Navigation">
+						<panelchildren style="padding:5px;">
+						<listbox id="itemList" model="@{saction.resourceList, load-after=refreshCategory.onClick}" onSelect="saction.changeFunc(self.selectedItem.value);" fixedLayout="true" vflex="true" style="border:none;" height="100%">
+						<listhead>
+						<listheader width="27px"/>
+						<listheader/>
+						</listhead>
+						<listitem self="@{each='item'}" value="@{item}" height="32px">
+						<listcell image="@{item.image}"/>
+						<listcell label="@{item.resourceName}" />
+						</listitem>
+						</listbox> 
+						</panelchildren>
+						</panel>
+					-->
+				</div>
+			</west>
+
+			<!-- Content -->
+			<center id="test" flex="true" autoscroll="true">
+				<iframe width="100%" height="100%" id="iframe"
+					src="${saction.currResource }">
+				</iframe>
+			</center>
+		</borderlayout>
+	</window>
+</zk>

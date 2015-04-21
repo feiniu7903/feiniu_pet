@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>登录</title>
+<#include "../common/define.html">
+<script src="${request.contextPath!}/js/comm.js"></script>
+<script src="${request.contextPath!}/js/login.js?_version=20131017"></script>
+<script>
+$(function(){
+	/*input 框变色*/
+	$("input.lv-input-01").focus(function(e) {
+		$(this).addClass("lv-input01-focus");
+	});
+	$("input.lv-input-01").blur(function(e) {
+		$(this).removeClass("lv-input01-focus");
+	});	
+	
+});
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <#if !(activityChannel?? && activityChannel !="")>
+  <div class="lv-operate-icon lv-pull-left"> 
+     <a href="javascript:history.back();"> <img src="${prefix_pic_url!}/img/return.png"> </a>
+   </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  </#if>
+  <div class="lv-title">驴妈妈会员登录</div>
+  <#if !(activityChannel?? && activityChannel !="")>
+  <div class="lv-position lv-fontsize-15"><a href="javascript:void(0);" onclick="submitFindPW();">忘记密码</a></div>
+   </#if>
+</div>
+<form id="findPassworldForm" action="${request.contextPath!}/find_passworld.htm" method="GET">
+   <input id="redirect_url" type="hidden" name="service" value ="${service!}"/>
+   <input id="activityChannel" type="hidden" name="activityChannel" value ="${activityChannel!}"/>
+</form>
+<div class="lv-wrapper lv-media-width" style="min-height:300px;">
+<div class="lv-wrapper-container">
+	<!--匿名下单成功后查看订单详情登陆显示-->
+  <div id="nimingOrderDetail" style="display:none;font-size: 14px; color: rgb(102, 102, 102); border: 1px solid rgb(231, 231, 231); background: none repeat scroll 0% 0% rgb(254, 248, 231); margin: 0px -11px; padding: 4px 0px 7px; text-align: center;">由于你未登录，请先登录后查看订单<br>（账号为<span style=" color:#EC3297">订单联系人的手机号码</span>）</div>
+  <div class="lv-box" style="margin-top:10px;">
+    <ul class="lv-proinfo-list">
+      <li>
+        <label style="width:40px;" for="username">账&nbsp;&nbsp;号</label>
+        <input class="lv-input-text" id="username" name="username" type="text" value="${username!}" placeholder="请输入邮箱/手机/用户名">
+      </li>
+      <li>
+        <label style="width:40px;" for="password">密&nbsp;&nbsp;码</label>
+        <input class="lv-input-text" id="password" name="password" type="password" value="${password!}" placeholder="请输入密码">
+      </li>
+    </ul>
+  </div>
+  
+  <div class="login_v3">
+   <#if !(activityChannel?? && activityChannel !="")>
+      <a href="${request.contextPath}/reg.htm" class="ic_yellow">快速注册</a>
+   <#else>
+      <a href="${request.contextPath}/reg.htm?activityChannel=${activityChannel!}" class="ic_yellow">快速注册</a>
+   </#if> 
+    <a href="javascript:void(0);" onclick="login('${activityChannel!}');" class="ic_roseo">登录</a>
+  </div>
+   <!-- 活动页面不需要第三方登录 -->
+   <#if !(activityChannel?? && activityChannel !="")>
+	   <div class="login_other">
+	    	<span class="login_other2">其他登录方式</span>
+	    	<#assign serviceUrl = "http://"+hostName/>
+		    <#if service?? && service !="">
+		    	<#if absolutePath?? && absolutePath>
+		    		<#assign serviceUrl = service/>
+		    	<#else>
+					<#assign serviceUrl = "http://"+hostName+request.contextPath+service/> 
+		    	</#if>
+		    </#if>
+	       	<p>
+	        	<i class="login_sina" onclick="union_login('http://login.lvmama.com/nsso/cooperation/sinaUnionLogin.do?loginType=HTML5&firstChannel=TOUCH&secondChannel=LVMM','${serviceUrl!}')"></i>
+	        	<i class="login_qq" onclick="union_login('http://login.lvmama.com/nsso/cooperation/tencentQQUnionLogin.do?loginType=HTML5&firstChannel=TOUCH&secondChannel=LVMM','${serviceUrl!}')"></i>
+	        	<i class="login_qqweibo" onclick="union_login('http://login.lvmama.com/nsso/cooperation/tencentUnionLogin.do?loginType=HTML5&firstChannel=TOUCH&secondChannel=LVMM','${serviceUrl!}')"></i>
+	        </p>	
+	    </div>
+    </#if>
+  </div>
+</div>
+
+ <script >
+     $(function() {
+    	 if(navigator.geolocation) {
+    		 var user_p = getLocalStorage("LT_user_p");
+    		 if(null != user_p && $.trim(user_p) != '' ) {
+    			 $("#password").val(user_p);
+    		 }
+    	 }
+     });
+     var loginUrl= decodeURIComponent(window.location.href);
+     $(function() {
+    	 if(loginUrl.indexOf("activityChannel")>0 && loginUrl.indexOf("callUrl")>0){
+	    	 setcookie('loginUrl', loginUrl, 72000000, '/', ".lvmama.com",false); //设置cookie 秒
+    	 }
+    	 //匿名下单成功后查看订单详情登陆显示
+    	 if(loginUrl.indexOf("orderDetailStatus=niming_order")>=0){
+    		 $("#username").val("");
+    		 $("#password").val("");
+    		 $("#nimingOrderDetail").show();
+    	 }
+     });
+  </script>
+  <!-- footer -->
+ <#if !(activityChannel?? && activityChannel !="")>
+     <#include "../common/footer.html"/>
+ <#else>
+    <#include "../common/common_toast.html"/>
+    <#if activityChannel?? && activityChannel !="CJ">
+	    <script type="text/javascript">
+	       lvToast(true,"马上登录或注册驴妈妈，<br/>即享优惠券大礼包！<br/>",5000);
+	    </script>
+	</#if>    
+ </#if>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TRAVEL_TIPS">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.TravelTips">
+		<result column="ID" property="travelTipsId" />
+		<result column="CONTINENT" property="continent"/>
+		<result column="COUNTRY" property="country" />
+		<result column="TIPS_NAME" property="tipsName" />
+		<result column="CONTENT" property="content"/>
+ 	</resultMap>
+ 	
+ 	<sql id="selectTravelTipsByParamSql">
+ 		<isNotEmpty prepend="AND" property="continent">			 
+		TT.CONTINENT = #continent#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="country">
+		TT.COUNTRY LIKE '%$country$%' 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tipsName">
+		TT.TIPS_NAME LIKE '%$tipsName$%'
+		</isNotEmpty>
+ 	</sql>
+ 	
+ 	<select id="selectTravelTipsByParamCount" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+ 		SELECT COUNT(1) FROM TRAVEL_TIPS TT WHERE	1=1
+ 		<include refid="selectTravelTipsByParamSql"/> 		
+ 	</select>
+ 	
+ 	
+	<select id="selectTravelTipsByParam" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		<include refid="pageSearchHead"/>
+		SELECT * FROM TRAVEL_TIPS TT WHERE	1=1 
+		<include refid="selectTravelTipsByParamSql"/>
+		<include refid="pageSearchFoot"/>
+	</select>
+	<select id="selectByTravelTipsId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+		SELECT * FROM TRAVEL_TIPS WHERE ID = #travelTipsId#
+	</select>
+	<insert id="insert"	parameterClass="com.lvmama.comm.bee.po.prod.TravelTips">
+		<selectKey resultClass="java.lang.Long" keyProperty="travelTipsId" >
+	      select TRAVEL_TIPS_SEQ.nextval as id from DUAL
+	    </selectKey>	    
+		INSERT INTO TRAVEL_TIPS (ID, CONTINENT,COUNTRY,TIPS_NAME,CONTENT)
+		VALUES(#travelTipsId#,#continent#,#country#,#tipsName#,#content#)
+	</insert>
+	<update id="update" parameterClass="com.lvmama.comm.bee.po.prod.TravelTips">
+		update TRAVEL_TIPS set COUNTRY= #country#,CONTINENT = #continent#,
+		TIPS_NAME = #tipsName#,CONTENT = #content# 
+		where ID=#travelTipsId#
+	</update>
+	<delete id="deleteByPrimarKey" parameterClass="com.lvmama.comm.bee.po.prod.TravelTips">
+		DELETE FROM TRAVEL_TIPS
+		WHERE ID = #travelTipsId#
+	</delete>
+</sqlMap>

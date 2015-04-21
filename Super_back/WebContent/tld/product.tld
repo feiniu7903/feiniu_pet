@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+  <description><![CDATA["To make it easier to access dynamic data;
+                    the Apache Struts framework includes a library of custom tags.
+                    The tags interact with the framework's validation and internationalization features;
+                    to ensure that input is correct and output is localized.
+                    The Struts Tags can be used with JSP FreeMarker or Velocity."]]></description>
+  <display-name>"Struts Tags"</display-name>
+  <tlib-version>2.2</tlib-version>
+  <short-name>lvp</short-name>
+  <uri>/product</uri>
+  <tag>
+    <description><![CDATA[Execute an action from within a view]]></description>
+    <name>productName</name>
+    <tag-class>com.lvmama.back.sweb.taglib.ShowProductNameTag</tag-class>
+    <body-content>empty</body-content>
+    <attribute>
+    	<name>value</name>
+    	<type>java.lang.String</type>
+  	</attribute>
+  	<attribute>
+  		<name>type</name>
+  		<required>true</required>
+  		<type>java.lang.String</type>
+  	</attribute>
+  	<attribute>
+  		<name>showBranch</name>
+  	</attribute>
+  </tag>
+</taglib>

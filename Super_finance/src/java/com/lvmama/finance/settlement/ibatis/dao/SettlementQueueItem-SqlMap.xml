@@ -1,0 +1,954 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SettlementQueueItem" >
+	 
+   <typeAlias alias="SettlementQueueItem" type="com.lvmama.finance.settlement.ibatis.po.SettlementQueueItem"/>
+   
+   <typeAlias alias="OrdSettlement" type="com.lvmama.finance.settlement.ibatis.po.OrdSettlement"/>
+   
+   <typeAlias alias="OrdSubSettlement" type="com.lvmama.finance.settlement.ibatis.po.OrdSubSettlement"/>
+   
+   <typeAlias alias="OrdSettlementChange" type="com.lvmama.finance.settlement.ibatis.po.OrdSettlementChange"/>
+   
+   <typeAlias alias="OrdSettlementPayment" type="com.lvmama.finance.settlement.ibatis.po.OrdSettlementPayment"/>
+   
+   <typeAlias alias="OrdRefundment" type="com.lvmama.finance.settlement.ibatis.po.OrdRefundment"/>
+   
+   <typeAlias alias="SupSettlementTarget" type="com.lvmama.finance.settlement.ibatis.po.SupSettlementTarget"/>
+   
+   <typeAlias alias="ComboxItem" type="com.lvmama.finance.common.ibatis.po.ComboxItem"/>
+   
+   <!-- 查询结算队列项基本结果集 -->
+	<sql id="querySettlementItemBaseSql2">
+   		SELECT 
+			T1.SETTLEMENT_QUEUE_ITEM_ID AS settlementQueueItemId,
+			T1.STATUS AS status,
+			NVL(T1.PAYED_AMOUNT,0) AS payedAmount,
+			T1.TOTAL_SETTLEMENT_PRICE AS TOTALSETTLEMENTPRICE,
+		    T2.ORDER_ITEM_META_ID AS orderItemMetaId,
+			T2.ORDER_ID AS orderId,
+			T2.ORDER_ITEM_ID AS orderItemId,
+			T2.META_PRODUCT_ID AS metaProductId,
+			T2.META_BRANCH_ID AS metaBranchId,
+			T2.SETTLEMENT_PRICE AS settlementPrice,
+			T2.ACTUAL_SETTLEMENT_PRICE AS realSettlementPrice,
+			T2.SUPPLIER_ID AS supplierId,
+			T2.PRODUCT_QUANTITY AS productQuantity,
+			T2.QUANTITY AS quantity,
+       		ord.PAYMENT_TIME as paymentTime,
+       		ord.create_time as createTime,
+			T2.VISIT_TIME AS visitDate
+		FROM
+			ORD_ORDER ORD,
+			ORD_ORDER_ITEM_META T2,
+    		ORD_SETTLEMENT_QUEUE_ITEM T1
+     	WHERE
+     		ORD.ORDER_ID = T2.ORDER_ID
+     	AND
+     		T2.ORDER_ITEM_META_ID = T1.ORDER_ITEM_META_ID(+)
+     	AND
+     		(T2.SETTLEMENT_STATUS = 'UNSETTLEMENTED'  OR T1.SETTLEMENT_QUEUE_ITEM_ID IS NOT NULL) <!-- 订单的结算状态为未结算 或 结算队列项有关联数据 -->
+   		AND 
+   			(ORD.PAYMENT_STATUS = 'PAYED' OR (ORD.PAYMENT_STATUS = 'UNPAY' AND T2.PAYMENT_TARGET = 'TOSUPPLIER'))
+     	<!-- 订单号不为空 -->
+		<isNotEmpty property="ordId" prepend="AND">
+    		T2.ORDER_ID = #ordId#
+    	</isNotEmpty>
+		<!-- 结算队列项的结算状态 -->
+		<isEqual property="existStatus" compareValue="1">
+			AND
+			(	
+			    1=2
+				<isNotEmpty property="ordId" prepend="OR">
+					T1.STATUS IS NULL
+				</isNotEmpty>
+				<isEqual prepend="OR" property="statusNormal" compareValue="1">
+					T1.STATUS = 'NORMAL'
+				</isEqual>
+				<isEqual prepend="OR"  property="statusDelaySettle" compareValue="1">
+					T1.STATUS = 'PAUSE'
+				</isEqual>
+				<isEqual prepend="OR"  property="statusNoSettle" compareValue="1">
+					T1.STATUS = 'NEVER'
+				</isEqual>
+			)
+		</isEqual>
+		<!-- 产品类型为 线路，且 团类型为代售的订单结算  -->
+		<isEqual property="isProxySale" compareValue="1">
+			AND (
+				T1.SETTLEMENT_TYPE = 'GROUP' 
+				<isNotEmpty property="ordId" prepend="OR">
+					(T1.SETTLEMENT_TYPE IS NULL AND EXISTS (SELECT 1 FROM OP_TRAVEL_GROUP OTG,PROD_ROUTE PR WHERE OTG.TRAVEL_GROUP_CODE = ORD.TRAVEL_GROUP_CODE AND OTG.PRODUCT_ID = PR.PRODUCT_ID AND PR.GROUP_TYPE = 'AGENCY'))
+				</isNotEmpty>
+				)
+		</isEqual>
+		<isNotEqual property="isProxySale" compareValue="1">
+			AND (T1.SETTLEMENT_TYPE = 'ORDER' 
+				<isNotEmpty property="ordId" prepend="OR"> 
+					(T1.SETTLEMENT_TYPE IS NULL AND (ORD.TRAVEL_GROUP_CODE IS NULL OR T2.SUB_PRODUCT_TYPE = 'INSURANCE'))
+				</isNotEmpty>
+			)
+		</isNotEqual>
+		<!-- 支付给驴妈妈 OR 供应商 -->
+		<isNotEmpty property="payToFlag"> 
+			AND T2.PAYMENT_TARGET = #payToFlag#		
+		</isNotEmpty>
+			
+		<!-- 结算对象 -->
+	    <isNotEmpty property="settlementTarget"> 
+	    	AND EXISTS
+			(
+			    SELECT 
+			      	T9.META_PRODUCT_ID
+			    FROM 
+					META_PRODUCT T9,
+					META_SETTLEMENT T10,
+					SUP_SETTLEMENT_TARGET T11
+			    WHERE
+			    	T9.META_PRODUCT_ID = T2.META_PRODUCT_ID
+			    AND
+			      	T10.META_PRODUCT_ID = T9.META_PRODUCT_ID
+			    AND  T10.TARGET_ID = T11.TARGET_ID
+	    		AND T11.TARGET_ID = #settlementTarget#
+	    	)
+	    </isNotEmpty>
+		    
+	    <!--结算对象名称是否包含"驴妈妈"-->
+		<isNotEmpty property="isLvmamaTargetContained"> 
+			<isEqual property="isLvmamaTargetContained" compareValue="0">	<!-- 不包含 -->
+			AND EXISTS
+			(
+			    SELECT 
+			      	T9.META_PRODUCT_ID
+			    FROM 
+					META_PRODUCT T9,
+					META_SETTLEMENT T10,
+					SUP_SETTLEMENT_TARGET T11
+			    WHERE
+			    	T9.META_PRODUCT_ID = T2.META_PRODUCT_ID
+			    AND
+			      	T10.META_PRODUCT_ID = T9.META_PRODUCT_ID
+			    AND  T10.TARGET_ID = T11.TARGET_ID
+				AND INSTR(T11.NAME, '驴妈妈', 1) = 0	
+			)
+			</isEqual>
+		</isNotEmpty>  
+		<!-- 结算周期 -->
+	    <isNotEmpty property="settlementPeriod"> 
+	    	AND EXISTS
+			(
+			    SELECT 
+			      	T9.META_PRODUCT_ID
+			    FROM 
+					META_PRODUCT T9,
+					META_SETTLEMENT T10,
+					SUP_SETTLEMENT_TARGET T11
+			    WHERE
+			    	T9.META_PRODUCT_ID = T2.META_PRODUCT_ID
+			    AND
+			      	T10.META_PRODUCT_ID = T9.META_PRODUCT_ID
+			    AND  T10.TARGET_ID = T11.TARGET_ID
+	    		AND  T11.SETTLEMENT_PERIOD = #settlementPeriod#  
+	    	)
+	    </isNotEmpty>
+			
+	    	<!-- 游玩时间 -->
+	    	<isNotNull prepend=" AND " property="visitDateStart"> 
+	    		T2.VISIT_TIME &gt;= TRUNC(TO_DATE(#visitDateStart#,'YYYY-MM-DD'))
+	    	</isNotNull>
+	    	<isNotNull prepend=" AND " property="visitDateEnd"> 
+	    		T2.VISIT_TIME &lt; TRUNC(TO_DATE(#visitDateEnd#,'YYYY-MM-DD') + 1)
+	    	</isNotNull>
+			<!--采购产品-->
+			<isNotEmpty property="metaProduct"> 
+				AND T2.META_PRODUCT_ID = #metaProduct#
+				<!-- 采购产品分支类型 -->
+				<isNotEmpty property="metaBranchType">
+					AND T2.META_BRANCH_ID = #metaBranchType#
+				</isNotEmpty>
+			</isNotEmpty> 
+	      	<!--支付时间-->
+	      	<isNotNull property="payTimeStart"> 
+	      		AND ORD.PAYMENT_TIME &gt;= TRUNC(TO_DATE(#payTimeStart#,'YYYY-MM-DD'))
+	      		<isNotNull property="payTimeEnd"> 
+	    				AND	ORD.PAYMENT_TIME &lt; TRUNC(TO_DATE(#payTimeEnd#,'YYYY-MM-DD') + 1)
+    			</isNotNull>
+	    	</isNotNull>
+	       <!--我方结算主体-->
+	       <isNotEmpty property="settlementCompany">
+	       		AND EXISTS
+	       			(
+	       				SELECT 
+	       					T19.SUPPLIER_ID
+	       				FROM 
+	       					SUP_SUPPLIER T19
+	       				WHERE
+	       					T19.SUPPLIER_ID = T2.SUPPLIER_ID
+	       				AND
+	       					T19.COMPANY_ID = #settlementCompany#
+	       			)
+	       </isNotEmpty>
+	
+	       <!--有退款-->
+	       <isEqual property="hasRefunded" compareValue="1">
+	       		AND T2.REFUND = 'true'
+	       </isEqual>
+	
+	       <!--建议打款时间-->
+	       <isNotEmpty property="suggestionPayDateStart"> 
+	       		AND EXISTS
+	       			(
+	       				SELECT 
+	       					T20.META_PRODUCT_ID
+	       				FROM
+	       					META_PRODUCT T20,
+	       					META_SETTLEMENT T21,
+	       					SUP_SETTLEMENT_TARGET T22
+	       				WHERE 
+	       					T20.META_PRODUCT_ID = T2.META_PRODUCT_ID
+	       				AND
+	       					T21.META_PRODUCT_ID = T20.META_PRODUCT_ID
+	       				AND 
+	       					T21.TARGET_ID = T22.TARGET_ID
+	       				AND 
+	       					T22.SETTLEMENT_PERIOD = 'PERORDER'	<!-- 按单结算 -->
+	       				AND
+	       					( T2.VISIT_TIME - DECODE(T22.ADVANCED_DAYS, null, 0, T22.ADVANCED_DAYS ) ) &gt;= TO_DATE(#suggestionPayDateStart#,'YYYY-MM-DD')
+	       				<isNotEmpty property="suggestionPayDateEnd"> 
+	       				AND 
+	       					( T2.VISIT_TIME - DECODE(T22.ADVANCED_DAYS, null, 0, T22.ADVANCED_DAYS ) ) &lt; TO_DATE(#suggestionPayDateEnd#,'YYYY-MM-DD') + 1
+	       				</isNotEmpty>
+	       			)
+	       </isNotEmpty>
+	       <isEmpty property="suggestionPayDateStart"> 
+	       		<isNotEmpty property="suggestionPayDateEnd">
+		       		AND EXISTS
+		       			(
+		       				SELECT 
+		       					T2.META_PRODUCT_ID
+		       				FROM
+		       					META_PRODUCT T20,
+		       					META_SETTLEMENT T21,
+		       					SUP_SETTLEMENT_TARGET T22
+		       				WHERE 
+		       					T20.META_PRODUCT_ID = T2.META_PRODUCT_ID
+		       				AND
+		       					T21.META_PRODUCT_ID = T20.META_PRODUCT_ID
+		       				AND 
+		       					T21.TARGET_ID = T22.TARGET_ID
+		       				AND 
+		       					T22.SETTLEMENT_PERIOD = 'PERORDER'	<!-- 按单结算 -->
+		       				AND 
+		       					T2.VISIT_TIME - DECODE(T22.ADVANCED_DAYS, null, 0, T22.ADVANCED_DAYS ) &lt; TO_DATE(#suggestionPayDateEnd#,'YYYY-MM-DD') + 1
+		       			)
+	      			</isNotEmpty>
+	       </isEmpty>
+	
+	       <!--供应商、供应商银行账号名称-->
+	       <isNotEmpty property="supplier">
+	       		AND EXISTS
+	       		(
+				    SELECT 
+			      		T17.SUPPLIER_ID 
+				    FROM 
+						SUP_SUPPLIER T17 ,
+						SUP_SETTLEMENT_TARGET T18
+				    WHERE 
+				    	T17.SUPPLIER_ID = T2.SUPPLIER_ID
+				    AND
+				      	T17.SUPPLIER_ID = T18.SUPPLIER_ID
+	     			AND  T17.SUPPLIER_ID = #supplier#
+	     			<isNotEmpty property="bankAccount">
+	     				AND  T18.BANK_ACCOUNT_NAME LIKE CONCAT(CONCAT('%', #bankAccount#), '%') 
+	     			</isNotEmpty> 	
+	     		)
+	     	</isNotEmpty>
+	     	<isEmpty property="supplier">
+		     	<isNotEmpty property="bankAccount">
+		     		AND EXISTS
+		       		(
+					    SELECT 
+				      		T17.SUPPLIER_ID 
+					    FROM 
+							SUP_SUPPLIER T17 ,
+							SUP_SETTLEMENT_TARGET T18
+					    WHERE 
+					    	T17.SUPPLIER_ID = T2.SUPPLIER_ID
+					    AND
+					      	T17.SUPPLIER_ID = T18.SUPPLIER_ID
+		      			AND  T18.BANK_ACCOUNT_NAME LIKE CONCAT(CONCAT('%', #bankAccount#), '%') 
+		      		)	
+		      	</isNotEmpty>
+		     </isEmpty>
+		     
+		     <!-- 用户名 -->
+		     <isNotEmpty property="username">
+		     	AND EXISTS
+		     	(
+		     		SELECT
+		     			a.ID
+		     		FROM
+		     			FIN_SUPPLIER_ALLOT a
+		     		WHERE
+		     			T2.SUPPLIER_ID = a.SUPPLIER_ID
+		     		AND a.USER_NAME = #username#
+		     	)
+		     </isNotEmpty>
+			
+	    	<!-- 下单时间 -->
+	    	<isNotNull prepend=" AND " property="createOrderTimeBegin"> 
+	    		ORD.CREATE_TIME &gt;= TRUNC(TO_DATE(#createOrderTimeBegin#,'YYYY-MM-DD'))
+	    	</isNotNull>
+	    	<isNotNull prepend=" AND " property="createOrderTimeEnd"> 
+	    		ORD.CREATE_TIME &lt; TRUNC(TO_DATE(#createOrderTimeEnd#,'YYYY-MM-DD') + 1)
+	    	</isNotNull>
+   </sql>
+   <!-- 条件查询结算队列项/订单子子项 -->
+   <select id="querySettlementItem" parameterClass="java.util.HashMap" 
+   		resultClass="SettlementQueueItem" remapResults="true">
+   		SELECT
+			T5.*,
+			T3.PRODUCT_ID AS productId,
+			T3.PRODUCT_NAME AS productName,
+			T6.PRODUCT_NAME AS metaProductName,
+			T7.CREATE_TIME AS performTime,
+			T15.NAME AS settlementTargetName,
+			( T5.visitDate - DECODE(T15.ADVANCED_DAYS, null, 0, T15.ADVANCED_DAYS ) ) AS suggestionPayTime,
+			T23.NAME AS pickTicketPerson,
+			T27.BRANCH_NAME AS branchTypeName,
+			C2.SUPPLIER_NAME AS supplierName,
+			C2.ITEM_NAME AS settlementCompanyName
+   		FROM
+   		(
+		<include refid="pageSearchHead"/>
+		<include refid="querySettlementItemBaseSql2"/>
+		<include refid="pageSearchFoot"/>
+		) T5
+		<!-- 销售产品ID、名称 -->
+		LEFT JOIN
+			ORD_ORDER_ITEM_PROD T3
+		ON
+			T5.orderItemId = T3.ORDER_ITEM_PROD_ID
+		<!-- 采购产品名称 -->
+		LEFT JOIN
+			META_PRODUCT T6
+	    ON
+			T5.metaProductId = T6.META_PRODUCT_ID
+		<!-- 实际履行时间 -->
+	    LEFT JOIN 
+			ORD_PERFORM T7
+	    ON 
+			T5.orderItemMetaId = T7.OBJECT_ID
+		AND
+			T7.OBJECT_TYPE = 'ORD_ORDER_ITEM_META'
+		<!-- 结算对象名称 -->
+	    LEFT JOIN
+		(
+			SELECT 
+				T13.META_PRODUCT_ID,
+				T14.NAME,
+				NVL(T14.ADVANCED_DAYS,0) AS ADVANCED_DAYS	<!-- 提前打款天数 -->
+			FROM 
+				META_SETTLEMENT T13,
+				SUP_SETTLEMENT_TARGET T14
+			WHERE
+				T13.TARGET_ID = T14.TARGET_ID
+		) T15
+    	ON
+			T5.metaProductId = T15.META_PRODUCT_ID
+		<!-- 取票人 -->
+		LEFT JOIN
+			ORD_PERSON T23
+		ON
+			T5.orderId = T23.OBJECT_ID
+		AND T23.OBJECT_TYPE = 'ORD_ORDER'
+		AND T23.PERSON_TYPE = 'CONTACT'
+		<!-- 采购产品分支类别 -->
+		LEFT JOIN
+			META_PRODUCT_BRANCH T27
+		ON
+			T27.META_BRANCH_ID = T5.metaBranchId
+		<!-- 我方结算主体、供应商名称 -->
+		LEFT JOIN
+		(
+			SELECT
+				S1.SUPPLIER_ID,
+				S1.SUPPLIER_NAME,
+				C1.ITEM_NAME
+			FROM
+				SUP_SUPPLIER S1,
+				COM_CODE C1
+			WHERE S1.COMPANY_ID = C1.ITEM_CODE
+			AND	C1.SET_CODE = 'SETTLEMENT_COMPANY'
+		) C2
+		ON
+			T5.supplierId = C2.SUPPLIER_ID
+		<isEmpty property="orderby">
+			ORDER BY
+				payedAmount
+			ASC
+		</isEmpty>
+		<isNotEmpty property="orderby" prepend="ORDER BY">
+			$orderby$ $order$
+		</isNotEmpty>
+   </select>
+   <!-- 查询结果集大小（结算子子单数量） -->
+   <select id="querySettlementItemCount" parameterClass="java.util.HashMap"  resultClass="Integer">
+   		SELECT 
+   			COUNT(TT1.orderItemMetaId) 
+   		FROM 
+  		(
+  			<include refid="querySettlementItemBaseSql2"/>
+  		) TT1
+   </select>
+   
+   <!-- 根据id获取结算队列项 -->
+   <select id="getSettlementQueueItemById" parameterClass="long" resultClass="SettlementQueueItem">
+   		SELECT
+   			T1.SETTLEMENT_QUEUE_ITEM_ID AS settlementQueueItemId,
+   			T1.ORDER_ITEM_META_ID AS orderItemMetaId,
+   			T1.STATUS AS status,
+   			NVL(T1.PAYED_AMOUNT,0) AS payedAmount,
+   			T1.SETTLEMENT_ID AS settlementId,
+   			T1.SUB_SETTLEMENT_ID AS subSettlementId,
+   			T2.ORDER_ID AS orderId
+   		FROM
+   			ORD_SETTLEMENT_QUEUE_ITEM T1,
+   			ORD_ORDER_ITEM_META T2
+   		WHERE
+   			T1.SETTLEMENT_QUEUE_ITEM_ID = #value#
+   		AND
+   			T1.ORDER_ITEM_META_ID = T2.ORDER_ITEM_META_ID
+   </select>
+   
+   <!-- 更新结算队列项状态 -->
+   <update id="updateSettlementItemStatus" parameterClass="java.util.HashMap">
+   		UPDATE
+   			ORD_SETTLEMENT_QUEUE_ITEM T
+   		SET 
+   			T.STATUS = #status#
+   		WHERE 
+   			T.SETTLEMENT_QUEUE_ITEM_ID
+   		IN
+   			(
+   				<iterate property="ids" conjunction=","  >
+   					#ids[]#
+   				</iterate>
+   			)
+   </update>
+   
+   <!-- 对已打款的结算队列项生成抵扣款 -->
+   <insert id="insertSettlementItemsForCharge" parameterClass="map">
+   		<selectKey keyProperty="key" resultClass="long">
+  			SELECT 
+  				ORD_SETTLEMENT_QUEUE_IM_ID_SEQ.NEXTVAL AS key
+  			FROM
+  				DUAL
+  		</selectKey>
+		INSERT INTO 
+			ORD_SETTLEMENT_QUEUE_ITEM
+		(
+			SETTLEMENT_QUEUE_ITEM_ID,
+			SETTLEMENT_QUEUE_ID,
+			ORDER_ITEM_META_ID,
+			CREATE_TIME,
+			DELETED,
+			STATUS,
+			PAYMENT_TARGET,
+			ADVANCED_DAYS,
+			PAYED_AMOUNT,
+			SUB_SETTLEMENT_ID,
+			SETTLEMENT_ID
+		)
+		SELECT 
+			#key#,
+			T1.SETTLEMENT_QUEUE_ID,
+			T1.ORDER_ITEM_META_ID,
+			SYSDATE,
+			'false',
+			'NORMAL',
+			T1.PAYMENT_TARGET,
+			T1.ADVANCED_DAYS,
+			0 - T1.PAYED_AMOUNT,
+			SUB_SETTLEMENT_ID,
+			SETTLEMENT_ID
+		FROM 
+			ORD_SETTLEMENT_QUEUE_ITEM T1
+		WHERE
+			T1.SETTLEMENT_QUEUE_ITEM_ID = #id#
+   </insert>
+   
+   <!-- 根据订单子子项ID、结算队列项ID，查询结算所需的数据,过滤结算状态为不结的结算队列项  -->
+   <select id="querySettleDataByOrderItemMetaId" parameterClass="java.util.HashMap" resultClass="SettlementQueueItem">
+		SELECT 
+			T4.*,
+			NVL(T5.PAYED_AMOUNT,0) AS payedAmount,
+			T5.SETTLEMENT_QUEUE_ITEM_ID AS settlementQueueItemId,
+			T5.SETTLEMENT_ID AS settlementId,
+			T5.SUB_SETTLEMENT_ID AS subSettlementId,
+			T5.TOTAL_SETTLEMENT_PRICE AS TOTALSETTLEMENTPRICE
+		FROM
+		(
+			SELECT
+				T1.ORDER_ITEM_META_ID AS orderItemMetaId,
+				T1.ORDER_ID AS orderId,
+				T1.PRODUCT_QUANTITY AS productQuantity,
+				T1.QUANTITY AS quantity,
+				T1.ACTUAL_SETTLEMENT_PRICE AS realSettlementPrice,
+				T1.META_PRODUCT_ID AS metaProductId,
+				T1.META_BRANCH_ID AS metaBranchId,
+				T1.PAYMENT_TARGET AS paymentTarget,
+				T3.TARGET_ID AS settlementTargetId
+			FROM 
+				ORD_ORDER_ITEM_META T1,
+				META_SETTLEMENT T2,
+				SUP_SETTLEMENT_TARGET T3
+			WHERE
+			  	T2.META_PRODUCT_ID = T1.META_PRODUCT_ID
+			AND 
+			  	T2.TARGET_ID = T3.TARGET_ID
+			<isNotEmpty property="metaIdList">
+			AND
+			(
+				<iterate property="metaIdList" conjunction=" OR "  >
+					T1.ORDER_ITEM_META_ID 
+				IN
+				(
+					<iterate property="metaIdList[]" conjunction=","  >
+						#metaIdList[].[]#
+					</iterate>
+				)
+				</iterate>
+			)
+			</isNotEmpty>
+		) T4
+		LEFT JOIN
+			ORD_SETTLEMENT_QUEUE_ITEM T5
+		ON
+			T4.orderItemMetaId = T5.ORDER_ITEM_META_ID
+		AND
+			T5.STATUS != 'NEVER'
+		<isNotEmpty property="queueIdList">
+		AND
+		(
+			<iterate property="queueIdList" conjunction=" OR "  >
+					T5.SETTLEMENT_QUEUE_ITEM_ID 
+				IN
+				(
+					<iterate property="queueIdList[]" conjunction=","  >
+						#queueIdList[].[]#
+					</iterate>
+				)
+			</iterate>
+		)
+		</isNotEmpty>
+   </select>
+   
+   <!-- 全部生成结算单时，根据查询条件获取订单子子项ID和结算队列项ID，去掉不结的结算队列项 -->
+   <select id="getSettlementQueueItemOnlyIds" parameterClass="java.util.HashMap"
+   		 remapResults="true" resultClass="SettlementQueueItem">
+    	SELECT 
+   			A.orderItemMetaId AS orderItemMetaId,
+   			A.settlementQueueItemId AS settlementQueueItemId
+    	FROM
+    	(
+    		<include refid="querySettlementItemBaseSql2"/>
+    	) A
+    	WHERE
+    		A.status != 'NEVER'
+    	OR
+    		A.status IS NULL
+   	</select>
+   
+   <!-- 删除结算队列项 -->
+   <delete id="deleteSettlementQueueItemById" parameterClass="map">
+   		DELETE 
+   		FROM
+   			ORD_SETTLEMENT_QUEUE_ITEM
+   		WHERE
+   		<iterate property="ids" conjunction=" OR ">
+   			SETTLEMENT_QUEUE_ITEM_ID IN
+   		(
+   			<iterate property="ids[]" conjunction=",">
+   				#ids[].[]#
+   			</iterate>
+   		)
+   		</iterate>
+   </delete>
+   
+   <!-- 更新订单子子项的结算状态 ，已结算的子子项无法更新-->
+   <update id="updateOrderItemMetaSettlementStatus" parameterClass="map">
+   		UPDATE
+   			ORD_ORDER_ITEM_META
+   		SET
+   			SETTLEMENT_STATUS = #status#
+   		WHERE
+   			SETTLEMENT_STATUS != 'SETTLEMENTED'
+   		AND
+   		(
+   		<iterate property="ids" conjunction=" OR ">
+   			ORDER_ITEM_META_ID IN
+   			(
+   				<iterate property="ids[]" conjunction=",">
+   					#ids[].[]#
+   				</iterate>
+   			)
+   		</iterate>
+   		)
+    </update>
+   
+   <!-- 更新订单的结算状态 -->
+   <update id="updateOrderSettlementStatus" parameterClass="map">
+   		UPDATE
+   			ORD_ORDER
+   		SET
+   			SETTLEMENT_STATUS = #status#
+   		<isNotEmpty property="ids">
+			WHERE
+			<iterate property="ids" conjunction=" OR "  >
+				ORDER_ID IN
+			(
+				<iterate property="ids[]" conjunction=","  >
+					#ids[].[]#
+				</iterate>
+			)
+			</iterate>
+		</isNotEmpty>
+   </update>
+   
+   <!-- 新增结算对列项beign -->
+   <insert id="insertSettlementQueueItem" parameterClass="long">
+   	INSERT INTO 
+   		ORD_SETTLEMENT_QUEUE_ITEM
+   	(
+   		SETTLEMENT_QUEUE_ITEM_ID,
+   		ORDER_ITEM_META_ID,
+   		CREATE_TIME,
+   		DELETED,
+   		STATUS,
+   		PAYMENT_TARGET,
+   		ADVANCED_DAYS,
+   		PAYED_AMOUNT,
+   		SUB_SETTLEMENT_ID,
+   		SETTLEMENT_ID
+   	)
+	SELECT 
+		ORD_SETTLEMENT_QUEUE_IM_ID_SEQ.NEXTVAL,
+		A.ORDER_ITEM_META_ID,
+		SYSDATE,
+		'false',
+		'NORMAL',
+		C.PAYMENT_TARGET,
+		D.ADVANCED_DAYS,
+		DECODE(C.PAYED_AMOUNT,0,DECODE(SIGN(A.PAY_AMOUNT),-1,A.PAY_AMOUNT,0),A.PAY_AMOUNT),
+		A.SUB_SETTLEMENT_ID,
+		B.SETTLEMENT_ID
+	FROM 	
+		ORD_SUB_SETTLEMENT_ITEM A ,
+		ORD_SUB_SETTLEMENT B,
+		ORD_SETTLEMENT C ,
+		SUP_SETTLEMENT_TARGET D
+	WHERE 
+		A.SUB_SETTLEMENT_ID = B.SUB_SETTLEMENT_ID 
+	AND 
+		B.SETTLEMENT_ID = C.SETTLEMENT_ID 
+	AND 	
+		C.TARGET_ID = D.TARGET_ID 
+	AND
+		A.PAY_AMOUNT &gt;= 0
+	AND 
+		A.SUB_SETTLEMENT_ID=#id#
+   </insert>
+   <insert id="batchInsertSettlementQueueItem" parameterClass="map">
+   	INSERT INTO 
+   		ORD_SETTLEMENT_QUEUE_ITEM
+   	(
+   		SETTLEMENT_QUEUE_ITEM_ID,
+   		ORDER_ITEM_META_ID,
+   		CREATE_TIME,
+   		DELETED,
+   		STATUS,
+   		PAYMENT_TARGET,
+   		ADVANCED_DAYS,
+   		PAYED_AMOUNT,
+   		SUB_SETTLEMENT_ID,
+   		SETTLEMENT_ID
+   	)
+	SELECT 
+		ORD_SETTLEMENT_QUEUE_IM_ID_SEQ.NEXTVAL,
+		A.ORDER_ITEM_META_ID,
+		SYSDATE,
+		'false',
+		#status#,
+		C.PAYMENT_TARGET,
+		D.ADVANCED_DAYS,
+		DECODE(C.PAYED_AMOUNT,0,DECODE(SIGN(A.PAY_AMOUNT),-1,A.PAY_AMOUNT,0),A.PAY_AMOUNT),
+		A.SUB_SETTLEMENT_ID,
+		B.SETTLEMENT_ID
+	FROM 	
+		ORD_SUB_SETTLEMENT_ITEM A ,
+		ORD_SUB_SETTLEMENT B,
+		ORD_SETTLEMENT C ,
+		SUP_SETTLEMENT_TARGET D
+	WHERE 
+		A.SUB_SETTLEMENT_ID = B.SUB_SETTLEMENT_ID 
+	AND 
+		B.SETTLEMENT_ID = C.SETTLEMENT_ID 
+	AND 	
+		C.TARGET_ID = D.TARGET_ID 
+	AND 
+		   A.SUB_SETTLEMENT_ITEM_ID IN
+	<iterate property="ids" conjunction="," open="(" close=")">
+		#ids[]#
+	</iterate>
+   </insert>
+   <!-- 新增结算对列项end -->
+   
+   <!-- 新增抵扣款的结算对列项begin -->
+   <insert id="insertSettlementQueueItemDeduction" parameterClass="map">
+	   INSERT INTO 
+	   		ORD_SETTLEMENT_QUEUE_ITEM
+	   	(
+	   		SETTLEMENT_QUEUE_ITEM_ID,
+	   		ORDER_ITEM_META_ID,
+	   		CREATE_TIME,
+	   		DELETED,
+	   		STATUS,
+	   		PAYMENT_TARGET,
+	   		ADVANCED_DAYS,
+	   		PAYED_AMOUNT,
+	   		SUB_SETTLEMENT_ID,
+	   		SETTLEMENT_ID
+	   	)SELECT 
+         	ORD_SETTLEMENT_QUEUE_IM_ID_SEQ.NEXTVAL,
+        	#ordItemMetaId#,
+         	SYSDATE,
+	      	'false',
+	      	'NORMAL',
+	      	C.PAYMENT_TARGET,
+	      	D.ADVANCED_DAYS, 
+	      	#amount#,
+	      	#subSettlementId#,
+	      	C.SETTLEMENT_ID
+    	FROM 
+       		ORD_SETTLEMENT C ,
+        	SUP_SETTLEMENT_TARGET D
+        WHERE 
+          	C.TARGET_ID = D.TARGET_ID 
+        AND
+        	C.SETTLEMENT_ID = #settlementId#
+   </insert>
+   <!-- 新增抵扣款的结算对列项end -->
+   
+   <!-- 结算单结算后，把之前因为删除的pay_amount大于0的结算对列项生成抵扣款begin -->
+   <update id="updateSettlementQueueItem2Deduction" parameterClass="long">
+   		UPDATE
+   			ORD_SETTLEMENT_QUEUE_ITEM
+   		SET 
+   			PAYED_AMOUNT = 0- PAYED_AMOUNT,
+   			STATUS = 'NORMAL',
+   			CREATE_TIME = SYSDATE
+   		WHERE
+   			PAYED_AMOUNT &gt; 0 
+   		AND
+   			SETTLEMENT_ID = #settlementId#
+   </update>
+    <!-- 结算单结算后，把之前因为删除的pay_amount大于0的结算对列项生成抵扣款end -->
+    
+    <!-- 查询被删除的结算子单项的支付金额总和begin -->
+    <select id="searchDeletedSumPayedAmount" parameterClass="long" resultClass="java.lang.Double">
+    	SELECT 
+    		NVl(SUM(PAYED_AMOUNT),0)
+    	FROM 
+    		ORD_SETTLEMENT_QUEUE_ITEM
+    	WHERE 
+    		PAYED_AMOUNT &gt; 0 
+		AND
+   			SETTLEMENT_ID = #settlementId#
+    </select>
+    <!-- 查询被删除的结算子单项的支付金额总和end -->
+    
+    <update id="updateSettlementQueueItem2DeductionSingle" parameterClass="map">
+   		UPDATE
+   			ORD_SETTLEMENT_QUEUE_ITEM
+   		SET 
+   			PAYED_AMOUNT = #amount#,
+   			STATUS = 'NORMAL',
+   			CREATE_TIME = SYSDATE
+   		WHERE
+   			PAYED_AMOUNT &gt; 0 
+   		AND
+   			SETTLEMENT_ID = #settlementId#
+   		AND ROWNUM = 1
+   </update>
+   <!-- 结算单结算后，把之前因为删除的pay_amount大于0的结算对列项改为0 （抵扣款使用差额生成）begin -->
+    <update id="updateSettlementQueueItem2Zero" parameterClass="long">
+   		UPDATE
+   			ORD_SETTLEMENT_QUEUE_ITEM
+   		SET 
+   			PAYED_AMOUNT = 0,
+   			STATUS = 'NORMAL',
+   			CREATE_TIME = SYSDATE
+   		WHERE
+   			PAYED_AMOUNT &gt; 0 
+   		AND
+   			SETTLEMENT_ID = #settlementId#
+   </update>
+   <!-- 结算单结算后，把之前因为删除的pay_amount大于0的结算对列项改为0 （抵扣款使用差额生成）end -->
+   
+   <!-- 查询结算队列项的结算对象ID -->
+   <select id="getTargetIdByQueueItemId" parameterClass="long" resultClass="long">
+   		SELECT
+   			T3.TARGET_ID
+   		FROM
+   			ORD_SETTLEMENT_QUEUE_ITEM T1,
+   			ORD_ORDER_ITEM_META T2,
+   			META_SETTLEMENT T3
+   		WHERE
+   			T1.SETTLEMENT_QUEUE_ITEM_ID = #value#
+   		AND
+   			T1.ORDER_ITEM_META_ID = T2.ORDER_ITEM_META_ID
+   		AND
+   			T2.META_PRODUCT_ID = T3.META_PRODUCT_ID
+   </select>
+   
+   <!-- 插入支付记录 -->
+   <insert id="insertOrdSettlementPayment" parameterClass="OrdSettlementPayment">
+   		<selectKey keyProperty="settlementPaymentId" resultClass="long">
+   			SELECT
+   				SETTLEMENT_PAYMENT_ID_SEQ.NEXTVAL AS settlementPaymentId
+   			FROM
+   				DUAL
+   		</selectKey>
+   		INSERT INTO 
+  		ORD_SETTLEMENT_PAYMENT
+	  	(
+	  		SETTLEMENT_PAYMENT_ID,
+	  		TARGET_ID,
+	  		SETTLEMENT_ID,
+	  		PAYTYPE,
+	  		AMOUNT,
+	  		BANK,
+	  		SERIAL,
+	  		OPERATETIME,
+	  		REMARK,
+	  		CREATOR,
+	  		CREATETIME
+	  	)
+	  	VALUES
+	  	(
+	  		#settlementPaymentId#,
+	  		#targetId#,
+	  		#settlementId#,
+	  		#paytype#,
+			#amount#,	
+	  		#bank#,
+	  		#serial#,
+	  		#operatetime#,
+	  		#remark#,
+	  		#creator#,
+	  		#createtime#
+	  	)
+   </insert>
+  
+   <!-- 根据订单查询结算订单信息begin -->
+   
+   <!-- 根据订单查询结算订单信息end -->
+   
+   <!-- 根据订单子子项的退款备注 -->
+   <select id="getRefundmentByOrderItemMetaIds" parameterClass="list" resultClass="OrdRefundment">
+   		SELECT
+   			DISTINCT T2.ORDER_ITEM_META_ID AS orderItemMetaId,
+   			T1.MEMO AS memo
+   		FROM
+   			ORD_REFUNDMENT T1,
+   			ORD_REFUNDMENT_ITEM T2
+   		WHERE
+   			T1.REFUNDMENT_ID = T2.REFUNDMENT_ID
+   		AND
+   			T1.STATUS = 'REFUNDED'
+   		AND
+   			T2.ORDER_ITEM_META_ID
+   		IN
+   		(
+   			<iterate conjunction=",">
+   				#value[]#
+   			</iterate>
+   		)
+   </select>
+   
+   <!-- 查询结算对象信息-->
+   <select id="getSettlementTargetById" parameterClass="long" resultClass="SupSettlementTarget">
+   		SELECT
+   			TARGET_ID AS targetId, 
+   			NAME AS name, 
+   			MEMO AS memo, 
+   			BANK_NAME AS bankName, 
+   			BANK_ACCOUNT_NAME AS bankAccountName, 
+   			BANK_ACCOUNT AS bankAccount, 
+   			ALIPAY_NAME AS alipayName,
+      		ALIPAY_ACCOUNT AS alipayAccount, 
+      		DEPOSIT AS deposit, 
+      		CREATE_TIME AS createTime, 
+      		SUPPLIER_ID AS supplierId, 
+      		SETTLEMENT_PERIOD AS settlementPeriod, 
+      		VALID AS valid, 
+      		ORG_ID AS orgId, 
+      		TYPE AS type,
+      		BANK_LINES AS bankLines,
+      		ADVANCED_DAYS AS advancedDays
+   		FROM
+   			SUP_SETTLEMENT_TARGET
+   		WHERE
+   			TARGET_ID = #value#
+   </select>
+   
+   <!-- 根据结算对象ID，查询供应商的我方结算主体-->
+   <select id="getCompanyIdByTargetId" parameterClass="long" resultClass="string">
+   		SELECT
+   			T2.COMPANY_ID
+   		FROM
+   			SUP_SETTLEMENT_TARGET T1,
+   			SUP_SUPPLIER T2
+   		WHERE
+   			T1.SUPPLIER_ID = T2.SUPPLIER_ID
+   		AND
+   			T1.TARGET_ID = #value#
+   </select>
+   <!-- 根据采购产品ID查询分支类别-->
+   <select id="getMetaBranchTypeByMetaProductId" parameterClass="long" resultClass="ComboxItem">
+   		SELECT
+   			META_BRANCH_ID AS VALUE,
+   			BRANCH_NAME AS LABEL
+   		FROM
+   			META_PRODUCT_BRANCH
+   		WHERE
+   			META_PRODUCT_ID = #value#
+   </select>
+   
+   <!-- 不结，根据结算队列项ID，更新订单子子项状态为不结 -->
+   <update id="updateOrderItemMetaSettlementStatusForNeverSettle" parameterClass="map">
+   		UPDATE
+   			ORD_ORDER_ITEM_META T1
+   		SET
+   			T1.SETTLEMENT_STATUS = 'SETTLEMENTED'
+   		WHERE
+   			T1.ORDER_ITEM_META_ID
+   		IN
+   		(
+   			SELECT
+   				T2.ORDER_ITEM_META_ID
+   			FROM
+   				ORD_SETTLEMENT_QUEUE_ITEM T2
+   			WHERE
+   				T2.SETTLEMENT_QUEUE_ITEM_ID
+   			IN
+   			(
+	   			<iterate property="ids" conjunction=",">
+	   				#ids[]#
+	   			</iterate>
+   			)
+   		)
+   </update>
+   
+</sqlMap>

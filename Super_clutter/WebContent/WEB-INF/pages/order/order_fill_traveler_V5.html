@@ -1,0 +1,250 @@
+<!doctype html>
+<html>
+<head>
+    <title>我的驴妈妈-驴妈妈</title>
+   	<meta charset="UTF-8">
+	<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<meta content="telephone=no" name="format-detection" />
+	<meta http-equiv="Cache-Control" content="no-transform " />
+	<meta name="description" content="驴妈妈旅游网在线手机预订服务，为您提供更多景点门票预订,自由行,自助游,旅游团购,攻略,旅游度假和酒店预订等旅游信息,优质,个性,自由,尊贵服务只为您！" >
+	<link rel="alternate" type="application/vnd.wap.xhtml+xml" media="handheld" href="target"/>
+	<link rel="apple-touch-icon" href="${prefix_pic_url!}/img/lvmama_v1_png.png" />
+	<link rel="apple-touch-icon" sizes="72x72" href="${prefix_pic_url!}/img/lvmama_v1_png.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="${prefix_pic_url!}/img/lvmama_v1_png.png" />
+	<link rel="apple-touch-icon" sizes="144x144" href="${prefix_pic_url!}/img/lvmama_v1_png.png" />
+	<link rel="shortcut icon" href="http://www.lvmama.com/favicon.ico" type="image/x-icon" > 
+	<script src="${request.contextPath}/jquery.mobile/jquery-1.8.2.js"></script>
+	<script src="${request.contextPath}/jquery.mobile/jquery.cookie.js"></script>
+	<!-- 新版JS-CSS -->
+    <link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/font-icons.css">
+    <link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/global.css">
+    <link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/order.css">
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/lib/zepto.min.js"></script>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/base.js"></script>
+    <!-- 游玩人JS -->
+    <script src="${request.contextPath}/js/order_traveler_v5.js" type="text/javascript"></script>
+    <script src="${request.contextPath}/js/validate.js?_v=20131017" type="text/javascript"></script>
+    <script type="text/javascript">
+	    var hostName="${reauestHostName!}";
+		var contextPath = '${request.contextPath}';
+		var user_status=null;
+		var reserve_type=null;
+		$(function(){
+			user_status=$("#user_status").val();
+			reserve_type=$("input[name=productType]").val();
+		});
+	</script>
+</head>
+<body>
+<!-- 文件头部 -->
+<header class="header" id="travelerTitle">
+	<a href="javascript:history.back();" class="back"><span class="icon-back"></span></a>
+    <h1><#if emergencyContact?? && emergencyContact>游玩人和紧急联系人<#else>游玩人信息</#if></h1>
+   <!--  <section class="header_alice">
+    	<a href="javascript:void(0);" onclick="home_back();" class="btn1"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a>
+    </section> -->
+</header>
+<!-- 常用，新增和编辑游玩人头部 -->
+<header class="header" id="travelerAddEditTitle" style="display:none">
+	<a href="javascript:history.back();" class="back"><span class="icon-back"></span></a>
+    <h1 id="header_value">常用游玩人</h1>
+   	<section class="header_btn" id="header_finish">
+    	<a href="javascript:void(0);" onclick="choose_person_ok();" class="btn1">完成</a>
+    </section>
+</header>
+<!-- 判断用户是否登录 -->
+<#if user??>
+	<input type="hidden" name="user_status" id="user_status" value="1"/>
+<#else>	
+	<input type="hidden" name="user_status" id="user_status" value="0"/>
+</#if>
+<div id="wrapper">
+	<!--需要的游玩人列表  -->
+    <div id="travelerList">
+        <div class="common-order">
+        	<!-- 填写订单页传过来的参数 -->
+        	<form action="${request.contextPath}/order/order_submit.htm" method="post" id="order_submit" >
+		         <#list request.getParameterNames() as parameterName>
+		              <#if parameterName!="totalPrice" || parameterName.indexOf("t_")==-1>
+				          <#if parameterName!="canOrderToday" && parameterName!="needIdCard">
+				             <input type="hidden" name="${parameterName!}" value="${Request[parameterName]?default("")}"/>
+				          <#else>
+				             <input type="hidden" name="${parameterName!}" value="${Request[parameterName]?string}"/>
+				          </#if>
+				      </#if>
+				 </#list>
+		         <input type="hidden" name="fillTravellerNum" id="fillTravellerNum" value="${fillTravellerNum!}"/>
+		         <input type="hidden" name="personListItems" id="personListItems" value=""/>
+	        </form>
+            <article class="box-sp-3">
+                <div class="common-order-pan">
+                	 <#if user?? && contactList?? && contactList?size &gt;0>
+                    	<span class="fr" onclick="contact_traveler();"><i class="icon-people-add"></i><i>常用游玩人</i></span>
+                	 </#if>
+                    <span>${fillTravellerNum!}个游玩人</span>
+                </div>
+            </article>
+            <!-- 需要游玩人列表 -->
+            <#if travellerOptions?? && travellerOptions?size&gt;0>
+            	<#list travellerOptions as travellerOption>
+            		<article class="need_traveler_list">
+		                <div class="common-order-line required">
+		                    <span class="t_l1"><label for="userName">游玩人${travellerOption_index+1}</label></span>
+		                    <input type="text" placeholder="游玩人姓名" value="" name="traveler_name_${travellerOption_index}" id=traveler_name_${travellerOption_index} class="lv-text-input">
+		                </div>
+		                
+		                <div class="common-order-line <#if travellerOption.MOBILE?? && travellerOption.MOBILE=='MOBILE'>required</#if>">
+		                    <span class="t_l1"><label for="mobile">手机</label></span>
+		                    <input type="tel" placeholder="游玩人手机" value="" name="traveler_mobile_${travellerOption_index}" id="traveler_mobile_${travellerOption_index}" class="lv-text-input">
+		                </div>
+		                <div class="common-order-line">
+		                    <span class="t_l1"><label for="certType3">证件类型</label></span>
+		                    <select onchange="onPersonListTypeChoose(${travellerOption_index},this);" id="cert_type_${travellerOption_index}" name="cert_type_${travellerOption_index}" class="sex">
+		                        <option value="ID_CARD">身份证</option>
+		                        <option value="HUZHAO">护照</option>
+		                    </select>
+		                </div>
+		                <div class="common-order-line <#if travellerOption.CARD_NUMBER?? && travellerOption.CARD_NUMBER=='CARD_NUMBER'>required</#if>">
+		                    <span class="t_l1"><label for="contact3CertNo">证件号码</label></span>
+		                    <input type="text" placeholder="游玩人证件号" value="" id="contact_cert_no_${travellerOption_index}" name="contact_cert_no_${travellerOption_index}" class="lv-text-input">
+		                </div>
+		                <div style="display:none" id="only_huzhao_used_${travellerOption_index}">
+			                  <div class="common-order-line"><label class="t_l1" for="contact3BirthDay">出生日期</label><input type="date" placeholder="格式19800101" value="" id="contact_birthDay_${travellerOption_index}" name="contact_birthDay_${travellerOption_index}"></div>
+			                  <div class="common-order-line"><label class="t_l1" for="contact3Sex">性别</label>
+			                      <select id="contact_sex_${travellerOption_index}" name="contact_sex_${travellerOption_index}" class="sex">
+			                          <option value="M">&nbsp;&nbsp;男&nbsp;&nbsp;</option>
+			                          <option value="F">&nbsp;&nbsp;女&nbsp;&nbsp;</option>
+			                      </select>
+			                  </div>
+			              </div>
+		            </article>
+            	</#list>
+            </#if>
+            <!--  紧急联系人-->
+            <#if emergencyContact?? && emergencyContact>
+	            <div class="common-order-title">紧急联系人</div>
+	            <article>
+	                <div class="common-order-line required">
+	                    <span class="t_l1"><label for="userName">联系人</label></span>
+	                    <input type="text" placeholder="姓名" value="" name="userName" id=emergency_lx class="lv-text-input">
+	                </div>
+	                <div class="common-order-line required">
+	                    <span class="t_l1"><label for="mobile">手机</label></span>
+	                    <input type="tel" placeholder="用于接收通知" value="" name="mobile" id="emergency_tel" class="lv-text-input">
+	                </div>
+	            </article>
+            </#if>
+        </div>
+    </div>
+    <!-- 常用游玩人列表 -->
+    <!-- 第二步 选择游玩人 -->
+      <div id="contactList" class="common-order" style="display: none;">
+          <article >
+              <div onclick="editContact('','','','TRAVELLER','ID_CARD','','','');" class="common-order-line" data-value="--TRAVELLER--ID_CARD" data-id="">
+                  <span class="ic_add"></span> <span>新增游玩人</span>
+                  <span class="ic_ri"></span>
+              </div>
+          </article>
+          	<article id="people_list">
+          		<#if contactList?? && contactList?size &gt;0>
+	          	<#list contactList as contact>
+	               <div class="common-order-line">
+					   <input type="hidden" name="receiver_id_${contact_index}" id="receiver_id_${contact_index}" value="${contact.receiverId!}"/>
+					   <input type="hidden" name="receiver_name_${contact_index}" id="receiver_name_${contact_index}" value="${contact.receiverName!}"/>
+					   <input type="hidden" name="mobile_mumber_${contact_index}" id="mobile_mumber_${contact_index}" value="${contact.mobileNumber!}"/>
+					   <input type="hidden" name="traveler_cert_type_${contact_index}" id="traveler_cert_type_${contact_index}" value="${contact.certType!}"/>
+					   <input type="hidden" name="traveler_cert_no_${contact_index}" id="traveler_cert_no_${contact_index}" value="${contact.certNo!}"/>
+					   <input type="hidden" name="traveler_birthday_${contact_index}" id="traveler_birthday_${contact_index}" value="${contact.birthday!}"/>
+					   <input type="hidden" name="traveler_gender_${contact_index}" id="traveler_gender_${contact_index}" value="${contact.gender!}"/>
+	                   <div class="checkOption">
+	                       <span class="ic_check_a"><i></i></span>
+	                       <span>
+	                           ${contact.receiverName!}<br>
+	                           <em>
+		                           	<#if contact.mobileNumber?? && contact.mobileNumber!="">
+		                           		手机号：${contact.mobileNumber?default(" ")}<br>
+		                           	</#if>
+		                           	<#if contact.certNo?? && contact.certNo!="">
+		                           		<#if contact.certType?? && contact.certType=="ID_CARD">
+		                           			身份证：
+		                           		<#else>
+		                           			护&nbsp;&nbsp;&nbsp;照：
+		                           		</#if>
+		                           		${contact.certNo?default(" ")}
+		                           	</#if>
+	                            </em>
+	                       </span>
+	                       <!-- <span class="ic_ri"></span> -->
+	                   </div>
+	                   <span class="icon-pencil" onclick="editContact('${contact.receiverId!}','${contact.receiverName!}','${contact.mobileNumber!}','TRAVELLER','${contact.certType!}','${contact.certNo!}','${contact.birthday!}','${contact.gender!}');"></span>
+	               </div>
+	          	</#list>
+          		</#if>
+          	</article>
+      </div>
+	<!-- 编辑新增游玩人 -->
+      <div style="display: none;" id="travelerAddEdit" class="common-order">
+          <article>
+              <input type="hidden" value="" id="contact3ReceiverId" name="receiverId">
+              <input type="hidden" value="TRAVELLER" id="personType3" name="personType">
+              <div class="common-order-line required"><label class="t_l1" for="contact3Name">姓　　名</label><input type="text" placeholder="姓名" value="" id="contact3Name" name="receiverName" class="lv-text-input"></div>
+              <div class="common-order-line"><label class="t_l1" for="contact3Tel">手　　机</label><input type="tel" placeholder="手机" value="" id="contact3Tel" name="mobileNumber" class="lv-text-input"></div>
+              <div class="common-order-line">
+                  <label class="t_l1" for="certType3">证件类型</label>
+                  <select onchange="onPersonTypeChoose(this);" id="certType3" name="certType" class="sex">
+                      <option value="ID_CARD">&nbsp;&nbsp;身份证&nbsp;&nbsp;</option>
+                      <option value="HUZHAO">&nbsp;&nbsp;护照&nbsp;&nbsp;</option>
+                  </select>
+              </div>
+              <div class="common-order-line"><label class="t_l1" for="contact3CertNo">证件号码</label><input type="text" placeholder="有效证件号码" value="" id="contact3CertNo" name="certNo" class="lv-text-input"></div>
+              <div style="display:none" id="only_huzhao_used">
+                  <div class="common-order-line"><label class="t_l1" for="contact3BirthDay">出生日期</label><input type="date" placeholder="格式19800101" value="" id="contact3BirthDay" name="birthday"></div>
+                  <div class="common-order-line"><label class="t_l1" for="contact3Sex">性别</label>
+                      <select id="contact3Sex" name="gender" class="sex">
+                          <option value="M">&nbsp;&nbsp;男&nbsp;&nbsp;</option>
+                          <option value="F">&nbsp;&nbsp;女&nbsp;&nbsp;</option>
+                      </select>
+                  </div>
+              </div>
+          </article>
+          <a id="delete_contact_id" onclick="deleteContact();" class="view_more btn" href="#">删除游玩人</a>
+      </div>
+   	 <!-- 订单联系人 CONTACT -->
+     <dd  style="display:none">
+       <input type="text" name="lx" id="contact1_lx" value="${userName!}" placeholder="姓名" />
+       <input type="tel" name="lx" id="contact1_tel" value="${mobile!}" placeholder="手机" />
+       <#if idCard?? && idCard !="">
+       <input type="text" name="cardNum" id="contact1_cardNum" value="${idCard!}" placeholder="身份证号" />
+       </#if>
+       <input type="hidden" id="traveller_list_hidden"  value=""/>
+       <!-- 实体票 -->
+       <#if physical?? && physical=="true" && mpi??>
+           <input type="hidden" id="exp_contact_hidden"  value="${mpi.personName!}-${mpi.personMobile!}-${mpi.personType!}-${mpi.province!}-${mpi.city!}-${mpi.address!}"/>
+       </#if>
+     </dd>
+     <section class="common-order-result">
+     	<div class="fl"><span>订单总额：</span><strong>&yen;<i id="total_price">${totalPrice!}</i></strong></div>
+        <a href="javascript:void(0);" onclick="fill_traveller_submit();" id="fill_traveller_submit_show" _popupEvent='_popup' class="btn_style_1 fr">提交订单</a>
+        <a href="javascript:void(0);" class="btn_style_1 fr" id="fill_traveller_submit_hide" style="display:none">提交订单</a>
+      </section>
+    <!-- footer -->
+	<#include "../common/order_footer.html"/>
+</div>
+<!-- 新版JS -->
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/file/order/order.js"></script>
+<script type="text/javascript">
+    $("#couponActivity").radioBox({//优惠券单选
+        initNum : -1,
+        radioName : "couponOption"
+    });
+</script>
+<script type="text/javascript">
+    $("#people_list").checkBox({
+        initNum : -1
+    });//游玩人复选
+</script>
+</body>
+</html>

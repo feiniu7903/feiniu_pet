@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+    <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<#include "pages/common/define_v5.html">
+	</head>
+	<body>
+	    
+	</body>
+	<script name="baidu-tc-cerfication" src="http://apps.bdimg.com/cloudaapi/lightapp.js"></script>
+	 <script>
+		 var loginStatus = false;
+		 clouda.lightapp("4tjhI1dx8WPmCIKtl365x7Xg",function(){
+		     //加载完api js后，立即执行读取本地相机图片
+		     loginStatus = true;
+		 }); 
+		 $(function(){
+				var code = unescape(getUrlParam("code"));
+				//alert(code);
+				//window.location.href="https://openapi.baidu.com/oauth/2.0/token?grant_type=authorization_code&client_id=4tjhI1dx8WPmCIKtl365x7Xg&client_secret=CdRBKcdVQDdZn8AFoBwgZlfyAxd5Es08&redirect_uri=http://m.lvmama.com/static/baidulogin.html&code="+code
+				$.ajax({
+					url : contextPath+'/bd/t_baiduLogin.htm',
+					data : {'code': code},
+					type : "POST",
+					success : function(datas) {
+						if(datas!=null && datas.error==null){
+							//alert(datas.username);
+							window.location.href=contextPath+'/my';
+						}else{
+							alert(datas.error);
+						}
+					},
+					error:function() {
+						alert("error");
+					}
+				});		
+		 });
+	 
+	 </script>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+    <title>景点活动_驴妈妈手机站</title>
+    <#include "../common/define_v5.html">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/detail.css">
+    <style>
+    .copyright{ text-align: center;}    
+    .t_content{border-bottom:1px solid #D2D2D2;}
+    .lv-box .t_content:last-child{ border:none;}
+    </style>
+</head>
+<body>
+<!--  头部-->
+<#if firstChannel?? && firstChannel=="CLIENT" >
+	<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/header.js"></script>
+</#if>
+<div id="wrapper">
+     <div id="content">
+        <div class="lv-box lv-product-explain">
+            <!-- 景点活动 -->
+             <#if placeActivity?? >
+		         ${placeActivity.content!}
+		     <#else>
+		                     暂无活动内容
+		     </#if>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+</div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+<script>
+    $(function(){
+        $(".lv-item-sprite01 a").click(function(e){
+            $(this).parent().removeClass().addClass("lv-item-scroe"+($(this).index()+1)).addClass("lv-item-sprite01").addClass("fl");
+            $(this).siblings("input:first").val($(this).index()+1);
+        });
+        $("textarea").focus(function(e) {
+            $(this).addClass("lv-input01-focus");
+        });
+        $("textarea").blur(function(e) {
+            $(this).removeClass("lv-input01-focus");
+        });
+    });
+</script>
+</body>
+</html>

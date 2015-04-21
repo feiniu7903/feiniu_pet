@@ -1,0 +1,111 @@
+<?page title="标签管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./tagManagerWin"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<?component name="button" extends="button" class="com.lvmama.back.utils.perm.PermButton" ?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="label" extends="label" class="com.lvmama.back.utils.perm.PermLabel" ?>
+	<window id="tagManagerWin" title="标签管理" mode="embedded"
+		apply="com.lvmama.back.web.tag.TagManagerAction">
+		<grid>
+			<columns>
+				<column width="80px"></column>
+				<column width="200px"></column>
+				<column width="80px"></column>
+				<column width="200px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="小组名：" />
+					</hbox>
+					<hbox>
+						<listbox id="groupListbox"
+							model="@{saction.tagGroups,load-after='refreshButton.onClick'}"
+							mold="select"
+							onSelect="saction.setTagGroupId(self.selectedItem.value);saction.loadTags(self.selectedItem.value);">
+							<listitem self="@{each='tagGroups'}"
+								label="@{tagGroups.tagGroupName}"
+								value="@{tagGroups.tagGroupId}" />
+						</listbox>
+					</hbox>
+					<hbox>
+						<label value="标签名：" />
+					</hbox>
+					<hbox>
+						<listbox id="tagListbox"
+							model="@{saction.tags,load-after='groupListbox.onSelect,refreshButton.onClick'}"
+							mold="select"
+							onSelect="saction.setTagId(self.selectedItem.value);">
+							<listitem self="@{each='tag'}"
+								label="@{tag.tagName}" value="@{tag.tagId}" />
+						</listbox>
+					</hbox>
+					<hbox>
+						<button width="100px" id="searchButton" label="查询"
+							onClick="saction.searchTags();" />
+						<button width="100px" id="addTagButton" label="新增标签" permCode="2008"
+							onClick='saction.showWindow("/tag/addTag.zul", null);' />
+					</hbox>
+					
+				</row>
+			</rows>
+		</grid>
+
+		<listbox id="box" fixedLayout="true"
+			model="@{saction.searchTags,load-after='searchButton.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader label="小组名" />
+				<listheader label="标签名" />
+				<listheader label="SEQ" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem self="@{each='searchTag'}" value="@{searchTag}">
+				<listcell id="tagId" label="@{searchTag.tagId}" visible="false" />
+				<listcell label="@{searchTag.tagGroupName}" />
+				<listcell label="@{searchTag.tagName}" />
+				<listcell label="@{searchTag.tagSEQ}" />
+				<listcell>
+					<hbox>
+						<button width="60px" id="queryButton" label="查看"
+							onClick='saction.showWindow("/tag/tagRelatedProductAndDest.zul",self.getAttributes());'>
+							<custom-attributes
+								attrTagId="@{searchTag.tagId}" />
+						</button>
+						<button width="60px" id="editButton" label="修改" permCode="2009"
+							onClick='saction.showWindow("/tag/editTag.zul", self.getAttributes());'>
+							<custom-attributes
+								attrTagId="@{searchTag.tagId}" />
+						</button>
+					</hbox>
+				</listcell>
+			</listitem>
+		</listbox>
+		
+		
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell width="200px">
+							<paging id="_paging" pageSize="15"
+								onPaging='saction.searchTags();'>
+							</paging>
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+		<!--  
+		<button id="delButton" label="删除" permCode="2010"
+			onClick="saction.delProductTags();" />
+-->
+		<button id="refreshButton" onClick="saction.load();"
+			visible="false" />
+	</window>
+</zk>

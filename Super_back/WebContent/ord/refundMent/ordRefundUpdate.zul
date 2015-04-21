@@ -1,0 +1,242 @@
+﻿<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_refund_update"?>
+<?component name="ordRefundAddComponent" macroURI="/ord/sale/ordSaleDealAdd.zul" ?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_refund_update" title="售后服务处理" border="normal"
+		apply="com.lvmama.back.web.ord.refundMent.OrdOrderRefundUpdateAction">
+		<grid>
+			<columns>
+				<column width="100px" align="right"></column>
+				<column></column>
+				<column width="100px"></column>
+				<column></column>
+				<column width="100px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label width="150px" value="订单号:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.orderId}" />
+					</hbox>
+					<hbox>
+						<label width="150px" value="下单时间:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.zhCreateTime}" />
+					</hbox>
+					<hbox>
+						<label width="150px" value="下单人:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.userName}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>
+						<label width="150px" value="应付金额:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.oughtPayYuan}" />
+					</hbox>
+					<hbox>
+						<label width="150px" value="实付金额:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.actualPayYuan}" />
+					</hbox>
+					<hbox>
+						<label width="150px" value="支付状态:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.zhPaymentStatus}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>
+						<label width="150px" value="支付等待时间:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.zhWaitPayment}" />
+					</hbox>
+					<hbox>
+						<label width="150px" value="订单状态:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.zhOrderStatus}" />
+					</hbox>
+					<hbox>
+						<label width="150px" value="订单来源渠道:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.zhProductChannel}" />
+					</hbox>
+				</row>
+				<row spans="1,6">
+					<hbox>
+						<label width="150px" value="用户备注:" />
+					</hbox>
+					<hbox>
+						<label
+							value="@{saction.historyOrderDetail.userMemo}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<ordRefundAddComponent saleServiceId="${saction.saleServiceId}"
+			serviceType="${saction.serviceType}">
+		</ordRefundAddComponent>
+		<space />
+
+		<zscript>
+			List items = saction.historyOrderDetail.allOrdOrderItemMetas; 
+		</zscript>
+		<groupbox style="border: none;">
+			<caption label="采购产品"></caption>
+			<listbox id="ordItemMetaListbox" multiple="true" checkmark="true">
+				<listhead>
+					<listheader style="width:100px;" label="采购产品ID"></listheader>
+					<listheader label="采购产品名称"></listheader>
+					<listheader label="结算状态"></listheader>
+					<listheader label=""></listheader>
+					<listheader label="备注" />
+				</listhead>
+				<listitem forEach="${items}" selected="${each.checkFlag}">
+					<listcell> 
+						<label value="${each.metaProductId}" id="${each.orderItemMetaId}" />
+						<label value="${each.orderItemMetaId}" visible="false"  />
+					</listcell>
+					<listcell> <label value="${each.productName}" /> </listcell>
+					<listcell> <label value="${each.settlementStatusStr}" /></listcell>
+					<listcell>
+						<!-- 补偿时选中供应商承担金额 -->
+						<listbox mold="select" if='${saction.penaltyAmountFlag==true}'>
+							<!-- listitem label="游客损失" value="VISITOR_LOSS" / -->
+							<listitem label="供应商承担金额" value="SUPPLIER_BEAR" selected="true"/>
+						</listbox> 
+						<!-- 订单退款 -->
+						<listbox mold="select" if='${saction.penaltyAmountFlag==false}' disabled="true">
+							<listitem label="游客损失" value="VISITOR_LOSS" selected="true" if='${each.amountType=="VISITOR_LOSS"}' />
+							<listitem label="游客损失" value="VISITOR_LOSS" selected="false" if='${each.amountType=="SUPPLIER_BEAR"}' />
+							<listitem label="供应商承担金额" value="SUPPLIER_BEAR" selected="false" if='${each.amountType=="VISITOR_LOSS"}'/>
+							<listitem label="供应商承担金额" value="SUPPLIER_BEAR" selected="true" if='${each.amountType=="SUPPLIER_BEAR"}'/>
+							<listitem label="游客损失" value="VISITOR_LOSS" selected="true" if='${each.amountType==null}' />
+							<listitem label="供应商承担金额" value="SUPPLIER_BEAR" if='${each.amountType==null}'/>
+						</listbox> 
+						<doublebox width="60px" value="${each.amountValueYuanStr}" maxlength="10" ></doublebox> 
+						<label value="${each.actualSettlementPrice}" visible="false"  />
+						<label value="${each.productQuantity}" visible="false"  />
+						<label value="${each.quantity}" visible="false"  />
+					</listcell>
+					<listcell> 
+						<textbox width="120px" value="${each.memo}"></textbox> 
+					</listcell>
+				</listitem>
+			</listbox>
+		</groupbox>
+		
+		<groupbox style="border: none">
+			<caption label="添加退款服务内容" />
+			<grid>
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+					<column width="100px" align="right"></column>
+					<column></column>
+					<column width="100px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label width="150px" value="退款金额:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<doublebox id="amount"
+								value="@{saction.ordRefundment.amountYuanStr}" constraint="/^[0-9]*$/:仅允许输入数字;">
+							</doublebox>
+							<button label="计算" onClick="computeAmount()"></button>
+						</hbox>
+						<hbox>
+							<label width="100px" value="违约金:" />
+						</hbox>
+						<hbox>
+							<doublebox id="penaltyAmount" value="@{saction.ordRefundment.penaltyAmountYuanStr}" disabled="@{saction.penaltyAmountFlag}"
+								constraint="/^[0-9]*$/:仅允许输入数字;">
+							</doublebox>
+						</hbox>
+						<hbox>
+							<label width="150px" value="退款类型:" />
+						</hbox>
+						<hbox>
+							<label id="refundType" value="@{saction.ordRefundment.refundTypeName}"></label>
+						</hbox>
+					</row>
+					<row spans="1,5">
+						<hbox>
+							<label value="退款要求及备注:" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox id="ord_applyContent" rows="5"
+								maxlength="200" value="@{saction.ordRefundment.memo}" width="680px" constraint="no empty:退款要求及备注不允许为空">
+							</textbox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<textbox id="btnPayTotal" value="@{saction.historyOrderDetail.actualPayYuan}" visible="false"/>
+		<textbox id="btnRefundedAmount" value="@{saction.historyOrderDetail.refundedAmountYuan}" visible="false"/>
+		<toolbar align="center">
+			<button id="save" width="100px" label="提交"
+				onClick="chk_value();">
+				<custom-attributes
+					saleServiceId="${saction.saleServiceId}" />
+				<custom-attributes sysCode="@{saction.sysCode}" />
+			</button>
+			<button label="关闭窗口" width="100px"
+				onClick="win_refund_update.detach()">
+			</button>
+			
+			<button label="转投诉" width="100px" visible="@{saction.showComplaint}"
+				onClick="saction.updateOrdSaleServiceType();win_refund_update.detach();">
+			</button>
+		</toolbar>
+		<zscript>
+			public void chk_value() {
+				if (amount.getValue() == "" || null == amount.getValue()) {
+						alert("请填写退款单中的退款金额!");
+						return;
+				}
+
+				if (null == ord_applyContent.getValue() || ord_applyContent.getValue() == "") {
+						alert("请填写退款单中的退款要求及备注!");
+						return;
+				}
+				saction.updateRefundMent(refundType.getValue());
+				win_refund_update.detach();
+			}
+			
+			// 计算
+			public void computeAmount(){
+				Double amountValue = saction.computeAmount(refundType.getValue());
+				amount.setValue(amountValue);
+			}
+		</zscript>
+	</window>
+</zk>

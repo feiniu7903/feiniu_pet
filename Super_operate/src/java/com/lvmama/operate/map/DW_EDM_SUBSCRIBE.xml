@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="EDM_SUBSCRIBE" >
+	<typeAlias alias="edm" type="com.lvmama.comm.pet.po.edm.EdmSubscribe"/>
+	<resultMap  id="edmSubscribe" class="com.lvmama.comm.pet.po.edm.EdmSubscribe">
+		<result  column="ID" 			property="id"/>
+		<result  column="EMAIL" 		property="email"/>
+		<result  column="PROVINCE" 		property="province"/>
+		<result  column="CITY" 			property="city"/>
+		<result  column="CREATE_DATE" 	property="createDate"/>
+		<result  column="TYPE_NAME"		property="typeName"/>
+	</resultMap>	
+	<sql id="subQueryId">
+	SELECT A.*, ROWNUM RN
+    FROM (
+			SELECT E.ID,
+			       E.EMAIL,
+			       P.PROVINCE_NAME PROVINCE,
+			       C.CITY_NAME CITY,
+			       E.CREATE_DATE,
+			       (SELECT LISTAGG(C.ITEM_NAME, ',') WITHIN GROUP(ORDER BY I.ID) TYPE_NAME
+			          FROM LVMM_LAND.S_EDM_SUBSCRIBE_INFO I, LVMM_LAND.S_COM_CODE C
+			         WHERE I.TYPE = C.ITEM_CODE
+			           AND C.VALID_FLAG = 'Y'
+			           AND I.IS_VALID = 'Y'
+			           AND I.CANCEL_DATE IS NULL
+			           AND I.EDM_USER_ID = E.ID) TYPE_NAME
+			  FROM LVMM_LAND.S_EDM_SUBSCRIBE E,
+			       LVMM_LAND.S_COM_PROVINCE  P,
+			       LVMM_LAND.S_COM_CITY      C
+			 WHERE E.PROVINCE = P.PROVINCE_ID(+)
+			   AND E.CITY = C.CITY_ID(+)
+			   AND NOT EXISTS
+			 (SELECT 1 FROM LVMM_LAND.PT_USER_USER U WHERE U.EMAIL = E.EMAIL)
+		 <dynamic>
+		 	<isNotNull prepend=" AND " property="email"> E.EMAIL LIKE '%$email$%'</isNotNull>
+		 	<isNotNull prepend=" AND " property="type">  
+		 	(SELECT WMSYS.WM_CONCAT(I.TYPE) TYPE
+	          FROM LVMM_LAND.S_EDM_SUBSCRIBE_INFO I
+	         WHERE I.IS_VALID = 'Y'
+	           AND I.CANCEL_DATE IS NULL
+	           AND I.EDM_USER_ID = E.ID) LIKE '%$type$%'
+           </isNotNull>
+		 	<isNotNull prepend=" AND " property="beginCreateDate"> E.CREATE_DATE &gt;= TRUNC(#beginCreateDate#)</isNotNull>
+		 	<isNotNull prepend=" AND " property="endCreateDate">   E.CREATE_DATE &lt; TRUNC(#endCreateDate#+1)</isNotNull>
+		 </dynamic>
+		 ORDER BY CREATE_DATE DESC
+		 ) A  WHERE A.TYPE_NAME IS NOT NULL
+	</sql>
+	<select id="query"  parameterClass="java.util.Map" resultMap="edmSubscribe">
+		SELECT * 
+		  FROM (<include refid="subQueryId"/>) A
+		 <dynamic prepend=" WHERE ">
+		 	<isNotNull prepend=" AND " property="_endRow">A.RN &lt;= #_endRow# </isNotNull>
+		 	<isNotNull prepend=" AND " property="_startRow">A.RN &gt;= #_startRow# </isNotNull>
+		 </dynamic>
+	</select>
+	<select id="count" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		SELECT COUNT(*) 
+		  FROM (<include refid="subQueryId"/>) A
+	</select>
+</sqlMap>

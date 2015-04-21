@@ -1,0 +1,325 @@
+<?page title="订单审核" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./approveDetailOrder"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<?component name="lvmama_product" macroURI="/macors/product.zul"?>
+
+
+<zk>
+<window id="approveDetailOrder" border="none" apply="com.lvmama.back.web.ord.approve.ApproveDetailOrderAction">
+<script type="text/javascript">
+	 <![CDATA[  
+function window_open(productId) {
+	window.open("/super_back/phoneOrder/showImportantTipTabs.do?pageId="+productId+"&needJquery=true");
+}	]]>       
+	</script>
+<grid >
+			<rows>
+				<row>	
+					<cell width="55px">订单号</cell>
+					<cell><label  value="@{saction.ordOrder.orderId}" /></cell>
+					<cell width="55px">下单时间</cell>
+					<cell><label value="@{saction.ordOrder.createTime}" /></cell>
+					<cell width="55px">应付总额</cell>
+					<cell><label  value="@{saction.ordOrder.oughtPayYuan}" /></cell>
+					<cell width="60px">实付总额</cell>
+					<cell><label value="@{saction.ordOrder.actualPayYuan}" /></cell>
+				</row>
+				
+				
+				<row>	
+					<cell width="55px">支付状态</cell>
+					<cell>
+						<label value="@{saction.ordOrder.paymentStatus,converter='com.lvmama.back.utils.CodesetZKConverter'}" >
+							<custom-attributes codeset="PAYMENT_STATUS"/>
+						</label>
+					</cell>
+					<cell width="55px">支付方式</cell>
+					<cell>
+						<label value="@{saction.ordOrder.pay.paymentType,converter='com.lvmama.back.utils.CodesetZKConverter'}" >
+							<custom-attributes codeset="PAYMENT_TYPE"/>	
+						</label>
+					</cell>
+					<cell width="55px">支付渠道</cell>
+					<cell>
+						<label value="@{saction.ordOrder.pay.paymentGateway,converter='com.lvmama.back.utils.CodesetZKConverter'}" >
+							<custom-attributes codeset="PAYMENT_GATEWAY"/>	
+						</label>
+					</cell>
+					<cell>商品交易号</cell>
+					<cell ><label value="${saction.ordOrder.pay.gatewayTradeNo}" /></cell>
+				</row>
+				
+				<row spans="1,5,1,1">	
+					<cell>用户备注</cell>
+					<cell>
+						<label value="@{saction.ordOrder.userMemo}" />
+					</cell>
+					<cell>游玩时间</cell>
+					<cell>
+						<datebox id="visitTime" if="${arg.action=='approveOrder' || arg.action=='approveResource'}" 
+								value="@{saction.ordOrder.visitTime}" />
+						
+						<label if="${arg.action != 'approveOrder' &amp;&amp; arg.action !=  'approveResource'}" 
+								value="@{saction.ordOrder.visitTime,converter='com.lvmama.back.utils.DateZKConverter'}" />
+					</cell>
+				</row>
+				
+				<row spans="1,1,1,3,2">	
+					<cell>支付等待时间</cell>
+					<cell>
+						<listbox mold="select" visible="false">
+							
+						</listbox>
+						
+						<listbox if="${saction.ordOrder.orderStatus=='NORMAL' }" mold="select" selectedItem="@{saction.ordOrder.waitPayment}">
+							<listitem label="30分钟" value="${30}"/>
+							<listitem label="1小时" value="${60}"/>
+							<listitem label="24小时" value="${1440}"/>
+							<listitem label="2天" value="${2880}"/>
+						</listbox>
+						
+						<label if="${saction.ordOrder.orderStatus=='CANCEL' }"  value="@{saction.ordOrder.waitPayment,converter='com.lvmama.back.utils.CodesetZKConverter'}" >
+							<custom-attributes codeset="WAIT_PAYMENT"/>
+						</label>
+					</cell>
+					<cell>用户反馈</cell>
+					<cell>
+						<textbox rows="3" width="100%" maxlength="4000" value="@{saction.ordOrder.userReply}" />
+					</cell>
+					<cell>
+						<button label="保存" width="100px" onClick="saction.updateOrder()"/>
+					</cell>
+					
+				</row>
+				
+			</rows>
+</grid>
+<button visible="false" id="refresh" />
+	<listbox  multiple="true" model ="@{saction.ordOrder.ordOrderItemProds,load-after='refresh.onClick' }">
+		<listhead>
+			<listheader label="订单商品" width="13%"/>
+			<listheader label="游玩时间" width="15%" />
+			<listheader label="采购产品" width="15%" />
+			<listheader label="商品单价" width="7%"/>
+			<listheader label="数量" width="5%"/>
+			<listheader label="总金额" width="5%"/>
+			<listheader label="采购供应商" width="10%" />
+				
+			<listheader label="产品类型" width="8%" />
+			<listheader label="传真备注" width="200px"/>
+			<listheader label="资源状态" width="150px" if="${arg.action=='approveResource' }"/>
+			<listheader label="资源状态" width="150px" if="${arg.action=='approveOrder' }"/>
+			<listheader label="操作" width="60px"/>
+
+		</listhead>
+		<listitem self="@{each=item}">
+			<listcell>
+				<a label="@{item.productName}" style="color:blue">
+					<custom-attributes productId="@{item.productId}" />	
+					<custom-attributes productType="@{item.productType}" />			
+					<attribute name="onClick">       
+				     <![CDATA[       
+				         Clients.evalJavaScript("window_open("+self.getAttribute("productId")+");");   
+				     ]]>       
+				     </attribute>		
+				</a>
+			</listcell>
+			
+			<listcell span="2">
+				<grid model ="@{item.ordOrderItemMetas }" style="border:none;">
+					<rows >
+						<row height="25px" self="@{each=row1}">
+							<label value="@{row1.visitTime,converter='com.lvmama.back.utils.DateZKConverter'}" />
+							
+							<label value="@{row1.productName}" />
+						</row>
+					</rows>
+				</grid>
+				
+			</listcell>
+			
+			<listcell label="@{item.priceYuan}" />
+			<listcell label="@{item.quantity}" />
+			<listcell label="@{item.amountYuan}" />
+			<listcell >
+				<grid model ="@{item.ordOrderItemMetas }" style="border:0">
+					<rows>
+						<row height="25px" self="@{each=row2}">
+							<label value="@{row2.supplier.supplierName}" />
+						</row>
+					</rows>
+				</grid>
+			</listcell>
+			
+			<listcell label="@{item.productType,converter='com.lvmama.back.utils.CodesetZKConverter'}" >
+				<custom-attributes codeset="PRODUCT_TYPE"/>
+			</listcell>
+			
+			<listcell >
+				<grid  model ="@{item.ordOrderItemMetas }" style="border:0">
+					<rows  >
+						<row height="25px" self="@{each=row3}"> <cell>
+							<textbox maxlength="1000" value="@{row3.faxMemo}" />
+							<a style="color:blue" label="保存" onClick='saction.saveFaxMemo(self)'>
+								<custom-attributes ordOrderItemMeta="@{row3 }"/>
+							</a>
+							
+						</cell></row>
+					</rows>
+				</grid>
+			</listcell>
+			
+			<listcell if="${arg.action=='approveResource' }">
+				<grid  model ="@{item.ordOrderItemMetas }" style="border:0">
+					<rows  >
+						<row height="25px" self="@{each=row}"> <cell>
+							<listbox mold="select" visible="@{row.resourceConfirm}" selectedItem="@{row.resourceStatus}">
+								<listitem label="资源满足" value="AMPLE" />
+								<listitem label="资源不满足" value="LACK" />
+							</listbox>
+						</cell></row>
+					</rows>
+				</grid>
+				
+				
+			</listcell>
+			
+			<listcell if="${arg.action=='approveOrder' }">
+				<grid  model ="@{item.ordOrderItemMetas }" style="border:0">
+					<rows  >
+						<row height="25px" self="@{each=row}"> <cell>
+							<label value="@{row.resourceStatus,converter='com.lvmama.back.utils.CodesetZKConverter'}" >
+								<custom-attributes codeset="RESOURCE_STATUS"/>
+							</label>
+						</cell></row>
+					</rows>
+				</grid>
+				
+				
+			</listcell>
+			
+			<listcell >
+					<a style="color:blue" label="删除" onClick='saction.deleteProduct(self)' if="${arg.action=='approveOrder' }">
+							<custom-attributes item="@{item}"/>
+					</a>
+			</listcell>
+		</listitem>
+	</listbox>
+	
+	<grid if="${arg.action=='approveOrder' }">
+	<rows>
+		<row>
+			<cell width="100px">选择销售产品</cell>
+			<cell width="250px">
+				<label value="@{ordOrderItemProd.productName }" />
+				<longbox id="productId" visible="false" value="@{saction.ordOrderItemProd.productId }"/>
+				<lvmama_product />
+			</cell>
+			<cell width="50px">数量</cell>
+			<cell><longbox value="@{saction.ordOrderItemProd.quantity }" constraint="no empty:数量不能为空" /></cell>
+			<cell>
+				 <button id="doAdd" label="新增"  onClick="saction.addProduct()"/>
+			</cell>
+		</row>
+	</rows>
+</grid>
+
+	<groupbox style="border: none;">
+		<caption label="订单备注信息:" />
+		<grid >
+			<rows>
+				<row>	
+					<cell>
+						<button id="refreshButton" visible="false" onClick="saction.refreshMemos()"/>
+						<listbox  multiple="true" model ="@{saction.orderMemoList,load-after='refreshButton.onClick' }">
+							<listhead>
+								<listheader width="150px"></listheader>
+								<listheader></listheader>
+								<listheader></listheader>
+							</listhead>
+							<listitem self="@{each=row}" >
+								<listcell label="@{row.type,converter='com.lvmama.back.utils.CodesetZKConverter' }">
+									<custom-attributes codeset="ORD_MEMO_TYPE"/>
+								</listcell>
+								<listcell label="@{row.content }"/>
+								<listcell >
+									<a style="color:blue" label="修改" onClick='saction.preUpdate(self);'>
+										<custom-attributes memo="@{row}"/>
+									</a>
+									<a style="color:blue" label="删除" onClick='saction.delete(self)'>
+										<custom-attributes memoId="@{row.memoId}"/>
+									</a>
+								</listcell>
+							</listitem>
+						</listbox>
+						
+			<grid >
+					<columns>
+					<column width="100px" />
+					<column width="200px" />
+					<column width="100px" />
+					<column />
+					<column width="150px" />
+				</columns>
+			<rows>
+				
+				<row>	
+					<cell >备注类别：
+					</cell>
+					<cell >
+						<listbox id="type" codeset="ORD_MEMO_TYPE"
+							mold="select" selectedItem="@{saction.ordOrderMemo.type}" />
+					</cell>
+					<cell >备注内容：
+					</cell>
+					<cell>
+						<textbox id="editContent" rows="5" width="350px" maxlength="4000"
+							value="@{saction.ordOrderMemo.content }" />
+					</cell>
+					
+					<cell>
+						<button label="保存"  id="insert" width="100px" onClick='saction.insert()' />
+						<button label="修改"  id="update" width="100px" onClick='saction.update()' visible="false"/>
+ 						
+					</cell>
+				</row>
+				
+			</rows>
+			</grid>
+					</cell>
+					
+				</row>
+			</rows>
+		</grid>
+		
+	</groupbox>
+	<groupbox style="border:none;">
+		<caption label="订单支付流水信息:" />
+		<listbox id="box" fixedLayout="true"
+		model="@{saction.ordPaymentList,load-after='refreshPayInfo.onClick'}">
+		<listhead>
+			<listheader label="交易流水号" />
+			<listheader label="支付网关" />
+			<listheader label="交易金额" />
+			<listheader label="支付状态" />
+			<listheader label="错误信息" />
+			<listheader label="创建时间" />			
+		</listhead>
+		<listitem self="@{each='pay'}"  height="20px">
+			<listcell label="@{pay.serial}" />
+			<listcell label="@{pay.payWayZh}"/>
+			<listcell label="@{pay.amount}"/>
+			<listcell label="@{pay.statusZh}"/>
+			<listcell label="@{pay.callbackInfo}"></listcell>
+			<listcell>
+			<label value="@{pay.createTime}"></label>
+			</listcell>
+			</listitem>
+			</listbox>
+
+		</groupbox>
+		<button label="刷新订单支付信息" onClick="saction.loadOrdPaymentList()" id="refreshPayInfo"></button>
+		<button if="${!saction.ordOrder.paymentSucc}" label="立即电话支付" onClick="saction.phonePay();"></button>
+		
+</window>
+</zk>

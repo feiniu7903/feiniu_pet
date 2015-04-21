@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="EBK_PROD_TIME_PRICE" >
+
+  <typeAlias alias="ebkProdTimePriceDO" type="com.lvmama.comm.bee.po.ebooking.EbkProdTimePrice" />
+
+  <resultMap id="ebkProdTimePriceDOResultMapBase" class="ebkProdTimePriceDO" >
+    <result property="timePriceId" column="TIME_PRICE_ID" />
+    <result property="specDate" column="SPEC_DATE" />
+    <result property="productId" column="PRODUCT_ID" />
+    <result property="prodBranchId" column="PROD_BRANCH_ID" />
+    <result property="price" column="PRICE" />
+    <result property="marketPrice" column="MARKET_PRICE" />
+    <result property="settlementPrice" column="SETTLEMENT_PRICE" />
+    <result property="dayStock" column="DAY_STOCK" />
+    <result property="resourceConfirm" column="RESOURCE_CONFIRM" />
+    <result property="overSale" column="OVER_SALE" />
+    <result property="stockType" column="STOCK_TYPE" />
+    <result property="aheadHour" column="AHEAD_HOUR" />
+    <result property="cancelStrategy" column="CANCEL_STRATEGY" />
+    <result property="forbiddenSell" column="FORBIDDEN_SELL" />
+    <result property="breakfastCount" column="BREAKFAST_COUNT" />
+    <result property="operateStatus" column="OPERATE_STATUS" />
+  </resultMap>
+  
+    <resultMap id="ebkVirtualProdTimePriceDOResultMapBase" class="ebkProdTimePriceDO" >
+    <result property="timePriceId" column="TIME_PRICE_ID" />
+    <result property="specDate" column="SPEC_DATE" />
+    <result property="productId" column="PRODUCT_ID" />
+    <result property="prodBranchId" column="PROD_BRANCH_ID" />
+    <result property="marketPrice" column="MARKET_PRICE" />
+    <result property="settlementPrice" column="SETTLEMENT_PRICE" />
+    <result property="dayStock" column="DAY_STOCK" />
+    <result property="resourceConfirm" column="RESOURCE_CONFIRM" />
+    <result property="overSale" column="OVER_SALE" />
+    <result property="stockType" column="STOCK_TYPE" />
+    <result property="aheadHour" column="AHEAD_HOUR" />
+    <result property="cancelStrategy" column="CANCEL_STRATEGY" />
+    <result property="forbiddenSell" column="FORBIDDEN_SELL" />
+    <result property="breakfastCount" column="BREAKFAST_COUNT" />
+    <result property="operateStatus" column="OPERATE_STATUS" />
+  </resultMap>
+  
+  <sql id="ebkProdTimePrice_columns" >
+    a1.TIME_PRICE_ID, a1.SPEC_DATE, a1.PRODUCT_ID, a1.PROD_BRANCH_ID, a1.PRICE, a1.MARKET_PRICE, 
+      a1.SETTLEMENT_PRICE, a1.DAY_STOCK, a1.RESOURCE_CONFIRM, a1.OVER_SALE, a1.STOCK_TYPE, 
+      a1.AHEAD_HOUR, a1.CANCEL_STRATEGY, a1.FORBIDDEN_SELL, a1.BREAKFAST_COUNT,a1.OPERATE_STATUS
+  </sql>
+
+  <sql id="ebkProdTimePrice_do_columns" >
+    a1.TIME_PRICE_ID, a1.SPEC_DATE, a1.PRODUCT_ID, a1.PROD_BRANCH_ID, a1.PRICE, a1.MARKET_PRICE, 
+      a1.SETTLEMENT_PRICE, a1.DAY_STOCK, a1.RESOURCE_CONFIRM, a1.OVER_SALE, a1.STOCK_TYPE, 
+      a1.AHEAD_HOUR, a1.CANCEL_STRATEGY, a1.FORBIDDEN_SELL, a1.BREAKFAST_COUNT,a1.OPERATE_STATUS
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="timePriceId" prepend="AND" >
+        <![CDATA[  
+        TIME_PRICE_ID = #timePriceId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="specDate" prepend="AND" >
+        <![CDATA[  
+        SPEC_DATE = #specDate#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodBranchId" prepend="AND" >
+        <![CDATA[  
+        PROD_BRANCH_ID = #prodBranchId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="price" prepend="AND" >
+        <![CDATA[  
+        PRICE = #price#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="marketPrice" prepend="AND" >
+        <![CDATA[  
+        MARKET_PRICE = #marketPrice#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="settlementPrice" prepend="AND" >
+        <![CDATA[  
+        SETTLEMENT_PRICE = #settlementPrice#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="dayStock" prepend="AND" >
+        <![CDATA[  
+        DAY_STOCK = #dayStock#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="resourceConfirm" prepend="AND" >
+        <![CDATA[  
+        RESOURCE_CONFIRM = #resourceConfirm#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="overSale" prepend="AND" >
+        <![CDATA[  
+        OVER_SALE = #overSale#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="stockType" prepend="AND" >
+        <![CDATA[  
+        STOCK_TYPE = #stockType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="aheadHour" prepend="AND" >
+        <![CDATA[  
+        AHEAD_HOUR = #aheadHour#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="cancelStrategy" prepend="AND" >
+        <![CDATA[  
+        CANCEL_STRATEGY = #cancelStrategy#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="forbiddenSell" prepend="AND" >
+        <![CDATA[  
+        FORBIDDEN_SELL = #forbiddenSell#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="operateStatus" prepend="AND" >
+        <![CDATA[  
+        OPERATE_STATUS = #operateStatus#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <sql id="findListByParamsSql">
+  	<include refid="queryParams"/>
+    <dynamic>
+      <isNotNull property="beginDate" prepend="AND">
+      	 <![CDATA[  
+        TRUNC(SPEC_DATE) >= TRUNC(#beginDate#)  
+        ]]>
+      </isNotNull>
+      <isNotNull property="endDate" prepend="AND">
+      	 <![CDATA[  
+        TRUNC(SPEC_DATE) <= TRUNC(#endDate#)
+        ]]>
+      </isNotNull>
+      <isNotNull property="prodBranchIds" prepend="AND">
+      	PROD_BRANCH_ID IN 
+      	<iterate property="prodBranchIds" conjunction="," open="(" close=")">
+              #prodBranchIds[]#
+          </iterate>
+      </isNotNull>
+      <isNotNull property="notInTimePriceIds" prepend="AND">
+      	TIME_PRICE_ID NOT IN 
+      	<iterate property="notInTimePriceIds" conjunction="," open="(" close=")">
+              #notInTimePriceIds[]#
+          </iterate>
+      </isNotNull>
+    </dynamic> 
+    <isNotEmpty property="orderby">
+			ORDER BY $orderby$
+			<isNotEmpty property="order">
+				$order$
+			</isNotEmpty>
+	</isNotEmpty>
+  </sql>
+  <insert id="insert" parameterClass="ebkProdTimePriceDO" >
+  	<selectKey keyProperty="timePriceId" resultClass="java.lang.Long" >
+      SELECT EBK_PROD_TIME_PRICE_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO EBK_PROD_TIME_PRICE( TIME_PRICE_ID, SPEC_DATE, PRODUCT_ID, PROD_BRANCH_ID, PRICE, MARKET_PRICE, 
+      SETTLEMENT_PRICE, DAY_STOCK, RESOURCE_CONFIRM, OVER_SALE, STOCK_TYPE,
+      AHEAD_HOUR, CANCEL_STRATEGY, FORBIDDEN_SELL,BREAKFAST_COUNT,OPERATE_STATUS )
+     VALUES ( #timePriceId#, #specDate#, #productId#, #prodBranchId#, #price#, #marketPrice#, 
+      #settlementPrice#, #dayStock#, #resourceConfirm#, #overSale#, #stockType#, 
+      #aheadHour#, #cancelStrategy#, #forbiddenSell#,#breakfastCount#,#operateStatus#)
+  </insert>
+
+  <update id="update" parameterClass="ebkProdTimePriceDO" >
+    UPDATE EBK_PROD_TIME_PRICE   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="timePriceId" prepend="," >
+        <![CDATA[  
+        TIME_PRICE_ID = #timePriceId#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="specDate" prepend="," >
+        <![CDATA[  
+        SPEC_DATE = #specDate#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="," >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodBranchId" prepend="," >
+        <![CDATA[  
+        PROD_BRANCH_ID = #prodBranchId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="price" prepend="," >
+        <![CDATA[  
+        PRICE = #price#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="marketPrice" prepend="," >
+        <![CDATA[  
+        MARKET_PRICE = #marketPrice#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="settlementPrice" prepend="," >
+        <![CDATA[  
+        SETTLEMENT_PRICE = #settlementPrice#  
+        ]]>  
+      </isNotNull>
+       <isNotNull property="dayStock" prepend="," >
+        <![CDATA[  
+        DAY_STOCK = #dayStock#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="stockType" prepend="," >
+        <![CDATA[  
+        STOCK_TYPE = #stockType#
+        ]]>  
+      </isNotNull>
+      <isNotNull property="resourceConfirm" prepend="," >
+        <![CDATA[  
+        RESOURCE_CONFIRM = #resourceConfirm#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="overSale" prepend="," >
+        <![CDATA[  
+        OVER_SALE = #overSale#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="aheadHour" prepend="," >
+        <![CDATA[  
+        AHEAD_HOUR = #aheadHour#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="cancelStrategy" prepend="," >
+        <![CDATA[  
+        CANCEL_STRATEGY = #cancelStrategy#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="forbiddenSell" prepend="," >
+        <![CDATA[  
+        FORBIDDEN_SELL = #forbiddenSell#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="breakfastCount" prepend="," >
+        <![CDATA[  
+        BREAKFAST_COUNT = #breakfastCount#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="operateStatus" prepend="," >
+        <![CDATA[  
+        OPERATE_STATUS = #operateStatus#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE TIME_PRICE_ID = #timePriceId#  
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="ebkProdTimePriceDOResultMapBase" >
+     SELECT 
+    <include refid="ebkProdTimePrice_do_columns" />
+    <![CDATA[  
+     FROM EBK_PROD_TIME_PRICE a1 WHERE TIME_PRICE_ID = #timePriceId#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_TIME_PRICE WHERE TIME_PRICE_ID = #timePriceId#
+    ]]>  
+  </delete>
+
+  <select id="countByDOExample" parameterClass="ebkProdTimePriceDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(TIME_PRICE_ID) AS num FROM EBK_PROD_TIME_PRICE 
+    <include refid="queryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="ebkProdTimePriceDOResultMapBase" parameterClass="ebkProdTimePriceDO" >
+     SELECT 
+    <include refid="ebkProdTimePrice_do_columns" />
+     FROM EBK_PROD_TIME_PRICE a1 
+    <include refid="queryParams" />
+  </select>
+  
+   <select id="findListByTermOrderByDateASC" resultMap="ebkProdTimePriceDOResultMapBase" parameterClass="ebkProdTimePriceDO" >
+     SELECT 
+    <include refid="ebkProdTimePrice_do_columns" />
+     FROM EBK_PROD_TIME_PRICE a1 
+    <include refid="queryParams" />
+     ORDER BY a1.SPEC_DATE ASC
+  </select>
+  
+  <select id="findListByParams" resultMap="ebkProdTimePriceDOResultMapBase" parameterClass="map" >
+     SELECT 
+    <include refid="ebkProdTimePrice_do_columns" />
+     FROM EBK_PROD_TIME_PRICE a1 
+    <include refid="findListByParamsSql" />
+  </select>
+  
+   <select id="queryMetaAndProdTimePrice" resultMap="ebkProdTimePriceDOResultMapBase" parameterClass="map" >
+    SELECT NULL TIME_PRICE_ID,
+	       M.SPEC_DATE,
+	       B.PROD_PRODUCT_ID PRODUCT_ID,
+	       B.PROD_BRANCH_ID,
+	       P.PRICE,
+	       M.MARKET_PRICE,
+	       M.SETTLEMENT_PRICE,
+	       M.DAY_STOCK,
+	       M.RESOURCE_CONFIRM,
+	       M.OVER_SALE,
+	       NULL STOCK_TYPE,
+	       M.AHEAD_HOUR,
+	       M.CANCEL_STRATEGY,
+	       NULL FORBIDDEN_SELL,
+	       M.BREAKFAST_COUNT,
+	       NULL OPERATE_STATUS
+	  FROM EBK_PROD_BRANCH B, META_TIME_PRICE M, PROD_TIME_PRICE P
+	 WHERE B.META_PROD_BRANCH_ID = M.META_BRANCH_ID
+	   AND B.PROD_PRODUCT_BRANCH_ID = P.PROD_BRANCH_ID
+	   AND TRUNC(M.SPEC_DATE) = TRUNC(P.SPEC_DATE)
+	   <dynamic>
+	   		<isNotNull prepend=" AND " property="prodBranchId"> B.PROD_BRANCH_ID = #prodBranchId#</isNotNull>
+	   		<isNotNull prepend=" AND " property="beginDate"> M.SPEC_DATE >= #beginDate#</isNotNull>
+	   		<isNotNull prepend=" AND " property="endDate"> TRUNC(M.SPEC_DATE) &lt;= TRUNC(#endDate#)</isNotNull>
+	   		<isNotNull prepend=" AND " property="beginDate"> P.SPEC_DATE >= #beginDate#</isNotNull>
+	   		<isNotNull prepend=" AND " property="endDate"> TRUNC(P.SPEC_DATE) &lt;= TRUNC(#endDate#)</isNotNull>
+	   		<isNotNull prepend=" AND " property="superProdBranchId"> P.PROD_BRANCH_ID = #prodBranchId#</isNotNull>
+	   </dynamic>
+  </select>
+  
+   <select id="queryMetaTimePrice" resultMap="ebkVirtualProdTimePriceDOResultMapBase" parameterClass="map" >
+    SELECT NULL TIME_PRICE_ID,
+	       M.SPEC_DATE,
+	       B.PROD_PRODUCT_ID PRODUCT_ID,
+	       B.PROD_BRANCH_ID,
+	       M.MARKET_PRICE,
+	       M.SETTLEMENT_PRICE,
+	       M.DAY_STOCK,
+	       M.RESOURCE_CONFIRM,
+	       M.OVER_SALE,
+	       NULL STOCK_TYPE,
+	       M.AHEAD_HOUR,
+	       M.CANCEL_STRATEGY,
+	       NULL FORBIDDEN_SELL,
+	       M.BREAKFAST_COUNT,
+	       NULL OPERATE_STATUS
+	  FROM EBK_PROD_BRANCH B, META_TIME_PRICE M 
+	 WHERE B.META_PROD_BRANCH_ID = M.META_BRANCH_ID
+	   <dynamic>
+	   		<isNotNull prepend=" AND " property="prodBranchId"> B.PROD_BRANCH_ID = #prodBranchId#</isNotNull>
+	   		<isNotNull prepend=" AND " property="beginDate"> M.SPEC_DATE >= #beginDate#</isNotNull>
+	   		<isNotNull prepend=" AND " property="endDate"> TRUNC(M.SPEC_DATE) &lt;= TRUNC(#endDate#)</isNotNull>
+	   </dynamic>
+  </select>
+  <select id="queryRelationProductTimePrice" resultMap="ebkProdTimePriceDOResultMapBase" parameterClass="map" >
+    SELECT NULL               TIME_PRICE_ID,
+	       M.SPEC_DATE,
+	       P.PRODUCT_ID,
+	       B.PROD_BRANCH_ID,
+	       P.PRICE,
+	       M.MARKET_PRICE,
+	       M.SETTLEMENT_PRICE,
+	       M.DAY_STOCK,
+	       M.RESOURCE_CONFIRM,
+	       M.OVER_SALE,
+	       NULL               STOCK_TYPE,
+	       M.AHEAD_HOUR,
+	       M.CANCEL_STRATEGY,
+	       NULL               FORBIDDEN_SELL,
+	       M.BREAKFAST_COUNT,
+	       NULL               OPERATE_STATUS
+	  FROM PROD_PRODUCT_BRANCH_ITEM B, META_TIME_PRICE M, PROD_TIME_PRICE P
+	 WHERE B.META_BRANCH_ID = M.META_BRANCH_ID
+	   AND B.PROD_BRANCH_ID = P.PROD_BRANCH_ID
+	   AND TRUNC(M.SPEC_DATE) = TRUNC(P.SPEC_DATE)
+	   <dynamic>
+	   		<isNotNull prepend=" AND " property="prodBranchId"> B.PROD_BRANCH_ID = #prodBranchId#</isNotNull>
+	   		<isNotNull prepend=" AND " property="beginDate"> M.SPEC_DATE >= #beginDate#</isNotNull>
+	   		<isNotNull prepend=" AND " property="endDate"> TRUNC(M.SPEC_DATE) &lt;= TRUNC(#endDate#)</isNotNull>
+	   		<isNotNull prepend=" AND " property="beginDate"> P.SPEC_DATE >= #beginDate#</isNotNull>
+	   		<isNotNull prepend=" AND " property="endDate"> TRUNC(P.SPEC_DATE) &lt;= TRUNC(#endDate#)</isNotNull>
+	   		<isNotNull prepend=" AND " property="superProdBranchId"> P.PROD_BRANCH_ID = #superProdBranchId#</isNotNull>
+	   </dynamic>
+  </select>
+  <sql id="updateparams">
+  	WHERE
+    <dynamic prepend=" ">
+    	<isNotNull property="productId" prepend=" AND " >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodBranchId" prepend=" AND " >
+        <![CDATA[  
+        PROD_BRANCH_ID = #prodBranchId#  
+        ]]>  
+      </isNotNull>
+    	<isNotNull property="beginDate" prepend="AND">
+      	<![CDATA[  
+        TRUNC(SPEC_DATE) >= TRUNC(#beginDate#)  
+        ]]>
+      </isNotNull>
+      <isNotNull property="endDate" prepend="AND">
+      	 <![CDATA[  
+         TRUNC(SPEC_DATE) <= TRUNC(#endDate#) 
+         ]]>
+      </isNotNull>
+      <isNotNull property="dates" prepend="AND">
+      	TRUNC(SPEC_DATE) IN 
+      	<iterate property="dates" conjunction="," open="(" close=")">
+              TRUNC(#dates[]#)
+          </iterate>
+      </isNotNull>
+      <isNotNull property="week" prepend="AND">
+      	TO_CHAR(SPEC_DATE,'D') IN 
+      	<iterate property="week" conjunction="," open="(" close=")">
+              #week[]#
+          </iterate>
+      </isNotNull>
+      <isNotNull property="prodBranchIds" prepend="AND">
+      	PROD_BRANCH_ID IN 
+      	<iterate property="prodBranchIds" conjunction="," open="(" close=")">
+              #prodBranchIds[]#
+          </iterate>
+      </isNotNull>
+      <isNotNull property="notInTimePriceIds" prepend="AND">
+      	TIME_PRICE_ID NOT IN 
+      	<iterate property="notInTimePriceIds" conjunction="," open="(" close=")">
+              #notInTimePriceIds[]#
+          </iterate>
+      </isNotNull>
+      <isNotNull property="operateStatus" prepend=" AND " >
+        <![CDATA[  
+        OPERATE_STATUS = #operateStatus#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+  <update id="updateByParams" parameterClass="map">
+  	UPDATE EBK_PROD_TIME_PRICE   
+    <dynamic prepend="SET" >
+      <isNotNull property="price" prepend="," >
+        <![CDATA[  
+        PRICE = #price#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="marketPrice" prepend="," >
+        <![CDATA[  
+        MARKET_PRICE = #marketPrice#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="settlementPrice" prepend="," >
+        <![CDATA[  
+        SETTLEMENT_PRICE = #settlementPrice#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="resourceConfirm" prepend="," >
+        <![CDATA[  
+        RESOURCE_CONFIRM = #resourceConfirm#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="overSale" prepend="," >
+        <![CDATA[  
+        OVER_SALE = #overSale#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="dayStock" prepend="," >
+        <![CDATA[  
+        DAY_STOCK = #dayStock#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="stockType" prepend="," >
+        <![CDATA[  
+        STOCK_TYPE = #stockType#
+        ]]>  
+      </isNotNull>
+      <isNotNull property="aheadHour" prepend="," >
+        <![CDATA[  
+        AHEAD_HOUR = #aheadHour#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="cancelStrategy" prepend="," >
+        <![CDATA[  
+        CANCEL_STRATEGY = #cancelStrategy#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="forbiddenSell" prepend="," >
+        <![CDATA[  
+        FORBIDDEN_SELL = #forbiddenSell#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="breakfastCount" prepend="," >
+        <![CDATA[  
+        BREAKFAST_COUNT = #breakfastCount#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="operateStatus" prepend="," >
+        <![CDATA[  
+        OPERATE_STATUS = #operateStatus#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+    <include refid="updateparams"/>
+  </update>
+  <delete id="deleteByParams" parameterClass="map">
+  	DELETE FROM EBK_PROD_TIME_PRICE   <include refid="updateparams"/>
+  </delete>
+  
+</sqlMap>

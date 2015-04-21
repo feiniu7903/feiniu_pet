@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROCEED_TOURS">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProceedTours">
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="VISIT_DATE" property="visitDate" />
+		<result column="INITIAL_NUM" property="initialNum" />
+		<result column="AHEAD_CONFIRM_HOURS" property="aheadConfirmHours" nullValue="0" />
+		<result column="TOURISTS" property="tourists" />
+		<result column="STATUS" property="status" />
+		<result column="OPERATOR_NAME" property="operatorName" />
+	</resultMap>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProceedTours">
+		INSERT INTO PROCEED_TOURS
+			(PRODUCT_ID,VISIT_DATE,PRODUCT_NAME, INITIAL_NUM,AHEAD_CONFIRM_HOURS,TOURISTS,STATUS,OPERATOR_NAME)
+		VALUES
+			(#productId#,#visitDate#,#productName#,#initialNum#,#aheadConfirmHours#,#tourists#,#status#,#operatorName#)
+	</insert>
+
+	<update id="addition" parameterClass="com.lvmama.comm.bee.po.prod.ProceedTours">
+		UPDATE 
+			PROCEED_TOURS
+		SET
+			PRODUCT_NAME= #productName#, INITIAL_NUM = #initialNum#, AHEAD_CONFIRM_HOURS = #aheadConfirmHours#, TOURISTS = TOURISTS + #tourists#
+		WHERE
+			PRODUCT_ID = #productId# AND VISIT_DATE = #visitDate#	
+	</update>
+
+	<update id="subtraction" parameterClass="com.lvmama.comm.bee.po.prod.ProceedTours">
+		UPDATE 
+			PROCEED_TOURS
+		SET
+			PRODUCT_NAME= #productName#,INITIAL_NUM = #initialNum#, AHEAD_CONFIRM_HOURS = #aheadConfirmHours#, TOURISTS = TOURISTS - #tourists#
+		WHERE
+			PRODUCT_ID = #productId# AND VISIT_DATE = #visitDate#	
+	</update>
+	
+	<update id="updateStatus" parameterClass="com.lvmama.comm.bee.po.prod.ProceedTours">
+		UPDATE 
+			PROCEED_TOURS
+		SET
+			STATUS = #status#,OPERATOR_NAME = #operatorName#
+		WHERE
+			PRODUCT_ID = #productId# AND VISIT_DATE = #visitDate#	
+	</update>
+
+	<sql id="reuse_query_sql"> 
+		FROM
+			PROCEED_TOURS WHERE 1 = 1
+			<isNotEmpty property="productId" prepend=" AND ">PRODUCT_ID = #productId#</isNotEmpty>
+			<isNotEmpty property="visitDate" prepend=" AND ">VISIT_DATE = #visitDate#</isNotEmpty>
+			<isNotEmpty property="productName" prepend=" AND ">PRODUCT_NAME like '%$productName$%'</isNotEmpty>
+			<isNotEmpty property="beginVisitTime" prepend=" AND "> VISIT_DATE &gt;= #beginVisitTime#</isNotEmpty>
+			<isNotEmpty property="endVisitTime" prepend=" AND "> VISIT_DATE &lt;= #endVisitTime#</isNotEmpty>
+			<isNotEmpty property="beginConfirmTime" prepend=" AND "> VISIT_DATE - (AHEAD_CONFIRM_HOURS/24)  &gt;= #beginConfirmTime#</isNotEmpty>
+			<isNotEmpty property="endConfirmTime" prepend=" AND "> VISIT_DATE - (AHEAD_CONFIRM_HOURS/24) &lt;= #endConfirmTime#</isNotEmpty>
+			<isNotEmpty property="PROCEED" prepend=" AND ">TOURISTS - INITIAL_NUM &gt;= 0 </isNotEmpty>
+			<isNotEmpty property="UNPROCEED" prepend=" AND ">TOURISTS - INITIAL_NUM &lt; 0 </isNotEmpty>
+			<isNotEmpty property="status" prepend=" AND ">STATUS = #status#</isNotEmpty>
+			<isNotEmpty property="valid" prepend=" AND ">TOURISTS != 0</isNotEmpty>
+    </sql>
+	
+	<select id="query" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		<isNotEmpty property="skipResults">
+			SELECT * FROM (
+		</isNotEmpty>
+		SELECT 
+			rownum r,
+			PROCEED_TOURS.*
+		<include refid="reuse_query_sql"/>
+		<dynamic prepend = " AND ">
+			<isNotEmpty property="maxResults" >rownum &lt;= #maxResults# </isNotEmpty> 
+		</dynamic>
+		<isNotEmpty property="skipResults">
+			)
+		</isNotEmpty>
+		<dynamic prepend = " WHERE ">
+			<isNotEmpty property="skipResults" prepend=" AND "> r &gt; #skipResults# </isNotEmpty>
+		</dynamic>
+	</select>	
+
+	<select id="count" parameterClass="java.util.Map" resultClass="long">
+		SELECT COUNT(PRODUCT_ID)
+		<include refid="reuse_query_sql"/>  	  
+	</select>	
+</sqlMap>

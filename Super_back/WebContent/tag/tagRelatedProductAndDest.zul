@@ -1,0 +1,23 @@
+<?page title="标签管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./tagRelatedProductAndDest"?>
+<?component name="tagRelatedProduct" macroURI="/tag/tagRelatedProduct.zul"?>
+<?component name="tagRelatedPlace" macroURI="/tag/tagRelatedPlace.zul"?>
+<window id="tagRelatedProductAndDest" mode="embedded" title="关联产品和目的地的标签" closable="false" apply="com.lvmama.back.web.tag.TagRelatedProductAndDestAction">
+
+	<tabbox width="99%" tabscroll="false">
+
+		<tabs>
+			<tab id="tagRelatedProduct" label="关联的产品" />
+			<tab id="tagRelatedPlace" label="关联的目的地" />
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+				<tagRelatedProduct attrTagId="${saction.attrTagId}" />
+			</tabpanel>
+			<tabpanel>
+				<tagRelatedPlace attrTagId="${saction.attrTagId}" />
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+
+</window>

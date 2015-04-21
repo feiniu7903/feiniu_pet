@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="COM_TASK">
+
+    <resultMap id="ComTaskResultMap" class="com.lvmama.comm.pet.po.pub.ComTask">
+        <result column="TASK_ID" property="taskId"/>
+        <result column="TASK_NAME" property="taskName"/>
+        <result column="WEB_SERVICE_URL" property="webServiceUrl"/>
+        <result column="PLAN_TIME" property="planTime"/>
+        <result column="CYCLE" property="cycle"/>
+        <result column="CYCLE_DIMENSION" property="cycleDimension"/>
+        <result column="WEEK" property="week"/>
+        <result column="STATUS" property="status"/>
+        <result column="DESCRIPTION" property="description"/>
+        <result column="AVAILABLE" property="available"/>
+        <result column="PARAMETER" property="parameter"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="NEXT_RUN_TIME" property="nextRunTime"/>
+    </resultMap>
+    <typeAlias alias="ComTask" type="com.lvmama.comm.pet.po.pub.ComTask"/>
+
+    <insert id="insertComTask" parameterClass="ComTask">
+        <selectKey keyProperty="taskId">
+            SELECT COM_TASK_ID_SEQ.nextval FROM dual
+        </selectKey>
+        INSERT INTO COM_TASK(TASK_ID ,TASK_NAME ,WEB_SERVICE_URL ,PLAN_TIME ,CYCLE ,CYCLE_DIMENSION,WEEK ,STATUS ,DESCRIPTION ,AVAILABLE,CREATE_TIME,NEXT_RUN_TIME,PARAMETER)
+        values(#taskId#,#taskName#,#webServiceUrl#,#planTime#,#cycle#,#cycleDimension#,#week#,#status#,#description#,#available#,#createTime#,#nextRunTime#,#parameter#)
+    </insert>
+
+    <update id="updateComTask" parameterClass="ComTask">
+        update COM_TASK
+        set TASK_NAME = #taskName#,
+            WEB_SERVICE_URL = #webServiceUrl#,
+            PLAN_TIME= #planTime#,
+            CYCLE = #cycle#,
+            CYCLE_DIMENSION = #cycleDimension#,
+            WEEK = #week#,
+            STATUS = #status#,
+            DESCRIPTION = #description#,
+            AVAILABLE = #available#,
+            PARAMETER = #parameter#,
+            NEXT_RUN_TIME = #nextRunTime#
+        WHERE TASK_ID = #taskId#
+    </update>
+
+    <delete id="delete" parameterClass="java.lang.Long">
+		DELETE FROM COM_TASK WHERE TASK_ID = #taskId#
+	</delete>
+
+    <select id="selectComTaskCount" parameterClass="java.util.Map" resultClass="java.lang.Long">
+        SELECT count(1) ct
+        FROM COM_TASK
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="taskName">
+                TASK_NAME like '%'||#taskName#||'%'
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="status">
+                STATUS = #status#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="available">
+                AVAILABLE = #available#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="currentTime">
+                #currentTime# > NEXT_RUN_TIME
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <select id="selectComTaskList" parameterClass="java.util.Map" resultMap="ComTaskResultMap">
+        SELECT * FROM ( SELECT T.*, ROWNUM AS ROWNUM1 FROM (
+        SELECT TASK_ID ,TASK_NAME ,WEB_SERVICE_URL ,PLAN_TIME ,CYCLE,CYCLE_DIMENSION ,WEEK ,STATUS ,DESCRIPTION ,AVAILABLE,CREATE_TIME,NEXT_RUN_TIME,PARAMETER
+        FROM COM_TASK
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="taskName">
+                TASK_NAME like '%'||#taskName#||'%'
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="status">
+                STATUS = #status#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="available">
+                AVAILABLE = #available#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="currentTime">
+                #currentTime# > NEXT_RUN_TIME
+            </isNotEmpty>
+        </dynamic>
+        order by TASK_ID desc
+        )T
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="_endRow" prepend="">
+                ROWNUM &lt;= #_endRow#
+            </isNotEmpty>
+        </dynamic>
+        )
+        <dynamic prepend=" WHERE ">
+            <isNotEmpty property="_startRow" prepend="">
+                ROWNUM1 &gt;= #_startRow#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <select id="selectComTask" parameterClass="java.lang.Long" resultMap="ComTaskResultMap">
+        SELECT TASK_ID ,TASK_NAME ,WEB_SERVICE_URL ,PLAN_TIME ,CYCLE ,CYCLE_DIMENSION,WEEK ,STATUS ,DESCRIPTION ,AVAILABLE,CREATE_TIME,NEXT_RUN_TIME,PARAMETER
+            FROM COM_TASK
+            WHERE TASK_ID = #taskId#
+    </select>
+</sqlMap>

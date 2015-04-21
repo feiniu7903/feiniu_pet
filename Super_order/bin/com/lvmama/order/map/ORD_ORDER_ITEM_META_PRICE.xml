@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ORD_ORDER_ITEM_META_PRICE" >
+    <sql id="selectPriceRowWhereSql">
+    <dynamic>
+    		AND A.SETTLEMENT_STATUS &lt;&gt; 'SETTLEMENTED'
+			   	<isNotEmpty property="productId" prepend="AND">
+			   		A.META_PRODUCT_ID = #productId#
+			   	</isNotEmpty>
+			   	<isNotEmpty property="productBranchId" prepend="AND">
+			   		D.META_BRANCH_ID = #productBranchId#
+			   	</isNotEmpty>
+			   	<isNotEmpty property="supplierId" prepend="AND">
+			   		A.SUPPLIER_ID = #supplierId#
+			   	</isNotEmpty>
+			   	<isNotEmpty property="orderId" prepend="AND">
+			   		A.ORDER_ID = #orderId#
+			   	</isNotEmpty>
+			   	<isNotEmpty property="visitDateStart" prepend="AND">
+			   		A.VISIT_TIME &gt;= TO_DATE(#visitDateStart#,'yyyy-mm-dd')
+			   	</isNotEmpty>
+			   	<isNotEmpty property="visitDateEnd" prepend="AND">
+			   		A.VISIT_TIME &lt; TO_DATE(#visitDateEnd#,'yyyy-mm-dd') + 1
+			   	</isNotEmpty>
+			   	<isNotEmpty property="createOrderTimeBegin" prepend="AND">
+			   		F.CREATE_TIME &gt;= TO_DATE(#createOrderTimeBegin#,'yyyy-mm-dd')
+			   	</isNotEmpty>
+			   	<isNotEmpty property="createOrderTimeEnd" prepend="AND">
+			   		F.CREATE_TIME &lt; TO_DATE(#createOrderTimeEnd#,'yyyy-mm-dd') + 1
+			   	</isNotEmpty>
+			   	<isNotEmpty property="targetId" prepend="AND">
+			   		G.TARGET_ID = #targetId#
+			   	</isNotEmpty>
+			   	<isNotEmpty property="payTimeStart" prepend="AND">
+			   		F.PAYMENT_TIME &gt;= TO_DATE(#payTimeStart#, 'YYYY-MM-DD')
+			   	</isNotEmpty>
+			   	<isNotEmpty property="payTimeEnd" prepend="AND">
+			   		F.PAYMENT_TIME &lt; TO_DATE(#payTimeEnd#, 'YYYY-MM-DD') + 1
+			   	</isNotEmpty>
+			   	<isNotEmpty property="totalSettlePriceBegin" prepend="AND">
+			   		A.TOTAL_SETTLEMENT_PRICE &gt;= #totalSettlePriceBegin#*100
+			   	</isNotEmpty>
+			   	<isNotEmpty property="totalSettlePriceEnd" prepend="AND">
+			   		A.TOTAL_SETTLEMENT_PRICE &lt;= #totalSettlePriceEnd#*100
+			   	</isNotEmpty>
+			   	<isNotNull property="refundment" prepend=" AND ">
+			   	   <isEqual property="refundment" 	compareValue="N"> (F.REFUNDED_AMOUNT =0 OR F.REFUNDED_AMOUNT IS NULL) </isEqual>
+			   	   <isNotEqual property="refundment" 	compareValue="N"> F.REFUNDED_AMOUNT > 0 </isNotEqual>
+			   	</isNotNull>
+    </dynamic>
+    </sql>
+  	<select id="selectPriceRowCount" parameterClass="map" resultClass="Integer">
+  		SELECT 
+  			COUNT(*)
+	  	FROM 
+	  		ORD_ORDER_ITEM_META A,
+	       	SUP_SUPPLIER B,
+	       	ORD_ORDER_ITEM_PROD C,
+	       	META_PRODUCT_BRANCH D,
+	       	(SELECT OBJECT_ID, NAME
+	          	FROM ORD_PERSON DT
+	         WHERE OBJECT_TYPE = 'ORD_ORDER'
+	           AND PERSON_TYPE = 'CONTACT') E,
+	       	ORD_ORDER F,
+	   		META_SETTLEMENT G,
+       		SUP_SETTLEMENT_TARGET H
+	 	WHERE 
+	 		A.SUPPLIER_ID = B.SUPPLIER_ID
+	   	AND 
+	   		A.ORDER_ITEM_ID = C.ORDER_ITEM_PROD_ID
+	   	AND 
+	   		A.META_BRANCH_ID = D.META_BRANCH_ID
+	   	AND 
+	   		A.ORDER_ID = E.OBJECT_ID(+)
+	   	AND 
+	   		A.ORDER_ID = F.ORDER_ID
+   		AND 
+   			A.META_PRODUCT_ID = G.META_PRODUCT_ID
+   		AND 
+   			G.TARGET_ID = H.TARGET_ID
+	   <include refid="selectPriceRowWhereSql"/>
+  	</select>
+  	<select id="selectPriceListByParms" parameterClass="map" resultClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMetaPrice">
+  		select * from (
+  	   		select st.*,rownum as rn from (
+       			SELECT 
+		  			A.ORDER_ID AS orderId,
+       				A.ORDER_ITEM_META_ID AS orderItemMetaId,
+			       	A.SETTLEMENT_STATUS AS settlementStatus,
+			       	B.SUPPLIER_ID AS supplierId,
+			       	B.SUPPLIER_NAME AS supplierName,
+			       	C.PRODUCT_ID AS productId,
+			       	C.PRODUCT_NAME AS productName,
+			       	A.META_PRODUCT_ID AS metaProductId,
+			       	A.PRODUCT_NAME AS metaProductName,
+			       	A.META_BRANCH_ID AS metaBranchId,
+			       	D.BRANCH_NAME AS branchName,
+			       	A.PRODUCT_QUANTITY AS productQuantity,
+			       	A.QUANTITY AS quantity,
+			       	A.PRODUCT_QUANTITY * A.QUANTITY AS totalQuantity,
+			       	E.NAME AS pickTicketPerson,
+			       	A.VISIT_TIME AS visitTime,
+			       	A.SETTLEMENT_PRICE AS settlementPrice,
+			       	A.ACTUAL_SETTLEMENT_PRICE AS actualSettlementPrice,
+			       	A.TOTAL_SETTLEMENT_PRICE AS totalSettlementPrice,
+       				(SELECT STATUS FROM (SELECT RECORD_ID, STATUS,ORDER_ITEM_META_ID FROM ORD_SETTLEMENT_PRICE_RECORD I ORDER BY RECORD_ID DESC) X WHERE X.ORDER_ITEM_META_ID = A.ORDER_ITEM_META_ID AND ROWNUM = 1) AS STATUS
+			  	FROM 
+			  		ORD_ORDER_ITEM_META A,
+			       	SUP_SUPPLIER B,
+			       	ORD_ORDER_ITEM_PROD C,
+			       	META_PRODUCT_BRANCH D,
+			       	(SELECT OBJECT_ID, NAME
+			          	FROM ORD_PERSON DT
+			         WHERE OBJECT_TYPE = 'ORD_ORDER'
+			           AND PERSON_TYPE = 'CONTACT') E,
+			       	ORD_ORDER F,
+			   		META_SETTLEMENT G,
+       				SUP_SETTLEMENT_TARGET H
+			 	WHERE 
+			 		A.SUPPLIER_ID = B.SUPPLIER_ID
+			   	AND 
+			   		A.ORDER_ITEM_ID = C.ORDER_ITEM_PROD_ID
+			   	AND 
+			   		A.META_BRANCH_ID = D.META_BRANCH_ID
+			   	AND 
+			   		A.ORDER_ID = E.OBJECT_ID(+)
+			   	AND 
+			   		A.ORDER_ID = F.ORDER_ID
+		   		AND 
+		   			A.META_PRODUCT_ID = G.META_PRODUCT_ID
+		   		AND 
+		   			G.TARGET_ID = H.TARGET_ID
+			   	<include refid="selectPriceRowWhereSql"/>
+			   	ORDER BY F.CREATE_TIME DESC
+       		) st
+       	)
+       	<dynamic prepend=" where ">
+       		<isNotEmpty property="skipResults">
+       			<isNotEmpty property="maxResults">
+       				rn between #skipResults# and #maxResults#
+       			</isNotEmpty>
+       		</isNotEmpty>
+       	</dynamic>
+  	</select>
+  	
+  	<select id="queryHistoryRecordCount" resultClass="Integer" parameterClass="map">
+			SELECT 
+				COUNT(*)
+			FROM 
+				ORD_ORDER_ITEM_META A,
+		       	SUP_SUPPLIER B,
+		       	ORD_ORDER_ITEM_PROD C,
+		       	META_PRODUCT_BRANCH D,
+		       	ORD_ORDER E,
+       			ORD_SETTLEMENT_PRICE_RECORD F
+	       		<isNotEmpty property="targetId" prepend=",">
+				   	META_SETTLEMENT G
+	       		</isNotEmpty>
+		 	WHERE 
+		 		A.SUPPLIER_ID = B.SUPPLIER_ID
+		   	AND 
+		   		A.ORDER_ITEM_ID = C.ORDER_ITEM_PROD_ID
+		   	AND 
+		   		A.META_BRANCH_ID = D.META_BRANCH_ID
+		   	AND 
+		   		A.ORDER_ID = E.ORDER_ID
+	   		AND 
+	   			A.ORDER_ITEM_META_ID = F.ORDER_ITEM_META_ID
+			AND 
+				F.STATUS = 'VERIFIED'
+		   	<isNotEmpty property="productId" prepend="AND">
+		   		A.META_PRODUCT_ID = #productId#
+		   	</isNotEmpty>
+		   	<isNotEmpty property="productBranchId" prepend="AND">
+		   		D.META_BRANCH_ID = #productBranchId#
+		   	</isNotEmpty>
+		   	<isNotEmpty property="supplierId" prepend="AND">
+		   		A.SUPPLIER_ID = #supplierId#
+		   	</isNotEmpty>
+		   	<isNotEmpty property="orderId" prepend="AND">
+		   		A.ORDER_ID = #orderId#
+		   	</isNotEmpty>
+		   	<isNotEmpty property="visitDateStart" prepend="AND">
+		   		A.VISIT_TIME &gt;= TO_DATE(#visitDateStart#,'yyyy-mm-dd')
+		   	</isNotEmpty>
+		   	<isNotEmpty property="visitDateEnd" prepend="AND">
+		   		A.VISIT_TIME &lt; TO_DATE(#visitDateEnd#,'yyyy-mm-dd') + 1
+		   	</isNotEmpty>
+		   	<isNotEmpty property="reason" prepend="AND">
+		   		F.REASON = #reason#
+		   	</isNotEmpty>
+		   	<isNotEmpty property="changeType" prepend="AND">
+		   		F.CHANGE_TYPE IN
+		   		<iterate property="changeType" conjunction="," open="(" close=")">
+						#changeType[]# 
+			   	</iterate>
+		   	</isNotEmpty>
+		   	<isNotEmpty property="settlementPay" prepend="AND">
+		   		F.SETTLEMENT_PAY IN
+		   		<iterate property="settlementPay" conjunction="," open="(" close=")">
+						#settlementPay[]# 
+			   	</iterate>
+		   	</isNotEmpty>
+		   	<isNotEmpty property="operateType" prepend="AND">
+		   		F.CHANGE_RESULT=#operateType#
+		   	</isNotEmpty>
+		   	<isNotEmpty property="modifyDateBegin" prepend="AND">
+		   		F.CREATE_TIME &gt;= TO_DATE(#modifyDateBegin#,'yyyy-mm-dd')
+		   	</isNotEmpty>
+		   	<isNotEmpty property="modifyDateEnd" prepend="AND">
+		   		F.CREATE_TIME &lt; TO_DATE(#modifyDateEnd#,'yyyy-mm-dd')+1
+		   	</isNotEmpty>
+		   	<isNotEmpty property="targetId" prepend="AND">
+			   	A.META_PRODUCT_ID = G.META_PRODUCT_ID
+			AND 
+		   		G.TARGET_ID = #targetId#
+		   	</isNotEmpty>
+  	</select>
+  	<select id="queryHistoryRecordList" parameterClass="map" resultClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMetaPrice">
+		select * from (
+  	   		select st.*,rownum as rn from (
+	  	   		SELECT 
+					A.ORDER_ID AS orderId,
+			       	A.ORDER_ITEM_META_ID AS orderItemMetaId,
+			       	B.SUPPLIER_ID AS supplierId,
+			       	B.SUPPLIER_NAME AS supplierName,
+			       	C.PRODUCT_ID AS productId,
+			       	C.PRODUCT_NAME AS productName,
+			       	A.META_PRODUCT_ID AS metaProductId,
+			       	A.PRODUCT_NAME AS metaProductName,
+			       	D.BRANCH_NAME AS branchName,
+			       	A.PRODUCT_QUANTITY AS productQuantity,
+			       	A.QUANTITY AS quantity,
+			       	A.PRODUCT_QUANTITY * A.QUANTITY AS totalQuantity,
+			       	A.SELL_PRICE AS sellPrice,
+			       	A.VISIT_TIME AS visitTime,
+			       	F.ACTUAL_SETTLEMENT_PRICE AS modifyActualSettlementPrice,
+       				F.TOTAL_SETTLEMENT_PRICE AS modifyTotalSettlementPrice,
+			       	F.OPERATOR AS operatorName,
+			       	F.CREATE_TIME AS modifyDate,
+			       	F.B_ACTUAL_SETTLEMENT_PRICE AS settlementPrice,
+			       	F.B_TOTAL_SETTLEMENT_PRICE AS totalSettlementPrice,
+       				F.CHANGE_RESULT AS changeResult,
+			       	F.CHANGE_TYPE AS changeType,
+			       	F.REASON AS reason,
+			       	F.REMARK AS remark,
+			       	F.VERIFIED_OPERATOR AS verifiedOperator
+			  	FROM 
+			  		ORD_ORDER_ITEM_META A,
+			       	SUP_SUPPLIER B,
+			       	ORD_ORDER_ITEM_PROD C,
+			       	META_PRODUCT_BRANCH D,
+			       	ORD_ORDER E,
+       				ORD_SETTLEMENT_PRICE_RECORD F
+		       		<isNotEmpty property="targetId" prepend=",">
+					   	META_SETTLEMENT G
+		       		</isNotEmpty>
+			 	WHERE 
+			 		A.SUPPLIER_ID = B.SUPPLIER_ID
+			   	AND 
+			   		A.ORDER_ITEM_ID = C.ORDER_ITEM_PROD_ID
+			   	AND 
+			   		A.META_BRANCH_ID = D.META_BRANCH_ID
+			   	AND 
+			   		A.ORDER_ID = E.ORDER_ID
+		   		AND 
+		   			A.ORDER_ITEM_META_ID = F.ORDER_ITEM_META_ID
+   				AND 
+   					F.STATUS = 'VERIFIED'
+			   	<isNotEmpty property="productId" prepend="AND">
+			   		A.META_PRODUCT_ID = #productId#
+			   	</isNotEmpty>
+			   	<isNotEmpty property="productBranchId" prepend="AND">
+			   		D.META_BRANCH_ID = #productBranchId#
+			   	</isNotEmpty>
+			   	<isNotEmpty property="supplierId" prepend="AND">
+			   		A.SUPPLIER_ID = #supplierId#
+			   	</isNotEmpty>
+			   	<isNotEmpty property="orderId" prepend="AND">
+			   		A.ORDER_ID = #orderId#
+			   	</isNotEmpty>
+			   	<isNotEmpty property="visitDateStart" prepend="AND">
+			   		A.VISIT_TIME &gt;= TO_DATE(#visitDateStart#,'yyyy-mm-dd')
+			   	</isNotEmpty>
+			   	<isNotEmpty property="visitDateEnd" prepend="AND">
+			   		A.VISIT_TIME &lt; TO_DATE(#visitDateEnd#,'yyyy-mm-dd') + 1
+			   	</isNotEmpty>
+			   	<isNotEmpty property="reason" prepend="AND">
+			   		F.REASON = #reason#
+			   	</isNotEmpty>
+			   	<isNotEmpty property="changeType" prepend="AND">
+			   		F.CHANGE_TYPE IN
+			   		<iterate property="changeType" conjunction="," open="(" close=")">
+							#changeType[]# 
+				   	</iterate>
+			   	</isNotEmpty>
+			   	<isNotEmpty property="settlementPay" prepend="AND">
+			   		F.SETTLEMENT_PAY IN
+			   		<iterate property="settlementPay" conjunction="," open="(" close=")">
+							#settlementPay[]# 
+				   	</iterate>
+			   	</isNotEmpty>
+			   	<isNotEmpty property="operateType" prepend="AND">
+			   		F.CHANGE_RESULT=#operateType#
+			   	</isNotEmpty>
+			   	<isNotEmpty property="modifyDateBegin" prepend="AND">
+			   		F.CREATE_TIME &gt;= TO_DATE(#modifyDateBegin#,'yyyy-mm-dd')
+			   	</isNotEmpty>
+			   	<isNotEmpty property="modifyDateEnd" prepend="AND">
+			   		F.CREATE_TIME &lt; TO_DATE(#modifyDateEnd#,'yyyy-mm-dd')+1
+			   	</isNotEmpty>
+			   	<isNotEmpty property="targetId" prepend="AND">
+				   	A.META_PRODUCT_ID = G.META_PRODUCT_ID
+				AND 
+			   		G.TARGET_ID = #targetId#
+	   			</isNotEmpty>
+	   			<isNotEmpty property="orderItemMetaId" prepend=" AND ">
+	   				F.ORDER_ITEM_META_ID = #orderItemMetaId#
+	   			</isNotEmpty>
+	   		ORDER BY F.CREATE_TIME DESC
+       		) st
+       	)
+       	<dynamic prepend=" where ">
+       		<isNotEmpty property="skipResults">
+       			<isNotEmpty property="maxResults">
+       				rn between #skipResults# and #maxResults#
+       			</isNotEmpty>
+       		</isNotEmpty>
+       	</dynamic>
+  	</select>
+  	
+  	<select id="exportHistoryRecordList" parameterClass="map" resultClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMetaPrice">
+  		SELECT 
+			A.ORDER_ID AS orderId,
+	       	A.ORDER_ITEM_META_ID AS orderItemMetaId,
+	       	B.SUPPLIER_ID AS supplierId,
+	       	B.SUPPLIER_NAME AS supplierName,
+	       	C.PRODUCT_ID AS productId,
+	       	C.PRODUCT_NAME AS productName,
+	       	A.META_PRODUCT_ID AS metaProductId,
+	       	A.PRODUCT_NAME AS metaProductName,
+	       	D.BRANCH_NAME AS branchName,
+	       	A.PRODUCT_QUANTITY AS productQuantity,
+	       	A.QUANTITY AS quantity,
+	       	A.PRODUCT_QUANTITY * A.QUANTITY AS totalQuantity,
+	       	A.VISIT_TIME AS visitTime,
+	       	F.B_ACTUAL_SETTLEMENT_PRICE AS actualSettlementPrice,
+       		F.B_TOTAL_SETTLEMENT_PRICE AS totalSettlementPrice,
+	       	F.OPERATOR AS operatorName,
+	       	F.CREATE_TIME AS modifyDate,
+	       	F.ACTUAL_SETTLEMENT_PRICE AS modifyActualSettlementPrice,
+	       	F.TOTAL_SETTLEMENT_PRICE AS modifyTotalSettlementPrice,
+       		F.CHANGE_RESULT AS changeResult,
+	       	F.CHANGE_TYPE AS changeType,
+	       	F.REASON AS reason,
+	       	F.REMARK AS remark
+	  	FROM 
+	  		ORD_ORDER_ITEM_META A,
+	       	SUP_SUPPLIER B,
+	       	ORD_ORDER_ITEM_PROD C,
+	       	META_PRODUCT_BRANCH D,
+	       	ORD_ORDER E,
+       		ORD_SETTLEMENT_PRICE_RECORD F
+       		<isNotEmpty property="targetId" prepend=",">
+			   	META_SETTLEMENT G
+       		</isNotEmpty>
+	 	WHERE 
+	 		A.SUPPLIER_ID = B.SUPPLIER_ID
+	   	AND 
+	   		A.ORDER_ITEM_ID = C.ORDER_ITEM_PROD_ID
+	   	AND 
+	   		A.META_BRANCH_ID = D.META_BRANCH_ID
+	   	AND 
+	   		A.ORDER_ID = E.ORDER_ID
+   		AND 
+   			A.ORDER_ITEM_META_ID = F.ORDER_ITEM_META_ID
+ 		AND 
+ 			F.STATUS = 'VERIFIED'
+	   	<isNotEmpty property="productId" prepend="AND">
+	   		A.META_PRODUCT_ID = #productId#
+	   	</isNotEmpty>
+	   	<isNotEmpty property="productBranchId" prepend="AND">
+	   		D.META_BRANCH_ID = #productBranchId#
+	   	</isNotEmpty>
+	   	<isNotEmpty property="supplierId" prepend="AND">
+	   		A.SUPPLIER_ID = #supplierId#
+	   	</isNotEmpty>
+	   	<isNotEmpty property="orderId" prepend="AND">
+	   		A.ORDER_ID = #orderId#
+	   	</isNotEmpty>
+	   	<isNotEmpty property="visitDateStart" prepend="AND">
+	   		A.VISIT_TIME &gt;= TO_DATE(#visitDateStart#,'yyyy-mm-dd')
+	   	</isNotEmpty>
+	   	<isNotEmpty property="visitDateEnd" prepend="AND">
+	   		A.VISIT_TIME &lt; TO_DATE(#visitDateEnd#,'yyyy-mm-dd') + 1
+	   	</isNotEmpty>
+	   	<isNotEmpty property="reason" prepend="AND">
+	   		F.REASON = #reason#
+	   	</isNotEmpty>
+	   	<isNotEmpty property="modifyPrice" prepend="AND">
+	   		F.CHANGE_TYPE=#modifyPrice#
+	   	</isNotEmpty>
+	   	<isNotEmpty property="modifyTotalPrice" prepend="AND">
+	   		F.CHANGE_TYPE=#modifyTotalPrice#
+	   	</isNotEmpty>
+	   	<isNotEmpty property="operateType" prepend="AND">
+	   		F.CHANGE_RESULT=#operateType#
+	   	</isNotEmpty>
+	   	<isNotEmpty property="modifyDateBegin" prepend="AND">
+	   		F.CREATE_TIME &gt;= TO_DATE(#modifyDateBegin#,'yyyy-mm-dd')
+	   	</isNotEmpty>
+	   	<isNotEmpty property="modifyDateEnd" prepend="AND">
+	   		F.CREATE_TIME &lt; TO_DATE(#modifyDateEnd#,'yyyy-mm-dd')+1
+	   	</isNotEmpty>
+	   	<isNotEmpty property="targetId" prepend="AND">
+		   	A.META_PRODUCT_ID = G.META_PRODUCT_ID
+		AND 
+	   		G.TARGET_ID = #targetId#
+	   	</isNotEmpty>
+  	</select>
+  	
+  	<insert id="insertOrdSettlementPriceRecord" parameterClass="com.lvmama.comm.bee.po.ord.OrdSettlementPriceRecord">
+  		INSERT INTO ORD_SETTLEMENT_PRICE_RECORD(
+  			RECORD_ID,
+  			ORDER_ITEM_META_ID,
+  			B_ACTUAL_SETTLEMENT_PRICE,
+  			B_TOTAL_SETTLEMENT_PRICE,
+  			ACTUAL_SETTLEMENT_PRICE,
+  			TOTAL_SETTLEMENT_PRICE,
+  			CHANGE_TYPE,
+  			CHANGE_RESULT,
+  			REASON,
+  			OPERATOR,
+  			CREATE_TIME,
+  			REMARK,
+  			STATUS,
+  			SETTLEMENT_PAY
+  		) VALUES (
+  			ORD_SETTLEMENT_PRICE_RE_SEQ.NEXTVAL,
+  			#orderItemMetaId#,
+  			#bActualSettlementPrice#,
+  			#bTotalSettlementPrice#,
+  			#actualSettlementPrice#,
+  			#totalSettlementPrice#,
+  			#changeType#,
+  			#changeResult#,
+  			#reason#,
+  			#creator#,
+  			SYSDATE,
+  			#remark#,
+  			#status#,
+  			#settlementPay#
+  		)
+  	</insert>
+  	
+  	<update id="updateSettlementPrice" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMetaPrice">
+  		UPDATE 
+  			ORD_ORDER_ITEM_META 
+  		SET 
+  		<isEqual property="changeType" compareValue="UNIT_PRICE">
+	  		<isNotEmpty property="actualSettlementPrice">
+	  			ACTUAL_SETTLEMENT_PRICE = #actualSettlementPrice#,
+	  			TOTAL_SETTLEMENT_PRICE = #actualSettlementPrice# * NVL(QUANTITY, 0) * NVL(PRODUCT_QUANTITY, 0)
+	  		</isNotEmpty>
+  		</isEqual>
+  		<isNotEqual property="changeType" compareValue="UNIT_PRICE">
+	  		<isNotEmpty property="totalSettlementPrice">
+	  			ACTUAL_SETTLEMENT_PRICE =ROUND(#totalSettlementPrice#/NVL(QUANTITY, 0)/NVL(PRODUCT_QUANTITY, 0),0),
+	  			TOTAL_SETTLEMENT_PRICE = #totalSettlementPrice# 
+	  		</isNotEmpty>
+  		</isNotEqual>
+  		WHERE 
+  			ORDER_ITEM_META_ID = #orderItemMetaId#
+  	</update>
+
+  	<select id="selectByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMeta" resultClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMetaPrice" >
+    	SELECT 
+    		A.ORDER_ITEM_META_ID AS orderItemMetaId,
+       		A.ACTUAL_SETTLEMENT_PRICE AS actualSettlementPrice,
+       		A.TOTAL_SETTLEMENT_PRICE AS totalSettlementPrice,
+       		A.SETTLEMENT_PRICE AS settlementPrice,
+			A.PRODUCT_QUANTITY * A.QUANTITY AS totalQuantity
+  		FROM ORD_ORDER_ITEM_META A
+ 		WHERE ORDER_ITEM_META_ID = #orderItemMetaId#
+  	</select>
+  	
+  	<!-- 查询审核列表 -->
+  	<select id="queryVerifyListCount" resultClass="Integer" parameterClass="map">
+			SELECT 
+				COUNT(*)
+			FROM 
+				ORD_ORDER_ITEM_META A,
+		       	SUP_SUPPLIER B,
+		       	ORD_ORDER_ITEM_PROD C,
+		       	META_PRODUCT_BRANCH D,
+		       	ORD_ORDER E,
+       			ORD_SETTLEMENT_PRICE_RECORD F
+		 	WHERE 
+		 		A.SUPPLIER_ID = B.SUPPLIER_ID
+		   	AND 
+		   		A.ORDER_ITEM_ID = C.ORDER_ITEM_PROD_ID
+		   	AND 
+		   		A.META_BRANCH_ID = D.META_BRANCH_ID
+		   	AND 
+		   		A.ORDER_ID = E.ORDER_ID
+	   		AND 
+	   			A.ORDER_ITEM_META_ID = F.ORDER_ITEM_META_ID
+		   	AND 
+		   		E.SETTLEMENT_STATUS &lt;&gt; 'SETTLEMENTED'
+		   	AND 
+		   		F.STATUS = 'UNVERIFIED'
+		   	<isNotEmpty property="orderId" prepend="AND">
+		   		A.ORDER_ID = #orderId#
+		   	</isNotEmpty>
+  	</select>
+  	<select id="queryVerifyList" parameterClass="map" resultClass="com.lvmama.comm.bee.po.ord.OrdOrderItemMetaPrice">
+		select * from (
+  	   		select st.*,rownum as rn from (
+	  	   		SELECT 
+	  	   			F.RECORD_ID AS recordId,
+					A.ORDER_ID AS orderId,
+			       	A.ORDER_ITEM_META_ID AS orderItemMetaId,
+			       	B.SUPPLIER_ID AS supplierId,
+			       	B.SUPPLIER_NAME AS supplierName,
+			       	C.PRODUCT_ID AS productId,
+			       	C.PRODUCT_NAME AS productName,
+			       	A.META_PRODUCT_ID AS metaProductId,
+			       	A.PRODUCT_NAME AS metaProductName,
+			       	D.BRANCH_NAME AS branchName,
+			       	A.PRODUCT_QUANTITY AS productQuantity,
+			       	A.QUANTITY AS quantity,
+			       	A.PRODUCT_QUANTITY * A.QUANTITY AS totalQuantity,
+			       	A.VISIT_TIME AS visitTime,
+			       	F.B_ACTUAL_SETTLEMENT_PRICE AS settlementPrice,
+       				F.B_TOTAL_SETTLEMENT_PRICE AS totalSettlementPrice,
+			       	F.OPERATOR AS operatorName,
+			       	F.CREATE_TIME AS modifyDate,
+			       	F.ACTUAL_SETTLEMENT_PRICE AS modifyActualSettlementPrice,
+			       	F.TOTAL_SETTLEMENT_PRICE AS modifyTotalSettlementPrice,
+       				F.CHANGE_RESULT AS changeResult,
+			       	F.CHANGE_TYPE AS changeType,
+			       	F.REASON AS reason,
+			       	F.REMARK AS remark
+			  	FROM 
+			  		ORD_ORDER_ITEM_META A,
+			       	SUP_SUPPLIER B,
+			       	ORD_ORDER_ITEM_PROD C,
+			       	META_PRODUCT_BRANCH D,
+			       	ORD_ORDER E,
+       				ORD_SETTLEMENT_PRICE_RECORD F
+			 	WHERE 
+			 		A.SUPPLIER_ID = B.SUPPLIER_ID
+			   	AND 
+			   		A.ORDER_ITEM_ID = C.ORDER_ITEM_PROD_ID
+			   	AND 
+			   		A.META_BRANCH_ID = D.META_BRANCH_ID
+			   	AND 
+			   		A.ORDER_ID = E.ORDER_ID
+		   		AND 
+		   			A.ORDER_ITEM_META_ID = F.ORDER_ITEM_META_ID
+			   	AND 
+			   		E.SETTLEMENT_STATUS &lt;&gt; 'SETTLEMENTED'
+			   	AND 
+			   		F.STATUS = 'UNVERIFIED'
+			   	<isNotEmpty property="orderId" prepend="AND">
+			   		A.ORDER_ID = #orderId#
+			   	</isNotEmpty>
+       		) st
+       	)
+       	<dynamic prepend=" where ">
+       		<isNotEmpty property="skipResults">
+       			<isNotEmpty property="maxResults">
+       				rn between #skipResults# and #maxResults#
+       			</isNotEmpty>
+       		</isNotEmpty>
+       	</dynamic>
+  	</select>
+  	
+  	<!-- 修改历史记录的审核状态 -->
+  	<update id="updateHistoryRecordStatus" parameterClass="map">
+  		UPDATE ORD_SETTLEMENT_PRICE_RECORD SET STATUS = #status# WHERE RECORD_ID = #recordId#
+  	</update>
+  	
+  	<!-- 根据recordId查询历史记录 -->
+  	<select id="queryHistoryRecordById" parameterClass="long" resultClass="com.lvmama.comm.bee.po.ord.OrdSettlementPriceRecord">
+  		SELECT 
+  			RECORD_ID AS recordId,
+  			ORDER_ITEM_META_ID AS orderItemMetaId,
+  			B_ACTUAL_SETTLEMENT_PRICE AS bActualSettlementPrice,
+  			B_TOTAL_SETTLEMENT_PRICE AS bTotalSettlementPrice,
+  			ACTUAL_SETTLEMENT_PRICE AS actualSettlementPrice,
+  			TOTAL_SETTLEMENT_PRICE AS totalSettlementPrice,
+  			CHANGE_TYPE AS changeType,
+  			CHANGE_RESULT AS changeResult,
+  			REASON AS reason,
+  			OPERATOR AS creator,
+  			CREATE_TIME AS createTime,
+  			REMARK AS remark,
+  			STATUS AS status,
+  			SETTLEMENT_PAY AS settlementPay
+  		FROM 
+  			ORD_SETTLEMENT_PRICE_RECORD
+  		WHERE 
+  			RECORD_ID = #recordId#
+  	</select>
+  	
+  	<!-- 保存审核人 -->
+  	<update id="updateHistoryRecordById" parameterClass="map">
+  		UPDATE ORD_SETTLEMENT_PRICE_RECORD SET VERIFIED_OPERATOR = #verifiedOperator# WHERE RECORD_ID = #recordId#
+  	</update>
+  	
+  	<select id="queryRefundmentByMetaId" parameterClass="long" resultClass="Integer">
+  		SELECT 
+  			COUNT(*)
+        FROM 
+        	ORD_REFUNDMENT A,
+         	(SELECT ORDER_ID FROM ORD_ORDER_ITEM_META WHERE ORDER_ITEM_META_ID = #orderItemMetaId#) B
+        WHERE 
+        	A.ORDER_ID = B.ORDER_ID
+  	</select>
+  	
+  	<!-- 根据订单子子项ID查询审核中的修改记录 -->
+  	<select id="searchUnverifiedRecord" parameterClass="long" resultClass="Integer">
+  		SELECT COUNT(*) FROM ORD_SETTLEMENT_PRICE_RECORD WHERE STATUS = 'UNVERIFIED' AND ORDER_ITEM_META_ID = #orderItemMetaId#
+  	</select>
+  	
+</sqlMap>

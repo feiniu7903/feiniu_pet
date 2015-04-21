@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_TIME_PRICE">
+
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.TimePrice">
+		<result column="TIME_PRICE_ID" property="timePriceId" />
+		<result column="SPEC_DATE" property="specDate" />
+		<result column="META_PRODUCT_ID" property="productId" />
+		<result column="DAY_STOCK" property="dayStock" nullValue="0"/>
+		<result column="SETTLEMENT_PRICE" property="settlementPrice" nullValue="0"/>
+		<result column="MARKET_PRICE" property="marketPrice" nullValue="0"/>
+		<result column="META_BRANCH_ID" property="metaBranchId"/>
+		<result column="ZERO_STOCK_HOUR" property="zeroStockHour"/>
+		<result column="BREAKFAST_COUNT" property="breakfastCount"/>
+		<result column="SUGGEST_PRICE" property="suggestPrice"/>
+		<result column="TOTAL_DAY_STOCK" property="totalDayStock"/>
+		<result column="AHEAD_HOUR" property="aheadHour"/>
+		<result column="CANCEL_HOUR" property="cancelHour"/>
+		<result column="EARLIEST_USE_TIME" property="earliestUseTime"/>
+		<result column="LATEST_USE_TIME" property="latestUseTime"/>
+		<result column="CANCEL_STRATEGY" property="cancelStrategy"/>
+		<result column="STOCK_FLAG" property="stockFlag"/>
+	</resultMap>
+	
+	<resultMap id="OverSaleBaseResultMap" extends="BaseResultMap" class="com.lvmama.comm.bee.po.prod.TimePrice">
+			<result column="OVER_SALE" property="overSale"/>
+			<result column="RESOURCE_CONFIRM" property="resourceConfirm"/>
+	</resultMap>
+	<select id="selectMarkPriceForProdByDate" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		select sum(market_price*ppbi.quantity) from meta_time_price mtp, prod_product_branch_item ppbi where mtp.meta_branch_id=ppbi.meta_branch_id and ppbi.prod_branch_id = #prodBranchId# and mtp.SPEC_DATE<![CDATA[=]]>#date#
+	</select>
+	
+	<select id="selectTotalSettlementPriceForProdByDate" resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+		select sum(mtp.settlement_price*ppbi.quantity) from meta_time_price mtp, prod_product_branch_item ppbi where mtp.meta_branch_id=ppbi.meta_branch_id and ppbi.prod_branch_id = #prodBranchId# and mtp.spec_date<![CDATA[=]]>#date#
+	</select>
+	
+	<select id="selectByParams" resultMap="OverSaleBaseResultMap" parameterClass="java.util.HashMap">
+		select * from META_TIME_PRICE
+		<dynamic prepend="where">
+			<isNotNull prepend="and" property="beginDate">
+				SPEC_DATE<![CDATA[>=]]>#beginDate#
+			</isNotNull>
+			<isNotNull prepend="and" property="endDate">
+				SPEC_DATE<![CDATA[<=]]>#endDate#
+			</isNotNull>
+			<isNotNull prepend="and" property="metaBranchId">
+				META_BRANCH_ID = #metaBranchId#
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<select id="selectByParamsOrderBY" resultMap="OverSaleBaseResultMap" parameterClass="java.util.HashMap">
+		select * from META_TIME_PRICE
+		<dynamic prepend="where">
+			<isNotNull prepend="and" property="metaBranchId">
+				META_BRANCH_ID = #metaBranchId#
+			</isNotNull>
+			<isNotNull prepend="and" property="specDateStart">
+		  		SPEC_DATE<![CDATA[>=]]>#specDateStart#
+		 	</isNotNull>
+		 	<isNotNull prepend="and" property="specDateEnd">
+		  		SPEC_DATE<![CDATA[<=]]>#specDateEnd#
+		 	</isNotNull>
+		</dynamic>
+		order by SPEC_DATE asc
+	</select>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice">
+		<selectKey resultClass="long" keyProperty="timePriceId">
+			select META_TIME_PRICE_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into META_TIME_PRICE (TIME_PRICE_ID, SPEC_DATE,
+		META_PRODUCT_ID, DAY_STOCK, SETTLEMENT_PRICE, MARKET_PRICE, OVER_SALE, RESOURCE_CONFIRM,META_BRANCH_ID,ZERO_STOCK_HOUR,BREAKFAST_COUNT,SUGGEST_PRICE,TOTAL_DAY_STOCK,AHEAD_HOUR,CANCEL_HOUR,EARLIEST_USE_TIME,LATEST_USE_TIME,CANCEL_STRATEGY) 
+		values
+		(#timePriceId#, #specDate#, #productId#, #dayStock#,
+		#settlementPrice#, #marketPrice#, #overSale#, #resourceConfirm#,#metaBranchId#,#zeroStockHour#,#breakfastCount#,#suggestPrice#,#totalDayStock#,#aheadHour#,#cancelHour#,#earliestUseTime#,#latestUseTime#,#cancelStrategy#)
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice">
+		update META_TIME_PRICE 
+		set DAY_STOCK = #dayStock#, SETTLEMENT_PRICE = #settlementPrice#, MARKET_PRICE = #marketPrice#, OVER_SALE = #overSale#, 
+		RESOURCE_CONFIRM = #resourceConfirm#,ZERO_STOCK_HOUR = #zeroStockHour#
+		,BREAKFAST_COUNT=#breakfastCount#,SUGGEST_PRICE=#suggestPrice#,TOTAL_DAY_STOCK=#totalDayStock#,AHEAD_HOUR=#aheadHour#,CANCEL_HOUR=#cancelHour#
+		,EARLIEST_USE_TIME=#earliestUseTime#,LATEST_USE_TIME=#latestUseTime#,CANCEL_STRATEGY=#cancelStrategy#,STOCK_FLAG=#stockFlag#
+		where TIME_PRICE_ID = #timePriceId#
+	</update>
+	
+	<!-- 提供动态更新 -->
+	<update id="updateDynamicByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice">
+		update META_TIME_PRICE
+		 <dynamic prepend="SET" >
+	      <isNotNull property="dayStock" prepend="," >
+	        <![CDATA[  
+	        DAY_STOCK = #dayStock#  
+	        ]]>  
+	      </isNotNull>
+	       <isNotNull property="settlementPrice" prepend="," >
+	        <![CDATA[  
+	        SETTLEMENT_PRICE = #settlementPrice#  
+	        ]]>  
+	      </isNotNull>
+	      <isNotNull property="marketPrice" prepend="," >
+	        <![CDATA[  
+	        MARKET_PRICE = #marketPrice#  
+	        ]]>  
+	      </isNotNull>
+	       <isNotNull property="overSale" prepend="," >
+	        <![CDATA[  
+	        OVER_SALE = #overSale#  
+	        ]]>  
+	      </isNotNull>
+	       <isNotNull property="resourceConfirm" prepend="," >
+	        <![CDATA[  
+	        RESOURCE_CONFIRM = #resourceConfirm#  
+	        ]]>  
+	      </isNotNull>
+	       <isNotNull property="zeroStockHour" prepend="," >
+	        <![CDATA[  
+	        ZERO_STOCK_HOUR = #zeroStockHour#  
+	        ]]>  
+	      </isNotNull>
+	       <isNotNull property="breakfastCount" prepend="," >
+	        <![CDATA[  
+	        BREAKFAST_COUNT = #breakfastCount#  
+	        ]]>  
+	      </isNotNull>
+	        <isNotNull property="suggestPrice" prepend="," >
+	        <![CDATA[  
+	        SUGGEST_PRICE = #suggestPrice#  
+	        ]]>  
+	      </isNotNull>
+	       <isNotNull property="totalDayStock" prepend="," >
+	        <![CDATA[  
+	        TOTAL_DAY_STOCK = #totalDayStock#  
+	        ]]>  
+	      </isNotNull>
+	       <isNotNull property="aheadHour" prepend="," >
+	        <![CDATA[  
+	        AHEAD_HOUR = #aheadHour#  
+	        ]]>  
+	      </isNotNull>
+	      <isNotNull property="cancelHour" prepend="," >
+	        <![CDATA[  
+	        CANCEL_HOUR = #cancelHour#  
+	        ]]>  
+	      </isNotNull>
+	      <isNotNull property="earliestUseTime" prepend="," >
+	        <![CDATA[  
+	        EARLIEST_USE_TIME = #earliestUseTime#  
+	        ]]>  
+	      </isNotNull>
+	       <isNotNull property="latestUseTime" prepend="," >
+	        <![CDATA[  
+	        LATEST_USE_TIME = #latestUseTime#  
+	        ]]>  
+	      </isNotNull>
+	       <isNotNull property="cancelStrategy" prepend="," >
+	        <![CDATA[  
+	        CANCEL_STRATEGY = #cancelStrategy#  
+	        ]]>  
+	      </isNotNull>
+    	</dynamic>
+		where TIME_PRICE_ID = #timePriceId#
+	</update>
+	
+	
+	
+	<delete id="deleteByBeginDateAndEndDate">
+		delete from META_TIME_PRICE where SPEC_DATE
+		<![CDATA[>=]]>#beginDate# and SPEC_DATE
+		<![CDATA[<=]]>#endDate# and META_BRANCH_ID =
+		#metaBranchId#
+	</delete>
+	
+	<delete id="deleteByPK">
+		delete from META_TIME_PRICE where TIME_PRICE_ID=#timePriceId#
+	</delete>
+	
+	<select id="getTimePriceByIdAndDate" resultMap="OverSaleBaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice">
+		select * from META_TIME_PRICE where META_BRANCH_ID=#metaBranchId# and SPEC_DATE=#specDate#
+	</select>
+	
+	<select id="selectMetaTimePriceByProdBranchIdAndDate" resultMap="OverSaleBaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice">
+		select mtp.* from META_TIME_PRICE mtp,PROD_PRODUCT_BRANCH_ITEM ppbi where mtp.META_BRANCH_ID=ppbi.META_BRANCH_ID AND ppbi.PROD_BRANCH_ID=#prodBranchId# and SPEC_DATE=#specDate#
+	</select>
+
+	<select id="getGroupTimePriceByBranchIdAndDate" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice">
+		select 0 as TIME_PRICE_ID,0 as META_PRODUCT_ID, 0 as META_BRANCH_ID, #specDate# as SPEC_DATE, 
+		min(mtp.DAY_STOCK) as DAY_STOCK, 
+		sum(mtp.SETTLEMENT_PRICE*ppbi.QUANTITY) as SETTLEMENT_PRICE, 
+		sum(mtp.MARKET_PRICE*ppbi.QUANTITY) as MARKET_PRICE 
+		from META_TIME_PRICE mtp, PROD_PRODUCT_BRANCH_ITEM ppbi 
+		where mtp.META_BRANCH_ID=ppbi.META_BRANCH_ID 
+    	and ppbi.PROD_BRANCH_ID=#prodBranchId#
+    	and mtp.SPEC_DATE=#specDate#
+	</select>
+    
+    <select id="selectIsExistProdProduct" parameterClass="java.util.HashMap" resultClass="java.lang.Long">
+    	 select count(*) from prod_time_price mtp, prod_product_branch_item ppbi
+     	where ppbi.prod_branch_id = mtp.prod_branch_id
+     	and ppbi.meta_branch_id=#metaBranchId#
+    	and 
+   		<![CDATA[
+   		mtp.spec_date >= #beginDate#
+		]]>
+  	    and 
+  	    <![CDATA[
+  	    mtp.spec_date <= #endDate#
+		]]>
+    	
+    </select>
+    <select id="selectNotNeedResourceConfirm" resultClass="java.lang.Long" parameterClass="java.util.Map">
+        select count(*) from meta_time_price mtp,meta_product_branch mpb where 
+    		mpb.meta_branch_id=mtp.meta_branch_id
+    		and mtp.resource_confirm='false'
+    		and mtp.spec_date &gt;=#beginDate#
+            and mpb.meta_product_id=#metaProductId#
+    </select>
+    
+    
+    <update id="resetStock">
+    <![CDATA[
+    	update meta_time_price mtp set mtp.RESOURCE_CONFIRM='true'
+		 where mtp.zero_stock_hour is not null
+	       and mtp.day_stock > 0
+	       and (mtp.spec_date - mtp.zero_stock_hour/24)<sysdate 
+	       and mtp.RESOURCE_CONFIRM='false'
+	       and mtp.spec_date between(sysdate-2) and (sysdate+61)
+	]]>
+    </update>
+    <select id="getMinOrMaxTimePriceByMetaBranchId" parameterClass="java.util.Map" resultMap="BaseResultMap">
+        select * from (select * from meta_time_price 
+		where meta_branch_id = #metaBranchId# 
+		order by spec_date 
+		<isEqual property="isMax" compareValue = "true">
+		    desc
+		</isEqual>
+		) where rownum=1
+    </select>
+    <update id="updateTrainTimePrice" parameterClass="com.lvmama.comm.bee.po.prod.TimePrice">
+     	<![CDATA[
+	    	update meta_time_price mtp
+	    	   set mtp.day_stock = #dayStock#
+	    	 where mtp.meta_branch_id = #metaBranchId#
+	    	   and mtp.spec_date >= #beginDate#
+	    	   and mtp.spec_date <= #endDate#
+    	]]>
+    </update>
+    
+    <update id="signIsSendEmail" parameterClass="java.util.HashMap">
+		update meta_time_price mtp set
+		mtp.STOCK_FLAG=#stokflag# where mtp.TIME_PRICE_ID=#priceId#
+	</update>
+</sqlMap>

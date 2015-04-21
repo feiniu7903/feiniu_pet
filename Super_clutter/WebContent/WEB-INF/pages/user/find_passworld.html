@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<title>找回密码-驴妈妈手机站</title>
+<meta name="description" content="驴妈妈旅游网在线手机预订服务，为您提供更多景点门票预订,自由行,自助游,旅游团购,攻略,旅游度假和酒店预订等旅游信息,优质,个性,自由,尊贵服务只为您！" >
+<#include "../common/define_v3.html">
+
+<script src="${request.contextPath!}/js/find_passworld.js"></script>
+ <script >
+   var _nssoUrl = "${nssoUrl!}" +"/";
+ </script>
+</head>
+
+<body>
+<div class="wrap">
+	<header class="header">
+    	<a href="javascript:history.back();" class="back" id="back1_id"><span class="ic_back"></span></a>
+    	<a href="javascript:findPassworldBack('2');" class="back" style="display:none" id="back2_id"><span class="ic_back"></span></a>
+        <h1>找回密码</h1>
+    </header>
+    <section class="coupon_main">
+        <input id="redirect_url" type="hidden" value ="${service!}"/>
+    	<!-- 第一步获取验证码-->
+    	<article class="find_pass find_pass1" id="step1">
+    	       <input type="checkbox" name="checkbox1" id="checkbox" checked style="display:none">
+                <ul>
+                    <li><input id="mobile" type="tel" name="mobile" placeholder="请输入手机号" value="" onkeyup="step1change();"/><i class="ic_delete"></i></li>
+                </ul>
+                <a href="javascript:void(0);" onclick="getAuthCodeByFindPW();" class="btn_se_sub1" _popupEvent='_popup' style="display:none" id="step1_show">获取手机验证码</a>
+                <a href="javascript:void(0);" class="btn_se_sub3" _popupEvent='_popup' id="step1_hide">获取手机验证码</a>
+        </article>
+        <!-- \第一步获取验证码-->
+    	<article class="find_pass" id="step2" style="display:none">
+                <p>
+                    短信验证码已发送到手机：<span id="telId">130***912</span>
+                </p>
+                <ul>
+                    <li><input type="text" name="yzm" id="authenticationCode" placeholder="请输入短信验证码" value="" /><i class="ic_delete"></i></li>
+                    <li><input type="password" id="password" name="pass1" placeholder="请输入新密码（最少6位）" value="" /><i class="ic_delete"></i></li>
+                    <li><input type="password" id="oldPassword" name="pass2" placeholder="重复密码" value="" /><i class="ic_delete"></i></li>
+                </ul>
+                <a href="javascript:void(0);" onclick="resetPassworld();" class="btn_se_sub1">设置密码</a>
+        </article>
+    </section>
+   <!-- footer -->
+   <#include "../common/footer_v3.html"/>
+</div>
+</body>
+</html>

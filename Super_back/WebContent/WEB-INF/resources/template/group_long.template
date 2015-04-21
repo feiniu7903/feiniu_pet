@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title> 国内长途跟团游 </title> 
+<style type="text/css"> 
+	body{font-family: SimSun;background-image:url(${backImage});}
+	* {margin:0;padding:0;}
+	.txt-hetong {color:#666;width:635px;margin:10px auto;text-align:center;font:12px/1.5 arial,SimSun;}
+	.txt-hetong h1,.st2 {font:700 18px/2 SimSun;color:#333;}
+	.txt-hetong .st2 {display:block;}
+	.txt-hetong .st3 {display:block;text-align:center;font:700 14px SimSun;padding-bottom:5px;}
+	.txt-hetong h1.h1-title {font:700 24px/2 SimSun;}
+	.txt-hetong strong.st1 {font:14px/1.5 SimSun;color:#333;display:block;}
+	.txt-hetong b {color:#333;font-weight:700;}
+	.txt-hetong p {text-align:left;overflow:hidden;}
+	.txt-hetong h2 {text-align:left;font:700 14px/2 SimSun;color:#333;margin-top:10px;}
+	.txt-hetong .txt-right {float:right;}
+	.txt-hetong .txt-right2 {float:right;color:#333;font:16px/2 SimSun;}
+	.txt-hetong .all-line {font-style:normal;display:inline-block;border-bottom:1px solid #666;padding:0 5px;margin:0 5px;}
+	.txt-hetong .all-line1 {width:50px;}
+	.txt-hetong .all-line2 {width:255px;}
+	.txt-hetong .all-line3 {width:80%;}
+	.txt-hetong .b1 {font-family:SimSun;font-size:15px;}
+	.txt-hetong .b2 {font:15px/1.5 SimSun;}
+	.txt-hetong .kaiti {font-family:SimSun;font-size:16px;}
+	.txt-hetong .kaiti1 {font-family:SimSun;font-size:18px;}
+	.tab1 {background-color:#ccc;width:90%;margin:10px auto;}
+	.tab1 td,.tab1 th {padding:5px;text-align:center;vertical-align:middle;background-color:#fff;}
+	.ul1 {width:90%;border-left:1px solid #ccc;border-top:1px solid #ccc;margin:10px auto;list-style:none;}
+	.ul1 li {border-right:1px solid #ccc;border-bottom:1px solid #ccc;height:18px;font:14px/18px SimSun;text-align:left;text-indent:3em;}
+	.text1 {width:250px;margin:20px auto;height:80px;font:14px SimSun;color:#333;}
+	.text1 span {display:block;text-align:left;}
+	.text1 .textLeft {float:left;width:150px;line-height:30px;}
+	.text1 .textRight {float:left;width:100px;line-height:60px;}
+	.ul2 {width:635px;list-style:none;}
+	.ul2 li {width:317px;float:left;text-align:left;}
+	.div1 {background-color: #FFFFFF;width:15px; height:15px;display:block; border: #000000 inset 1px;}
+ </style> 
+ </head> 
+
+<body> 
+<div class="txt-hetong">
+
+<span style="font-size: x-large; align:center;"> 国内长途跟团游 </span>  <br/> 
+<hr/>
+<p><b>旅游线路：</b>${productName} </p>  
+<p><b>订单编号：</b>${orderId}</p>
+<p><b>客人姓名：</b>${travellerInfo} </p>  
+<p><b>旅游日期：</b>${travelTimeRange} </p>  
+<p><b>接团方式：</b> </p>
+<p><b>接机导游电话：</b></p>
+<p><b>当地应急电话：</b> </p>
+<p><b>驴妈妈应急联系电话：</b>60561632*1022 </p>
+<p><b>驴妈妈质监电话：</b>021-60561634 </p>
+<p><b>组团社：</b>上海驴妈妈国际旅行社有限公司 </p>
+<p><b>代理社：</b>上海驴妈妈国际旅行社有限公司 </p>
+<p><b>注意事项：</b></p>
+<p><b>客人信息</b></p>
+<table border="0" cellspacing="1" cellpadding="0" class="tab1"> 
+	 <tr> 
+		 <td> <b>姓名</b> </td> 
+		 <td> <b>证件类型</b> </td> 
+		 <td> <b>证件号</b> </td> 
+	 </tr>
+	 ${travellerList}
+ </table> 
+ 
+<p><b>航班信息(往返大交通)</b></p>
+<table border="0" cellspacing="1" cellpadding="0" class="tab1"> 
+	 <tr> 
+		 <td> &nbsp; </td> 
+		 <td> <b>日期</b> </td> 
+		 <td> <b>航班号</b> </td> 
+		 <td> <b>机场 </b></td> 
+		 <td><b> 起飞时间</b> </td> 
+		 <td> <b>备注</b> </td> 
+	 </tr>
+	  <tr> 
+		 <td>  </td> 
+		 <td>  </td> 
+		 <td>  </td> 
+		 <td>  </td> 
+		 <td>  </td> 
+		 <td>  </td> 
+	 </tr> 
+	   <tr> 
+		 <td>  </td> 
+		 <td>  </td> 
+		 <td>  </td> 
+		 <td>  </td> 
+		 <td>  </td> 
+		 <td>  </td> 
+	 </tr>   
+ </table> 
+<p>建议：请各位游客到达机场后从进口进入，办理登机手续，领取登机牌。具体登记手续操作按照大屏幕显示为准或询问柜台服务人员。
+</p>
+
+<p>行程信息</p>
+<table border="0" cellspacing="1" cellpadding="0" class="tab1" style="width:680px;table-layout:fixed"> 
+	 <tr> 
+		 <td style="width:8%"> <b>日期</b> </td> 
+		 <td> <b>行程 </b></td> 
+		 <td style="width:8%"> <b>早中晚餐</b> </td> 
+		 <td style="width:10%"><b>住宿</b></td>
+	 </tr>
+	 ${viewJourneyVoList}
+ </table> 
+<p><b>费用说明：</b><br/>${costContain}</p>
+<br/>
+<p><b>行前须知：</b><br/>${acitonToknow}</p>
+</div>
+</body> 
+</html>

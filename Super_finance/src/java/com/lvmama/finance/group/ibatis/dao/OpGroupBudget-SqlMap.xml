@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="OpGroupBudget" >
+	 
+	<typeAlias alias="OpGroupBudget" type="com.lvmama.comm.bee.po.op.OpGroupBudget"/>
+	<!-- 查询团预算信息begin -->
+ 	<select id="searchBudget" parameterClass="string" resultClass="OpGroupBudget">
+		SELECT 	
+			TRAVEL_GROUP_CODE AS TRAVELGROUPCODE,
+			BG_PERSONS AS BGPERSONS,
+			BG_TOTAL_COSTS AS BGTOTALCOSTS,
+			BG_INCOMING AS BGINCOMING,
+			BG_PROFIT AS BGPROFIT,
+			BG_PROFIT_RATE*100 AS BGPROFITRATE,
+			ACT_PERSONS AS ACTPERSONS,
+			ACT_INCOMING AS ACTINCOMING,
+			ACT_ALLOWANCE AS ACTALLOWANCE,
+			ACT_TOTAL_COSTS AS ACTTOTALCOSTS,
+			ACT_PROFIT AS ACTPROFIT,
+			ACT_PROFIT_RATE*100 AS ACTPROFITRATE
+		FROM 
+			OP_GROUP_BUDGET
+		WHERE
+			TRAVEL_GROUP_CODE = #code#
+ 	</select>
+ 	<!-- 查询团预算信息end -->
+ 	
+</sqlMap>

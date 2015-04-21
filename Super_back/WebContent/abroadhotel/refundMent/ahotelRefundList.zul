@@ -1,0 +1,69 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_abroad_hotel_refundList_add"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_abroad_hotel_refundList_add" title="退款处理" border="normal"
+		apply="com.lvmama.back.web.abroadhotel.sale.AhotelOrdSaleAddListAction">
+		<listbox mold="paging" model="@{saction.ordRefundmentList}">
+			<listhead>
+				<listheader label="退款单号" width="6%" />
+				<listheader label="退款金额" width="8%" />
+				<listheader label="退款类型" width="13%" />
+				<listheader label="处理内容" width="25%" />
+				<listheader label="提交人" width="10%" />
+				<listheader label="提交时间" />
+				<listheader label="退款状态" />
+				<listheader label="退款时间" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem height="25px" self="@{each='refundment'}">
+				<listcell label="@{refundment.refundmentId}" />
+				<listcell label="@{refundment.amountYuan}" />
+				<listcell label="@{refundment.refundTypeName}" />
+				<listcell label="@{refundment.memo}" />
+				<listcell label="@{refundment.operatorName}" />
+				<listcell label="@{refundment.createTime}" />
+				<listcell label="@{refundment.statusName}" />
+				<listcell label="@{refundment.refundTime}" />
+				<listcell>
+				<a style="color:blue" label="通过"
+						onClick='saction.updateOrdRefundSuccess(self.getAttribute("refundmentId"))' visible="@{refundment.approveVisible}">
+						<custom-attributes
+							refundmentId="@{refundment.refundmentId}" />
+					</a>
+					<a style="color:blue" label="修改退款" visible="@{refundment.visibleUpdate}"
+						onClick='saction.showWindow("/abroadhotel/refundMent/ahotelRefundUpdate.zul",self.getAttributes());'>
+						<custom-attributes
+							refundmentId="@{refundment.refundmentId}" />
+						<custom-attributes
+							orderId="@{refundment.orderId}" />
+							<custom-attributes
+							saleServiceId="@{refundment.saleServiceId}" />
+							
+					</a>
+					<a style="color:blue" label="取消退款" visible="false"
+						onClick='saction.window(self.getAttribute("refundmentId"))' >
+						<custom-attributes
+							refundmentId="@{refundment.refundmentId}" />
+					</a>
+					<a style="color:blue" label="操作日志" onClick='saction.showWindow("/abroadhotel/refundMent/abroadRefundmentLogs.zul",self.getAttributes());'>
+					     <custom-attributes refundmentId="@{refundment.refundmentId}" />
+					     <custom-attributes logType="updateOrderRefundment" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+		<toolbar align="center">
+			<button id="save" width="100px" label="新增退款服务"
+				onClick='saction.showWindow("/abroadhotel/refundMent/ahotelOrdRefundAdd.zul",self.getAttributes());'>
+				<custom-attributes
+					saleServiceId="@{saction.saleServiceId}" />
+				<custom-attributes orderId="@{saction.orderId}" />
+			</button>
+			<button label="关闭窗口" width="100px"
+				onClick="win_abroad_hotel_refundList_add.detach()">
+			</button>
+		</toolbar>
+	</window>
+</zk>

@@ -1,0 +1,15 @@
+<?component name="tasks" macroURI="/push/tasks.zul" ?>
+<?component name="message" macroURI="/push/messages.zul" ?>
+<?component name="announ" macroURI="/push/announ.zul" ?>
+<tabbox  orient="vertical" height="100%" apply="com.lvmama.back.web.log.ToolsAction">
+	<tabs width="5%">
+		<tab id="messages" label="消息" />
+		<tab id="tasks" label="任务"/>
+		<tab id="announ" label="公告"/>
+	</tabs>
+	<tabpanels style="width:593px;">
+		<tabpanel><message/></tabpanel>
+		<tabpanel><tasks/></tabpanel>
+		<tabpanel><announ/></tabpanel>
+	</tabpanels>
+</tabbox>

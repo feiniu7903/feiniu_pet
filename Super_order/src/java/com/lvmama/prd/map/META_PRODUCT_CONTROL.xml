@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="META_PRODUCT_CONTROL">
+	<resultMap id="BaseResultMap"
+		class="com.lvmama.comm.bee.po.meta.MetaProductControl">
+		<result column="META_PRODUCT_CONTROL_ID" property="metaProductControlId" />
+		<result column="CONTROL_TYPE" property="controlType" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_BRANCH_ID" property="productBranchId" />
+		<result column="CONTROL_QUANTITY" property="controlQuantity" />
+		<result column="SALE_QUANTITY" property="saleQuantity" />
+		<result column="DELAY_ABLE" property="delayAble" />
+		<result column="BACK_ABLE" property="backAble" />
+		<result column="START_DATE" property="startDate" />
+		<result column="END_DATE" property="endDate" />
+		<result column="FIRST_TIME" property="firstTime" />
+		<result column="SECOND_TIME" property="secondTime" />	
+		<result column="THIRD_TIME" property="thirdTime"/>
+		<result column="FIRST_LEVEL" property="firstLevel"/>
+		<result column="SECOND_LEVEL" property="secondLevel"/>
+		<result column="THIRD_LEVEL" property="thirdLevel"/>
+		<result column="SALE_START_DATE" property="saleStartDate"/>
+		<result column="SALE_END_DATE" property="saleEndDate"/>
+		<result column="EXT" property="ext"/>
+		<result column="NOT_GOT" property="notGot"/>
+		<result column="FINISH_SALE" property="finishSale"/>
+		<result column="PRODUCT_NAME" property="productName"/>
+		<result column="BRANCH_NAME" property="branchName"/>
+		<result column="SUPPLIER_NAME" property="supplierName"/>
+	</resultMap>
+	
+	<resultMap class="com.lvmama.comm.bee.vo.view.ViewMetaProductControl" id="ViewResultMap" extends="BaseResultMap">
+		<result property="belongCenter" column="BELONG_CENTER"/>
+		<result property="supplierId" column="SUPPLIER_ID"/>
+		<result property="applierName" column="APPLIER_NAME"/>
+		<result property="managerEmail" column="MANAGER_EMAIL"/>
+	</resultMap>
+
+	<sql id="condition">
+		<dynamic>			
+			<isNotEmpty prepend="and" property="productId">
+				C.PRODUCT_ID = #productId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="branchId">
+				C.PRODUCT_BRANCH_ID = #branchId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="controlType">
+				C.CONTROL_TYPE = #controlType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="productName">
+				P.PRODUCT_NAME LIKE #productName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="branchName">
+				B.BRANCH_NAME LIKE #branchName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="supplierId">
+				S.SUPPLIER_ID = #supplierId#
+			</isNotEmpty>
+			<isNull property="supplierId">
+				<isNotEmpty prepend="and" property="supplierName">
+						S.SUPPLIER_NAME LIKE #supplierName#
+				</isNotEmpty>
+			</isNull>
+			<isNotEmpty prepend="AND" property="userId">
+		  		P.MANAGER_ID = #userId#
+		  	</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<sql id="viewCondition">
+		<dynamic>
+			<isNotEmpty prepend="AND" property="applierName">
+				U.REAL_NAME LIKE #applierName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="branchName">
+				B.BRANCH_NAME LIKE #branchName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="productName">
+				P.PRODUCT_NAME LIKE #productName#
+			</isNotEmpty>
+			<isNull property="supplierId">
+				<isNotEmpty prepend="and" property="supplierName">
+						S.SUPPLIER_NAME LIKE #supplierName#
+				</isNotEmpty>
+			</isNull>
+			<isNotEmpty prepend="AND" property="controlType">
+				c.CONTROL_TYPE = #controlType#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="saleStartDate">
+	        	<![CDATA[
+			  		C.SALE_START_DATE >= #saleStartDate#
+		  		]]>
+		  	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="saleEndDate">
+	        	<![CDATA[
+			  		C.SALE_END_DATE <= #saleEndDate#
+		  		]]>
+		  	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startDate">
+	        	<![CDATA[
+			  		C.START_DATE >= #startDate#
+		  		]]>
+		  	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endDate">
+	        	<![CDATA[
+			  		C.END_DATE <= #endDate#
+		  		]]>
+		  	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="reportDate">
+	        	<![CDATA[
+			  		C.END_DATE >= #reportDate#
+		  		]]>
+		  	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="finish">
+	        	<![CDATA[
+			  		C.FINISH_SALE = 'true'
+			  		AND C.SALE_QUANTITY >= C.CONTROL_QUANTITY
+		  		]]>
+		  	</isNotEmpty>
+		  	<isNotEmpty prepend="AND" property="time">
+		  		<isEqual property="time" compareValue="1">
+			  		C.FIRST_TIME = TO_DATE(TO_CHAR(SYSDATE, 'yyyyMMdd'), 'yyyyMMdd') 
+		  		</isEqual>
+		  		<isEqual property="time" compareValue="2">
+			  		C.SECOND_TIME = TO_DATE(TO_CHAR(SYSDATE, 'yyyyMMdd'), 'yyyyMMdd') 
+		  		</isEqual>
+		  		<isEqual property="time" compareValue="3">
+			  		C.THIRD_TIME = TO_DATE(TO_CHAR(SYSDATE, 'yyyyMMdd'), 'yyyyMMdd') 
+		  		</isEqual>
+		  	</isNotEmpty>
+		  	<isNotEmpty prepend="AND" property="workGroupId">
+		  		G.WORK_GROUP_ID = #workGroupId#
+		  	</isNotEmpty>
+		  	<isNotEmpty prepend="AND" property="productId">
+		  		P.META_PRODUCT_ID = #productId#
+		  	</isNotEmpty>
+		  	<isNotEmpty prepend="AND" property="supplierId">
+		  		P.SUPPLIER_ID = #supplierId#
+		  	</isNotEmpty>
+		  	<isEqual property="roleArea" compareValue="ROLE_MANAGER">
+		  		<isNotEmpty prepend="AND" property="managerList">
+			  		P.MANAGER_ID in ($managerList$)
+		  		</isNotEmpty>
+		  	</isEqual>
+		  	<isEqual property="roleArea" compareValue="ROLE_SELF">
+			  	<isNotEmpty prepend="AND" property="userId">
+			  		P.MANAGER_ID = #userId#
+			  	</isNotEmpty>
+		  	</isEqual>
+		</dynamic>
+	</sql>
+
+	<select id="getDateCrossCountByControl" resultClass="java.lang.Long"
+		parameterClass="com.lvmama.comm.bee.po.meta.MetaProductControl">
+		<![CDATA[
+			SELECT COUNT(1)
+			  FROM META_PRODUCT_CONTROL C
+			 WHERE ((C.START_DATE <= #startDate# AND
+			       C.END_DATE >= #startDate#) OR
+			       (C.START_DATE <= #endDate# AND
+			       C.END_DATE >= #endDate#))
+        ]]>
+       	<isNotEmpty prepend="and" property="productId">
+			<![CDATA[
+			   C.PRODUCT_ID = #productId#
+			]]>
+		</isNotEmpty>
+       	<isNotEmpty prepend="and" property="productBranchId">
+			<![CDATA[
+			   C.PRODUCT_BRANCH_ID = #productBranchId#
+			]]>
+		</isNotEmpty>
+       	<isNotEmpty prepend="and" property="metaProductControlId">
+			<![CDATA[
+			   C.META_PRODUCT_CONTROL_ID <> #metaProductControlId#
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="countByCondition" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		SELECT COUNT(1)
+		  FROM META_PRODUCT_CONTROL C
+		  LEFT JOIN META_PRODUCT P
+		    ON P.META_PRODUCT_ID = C.PRODUCT_ID
+		  LEFT JOIN SUP_SUPPLIER S
+		    ON S.SUPPLIER_ID = P.SUPPLIER_ID
+		  LEFT JOIN META_PRODUCT_BRANCH B
+		    ON C.PRODUCT_BRANCH_ID = B.META_BRANCH_ID
+		WHERE 1 = 1
+		<include refid="condition" />
+	</select>
+	
+	<select id="countViewControlByCondition" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		SELECT COUNT(1)
+		  FROM META_PRODUCT_CONTROL C
+		  LEFT JOIN META_PRODUCT P
+		    ON P.META_PRODUCT_ID = C.PRODUCT_ID
+		  LEFT JOIN SUP_SUPPLIER S
+		    ON S.SUPPLIER_ID = P.SUPPLIER_ID
+		  LEFT JOIN META_PRODUCT_BRANCH B
+		    ON C.PRODUCT_BRANCH_ID = B.META_BRANCH_ID
+		  LEFT JOIN LVMAMA_PET.WORK_GROUP G
+		    ON P.WORK_GROUP_ID = G.WORK_GROUP_ID
+		  LEFT JOIN LVMAMA_PET.PERM_USER U
+		    ON P.MANAGER_ID = U.USER_ID
+		WHERE 1 = 1
+		<include refid="viewCondition" />
+	</select>
+
+	<select id="find" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT C.*, P.PRODUCT_NAME, B.BRANCH_NAME, S.SUPPLIER_NAME
+		  FROM META_PRODUCT_CONTROL C
+		  LEFT JOIN META_PRODUCT P
+		    ON P.META_PRODUCT_ID = C.PRODUCT_ID
+		  LEFT JOIN SUP_SUPPLIER S
+		    ON S.SUPPLIER_ID = P.SUPPLIER_ID
+		  LEFT JOIN META_PRODUCT_BRANCH B
+		    ON C.PRODUCT_BRANCH_ID = B.META_BRANCH_ID
+		 WHERE C.META_PRODUCT_CONTROL_ID = #metaProductControlId#
+	</select>
+
+	<select id="getListByCondition" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT *
+		  FROM (SELECT T.*, ROWNUM AS ROWNUM1
+		          FROM (SELECT *
+		                  FROM (SELECT C.*,P.PRODUCT_NAME,B.BRANCH_NAME,S.SUPPLIER_NAME
+		                          FROM META_PRODUCT_CONTROL C
+		                          LEFT JOIN META_PRODUCT P
+								    ON P.META_PRODUCT_ID = C.PRODUCT_ID
+								  LEFT JOIN SUP_SUPPLIER S
+								    ON S.SUPPLIER_ID = P.SUPPLIER_ID
+								  LEFT JOIN META_PRODUCT_BRANCH B
+								    ON C.PRODUCT_BRANCH_ID = B.META_BRANCH_ID
+		                         WHERE 1 = 1
+		                         <include refid="condition" />
+		                         ORDER BY C.START_DATE ASC)) T
+		<![CDATA[
+		         WHERE ROWNUM <= #_endRow#)
+		 WHERE ROWNUM1 >= #_startRow#
+		]]>
+	</select>
+	
+	<select id="getViewControlList" resultMap="ViewResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT *
+		  FROM (SELECT T.*, ROWNUM AS ROWNUM1
+		          FROM (SELECT *
+		                  FROM (SELECT C.*,
+								       P.PRODUCT_NAME,
+								       P.SUPPLIER_ID,
+								       U.REAL_NAME     APPLIER_NAME,
+								       U.EMAIL         MANAGER_EMAIL,
+								       B.BRANCH_NAME,
+								       S.SUPPLIER_NAME,
+								       G.GROUP_NAME    BELONG_CENTER
+								  FROM META_PRODUCT_CONTROL C
+								  LEFT JOIN META_PRODUCT P
+								    ON P.META_PRODUCT_ID = C.PRODUCT_ID
+								  LEFT JOIN SUP_SUPPLIER S
+								    ON S.SUPPLIER_ID = P.SUPPLIER_ID
+								  LEFT JOIN META_PRODUCT_BRANCH B
+								    ON C.PRODUCT_BRANCH_ID = B.META_BRANCH_ID
+								  LEFT JOIN LVMAMA_PET.WORK_GROUP G
+								    ON P.WORK_GROUP_ID = G.WORK_GROUP_ID
+								  LEFT JOIN LVMAMA_PET.PERM_USER U
+								    ON P.MANAGER_ID = U.USER_ID
+		                         WHERE 1 = 1
+		                         <include refid="viewCondition" />
+		                         ORDER BY C.START_DATE ASC)) T
+		<![CDATA[
+		         WHERE ROWNUM <= #_endRow#)
+		 WHERE ROWNUM1 >= #_startRow#
+		]]>
+	</select>
+	
+	<select id="findByVisitTimeCondition" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		<![CDATA[
+			SELECT C.*, P.PRODUCT_NAME, B.BRANCH_NAME, S.SUPPLIER_NAME
+			  FROM META_PRODUCT_CONTROL C
+			  LEFT JOIN META_PRODUCT P
+			    ON P.META_PRODUCT_ID = C.PRODUCT_ID
+			  LEFT JOIN SUP_SUPPLIER S
+			    ON S.SUPPLIER_ID = P.SUPPLIER_ID
+			  LEFT JOIN META_PRODUCT_BRANCH B
+			    ON C.PRODUCT_BRANCH_ID = B.META_BRANCH_ID
+			 WHERE C.PRODUCT_ID = #productId#
+			   AND C.START_DATE <= #visiteTime#
+			   AND C.END_DATE + 1 > #visiteTime#
+		]]>
+		<isNotEmpty prepend="and" property="branchId">
+			<![CDATA[
+			   C.PRODUCT_BRANCH_ID = #branchId#
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="getTotalSaleQuantityByControlId" resultClass="Long" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductControl">
+		<![CDATA[
+			SELECT (DECODE((SELECT SUM(META.PRODUCT_QUANTITY * PROD.QUANTITY) 
+		                FROM LVMAMA_SUPER.ORD_ORDER_ITEM_META META 
+		                JOIN META_PRODUCT_CONTROL CONTROL 
+		]]>
+						<isEqual property="controlType" compareValue="PRODUCT_LEVEL">
+							ON META.META_PRODUCT_ID= CONTROL.PRODUCT_ID 
+						</isEqual>
+						<isEqual property="controlType" compareValue="BRANCH_LEVEL">
+							ON META.META_BRANCH_ID = CONTROL.PRODUCT_BRANCH_ID 
+						</isEqual>
+		<![CDATA[		                
+		                JOIN ORD_ORDER ORD 
+		                  ON META.ORDER_ID = ORD.ORDER_ID 
+		                JOIN ORD_ORDER_ITEM_PROD PROD 
+		                  ON META.ORDER_ITEM_ID = PROD.ORDER_ITEM_PROD_ID 
+		               WHERE ORD.ORDER_STATUS <> 'CANCEL' 
+		                 AND PROD.VISIT_TIME >= CONTROL.START_DATE 
+		                 AND PROD.VISIT_TIME < CONTROL.END_DATE + 1 
+		                 AND PROD.SUB_PRODUCT_TYPE <> 'SINGLE_ROOM' 
+		                 AND CONTROL.META_PRODUCT_CONTROL_ID = #metaProductControlId#), 
+		              NULL, 
+		              0, 
+		              (SELECT SUM(META.PRODUCT_QUANTITY * PROD.QUANTITY) 
+		                 FROM LVMAMA_SUPER.ORD_ORDER_ITEM_META META 
+		                 JOIN META_PRODUCT_CONTROL CONTROL 
+		]]>
+	                   	 <isEqual property="controlType" compareValue="PRODUCT_LEVEL">
+							ON META.META_PRODUCT_ID= CONTROL.PRODUCT_ID 
+						 </isEqual>
+						 <isEqual property="controlType" compareValue="BRANCH_LEVEL">
+							ON META.META_BRANCH_ID = CONTROL.PRODUCT_BRANCH_ID 
+						 </isEqual>
+		<![CDATA[
+		                 JOIN ORD_ORDER ORD 
+		                   ON META.ORDER_ID = ORD.ORDER_ID 
+		                 JOIN ORD_ORDER_ITEM_PROD PROD 
+		                   ON META.ORDER_ITEM_ID = PROD.ORDER_ITEM_PROD_ID 
+		                WHERE ORD.ORDER_STATUS <> 'CANCEL' 
+		                  AND PROD.VISIT_TIME >= CONTROL.START_DATE 
+		                  AND PROD.VISIT_TIME < CONTROL.END_DATE + 1 
+		                  AND PROD.SUB_PRODUCT_TYPE <> 'SINGLE_ROOM' 
+		                  AND CONTROL.META_PRODUCT_CONTROL_ID = #metaProductControlId#)) + 
+		       DECODE((SELECT SUM(META.PRODUCT_QUANTITY * MTIME.QUATITY) 
+		                FROM LVMAMA_SUPER.ORD_ORDER_ITEM_META META 
+		                JOIN META_PRODUCT_CONTROL CONTROL 
+		]]>
+	                  	<isEqual property="controlType" compareValue="PRODUCT_LEVEL">
+							ON META.META_PRODUCT_ID= CONTROL.PRODUCT_ID 
+					 	</isEqual>
+					 	<isEqual property="controlType" compareValue="BRANCH_LEVEL">
+							ON META.META_BRANCH_ID = CONTROL.PRODUCT_BRANCH_ID 
+					 	</isEqual>
+		<![CDATA[
+		                JOIN ORD_ORDER_ITEM_META_TIME MTIME 
+		                  ON META.ORDER_ITEM_META_ID = MTIME.ORDER_ITEM_META_ID 
+		                JOIN ORD_ORDER ORD 
+		                  ON META.ORDER_ID = ORD.ORDER_ID 
+		                JOIN ORD_ORDER_ITEM_PROD PROD 
+		                  ON META.ORDER_ITEM_ID = PROD.ORDER_ITEM_PROD_ID 
+		               WHERE ORD.ORDER_STATUS <> 'CANCEL' 
+		                 AND MTIME.VISIT_TIME >= CONTROL.START_DATE 
+		                 AND MTIME.VISIT_TIME < CONTROL.END_DATE + 1 
+		                 AND PROD.SUB_PRODUCT_TYPE = 'SINGLE_ROOM' 
+		                 AND CONTROL.META_PRODUCT_CONTROL_ID = #metaProductControlId#), 
+		              NULL, 
+		              0, 
+		              (SELECT SUM(META.PRODUCT_QUANTITY * MTIME.QUATITY) 
+		                 FROM LVMAMA_SUPER.ORD_ORDER_ITEM_META META 
+		                 JOIN META_PRODUCT_CONTROL CONTROL 
+		]]>
+                   		 <isEqual property="controlType" compareValue="PRODUCT_LEVEL">
+							ON META.META_PRODUCT_ID= CONTROL.PRODUCT_ID 
+					 	 </isEqual>
+					 	 <isEqual property="controlType" compareValue="BRANCH_LEVEL">
+							ON META.META_BRANCH_ID = CONTROL.PRODUCT_BRANCH_ID 
+					 	 </isEqual>
+		<![CDATA[
+		                 JOIN ORD_ORDER_ITEM_META_TIME MTIME 
+		                   ON META.ORDER_ITEM_META_ID = MTIME.ORDER_ITEM_META_ID 
+		                 JOIN ORD_ORDER ORD 
+		                   ON META.ORDER_ID = ORD.ORDER_ID 
+		                 JOIN ORD_ORDER_ITEM_PROD PROD 
+		                   ON META.ORDER_ITEM_ID = PROD.ORDER_ITEM_PROD_ID 
+		                WHERE ORD.ORDER_STATUS <> 'CANCEL' 
+		                  AND MTIME.VISIT_TIME >= CONTROL.START_DATE 
+		                  AND MTIME.VISIT_TIME < CONTROL.END_DATE + 1 
+		                  AND PROD.SUB_PRODUCT_TYPE = 'SINGLE_ROOM' 
+		                  AND CONTROL.META_PRODUCT_CONTROL_ID = #metaProductControlId#))) AS TOTAL_QUANTITY 
+		  FROM DUAL
+		]]>
+	</select>
+	
+
+	<insert id="save"
+		parameterClass="com.lvmama.comm.bee.po.meta.MetaProductControl">
+		<selectKey resultClass="java.lang.Long"
+			keyProperty="metaProductControlId">
+			SELECT META_PRODUCT_CONTROL_ID_SEQ.NEXTVAL AS ID FROM DUAL
+		</selectKey>
+		INSERT INTO META_PRODUCT_CONTROL (
+			META_PRODUCT_CONTROL_ID,
+			CONTROL_TYPE,
+			PRODUCT_ID,
+			PRODUCT_BRANCH_ID,
+			CONTROL_QUANTITY,
+			SALE_QUANTITY,
+			DELAY_ABLE,
+			BACK_ABLE,
+			START_DATE,
+			END_DATE,
+			FIRST_TIME,
+			SECOND_TIME,
+			THIRD_TIME,
+			FIRST_LEVEL,
+			SECOND_LEVEL,
+			THIRD_LEVEL,
+			SALE_START_DATE,
+			SALE_END_DATE,
+			NOT_GOT,
+			FINISH_SALE
+		)
+		VALUES (
+			#metaProductControlId#,
+			#controlType#,
+			#productId#,
+			#productBranchId#,
+			#controlQuantity#,
+			0,
+			#delayAble#,
+			#backAble#,
+			#startDate#,
+			#endDate#,
+			#firstTime#,
+			#secondTime#,	
+			#thirdTime#,
+			#firstLevel#,
+			#secondLevel#,
+			#thirdLevel#,
+			#saleStartDate#,
+			#saleEndDate#,
+			#notGot#,
+			#finishSale#
+		)
+	</insert>
+	
+	<update id="update" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductControl">
+		UPDATE META_PRODUCT_CONTROL
+			SET 
+				CONTROL_QUANTITY = #controlQuantity#,
+				DELAY_ABLE = #delayAble#,
+				BACK_ABLE = #backAble#,
+				START_DATE = #startDate#,
+				END_DATE = #endDate#,
+				FIRST_TIME = #firstTime#,
+				SECOND_TIME = #secondTime#,
+				THIRD_TIME = #thirdTime#,
+				FIRST_LEVEL = #firstLevel#,
+				SECOND_LEVEL = #secondLevel#,
+				THIRD_LEVEL = #thirdLevel#,
+				SALE_START_DATE = #saleStartDate#,
+				SALE_END_DATE = #saleEndDate#,
+				NOT_GOT = #notGot#,
+				FINISH_SALE = #finishSale#
+		WHERE META_PRODUCT_CONTROL_ID = #metaProductControlId#
+	</update>
+	
+	<update id="updateSaleQuantity" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductControl">
+		UPDATE META_PRODUCT_CONTROL
+			SET 
+				SALE_QUANTITY = #saleQuantity#,
+				EXT = #ext#
+		WHERE META_PRODUCT_CONTROL_ID = #metaProductControlId#
+	</update>
+	
+	<update id="updateOrderItemMetaBtQuantity"  parameterClass="java.util.HashMap">
+		UPDATE ORD_ORDER_ITEM_META
+		   SET 
+		       BUY_OUT_QUANTITY = #buyOutQuantity#
+		 WHERE ORDER_ITEM_META_ID = #orderItemMetaId#
+	</update>
+	
+	<update id="updateOrderItemMetaTimeBtQuantity"  parameterClass="java.util.HashMap">
+		UPDATE ORD_ORDER_ITEM_META_TIME
+		   SET 
+		       BUY_OUT_QUANTITY = #buyOutQuantity#
+		 WHERE ITEM_META_TIME_ID = #orderItemMetaTimeId#
+	</update>
+	
+	<delete id="deleteControlByProductId" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductControl" >
+		DELETE FROM META_PRODUCT_CONTROL WHERE PRODUCT_ID = #productId#
+	</delete>
+	
+	<delete id="deleteControlByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.meta.MetaProductControl" >
+		DELETE FROM META_PRODUCT_CONTROL WHERE META_PRODUCT_CONTROL_ID = #metaProductControlId#
+	</delete>
+</sqlMap>

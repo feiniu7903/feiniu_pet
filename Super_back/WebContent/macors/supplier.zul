@@ -1,0 +1,23 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./bandsupplier"?>
+<bandbox id="bandsupplier" apply="com.lvmama.back.web.supplier.MacroChooseSupplier"
+	onChanging="bandsupplier$composer.changeSupplier(event)"
+	 onBlur='if(bandsupplier.getValue().trim().equals("")){supplierId.setValue(null);}'
+	mold="rounded" autodrop="true">
+	<bandpopup>
+		<vbox>
+			<listbox width="300px" id="bandboxListBox"
+				model="@{bandsupplier$composer.supplierList, load-after='bandsupplier.onChanging' }"
+				onSelect='bandsupplier.value=self.selectedItem.lastChild.label; supplierId.value=self.selectedItem.value;Events.postEvent("onChange",supplierId,null); bandsupplier.close();'>
+				<listhead>
+					<listheader width="50px" label="编号" />
+					<listheader label="供应商名称" />
+				</listhead>
+				<listitem self="@{each='supplier'}" value="@{supplier.supplierId}"
+					height="25px">
+					<listcell label="@{supplier.supplierId}" />
+					<listcell label="@{supplier.supplierName}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

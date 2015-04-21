@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_MODEL_PROPERTY">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProductModelProperty">
+		<result column="ID" property="id" />
+		<result column="FIRST_MODEL_ID" property="firstModelId" />
+		<result column="FIRST_MODEL_NAME" property="firstModelName" />
+		<result column="SECOND_MODEL_ID" property="secondModelId" />
+		<result column="SECOND_MODEL_NAME" property="secondModelName" />
+		<result column="PROPERTY" property="property" />
+		<result column="PINGYING" property="pingying" />
+		<result column="THESAURUS" property="thesaurus" />
+		<result column="PRODUCT_TYPE" property="productType" />	
+		<result column="ORDER_NUM" property="orderNum"  nullValue="0"/>	
+		<result column="IS_VALID" property="isValid" />	
+		<result column="UPDATE_DATE" property="updateDate" />	
+		<result column="SEQ" property="seq"  nullValue="0" />
+		<result column="IS_MAINTAIN" property="isMaintain"  nullValue="0" />	
+	</resultMap>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProductModelProperty">
+	    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+			SELECT PROD_MODEL_PROPERTY_ID_SEQ.NEXTVAL AS id FROM DUAL
+		</selectKey>
+		INSERT INTO PROD_MODEL_PROPERTY
+			(ID, FIRST_MODEL_ID, SECOND_MODEL_ID, PROPERTY, PINGYING, THESAURUS, PRODUCT_TYPE, ORDER_NUM, IS_VALID, UPDATE_DATE)
+		VALUES
+			(#id#,#firstModelId#,#secondModelId#,#property#,#pingying#,#thesaurus#,#productType#,#orderNum#,'Y',sysdate)
+	</insert>
+
+	<update id="update" parameterClass="com.lvmama.comm.bee.po.prod.ProductModelProperty">
+		UPDATE 
+			PROD_MODEL_PROPERTY
+		<dynamic prepend=" SET ">
+		        UPDATE_DATE = sysdate,
+			<isNotEmpty property="firstModelId" prepend=",">
+				FIRST_MODEL_ID = #firstModelId#
+			</isNotEmpty>
+			<isNotEmpty property="secondModelId" prepend=",">
+				SECOND_MODEL_ID = #secondModelId#
+			</isNotEmpty>
+			<isNotEmpty property="property" prepend=",">
+				PROPERTY = #property#
+			</isNotEmpty>
+			<isNotEmpty property="pingying" prepend=",">
+				PINGYING = #pingying#
+			</isNotEmpty>
+			<isNotEmpty property="thesaurus" prepend=",">
+				THESAURUS = #thesaurus#
+			</isNotEmpty>
+			<isNotEmpty property="productType" prepend=",">
+				PRODUCT_TYPE = #productType#
+			</isNotEmpty>
+			<isNotEmpty property="orderNum" prepend=",">
+				ORDER_NUM = #orderNum#
+			</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">
+				IS_VALID = #isValid#
+			</isNotEmpty>
+		</dynamic>
+		WHERE
+			ID = #id#	
+	</update>
+
+	<sql id="reuse_query_sql"> 
+		select pmp.*,
+               (select pmt.model_name from prod_model_type pmt where pmt.id = pmp.first_model_id) FIRST_MODEL_NAME,
+               (select pmt.model_name from prod_model_type pmt where pmt.id = pmp.second_model_id) SECOND_MODEL_NAME,
+               (select pmt.SEQ from prod_model_type pmt where pmt.id = pmp.second_model_id) SEQ,
+               (select pmt.IS_MAINTAIN from prod_model_type pmt where pmt.id = pmp.second_model_id) IS_MAINTAIN
+          from prod_model_property pmp
+          <dynamic prepend=" where ">
+            <isNotEmpty property="id" prepend=" and ">
+				ID = #id#
+			</isNotEmpty>
+			<isNotEmpty property="ids" prepend=" and ">
+				ID in ($ids$)
+			</isNotEmpty>
+			<isNotEmpty property="firstModelId" prepend=" and ">
+				FIRST_MODEL_ID = #firstModelId#
+			</isNotEmpty>
+			<isNotEmpty property="secondModelId" prepend=" and ">
+				SECOND_MODEL_ID = #secondModelId#
+			</isNotEmpty>
+			<isNotEmpty property="property" prepend=" and ">
+				PROPERTY like '%'||#property#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="pingying" prepend=" and ">
+				PINGYING like '%'||#pingying#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="thesaurus" prepend=" and ">
+				THESAURUS like '%'||#thesaurus#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="productTypes" prepend=" and ">
+				<iterate property="productTypes" open="(" close=")" conjunction="OR">
+					PRODUCT_TYPE like '%'||#productTypes[]#||'%'
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty property="isGroupSql" prepend=" and ">
+				$isGroupSql$
+			</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=" and ">
+				IS_VALID = #isValid#
+			</isNotEmpty>
+			<isNotEmpty property="isMaintain" prepend=" and ">
+				pmp.second_model_id not in (select pmt.id from prod_model_type pmt where pmt.remark='二级模块' and pmt.is_maintain='N')
+			</isNotEmpty>
+		</dynamic>  	
+		order by UPDATE_DATE desc
+    </sql>
+    
+    <select id="select" parameterClass="java.util.Map" resultMap="BaseResultMap">
+    	 select *
+		   from (select T.*, rownum as rn
+		           from (<include refid="reuse_query_sql"/>) T
+				   <dynamic prepend=" where ">
+						<isNotEmpty property="_endRow">
+						 rownum &lt;= #_endRow#
+						</isNotEmpty>
+				   </dynamic>)
+		  <dynamic prepend=" where ">
+				<isNotEmpty property="_startRow">
+					rn &gt;= #_startRow#
+				</isNotEmpty>
+		  </dynamic>
+    </select>
+
+	<select id="count" parameterClass="java.util.Map" resultClass="long">
+		select count(ID)
+		  from (<include refid="reuse_query_sql"/>) T 		
+	</select>	
+</sqlMap>

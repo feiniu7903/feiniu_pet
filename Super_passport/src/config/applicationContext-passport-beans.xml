@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  - Application context definition for JPetStore's business layer.
+	- Contains bean references to the transaction manager and to the DAOs in
+	- dataAccessContext-local/jta.xml (see web.xml's "contextConfigLocation").
+	-->
+<beans>
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:mail.properties</value>
+				<value>classpath:const.properties</value>
+				<value>classpath:jms.properties</value>
+				<value>classpath:webService.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<import resource="applicationContext-passport-processer.xml"/>
+	<import resource="applicationContext-order-processer.xml"/>
+	<import resource="applicationContext-passport-service.xml"/>
+	<import resource="applicationContext-passport-xfire.xml"/>
+	<import resource="applicationContext-passport-trigger.xml"/>
+	
+	<import resource="applicationContext-lvmama-comm-jms.xml"/>
+	<import resource="applicationContext-lvmama-comm-remote.xml"/>
+	<import resource="applicationContext-lvmama-comm-bee-remote.xml"/>
+	<import resource="applicationContext-lvmama-comm-remote-dest.xml"/>
+	<import resource="applicationContext-product-head-remote.xml"/>
+
+	<import resource="applicationContext-passport-thread-service.xml"/>
+
+	<import resource="applicationContext-lvmama-comm-client.xml"/>
+
+</beans>

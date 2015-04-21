@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_RELATION" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductRelation" >
+    <result column="RELATION_ID" property="relationId" />
+    <result column="SALE_NUM_TYPE" property="saleNumType"/>
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="PROD_BRANCH_ID" property="prodBranchId" />
+    <result column="RELAT_PRODUCT_ID" property="relatProductId" />    
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductRelation" >
+    select *  from PROD_PRODUCT_RELATION
+    where RELATION_ID = #relationId#
+  </select>
+  
+    <select id="selectByProductId" resultMap="BaseResultMap">
+    select *  from PROD_PRODUCT_RELATION
+    where PRODUCT_ID = #productId#
+  </select>
+  <select id="selectProdRelationByParam" parameterClass="java.util.HashMap" resultMap="BaseResultMap">
+  	select ppr.* from PROD_PRODUCT_RELATION ppr,PROD_PRODUCT_BRANCH ppb,PROD_PRODUCT pp 
+  	where ppr.PROD_BRANCH_ID= ppb.PROD_BRANCH_ID AND ppb.VALID='Y' AND ppb.product_id=pp.product_id AND pp.valid='Y' 
+  	<isNotEmpty property="productId" prepend="and">
+  		ppr.PRODUCT_ID = #productId#
+  	</isNotEmpty>
+  	<isNotEmpty property="prodBranchId" prepend="and">
+  		ppr.PROD_BRANCH_ID = #prodBranchId#
+  	</isNotEmpty>
+  	<isNotEmpty property="relatProductId" prepend="and">
+  		ppr.RELAT_PRODUCT_ID = #relatProductId#
+  	</isNotEmpty>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductRelation" >
+    delete from PROD_PRODUCT_RELATION
+    where RELATION_ID = #relationId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductRelation" >
+  	<selectKey keyProperty="relationId" resultClass="java.lang.Long">
+  		select prod_relation_id_seq.nextval from dual
+  	</selectKey>
+    insert into PROD_PRODUCT_RELATION (RELATION_ID, SALE_NUM_TYPE, PRODUCT_ID, PROD_BRANCH_ID,
+      RELAT_PRODUCT_ID)
+    values (#relationId#, #saleNumType#, #productId#,
+      #prodBranchId#, #relatProductId#)
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductRelation" >
+    update PROD_PRODUCT_RELATION
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID = #productId#
+      </isNotNull>
+      <isNotNull prepend="," property="prodBranchId" >
+        PROD_BRANCH_ID = #prodBranchId#
+      </isNotNull>
+      <isNotNull prepend="," property="relatProductId" >
+        RELAT_PRODUCT_ID = #relatProductId#
+      </isNotNull>
+      <isNotNull prepend="," property="saleNumType" >
+        SALE_NUM_TYPE = #saleNumType#
+      </isNotNull>
+    </dynamic>
+    where RELATION_ID = #relationId#
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductRelation" >
+    update PROD_PRODUCT_RELATION
+    <dynamic prepend="set" >
+        SALE_NUM_TYPE = #saleNumType#,
+        PRODUCT_ID = #productId#,
+        PROD_BRANCH_ID = #prodBranchId#,
+        RELAT_PRODUCT_ID = #relatProductId#
+    </dynamic>
+    where RELATION_ID = #relationId#
+  </update>
+</sqlMap>

@@ -1,0 +1,74 @@
+<?page title="编辑分销商" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./editDistributorWin"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset"?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="label" extends="label" class="com.lvmama.back.utils.perm.PermLabel" ?>
+<zk>
+<window id="editDistributorWin" title="编辑分销商" border="normal" closable="false" mode="embedded" apply="com.lvmama.back.web.distribution.EditDistributorAction">
+			<grid fixedLayout="true" width="100%">
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label value="分销商编号" />
+						</hbox>
+						<hbox>
+							<textbox value="@{saction.distributor.distributorCode}" maxlength="25"></textbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="分销商名称" />
+						</hbox>
+						<hbox>
+							<textbox value="@{saction.distributor.distributorName}" maxlength="50"></textbox>
+						</hbox>
+					</row>
+					<row visible="@{saction.showKey}">
+						<hbox>
+							<label value="分销商密钥" />
+						</hbox>
+						<hbox>
+							<textbox readonly="true" value="@{saction.distributor.distributorKey}" maxlength="50"></textbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="渠道CODE" />
+						</hbox>
+						<hbox>
+							<textbox value="@{saction.distributor.channelCode}" maxlength="50"></textbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="备注" />
+						</hbox>
+						<hbox>
+							<textbox value="@{saction.distributor.remark}" maxlength="50"></textbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="是否允许注册用户" />
+						</hbox>
+						<hbox>
+							<checkbox checked="@{saction.distributor.isRegisterUser}" />
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<label value="是否推送更新" />
+						</hbox>
+						<hbox>
+							<checkbox checked="@{saction.distributor.isPushUpdate}" />
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+	<button id="doSearch" visible="true" label="保存" onClick="saction.doSave()" />
+</window>
+</zk>

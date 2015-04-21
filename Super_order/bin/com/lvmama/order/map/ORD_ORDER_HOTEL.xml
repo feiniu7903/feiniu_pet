@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_ORDER_HOTEL">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderHotel">
+		<result column="ID" property="id" />
+		<result column="LVMAMA_ORDER_ID" property="lvmamaOrderId" />
+		<result column="PARTNER_ORDER_ID" property="partnerOrderId" />
+		<result column="ORDER_ITEM_ID" property="orderItemId" />
+		<result column="HOTEL_SUPPLIER_ID" property="hotelSupplierId" />
+		<result column="HOTEL_SUPPLIER_NAME" property="hotelSupplierName" />
+		<result column="ORDER_STATUS_CODE" property="statusCode" />
+		<result column="ORDER_STATUS_NAME" property="statusName" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="VISIT_DATE" property="visitDate"/>
+	</resultMap>
+	<resultMap id="OrderHotelResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderHotel">
+		<result column="LVMAMA_ORDER_ID" property="lvmamaOrderId" />
+		<result column="PARTNER_ORDER_ID" property="partnerOrderId" />
+		<result column="ORDER_STATUS_CODE" property="statusCode" />
+	</resultMap>
+	
+	<select id="queryOrderHotelListByParam" resultMap="BaseResultMap">
+		SELECT *
+		FROM ORD_ORDER_HOTEL
+		<dynamic prepend="where">
+			<isNotEmpty property="hotelSupplierId" prepend="and">
+			 HOTEL_SUPPLIER_ID = #hotelSupplierId# 
+			</isNotEmpty>
+			<isNotEmpty property="partnerOrderId" prepend="and">
+			PARTNER_ORDER_ID=#partnerOrderId#
+			</isNotEmpty>
+			<isNotEmpty property="excludedStatusCodes" prepend="and">
+			ORDER_STATUS_CODE not in <iterate open="(" close=")" conjunction="," property="excludedStatusCodes" >#excludedStatusCodes[]#</iterate>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="queryHotelListByOrderId" resultMap="BaseResultMap">
+		SELECT * FROM ORD_ORDER_HOTEL WHERE LVMAMA_ORDER_ID = #orderId#
+	</select>
+	
+	<sql id="ordOrderHotelWhere">
+		<dynamic prepend="where">
+			<isNotEmpty property="lvmamaOrderId" prepend="and">
+				LVMAMA_ORDER_ID=#lvmamaOrderId#
+			</isNotEmpty>
+			<isNotEmpty property="partnerOrderId" prepend="and">
+				PARTNER_ORDER_ID=#partnerOrderId#
+			</isNotEmpty>
+			<isNotEmpty property="orderItemId" prepend="and">
+				ORDER_ITEM_ID=#orderItemId#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<sql id="selectOrdOrderHotelList">
+		SELECT * FROM ord_order_hotel
+		<include refid="ordOrderHotelWhere" /> 
+		ORDER BY create_time DESC
+	</sql>
+	
+	<select id="queryOrdOrderHotelListByParam" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		SELECT *
+		FROM (SELECT A.*, ROWNUM RN
+		FROM (
+		<include refid="selectOrdOrderHotelList" />
+		) A
+		<dynamic prepend="where">
+			<isNotEmpty property="endRows" prepend="and">
+				ROWNUM &lt;= #endRows#
+			</isNotEmpty>
+		</dynamic>
+		)
+		<dynamic prepend="where">
+			<isNotEmpty property="startRows" prepend="and">
+				rn &gt;= #startRows#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="countOrdOrderHotelListByParam" parameterClass="java.util.Map" resultClass="Long">
+		SELECT COUNT(*) FROM ord_order_hotel
+		<include refid="ordOrderHotelWhere" />
+	</select>
+	
+	<select id="queryDistinctOrdOrderHotelListBySupplierId" resultMap="OrderHotelResultMap" parameterClass="java.lang.String">
+		SELECT distinct PARTNER_ORDER_ID,lvmama_order_id,order_status_code FROM ORD_ORDER_HOTEL
+		where VISIT_DATE &gt;= sysdate and HOTEL_SUPPLIER_ID = #supplierId#
+	</select>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderHotel">
+		<selectKey resultClass="java.lang.Long" keyProperty="id"> 
+			select ORD_ORDER_HOTEL_ID_SEQ.nextval as id from DUAL
+		</selectKey>
+		insert into ORD_ORDER_HOTEL(id,lvmama_order_id,partner_order_id,order_item_id,hotel_supplier_id,hotel_supplier_name,order_status_code,order_status_name,create_time,visit_date)
+		values (#id#,#lvmamaOrderId#,#partnerOrderId#,#orderItemId#,#hotelSupplierId#,#hotelSupplierName#,#statusCode#,#statusName#,#createTime#,#visitDate#)
+	</insert>
+	
+	<update id="updateOrderStatus" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderHotel">
+		update ORD_ORDER_HOTEL set ORDER_STATUS_CODE=#statusCode#,ORDER_STATUS_NAME=#statusName# where ID=#id#
+	</update>
+	
+	<update id="updateOrderStatusByPartnerOrderId" parameterClass="java.util.Map">
+		update ORD_ORDER_HOTEL set ORDER_STATUS_CODE=#statusCode#,ORDER_STATUS_NAME=#statusName# where PARTNER_ORDER_ID=#partnerOrderId#
+	</update>
+</sqlMap>

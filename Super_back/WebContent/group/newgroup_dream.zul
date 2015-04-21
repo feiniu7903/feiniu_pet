@@ -1,0 +1,181 @@
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:zk="http://www.zkoss.org/2005/zk">
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./groupDreamWindow"?>
+	<?component name="lvmama_pcity" macroURI="/macors/p_city.zul" inline="true"?>
+	<?page title="Auto Generated index.zul"?>
+
+	<window id="groupDreamWindow" title="新增团购梦信息" border="normal" apply="com.lvmama.back.web.group.EditGroupDreamAction" > 
+		<zscript>
+	public void check_value() {
+ 		if (productName.getValue() == "") {
+			return;
+		}
+		if (lowDreamPriceDou.getValue() == "") {
+			return;
+		}
+		if (highDreamPriceDou.getValue() == "") {
+			return;
+		}
+		if (marketPriceDou.getValue() == "") {
+			return;
+		}
+		if (dest.getValue() == "") {
+			return;
+		}
+		saction.save();
+
+	}
+	public void check_file_value() {
+		if(!"".equals(fname.getValue())) {
+			upBtn.setDisabled(false);
+		} else {
+			upBtn.setDisabled(true);
+		}
+	}
+</zscript>
+		<space />
+		<groupbox style="border: none">
+		
+		<caption label="团购梦基本信息" />
+		 <grid >
+		  <columns>
+					<column width="100px" align="right"></column>
+					<column></column>
+					<column width="100px" align="right"></column>
+					<column></column>
+		  </columns>
+			<rows>
+			   <row>
+						<hbox>
+							<label value="产品名称：" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox width="200px;" id="productName" maxlength="150" value="@{saction.groupDream.productName }"  constraint="no empty:产品名称不允许为空!" >
+							</textbox>
+						</hbox> 
+						
+						<hbox>
+							<label value="所属年月：" />
+ 						</hbox>
+						<hbox>
+							<textbox width="200px;" id="dreamYearMonth" maxlength="6" value="@{saction.groupDream.dreamYearMonth }" >
+							</textbox>
+						</hbox> 
+				</row>
+				<row>
+						<hbox>
+
+							<label value="最低团购预订价格：" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox width="200px;" id="lowDreamPriceDou" value="@{saction.groupDream.lowDreamPriceDou}"  constraint="no empty,/^\d{1,}$|^\d{1,}.\d{1,2}$/:请输入正确的驴妈妈售价"/>
+						</hbox>
+						
+						<hbox>
+							<label value="最高团购预订价格：" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox width="200px;" id="highDreamPriceDou" value="@{saction.groupDream.highDreamPriceDou}"  constraint="no empty,/^\d{1,}$|^\d{1,}.\d{1,2}$/:请输入正确的驴妈妈售价"/>
+						</hbox>
+                </row>
+                
+              
+                <row>
+                	   <hbox>
+							<label value="门市价格：" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox width="200px;" id="marketPriceDou" value="@{saction.groupDream.marketPriceDou}"  constraint="no empty,/^\d{1,}$|^\d{1,}.\d{1,2}$/:请输入正确的驴妈妈售价"/>
+						</hbox>
+                	   <hbox>
+							<label value="目的地：" />
+							<label value="[*]" style="color:red;" />
+						</hbox>
+						<hbox>
+							<textbox width="200px;" id="dest" maxlength="100" value="@{saction.groupDream.dest }" constraint="no empty:目的地不允许为空!" >
+							</textbox>
+						</hbox> 
+				
+						
+					   
+                </row> 
+               <row >
+						 <hbox>
+							<label value="产品类型：" />
+						</hbox>
+						<hbox>
+							<listbox mold="select" rows="1" id="productType"  model="@{saction.productTypeList}" selectedItem="@{saction.productTypeItem}"  onSelect="saction.groupDream.setProductType(self.selectedItem.value)">
+								<listitem self="@{each='com'}" label="@{com.name }" value="@{com.code}"  />
+							</listbox>
+						</hbox>
+						<hbox>
+							<label value="产品介绍："  />
+						</hbox>
+						<hbox>
+							<textbox id="introduction" width="400px;%" rows="3"  height="60px;" maxlength="2000" value="@{saction.groupDream.introduction }"></textbox>
+						</hbox>
+					</row>
+				
+		        <row spans="1,3">	
+					<hbox>
+						<label value="图片:" />
+					</hbox>
+					<vbox>
+						<image id="imageStruct" height="100px" width="100px" visible="false"/>
+						<textbox id="fnameArray" visible="false"/>
+						<textbox id="furlArray" visible="false"/>
+						<vbox>
+							<hbox>图片名称：<textbox id="fname" maxlength="400" onChange="check_file_value()"/>(请先录入图片名称，再上传图片)</hbox>
+							<hbox>上传图片：<textbox id="furl" readonly="true"/>
+							<button id="upBtn" label="上传图片" upload="true" disabled="true" apply="com.lvmama.back.web.upload.UploadCtrl" onUpload='upBtn$composer.onUpload(event, furl); groupDreamWindow$composer.addImage(fname.value,furl.value); Events.postEvent("onClick",refreshPictureList,null);'></button>
+							</hbox>
+							<button id="refreshPictureList" visible="false"/>
+							<hbox id="imgboxDetail">
+							<listbox id="abc" model="@{saction.pictureList, load-after='refreshPictureList.onClick'}">
+							<listhead>
+								<listheader label="名称"  width="20%"/>
+								<listheader label="图片"/>
+								<listheader label="操作" width="20%"/>
+							</listhead>
+								<listitem self="@{each='picture'}" value="@{place}" height="25px">
+									<listcell label="@{picture.pictureName}"/>
+									<listcell>
+										<div>
+										<image src="@{picture.absoluteUrl}" width="100px" height="100px"></image>
+										</div>
+									</listcell>
+									<listcell>
+										<a style="color:blue" label="删除" onClick='saction.delImage(self);Events.postEvent("onClick",refreshPictureList,null);'>
+											<custom-attributes pictureId="@{picture.pictureId}"/>
+										</a>
+									</listcell>
+								</listitem>
+							</listbox>
+						</hbox>
+						</vbox>
+					</vbox>
+			   </row>
+			</rows>
+			</grid>
+			
+		</groupbox>
+		
+		<space />
+		<toolbar align="center" id="toolBar">
+		   <button id="dreamLogBtn" visible="false" label="查看操作日志" onClick='saction.showWindow("/log/viewSuperLog.zul",self.getAttributes());'>
+		       <custom-attributes objectType="GROUP_DREAM" />
+		       <custom-attributes objectId="@{saction.dreamId}" />
+		      </button>
+		       <zscript>
+		          if(saction.groupDream.dreamId!=null){
+		             dreamLogBtn.setVisible(true);
+		          }
+		        </zscript>
+			<button id="addGroupDream" label="提交" width="100px" onClick="check_value();"/><space /><button label="取消" onClick="groupDreamWindow.detach();" width="100px"></button>
+		</toolbar>
+	</window>
+
+</zk>

@@ -1,0 +1,33 @@
+<#assign prefix_pic_url="http://pic.lvmama.com/img/mobile/touch">
+ <#assign commentScore= "com.lvmama.clutter.utils.CommentScoreMethod"?new()>
+ <#if commentList?? && commentList?size&gt;0 >
+     <#list commentList as comment>
+           <li>
+                <div class="lv-user-name">${comment.userName}</div>
+                <div class="lv-user-score">
+                    <div class="fl">
+                    	<#assign dscore = commentScore("${comment.avgScore!}")/> 
+                        <span class="lv-score lv-score-${dscore!}"></span>
+                        <#if comment.avgScore != '' && comment.avgScore != '0'><span class="f-color-1">${comment.avgScore!}</span>分</#if>
+                        <#if comment.experience><span class="lv-evaluate-state">验</span></#if>
+                        <#if comment.best><span class="lv-evaluate-state">精</span></#if>
+                    </div>
+                    <div class="fr">
+                    	<#if comment.cashRefundYuan?? && comment.cashRefundYuan !='' && comment.cashRefundYuan !='0'>
+                        	 奖金:${comment.cashRefundYuan!}
+						</#if>
+						<#if comment.point !=''>
+                        	 积分:${comment.point!}
+						</#if>
+                    </div>
+                </div>
+                <div class="lv-user-content">${comment.content!}</div>
+                <div class="lv-user-time">${comment.createdTimeStr!}</div>
+            </li>
+      </#list>
+ </#if>
+ <input id = "tmp_p" type ="hidden" value = "${page!}"/>
+ <#if isLastPage  >
+	<input id = "lastPage_flag" type ="hidden" value = "1"/>
+ </#if>
+ 

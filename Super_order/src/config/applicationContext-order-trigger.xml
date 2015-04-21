@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName" >
+
+	<bean id="orderPay0YuanProcessor" class="com.lvmama.order.trigger.Pay0YuanProcesser"/>
+	<bean id="orderStatusService" class="com.lvmama.order.trigger.OrderStatusProcesser"/>
+	<bean id="orderSmsSendService" class="com.lvmama.order.trigger.OrderSmsSendProcesser"/>
+	<bean id="orderSmsCreateService" class="com.lvmama.order.trigger.OrderSmsCreateProcesser"/>
+	<bean id="orderAperiodicSmsProcesser" class="com.lvmama.order.trigger.OrderAperiodicSmsProcesser"/>
+	<bean id="commentSmsCreateService" class="com.lvmama.order.trigger.CommentSmsCreateProcesser"/>
+	<bean id="certSmsSendProcesser" class="com.lvmama.order.trigger.CertSmsSendProcesser"/>
+	<bean id="autoApproveOrderProcessor" class="com.lvmama.order.trigger.AutoApproveOrderProcessor"/>
+	<bean id="orderPrePayProcesser" class="com.lvmama.order.trigger.OrderPrePayProcesser"/>
+	<bean id="orderItemMetaSaleAmountProcesser" class="com.lvmama.order.trigger.OrderItemMetaSaleAmountProcesser"/>
+	<bean id="orderSettleProcesser" class="com.lvmama.order.trigger.OrderSettleProcesser"/>
+	<bean id="forPaymentSmsProcesser" class="com.lvmama.order.trigger.ForPaymentSmsProcesser"/>
+    <bean id="cpsStatusSendProcessor" class="com.lvmama.order.trigger.CpsStatusSendProcessor"/>
+    <bean id="supplierCertificateProcesser" class="com.lvmama.order.trigger.SupplierCertificateProcesser"/>
+    <bean id="orderTrafficRefumentProcesser" class="com.lvmama.order.trigger.OrderTrafficRefumentProcesser"/>
+    <bean id="passportPaySmsProcessor" class="com.lvmama.order.trigger.PassportPaySmsProcessor"/>
+    <!-- 支付完成发送工单 -->
+    <bean id="payedSenderWorkOrderProcessor" class="com.lvmama.order.trigger.PayedSenderWorkOrderProcessor"/>
+	
+	<!-- 出团通知书状态处理 -->
+	<bean id="groupAdviceNoteStatusProcesser" class="com.lvmama.order.trigger.GroupAdviceNoteStatusProcesser"/>
+	
+	<!-- 消息接收 -->
+	<bean id="orderTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.ORDER.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+				<ref bean="orderPay0YuanProcessor"/>
+				<ref bean="orderStatusService"/>
+				<ref bean="orderSmsSendService"/>
+				<ref bean="orderSmsCreateService"/>
+				<ref bean="orderAperiodicSmsProcesser"/>
+				<ref bean="commentSmsCreateService"/>
+ 				<ref bean="certSmsSendProcesser"/>
+				<ref bean="passcodeSmsSendService"/>
+				<ref bean="autoApproveOrderProcessor"/>
+				<ref bean="orderPrePayProcesser"/>
+				<!-- ref bean="orderItemMetaSaleAmountProcesser"/ -->
+				<ref bean="groupAdviceNoteStatusProcesser"/>
+				<ref bean="orderSettleProcesser"/>
+				<ref bean="forPaymentSmsProcesser"/>
+				<ref bean="cpsStatusSendProcessor"/>
+				<ref bean="supplierCertificateProcesser"/>
+				<ref bean="orderTrafficRefumentProcesser"/>
+				<ref bean="passportPaySmsProcessor"/>
+				<ref bean="payedSenderWorkOrderProcessor"/>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 订阅 -->
+	<bean id="orderMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="orderTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+	
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="orderTopicListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="ORDER_TOPIC" />
+		<property name="messageListener" ref="orderMessageListener" />
+		<!--
+		<property name="concurrentConsumers" value="5" /> 
+		<property name="maxConcurrentConsumers" value="20" />
+		-->		
+	</bean>
+	
+	<!-- 订阅 shift -->
+	<bean id="orderMessageListenerShift" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="orderTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+	
+	<bean id="orderTopicListenerContainerShift" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="ORDER_TOPIC_SHIFT" />
+		<property name="messageListener" ref="orderMessageListenerShift" />
+		<!---->
+		<property name="concurrentConsumers" value="5" /> 
+		<property name="maxConcurrentConsumers" value="20" />
+	</bean>
+
+	
+	<bean id="passcodeSmsSendService" class="com.lvmama.order.trigger.PasscodeSmsSendProcesser"/>
+	
+	<!-- 消息接收 -->
+	<bean id="passportTopicMessageConsumer" class="com.lvmama.comm.jms.TopicMessageConsumer">
+		<property name="destName"><value>ActiveMQ.PASSPORT.${jms_node}</value></property>
+		<property name="processerList">
+			<list>
+				<ref bean="passcodeSmsSendService"/>
+				<ref bean="orderSettleProcesser"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 订阅 -->
+	<bean id="passportMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg ref="passportTopicMessageConsumer" />
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+	
+	<!-- 消息监听 TOPIC 模式    -->
+	<bean id="passportListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="PASSPORT_TOPIC" />
+		<property name="messageListener" ref="passportMessageListener" />
+		<!--
+		<property name="concurrentConsumers" value="5" /> 
+		<property name="maxConcurrentConsumers" value="20" />
+		-->		
+	</bean>
+</beans>

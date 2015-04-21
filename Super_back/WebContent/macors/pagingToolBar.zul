@@ -1,0 +1,29 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./pagingToolBar"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.back.utils.ListboxCodeset" ?>
+
+<toolbar id="pagingToolBar"  apply="com.lvmama.back.web.PagingToolBarAction">
+	<grid style="border:0">
+	<rows>
+			<row>
+			<cell width="60px">
+				共
+				<label id="_totalRowCount" value="${saction.myPaging.totalRowCount}" />条
+			</cell>
+			<cell width="200px">
+				<paging id="pager"
+					onPaging='saction.myPaging.doNextPage();' />
+			</cell>
+			<cell width="80px">
+					<listbox id="type"  width="70px"
+							mold="select" selectedItem="@{saction.myPaging.maxResults}" onSelect="saction.myPaging.onMaxrowsChange()">
+								<listitem label="10" value="10"/>
+								<listitem label="20" value="20"/>
+								<listitem label="50" value="50"/>
+								<listitem label="100" value="100"/>
+					</listbox>
+			</cell>
+			
+	</row>
+	</rows>
+	</grid>
+</toolbar>

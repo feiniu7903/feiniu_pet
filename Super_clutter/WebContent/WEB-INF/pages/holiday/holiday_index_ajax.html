@@ -1,0 +1,41 @@
+ <#assign prefix_pic_url="http://pic.lvmama.com/img/mobile/touch">
+ <#setting number_format="#.##"> 
+<#if destList?? && destList?size&gt;0>
+   <#list destList as dest>
+       <#if dest.type !="OTHER" && dest.info?? && dest.info?size&gt;0>
+	       <div class="lv-wrapper lv-min-height lv-media-width">
+		       <div class="lv-biz-title">${dest.name!}</div>
+		       <div class="lv-seprator-super"><img src="${prefix_pic_url!}/img/seprator-line-super.png"></div>
+			       <ul class="lv-biz-list">
+			           <li>
+			           <#list dest.info as info>
+			               <#if info_index &lt; 11>
+			                   <a class="lv-ticket" href="javascript:void(0);" onclick="destSearch('${info.objectId!}','${info.recommendTitle!}','${dest.type!}');"> 
+			                   <img class="lv-radius-10" src="${info.absoluteRecommendImageUrl!}"> 
+			                   <span>${info.recommendTitle!}</span></a>
+	                       <#elseif info_index == 11>
+	                           <a id="${dest.type!}${info_index}" class="lv-mylv" href="javascript:void(0);" onclick="destSearchMore('${dest.type!}');"> 
+	                           <img class="lv-radius-10" src="${prefix_pic_url!}/img/holiday/nav-holiday-more.png">
+	                            <span>更多</span> </a>
+	                       </#if>
+	                       <#if info_index &gt; 10>
+	                           <a id="${dest.type!}${info_index}" style="display:none" class="lv-ticket" href="javascript:void(0);" onclick="destSearch('${info.objectId!}','${info.recommendTitle!}','${dest.type!}');"> 
+	                           <img class="lv-radius-10" src="${info.absoluteRecommendImageUrl!}"> 
+	                           <span>${info.recommendTitle!}</span></a>
+	                           <#if !info_has_next>
+	                               <a id="${dest.type!}${info_index}" style="display:none" class="lv-mylv" href="javascript:void(0);" onclick="destSearchMore('${dest.type!}');"> 
+	                                <img class="lv-radius-10" src="${prefix_pic_url!}/img/lv_more_button_up.png">
+	                                <span>收起</span></a>
+	                           </#if>
+	                       </#if>
+			           </#list>
+			           </li>
+			       </ul>
+			   <div class="lv-seprator-line"></div>
+		   </div>
+	   </#if>
+   </#list>
+<#else>
+	<#assign no_data_msg="没有找到合适的度假线路</br>请试试搜索其他关键词">
+    <#include "../common/no_data_list.html">
+</#if>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="DISTRIBUTOR_ORDER_REFUND" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributionOrderRefund" >
+	<result column="DISTRIBUTION_ORDER_REFUND_ID" property="distributionOrderRefundId" />  
+    <result column="PARTNER_ORDER_ID" property="partnerOrderId" />
+    <result column="REFUND_TYPE" property="refundType" />
+    <result column="REFUND_AMOUNT" property="refundAmount" />
+    <result column="FACTORAGE" property="factorage" />
+    <result column="REMARK" property="remark" />
+    <result column="REFUND_TIME" property="refundTime" />
+    <result column="REFUND_STATUS" property="refundStatus" />
+  </resultMap>
+  
+  <resultMap id="QueryResultMap" extends="BaseResultMap" class="com.lvmama.comm.bee.po.distribution.DistributionOrderRefund" >
+    <result column="ORDER_ID" property="orderId" />
+    <result column="DISTRIBUTOR_NAME" property="distributorName" />
+    <result column="OUGHT_PAY" property="amount" />
+    <result column="DISTRIBUTOR_CODE" property="distributorCode" />
+    <result column="DISTRIBUTOR_KEY" property="distributorKey"/>
+  </resultMap>
+  
+  <sql id="queryDistributionOrderRefundCondition" >
+		<isNotEmpty prepend="AND" property="orderId">
+			OO.ORDER_ID = #orderId#
+		</isNotEmpty>
+		<isNotNull prepend="AND" property="partnerOrderId">
+			DOR.PARTNER_ORDER_ID = #partnerOrderId#
+		</isNotNull>
+		<isNotEmpty prepend="AND" property="distributorInfoId">
+			OOD.DISTRIBUTOR_INFO_ID = #distributorInfoId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="refundType">
+			DOR.REFUND_TYPE = #refundType#
+		</isNotEmpty>
+		<isNotNull prepend="AND" property="beginDate">
+			DOR.REFUND_TIME<![CDATA[>=]]>TO_DATE(#beginDate#,'YYYY-MM-DD HH24:MI:SS')
+			</isNotNull>
+		<isNotNull prepend="AND" property="endDate">
+			DOR.REFUND_TIME<![CDATA[<=]]>TO_DATE(#endDate#,'YYYY-MM-DD HH24:MI:SS')
+		</isNotNull>
+		<isNotNull prepend="AND" property="refundStatus">
+			DOR.REFUND_STATUS=#refundStatus#
+		</isNotNull>
+  </sql>
+  
+  <select id="queryDistributionOrderRefundByParams" resultMap="QueryResultMap" parameterClass="java.util.Map">
+  SELECT *
+		FROM
+		(SELECT T.*,
+		ROWNUM AS ROWNUM1
+		FROM
+		(
+	  		SELECT DOR.*,OO.OUGHT_PAY,OOD.ORDER_ID,DI.DISTRIBUTOR_NAME,DI.DISTRIBUTOR_CODE,DI.DISTRIBUTOR_KEY
+			FROM DISTRIBUTION_ORDER_REFUND DOR , ORD_ORDER OO , ORD_ORDER_DISTRIBUTION OOD, DISTRIBUTOR_INFO DI
+			WHERE DOR.PARTNER_ORDER_ID = OOD.PARTNER_ORDER_ID
+			AND   OOD.ORDER_ID = OO.ORDER_ID
+			AND   OOD.DISTRIBUTOR_INFO_ID = DI.DISTRIBUTOR_INFO_ID
+			<include refid="queryDistributionOrderRefundCondition"/>
+			ORDER BY DOR.REFUND_TIME DESC
+		) T)
+		WHERE ROWNUM1 &lt;=#end#
+		AND ROWNUM1 &gt;=#start#
+  </select>
+  
+   <select id="queryDistributionOrderRefundByParamsCount" resultClass="java.lang.Long" parameterClass="java.util.Map">
+  		SELECT COUNT(*)
+		FROM DISTRIBUTION_ORDER_REFUND DOR , ORD_ORDER OO , ORD_ORDER_DISTRIBUTION OOD, DISTRIBUTOR_INFO DI
+		WHERE DOR.PARTNER_ORDER_ID = OOD.PARTNER_ORDER_ID
+		AND   OOD.ORDER_ID = OO.ORDER_ID
+		AND   OOD.DISTRIBUTOR_INFO_ID = DI.DISTRIBUTOR_INFO_ID
+		<include refid="queryDistributionOrderRefundCondition"/>
+  </select>
+  
+  <select id="selectRefundByOrderRefundId" resultClass="java.lang.String" parameterClass="java.lang.Long">
+  		SELECT DOR.REFUND_STATUS FROM DISTRIBUTION_ORDER_REFUND DOR WHERE DOR.DISTRIBUTION_ORDER_REFUND_ID=#distributionOrderRefundId#
+  </select>
+  
+  
+   <insert id="insert" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionOrderRefund">
+		INSERT INTO DISTRIBUTION_ORDER_REFUND 
+		(
+			DISTRIBUTION_ORDER_REFUND_ID,
+			PARTNER_ORDER_ID,
+			REFUND_TYPE,
+			REFUND_AMOUNT,
+			FACTORAGE,
+			REMARK,
+			REFUND_TIME,
+			REFUND_STATUS
+		)
+		VALUES
+		(	
+			DISTRIBUTION_ORDER_REFUND_SEQ.NEXTVAL,
+			#partnerOrderId#,
+			#refundType#,
+			#refundAmount#,
+			#factorage#,
+			#remark#,
+			SYSDATE,
+			#refundStatus#
+		)
+  </insert>
+  <update id="update" parameterClass="com.lvmama.comm.bee.po.distribution.DistributionOrderRefund">
+  		UPDATE DISTRIBUTION_ORDER_REFUND DOR  
+  		<dynamic prepend=" SET ">
+			<isNotEmpty property="orderId" prepend=",">
+				DOR.PARTNER_ORDER_ID = #partnerOrderId#
+			</isNotEmpty>
+			<isNotEmpty property="refundType" prepend=",">
+				DOR.REFUND_TYPE = #refundType#
+			</isNotEmpty>
+			<isNotEmpty property="refundAmount" prepend=",">
+				DOR.REFUND_AMOUNT = #refundAmount#
+			</isNotEmpty>
+			<isNotEmpty property="factorage" prepend=",">
+				DOR.FACTORAGE = #factorage#
+			</isNotEmpty>
+			<isNotEmpty property="remark" prepend=",">
+				DOR.REMARK = #remark#
+			</isNotEmpty>
+			<isNotEmpty property="refundStatus" prepend=",">
+				DOR.REFUND_STATUS = #refundStatus#
+			</isNotEmpty>
+		</dynamic>
+		WHERE DOR.DISTRIBUTION_ORDER_REFUND_ID =#distributionOrderRefundId#
+  </update>
+  
+  <update id="updateRefundStatusByRefundId" parameterClass="java.lang.Long">
+  	UPDATE DISTRIBUTION_ORDER_REFUND DOR SET DOR.REFUND_STATUS='SUCCESS' WHERE DOR.DISTRIBUTION_ORDER_REFUND_ID =#distributionOrderRefundId#
+  </update>
+  
+  <select id="selectDistributionOrderRefundById" resultMap="QueryResultMap" parameterClass="java.lang.Long">
+  	SELECT DOR.*,OO.OUGHT_PAY,OOD.ORDER_ID,DI.DISTRIBUTOR_NAME,DI.DISTRIBUTOR_CODE,DI.DISTRIBUTOR_KEY
+			FROM DISTRIBUTION_ORDER_REFUND DOR , ORD_ORDER OO , ORD_ORDER_DISTRIBUTION OOD, DISTRIBUTOR_INFO DI
+			WHERE DOR.PARTNER_ORDER_ID = OOD.PARTNER_ORDER_ID
+			AND   OOD.ORDER_ID = OO.ORDER_ID
+			AND   OOD.DISTRIBUTOR_INFO_ID = DI.DISTRIBUTOR_INFO_ID
+			AND  DOR.DISTRIBUTION_ORDER_REFUND_ID = #refundId#
+  </select>
+</sqlMap>

@@ -1,0 +1,113 @@
+<?page title="用户账号管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./userManagement"?>
+<?component name="userstatuslistbox" extends="listbox" class="com.lvmama.businessreply.utils.ListBoxUserStatusSet"?>
+<?component name="usertypelistbox" extends="listbox" class="com.lvmama.businessreply.utils.ListboxUserTypeSet"?>
+<window id="userManagement" title="用户账号管理" border="normal" apply="com.lvmama.businessreply.web.UserManagementAction">
+		<zscript>
+		<![CDATA[
+			public void checkValues() {
+				saction.doQuery();
+			}
+			
+		]]>			
+		</zscript>
+
+		<grid>
+			<columns>
+				<column width="110px"></column>
+				<column></column>
+				<column width="110px"></column>
+				<column></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>用户类型：</hbox>
+					<hbox>
+						<usertypelistbox mold="select"  onSelect='saction.changeValue("userType",self.selectedItem.value);'/>
+					</hbox>
+				</row>
+				<row>
+					<hbox>用户登录名：</hbox>
+					<hbox>
+						<textbox id="userID"
+							value="@{saction.queryOption.userID}" />
+					</hbox>
+					<hbox>用户名称：</hbox>
+					<hbox>
+						<textbox value="@{saction.queryOption.userName}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>景点，酒店，目的地ID：</hbox>
+					<hbox>
+						<textbox value="@{saction.queryOption.placeIDString}" />
+					</hbox>
+				    <hbox>状态：</hbox>
+					<hbox>
+						<userstatuslistbox mold="select" onSelect='saction.changeValue("status",self.selectedItem.value);'/>
+					</hbox>
+					<hbox>
+						<button label="查询" id="search" width="100px"
+							onClick="checkValues();" />
+						<button label="新增" width="100px"
+							onClick='saction.showWindow("/editUser.zul",self.getAttributes());' />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+
+
+		<listbox
+			model="@{saction.businessUserList,load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader label="用户名" />
+				<listheader label="商家名" />
+				<listheader label="用户类型" />
+				<listheader label="所属内容" />
+				<listheader label="是否启用" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem height="25px" self="@{each='businessUser'}">
+				<listcell label="@{businessUser.userID}" />
+				<listcell label="@{businessUser.userName}" />
+				<listcell label="@{businessUser.userType}" />
+				<listcell label="@{businessUser.placeNameListString}" >         
+				</listcell>
+				<listcell label="@{businessUser.isValid}" /> 
+				<listcell>
+					<a style="color:blue" label="修改"
+						onClick='saction.showWindow("/editUser.zul",self.getAttributes());' >
+						<custom-attributes provider="@{businessUser}" />
+					</a>
+					
+					<a style="color:blue" label="启用"
+						onClick='saction.enableUser(self.getAttribute("userID"));'>
+						<custom-attributes userID="@{businessUser.userID}" />
+					</a>
+					
+					<a style="color:blue" label="停用"
+						onClick='saction.disableUser(self.getAttribute("userID"));'>
+						<custom-attributes userID="@{businessUser.userID}" />
+					</a>
+
+				</listcell>
+			</listitem>
+		</listbox>
+		
+	<toolbar>
+		<grid style="border:0">
+		<rows >
+			<row >
+				<cell width="60px">
+					共<label id="_totalRowCountLabel" />条
+				</cell>
+				<cell width="200px">
+					<paging  id="_paging" pageSize = "10" onPaging='saction.doQuery();'/>
+				</cell>
+			</row>
+		</rows>
+		</grid>
+	</toolbar>
+
+</window>

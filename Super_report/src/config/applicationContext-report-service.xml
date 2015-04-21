@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+	
+	<bean id="userRegisterBasicService" class="com.lvmama.report.service.impl.UserRegisterBasicServiceImpl" />
+	<bean id="reportService" class="com.lvmama.report.service.impl.ReportServiceImpl" />
+	<bean id="rptQueryService" class="com.lvmama.report.service.impl.RptQueryServiceImpl" />
+	<bean id="membershipCardService" class="com.lvmama.report.service.impl.MembershipCardServiceImpl" />
+	<bean id="userRegisterChannelService" class="com.lvmama.report.service.impl.UserRegisterChannelServiceImpl" />
+	<bean id="markCouponUsageService" class="com.lvmama.report.service.impl.MarkCouponUsageServiceImpl" />
+	<bean id="reportOrderService" class="com.lvmama.report.service.impl.ReportOrderServiceImpl"/>
+	<bean id="regUsersStatisticsService" class="com.lvmama.report.service.impl.RegUsersStatisticsServiceImpl"/>
+	<bean id="ccStaffsSalesStatisticsService" class="com.lvmama.report.service.impl.CCStaffsSalesStatisticsServiceImpl"/>
+	<bean id="cmtStatisticsService" class="com.lvmama.report.service.impl.CmtStatisticsServiceImpl"/>
+	<bean id="pointService" class="com.lvmama.report.service.impl.ReportPointServiceImpl" />
+	<bean id="stockInsufficientService" class="com.lvmama.report.service.impl.StockInsufficientServiceImpl" />
+	<!-- 现金账户 -->
+	<bean id="moneyUserService" class="com.lvmama.report.service.impl.MoneyUserServiceImpl"/>
+	<bean id="prodChannelService" class="com.lvmama.report.service.impl.ProdChannelServiceImpl"/>
+	<bean id="moneyUserDetailExportService" class="com.lvmama.report.service.impl.MoneyUserDetailExportServiceImpl" />
+	<bean id="cashBonusReportService" class="com.lvmama.report.service.impl.CashBonusReportServiceImpl" />
+	<!-- 用户标签 -->
+	<bean id="userTagsSearchLogsService" class="com.lvmama.report.service.impl.UserTagsSearchLogsServiceImpl"></bean>
+</beans>

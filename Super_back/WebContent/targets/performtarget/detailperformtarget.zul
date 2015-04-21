@@ -1,0 +1,74 @@
+<?page title="edit PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_viewperformtarget"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="win_viewperformtarget" title="履行对象详细信息" border="normal" closable="true" apply="com.lvmama.back.web.targets.performtarget.DetailPerformTargetAction">
+    <space />
+    <groupbox style="border: none">
+		<caption label="履行对象详细信息" />
+		<grid>
+			<columns>
+				<column width="100px" align="right"></column>
+				<column></column>
+				<column width="100px" align="right"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>供应商名称：</hbox>
+					<hbox>${saction.supplier.supplierName}</hbox>
+				</row>
+				<row>
+					<hbox align="right">对象名称：</hbox>
+					<hbox><intbox id="targetId" visible="false"/>${saction.performTarget.name}</hbox>
+					<hbox>履行时间：</hbox>
+					<hbox>
+						${saction.performTarget.openTime}
+						~
+						${saction.performTarget.closeTime}
+					</hbox>
+				</row>
+				<row>
+					<hbox align="right">履行方式：</hbox>
+					<hbox>${saction.performTarget.zhCertificateType}</hbox>
+				</row>
+				<row spans="1,3">
+					<hbox>支付信息：</hbox>
+					<hbox>${saction.performTarget.paymentInfo}</hbox>
+				</row>
+				<row spans="1,3">
+					<hbox>履行信息：</hbox>
+					<hbox>${saction.performTarget.performInfo}</hbox>
+				</row>
+				<row spans="1,3">
+					<hbox>备注：</hbox>
+					<hbox>${saction.performTarget.memo}</hbox>
+				</row>
+			</rows>
+		</grid>
+	</groupbox>
+	<space />
+	<groupbox style="border: none">
+		<caption label="联系人" />
+		<listbox id="contactList"  model="@{saction.comContactRelationList}">
+			<listhead>
+				<listheader label="名称" width="80px"/>
+				<listheader label="手机"/>
+				<listheader label="电话"/>
+				<listheader label="公司名称"/>
+				<listheader label="类型"/>
+			</listhead>
+			<listitem self="@{each='com' }" value="@{com}">
+				<listcell label="@{com.name }"></listcell>
+				<listcell label="@{com.mobilephone }"></listcell>
+				<listcell label="@{com.telephone }"></listcell>
+				<listcell label="${saction.supplier.supplierName}"></listcell>
+				<listcell label="@{com.memo }"></listcell>
+			</listitem>
+		</listbox>
+	</groupbox>
+	<space />
+	<toolbar align="center" visible="${saction.closeable}">
+        <button label="关闭窗口" width="100px" onClick="win_viewperformtarget.detach()"></button>
+    </toolbar>
+  </window>
+</zk>

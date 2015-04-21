@@ -1,0 +1,71 @@
+<zk>
+    <space />
+    <groupbox style="border: none;">
+		<caption label="采购产品基本信息" />
+		<intbox id="metaProductId" visible="false"/>
+		<textbox id="metaProductType" value="HOTEL" visible="false"/>
+		<grid width="100%">
+			<columns>
+				<column width="150px" align="right"></column>
+				<column></column>
+				<column width="150px" align="right"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>采购产品供应商<label value="[*]" style="color:red;" />：</hbox>
+					<hbox>
+					<label value="${saction.metaProduct.supplierName}"/>					
+					</hbox>
+					<hbox>合同编号：</hbox>
+					<hbox>
+						<label value="${saction.metaProduct.contractNo}"/>
+					</hbox>
+				</row>
+				<row>
+					<hbox>采购产品名称<label value="[*]" style="color:red;" />：</hbox>
+					<hbox><label value="${saction.metaProduct.productName}"/></hbox>
+					<hbox>采购产品编号<label value="[*]" style="color:red;" />：</hbox>
+					<hbox><label value="${saction.metaProduct.bizCode}"/></hbox>					
+				</row>
+				<row>
+					<hbox>总库存量<label value="[*]" style="color:red;" />：</hbox>
+					<hbox><label value="${saction.metaProductBranch.totalStock}"/></hbox>
+					<hbox>是否总量递减<label value="[*]" style="color:red;" />：</hbox>
+					<hbox>
+						<label value="是" if="${saction.metaProductBranch.totalDecrease}"/>
+						<label value="否" unless="${saction.metaProductBranch.totalDecrease}"/>
+					</hbox>
+				</row>
+				<!-- <row>
+					<hbox> </hbox>
+					<hbox>
+					 
+					</hbox>
+					<hbox>规定售价：</hbox>
+					<hbox>
+						<label value="是" if="${saction.metaProduct.fixedPrice}"/>
+						<label value="否" unless="${saction.metaProduct.fixedPrice}"/>
+					</hbox>
+				</row> -->
+				<row>
+					<hbox>支持的支付方式：</hbox>
+					<hbox>
+						<label value="${saction.metaProduct.zhPaymentTarget}"/>
+					</hbox>
+					<hbox> </hbox>
+					<hbox>
+						 
+					</hbox>
+				</row>
+				<row spans="1,3">
+					<hbox>成人、儿童数量：</hbox>
+					<vbox>
+						<hbox><label value="成人"/><label value="${saction.metaProductBranch.adultQuantity}"/>位</hbox>
+						<hbox><label value="儿童"/><label value="${saction.metaProductBranch.childQuantity}"/>位</hbox>
+					</vbox>
+				</row>
+			</rows>
+		</grid>
+	</groupbox>
+</zk>

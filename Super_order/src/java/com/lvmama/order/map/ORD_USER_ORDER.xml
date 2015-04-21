@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_USER_ORDER" >
+
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdUserOrder" >
+    <result column="USER_ORDER_ID" property="userOrderId" jdbcType="DECIMAL" />
+    <result column="ORDER_ID" property="orderId" jdbcType="DECIMAL" />
+    <result column="BIZ_TYPE" property="bizType" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="ORDER_TYPE" property="orderType" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  	USER_ORDER_ID, ORDER_ID, BIZ_TYPE, USER_ID, CREATE_TIME, ORDER_TYPE
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ORD_USER_ORDER
+    where USER_ORDER_ID = #userOrderId#
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    delete from ORD_USER_ORDER
+    where USER_ORDER_ID = #userOrderId#
+  </delete>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdUserOrder" >
+    <selectKey resultClass="java.lang.Long" keyProperty="userOrderId">
+      select ORD_USER_ORDER_SEQ.nextval from dual
+    </selectKey>
+    insert into ORD_USER_ORDER (USER_ORDER_ID, ORDER_ID, BIZ_TYPE, USER_ID, CREATE_TIME, ORDER_TYPE)
+    values (#userOrderId#, #orderId#, #bizType#, 
+      #userId#, #createTime#, #orderType#)
+  </insert>
+  
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.ord.OrdUserOrder" >
+    <selectKey resultClass="java.lang.Long" keyProperty="userOrderId">
+      select ORD_USER_ORDER_SEQ.nextval from dual
+    </selectKey>
+    insert into ORD_USER_ORDER (
+      USER_ORDER_ID
+      <isNotNull prepend="," property="orderId">
+      	ORDER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="bizType">
+      	BIZ_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="userId">
+      	USER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+      	CREATE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="orderType">
+      	ORDER_TYPE
+      </isNotNull>
+      )
+    values (
+      #userOrderId#
+      <isNotNull prepend="," property="orderId">
+      	#orderId#
+      </isNotNull>
+      <isNotNull prepend="," property="bizType">
+      	#bizType#
+      </isNotNull>
+      <isNotNull prepend="," property="userId">
+      	#userId#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+      	#createTime#
+      </isNotNull>
+      <isNotNull prepend="," property="orderType">
+      	#orderType#
+      </isNotNull>
+      )
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.ord.OrdUserOrder" >
+    update ORD_USER_ORDER
+    set 
+    <isNotNull prepend=" " property="orderId">
+    	ORDER_ID = #orderId#
+    </isNotNull>
+    <isNotNull prepend="," property="bizType">
+    	BIZ_TYPE = #bizType#
+    </isNotNull>
+    <isNotNull prepend="," property="userId">
+    	USER_ID = #userId#
+    </isNotNull>
+    <isNotNull prepend="," property="createTime">
+    	CREATE_TIME = #createTime#
+    </isNotNull>
+    <isNotNull prepend="," property="orderType">
+    	orderType = #orderType# 
+    </isNotNull>
+    where USER_ORDER_ID = #userOrderId#
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdUserOrder" >
+    update ORD_USER_ORDER
+    set ORDER_ID = #orderId#,
+        BIZ_TYPE = #bizType#,
+        USER_ID = #userId#,
+        CREATE_TIME = #createTime#,
+        ORDER_TYPE = #orderType#
+    where USER_ORDER_ID = #userOrderId#
+  </update>
+  
+  <sql id="Base_Query_Column_List" >
+  	<isNotNull prepend=" and " property="userOrderId">
+    	USER_ORDER_ID = #userOrderId#
+    </isNotNull>
+    <isNotNull prepend=" and " property="orderId">
+    	ORDER_ID = #orderId#
+    </isNotNull>
+    <isNotNull prepend=" and " property="bizType">
+    	BIZ_TYPE = #bizType#
+    </isNotNull>
+    <isNotNull prepend=" and " property="userId">
+    	USER_ID = #userId#
+    </isNotNull>
+    <isNotNull prepend=" and " property="createTime">
+    	CREATE_TIME = #createTime#
+    </isNotNull>
+    <isNotNull prepend=" and " property="orderType">
+    	orderType = #orderType# 
+    </isNotNull>
+  </sql>
+  
+  <select id="selectListByParams" parameterClass="java.util.Map" resultMap="BaseResultMap">
+      <include refid="pageSearchHead" />
+      select 
+	  	<include refid="Base_Column_List" />
+	  from ORD_USER_ORDER
+	  where 1 = 1
+	  	<include refid="Base_Query_Column_List" />
+	  <include refid="pageSearchFoot" /> 	
+  </select>
+  
+  <select id="queryTotalCount" parameterClass="java.util.Map" resultClass="java.lang.Long">
+      select count(1)
+	  from ORD_USER_ORDER
+	  where 1 = 1
+	  	<include refid="Base_Query_Column_List" />
+  </select>
+  
+</sqlMap>

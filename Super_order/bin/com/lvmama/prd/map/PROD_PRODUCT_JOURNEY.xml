@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_PRODUCT_JOURNEY" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdProductJourney" >
+    <result column="PROD_JOURENY_ID" property="prodJourenyId" />
+    <result column="TICKET_POLICY" property="ticketPolicy" />
+    <result column="HOTEL_POLICY" property="hotelPolicy" />
+    <result column="TRAFFIC_POLICY" property="trafficPolicy" />
+    <result column="ROUTE_POLICY" property="routePolicy" />
+    <result column="FROM_PLACE_ID" property="fromPlaceId" />
+    <result column="TO_PLACE_ID" property="toPlaceId" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="JOURNEY_TIME" property="journeyTime"/>
+  </resultMap>  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourney" >
+    select * from PROD_PRODUCT_JOURNEY
+    where PROD_JOURENY_ID = #prodJourenyId#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourney" >
+    delete from PROD_PRODUCT_JOURNEY
+    where PROD_JOURENY_ID = #prodJourenyId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourney" >
+  	<selectKey keyProperty="prodJourenyId" resultClass="java.lang.Long" >
+  		select PROD_JOURENY_ID_SEQ.NEXTVAL from dual
+  	</selectKey>
+    insert into PROD_PRODUCT_JOURNEY (PROD_JOURENY_ID, TICKET_POLICY, HOTEL_POLICY, TRAFFIC_POLICY,
+      ROUTE_POLICY, FROM_PLACE_ID, TO_PLACE_ID, PRODUCT_ID,JOURNEY_TIME)
+    values (#prodJourenyId#, #ticketPolicy#, #hotelPolicy#,
+      #trafficPolicy#, #routePolicy#, #fromPlaceId#, #toPlaceId#,
+      #productId#,#journeyTime#)
+  </insert>
+
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourney" >
+    insert into PROD_PRODUCT_JOURNEY
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="prodJourenyId" >
+        PROD_JOURENY_ID
+      </isNotNull>
+      <isNotNull prepend="," property="ticketPolicy" >
+        TICKET_POLICY
+      </isNotNull>
+      <isNotNull prepend="," property="hotelPolicy" >
+        HOTEL_POLICY
+      </isNotNull>
+      <isNotNull prepend="," property="trafficPolicy" >
+        TRAFFIC_POLICY
+      </isNotNull>
+      <isNotNull prepend="," property="routePolicy" >
+        ROUTE_POLICY
+      </isNotNull>
+      <isNotNull prepend="," property="fromPlaceId" >
+        FROM_PLACE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="toPlaceId" >
+        TO_PLACE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="journeyTime" >
+        JOURNEY_TIME
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="prodJourenyId" >
+        #prodJourenyId#
+      </isNotNull>
+      <isNotNull prepend="," property="ticketPolicy" >
+        #ticketPolicy#
+      </isNotNull>
+      <isNotNull prepend="," property="hotelPolicy" >
+        #hotelPolicy#
+      </isNotNull>
+      <isNotNull prepend="," property="trafficPolicy" >
+        #trafficPolicy#
+      </isNotNull>
+      <isNotNull prepend="," property="routePolicy" >
+        #routePolicy#
+      </isNotNull>
+      <isNotNull prepend="," property="fromPlaceId" >
+        #fromPlaceId#
+      </isNotNull>
+      <isNotNull prepend="," property="toPlaceId" >
+        #toPlaceId#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        #productId#
+      </isNotNull>
+      <isNotNull prepend="," property="journeyTime" >
+        #journeyTime#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourney" >
+    update PROD_PRODUCT_JOURNEY
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="ticketPolicy" >
+        TICKET_POLICY = #ticketPolicy#
+      </isNotNull>
+      <isNotNull prepend="," property="hotelPolicy" >
+        HOTEL_POLICY = #hotelPolicy#
+      </isNotNull>
+      <isNotNull prepend="," property="trafficPolicy" >
+        TRAFFIC_POLICY = #trafficPolicy#
+      </isNotNull>
+      <isNotNull prepend="," property="routePolicy" >
+        ROUTE_POLICY = #routePolicy#
+      </isNotNull>
+      <isNotNull prepend="," property="fromPlaceId" >
+        FROM_PLACE_ID = #fromPlaceId#
+      </isNotNull>
+      <isNotNull prepend="," property="toPlaceId" >
+        TO_PLACE_ID = #toPlaceId#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID = #productId#
+      </isNotNull>
+      <isNotNull prepend="," property="journeyTime" >
+        JOURNEY_TIME = #journeyTime#
+      </isNotNull>
+    </dynamic>
+    where PROD_JOURENY_ID = #prodJourenyId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourney" >
+    update PROD_PRODUCT_JOURNEY
+    set TICKET_POLICY = #ticketPolicy#,
+      HOTEL_POLICY = #hotelPolicy#,
+      TRAFFIC_POLICY = #trafficPolicy#,
+      ROUTE_POLICY = #routePolicy#,
+      FROM_PLACE_ID = #fromPlaceId#,
+      TO_PLACE_ID = #toPlaceId#,
+      PRODUCT_ID = #productId#,
+      JOURNEY_TIME = #journeyTime#
+    where PROD_JOURENY_ID = #prodJourenyId#
+  </update>
+  
+  <select id="selectListByProductId" parameterClass="com.lvmama.comm.bee.po.prod.ProdProductJourney" resultMap="BaseResultMap">
+  	select * from PROD_PRODUCT_JOURNEY where PRODUCT_ID=#productId# order by PROD_JOURENY_ID asc
+  </select>
+</sqlMap>

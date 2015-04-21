@@ -1,0 +1,62 @@
+<?page title="通关产品管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./myWin"?>
+<zk>
+	<window id="myWin" title="迪士尼特色产品管理" border="normal"
+		apply="com.lvmama.passport.web.pass.DisneyProductAction">
+	<zscript>
+		<![CDATA[
+			public void checkValues() {
+				saction.doQuery();
+			}
+			
+		]]>			
+		</zscript>
+	<grid>
+		<columns>
+			<column width="110px"></column>
+			<column></column>
+			<column width="110px"></column>
+			<column></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox width="300px">开始日期：</hbox>
+				<hbox>
+					<datebox
+							value="@{saction.queryOption.startDate}" />
+				</hbox>
+				<hbox width="300px">结束日期：</hbox>
+				<hbox>
+					<datebox
+							value="@{saction.queryOption.endDate}" />
+				</hbox>
+				<hbox>
+					<button label="查询" id="search" width="100px"
+							onClick="checkValues();" />
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+	<listbox
+			model="@{saction.disneyProducts,load-after='search.onClick'}">
+		<listhead>
+			<listheader label="eventId" width="80px"/>
+			<listheader label="name" width="200px"/>
+			<listheader label="remark" width="500px"/>
+			<listheader label="showid" width="80px"/>
+			<listheader label="showDateTime"/>
+			<listheader label="cutoffDateTime"/>
+		</listhead>
+		
+		<listitem height="25px" self="@{each='productBean'}">
+			<listcell label="@{productBean.eventId}" />
+			<listcell label="@{productBean.name}" />
+			<listcell label="@{productBean.remark}"/>
+			<listcell label="@{productBean.showId}"/>
+			<listcell label="@{productBean.showDateTime}"/>
+			<listcell label="@{productBean.cutoffDateTime}"/>
+		</listitem>
+	</listbox>
+</window>
+</zk>

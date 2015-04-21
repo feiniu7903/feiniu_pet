@@ -1,0 +1,28 @@
+
+/**
+*** CSS Rule
+*** 
+*** color rule
+*** darker > dark > normal < light < lighter
+*** example: gray-darker > gray-dark > gray < gray-light < gray-lighter
+***          #222          #333        #555   #999         #eee
+**/
+
+/* selector common */
+body{color:#333;background:#fff;}
+a{color:#333;}
+a:hover{color:#e60012;}
+
+/* class common */
+.gmodule{margin-top:10px;}
+.gclearfix:after,.row:after{display:block;clear:both;visibility:hidden;height:0;content:'';}
+.gclearfix,.row{zoom:1;}
+
+/* color common */
+.red{color:#e60012;}
+.gray{color:#666;}
+.green{color:#178517;}
+.orange{color:#f60;}
+.blue{color:#02a1c8;}
+.green-light{color:#2fac06;}
+.blue-light{color:#0079ff;}

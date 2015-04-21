@@ -1,0 +1,26 @@
+<?page title="巴士班自助统计" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./detailsToursWin"?>
+<zk>
+<window id="detailsToursWin" title="详细信息" closable="true" mode="embedded"  border="normal" apply="com.lvmama.back.web.product.DetailsToursAction">
+	<grid>
+		<columns>
+			<column width="80px">订单号</column><column>处理人</column><column>联系人姓名</column><column>联系人电话 </column><column>产品名称</column><column>订购数量</column>
+		</columns>
+		<rows>
+			<row forEach="${saction.ordersList}" >
+				<hbox>${each.orderId}</hbox>
+				<hbox>${each.takenOperator}</hbox>
+				<hbox>${each.contact.name}</hbox>
+				<hbox>${each.contact.mobile }</hbox>
+				<hbox>
+					<vbox><label forEach="${each.ordOrderItemProds }">${each.productName }</label></vbox>
+				</hbox>
+				<hbox>
+					<vbox><label forEach="${each.ordOrderItemProds }">${each.quantity }</label></vbox>
+				</hbox>					
+			</row>
+		</rows>
+	</grid>	
+	
+</window>
+</zk>

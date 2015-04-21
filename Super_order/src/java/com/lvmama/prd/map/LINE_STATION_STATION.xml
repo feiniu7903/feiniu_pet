@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="LINE_STATION_STATION" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.LineStationStation" >
+    <result column="STATION_STATION_ID" property="stationStationId" />
+    <result column="DEPARTURE_STATION_ID" property="departureStationId" />
+    <result column="ARRIVAL_STATION_ID" property="arrivalStationId" />
+    <result column="DEPARTURE_TIME" property="departureTime" />
+    <result column="ARRIVAL_TIME" property="arrivalTime" />
+    <result column="LINE_NAME" property="lineName"/>
+    <result column="STATION_KEY" property="stationKey" />
+    <result column="CITY_KEY" property="cityKey" />
+    <result column="TAKEN_TIME" property="takenTime" />
+    <result column="DIRECT" property="direct" />
+    <result column="LINE_INFO_ID" property="lineInfoId" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap2" class="com.lvmama.comm.bee.po.prod.LineStationStation" >
+    <result column="STATION_STATION_ID" property="stationStationId" />
+    <result column="DEPARTURE_STATION_ID" property="departureStationId" />
+    <result column="ARRIVAL_STATION_ID" property="arrivalStationId" />
+    <result column="DEPARTURE_TIME" property="departureTime" />
+    <result column="ARRIVAL_TIME" property="arrivalTime" />
+    <result column="LINE_NAME" property="lineName"/>
+    <result column="STATION_KEY" property="stationKey" />
+    <result column="CITY_KEY" property="cityKey" />
+    <result column="TAKEN_TIME" property="takenTime" />
+    <result column="DIRECT" property="direct" />
+    <result column="LINE_INFO_ID" property="lineInfoId" />
+    <result column="START_STATION_ID" property="startStationId" />
+    <result column="END_STATION_ID" property="endStationId" />
+    <result column="START_STATION_NAME" property="startStationName" />
+    <result column="END_STATION_NAME" property="endStationName" />
+  </resultMap>
+    
+  <select id="selectByLineInfoId" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select *
+    from LINE_STATION_STATION
+    where LINE_INFO_ID = #lineInfoId#
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.LineStationStation" >
+    select *
+    from LINE_STATION_STATION
+    where STATION_STATION_ID = #stationStationId#
+  </select>
+  <select id="selectByStationKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.LineStationStation" >
+    select *
+    from LINE_STATION_STATION
+    where STATION_KEY = #stationKey#
+    and LINE_NAME = #lineName#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.LineStationStation" >
+    delete from LINE_STATION_STATION
+    where STATION_STATION_ID = #stationStationId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.LineStationStation" >
+    <selectKey resultClass="java.lang.Long" keyProperty="stationStationId" >
+      select LINE_STATION_STATION_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into LINE_STATION_STATION (STATION_STATION_ID, DEPARTURE_STATION_ID, ARRIVAL_STATION_ID,
+      DEPARTURE_TIME, ARRIVAL_TIME,LINE_NAME, STATION_KEY, CITY_KEY, TAKEN_TIME, DIRECT,LINE_INFO_ID)
+    values (#stationStationId#, #departureStationId#, #arrivalStationId#,
+      #departureTime#, #arrivalTime#,#lineName#, #stationKey#, #cityKey#, #takenTime#,
+      #direct#,#lineInfoId#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.prod.LineStationStation" >
+    <selectKey resultClass="java.lang.Long" keyProperty="stationStationId" >
+      select LINE_STATION_STATION_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into LINE_STATION_STATION
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="stationStationId" >
+        STATION_STATION_ID
+      </isNotNull>
+      <isNotNull prepend="," property="departureStationId" >
+        DEPARTURE_STATION_ID
+      </isNotNull>
+      <isNotNull prepend="," property="arrivalStationId" >
+        ARRIVAL_STATION_ID
+      </isNotNull>
+      <isNotNull prepend="," property="departureTime" >
+        DEPARTURE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="arrivalTime" >
+        ARRIVAL_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="stationKey" >
+        STATION_KEY
+      </isNotNull>
+      <isNotNull prepend="," property="cityKey" >
+        CITY_KEY
+      </isNotNull>
+      <isNotNull prepend="," property="takenTime" >
+        TAKEN_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="direct" >
+        DIRECT
+      </isNotNull>
+      <isNotNull prepend="," property="lineInfoId" >
+        LINE_INFO_ID
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="stationStationId" >
+        #stationStationId#
+      </isNotNull>
+      <isNotNull prepend="," property="departureStationId" >
+        #departureStationId#
+      </isNotNull>
+      <isNotNull prepend="," property="arrivalStationId" >
+        #arrivalStationId#
+      </isNotNull>
+      <isNotNull prepend="," property="departureTime" >
+        #departureTime#
+      </isNotNull>
+      <isNotNull prepend="," property="arrivalTime" >
+        #arrivalTime#
+      </isNotNull>
+      <isNotNull prepend="," property="stationKey" >
+        #stationKey#
+      </isNotNull>
+      <isNotNull prepend="," property="cityKey" >
+        #cityKey#
+      </isNotNull>
+      <isNotNull prepend="," property="takenTime" >
+        #takenTime#
+      </isNotNull>
+      <isNotNull prepend="," property="direct" >
+        #direct#
+      </isNotNull>
+      <isNotNull prepend="," property="lineInfoId" >
+        #lineInfoId#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.LineStationStation" >
+    update LINE_STATION_STATION
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="departureStationId" >
+        DEPARTURE_STATION_ID = #departureStationId#
+      </isNotNull>
+      <isNotNull prepend="," property="arrivalStationId" >
+        ARRIVAL_STATION_ID = #arrivalStationId#
+      </isNotNull>
+      <isNotNull prepend="," property="departureTime" >
+        DEPARTURE_TIME = #departureTime#
+      </isNotNull>
+      <isNotNull prepend="," property="arrivalTime" >
+        ARRIVAL_TIME = #arrivalTime#
+      </isNotNull>
+      <isNotNull prepend="," property="stationKey" >
+        STATION_KEY = #stationKey#
+      </isNotNull>
+      <isNotNull prepend="," property="cityKey" >
+        CITY_KEY = #cityKey#
+      </isNotNull>
+      <isNotNull prepend="," property="takenTime" >
+        TAKEN_TIME = #takenTime#
+      </isNotNull>
+      <isNotNull prepend="," property="direct" >
+        DIRECT = #direct#
+      </isNotNull>
+      <isNotNull prepend="," property="lineInfoId" >
+        LINE_INFO_ID=#lineInfoId#
+      </isNotNull>
+    </dynamic>
+    where STATION_STATION_ID = #stationStationId#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.LineStationStation" >
+    update LINE_STATION_STATION
+    set DEPARTURE_STATION_ID = #departureStationId#,
+      ARRIVAL_STATION_ID = #arrivalStationId#,
+      DEPARTURE_TIME = #departureTime#,
+      ARRIVAL_TIME = #arrivalTime#,
+      STATION_KEY = #stationKey#,
+      CITY_KEY = #cityKey#,
+      TAKEN_TIME = #takenTime#,
+      DIRECT = #direct#,
+      LINE_INFO_ID=#lineInfoId#
+    where STATION_STATION_ID = #stationStationId#
+  </update>
+  <select id="selectLineStationStationByPinyinKey" resultMap="BaseResultMap2" >
+  select a.start_station_id,a.end_station_id,b.*,  
+             c.station_name as start_Station_Name,d.station_name as end_Station_Name from line_info a 
+             inner join (select distinct * from line_station_station where station_key = #pinyinKey# or city_key = #pinyinKey#) b 
+             	on a.line_info_id=b.line_info_id 
+             inner join line_station c on b.departure_station_id = c.station_id 
+             inner join line_station d on b.arrival_station_id = d.station_id order by departure_time
+  </select>
+</sqlMap>

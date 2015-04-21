@@ -1,0 +1,20 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./mc_bcertTargetBandbox"?>
+<bandbox id="mc_bcertTargetBandbox" apply="com.lvmama.back.utils.MacroBCertTarget" onChanging="mc_bcertTargetBandbox$composer.changeInput(event)"
+	mold="rounded" autodrop="true">
+	<bandpopup>
+		<vbox>
+			<listbox width="300px" id="bandboxListBox"
+				model="@{mc_bcertTargetBandbox$composer.targetList, load-after='mc_bcertTargetBandbox.onChanging' }"
+				onSelect="mc_bcertTargetBandbox.value=self.selectedItem.lastChild.label; targetId.value=self.selectedItem.value; mc_bcertTargetBandbox.close();">
+				<listhead>
+					<listheader width="50px" label="编号" />
+					<listheader label="标的名称" />
+				</listhead>
+				<listitem self="@{each='target'}" value="@{target.targetId}" height="25px">
+					<listcell label="@{target.targetId}" />
+					<listcell label="@{target.name}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

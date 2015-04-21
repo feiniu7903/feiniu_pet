@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+	
+	<bean id="workOrderGroupStatusSenderJob" class="com.lvmama.order.jobs.WorkOrderGroupStatusSenderJob">
+	</bean>
+	<bean id="workOrderGroupStatusSenderFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="workOrderGroupStatusSenderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="workOrderGroupStatusSenderTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="workOrderGroupStatusSenderFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/2 * * * ? *</value>
+		</property>
+	</bean>
+	
+	<bean id="workOrderGroupVisitTimeSenderJob" class="com.lvmama.order.jobs.WorkOrderGroupVisitTimeSenderJob">
+	</bean>
+	<bean id="workOrderGroupVisitTimeSenderFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="workOrderGroupVisitTimeSenderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="workOrderGroupVisitTimeSenderTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="workOrderGroupVisitTimeSenderFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 20 8 * * ? *</value>
+		</property>
+	</bean>
+	
+	<bean id="workOrderPayTimeLimitSenderJob" class="com.lvmama.order.jobs.WorkOrderPayTimeLimitSenderJob">
+	</bean>
+	<bean id="workOrderPayTimeLimitSenderFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="workOrderPayTimeLimitSenderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="workOrderPayTimeLimitSenderTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="workOrderPayTimeLimitSenderFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/2 * * * ? *</value>
+		</property>
+	</bean>
+	
+	<bean id="workOrderPayedSenderJob" class="com.lvmama.order.jobs.WorkOrderPayedSenderJob">
+	</bean>
+	<bean id="workOrderPayedSenderFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="workOrderPayedSenderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="workOrderPayedSenderTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="workOrderPayedSenderFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/2 * * * ? *</value>
+		</property>
+	</bean>
+	
+	<bean id="workOrderPayedFaxSenderJob" class="com.lvmama.order.jobs.WorkOrderPayedFaxSenderJob">
+	</bean>
+	<bean id="workOrderPayedFaxSenderFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="workOrderPayedFaxSenderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="workOrderPayedFaxSenderTimes"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="workOrderPayedFaxSenderFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/5 * * * ? *</value>
+		</property>
+	</bean>
+	
+	<bean lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<!--<ref local="workOrderGroupStatusSenderTimes"/>-->
+	            <ref local="workOrderGroupVisitTimeSenderTimes"/>
+	            <ref local="workOrderPayTimeLimitSenderTimes"/>
+	            <!-- <ref local="workOrderPayedSenderTimes"/> -->
+			</list>
+		</property>
+	</bean>
+</beans>

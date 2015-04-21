@@ -1,0 +1,136 @@
+<?page title="EDM邮件发送" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit"?>
+<window id="EDM_SUBSCRIBE_BATCH_VIEW" title="邮件发送" closable="true" apply="com.lvmama.back.web.edm.EdmSubscribeBatchAction">
+   <grid>
+		<columns>
+			<column width="80px"></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>邮件标题：</hbox>
+				<hbox><textbox  value="@{saction.edmBatch.emailSubject}" width="480px" /></hbox>
+			</row>
+			<row>
+				<hbox>发件人：</hbox>
+				<hbox><textbox  value="@{saction.edmBatch.sendUserId}" width="480px" /></hbox>
+			</row>
+			<row>
+				<hbox>发件人邮箱：</hbox>
+				<hbox><textbox  value="@{saction.edmBatch.sendUserEmail  }" width="480px" /></hbox>
+			</row>
+			<row>
+				<hbox>收件人邮箱：</hbox>
+				<hbox><textbox  rows="10" maxlength="300" width="480px"  value="@{saction.edmBatch.receiveEmailContent}"/>
+					<image width="15px" height="15px" src="/img/qm.gif" tooltip="receiveEmailContentTip"/>
+					<popup id="receiveEmailContentTip" width="400px"> 
+						<label id="receiveEmailContentTipId" value="格式a@b.com;b@d.com"/> 
+					</popup>
+				</hbox>
+			</row>
+			<row>
+				<hbox>收件人邮箱TXT：</hbox>
+				<!-- -->
+				<hbox>
+					<textbox  value="@{saction.edmBatch.receiveEmailUrl}" width="480px" />
+					<image width="15px" height="15px" src="/img/qm.gif" tooltip="receiveEmailUrlTip"/>
+					<popup id="receiveEmailUrlTip" width="400px"> 
+						<label id="receiveEmailUrlTipId" value="目前只接收txt格式，字符编码为GBK,第一行为变量名：用##分割变量名，如：emailAddr##name"/> 
+					</popup>
+				</hbox>
+				
+				<!--  
+				<hbox>
+						<textbox id="receiveEmailUrl" maxlength="100" value="@{saction.edmBatch.receiveEmailUrl}" readonly="true" width="420px" visible = "false"/>
+						<textbox id="receiveEmailUrlename" maxlength="100" width="420px" readonly="true"/>
+						<button id="receiveEmailUrlupBtn" label="上传文件" upload="true" apply="com.lvmama.back.web.upload.UploadFileCtrl" onUpload='receiveEmailUrlupBtn$composer.onUpload(event, receiveEmailUrl, receiveEmailUrlename);Events.postEvent("onChange",receiveEmailUrl,receiveEmailUrlename);'></button>
+						<image width="15px" height="15px" src="/img/qm.gif" tooltip="receiveEmailUrlTip"/>
+						<popup id="receiveEmailUrlTip" width="400px"> 
+							<label id="receiveEmailUrlTipId" value="目前只接收txt格式，字符编码为GBK,第一行为变量名：用##分割变量名，如：emailAddr##name"/> 
+						</popup>
+				</hbox>
+				-->
+			</row>
+			<row>
+				<hbox>任务编号：</hbox>
+				<hbox><label  value="@{saction.edmBatch.taskId,load-after='save.onClick' }"/>
+					<image width="15px" height="15px" src="/img/qm.gif" tooltip="taskTip"/>
+					<popup id="taskTip" width="400px"> 
+						<label id="taskTipId" value="发送成功后返回的EDM任务号，如果为空或00000则不成功"/> 
+					</popup>
+				</hbox>
+			</row>
+			<row>
+				<hbox>邮件内容HTML:</hbox>
+				<!--  -->
+				<hbox>
+					<textbox  value="@{saction.edmBatch.emailContentUrl}" width="480px" />
+					<image width="15px" height="15px" src="/img/qm.gif" tooltip="emailContentUrlTip"/>
+					<popup id="emailContentUrlTip" width="400px"> 
+						<label id="emailContentUrlTipId" value="邮件模板，支持hmtl,htm，字符编码GBK"/> 
+					</popup>
+				</hbox>
+				
+				<!-- 
+				
+				<hbox>
+						<textbox id="furl" maxlength="100" value="@{saction.edmBatch.emailContentUrl}" readonly="true" width="420px" visible = "false"/>
+						<textbox id="filename" maxlength="100" width="420px" readonly="true"/>
+						<button id="upBtn" label="上传文件" upload="true" apply="com.lvmama.back.web.upload.UploadFileCtrl" onUpload='upBtn$composer.onUpload(event, furl, filename);Events.postEvent("onChange",furl,filename);'></button>
+						<image width="15px" height="15px" src="/img/qm.gif" tooltip="emailContentUrlTip"/>
+						<popup id="emailContentUrlTip" width="400px"> 
+							<label id="emailContentUrlTipId" value="邮件模板，支持hmtl,htm，字符编码GBK"/> 
+						</popup>
+				</hbox>  -->
+			</row>
+			<row>
+				<hbox>邮件附件：</hbox>
+				<!-- -->
+				<hbox>
+					<textbox  value="@{saction.edmBatch.emailAttachmentUrl}" width="480px" />
+				</hbox>
+				 
+				<!--
+				<hbox>
+						<textbox id="attachmenturl" maxlength="100" value="@{saction.edmBatch.emailAttachmentUrl}" readonly="true" width="420px" visible = "false"/>
+						<textbox id="attachmentname" maxlength="100" width="420px" readonly="true"/>
+						<button id="upBtn1" label="上传文件" upload="true" apply="com.lvmama.back.web.upload.UploadFileCtrl" onUpload='upBtn1$composer.onUpload(event, attachmenturl, attachmentname);Events.postEvent("onChange",attachmenturl,attachmentname);'></button>
+				</hbox>
+				 -->
+			</row>
+			<row>
+				<hbox>邮件类型：</hbox>
+				<hbox>
+					<listbox id="emailTypeList" mold="select" model="@{saction.emailTypeList}" onSelect="saction.edmBatch.setEmailType(self.selectedItem.value)">
+						<listitem self="@{each='com1'}" label="@{com1.name}" value="@{com1.code}"/>
+					</listbox>
+				</hbox>
+			</row>
+			<row>
+				<hbox>通道类型：</hbox>
+				<hbox>
+					<listbox id="channelTypeList" mold="select" model="@{saction.channelTypeList}" onSelect="saction.edmBatch.setSendType(self.selectedItem.value)">
+						<listitem self="@{each='com2'}" label="@{com2.name}" value="@{com2.code}"/>
+					</listbox>
+				</hbox>
+			</row>
+			<row>
+				<hbox>发送类型：</hbox>
+				<hbox>
+					<listbox id="sendTypeList" mold="select" model="@{saction.sendTypeList}" onSelect="saction.edmBatch.setEmailSendType(self.selectedItem.value)">
+						<listitem self="@{each='com3'}" label="@{com3.name}" value="@{com3.code}"/>
+					</listbox>
+				</hbox>
+			</row>
+			<row>
+				<hbox>发送时间：</hbox>
+				<hbox><datebox  id="emailSendTime" value="@{saction.edmBatch.emailSendTime}"/><timebox id="sendTime" value="@{saction.sendTime}"/></hbox>
+			</row>
+			<row spans="2">
+				<hbox><button label="发 送 " id="save" width="100px" onClick="saction.save();"/></hbox>
+			</row>
+		</rows>
+	</grid>	
+  </window>
+</zk>

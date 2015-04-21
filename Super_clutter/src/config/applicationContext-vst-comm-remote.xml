@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+    <bean id="clientPlaceService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vstSearch.serviceUrl}/clientPlaceService" />
+        <property name="serviceInterface" value="com.lvmama.vst.search.client.service.ClientPlaceService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    
+    <bean id="clientProductService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${vstSearch.serviceUrl}/clientProductService" />
+        <property name="serviceInterface" value="com.lvmama.vst.search.client.service.ClientProductService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+</beans>

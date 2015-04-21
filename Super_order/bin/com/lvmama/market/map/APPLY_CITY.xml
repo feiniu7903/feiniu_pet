@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="APPLY_CITY">
+	<typeAlias alias="applyCity" type="com.lvmama.comm.bee.po.market.ApplyCity"/>
+	<resultMap id="ApplyCityMap" class="applyCity">
+		<result column="APPLY_CITY_ID" property="applyCityId" />
+		<result column="CITY_NAME" property="cityName" />
+		<result column="CITY_PY" property="cityPY" />
+	</resultMap>
+	
+	<select id="getAllApplyCity" resultMap="ApplyCityMap"> 
+		SELECT APPLY_CITY_ID,CITY_NAME,CITY_PY FROM APPLY_CITY
+  	</select>
+  	
+  	<select id="getApplyCityByPage" resultMap="ApplyCityMap"> 
+		SELECT * FROM (SELECT T.*,ROWNUM RN FROM ( 
+		SELECT * FROM APPLY_CITY
+		)T )TT WHERE TT.RN &gt;=#start# and TT.RN &lt;=#end#
+  	</select>
+  	
+  	<select id="getApplyCityPageCount" parameterClass="map" resultClass="long">
+    	select count(*) from APPLY_CITY
+    </select>
+  	
+  	<select id="selectApplyCityBy" resultMap="ApplyCityMap"> 
+		SELECT APPLY_CITY_ID,CITY_NAME,CITY_PY FROM APPLY_CITY WHERE 1=1
+		<isNotEmpty property="cityId" prepend="and">
+			APPLY_CITY_ID=#cityId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="cityName">
+			CITY_NAME=#cityName#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="cityPY">
+			CITY_PY=#cityPY#
+		</isNotEmpty>
+  	</select>
+  	
+  	<insert id="addCity" parameterClass="applyCity">
+  		<selectKey keyProperty="applyCityId" resultClass="java.lang.Long">
+			SELECT apply_city_seq.nextval FROM DUAL
+		</selectKey>
+  		insert into apply_city
+  		(APPLY_CITY_ID,CITY_NAME,CITY_PY) 
+  		VALUES(#applyCityId#,#cityName#,#cityPY#)
+  	</insert>
+  	
+  	<delete id="delCityById" parameterClass="java.lang.Long">
+  		delete from apply_city where apply_city_id=#applyCityId#
+  	</delete>
+</sqlMap>

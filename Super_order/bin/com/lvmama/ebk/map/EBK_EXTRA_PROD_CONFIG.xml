@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="EBK_EXTRA_PROD_CONFIG" >
+
+  <typeAlias alias="ebkExtraProdConfigDO" type="com.lvmama.comm.bee.po.ebooking.EbkExtraProdConfig" />
+
+  <resultMap id="ebkExtraProdConfigDOResultMap" class="ebkExtraProdConfigDO" >
+    <result property="id" column="ID" />
+    <result property="ebkProductType" column="EBK_PRODUCT_TYPE" />
+    <result property="productType" column="PRODUCT_TYPE" />
+    <result property="daysTrip" column="DAYS_TRIP" />
+    <result property="productId" column="PRODUCT_ID" />
+    <result property="prodBranchId" column="PROD_BRANCH_ID" />
+    <result property="saleNumType" column="SALE_NUM_TYPE" />
+  </resultMap>
+
+  <sql id="ebkExtraProdConfig_columns" >
+    a1.ID, a1.EBK_PRODUCT_TYPE,a1.PRODUCT_TYPE, a1.DAYS_TRIP, a1.PRODUCT_ID, a1.PROD_BRANCH_ID, a1.SALE_NUM_TYPE
+  </sql>
+
+  <sql id="ebkExtraProdConfig_do_columns" >
+    a1.ID,a1.EBK_PRODUCT_TYPE, a1.PRODUCT_TYPE, a1.DAYS_TRIP, a1.PRODUCT_ID, a1.PROD_BRANCH_ID, a1.SALE_NUM_TYPE
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="id" prepend="AND" >
+        <![CDATA[  
+        ID = #id#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="ebkProductType" prepend="AND" >
+        <![CDATA[  
+        EBK_PRODUCT_TYPE = #ebkProductType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productType" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_TYPE = #productType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="daysTrip" prepend="AND" >
+        <![CDATA[  
+        DAYS_TRIP = #daysTrip#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodBranchId" prepend="AND" >
+        <![CDATA[  
+        PROD_BRANCH_ID = #prodBranchId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="saleNumType" prepend="AND" >
+        <![CDATA[  
+        SALE_NUM_TYPE = #saleNumType#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <sql id="doQueryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="id" prepend="AND" >
+        <![CDATA[  
+        ID = #id#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="ebkProductType" prepend="AND" >
+        <![CDATA[  
+        EBK_PRODUCT_TYPE = #ebkProductType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productType" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_TYPE = #productType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="daysTrip" prepend="AND" >
+        <![CDATA[  
+        DAYS_TRIP = #daysTrip#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodBranchId" prepend="AND" >
+        <![CDATA[  
+        PROD_BRANCH_ID = #prodBranchId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="saleNumType" prepend="AND" >
+        <![CDATA[  
+        SALE_NUM_TYPE = #saleNumType#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <insert id="insert" parameterClass="ebkExtraProdConfigDO" >
+  	<selectKey keyProperty="id" resultClass="java.lang.Long" >
+       SELECT EBK_EXTRA_PROD_CONFIG_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+     INSERT INTO EBK_EXTRA_PROD_CONFIG( ID, EBK_PRODUCT_TYPE,PRODUCT_TYPE, DAYS_TRIP, PRODUCT_ID, PROD_BRANCH_ID, SALE_NUM_TYPE)
+     VALUES ( #id#,#ebkProductType#, #productType#, #daysTrip#, #productId#, #prodBranchId#, #saleNumType#)
+  </insert>
+
+  <update id="update" parameterClass="ebkExtraProdConfigDO" >
+    UPDATE EBK_EXTRA_PROD_CONFIG   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="id" prepend="," >
+        <![CDATA[  
+        ID = #id#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="ebkProductType" prepend="," >
+        <![CDATA[  
+        EBK_PRODUCT_TYPE = #ebkProductType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productType" prepend="," >
+        <![CDATA[  
+        PRODUCT_TYPE = #productType#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="daysTrip" prepend="," >
+        <![CDATA[  
+        DAYS_TRIP = #daysTrip#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="," >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="prodBranchId" prepend="," >
+        <![CDATA[  
+        PROD_BRANCH_ID = #prodBranchId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="saleNumType" prepend="," >
+        <![CDATA[  
+        SALE_NUM_TYPE = #saleNumType#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE ID = #id#  
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="ebkExtraProdConfigDOResultMap" >
+     SELECT 
+    <include refid="ebkExtraProdConfig_do_columns" />
+    <![CDATA[  
+     FROM EBK_EXTRA_PROD_CONFIG a1 WHERE ID = #id#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_EXTRA_PROD_CONFIG WHERE ID = #id#
+    ]]>  
+  </delete>
+
+  <select id="countByDOTerm" parameterClass="ebkExtraProdConfigDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(ID) AS num FROM EBK_EXTRA_PROD_CONFIG 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="ebkExtraProdConfigDOResultMap" parameterClass="ebkExtraProdConfigDO" >
+     SELECT 
+    <include refid="ebkExtraProdConfig_do_columns" />
+     FROM EBK_EXTRA_PROD_CONFIG a1 
+    <include refid="doQueryParams" />
+  </select>
+</sqlMap>

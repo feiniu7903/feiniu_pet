@@ -1,0 +1,36 @@
+<?page title="退款操作页" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./editDistributionRefundWin"?>
+<?component name="a" extends="a" class="com.lvmama.back.utils.perm.PermALink" ?>
+<?component name="label" extends="label" class="com.lvmama.back.utils.perm.PermLabel" ?>
+<zk>
+<window id="editDistributionRefundWin" title="退款操作页" border="normal" closable="false" mode="embedded" apply="com.lvmama.back.web.distribution.DistributionRefundAction">
+	<grid>
+	<columns>
+		<column width="100px"></column>
+		<column></column>
+	</columns>
+	<rows>
+		<row>
+			<hbox>订单ID：</hbox>
+			<hbox><textbox readonly="true" value="@{saction.refund.partnerOrderId}" width="130px" /></hbox>
+		</row>
+		<row>
+			<hbox>退款金额：</hbox>
+			<hbox><doublebox value="@{saction.refundAmountYuan}" width="130px"/></hbox>
+		</row>
+		<row>
+			<hbox>手续费：</hbox>
+			<hbox><doublebox value="@{saction.factorageYuan}" width="130px"/></hbox>
+		</row>
+		<row>
+			<hbox>退款备注：</hbox>
+			<hbox><textbox value="@{saction.refund.remark}" rows="5" width="200px" /></hbox>
+		</row>
+	</rows>
+	</grid>
+	<toolbar>
+		<button id="save" label="确定" onClick="saction.doSave();"></button>
+		<button id="cancel" label="取消" onClick="saction.closeWindow();"></button>
+	</toolbar>
+</window>
+</zk>

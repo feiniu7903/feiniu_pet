@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>开始预订-驴妈妈手机站</title>
+<#include "../common/define_v3.html">
+<meta content="telephone=no" name="format-detection" />
+<script src="${request.contextPath!}/js/comm.js"></script>
+</head>
+<script>
+var jsonData = {}; //{timePriceJson!};
+var canOrderToday = '${canOrderToday?string!}'; 
+var visitTime = '${visitTime!}'; // 当前时间  
+$(function(){
+	var referer = document.referrer;
+	if(referer != null&&referer.indexOf("login")>0){
+		$(".lv-operate-icon a").attr("href","javascript:window.history.go(-2);");
+	}
+});
+</script>
+<body>
+<div class="wrap">
+	<header class="header">
+    	<a href="javascript:url_back_now('${location}');"  class="back"><span class="ic_back"></span></a>
+    	<!-- 用来判断是点击返回还是HOME -->
+    <input  value=""  type="hidden" name="backStatus" id="backStatus">
+    <!-- 处理弹框混乱跳转 -->
+    	<input  value=""  type="hidden" name="backButton" id="backButton">
+        <h1>填写预约单</h1>
+        <input  value="${productItems!}"  type="hidden" name="productItems" id="productItems">
+        <!-- <section class="header_alice">
+        	<a href="javascript:void(0);" onclick="home_back();" class="btn1"><img src="http://pic.lvmama.com/img/mobile/touch/img/index/home.png"></a>
+        </section> -->
+    </header>
+    <#if productItems?? && productItems?size&gt;0>
+	    <form action="${request.contextPath}/order/order_submit_jianyi.htm" method="post" id="order_submit" >
+		    <section class="order_info">
+		        <h1>${productName!}</h1>
+		        <input  type="hidden" id="productName" name="productName" value="${productName!}"/>
+		        <input  type="hidden" id="subProductType" name="subProductType" value="${product.subProductType!}"/>
+		        <!-- 友情提示，费用说明 ，退款说明-->
+				<!-- <#include "/WEB-INF/pages/order/order_fill_notice_info.html"> -->
+		        <dl class="order_product">
+		        	<dt>产品信息</dt>
+		            <dd>
+		              <ul class="order_list">
+		                  <li onclick="time_price_skip('${request.contextPath!}/date_price.htm?location=${location!}&productId=${productId!}&branchId=${branchId!}');">
+			                  	<span class="order_list1">游玩时间</span>
+			                  	<!-- f_red 字体加红添加样式-->
+			                 	<span class="order_list2 f_red" id="timeHolder">${productItems.timeHolder!}</span>
+			                 	<input  type="hidden" id="visitTime" name="visitTime" value="${visitTime!}" readonly/>
+			                  	<div class="order_list3 order_time"><i id="scroller">${visitTime!}</i><span class="ic_ri"></span></div>
+		                  </li>
+		                  <#if productItems?? && productItems.datas?? && productItems.datas?size&gt;0 >
+				               <input  value="false"  type="hidden" name="needIdCard" id="needIdCard">
+				               <#list productItems.datas as item>
+				                    <#if !item.additional >
+										<li>
+											<span class="order_list1">${item.shortName!}</span>
+											<span class="order_list2" id="sell_Price_${item_index}" data-value="${item.sellPriceYuan!}" >&yen; ${item.sellPriceYuan!}</span>
+											<div class="order_list3">
+												<!--用户提交信息(产品类型名，价格，数量)  -->
+												<input type="hidden" name="orderDataList[${item_index}].branchId"  value="${item.branchId}" >
+												<input type="hidden" name="orderDataList[${item_index}].shortName"  value="${item.shortName!}" id="shortName">
+												<input type="hidden" name="orderDataList[${item_index}].sellPriceYuan"  value="${item.sellPriceYuan!}" id="sellPriceYuan">
+												<input type="hidden" name="orderDataList[${item_index}].branchNum" value="${item.minimum!}"
+								                    class="lv-input-text" max="${item.maximum!}" min="${item.minimum!}" id="branchNum" 
+								                    data-additinal="false" data-adultQuantity="${item.adultQuantity!}" data-childQuantity="${item.childQuantity!}" 
+								                    data-order-quantity="">
+												<input type="hidden" name="orderItemList[${item_index}].branchId"  value="${item.branchId}" id="branchId">
+								             	<input type="hidden" name="orderItemList[${item_index}].quantity" value="${item.minimum!}"
+								                    class="lv-input-text" max="${item.maximum!}" min="${item.minimum!}" id="quantity" 
+								                    data-additinal="false" data-adultQuantity="${item.adultQuantity!}" data-childQuantity="${item.childQuantity!}" 
+								                    data-order-quantity="">
+												<!-- 数量减 -->
+												<a class="lv-reduce" href="javascript:void(0);" data-opt="reduce" data-value="${item_index}" data-additinal="false">
+												 	<#if item.minimum &gt; 0 || item.minimum ==0 >
+												 		<!--变灰 -->
+												 		<span class="ic_order_reduce2"></span>
+												 	<#else>、
+												 		<!-- 变红 -->
+								              	 	  <span class="ic_order_reduce"></span>
+								              	 	</#if>
+												</a>
+													<!--数量 -->
+													<span class="order_num lv-ticket-num">${item.minimum!}</span>
+												<!-- 数量加 -->	
+												<a class="lv-plus" href="javascript:void(0);" data-opt="plus" data-value="${item_index}" data-additinal="false">
+								              	    <#if item.maximum &gt; item.minimum >
+								              	    	<!-- 变红 -->
+								              	 	   <span class="ic_order_plus"></span>
+								              	 	<#else>
+								              	 		<!--  变灰-->
+								              	 	    <span class="ic_order_plus2"></span>
+								              	 	</#if>
+								              	</a>
+											</div>
+										</li>
+						            </#if>
+			                	</#list>
+			                </#if>
+		              </ul>
+		            </dd>
+		        	<dt>订单联系人信息</dt>
+		            <dd>
+		              <ul class="order_contact">
+		                   <#if productItems?? && productItems.personList?? && productItems.personList?size&gt;0 >
+				              	<#list productItems.personList as item>
+				                   <#if item.personType=="CONTACT" >
+										<li>
+							             	<span class="order_list1">联&nbsp;系&nbsp;人</span>
+							             	<span class="order_list2"><input type="text" id="userName" name="userName" placeholder="请输入联系人" value="${item.personName!}" /></span>
+						             	</li>
+			                  			<li>
+			                  				<span class="order_list1">手&nbsp;&nbsp;机</span>
+			                  				<span class="order_list2"><input type="tel" id="mobile" name="mobile" placeholder="请输入手机号" value="${item.personMobile!}" /></span>
+			                  			</li>
+					             	</#if>
+					        	</#list>
+				            <#else>
+				                <li>
+					             	<span class="order_list1">联&nbsp;系&nbsp;人</span>
+					             	<span class="order_list2"><input type="text" id="userName" name="userName" placeholder="请输入联系人" value="${userName!}" /></span>
+					             </li>
+	                 			<li>
+	                 				<span class="order_list1">手&nbsp;&nbsp;机</span>
+	                 				<span class="order_list2"><input type="tel" id="mobile" name="mobile" placeholder="请输入手机号" value="${mobile!}" /></span>
+	                 			</li>
+				            </#if>
+				            <!-- <#if productItems?? && productItems.needIdCard!>
+				             <li>
+				            	<span class='lv-span-01'><label for="tel">身份证号</label></span>
+				            	<input class="lv-input-text"  id="idCard" name="idCard" value="${idCard!}" type="text" placeholder="用于景区入园凭证">
+				             </li>
+				              <li>
+				             	<span class="order_list1">身份证号</span>
+				             	<span class="order_list2"><input id="idCard" name="idCard" value="${idCard!}" type="text"  placeholder="请输入联系人" /></span>
+				             </li>
+				          </#if> -->
+		              </ul>
+		            </dd>
+		        </dl>
+		       <!-- <label for="xieyi" class="order_treaty"><input type="checkbox" name="xiyi" id="xieyi" value=""/>&nbsp;我接受驴妈妈自由行旅行协议 <a href="#">查看协议</a></label>-->
+		        <footer class="order_note" style="margin-bottom:0;">
+		        	<!-- <span class="ic_note"></span><p>您只需先填写以上信息，驴妈妈客服专员会尽快与您联系，帮助您完成后续预订。</p> -->
+		        </footer>
+		    </section>
+		    <section class="order_all" style="margin-top: 0; margin-bottom:0;">
+		        <span>订单总额：<b id="total_price"></b></span>
+		        <input  value="${productId!}"  type="hidden" name="productId" id="productId">
+			    <input  value="${branchId!}"  type="hidden" name="branchId" id="branchId">
+			    <input  value="${canOrderToday?string("true","false")}"  type="hidden"  name="canOrderToday" id="canOrderToday">
+			    <input  value="0"  type="hidden" name="totalPrice" id="t_totalPrice">
+			    <input  value="0"  type="hidden" name="baoxianAmount" id="t_baoxianAmount">
+			    <input  value="0"  type="hidden" name="totalQuantity" id="t_totalQuantity">
+			    <input  value="ROUTE"  type="hidden" name="productType" id="t_productType">
+			    <input  value="0"  type="hidden" name="baoxianSelect" id="t_baoxianSelect">
+			    <input  value="CONTACT"  type="hidden"  name="personType" id="personType">
+		        <a href="javascript:void(0)" onclick="orderSubmitJianYi();" class="btn_se_sub1">提交预约单</a>
+		    </section>
+		 </form>
+    <#else>
+        <#assign no_data_msg="${msg!}">
+	    <#include "/WEB-INF/pages/common/no_data_list.html">
+    </#if>
+    <!-- footer -->
+	<#include "../common/order_footer.html"/>
+</div>
+<!-- 新弹出层 -->
+<!-- <div class="modal"></div>
+<div _popup='' class="popup_wrap">
+    <section class="popup find_popup">
+        <header>提示信息</header>
+        <article>
+            <p>
+                提示信息
+            </p>
+        </article>
+        <footer>
+            <a href="javascript:void(0);" class="ic_yellow" onclick="popupModal_logOut();">取消</a><a href="javascript:void(0);" onclick="logoutNow('${location}');" class="ic_roseo" >确定</a>
+            用来判断是点击返回还是HOME
+            <input  value=""  type="hidden" name="backStatus" id="backStatus">
+        </footer>
+    </section>
+</div> -->
+<script>
+	$(function(){
+		$('.lv-cascade-icongrey').hide();
+		$('.order_tab li').eq(0).find('.lv-cascade-icongrey').show();
+		$('.order_tab li').bind('click', function(){
+			var _this = $(this);
+			var _i = _this.index();
+			$('.lv-cascade-icongrey').hide();
+			_this.find('.lv-cascade-icongrey').show();
+			$('.tab_box').hide();
+			$('.tab_box').eq(_i).show();
+			$('.order_tab li').removeClass('order_tab_cur');
+			_this.addClass('order_tab_cur')
+		});
+	});
+	//读取联系人信息
+	$(function(){
+		var userName=$("#userName").val();
+		var mobile=$("#mobile").val();
+		
+		var userNameLoc= getLocalStorage("link_user_name");
+		var mobileLoc= getLocalStorage("link_user_mobile");
+		if((userName==null || userName=="") && (userNameLoc!=null && userNameLoc!="")){
+			$("#userName").val(userNameLoc);
+		}
+		if((mobile==null || mobile=="") && (mobileLoc!=null && mobileLoc!="")){
+			$("#mobile").val(mobileLoc);
+		}
+	});
+</script>
+<script src="${request.contextPath}/js/validate.js?version=20131023" type="text/javascript"></script>
+<script src="${request.contextPath}/js/order_easy.js" type="text/javascript"></script>
+<script src="${request.contextPath}/js/order_back.js"></script>
+<script src="${request.contextPath!}/js/moudle_v3.js?_version=20130826"></script>
+</body>
+</html>

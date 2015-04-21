@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_CHANNEL" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.pet.po.prod.ProdChannel" >
+    <result column="CHANNEL_ID" property="channelId" />
+    <result column="CHANNEL_CODE" property="channelCode" />
+    <result column="CHANNEL_NAME" property="channelName" />
+  </resultMap>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.pet.po.prod.ProdChannel" >
+    select CHANNEL_ID, CHANNEL_CODE, CHANNEL_NAME
+    from PROD_CHANNEL
+    where CHANNEL_ID = #channelId:DECIMAL#
+  </select>
+  <select id="selectProdChannelByAll" resultMap="BaseResultMap">
+  	select * from PROD_CHANNEL
+  </select>
+  
+  	<select id="searchChannelByParam" parameterClass="java.util.Map" resultClass="com.lvmama.comm.pet.po.prod.ProdChannel">
+  			SELECT 
+  				P.CHANNEL_ID AS channelId,
+  				P.CHANNEL_CODE AS channelCode,
+  				P.CHANNEL_NAME AS channelName
+  			FROM 
+  				lvmama_super.PROD_CHANNEL P
+  			where 
+  				(CHANNEL_CODE like ''||#channelSearch#||'%' 
+  				or CHANNEL_NAME like ''||#channelSearch#||'%' )
+  			<isNotEmpty prepend=" and " property="userName">
+  				user_name = #userName#
+  			</isNotEmpty>
+  	</select>
+</sqlMap>

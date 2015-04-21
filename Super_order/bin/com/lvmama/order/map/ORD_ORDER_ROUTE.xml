@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_ORDER_ROUTE">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderRoute">
+		<result column="ORDER_ROUTE_ID" property="orderRouteId" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="TRAFFIC_TICKET_STATUS" property="trafficTicketStatus" />
+		<result column="GROUP_WORD_STATUS" property="groupWordStatus" />
+		<result column="VISA_STATUS" property="visaStatus" />
+	</resultMap>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderRoute">
+		<selectKey resultClass="java.lang.Long" keyProperty="orderRouteId">
+			select
+			ORD_ORDER_ROUTE_ID_SEQ.nextval as id from DUAL
+	    </selectKey>
+		insert into ORD_ORDER_ROUTE (
+		ORDER_ROUTE_ID, ORDER_ID,
+		TRAFFIC_TICKET_STATUS, GROUP_WORD_STATUS,VISA_STATUS)
+		values (
+		#orderRouteId#, #orderId#, #trafficTicketStatus#,
+		#groupWordStatus#,
+		#visaStatus#)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderRoute">
+		update
+		ORD_ORDER_ROUTE
+		set
+		TRAFFIC_TICKET_STATUS = #trafficTicketStatus#,
+		GROUP_WORD_STATUS = #groupWordStatus#,
+		VISA_STATUS = #visaStatus#
+		where
+		ORDER_ID = #orderId#
+	</update>
+	
+	<select id="queryOrdOrderRoute" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+		SELECT * FROM ORD_ORDER_ROUTE WHERE ORDER_ID = #orderId#
+		]]>
+	</select>
+
+</sqlMap>

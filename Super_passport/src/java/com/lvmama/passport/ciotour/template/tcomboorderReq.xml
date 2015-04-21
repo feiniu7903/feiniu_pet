@@ -1,0 +1,20 @@
+<TcomboOrderInfo>
+	<SubscribeDate>${subscribeDate}</SubscribeDate>
+	<ThirdpartOrderID>${thirdpartOrderId}</ThirdpartOrderID>
+	<SubscriberName>${subscriberName}</SubscriberName>
+	<SubscriberIDCardType>${subscriberIdCardType}</SubscriberIDCardType>
+	<SubscriberIDCard>${subscriberIdCard}</SubscriberIDCard>
+	<SubscriberPhone>${subscriberPhone}</SubscriberPhone>
+	<TcomboID>${tcomboID}</TcomboID>
+	<TcomboQty>${tcomboQty}</TcomboQty>
+	<Memo>LVMAMA</Memo>
+	<OrderConsumerList>
+		<#list orderConsumerList as orderConsumer>
+		<TcomboOrderConsumer>
+			<ConsumerName>${orderConsumer.consumerName}</ConsumerName>
+			<ConsumerIDCardType>${orderConsumer.consumerIDCardType}</ConsumerIDCardType>
+			<ConsumerIDCard>${orderConsumer.consumerIDCard}</ConsumerIDCard>
+		</TcomboOrderConsumer>
+		</#list>
+	</OrderConsumerList>
+</TcomboOrderInfo>	

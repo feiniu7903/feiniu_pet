@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>我的酒店订单</title>
+    <#include "../common/define_v4.html">
+	<script src="${request.contextPath}/js/hotel.js"></script>
+    <link type="text/css" rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/v2/order.css">
+</head>
+<body>
+<div id="container">
+<header class="header">
+    <a href="javascript:union_back();" class="back"><span class="ic_back"></span></a>
+    <h1>我的酒店订单</h1>
+    <div class="header_btn">
+        <a class="header-icon-home" href="http://${hostName}"></a>
+    </div>
+</header>
+<div id="content">
+	<#if hotelOrderList?? && hotelOrderList?size&gt;0>
+	<input  value="1"  type="hidden" name="pageIndex" id="pageIndex"><!--分页第几页  -->
+	<input  value="5"  type="hidden" name="pageSize" id="pageSize"><!--分页大小  -->
+	    <div class="common-order" id="data_list">
+	        <article class="box-sp-1">
+	            <div class="common-order-line tc">目前只支持显示在手机端预定的酒店订单</div>
+	        </article>
+	        <input type="hidden" name="page" id="page" value="1">
+	        <#list hotelOrderList as hotelOrder>
+		        <article >
+		            <div class="common-order-pan t_title"><h3>订单号：${hotelOrder.orderId!}</h3>
+		            	<#if hotelOrder.statusCode?? && (
+		            	hotelOrder.statusCode=="N" || 
+		            	hotelOrder.statusCode=="V" || 
+		            	hotelOrder.statusCode=="G" || 
+		            	hotelOrder.statusCode=="U" || 
+		            	hotelOrder.statusCode=="O" || 
+		            	hotelOrder.statusCode=="Z" || 
+		            	hotelOrder.statusCode=="H" || 
+		            	hotelOrder.statusCode=="B1"
+		            	)>
+		            	<span> ${hotelOrder.status!}</span>
+		            	<#else>
+		                	<span class="disable"> ${hotelOrder.status!}</span>
+		            	</#if>
+		            </div>
+		
+		            <div class="common-order-line" onclick="union_skip('${request.contextPath}/order/hotel_order_detail.htm?orderId=${hotelOrder.orderId!}');">
+		            <span>
+		           	${hotelOrder.name!}<br>
+		                            总额：<span class="f-color-1">&yen; ${hotelOrder.totalPrice!}</span><br>
+		                            预订日期：${hotelOrder.creationDate!}<br>
+		                            入住日期：${hotelOrder.arrivalDate!}<br>
+		                            离店日期：${hotelOrder.departureDate!}<br>
+		                        </span>
+		                <span class="ic_ri"></span>
+		            </div>
+		
+		            <div class="common-order-line">
+			            <#if hotelOrder.canCancel>
+		                	<a class="btn_style_2" onclick="cancelHotelOrder(${hotelOrder.orderId!},0);" href="javascript:void(0);">取消订单</a>
+		            	</#if>
+		                <a class="btn_style_1" href="${request.contextPath!}/hotel/hotelDetail.htm?arrivalDate=${arrivalDate!}&departureDate=${departureDate!}&hotelId=${hotelOrder.hotelId!}" >再次预订</a>
+		            </div>
+		        </article>
+		     </#list>   
+	        <!-- 如果不是最后一页  -->
+	    </div>
+	    <#if hasNext?? && hasNext>
+		    <div class="view_more" id="show_more">
+		        <a href="javascript:void(0);" onclick="getMoreHorelList()">
+		            <span>查看更多</span>
+		        </a>
+		    </div>
+	   </#if>
+	<#else>
+         <#assign no_data_msg="暂无酒店订单">
+         <#include "../common/no_data_list.html">
+	</#if>
+</div>
+<!-- footer -->
+<div class="lv-toast lv-toast-success" style="display:none;">
+    <div class="lv-toast-div"><img src="http://pic.lvmama.com/img/mobile/touch/img/smile-grey.png"></div>
+    <p></p>
+</div>
+<div class="lv-toast lv-toast-fail" style="display:none;">
+    <div class="lv-toast-div"><img src="http://pic.lvmama.com/img/mobile/touch/img/sad-big.png"></div>
+    <p></p>
+</div>
+<div class="lv-toast-loading" style="display:none;"><img style="width:32px;" src="http://pic.lvmama.com/img/mobile/touch/img/3.gif"></div>
+<div id="loadingP" style="display:none;height: 100px; line-height: 100px; width:320px; position: absolute; top:50%; left:50%; margin:-50px 0 0 -160px; text-align: center; font-size: 12px; font-weight: 100;">正在定位中，请稍后…</div>
+<#include "../common/footer_v4.html"/>
+<!--电话弹出层 end-->
+<div class='model'></div>
+<!-- 新弹出层 -->
+<div class="modal" _modal=''></div>
+<div _popup='' class="popup_wrap">
+    <section class="popup find_popup">
+        <header>提示信息</header>
+        <article>
+            <p>
+                提示信息
+            </p>
+        </article>
+        <footer>
+            <a href="javascript:void(0);" class="ic_yellow" _disappear_cancel="">取消</a><a href="javascript:void(0);" class="ic_roseo" _disappear=''>确定</a>
+        </footer>
+    </section>
+</div>
+</div>
+
+</body>
+</html>

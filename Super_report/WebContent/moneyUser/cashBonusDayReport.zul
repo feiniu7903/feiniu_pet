@@ -1,0 +1,52 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<zk>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit"?>
+<window  title="奖金账户日报表" border="normal" apply="com.lvmama.report.web.moneyUser.CashBonusAction">
+	<grid>
+		<columns>
+			<column width="80px"></column>
+			<column width="300px"></column>
+			<column width="60px"></column>
+			<column width="80px"></column>
+			<column width="90px"></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>时间:</hbox>
+				<hbox>
+					<datebox value="@{saction.paramMap.startDate}"/> 
+					-- 
+					<datebox value="@{saction.paramMap.endDate}"/>
+				</hbox>
+				<hbox>
+					<button  label="查询" id="searchBtn" width="50px" 
+						onClick="_paging.activePage=0;saction.doQuery()"></button>
+				</hbox>
+				<hbox>
+					<button  label="导出报表" 
+						id="exportBtn" width="75px" 
+						onClick="saction.doExport()"></button>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+		
+	<listbox  
+		model="@{saction.cashBonusReportVOList, load-after='searchBtn.onClick'}">
+		<listhead>
+			<listheader label="期初金额"/>
+			<listheader label="新增金额（元）" />
+			<listheader label="消耗金额（元）" />
+			<listheader label="期末金额（元）" />
+		</listhead>
+		<listitem height="25px" width="150px" self="@{each='item'}">
+			<listcell label="@{item.beginAmountYuan}"></listcell>
+			<listcell >
+			<html content="@{item.addedAmountHtml}" />
+			</listcell>
+			<listcell label="@{item.consumeAmountYuan}"></listcell>
+			<listcell label="@{item.endAmountYuan}"></listcell>
+		</listitem>
+	</listbox>
+</window>
+</zk>

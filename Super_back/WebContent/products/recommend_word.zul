@@ -1,0 +1,44 @@
+<?page title="new product" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./recommendWordWin"?>
+<zk>
+	<window id="recommendWordWin" title="一句话推荐" closable="true"
+		border="normal" width="400px"
+		apply="com.lvmama.back.web.product.ProductRecommendWordAction">
+	<zscript><![CDATA[
+	//@DECLARATION
+	public void checkLength(Label word,Textbox recommendInfo) {
+		word.setValue(String.valueOf(recommendInfo.getValue().length()));
+	}
+]]>
+</zscript>
+		<groupbox style="border: none;">
+			<hbox height="30px">
+				<label value="推荐一:" />
+				<textbox width="200px" maxlength="15" id="recommendInfoFirst" value="@{saction.prodProduct.recommendInfoFirst }"
+					 onChange="checkLength(word1,recommendInfoFirst);" />
+				<label value="(字数控制在15字以内,含15) 已输入:" />
+				<label id="word1" style="color:red;" value="0" />
+			</hbox>
+			<hbox height="30px">
+				<label value="推荐二:" />
+				<textbox width="300px" maxlength="30" id="recommendInfoSecond" value="@{saction.prodProduct.recommendInfoSecond }"
+					onChange="checkLength(word2,recommendInfoSecond);" />
+				<label value="(字数控制在30字以内,含30)  已输入:" />
+				<label id="word2" style="color:red;" value="0" />
+			</hbox>
+			<hbox height="30px">
+				<label value="推荐三:" />
+				<textbox width="500px" maxlength="50" id="recommendInfoThird" value="@{saction.prodProduct.recommendInfoThird }"
+					onChange="checkLength(word3,recommendInfoThird);" />
+				<label value="(字数控制在50字以内,含50)  已输入:" />
+				<label id="word3" style="color:red;" value="0" />
+			</hbox>
+			<hbox height="30px">
+				<button id="save" width="100px" label="提交" onClick="saction.updateProdRecommendWord();" />
+				<button id="cancel" width="100px" label="取消"
+					onClick="recommendWordWin.detach();" />
+			</hbox>
+		</groupbox>
+
+	</window>
+</zk>

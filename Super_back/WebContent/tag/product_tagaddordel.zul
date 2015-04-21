@@ -1,0 +1,44 @@
+<?page title="标签管理" contentType="text/html;charset=UTF-8" ?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./product_tagaddordel"?>
+<zk>
+	<window id="product_tagaddordel" title="修改标签" border="normal" mode="embedded" apply="com.lvmama.back.web.tag.ProductTagAction">
+		<groupbox style="border: none">
+			<grid fixedLayout="true" width="100%">
+				<columns>
+					<column width="10%" />
+					<column width="90%" />
+				</columns>
+				<rows>
+					<row>
+						<hbox>小组名：</hbox>
+						<hbox>
+							<listbox mold="select" id="tagGroup" model="@{saction.groupsList }"
+								onSelect="saction.selectTagesInGroups(self.selectedItem.value);saction.createtag(self.selectedItem.value);" style="width:100px;">
+								<listitem self="@{each=prodTagGroup}" value="@{prodTagGroup.tagGroupId}" label="@{prodTagGroup.tagGroupName}" />
+							</listbox>
+						</hbox>
+					</row>
+					<row>
+						<hbox>标签名：</hbox>
+						<hbox>
+							<groupbox id="checkboxChildren" style="border:none" />
+							<radiogroup id="radioChildren" />
+						</hbox>
+					</row>
+					<row>
+						<hbox>时效：<!-- 使用value时会小组名（listbox mold="select" ）选择默认值 --></hbox>
+						<hbox>
+							<datebox id="beginTime" onChange="saction.setBeginTime(self.value)"></datebox>
+							-
+							<datebox id="endTime" onChange="saction.setEndTime(self.value)"></datebox>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+			<toolbar align="center">
+				<button label="提交" autodisable="self" onClick="saction.submitProductTag(tagGroup.selectedItem.value);" />
+				<button onClick="product_tagaddordel.detach();" label="取消" />
+			</toolbar>
+		</groupbox>
+	</window>
+</zk>

@@ -1,0 +1,59 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8"/>
+        <title>预付款产品协议书（高）</title>
+        <style TYPE="text/css">
+            * {margin:0;padding:0;}
+            body{font-family: SimSun;padding:0 40px;}
+            .txt-hetong {color:#666;width:635px;margin:10px auto;font:12px/1.5 arial,SimSun;}
+            .detail_txt{text-align:left; line-height:22px; overflow:hidden; zoom:1;}
+            .txt-hetong h1 {text-align:center;font:700 18px/2 SimSun;color:#333;}
+            .txt-hetong h2 {text-align:center;font:700 16px/2 SimSun;color:#444;margin-top:30px;}
+            .txt-hetong b {color:#333;font-weight:700;}
+            .textIndent24{text-indent:24px;}
+            .all-line {font-style:normal; display:inline-block;border-bottom:1px solid #666;padding:0 5px; text-indent:0;color:#333;}
+            .all-line1 {width: 70px; text-align:center;}
+            .all-line2 {width: 255px; text-align:center;}
+            .all-line3 {width: 80px; text-align:center;}
+			.all-line4{width: 120px; text-align:center;}
+            color:#333;}
+            .all-line1 {width:70px;}
+			.padding10{ padding:10px 0;}
+			.bottom{ margin-left:30px;}
+			.left{float:left; width:300px;}
+			.left em{display:block; font-style:normal; padding-bottom:10px;}
+			.bottom{ margin-left:30px; margin-top:80px; } 
+			.bottom p{float:left; width:270px;} 
+			.bottom p em{display:block; font-style:normal; padding-bottom:10px; position:relative;} 
+			.bottom p em img{ position:absolute; top:-90px; }
+        </style>
+    </head>
+
+    <body>
+        <div class="txt-hetong">
+			<h1>预付款产品协议书</h1>
+			<div class="detail_txt">
+			<p class="textIndent24">
+				<span>甲方（预订人）：<em class="all-line all-line2" >${allTravellerName}</em></span> 
+				<span>联系电话： <em class="all-line all-line4" >${firstTravellerMobile}</em></span>
+			</p>
+			<p class="textIndent24">
+				<span>乙方（接受预订人）：<em class="all-line all-line2">${companyName}</em></span> 
+				<span>联系电话： <em class="all-line all-line4" >${companyTel}</em></span>
+			</p>
+			</div>
+			<div class="detail_txt padding10">
+			<p class="textIndent24">鉴于甲方向乙方预订的旅游产品资源特殊,故双方经友好协商,达成如下协议:</p>
+			<p class="textIndent24">一、	甲方通过"驴妈妈旅游网"页面信息（产品重要提示中的预订须知描述）知晓并同意，其将预订的旅游产品资源需经一定时间方可确定。</p>
+			<p class="textIndent24">二、 甲方在本协议项下向乙方申请先行支付预付款（相当于该产品全额款）。该款在乙方确认资源后自动转为产品价款；乙方收款后进入预定流程，在规定日期内若乙方无该项产品资源的，则预付款将全额在<em class="all-line all-line1">5个</em>工作日内向甲方无息退还（原路径返还）；若因甲方原因申请撤销交易的按已产生的实际损失收取，扣除后的款项予以退还。</p>
+			<p class="textIndent24">三、	甲、乙双方一致确认，就本协议项下所述预订事宜双方无任何违约责任，仅按照前述条款约定办理。</p>
+			<p class="textIndent24">四、	甲方已阅读并同意由乙方提供的旅游合同，在资源确认后，甲乙双方将正式签订旅游合同，相应的权利义务以合同内容为准，本协议履行结束，对双方均无法律约束力。</p>
+			<p class="textIndent24">五、	本协议自甲方在线成功支付预付款后生效，将由"驴妈妈旅游网"发送至甲方指定邮箱。</p>
+			</div>
+			<div class="bottom">
+				<p ><b><em>甲方：${allTravellerName}</em><span>日期：${signDate}</span></b></p>
+				<p ><b><em>乙方：<img src="${imageUrl}" id="stamp_img" template="${template}"/></em><span>日期：${signDate}</span></b></p>
+			</div>
+		</div>
+    </body>
+</html>

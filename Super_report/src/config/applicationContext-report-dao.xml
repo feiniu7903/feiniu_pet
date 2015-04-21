@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+	
+	<bean id="baseIbatisDao" class="com.lvmama.common.dao.BaseIbatisDao" abstract="true">
+		<property name="sqlMapClient">
+	      <ref bean="sqlMapClient"/>
+	    </property>
+		<property name="dataSource">
+	      <ref bean="dataSource"/>
+	    </property>
+	</bean>
+	<bean id="userRegisterBasicDAO" class="com.lvmama.report.dao.UserRegisterBasicDAO" parent="baseIbatisDao" />
+	<bean id="prodProductBasicMVDAO" class="com.lvmama.report.dao.ProdProductBasicMVDAO" parent="baseIbatisDao" />
+	<bean id="channelBasicMVDAO" class="com.lvmama.report.dao.ChannelBasicMVDAO" parent="baseIbatisDao" />
+	<bean id="orderBasicMVDAO" class="com.lvmama.report.dao.OrderBasicMVDAO" parent="baseIbatisDao" />
+	<bean id="metaProductBasicMVDAO" class="com.lvmama.report.dao.MetaProductBasicMVDAO" parent="baseIbatisDao" />
+	<bean id="userRegisterBasicMVDAO" class="com.lvmama.report.dao.UserRegisterBasicMVDAO" parent="baseIbatisDao" />
+	<bean id="orderSaleServiceBasicMVDAO" class="com.lvmama.report.dao.OrderSaleServiceBasicMVDAO" parent="baseIbatisDao" />
+	<bean id="rptQueryDAO" class="com.lvmama.report.dao.RptQueryDAO" parent="baseIbatisDao" />
+	<bean id="membershipCardMVDAO" class="com.lvmama.report.dao.MembershipCardMVDAO" parent="baseIbatisDao" />
+	<bean id="userRegisterChannelMVDAO" class="com.lvmama.report.dao.UserRegisterChannelMVDAO" parent="baseIbatisDao" />
+	<bean id="markCouponUsageDAO" class="com.lvmama.report.dao.MarkCouponUsageDAO" parent="baseIbatisDao" />
+	<bean id="reportOrderDAO" class="com.lvmama.report.dao.ReportOrderDAO" parent="baseIbatisDao"/>
+	<bean id="ccStaffsSalesDAO" class="com.lvmama.report.dao.CCStaffsSalesDAO" parent="baseIbatisDao"/>
+	
+	<bean id="totalAnalysisTVDAO" class="com.lvmama.report.dao.TotalAnalysisTVDAO" parent="baseIbatisDao"/>
+	<bean id="weekAnalysisTVDAO" class="com.lvmama.report.dao.WeekAnalysisTVDAO" parent="baseIbatisDao"/>
+	<bean id="orderCustomerBasicMVDAO" class="com.lvmama.report.dao.OrderCustomerBasicMVDAO" parent="baseIbatisDao"/>
+	<bean id="orderTransformBasicMVDAO" class="com.lvmama.report.dao.OrderTransformBasicMVDAO" parent="baseIbatisDao"/>
+	<bean id="vistorDetailBasicMVDAO" class="com.lvmama.report.dao.VistorDetailBasicMVDAO" parent="baseIbatisDao"/>
+	
+	<bean id="cmtStatisticsDAO" class="com.lvmama.report.dao.CmtStatisticsDAO" parent="baseIbatisDao"/>
+	<bean id="reportPointDAO" class="com.lvmama.report.dao.ReportPointDAO" parent="baseIbatisDao"/>
+	
+	<bean id="stockInsufficientDAO" class="com.lvmama.report.dao.StockInsufficientDAO" parent="baseIbatisDao"/>
+	<!-- 现金账户 -->
+	<bean id="moneyUserDAO" class="com.lvmama.report.dao.MoneyUserDAO" parent="baseIbatisDao"/>
+	<bean id="prodChannelDAO" class="com.lvmama.report.dao.ProdChannelDAO" parent="baseIbatisDao" />
+	<bean id="moneyUserDetailExportDAO" class="com.lvmama.report.dao.MoneyUserDetailExportDAO" />
+	<bean id="cashBonusDayReportDAO" class="com.lvmama.report.dao.CashBonusDayReportDAO" parent="baseIbatisDao"/>
+	<!-- 用户标签 -->
+	<bean id="userTagsSearchLogsDAO" class="com.lvmama.report.dao.UserTagsSearchLogsDAO" parent="baseIbatisDao"></bean>
+</beans>

@@ -1,0 +1,758 @@
+<script language="javascript"> 
+//参考http://blog.csdn.net/hellohaifei/article/details/15340173 
+~(function(){ 
+var locUrl = window.location.href; 
+var LvmmUrl = locUrl.replace("http://","lvmama://") 
+//alert(LvmmUrl) 
+if(locUrl.split("channel=")[1].substring(0,2)=="QR"){ 
+if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) { 
+window.location = LvmmUrl; 
+window.setTimeout(function() { 
+window.location = "http://m.lvmama.com/static/zt/3.0.0/download/index.html"; 
+}, 3000); 
+
+} else if (navigator.userAgent.match(/android/i)) { 
+window.location = LvmmUrl; 
+window.setTimeout(function() { 
+window.location = "http://m.lvmama.com/static/zt/3.0.0/download/index.html"; 
+}, 3000); 
+} 
+} 
+})();
+</script>
+<!doctype html>
+<html>
+<head>
+    <title>${mobilePlace.name!}门票_团购价格_地址-驴妈妈手机预订</title>
+    <meta name="description" content="驴妈妈无线官网:提供${mobilePlace.name!}门票预订,${mobilePlace.name!}门票团购活动,景区地址指南,手机预订,方便您随时随地出游准备!">
+    <#include "../common/define_v5.html">
+
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/detail.css">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/ui/idangerous.swiper.css">
+    <script src="http://pic.lvmama.com/js/wap/js/ui/swiper.min.js"></script>
+    <script src="${request.contextPath}/js/spotTicket.js"></script>
+	<script src="${request.contextPath}/js/order_back.js"></script>
+	<script src="${request.contextPath}/js/baidu_login.js"></script>
+	<#assign commentScore=
+	"com.lvmama.clutter.utils.CommentScoreMethod"?new()> <#setting
+	number_format="#.##########">
+    <link rel="canonical" href="http://${hostName}/ticket/piao-${mobilePlace.id!}/" />
+    <style type="text/css">
+     .swiper-container{z-index:0}
+     .lv-filtrate-bar{z-index:0;}
+    </style>
+    <script>
+		$(function() {
+			var name = escape('${mobilePlace.name!}');
+			var address = escape('${mobilePlace.address!}');
+			var latitude = Number('${mobilePlace.baiduLatitude!}');
+			var longitude = Number('${mobilePlace.baiduLongitude!}');
+			//console.info("longitude="+longitude+";latitude="+latitude);
+			$(".lv-excurtion-postion")
+					.click(
+							function() {
+								if (longitude == "" || longitude == null
+										|| typeof (longitude) == "undefined") {
+									globe.lvToast(false, "无法获取当前地理位置", 3000);
+								} else {
+									window.location.href = "${request.contextPath}/position.htm?type=detail&latitude="
+											+ latitude
+											+ "&longitude="
+											+ longitude
+											+ "&name="
+											+ name
+											+ "&address="
+											+ address;
+								}
+							});
+			
+			
+			/*其他渠道推过产品(如:微博,微信),返回上一页功能改成返回首页*/
+			var refer = document.referrer ;
+			if (refer != null &&!(refer.startWith("http://${hostName}") || refer.startWith("http://api3g.lvmama.com")) ){
+				//$(".lv-operate-icon a").attr("onclick","union_skip('http://m.lvmama.com');");
+				/* if(getcookie("isShowDownload") == ''){
+					$(".down_push").show();
+				} */
+			}
+		});
+	</script>
+</head>
+<body>
+	
+<!--  头部-->
+<header class="header">景点详情
+	<span class="icon-back"></span>
+	<#if hostName?? && hostName=="qing.lvmama.com">
+		<div class="out_address" style="margin-top:4px;"><a style="color:#fff" href="javascript:baiduMyOrder();"><span style="background-size:36px;width:36px;height:36px;position:relative;display:block;margin-right:5px;float:right;" class="header-icon-file"></span></a><a style="color:#fff" href="tel:4001-570-570"><span style="background-size:36px;width:36px;height:36px;position:relative;display:block;margin-right:5px;float:right;" class="header-icon-tel"></span></a></div>
+	<#else>
+		<span id="favoritor_in" onclick="addFavoritor('${mobilePlace.id!}','PLACE','${mobilePlace.middleImage!}','${mobilePlace.name!}');" class="header-icon-fav"></span>
+	 	<span id="favoritor_out" onclick="cancelFavoritor('${mobilePlace.id!}','PLACE');" class="header-icon-fav-ed"></span>
+		<a style="color:#fff" href="http://${hostName}/"><div class="out_address"><span class="icon-svg14"></span></div></a>
+	</#if>
+</header>
+
+<input type="hidden" value="http://qing.lvmama.com" id="callUrlBaidu" name="callUrlBaidu">
+<div id="wrapper">
+    <div id="content">
+    	<#if mobilePlace.hasIn>
+		   <script>
+		       $("#favoritor_in").hide();
+		       $("#favoritor_out").show();
+		   </script>
+		<#else>
+		    <script>
+		       $("#favoritor_out").hide();
+		       $("#favoritor_in").show();
+		   </script>
+		</#if>
+        <div class="lv-project-detail">
+            <div class="swiper-main detail-banner">
+                <div class="swiper-container swiper-banner">
+                    <h2>${mobilePlace.name!}</h2>
+                    <div class="swiper-wrapper">
+                        <!--内容添加-->
+                        <#if mobilePlace.imageList?? && mobilePlace.imageList?size&gt;0 >
+							<#list mobilePlace.imageList as img> 
+							<div class="swiper-slide"><img src="${prefixPic!}${img!}" alt="${mobilePlace.name!}"></div>
+							</#list>
+						</#if>
+                    </div>
+                </div>
+                <div class="pagination"></div>
+            </div>
+            <div class="lv-filtrate-bar">
+                <div class="tab_select">
+                    <ul>
+                        <li class="active">
+                            <span>门票</span><span class="ic_triangle_up"></span>
+                        </li>
+                        <#if titlList?? && titlList?size&gt;0>
+	                        <li class="">
+	                            <span>套餐</span><span class="ic_triangle_up"></span>
+	                        </li>
+                        </#if>
+                        <li class="">
+                            <span>景点介绍</span><span class="ic_triangle_up"></span>
+                        </li>
+                        <li class="">
+                            <span>点评</span><span class="ic_triangle_up"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="t_list_1 tabChange" style="display: block;">
+            	<#if (singleList?? && singleList?size&gt;0) || (baiduGoodsList?? && baiduGoodsList?size&gt;0)> 
+	                <h2>门票</h2>
+	                <!-- 百度活动START -->
+	                <#if (baiduGoodsList?? && baiduGoodsList?size>0) && (hostName?? && hostName=="qing.lvmama.com")>
+		                <#list baiduGoodsList as product>
+			                <div class="lv-box set-btn baidu baiduRush" data-time="" id="data_time_${product_index}">
+			                    <h3>${product.fullName!}</h3>
+			                    	<div class="baidu_sale"><i><#if product.icon?? && product.icon=="1">半价票<#elseif product.icon?? && product.icon=="2">立减票</#if></i></div>
+				                    <div class="t_content">
+				                        <p>
+					                        <span>${product.shortName!}</span>
+				                        </p>
+				                        <p class="clearfix mt5">
+			                                <span class="t_btnbar countDown">
+			                                	<#if product.icon?? && product.icon=="1">
+						                        	<a href="javascript:void(0);" id="book_button_${product_index}"  class="btn_style_1">预订</a>
+						                        	<script type="text/javascript">
+														  $(function(){
+															  baidu_count_down(${product_index},${product.productId!},${product.branchId!},${product.icon!});
+														  });
+													</script>
+			                                	<#elseif product.icon?? && product.icon=="2">
+			                                		<a href="javascript:javascript:void(0);" id="book_button_reduce_${product_index}" class="btn_style_1">预订</a>
+			                                		<!-- <a href="javascript:globe.baidu_order_ticket('${request.contextPath!}',${product.productId!},${product.prodBranchId!},'false',${product.bedType!});"  class="btn_style_1">预订</a> -->
+			                                		<script type="text/javascript">
+														  $(function(){
+															  baidu_red_uce(${product_index},${product.productId!},${product.branchId!},${product.icon!});
+														  });
+													</script>
+			                                	</#if>
+			                                </span>
+			                                <span class="pro-value">
+			                                   &yen;${product.sellPriceYuan!}
+			                                    <del>&yen;${product.marketPriceYuan!}</del>
+			                                </span>
+				                        </p>
+				                        <p>
+					                        <span class="privilege rose">百度支付</span>
+					                        <span class="f-color-1 f-size-10">使用百度支付<#if product.icon?? && product.icon=="1">享受半价<#elseif product.icon?? && product.icon=="2">立减15元</#if></span>
+				                        </p>
+				                    </div>
+			                </div>
+		                </#list>
+	                </#if>
+	                <!--百度活动END  -->
+	                <#if singleList?? && singleList?size&gt;0>
+		                <#list singleList as item>
+			                <div class="lv-box set-btn">
+			                    <h3>${item.productName}</h3>
+								 <#list	item.datas as product>
+				                    <div class="t_content">
+				                        <p>
+					                        <#if product.mobileAlone?? && product.mobileAlone>
+					                        	<span class="flag phone">手机专享</span>
+					                        </#if>
+					                        <span>${product.shortName}</span>
+				                        </p>
+				
+				                        <p class="clearfix mt5">
+				                                <span class="t_btnbar">
+				                                	<#if product.canOrderToday>
+				                                		<#if product.canOrderTodayCurrentTime>
+				                                			<#if hostName?? && hostName=="qing.lvmama.com">
+							                                    <a href="javascript:product_order_skip(${product.productId!},${product.branchId!},'true');" class="btn_style_3">订今日票</a>
+				                                			<#else>
+							                                    <a href="javascript:order_ticket('${request.contextPath!}',${product.productId!},${product.branchId!},'true');" class="btn_style_3">订今日票</a>
+				                                			</#if>
+				                                		<#else>
+				                                			<a href="javascript:void(0);" class="btn_style_3 disable fl ml10">订今日票</a>
+				                                		</#if>
+				                                	</#if>
+				                                	<#if hostName?? && hostName=="qing.lvmama.com">
+					                                    <a href="javascript:product_order_skip(${product.productId!},${product.branchId!},'false');"  class="btn_style_1">预订</a>
+				                                	<#else>
+					                                    <a href="javascript:order_ticket('${request.contextPath!}',${product.productId!},${product.branchId!},'false');"  class="btn_style_1">预订</a>
+				                                	</#if>
+				                                </span>
+				                                <span class="pro-value">
+				                                   &yen;${product.sellPriceYuan}
+				                                    <del>&yen;${product.marketPriceYuan}</del>
+				                                </span>
+				                        </p>
+				                        <#if product.canOrderToday && product.todayOrderTips?? && product.canOrderTodayCurrentTime>
+				                        	<p>
+				                        		<div class="lv-pull-left f_v3_taday">
+				                        			<span class="reserve-today"><em>订今日票提醒：</em>${product.todayOrderTips!}</span>
+				                        		</div>
+				                        	</p>
+				                        </#if>
+				                        <p>
+				                        	<#if product.zhPaymentTarget?? &&  product.zhPaymentTarget!="" >
+					                            <span class="privilege blue">${product.zhPaymentTarget!}</span>
+				                        	</#if>
+				                        	<#if product.hasBusinessCoupon>
+				                        		<span class="privilege">惠</span>
+				                        	</#if>
+				                        	<#if product.canDeduction>
+				                        		<span class="privilege">抵</span>
+				                        	</#if>
+				                        	<#if product.cashRefund>
+					                            <span class="privilege rose">返 &yen;${product.cashRefundY!}</span>&nbsp;<span class="f-color-1 f-size-10">(比网站多返${product.mobileCashRefund!}元)</span>
+				                        	</#if>
+				                        </p>
+				                    </div>
+								 </#list>
+			                    <!-- <div class="t_tips">
+			                       	 本票包含养生馆、水空间两馆不限时通玩；养生馆包含：泡温泉，蒸桑拿，浴室房和免费休息大厅水空间主要是游泳和水上滑梯等 <br>有效期至2013.12.31
+			                    </div> -->
+			                </div>
+		                </#list>
+	                </#if>
+				</#if>
+				<#if suitList?? && suitList?size&gt;0> 
+	                <h2>套票</h2>
+	                <#list suitList as item>
+		                <div class="lv-box set-btn">
+		                    <h3>${item.productName}</h3>
+							 <#list	item.datas as product>
+			                    <div class="t_content">
+			                        <p>
+				                        <#if product.mobileAlone?? && product.mobileAlone>
+				                        	<span class="flag phone">手机专享</span>
+				                        </#if>
+				                        <span>${product.shortName}</span>
+			                        </p>
+			
+			                        <p class="clearfix mt5">
+			                                <span class="t_btnbar">
+			                                	<#if product.canOrderToday>
+			                                		<#if product.canOrderTodayCurrentTime>
+			                                			<#if hostName?? && hostName=="qing.lvmama.com">
+						                                    <a href="javascript:product_order_skip(${product.productId!},${product.branchId!},'true');"  class="btn_style_3">订今日票</a>
+			                                			<#else>
+						                                    <a href="javascript:order_ticket('${request.contextPath!}',${product.productId!},${product.branchId!},'true');"  class="btn_style_3">订今日票</a>
+			                                			</#if>
+			                                		<#else>
+			                                			<a href="javascript:void(0);" class="btn_style_3 disable fl ml10">订今日票</a>
+			                                		</#if>
+			                                	</#if>
+			                                	<#if hostName?? && hostName=="qing.lvmama.com">
+				                                    <a href="javascript:product_order_skip(${product.productId!},${product.branchId!},'false');" class="btn_style_1">预订</a>
+			                                	<#else>
+				                                    <a href="javascript:order_ticket('${request.contextPath!}',${product.productId!},${product.branchId!},'false');" class="btn_style_1">预订</a>
+			                                	</#if>
+			                                </span>
+			                                <span class="pro-value">
+			                                   &yen;${product.sellPriceYuan}
+			                                    <del>&yen;${product.marketPriceYuan}</del>
+			                                </span>
+			                        </p>
+			                        <#if product.canOrderToday && product.todayOrderTips?? && product.canOrderTodayCurrentTime>
+			                        	<p>
+			                        		<div class="lv-pull-left f_v3_taday">
+			                        			<span class="reserve-today"><em>订今日票提醒：</em>${product.todayOrderTips!}</span>
+			                        		</div>
+			                        	</p>
+			                        </#if>
+			                        <p>
+			                        	<#if product.zhPaymentTarget?? &&  product.zhPaymentTarget!="" >
+				                            <span class="privilege blue">${product.zhPaymentTarget!}</span>
+			                        	</#if>
+			                        	<#if product.hasBusinessCoupon>
+			                        		<span class="privilege">惠</span>
+			                        	</#if>
+			                        	<#if product.canDeduction>
+			                        		<span class="privilege">抵</span>
+			                        	</#if>
+			                        	<#if product.cashRefund>
+				                            <span class="privilege rose">返 &yen;${product.cashRefundY!}</span>&nbsp;<span class="f-color-1 f-size-10">(比网站多返${product.mobileCashRefund!}元)</span>
+			                        	</#if>
+			                        </p>
+			                    </div>
+							 </#list>
+		                    <!-- <div class="t_tips">
+		                       	 本票包含养生馆、水空间两馆不限时通玩；养生馆包含：泡温泉，蒸桑拿，浴室房和免费休息大厅水空间主要是游泳和水上滑梯等 <br>有效期至2013.12.31
+		                    </div> -->
+		                </div>
+	                </#list>
+				</#if>
+				<#if unionList?? && unionList?size&gt;0> 
+	                <h2>联票</h2>
+	                <#list unionList as item>
+		                <div class="lv-box set-btn">
+		                    <h3>${item.productName}</h3>
+							 <#list	item.datas as product>
+			                    <div class="t_content">
+			                        <p>
+				                        <#if product.mobileAlone?? && product.mobileAlone>
+				                        	<span class="flag phone">手机专享</span>
+				                        </#if>
+				                        <span>${product.shortName}</span>
+			                        </p>
+			
+			                        <p class="clearfix mt5">
+			                                <span class="t_btnbar">
+			                                	<#if product.canOrderToday>
+			                                		<#if product.canOrderTodayCurrentTime>
+			                                			<#if hostName?? && hostName=="qing.lvmama.com">
+						                                    <a href="javascript:product_order_skip(${product.productId!},${product.branchId!},'true');"  class="btn_style_3">订今日票</a>
+			                                			<#else>
+						                                    <a href="javascript:order_ticket('${request.contextPath!}',${product.productId!},${product.branchId!},'true');"  class="btn_style_3">订今日票</a>
+			                                			</#if>
+			                                		<#else>
+			                                			<a href="javascript:void(0);" class="btn_style_3 disable fl ml10">订今日票</a>
+			                                		</#if>
+			                                	</#if>
+			                                	<#if hostName?? && hostName=="qing.lvmama.com">
+				                                    <a href="javascript:product_order_skip(${product.productId!},${product.branchId!},'false');" class="btn_style_1">预订</a>
+			                                	<#else>
+				                                    <a href="javascript:order_ticket('${request.contextPath!}',${product.productId!},${product.branchId!},'false');" class="btn_style_1">预订</a>
+			                                	</#if>
+			                                </span>
+			                                <span class="pro-value">
+			                                   &yen;${product.sellPriceYuan}
+			                                    <del>&yen;${product.marketPriceYuan}</del>
+			                                </span>
+			                        </p>
+			                        <#if product.canOrderToday && product.todayOrderTips?? && product.canOrderTodayCurrentTime>
+			                        	<p>
+			                        		<div class="lv-pull-left f_v3_taday">
+			                        			<span class="reserve-today"><em>订今日票提醒：</em>${product.todayOrderTips!}</span>
+			                        		</div>
+			                        	</p>
+			                        </#if>
+			                        <p>
+			                        	<#if product.zhPaymentTarget?? &&  product.zhPaymentTarget!="" >
+				                            <span class="privilege blue">${product.zhPaymentTarget!}</span>
+			                        	</#if>
+			                        	<#if product.hasBusinessCoupon>
+			                        		<span class="privilege">惠</span>
+			                        	</#if>
+			                        	<#if product.canDeduction>
+			                        		<span class="privilege">抵</span>
+			                        	</#if>
+			                        	<#if product.cashRefund>
+				                            <span class="privilege rose">返 &yen;${product.cashRefundY!}</span>&nbsp;<span class="f-color-1 f-size-10">(比网站多返${product.mobileCashRefund!}元)</span>
+			                        	</#if>
+			                        </p>
+			                    </div>
+							 </#list>
+		                    <!-- <div class="t_tips">
+		                       	 本票包含养生馆、水空间两馆不限时通玩；养生馆包含：泡温泉，蒸桑拿，浴室房和免费休息大厅水空间主要是游泳和水上滑梯等 <br>有效期至2013.12.31
+		                    </div> -->
+		                </div>
+	                </#list>
+				</#if>
+				<#if mobilePlace.placeActivity?? && mobilePlace.placeActivity?size&gt;0>
+	                <div class="lv-box set-btn">
+	                	 <#list	mobilePlace.placeActivity as activity>
+		                    <h3 onclick="union_skip('${request.contextPath}/${activity.contentUrl!}&firstChannel=CLIENT');"><span class="active-tag">活动</span> ${activity.title!} <span class="ic_ri"></span></h3>
+	                	 </#list>
+	                </div>
+				</#if>
+                <!-- 预订须知 -->
+                <#if mobilePlace.orderNotice?? && mobilePlace.orderNotice!=''>
+	                <div class="lv-box set-btn">
+	                    <h3>预定须知</h3>
+	                    <div class="t_content">
+	                        ${mobilePlace.orderNotice?if_exists?replace("\n","</br>")}
+	                    </div>
+	                </div>
+                </#if>
+                <!-- 重要提示 -->
+                <#if mobilePlace.importantTips?? && mobilePlace.importantTips!=''>
+	                <div class="lv-box set-btn">
+	                    <h3>重要提示</h3>
+	                    <div class="t_content">
+	                       ${mobilePlace.importantTips?if_exists?replace("\n","</br>")}
+	                    </div>
+	                </div>
+                </#if>
+            </div>
+            <!--自由行 titlList-->
+            <#if titlList?? && titlList?size&gt;0>
+	            <div class="tabChange lv-project-list" style="display: none;">
+	                <ul>
+	                	<#list titlList as item>
+		                    <a href="javascript:void(0);" onclick="union_skip('http://${hostName}/product/${item.productId!}/');">
+		                        <article>
+		                            <div style="background-image: url(${prefixPic!}${item.smallImage!})"
+		                                 class="pro-pic"></div>
+		                            <div class="pro-info">
+		                                <h2>${item.productName?default("")}</h2>
+		                                <p>
+                                            <span class="fl">${item.zhSubProductType!}${item.visitDay!}天</span>
+		                                    <span class="fr pro-value">&yen;${item.sellPriceYuan!} <i>起</i></span>
+		                                </p>
+		                                <p>
+		                                    
+		                                    <#if item.tagList?? && item.tagList?size&gt;0>
+					                            <span class="flag">${item.tagList[0].tagName!}</span>
+				                        	</#if>
+				                        	<#if item.mobileAlone?? && item.mobileAlone>
+				                        		<span class="flag">手机独享</span>
+				                        	</#if>
+		                                    <#if item.cashRefund?? &&  item.cashRefund >
+			                                    <span class="privilege rose">返 &yen;${item.cashRefundY!}</span>
+		                                    </#if>
+		                                    <#if item.canDeduction>
+			                        			<span class="privilege">抵</span>
+			                        		</#if>
+		                                    <#if item.hasBusinessCoupon>
+		                                    	<span class="privilege">惠</span>
+		                                    </#if>
+		                                </p>
+		                            </div>
+		                        </article>
+		                    </a>
+	                    </#list>
+	                </ul>
+	                <!-- <a href="#" class="view_more btn">查看更多</a> -->
+	            </div>
+            </#if>
+            <!--景区介绍-->
+            <div class="tabChange" style="display: none;">
+                <div class="lv-box">
+                    <div class="t_content lv-excurtion-postion">
+                        <a class="lv-box-map" href="javascript:void(0);"><span class="ic_map"></span>地址：${mobilePlace.address!}<span
+                                class="ic_ri"></span></a>
+                    </div>
+                </div>
+                <div class="lv-box">
+                    <h3>开放时间</h3>
+
+                    <div class="t_content">
+                         <#if mobilePlace.scenicOpenTime?? && mobilePlace.scenicOpenTime != "" > 
+					        ${mobilePlace.scenicOpenTime!}
+					    <#else>
+					                     暂无信息
+					    </#if>
+                    </div>
+                </div>
+                <div class="lv-box">
+                    <h3>推荐理由</h3>
+
+                    <div class="t_content">
+                       <#if mobilePlace.recommendReason=="">无<#else>${mobilePlace.recommendReason?if_exists?replace("\n","</br>")}</#if>
+                    </div>
+                </div>
+                <div class="lv-box">
+                    <h3>景区介绍</h3>
+                    <div class="view_more" onclick="union_skip('${request.contextPath}/html5/index.htm?placeId=${mobilePlace.id}&tag=2');">
+                        <a href="javascript:void(0);"><span class="lv-evaluate-icon">查看图文详情</span></a>
+                    </div>
+                </div>
+            </div>
+            <!--点评-->
+            <div class="lv-evaluate tabChange" style="display: none;">
+                <!-- 如果总条数为0 ，不显示 -->
+                <#if mobilePlace.cmtNum != "" && mobilePlace.cmtNum?number&gt;0>
+	                <div class="lv-evaluate-sum">
+	                    <div class="t_p1">
+	                        <h3>总评</h3>
+	                        <p><strong class="f-color-1"><#if mobilePlace.cmtStarts?? && mobilePlace.cmtStarts!='null'>${mobilePlace.cmtStarts}<#else>0.0</#if></strong>分</p>
+	                        <p><#assign avgscore =commentScore("${mobilePlace.cmtStarts!}")/><span class="lv-score lv-score-${avgscore!}"></span></p>
+	                    </div>
+	                    <div class="t_p2">
+	                        <#if mobilePlace.placeCmtScoreList?? && mobilePlace.placeCmtScoreList?size&gt;0> 
+	                        	<#list mobilePlace.placeCmtScoreList as item>
+	                        		<#if !item.main>
+										<p>${item.name!}
+											<#assign score = commentScore("${item.score!}")/>
+											<span class="lv-score lv-score-${score!}"></span>
+											<span class="v-item-score">${item.score?default("0.0")}分</span>
+										</p>
+									</#if>
+								</#list>
+							</#if>
+	                    </div>
+	                </div>
+                </#if>
+                <!-- 点评  -->
+                <#if commentList?? && commentList?size&gt;0 > 
+	                <div class="lv-evaluate-title">
+	                    <span>驴友点评</span>&nbsp;(${mobilePlace.cmtNum!})
+	                </div>
+	                <ul id="data_list" class="lv-evaluate-list">
+	                    <input type="hidden" value="1" id="page" name="page">
+	                    <input type="hidden" value="${placeId!}" id="placeId" name="placeId">
+	                    <#list commentList as comment>
+		                    <li>
+		                        <div class="lv-user-name">${comment.userName}</div>
+		                        <div class="lv-user-score">
+		                            <div class="fl">
+		                            	<#assign dscore = commentScore("${comment.avgScore!}")/> 
+		                                <span class="lv-score lv-score-${dscore!}"></span>
+		                                <#if comment.avgScore != '' && comment.avgScore != '0'><span class="f-color-1">${comment.avgScore!}</span>分</#if>
+		                                <#if comment.experience><span class="lv-evaluate-state">验</span></#if>
+		                                <#if comment.best><span class="lv-evaluate-state">精</span></#if>
+		                            </div>
+		                            <div class="fr">
+		                            	<#if comment.cashRefundYuan?? && comment.cashRefundYuan !='' && comment.cashRefundYuan !='0'>
+			                               	 奖金:${comment.cashRefundYuan!}
+										</#if>
+										<#if comment.point !=''>
+			                               	 积分:${comment.point!}
+										</#if>
+		                            </div>
+		                        </div>
+		                        <div class="lv-user-content">${comment.content!}</div>
+		                        <div class="lv-user-time">${comment.createdTimeStr!}</div>
+		                    </li>
+	                    </#list>
+	                </ul>
+	             </#if>
+	             <#if !isLastPage>
+	                <a href="javascript:void(0);" id="show_more" onclick="getCommentData()" class="view_more btn">查看更多</a>
+	             </#if>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+</div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".lv-filtrate-bar").tabChange();
+    });
+</script>
+<script type="text/javascript">
+	var qingPlaceUrl = "http://qing.lvmama.com/ticket/piao-${mobilePlace.id}/";
+	var bd_status = globe.cookie("bd_framework") || globe.getUrlParam("bd_framework") || $localStorage.getItem("bd_framework");//判断框内框外1 框内
+    $(function(){
+        $(".lv-filtrate-bar").tabChange();
+        //初始化
+        var swiper = new Swiper('.swiper-banner', {
+            pagination : '.pagination',  //下方分页提示
+            loop:true, //是否循环
+            autoPlay:3000 //若要自动播放，更改为"1000"等即可
+        });
+        $('.pagination .swiper-pagination-switch').click(function(){
+            swiper.swipeTo($(this).index())
+        });
+        var lijian_status = globe.cookie("lijian_status");
+        if(lijian_status!=null && lijian_status=="no"){
+        	//globe.lvToast(false,"普通立减票已被抢光，请下载手机百度app享受立减特权！",LT_LOADING_CLOSE);	
+        	globe.setCookie("lijian_status","");
+        }
+        
+        /* $(".baiduRush").each(function(){
+            var url = $(this).attr("data-href");
+            $(this).countdown({
+                rewrite : function(){
+                    return '<a href="javascript:void(0)" class="btn_style_1 rush">距离开抢<br>'+this.h+':'+this.m+':'+this.s+'</a>';
+                },
+                rewriteEnd : function(){
+                    return '<a href="'+url+'" class="btn_style_1">预订</a>';
+                }
+            })
+
+        }); */
+    });
+	
+	function buildBuyBtn(data){
+		$("#book_button_"+data.index).attr("href","javascript:globe.baidu_order_ticket('"+data.contextPath+"',"+data.productId+","+data.branchId+",'false',"+data.bedType+",'"+data.qingPlaceUrl+"');");
+			$("#book_button_"+data.index).html(data.title);
+			$("#book_button_"+data.index).attr("class",data.style);
+	}
+    //百度活动倒计时--半价票
+    function baidu_count_down(index,productId,branchId,bedType){
+    	if(bd_status==1){//框内
+	    	var url=contextPath+"/bd/product_status.htm";
+	    	var param = {"productId":productId};
+	    	$.ajax({
+		  		url : url,
+		  		data : param,
+		  		type : "POST",
+		  		success : function(data) {
+		  			//可预订
+	  				bedType = 1;
+		  			if(data.productStatus !=null && data.productStatus=="0") {
+		  				
+		  				$("#book_button_"+index).attr("href","javascript:globe.baidu_order_ticket('"+contextPath+"',"+productId+","+branchId+",'false',"+bedType+",'"+qingPlaceUrl+"');");
+		  				$("#book_button_"+index).html("预订");
+		  				$("#book_button_"+index).attr("class","btn_style_1");
+		  			} else {
+		  				//不可预订
+		  				if("0"==data.baiduValid){
+			  				$("#data_time_"+index).attr("data-time",data.countDown);
+			  				//倒计时
+			  				$(".baiduRush").each(function(){
+			  		            $(this).countdown({
+			  		                rewrite : function(){
+			  		                    return '<a href="javascript:void(0)" class="btn_style_1 rush">距离开抢<br>'+this.h+':'+this.m+':'+this.s+'</a>';
+			  		                },
+			  		                rewriteEnd : function(){
+			  		                	var href="javascript:globe.baidu_order_ticket('"+contextPath+"',"+productId+","+branchId+",'false',"+bedType+",'"+qingPlaceUrl+"');";
+			  		                	return '<a href="'+href+'" id="book_button_'+index+'"  class="btn_style_1">预订</a>'
+			  		                }
+			  		            })
+		
+			  		        });
+		  				}else if("-1"==data.baiduValid){
+			  				$("#book_button_"+index).html("未开始");
+			  				$("#book_button_"+index).attr("class","btn_style_1 disable");
+		  				}else{
+			  				$("#book_button_"+index).html("已结束");
+			  				$("#book_button_"+index).attr("class","btn_style_1 disable");
+		  				}
+		  			}
+		  		},
+		  		error:function() {
+		  			globe.lvToast(false,LT_ORDER_SUBMIT_ERROR,LT_LOADING_CLOSE);
+		  		}
+		  	});
+    	}else{//框外
+    		var url=contextPath+"/bd/product_status.htm";
+	    	var param = {"productId":productId};
+	    	$.ajax({
+		  		url : url,
+		  		data : param,
+		  		type : "POST",
+		  		success : function(data) {
+		    		if("0"==data.baiduValid){
+			    		$("#book_button_"+index).attr("href","javascript:globe.baidu_order_ticket('"+contextPath+"',"+productId+","+branchId+",'false',"+bedType+",'"+qingPlaceUrl+"');");
+			    		$("#book_button_"+index).html("下载百度App预订");
+			    		$("#book_button_"+index).attr("class","btn_style_1 blue");
+		    			
+		    		}else if("-1"==data.baiduValid){
+		    			$("#book_button_"+index).html("未开始");
+		  				$("#book_button_"+index).attr("class","btn_style_1 disable");
+		    		}else{
+		    			$("#book_button_"+index).html("已结束");
+		  				$("#book_button_"+index).attr("class","btn_style_1 disable");
+		    		}
+		  		},
+		  		error:function() {
+		  			globe.lvToast(false,LT_ORDER_SUBMIT_ERROR,LT_LOADING_CLOSE);
+		  		}
+		  	});
+    	}
+    }
+  //百度活动倒计时--立减票
+    function baidu_red_uce(index,productId,branchId,bedType){
+    	if(bd_status==1){//框内
+	    	var url=contextPath+"/bd/product_status_reduce.htm";
+	    	var param = {"productId":productId,"baidutype":1};
+	    	$.ajax({
+		  		url : url,
+		  		data : param,
+		  		type : "POST",
+		  		success : function(data) {
+		  			if(data.productStatus !=null && data.productStatus=="1000") {
+		  				//可预订
+		  				bedType = 20;
+		  				$("#book_button_reduce_"+index).attr("href","javascript:globe.baidu_order_ticket('"+contextPath+"',"+productId+","+branchId+",'false',"+bedType+",'"+qingPlaceUrl+"');");
+		  				$("#book_button_reduce_"+index).html("预订");
+		  				$("#book_button_reduce_"+index).attr("class","btn_style_1");
+		  			} else {
+		  				//因为默认是已经抢光--这里不做处理
+		  				//如果已结束显示结束
+		  				if("0"==data.baiduValid){
+		  					$("#book_button_reduce_"+index).html("已抢完");
+			  				$("#book_button_reduce_"+index).attr("class","btn_style_1 disable");
+		  				}else if("-1"==data.baiduValid){
+		  					$("#book_button_reduce_"+index).html("未开始");
+			  				$("#book_button_reduce_"+index).attr("class","btn_style_1 disable");
+		  				}else{
+		  					$("#book_button_reduce_"+index).html("已结束");
+			  				$("#book_button_reduce_"+index).attr("class","btn_style_1 disable");
+		  				}
+		  			}
+		  		},
+		  		error:function() {
+		  			globe.lvToast(false,LT_ORDER_SUBMIT_ERROR,LT_LOADING_CLOSE);
+		  		}
+		  	});
+    	}else{//框外
+    		
+	    		var ljbedType;
+	    		var url=contextPath+"/bd/product_status_reduce.htm";
+		    	var param = {"productId":productId,"baidutype":0};
+				
+		    	$.ajax({
+			  		url : url,
+			  		data : param,
+			  		type : "POST",
+			  		success : function(data) {
+			  			//访问过中间页
+			
+			  			if(data.productStatus !=null && data.productStatus=="1000") {
+			  				//可预订
+			  				//如果框外可定
+	    					ljbedType = 21;//可预定 
+			  				$("#book_button_reduce_"+index).attr("href","javascript:globe.baidu_order_ticket('"+contextPath+"',"+productId+","+branchId+",'false',"+ljbedType+",'"+qingPlaceUrl+"');");
+			  				$("#book_button_reduce_"+index).html("下载百度App预订");
+			  				$("#book_button_reduce_"+index).attr("class","btn_style_1 blue");
+			  			} else {
+			  				//不可定
+			  				if("0"==data.baiduValid){
+			  					ljbedType = 20;//框外不可定
+				  				$("#book_button_reduce_"+index).attr("href","javascript:globe.baidu_order_ticket('"+contextPath+"',"+productId+","+branchId+",'false',"+ljbedType+",'"+qingPlaceUrl+"');");
+				  				$("#book_button_reduce_"+index).html("下载百度App预订");
+				  				$("#book_button_reduce_"+index).attr("class","btn_style_1 blue");
+			  				}else if("-1"==data.baiduValid){
+			  					$("#book_button_reduce_"+index).html("未开始");
+				  				$("#book_button_reduce_"+index).attr("class","btn_style_1 disable");
+			  				}else{
+			  					$("#book_button_reduce_"+index).html("已结束");
+				  				$("#book_button_reduce_"+index).attr("class","btn_style_1 disable");
+			  				}
+			  			}
+			  			
+			  		},
+			  		error:function() {
+			  			globe.lvToast(false,LT_ORDER_SUBMIT_ERROR,LT_LOADING_CLOSE);
+			  		}
+			  	});
+    		
+    	}
+    }
+</script>
+</body>
+</html>

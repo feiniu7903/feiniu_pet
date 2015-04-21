@@ -1,0 +1,144 @@
+<?page title="订单结算导出" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./_win"?>
+<?component name="listbox" extends="listbox" class="com.lvmama.report.web.other.ListboxCodeset"?>
+<?component name="button" extends="button" class="com.lvmama.report.utils.perm.PermButton" ?> 
+<?component name="a" extends="a" class="com.lvmama.report.utils.perm.PermALink" ?>
+<?component name="pagingToolBar" macroURI="/macors/pagingToolBar.zul" ?>
+<?component name="lvmama_settlementTarget" macroURI="/macors/settlementTarget.zul"?>
+<?component name="lvmama_channel" macroURI="/macors/channel.zul"?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"	xmlns:zk="http://www.zkoss.org/2005/zk">
+<window id="_win" mode="embedded" apply="com.lvmama.report.web.other.ReportQueryAction" >
+	<grid>
+		<columns>
+			<column width="100px"></column>
+			<column></column>
+			<column width="100px"></column>
+			<column></column>
+			<column width="80px"></column>
+			<column></column>
+		</columns>
+		<rows>
+			<row >
+			<cell>订单号：</cell>
+			<cell><longbox id="orderId" value="@{saction.queryOptions.orderId }"/>
+			</cell>
+			
+			<cell>游玩时间：</cell>
+			<cell>
+					<datebox id="visitTimeB" value="@{saction.queryOptions.visitTimeB}"/>
+					<label value="至" />
+					<datebox id="visitTimeE" value="@{saction.queryOptions.visitTimeE}"/>
+			</cell>
+			
+			<cell>订单状态：</cell>
+			<cell>
+					<listbox codeset="ORDER_STATUS"
+							mold="select" selectedItem="@{saction.queryOptions.orderStatus}" />
+			</cell>
+			</row>
+			
+			<row >
+			<cell>创建时间：</cell>
+			<cell >
+					<datebox id="createTimeB" value="@{saction.queryOptions.createTimeB}"/>
+					<label value="至" />
+					<datebox id="createTimeE" value="@{saction.queryOptions.createTimeE}"/>
+			</cell>
+			
+			<cell>支付时间：</cell>
+			<cell >
+					<datebox id="payTimeB" value="@{saction.queryOptions.payTimeB}"/>
+					<label value="至" />
+					<datebox id="payTimeE" value="@{saction.queryOptions.payTimeE}"/>
+			</cell>
+			<cell>支付状态：</cell>
+			<cell>
+					<listbox codeset="PAYMENT_STATUS"
+							mold="select" selectedItem="@{saction.queryOptions.paymentStatus}" />
+			</cell>
+			</row>
+			
+			<row >
+			<cell>采购产品名称：</cell>
+			<cell >
+					<textbox id="metaProductName" value="@{saction.queryOptions.metaProductName}"/>
+			</cell>
+			
+			<cell>销售产品名称：</cell>
+			<cell >
+					<textbox id="productName" value="@{saction.queryOptions.productName }"/>
+			</cell>
+			<cell>支付对象</cell>
+			<cell>
+				<listbox codeset="PAYMENT_TARGET"
+							mold="select" selectedItem="@{saction.queryOptions.paymentTarget}" />	
+			</cell>
+			</row>
+			
+			<row >
+			<cell>采购产品ID：</cell>
+			<cell >
+					<textbox id="metaProductId" value="@{saction.queryOptions.metaProductId}"/>
+			</cell>
+			
+			<cell>销售产品ID：</cell>
+			<cell >
+					<textbox id="productId" value="@{saction.queryOptions.productId }"/>
+			</cell>
+			<cell>供应商ID：</cell>
+			<cell >
+					<textbox id="supplierId" value="@{saction.queryOptions.supplierId }"/>
+			</cell>			
+			</row>			
+			<row >
+			<cell>团号：</cell>
+			<cell><textbox id="travelGroupCode" value="@{saction.queryOptions.travelGroupCode }"/></cell>
+			<cell>所属分公司:</cell>
+			<cell><listbox codeset="FILIALE_NAME" mold="select" selectedItem="@{saction.queryOptions.filialeName}" /></cell>
+			<cell>渠道：</cell>
+			<cell>
+				<textbox value="@{saction.queryOptions.channelCode}" id="channelValue" visible="false"/>
+				<lvmama_channel />
+			</cell>			
+			</row>	
+			<row>
+				<cell>
+					实体票:
+				</cell>
+				<cell>
+					<checkbox name="true" value="@{saction.queryOptions.physical}" id="physical_checkBox" onClick="saction.selectPhysical(self.checked)" label="是"/>
+				</cell>
+			</row>
+		</rows>
+	</grid>
+	
+	<grid>
+		<columns>
+			<column ></column>
+			<column width="300px"></column>
+		</columns>
+		<rows>
+			<row>
+				<cell>
+					<toolbar>
+						<grid style="border:0">
+						<rows >
+							<row >
+								<cell width="60px">
+									共<label id="_totalRowCountLabel" />条
+								</cell>
+							</row>
+						</rows>
+						</grid>
+					</toolbar>
+				</cell>
+				<cell>
+					<button label="统计" id="search" width="100px" onClick="saction.doSearch();"/>
+					<button label="导出" width="100px" onClick="saction.doExport();" permCode="1702"/>
+				</cell>
+			</row>
+		</rows>
+	</grid>
+	<button id="refreshButton" visible="false" />
+</window>
+</zk>

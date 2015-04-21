@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>度假</title>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/comm.js"></script>
+ <script src="${request.contextPath}/js/holiday.js?_version=20130812"></script>
+<script type="text/javascript">
+$(function(){
+	//$("#loadingP").show();//定位样式
+    /********   定位 相关 ************/
+	latitude = getLocalStorage(LOCAL_STORAGE_ROUTE_LAT);
+	longitude = getLocalStorage(LOCAL_STORAGE_ROUTE_LON);
+	currentCity = getLocalStorage(LOCAL_STRTORAGE_ROUTE_CITY);
+	if(null == currentCity || "" == currentCity ) {
+		if(navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(function(e){
+				latitude = e.coords.latitude;
+				longitude = e.coords.longitude;
+				setLocalStorage(LOCAL_STORAGE_ROUTE_LAT,latitude);
+				setLocalStorage(LOCAL_STORAGE_ROUTE_LON,longitude);
+				initCity(latitude,longitude,LOCAL_STRTORAGE_ROUTE_CITY); // 定位成功. 
+			},function(e){
+				$('#lv-start').html(DEFAULT_CITY);
+			},{enableHighAccuracy:true,timeout:3000,maximumAge:3000});
+	    } else {
+	    	$('#lv-start').html(DEFAULT_CITY);
+	    }
+	} else {
+		$('#lv-start').html(currentCity);
+	}
+	/*input 框变色*/
+	$("input.lv-input-search").focus(function(e) {
+		$("input.lv-input-search").parent().parent().addClass("lv-input-focus");
+	});
+	$("input.lv-input-search").blur(function(e) {
+		$("input.lv-input-search").parent().parent().removeClass("lv-input-focus");
+	});	
+	
+});
+
+function ke_focus(obj) {
+	$(obj).val('');
+	$(obj).attr('placeholder','');
+}
+
+function key_blur(obj) {
+	var v = $(obj).val();
+	if(null == v || $.trim(v) =='') {
+		if($.trim($("#hidden_keyword").val()) !='') {
+			$(obj).val($("#hidden_keyword").val());
+		} else {
+			$(obj).val('度假目的地/关键字');
+		}
+	}
+}
+
+function holidayBtnSearch(){
+	var toDest = $("#keyword").val();
+	if (toDest!=null && typeof(toDest)!="undefined" && toDest!=0){
+		$("input[name='fromDest']").val(encodeURI($("input[name='fromDest']").val()));
+		$("input[name='toDest']").val(encodeURI(toDest));
+		$("input[name='subject']").val("");
+		$("#holiday_search").submit();
+		$("input[name='toDest']").val("");
+	}else{
+		lvToast(false,"请输入目的地",1000);
+	}
+}
+//点击城市查询事件
+function clickCityList(){
+	var toDest = $("#keyword").val();
+	if(toDest!=null && toDest!=''){
+		setLocalStorage('holiday_mudidi_city',toDest);//目的地关键存localstor
+		window.location.href=contextPath+"/holiday/holiday_choose_city.htm?holidayClickStatus=holiday_list_keyword";
+	}else{
+		lvToast(false,"请输入目的地",1000);
+	}
+}
+document.onkeydown=function(event){
+    var e = event || window.event;      
+    if(e && e.keyCode==13){
+    	holidayBtnSearch();
+    }
+}
+
+</script>
+</head>
+
+<body>
+<div class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="${request.contextPath}/holiday"> <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">度假</div>
+      <!-- 度假列表头部右侧增加城市搜素 -->
+  <div class="lv-narrow-position"> 
+	   <a href="javascript:void(0);" onclick="clickCityList();">
+		   <div class="lv-operate-sep lv-pull-left" style="left: 20px;"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+		   <span id="lv-start" class="lv-ellipsis">${fromDest!}</span> <img class="lv-narrow-icon lv-pull-right" src="${prefix_pic_url!}/img/holiday/narrow-holiday-01.png"> 
+	   </a> 
+   </div>
+</div>
+<div class="lv-search search">
+  <div class="lv-div-search">
+    <form method="get" action="${request.contextPath}/holiday/holiday_search.htm"  id="holiday_search" >
+      <span class="lv-clear-icon01" onclick="union_clear_context('keyword');"  id="clear_password">
+               <img src="${prefix_pic_url!}/img/clear.png"></span>
+	  <input class="lv-input-search" id="keyword" type="text" onfocus="ke_focus(this);" onblur="key_blur(this);"  value="${toDest!}"placeholder="请输入度假目的地/关键字" autocomplete="off">
+      <input type="hidden" name="keyword" id="hidden_keyword" value="${toDest!}" data-name="">
+      <input type="hidden" name="toDest" id="toDest" value="${toDest!}" data-name="">
+      <input type="hidden" name="fromDest" id="fromDest" value="${fromDest!}" >
+      <input type="hidden" name="subject" id="subject" value="${subject!}" data-name="">
+      <input type="hidden" name="subProductType" id="subProductType" value="${subProductType!}" data-name="">
+      <input type="hidden" name="sort" id="sort" value="${sort!}" data-name="">
+      <input type="hidden" name="stage" id="stage" value="1" data-name="">
+      <input type="hidden" name="page" id="page" value="1" data-name="">
+       <input type="button" class="btn_sub" value="" onclick="holidayBtnSearch()" />
+    </form>
+  </div>
+ </div>
+        <div  id="search_autocomplete" style="display:none;">
+           <ul class="search_auto_complete" id="search_success"> </ul>
+        </div>
+
+<div class="lv-search lv-media-width lv-seach-mheight">
+  <ul class="lv-cascade-search">
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span id="span_subProductType">全部类型</span><img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png">
+      <img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a></li>
+    <li class="lv-li-row3" ><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span id="span_subject">全部主题</span><img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png">
+      <img class="lv-seprator-y" src="${prefix_pic_url!}/img/seprator-y.png"></a></li>
+    <li class="lv-li-row3"><a href="javascript:void(0);">
+      <div class="lv-cascade-icon" style="display:none;"></div>
+      <span id="span_sort">默认</span><img class="lv-narrow-icon" src="${prefix_pic_url!}/img/narrow.png"></a></li>
+  </ul>
+</div>
+
+<div class="lv-wrapper lv-min-height lv-media-width">
+  <div class="lv-cascade-div lv-media-width">
+        <div class="lv-tab" style="display:none;">
+      <ul class="lv-cascade-list bindclick">
+         <#if routeTypes?? && routeTypes?size&gt;0>
+              <#list routeTypes as route>
+                  <li data-value="${route.title!}" id="route${route.value!}" onclick="holidaySearch(this,'${route.value!}','route');">${route.title!}</li>
+              </#list>
+         <#else>
+	         <li data-value="全部类型" id="route" onclick="holidaySearch(this,'seq','route');">全部类型</li>
+         </#if>
+      </ul>
+    </div>
+    <div class="lv-tab" style="display:none;">
+      <ul class="lv-cascade-list bindclick"  id="subjects_id">
+         <#if subjects?? && subjects?size&gt;0>
+              <#list subjects as sub>
+                  <li onclick="holidaySearch(this,'${sub.value!}','subject')">${sub.title!}</li>
+              </#list>
+         <#else>
+	         <li data-value="  ">全部主题</li>
+         </#if>
+      </ul>
+    </div>
+    <div class="lv-tab" style="display:none;">
+      <ul class="lv-cascade-list bindclick">
+         <#if sortTypes?? && sortTypes?size&gt;0>
+              <#list sortTypes as sort>
+                  <li data-value="${sort.title!}" id="sort${sort.value!}" onclick="holidaySearch(this,'${sort.value!}','sort');">${sort.title!}</li>
+              </#list>
+         <#else>
+	         <li data-value="seq" id="sortseq" onclick="holidaySearch(this,'seq','sort');">默认</li>
+         </#if>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="lv-wrapper-container">
+    <#if mobileProductList?? && mobileProductList?size&gt;0>
+    <ul class="lv-spotticket-list  holiday_wrap" id="data_list">
+       <#list mobileProductList as product>
+	        <li class="lv-spotticket-li clear"><a href="javascript:void(0);" onclick="union_skip('http://${hostName}/product/${product.productId}/');">
+        	<div class="lv-spotticket-img lv-pull-left"><img src="${product.absoluteRecommendImageUrl!}"></div>
+            <div class="lv-spotticket-info lv-pull-right">
+            	<ul>
+                	<li class="lv-spotticket-title">
+                    <div class="jd_title2">
+							${product.productName?default("")}
+					</div>
+                   </li>
+                   <li><span class="lv-pull-left">${product.cmtNum!}人点评</span><span class="jd_fl_1 lv-color">&yen; ${product.sellPriceYuan!} <i>起</i></span></li>
+                   <li><span class="scenic_info_3">${product.zhSubProductType!}${product.visitDay!}天</span>
+	                   <span class="scenic_info_2">
+	                       <#if product.hasBusinessCoupon>
+		                   	  <i class="ic_hui"></i>
+		                   </#if>
+		                   <#if product.cashRefund>
+			                   <i class="ic_fan"></i>
+			                   <em>￥${product.cashRefundY!}</em>
+		                   </#if>
+	                   </span>
+                   </li>
+                </ul>
+            </div>
+            </a>
+        </li>
+        <div class="lv-seprator-line"></div>
+       </#list>
+    </ul>
+    <#else>
+		<#assign no_data_msg="没有找到合适的度假线路</br>请试试搜索其他关键词">
+	    <#include "../common/no_data_list.html">
+    </#if>
+	<!-- 如果不是最后一页  -->
+    <#if isLasgPage?? && !isLasgPage>
+	   <div class="lv-nav-li lv-btn-03" id="show_more">
+	        <a href="javascript:void(0);" onclick="getData()">
+	           <span>查看更多</span>
+	        </a>
+	    </div>
+     </#if>
+  </div>
+</div>
+<script src="${request.contextPath}/js/comm.js"></script>
+ <script src="${request.contextPath}/js/holiday.js"></script>
+ <!-- footer -->
+ <#include "../common/footer.html"/>
+ <div class="lv-transparent-div lv-transparent" style="display:none;"></div>
+</body>
+</html>

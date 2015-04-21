@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SUPPLIER_VIEW_JOURNEY">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.duijie.SupplierViewJourney">
+	<result column="JOURNEY_ID" property="journeyId"/>
+	<result column="SEQ" property="seq"/>
+	<result column="TITLE" property="title"/>
+	<result column="CONTENT" property="content"/>
+	<result column="PRODUCT_ID" property="productId"/>
+	<result column="DINNER" property="dinner"/>
+	<result column="HOTEL" property="hotel"/>
+	<result column="TRAFFIC" property="traffic"/>
+	</resultMap>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.duijie.SupplierViewJourney">
+		<selectKey keyProperty="journeyId" resultClass="Long">
+			SELECT SUPPLIER_VIEW_JOURNEY_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO SUPPLIER_VIEW_JOURNEY (
+		JOURNEY_ID,SEQ,TITLE,CONTENT,PRODUCT_ID,DINNER,HOTEL
+		,TRAFFIC
+		) VALUES
+		(#journeyId#,#seq#,#title#,#content#,
+		#productId#,#dinner#,#hotel#,#traffic#
+		)
+	</insert>
+	
+	<update id="update"  parameterClass="com.lvmama.comm.bee.po.duijie.SupplierViewJourney">
+		UPDATE SUPPLIER_VIEW_JOURNEY SVJ
+		SET
+		SVJ.CONTENT = #content#,
+		SVJ.HOTEL = #hotel#,
+		SVJ.TRAFFIC = #traffic#,
+		SVJ.TITLE = #title#,
+		SVJ.DINNER = #dinner#
+		WHERE SVJ.JOURNEY_ID = #journeyId#
+	</update>
+	
+	<select id="selectSupplierViewJourneyByCondition" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		SELECT * FROM SUPPLIER_VIEW_JOURNEY SVJ
+		WHERE 1=1 
+		<isNotNull property="productId" prepend="AND">
+		SVJ.PRODUCT_ID = #productId#
+		</isNotNull>
+		<isNotNull property="seq" prepend="AND">
+		SVJ.SEQ = #seq#
+		</isNotNull>
+        ORDER BY SVJ.SEQ
+	</select>
+</sqlMap>

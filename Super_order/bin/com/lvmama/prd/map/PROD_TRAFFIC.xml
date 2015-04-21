@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_TRAFFIC" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdTraffic" >
+    <result column="PROD_TRAFFIC_ID" property="prodTrafficId" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="GO_FLIGHT_ID" property="goFlightId" />
+    <result column="BACK_FLIGHT_ID" property="backFlightId" />
+    <result column="DIRECTION" property="direction" />
+    <result column="DAYS" property="days" />
+    <result column="LINE_INFO_ID" property="lineInfoId"/>
+  </resultMap>
+  <select id="getProdProductByLineInfoId" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select *
+    from PROD_TRAFFIC
+    where LINE_INFO_ID = #lineInfoId# order by PROD_TRAFFIC_ID desc
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdTraffic" >
+    select *
+    from PROD_TRAFFIC
+    where PROD_TRAFFIC_ID = #prodTrafficId:DECIMAL#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdTraffic" >
+    delete from PROD_TRAFFIC
+    where PROD_TRAFFIC_ID = #prodTrafficId:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdTraffic" >
+    <selectKey resultClass="java.lang.Long" keyProperty="prodTrafficId" >
+      select PROD_TRAFFIC_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PROD_TRAFFIC (PROD_TRAFFIC_ID, PRODUCT_ID, GO_FLIGHT_ID, BACK_FLIGHT_ID, DIRECTION, DAYS,LINE_INFO_ID)
+    values (#prodTrafficId:DECIMAL#, #productId:DECIMAL#, #goFlightId:DECIMAL#, #backFlightId:DECIMAL#,
+      #direction:VARCHAR#, #days:DECIMAL#,#lineInfoId#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdTraffic" >
+    <selectKey resultClass="java.lang.Long" keyProperty="prodTrafficId" >
+      select PROD_TRAFFIC_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into PROD_TRAFFIC
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="prodTrafficId" >
+        PROD_TRAFFIC_ID
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="goFlightId" >
+        GO_FLIGHT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="backFlightId" >
+        BACK_FLIGHT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="direction" >
+        DIRECTION
+      </isNotNull>
+      <isNotNull prepend="," property="days" >
+        DAYS
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="prodTrafficId" >
+        #prodTrafficId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="productId" >
+        #productId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="goFlightId" >
+        #goFlightId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="backFlightId" >
+        #backFlightId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="direction" >
+        #direction:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="days" >
+        #days:DECIMAL#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.prod.ProdTraffic" >
+    update PROD_TRAFFIC
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="productId" >
+        PRODUCT_ID = #productId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="goFlightId" >
+        GO_FLIGHT_ID = #goFlightId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="backFlightId" >
+        BACK_FLIGHT_ID = #backFlightId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="direction" >
+        DIRECTION = #direction:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="days" >
+        DAYS = #days:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="lineInfoId" >
+        LINE_INFO_ID = #lineInfoId:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    where PROD_TRAFFIC_ID = #prodTrafficId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdTraffic" >
+    update PROD_TRAFFIC
+    set PRODUCT_ID = #productId:DECIMAL#,
+      GO_FLIGHT_ID = #goFlightId:DECIMAL#,
+      BACK_FLIGHT_ID = #backFlightId:DECIMAL#,
+      DIRECTION = #direction:VARCHAR#,
+      DAYS = #days:DECIMAL#
+    where PROD_TRAFFIC_ID = #prodTrafficId:DECIMAL#
+  </update>
+  
+  <select id="getTrainProduct" parameterClass="java.lang.String" resultMap="BaseResultMap">
+   select * from(
+  	select pp.*,pt.prod_traffic_id,pt.go_flight_id,
+	pt.back_flight_id,pt.direction,pt.days,pt.line_info_id
+    from prod_product pp, prod_traffic pt
+    where pp.product_id = pt.product_id
+    and pp.biz_code = #fullName#)
+    where rownum = 1
+  </select>
+</sqlMap>

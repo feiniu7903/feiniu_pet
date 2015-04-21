@@ -1,0 +1,21 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./bandPermUser"?>
+<bandbox id="bandPermUser"
+	apply="com.lvmama.back.web.permission.PermUserMacroChooseAction"
+	onChanging="bandPermUser$composer.changeMangerUser(event);" onBlur='if(bandPermUser.getValue().trim().equals("")){managerId.setValue(null);}'
+	mold="rounded" autodrop="true">
+	<bandpopup>
+		<vbox>
+			<listbox width="200px" id="bandboxListBox"
+				model="@{bandPermUser$composer.permUserList, load-after='bandPermUser.onChanging' }"
+				onSelect='bandPermUser.value=self.selectedItem.lastChild.label; managerId.value=self.selectedItem.value;Events.postEvent("onChange",managerId,null); bandPermUser.close();'>
+				<listhead>
+					<listheader label="真实姓名" />
+				</listhead>
+				<listitem self="@{each='permUser'}"
+					value="@{permUser.userId}" height="25px">
+					<listcell label="@{permUser.realName}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

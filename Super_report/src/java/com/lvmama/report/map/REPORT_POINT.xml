@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="REPORT_POINT">
+	<resultMap id="shopPoint" class="com.lvmama.report.vo.ShopPointVo">
+		<result property="name" column="NAME" />
+		<result property="sumPoint" column="SUMPOINT" />
+		<result property="membersCount" column="MEMBERSCOUNT" />
+	</resultMap>
+
+	<resultMap id="pointRules" class="com.lvmama.report.po.PointRules">
+		<result property="ruleId" column="RULE_ID" />
+		<result property="ruleDescription" column="DESCRIPTION" />
+		<result property="isChecked" column="IS_CHECKED" />
+	</resultMap>
+
+	<sql id="sql">
+		<isNotNull prepend="and" property="sql">
+			($sql$)
+		</isNotNull>
+		<isNotNull prepend="and" property="startDate">
+			to_date(to_char(created_date,'yyyy-mm-dd'),'yyyy-mm-dd')<![CDATA[>=]]>#startDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="endDate">
+			to_date(to_char(created_date,'yyyy-mm-dd'),'yyyy-mm-dd')<![CDATA[<]]>#endDate#+1
+		</isNotNull>
+	</sql>
+
+	<sql id="queryBasic">
+		from (select count(distinct user_id) MEMBERSCOUNT ,
+		d.rule_description
+		NAME ,
+		sum(l.point) SUMPOINT
+		from
+		lvmama_pet.user_point_log l,
+		lvmama_pet.user_point_rule d
+		where d.rule_id =
+		l.rule_id
+		<include refid="sql" />
+		group by
+		l.rule_id,rule_description
+		) info
+	</sql>
+
+
+	<select id="query" parameterClass="java.util.HashMap" resultMap="shopPoint">
+		select *
+		<include refid="queryBasic" />
+	</select>
+
+	<select id="sumMemProportion" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Long">
+		select count(distinct user_id) memUser from lvmama_pet.user_point_log
+		l
+		where 1=1
+		<include refid="sql" />
+	</select>
+
+	<select id="sumPointProportion" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Long">
+		select sum(sumPoint)
+		<include refid="queryBasic" />
+	</select>
+
+	<select id="sumPoint" resultClass="java.lang.Long">
+		select sum(point) POINT from
+		lvmama_pet.user_user
+	</select>
+
+	<select id="listType" resultMap="pointRules">
+		select u.rule_description
+		DESCRIPTION,u.RULE_ID RULE_ID,'false' IS_CHECKED from
+		lvmama_pet.user_point_rule u
+	</select>
+
+	<select id="queryExpiredPoint" resultClass="java.lang.Long">
+		select sum(point) from
+		LVMAMA_REPORT.USER_POINT_STATISTICS_MV
+	</select>
+</sqlMap>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="EBK_PERMISSION">
+	<!-- 别名 -->
+    <typeAlias alias="ebkPermission" type="com.lvmama.comm.bee.po.eplace.EbkPermission"/>
+	<!-- 查询结果集 -->
+    <resultMap id="ebkPermissionResult" class="ebkPermission">
+        <result property="permissionId" column="permission_id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="bizType" column="biz_type"/>
+        <result property="urlPattern" column="url_pattern"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+	<resultMap id="ebkPermissionWithUserIdResult" class="ebkPermission" extends="ebkPermissionResult">
+        <result property="userId" column="user_id"/>
+    </resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonColumns">
+	    <![CDATA[
+        	permission_id ,
+        	name ,
+        	description ,
+        	parent_id ,
+        	biz_type ,
+        	url_pattern ,
+        	seq,
+        	create_time 
+	    ]]>
+	</sql>
+	<!-- 动态查询条件 -->
+	<sql id="dynamicWhere">
+	    <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="permissionId">
+	             permission_id = #permissionId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="name">
+	             name = #name#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="description">
+	             description = #description#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="parentId">
+	             parent_id = #parentId#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="bizType">
+	             biz_type = #bizType#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="urlPattern">
+	             url_pattern = #urlPattern#
+	       </isNotEmpty>
+	       <isNotEmpty prepend="AND" property="createTime">
+	             create_time = #createTime#
+	       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	<!-- 增加记录 -->
+    <insert id="insert" parameterClass="ebkPermission">
+				<selectKey keyProperty="permissionId" resultClass="java.lang.Long">
+					SELECT EBK_PERMISSION_SEQ.NEXTVAL FROM DUAL
+				</selectKey>
+    <![CDATA[
+        INSERT INTO
+        EBK_PERMISSION (
+        	permission_id ,
+        	name ,
+        	description ,
+        	parent_id ,
+        	biz_type ,
+        	url_pattern ,
+        	create_time 
+        ) VALUES (
+        	#permissionId# ,
+        	#name# ,
+        	#description# ,
+        	#parentId# ,
+        	#bizType# ,
+        	#urlPattern# ,
+        	#createTime# 
+        )
+    ]]>
+    </insert>
+    <!-- 查询记录，根据主键值 -->
+    <select id="getEbkPermissionById" resultMap="ebkPermissionResult">
+	    select <include refid="commonColumns"/>
+	    <![CDATA[
+	        from EBK_PERMISSION 
+	        where 
+						permission_id = #permissionId# 
+	    ]]>
+    </select>
+    <!-- 查询记录 根据特定条件 -->
+    <select id="queryEbkPermissionByParam"  resultMap="ebkPermissionResult" parameterClass="java.util.Map">
+       select <include refid="commonColumns"/> from EBK_PERMISSION 
+		<include refid="dynamicWhere"/>    
+    </select>
+    
+    <select id="getEbkPermissionByUserId" resultMap="ebkPermissionWithUserIdResult">
+	    <![CDATA[
+	       select up.user_id,p.* from ebk_user_permission up,ebk_permission p 
+				where up.permission_id=p.permission_id and up.user_id=#userId#
+	    ]]>
+    </select>
+    <select id="getEbkPermissionByBizType" resultMap="ebkPermissionResult">
+	   select <include refid="commonColumns"/>
+	        from EBK_PERMISSION
+	       <dynamic prepend="WHERE">
+	       <isNotEmpty prepend="AND" property="bizType">
+	             biz_type = #bizType# 
+	       </isNotEmpty>
+	       </dynamic>
+	        order by parent_id, seq
+    </select>
+    <!-- 增加用户权限 -->
+    <insert id="insertUserPermission" parameterClass="java.util.Map">
+		<selectKey keyProperty="userPermissionId" resultClass="java.lang.Long">
+			SELECT EBK_USER_PERMISSION_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	    <![CDATA[
+	        INSERT INTO
+	        EBK_USER_PERMISSION (
+	        	USER_PERMISSION_ID ,
+	        	USER_ID ,
+	        	PERMISSION_ID 
+	        ) VALUES (
+	        	#userPermissionId# ,
+	        	#userId# ,
+	        	#permissionId# 
+	        )
+	    ]]>
+    </insert>
+    <!-- 删除用户权限 -->
+    <delete id="deleteUserPermission" parameterClass="java.lang.Long">
+    	delete from ebk_user_permission where user_id=#userId#
+    </delete>
+</sqlMap>

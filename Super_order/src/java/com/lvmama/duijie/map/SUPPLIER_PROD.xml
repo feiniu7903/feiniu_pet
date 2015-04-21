@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SUPPLIER_PROD">
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.duijie.SupplierProd" >
+		<result column="ID" property="id"/>
+		<result column="SUPPLIER_ID" property="supplierId"/>
+		<result column="SUPPLIER_PROD_ID" property="supplierProdId"/>
+		<result column="LVMAMA_PROD_ID" property="lvmamaProdId"/>
+		<result column="SUPPLIER_PROD_NAME" property="supplierProdName"/>
+		<result column="DESTINATION_CITY" property="destinationCity"/>
+		<result column="SUPPLIER_PRODUCT_TYPE" property="supplierProductType"/>
+		<result column="SUPPLIER_CHANNEL" property="supplierChannel"/>
+		<result column="VALID" property="valid"/>
+	</resultMap>
+	
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.duijie.SupplierProd">
+		<selectKey keyProperty="id" resultClass="Long">
+			SELECT SUPPLIER_PROD_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO SUPPLIER_PROD(ID,SUPPLIER_ID,SUPPLIER_PROD_ID,LVMAMA_PROD_ID,
+		SUPPLIER_PROD_NAME,DESTINATION_CITY,SUPPLIER_PRODUCT_TYPE,SUPPLIER_CHANNEL,VALID) VALUES
+		(#id#,#supplierId#,#supplierProdId#,#lvmamaProdId#,
+		#supplierProdName#,#destinationCity#,#supplierProductType#,#supplierChannel#,#valid#)		
+	</insert>
+	
+	<update id="update" parameterClass="com.lvmama.comm.bee.po.duijie.SupplierProd">
+		UPDATE SUPPLIER_PROD SP
+		<dynamic prepend="SET">
+			<isNotEmpty prepend="," property="lvmamaProdId">
+				SP.LVMAMA_PROD_ID = #lvmamaProdId#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="valid">
+				SP.VALID = #valid#
+			</isNotEmpty>
+		</dynamic>
+		WHERE SP.ID = #id#
+	</update>
+	
+	<select id="selectSupplierProd" resultMap="BaseResultMap"  parameterClass="java.util.Map">
+		<isNotNull property="start">
+			SELECT * 
+			FROM (SELECT T.*, ROWNUM RN
+			FROM (
+		</isNotNull>
+		SELECT SP.* FROM SUPPLIER_PROD SP 
+		WHERE 1=1 
+		<isNotNull property="supplierId" prepend="AND">
+			SP.SUPPLIER_ID = #supplierId#
+		</isNotNull>
+		<isNotNull property="supplierProdName" prepend="AND">
+			SP.SUPPLIER_PROD_NAME LIKE  '%' ||#supplierProdName#|| '%'
+		</isNotNull>
+		<isNotNull property="supplierProdId" prepend="AND">
+			SP.SUPPLIER_PROD_ID = #supplierProdId#
+		</isNotNull>
+		<isNotNull property="destinationCity" prepend="AND">
+			SP.DESTINATION_CITY LIKE '%' || #destinationCity# || '%'
+		</isNotNull>
+		<isNotNull property="supplierProductType" prepend="AND">
+			SP.SUPPLIER_PRODUCT_TYPE = #supplierProductType#
+		</isNotNull>
+		<isNotNull property="supplierChannel" prepend="AND">
+			SP.SUPPLIER_CHANNEL = #supplierChannel#
+		</isNotNull>
+		<isNotNull property="start">
+			) T ) TT
+			WHERE RN &lt;= #end#
+			AND RN &gt;= #start#
+		</isNotNull>
+	</select>
+	
+	<select id="selectBySupplierProdCount" resultClass="Long" parameterClass="java.util.Map">
+	SELECT count(1) from SUPPLIER_PROD SP 
+	WHERE 1=1 
+	<isNotNull property="supplierId" prepend="AND">
+			SP.SUPPLIER_ID = #supplierId#
+	</isNotNull>
+	<isNotNull property="supplierProdName" prepend="AND">
+		SP.SUPPLIER_PROD_NAME LIKE '%' || #supplierProdName#|| '%'
+	</isNotNull>
+	<isNotNull property="destinationCity" prepend="AND">
+			SP.DESTINATION_CITY LIKE '%' || #destinationCity# || '%'
+	</isNotNull>
+	<isNotNull property="supplierProductType" prepend="AND">
+			SP.SUPPLIER_PRODUCT_TYPE = #supplierProductType#
+	</isNotNull>
+	<isNotNull property="supplierProdId" prepend="AND">
+			SP.SUPPLIER_PROD_ID = #supplierProdId#
+	</isNotNull>
+	<isNotNull property="supplierChannel" prepend="AND">
+			SP.SUPPLIER_CHANNEL = #supplierChannel#
+	</isNotNull>
+	<isNotNull property="valid" prepend="AND">
+				SP.VALID = #valid#
+	</isNotNull>
+	</select>	
+	
+	<select id="getProductIdByCondition" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select distinct ppb.product_id from prod_product_branch ppb,PROD_PRODUCT_BRANCH_ITEM ppbi 
+		where ppb.prod_branch_id = ppbi.prod_branch_id 
+		and PPBI.META_BRANCH_ID = 
+		(select max(mpb.meta_branch_id) 
+		from meta_product_branch mpb 
+		where mpb.product_id_supplier = 
+		#supplierProdId# 
+		and mpb.check_stock_handle=#supplierChannel#)
+	</select>
+	
+</sqlMap>

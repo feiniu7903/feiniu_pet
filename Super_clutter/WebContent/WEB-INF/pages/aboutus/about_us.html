@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>关于我们</title>
+    <meta name="description" content="">
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/font-icons.css">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/global.css">
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/lib/zepto.min.js"></script>
+    <script type="text/javascript" name="baidu-tc-cerfication" src="http://apps.bdimg.com/cloudaapi/lightapp.js#70e91d9156558b74286c45bf640cff9e"></script>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/globe.js"></script>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/base.js"></script>
+    <style>
+    #content{ padding: 20px;}
+    .copyright{ text-align: center;}
+    </style>
+</head>
+<body>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/header.js"></script>
+
+<div id="wrapper">
+    <div id="content">
+
+            <p style="text-align:center"><img style="width:70%;" src="http://pic.lvmama.com/img/mobile/touch/img/aboutus/about_logo.jpg"></p>
+            <h1 style="font-size: 15px;padding-bottom: 15px;text-align: center; font-weight:bold;">自助游天下   就找驴妈妈</h1>
+            <p class="info">
+                驴妈妈旅游网创立于2008年，是中国知名的新型B2C旅游电子商务网站，中国领先的自助游资讯及预订平台。成立之初，驴妈妈就以自助游服务商定位市场，经过数年发展，形成了以打折门票、自由行、度假酒店为主体，同时兼顾跟团游、长途游、出境游、旅游团购等业务，为游客出行提供一站式旅游服务，最终打造成为以"自助游"为核心特色的综合型旅游网站。
+
+        同时，我们致力于将传统旅游线下运营和网络营销有机结合，为旅游企业提供精准网络营销，包括为旅游企业搭建在线电子商务平台、产品分销、网络营销策划、活动策划、网络媒体投放等整合营销服务。秉承"诚信、激情、创新、多赢"的企业理念，驴妈妈将鼎力支持旅游企业全面提升电子商务应用水平和网络营销应用能力。
+
+        截止目前，有一万多家景区、一万多家度假酒店、千余家国内外旅游局和航空公司等同驴妈妈旅游网开展合作，覆盖全国各省及直辖市，覆盖5大洲、50多个国家和地区。知名的合作伙伴有：荷兰旅游局、土耳其旅游局、山东省旅游局、吉林省旅游局、华侨城集团公司、宋城旅游、张家界股份、黄山旅游、广州长隆集团等。
+
+        驴妈妈旅游网2008年成立时就获得天使投资。2009年9月，驴妈妈完成数千万元的A轮融资。2010年11月，驴妈妈获得红杉资本和鼎晖创投的B轮亿元注资。2011年9月，驴妈妈完成C轮融资，投资方为江南资本与红杉资本。
+
+        巨大的国内外旅游市场、充满竞争力的商业模式、朝气蓬勃的团队让我们在成功的高速路上飞奔，精彩无处不在。
+            </p>
+            <p class="copyright">
+                Copyright &copy; 2014  <br>上海景域文化传播有限公司版权所有
+            </p>
+    </div>
+    <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script>
+</div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+<script>
+    $(function(){
+        $(".lv-item-sprite01 a").click(function(e){
+            $(this).parent().removeClass().addClass("lv-item-scroe"+($(this).index()+1)).addClass("lv-item-sprite01").addClass("fl");
+            $(this).siblings("input:first").val($(this).index()+1);
+        });
+        $("textarea").focus(function(e) {
+            $(this).addClass("lv-input01-focus");
+        });
+        $("textarea").blur(function(e) {
+            $(this).removeClass("lv-input01-focus");
+        });
+    });
+</script>
+</body>
+</html>

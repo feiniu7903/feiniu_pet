@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>jQuery UI Autocomplete - Combobox</title>
+<link href="jquery.ui.autocomplete.css" rel="stylesheet" type="text/css">
+<script src="jquery-1.6.2.min.js"></script>
+<script src="jquery.ui.core.js"></script>
+<script src="jquery.ui.widget.js"></script>
+<script src="jquery.ui.button.js"></script>
+<script src="jquery.ui.position.js"></script>
+<script src="jquery.ui.autocomplete.js"></script>
+<!--<link href="demos.css" rel="stylesheet" type="text/css">-->
+<style>
+.ui-autocomplete-input {
+	margin: 0;
+	padding: 0.48em 0 0.47em 0.45em;
+}
+ul {
+	font-size:14px;
+	border: 1px solid #CBCBCB;
+}
+.ul-title {
+	background-color:#5B5B5B;
+	padding:5px;
+	color:#fff;
+	font-weight:600;
+	font-size:12px;
+}
+ul .py_right {
+	font: 10px/22px verdana;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+	text-align: right;
+	white-space: nowrap;
+	width: 110px;
+	float:right;
+}
+ul li {
+	padding: 1px 5px 0;
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #FFF;
+	cursor: pointer;
+	display: block;
+	height: 22px;
+	line-height: 22px;
+	min-height: 22px;
+}
+ul .ui-state-hover {
+	color:#C06;
+	background-color:#999999;/*	font-weight:600;*/
+}
+ul li.ui-paging {
+	text-align:center;
+}
+ul li.ui-paging a {
+	float:left;
+	display:block;
+	padding: 0px 5px;
+	margin: 0 5px;
+	color:#C06;
+	border: 1px solid #5B5B5B;
+	background-color:#FFF;
+	height: 20px;
+	line-height: 20px;
+	min-height: 20px;
+}
+ul li.ui-paging a:hover {
+	background-color:#C06;
+	color:#FFF;
+}
+</style>
+</head>
+<body>
+<div class="demo">
+  <label for="search">Search: </label>
+  <input id="search111" value="中文/拼音" />
+  <input type="hidden" id="search111-id"/>
+  <div class="ui-widget" style="margin-top:2em; font-family:Arial"> Result:
+    <div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
+  </div>
+</div>
+<!-- End demo --> 
+<script>
+	(function( $ ) {
+	var arrayAf = new Array();
+	var arrayGJ = new Array();
+	var arrayKn = new Array();
+	var arrayPw = new Array();
+	var arrayXz = new Array();
+	var arrayRm = new Array();
+	var dest3_div = '<div class="address_hotlist">
+	<ol class="address_hot_abb" style=""><li><span class="hot_selected">热门</span></li><li><span>A-F</span></li><li><span>G-J</span></li><li><span>K-N</span></li><li><span>P-W</span></li><li><span>X-Z</span></li></ol>
+	<ul class="address_hot_adress layoutfix" type="热门"><li><a href="###" data="BJS|北京">北京</a></li></ul>
+	<ul class="address_hot_adress layoutfix" style="display:none" type="A-F"></ul>
+	<ul class="address_hot_adress layoutfix" style="display:none" type="G-J"></ul>
+	<ul class="address_hot_adress layoutfix" style="display:none" type="K-N"></ul>
+	<ul class="address_hot_adress layoutfix" style="display:none" type="P-W"></ul>
+	<ul class="address_hot_adress layoutfix" style="display:none" type="X-Z"></ul>
+	</div>';
+	$('<li></li>')
+	$('<a href="###" data="BJS|北京"></a>');
+	var dest_div = $("<div class=\"cityAll2\" style=\"zoom:1;display:none;\">"
+			+ "<div class=\"cityAllCont\" style=\"display:\" id=\"popCity2\">"
+			+ "<div class=\"cityAllContTit\"><span>热门城市</span>(可直接选择城市或输入城市全拼)</div>"
+			+ "<ul class=\"cityDetail\">"
+			+ "<li class=\"cityDetailBlock\">"
+			+ "<p class=\"CountryName11\"><a class=\"CountryNameA\">推荐</a><a>A-F</a><a>G-J</a><a>K-N</a><a>P-W</a><a>X-Z</a></p>"
+			+ "<p class=\"CountryNameDetail c2 countryBlock\">" + "</p>"
+			+ "<p class=\"CountryNameDetail c2\">" + "</p>"
+			+ "<p class=\"CountryNameDetail c2\">" + "</p>"
+			+ "<p class=\"CountryNameDetail c2\">" + "</p>"
+			+ "<p class=\"CountryNameDetail c2\">" + "</p>"
+			+ "<p class=\"CountryNameDetail c2\">" + "</p>" + "</li>" + "</ul>"
+			+ "<span class=\"leftCityAll\"></span> " + "</div>" + "</div>");
+	$.fn.dest_suggest = function(options) {
+		var options = options || {};
+		options.rightInput = options.rightInput || 0;
+		options.inputBottom = options.inputBottom || 20;
+		options.hideSelect = options.hideSelect || false;
+		var keyInputVal = "sh";
+		var preKeyInputHasResultVal = "sh";
+		var input = $(this);
+		var currentPage = 1;
+		var url = "http://dest.lvmama.com/newplace/commAction!destInfos.do?jsoncallback=?";//上线注意这个URL要换成www.lvmama.com
+		$.getJSON(url, {recommendBlockId : 7142}, function(txt) {
+			arrayAf = txt.af;
+			arrayGJ = txt.gj;
+			arrayKn = txt.kn;
+			arrayPw = txt.pw;
+			arrayXz = txt.xz;
+			arrayRm = txt.rm;
+			// 创建拼音块
+			dest_div.find("p").eq(1).html(printTxt(arrayRm));
+			dest_div.find("p").eq(2).html(printTxt(arrayAf));
+			dest_div.find("p").eq(3).html(printTxt(arrayGJ));
+			dest_div.find("p").eq(4).html(printTxt(arrayKn));
+			dest_div.find("p").eq(5).html(printTxt(arrayPw));
+			dest_div.find("p").eq(6).html(printTxt(arrayXz));
+			// 初始化事件
+			dest_div.find("#canClick").each(function() {
+				$(this).bind("click", function() {
+					clickAtag($(this));
+				});
+			});
+		});
+		}
+	})( jQuery );
+
+
+	</script>
+</body>
+</html>

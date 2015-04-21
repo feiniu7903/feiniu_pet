@@ -1,0 +1,17 @@
+<?page title="ShowMemo" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_cancelorder"?>
+<zk>
+<window id="win_cancelorder" border="normal" title="废单" closable="true" mode="embedded" apply="com.lvmama.eplace.web.lvmama.ListCancelOrderAction">
+	<groupbox style="border: none;" width="99%">
+		<label value="废单理由："></label>
+		<textbox  id="reason" width="550px" rows="4" value="@{saction.reason}"/>
+	</groupbox>
+	<panel border="normal">
+        <toolbar align="center">
+        <button label="提交" width="100px" onClick="saction.cancelOrder()"/>
+        <space />
+        <button label="取消" width="100px" onClick="win_cancelorder.detach()"/>
+        </toolbar>
+    </panel>
+</window>
+</zk>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORD_ORDER_SHHOLIDAY" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderSHHoliday" >
+    <result column="ORDER_SHHOLIDAY_ID" property="orderSHHolidayId" />
+    <result column="OBJECT_ID" property="objectId" />
+    <result column="OBJECT_TYPE" property="objectType" />
+    <result column="CONTENT" property="content" />
+    <result column="CREATE_TIME" property="createTime" />
+  </resultMap>
+  
+  <select id="selectByObjectIdAndObjectType" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderSHHoliday" >
+    select * from ORD_ORDER_SHHOLIDAY
+    <dynamic prepend="where">
+    	<isNotNull prepend=" and" property="objectType" >
+	       OBJECT_TYPE = #objectType#	
+	      </isNotNull>
+		  <isNotNull prepend=" and" property="objectId" >
+	        OBJECT_ID = #objectId#
+	      </isNotNull>
+	      <isNotNull prepend=" and" property="content" >
+	        CONTENT = #content#
+	      </isNotNull>
+	</dynamic>
+  </select>
+  
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderSHHoliday" >
+    <selectKey resultClass="java.lang.Long" keyProperty="orderSHHolidayId" >
+      select ORD_ORDER_SHHOLIDAY_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_ORDER_SHHOLIDAY (ORDER_SHHOLIDAY_ID, OBJECT_ID, OBJECT_TYPE, CONTENT, CREATE_TIME)
+    values (#orderSHHolidayId#, #objectId#, #objectType#, #content#, #createTime#)
+  </insert>
+  
+   <update id="updateByObjectIdAndObjectType" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderSHHoliday" >
+    update ORD_ORDER_SHHOLIDAY set CONTENT =#content# where ORDER_SHHOLIDAY_ID = #orderSHHolidayId#
+  </update>
+</sqlMap>

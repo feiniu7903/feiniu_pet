@@ -1,0 +1,38 @@
+<?page title="修改所属组织" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./edit_org_win"?>
+<zk>
+	<window id="edit_org_win" border="normal" closable="true"
+		apply="com.lvmama.back.web.product.ModifyDepartmentAction">
+		<groupbox style="border: none">
+			<grid>
+				<columns>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							您选择了
+							<label style="color:red;"
+								value="@{saction.managerCount}" />
+							款产品，您要修改部门为
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<tree id="tree"
+								onSelect="saction.selectDepartment();">
+							</tree>
+						</hbox>
+					</row>
+					<row>
+						<hbox>
+							<button label="修改" onClick="saction.doUpdate();" />
+							<space />
+							<button label="取消" onClick="saction.closeWindow();" />
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+	</window>
+</zk>

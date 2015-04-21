@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+<head>
+    <title>填写订单</title>
+    <#include "../common/define_v5.html">
+    <link rel="stylesheet" href="http://pic.lvmama.com/styles/mobile_zt/wap/css/base/order.css">
+</head>
+<body>
+<!--  头部-->
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/header.js"></script>
+<div id="wrapper">
+	<!-- 产品是否可售 -->
+	<input type="hidden" id="login_click_type" name="login_click_type" value="">
+   	<#if productItems?? && productItems?size&gt;0>
+    	<div id="content">
+		    <div id="order_fill" class="common-order pb48">
+		        <div class="common-order-title"><h2>${productName!}</h2></div>
+		        <input type="hidden" id="qingPlaceUrl" name="qingPlaceUrl" value="${qingPlaceUrl!}">
+		        <form id="order_submit" method="post" action="${request.contextPath}/bdorder/baidu_order_submit.htm">
+		            <div class="common-order-title">产品信息</div>
+		            <article>
+		                <div onclick="time_price_skip('${request.contextPath}/date_price.htm?location=${location!}&productId=${productId!}&branchId=${branchId!}&status=baidu&qingPlaceUrl=${qingPlaceUrl!}');" class="common-order-line required">
+		                    <span class="t_r1"><input type="text" readonly value="${visitTime!}" name="visitTime" id="visitTime"></span>
+		                    <span class="t_l1">游玩时间</span>
+		                    <span class="f-color-1" id="timeHolder">${productItems.timeHolder!}</span>
+		                    <span class="ic_ri"></span>
+		                </div>
+		                <#if productItems?? && productItems.datas?? && productItems.datas?size&gt;0 >
+			                <#list productItems.datas as item>
+			                    <#if !item.additional >
+					                <div class="common-order-line">
+					                    <span class="t_l1">${item.shortName!}</span>
+                                        <span class="count relative">
+                                            <i data-value="0" data-opt="reduce" class="lv-reduce disable"></i>
+                                            	<i class="lv-num">1</i>
+                                            <div data-value="0" data-opt="plus" class="lv-plus disable"></div>
+                                        </span>
+					                </div>
+					                <div class="common-order-line">
+					                    <span class="t_l1">原价</span>
+					                    <del data-value="579" id="sell_Price_0">&yen;${marketPriceYuan!}</del>
+					                </div>
+					                <div class="common-order-line">
+					                    <span class="t_l1">百度支付价</span>
+					                    <span data-value="579" id="sell_Price_1">&yen;${item.sellPriceYuan!}</span>
+					                </div>
+					                <div class="common-order-pan">
+					                    <span class="t_l1"><i class="privilege big rose">百度支付</i></span>
+					                    <span class="t_l4">每个百度钱包账号活动期间内只能享受一次优惠，最多购买1张</span>
+					                </div>
+					        	</#if>
+			                </#list>
+		            	</#if>
+		            </article>
+		            <!-- 订单联系人 -->
+		            <div class="common-order-title">订单联系人</div>
+		            <article>
+		            	<!--是否需要证件 -->
+		                <input  value="${productItems.needIdCard!?string}"  type="hidden" name="needIdCard" id="needIdCard">
+		                <#if productItems?? && productItems.personList?? && productItems.personList?size&gt;0 >
+			              	<#list productItems.personList as item>
+			                   <#if item.personType=="CONTACT" >
+					                <div class="common-order-line">
+					                    <span class="t_l1"><label for="userName">联&nbsp;系&nbsp;人</label></span>
+					                    <input type="text" placeholder="姓名" value="${item.personName!}" name="userName" id="userName" class="lv-text-input">
+					                </div>
+					                <div class="common-order-line">
+					                    <span class="t_l1"><label for="mobile">手&nbsp;机&nbsp;号</label></span>
+					                    <input type="tel" placeholder="接收取票凭证短信" value="${item.personMobile!}" name="mobile" id="mobile" class="lv-text-input">
+					                </div>
+					            </#if>
+		        			</#list>
+			          	 <#else>
+			          		<div class="common-order-line">
+			                    <span class="t_l1"><label for="userName">联&nbsp;系&nbsp;人</label></span>
+			                    <input type="text" placeholder="姓名" value="${userName!}" name="userName" id="userName" class="lv-text-input">
+			                </div>
+			                <div class="common-order-line">
+			                    <span class="t_l1"><label for="mobile">手&nbsp;机&nbsp;号</label></span>
+			                    <input type="tel" placeholder="接收取票凭证短信" value="${mobile!}" name="mobile" id="mobile" class="lv-text-input">
+			                </div>
+			             </#if>
+			             <#if productItems?? && productItems.needIdCard!>
+				             <div class="common-order-line">
+			                    <span class="t_l1"><label for="mobile">身&nbsp;份&nbsp;证</label></span>
+			                    <input type="text" placeholder="用于景区入园等凭证" value="${idCard!}" name="idCard" id="idCard" class="lv-text-input">
+			                </div>
+			             </#if>
+		            </article>
+		            <div id="businessCouponContent" class="mt10">
+		            </div>
+		            <article id="orderExplain" class="order-explain">
+		                <div class="tab_select">
+		                    <ul>
+		                        <li><span>预订须知</span><span class="ic_triangle_up"></span></li>
+		                        <li><span>费用说明</span><span class="ic_triangle_up"></span></li>
+		                        <li><span>退款说明</span><span class="ic_triangle_up"></span></li>
+		                    </ul>
+		                </div>
+		                <div class="tabChange">
+		                	<#if productItems.orderTips?? && productItems.orderTips!="">	
+			                	<p>${productItems.orderTips?if_exists?replace("\n","</br>")}</p>
+			                 <#else>
+			                 	<p>暂无</p>
+		                	</#if>
+		                	<span class="ic_down" style="display: block;"></span>
+		               	</div>
+		               	<div class="tabChange">
+		                	 <#if productItems.constcontain?? && productItems.constcontain!="">	
+			                	<p>${productItems.constcontain?if_exists?replace("\n","</br>")}</p>
+			                 <#else>
+			                 	<p>暂无</p>
+		                	</#if>
+		                	<span class="ic_down" style="display: block;"></span>
+		               	</div>
+		               	<div class="tabChange">
+		                	<#if productItems.refundsExplanation?? && productItems.refundsExplanation!="">	
+			                	<p>${productItems.refundsExplanation?if_exists?replace("\n","</br>")}</p>
+			                 <#else>
+			                 	<p>暂无</p>
+		                	</#if>
+		                	<span class="ic_down" style="display: block;"></span>
+		               	</div>
+		            </article>
+		            <div class="agreement mt10">
+		                &nbsp;&nbsp;<input type="checkbox" id="agreement" name="agreement" checked>
+		                <span>&nbsp;&nbsp;我接受驴妈妈委托服务协议&nbsp;&nbsp;&nbsp;
+			                <#if product.freeness><!-- 自由行 -->
+					           <a  href="javascript:void(0);" onclick="union_skip('${request.contextPath}/xieyi.htm?xieyiType=xieyi');">查看协议</a> 
+					        <#elseif product.foreign><!-- 出境游 -->
+					          <a href="javascript:void(0);" onclick="union_skip('${request.contextPath}/xieyi.htm?xieyiType=xieyi_chujin');">查看协议</a> 
+					        <#elseif product.group><!-- 跟团游 -->
+					         <a  href="javascript:void(0);" onclick="union_skip('${request.contextPath}/xieyi.htm?xieyiType=xieyi_gentuan');">查看协议</a> 
+					        <#else>
+					           <a  href="javascript:void(0);" onclick="union_skip('${request.contextPath}/xieyi.htm?xieyiType=xieyi_ticket');">查看协议</a> 
+					        </#if>
+		                </span>
+		            </div>
+		
+		            <div class="common-order-result">
+		                <div class="fl"><span>订单总额：</span><strong><i id="total_price">&yen;${sellPriceYuan!}</i></strong></div>
+		                <input type="hidden" id="productId" name="productId" value="${productId!}">
+		                <input type="hidden" id="branchId" name="branchId" value="${branchId!}">
+		                <input type="hidden" id="canOrderToday" name="canOrderToday" value="false">
+		                <input type="hidden" id="quantity" name="quantity" value="1">
+		                <a  id="baidu_order_submit" href="javascript:void(0)" class="btn_style_1 fr">提交订单</a>
+		                <a  id="baidu_order_submit_hide" style="display:none" href="javascript:void(0)" class="btn_style_1 fr">正在提交...</a>
+		            </div>
+		        </form>
+		    </div>
+		</div>
+	<#else>
+		<#assign no_data_msg="${msg!}">
+	    <#include "/WEB-INF/pages/common/no_data_list.html">
+	</#if>
+    <!-- <script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/footer.js"></script> -->
+	</div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/wap/js/base/lazyload.min.js"></script>
+<script src="${request.contextPath}/js/order_back.js"></script>
+</body>
+<script>
+	$(function(){
+		var userName=$("#userName").val();
+		var mobile=$("#mobile").val();
+		var idCard=$("#idCard").val();
+		var econtractEmail=$("#econtractEmail").val();
+		
+		var userNameLoc= getLocalStorage("link_user_name");
+		var mobileLoc= getLocalStorage("link_user_mobile");
+		var idCardLoc= getLocalStorage("link_user_idCard");
+		var econtractEmailLoc= getLocalStorage("link_user_email");
+		if((userName==null || userName=="") && (userNameLoc!=null && userNameLoc!="")){
+			$("#userName").val(userNameLoc);
+		}
+		if((mobile==null || mobile=="") && (mobileLoc!=null && mobileLoc!="")){
+			$("#mobile").val(mobileLoc);
+		}
+		if((idCard==null || idCard=="") && (idCardLoc!=null && idCardLoc!="")){
+			$("#idCard").val(idCardLoc);
+		}
+		if((econtractEmail==null || econtractEmail=="") && (econtractEmailLoc!=null && econtractEmailLoc!="")){
+			$("#econtractEmail").val(econtractEmailLoc);
+		}
+	});
+	$("#orderExplain").tabChange(); 
+	/*点击展示更多初始化截取字==*/ 
+	$("#orderExplain .tabChange").each(function(){ 
+	var _this=$(this), 
+	_textthis = $(this).find("p"); 
+	if(parseInt(_textthis.height())>60){ 
+	_this.addClass("overflow"); 
+	_this.find('.ic_down').css("display","block"); 
+	_this.MBPBtn({ 
+	handler:function(){ 
+	if(_this.hasClass("overflow")){ 
+	_this.removeClass("overflow"); 
+	}else{ 
+	_this.addClass("overflow"); 
+	} 
+	} 
+	}); 
+	} 
+	});
+</script>
+</html>

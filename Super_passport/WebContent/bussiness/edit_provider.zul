@@ -1,0 +1,88 @@
+<?page title="服务商管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./providerEdit"?>
+
+<zk>
+	<window id="providerEdit" title="服务商管理" border="normal"
+		apply="com.lvmama.passport.web.pass.PassProviderEditAction">
+		<grid>
+			<columns>
+				<column width="110px"></column>
+				<column></column>
+				<column width="110px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>服务商名称：</hbox>
+					<hbox>
+						<textbox value="@{saction.provider.name}" constraint="no empty:服务商名称不能为空！" />
+					</hbox>
+					<hbox>备注：</hbox>
+					<hbox>
+						<textbox value="@{saction.provider.memo}" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>独立申码：</hbox>
+					<hbox>
+						<radiogroup  selectedItem="@{saction.provider.separate}">
+							<radio  value="true" label="每子项单独"></radio>
+							<radio value="false" label="所有子项合并申码"></radio>
+						</radiogroup>
+					</hbox>
+					<hbox>凭证短信合并：</hbox>
+					<hbox>
+						<radiogroup  selectedItem="@{saction.provider.mergeSMS}">
+							<radio  value="false" label="不合并"></radio>
+							<radio value="true" label="凭证合并"></radio>
+						</radiogroup>
+					</hbox>
+				</row>
+				
+				<row>
+					<hbox>由服务商发送短信:</hbox>
+					<hbox>
+						<checkbox
+							checked="@{saction.provider.sendSms}"
+							label="">
+						</checkbox>
+					</hbox>
+					<hbox>自动履行:</hbox>
+					<hbox>
+						<checkbox
+							checked="@{saction.provider.autoPerform}"
+							label="">
+						</checkbox>
+					</hbox>
+				</row>
+				
+				
+				<row>
+					<hbox>多线程申码:</hbox>
+					<hbox>
+						<checkbox
+							checked="@{saction.provider.supplierThread}"
+							label="">
+						</checkbox>
+					</hbox>
+					<hbox>是否重复使用同一流水号申码:</hbox>
+					<hbox>
+						<checkbox
+							checked="@{saction.provider.reApplayWay}"
+							label="">
+						</checkbox>
+					</hbox>
+				</row>
+				
+				<row>
+					<hbox>处理器类名：</hbox>
+					<hbox>
+						<textbox value="@{saction.provider.processor}" constraint="no empty:处理器类名不能为空！" rows="1" cols="60" />
+					</hbox>
+					<hbox><button label="保存" width="100px"
+						onClick="saction.doSave()" /></hbox>
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>

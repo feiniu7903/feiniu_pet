@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_REGISTER_BASIC_MV">
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.UserRegisterBasicMV">
+		<result column="SUB_REGISTER_CHANNEL_ID" property="subRegisterChannelId" />
+		<result column="SUB_REGISTER_CHANNEL" property="subRegisterChannel" />
+		<result column="NEW_USER_QUANTITY" property="newUserQuantity" />
+		<result column="NEW_PAYED_USER_QUANTITY" property="newPayedUserQuantity" />
+		<result column="NEW_PAYED_USER_AMOUNT" property="newPayedUserAmount" />
+	</resultMap>
+	
+	<resultMap id="OverviewResultMap" class="com.lvmama.report.po.UserRegisterBasicMV">
+		<result column="REGISTER_TIME" property="registerTime" />
+		<result column="NEW_USER_QUANTITY" property="newUserQuantity" />
+		<result column="NEW_PAYED_USER_QUANTITY" property="newPayedUserQuantity" />
+		<result column="NEW_2_PAYED_USER_QUANTITY" property="new2PayedUserQuantity" />
+		<result column="NEW_PAYED_USER_AMOUNT" property="newPayedUserAmount" />
+	</resultMap>
+	
+	<sql id="queryUserRegisterBasicMVSql" > 
+		select  count(t.created_date) as NEW_USER_QUANTITY,
+                    sum(case when t.USER_PAYED_QUANTITY >0 then 1 else 0 end) as NEW_PAYED_USER_QUANTITY,
+                    t.SUB_REGISTER_CHANNEL_ID,
+                    t.SUB_REGISTER_CHANNEL,
+                    sum(t.USER_PAYED_AMOUNT) as NEW_PAYED_USER_AMOUNT
+                    from USER_REGISTER_BASIC_MV t where 1=1
+			<isNotNull prepend=" and " property="startDate"> 
+			t.created_date<![CDATA[>=]]>#startDate# 
+			</isNotNull> 
+			<isNotNull prepend=" and " property="endDate"> 
+			t.created_date<![CDATA[<]]>#endDate#+1 
+			</isNotNull> 
+			<isNotNull prepend=" and " property="secondChannel"> 
+			t.SUB_REGISTER_CHANNEL like '%$secondChannel$%' 
+			</isNotNull>
+			group by (t.SUB_REGISTER_CHANNEL_ID,t.SUB_REGISTER_CHANNEL)
+	</sql>
+	
+	<sql id="queryUserOverviewRegisterBasicMVSql" > 
+		select to_char(t.created_date,'yyyy-mm-dd') as REGISTER_TIME,
+					count(t.created_date) as NEW_USER_QUANTITY,
+					sum(case when t.USER_PAYED_QUANTITY >0 then 1 else 0 end) as NEW_PAYED_USER_QUANTITY,
+					sum(case when t.USER_PAYED_QUANTITY >1 then 1 else 0 end) as NEW_2_PAYED_USER_QUANTITY,
+					sum(t.USER_PAYED_AMOUNT) as NEW_PAYED_USER_AMOUNT
+					from USER_REGISTER_BASIC_MV t where 1=1
+			<isNotNull prepend=" and " property="startDate"> 
+			 t.created_date <![CDATA[>=]]>#startDate# 
+			</isNotNull> 
+			<isNotNull prepend=" and " property="endDate"> 
+			t.created_date <![CDATA[<]]>#endDate#+1 
+			</isNotNull> 
+		group by to_char(t.created_date,'yyyy-mm-dd')
+	
+	</sql>
+	
+	<sql id="queryUserChannelBasicForOverriewSql">
+		SELECT 
+		    ucb1.ddate as REGISTER_TIME,
+		    nvl(ucb2.personnumber,0) as NEW_USER_QUANTITY,
+		    nvl(ucb3.personnumber,0) as NEW_PAYED_USER_QUANTITY,
+		    nvl(ucb4.sumfirstpay,0) as NEW_PAYED_USER_AMOUNT,
+		    nvl(ucb5.personnumber,0) as NEW_2_PAYED_USER_QUANTITY  
+		    FROM
+		      (select to_char(created_date,'yyyy-mm-dd') ddate from user_channel_basic 		
+		      <dynamic prepend=" WHERE ">
+				<isNotNull prepend=" and " property="startDate">created_date <![CDATA[>=]]>#startDate#</isNotNull> 
+				<isNotNull prepend=" and " property="endDate">created_date <![CDATA[<]]>#endDate#+1 </isNotNull>
+			  </dynamic> group by to_char(created_date,'yyyy-mm-dd')) ucb1,
+		      (select count(user_id) personnumber, to_char(created_date,'yyyy-mm-dd') ddate from user_channel_basic
+		      <dynamic prepend=" WHERE ">
+				<isNotNull prepend=" and " property="startDate">created_date <![CDATA[>=]]>#startDate#</isNotNull> 
+				<isNotNull prepend=" and " property="endDate">created_date <![CDATA[<]]>#endDate#+1 </isNotNull>
+			  </dynamic> group by to_char(created_date,'yyyy-mm-dd')) ucb2,
+		      (select count(user_id) personnumber, to_char(first_order_date,'yyyy-mm-dd') ddate from user_channel_basic where first_order_date is not null 
+		      <isNotNull prepend=" and " property="startDate">created_date <![CDATA[>=]]>#startDate#</isNotNull> 
+			  <isNotNull prepend=" and " property="endDate">created_date <![CDATA[<]]>#endDate#+1 </isNotNull> group by to_char(first_order_date,'yyyy-mm-dd')) ucb3 ,
+		      (select to_char(first_order_date,'yyyy-mm-dd') ddate , sum(first_order_pay)/100 sumfirstpay from user_channel_basic where first_order_pay is not null 
+		      	<isNotNull prepend=" and " property="startDate">created_date <![CDATA[>=]]>#startDate#</isNotNull> 
+				<isNotNull prepend=" and " property="endDate">created_date <![CDATA[<]]>#endDate#+1 </isNotNull> group by to_char(first_order_date,'yyyy-mm-dd')) ucb4,
+		      (select count(user_id) personnumber, to_char(second_order_date,'yyyy-mm-dd') ddate from user_channel_basic where second_order_date is not null 				
+		        <isNotNull prepend=" and " property="startDate">created_date <![CDATA[>=]]>#startDate#</isNotNull> 
+				<isNotNull prepend=" and " property="endDate">created_date <![CDATA[<]]>#endDate#+1 </isNotNull> group by to_char(second_order_date,'yyyy-mm-dd')) ucb5
+		    WHERE
+		      ucb1.ddate = ucb2.ddate(+) and ucb1.ddate = ucb3.ddate(+) and ucb1.ddate = ucb4.ddate(+) and ucb1.ddate = ucb5.ddate(+)
+	</sql>
+
+	
+	
+	<select id="countUserRegisterBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(*) from (
+			<include refid="queryUserRegisterBasicMVSql"/>
+		)
+	</select>
+	
+	<select id="countUserOverviewRegisterBasicMV" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(*) from (
+			<include refid="queryUserChannelBasicForOverriewSql"/>
+		)
+	</select>
+	
+	<select id="sumUserUpdate" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select sum(NEW_USER_QUANTITY) from (
+			<include refid="queryUserRegisterBasicMVSql"/>
+		)
+	</select>
+	
+	<select id="sumPayUserUpdate" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select sum(NEW_PAYED_USER_QUANTITY) from (
+			<include refid="queryUserChannelBasicForOverriewSql"/>
+		)
+	</select>
+	
+	<select id="sumPay2UserUpdate" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select sum(NEW_2_PAYED_USER_QUANTITY) from (
+			<include refid="queryUserChannelBasicForOverriewSql"/>
+		)
+	</select>
+	
+	<select id="allUserUpdate" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(user_id) from (select * from LVMAMA_PET.USER_USER)
+	</select>
+	
+	<select id="allPayUserUpdate" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(user_id) from user_channel_basic where first_order_pay is not null
+	</select>
+	
+	<select id="allPay2UserUpdate" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(user_id) from user_channel_basic where second_order_pay is not null
+	</select>
+	
+	<select id="sumSubChannel" resultClass="java.lang.Long" parameterClass="java.util.HashMap" >
+		select count(*) from ( select  distinct(SUB_REGISTER_CHANNEL_ID) from(
+			<include refid="queryUserRegisterBasicMVSql"/>
+		))
+	</select>
+	
+	<select id="queryUserRegisterBasicMV" parameterClass="java.util.Map" resultMap="BaseResultMap">
+		SELECT row_.* FROM( SELECT rownum rowunm_,p.* from ( 
+				select * from(<include refid="queryUserRegisterBasicMVSql"/> ) order by NEW_USER_QUANTITY desc
+			) p ) row_ where 
+	<![CDATA[row_.rowunm_ between  #_startRow# and #_endRow#]]> 
+	</select>
+	
+	<select id="queryUserOverviewRegisterBasicMV" parameterClass="java.util.Map" resultMap="OverviewResultMap">
+			SELECT row_.* FROM( SELECT rownum rowunm_,p.* from ( 
+				select * from(<include refid="queryUserChannelBasicForOverriewSql"/> ) order by REGISTER_TIME desc
+			) p ) row_ 
+		<dynamic prepend=" where">
+		<isNotNull prepend=" and " property="_startRow">
+			<![CDATA[row_.rowunm_ between  #_startRow# and #_endRow#]]> 
+		</isNotNull>
+		</dynamic>
+							
+	</select>
+</sqlMap>
+
+

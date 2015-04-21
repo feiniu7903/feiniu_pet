@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TOTAL_ANALYSIS_TV">
+	<resultMap id="BaseResultMap" class="com.lvmama.report.po.TotalAnalysisTV">
+	<result column="CREATE_TIME" property="createTime"/>
+		<result column="USER_TOTAL" property="userTotal" />
+		<result column="EMAIL_TOTAL" property="emailTotal" />
+		<result column="MOBILE_TOTAL" property="mobileTotal" />
+		<result column="EMAIL_RATIO" property="emailRatio" />
+		<result column="MOBILE_RATIO" property="mobileRatio" />
+		<result column="EMAIL_CHECK_TOTAL" property="emailCheckTotal" />
+		<result column="MOBILE_CHECK_TOTAL" property="mobileCheckTotal" />
+		<result column="EMAIL_CHECK_RATIO" property="emailCheckRatio" />
+		<result column="MOBILE_CHECK_RATIO" property="mobileCheckRatio" />
+		<result column="ORDER_RATIO" property="orderRatio" />
+		<result column="REPEAT_ORDER_RADIO" property="repeatOrderRadio" />
+		<result column="JC_ORDER_RADIO" property="jcOrderRadio" />
+		<result column="SEM_ORDER_RADIO" property="semOrderRadio" />
+		<result column="FREE_ORDER_RADIO" property="freeOrderRadio" />
+		<result column="PAY_RATIO" property="payRadio" />
+		<result column="REPEAT_PAY_RADIO" property="repeatPayRadio" />
+		<result column="JC_PAY_RADIO" property="jcPayRadio" />
+		<result column="SEM_PAY_RADIO" property="semPayRadio" />
+		<result column="FREE_PAY_RADIO" property="freePayRadio" />
+	</resultMap>
+	<select id="selectObjAll" parameterClass="java.util.HashMap"
+		resultMap="BaseResultMap">
+		SELECT WEEK_DATA.*
+		FROM (
+					SELECT PO.* , ROWNUM AS RN
+					FROM (
+					SELECT
+								wmsys.wm_concat(to_char(create_time,'yyyy-mm-dd')) CREATE_TIME,
+				                wmsys.wm_concat(USER_TOTAL) USER_TOTAL,
+				                wmsys.wm_concat(EMAIL_TOTAL) EMAIL_TOTAL,
+				                wmsys.wm_concat(MOBILE_TOTAL) MOBILE_TOTAL,
+				                wmsys.wm_concat(to_char(EMAIL_RATIO,'FM90.99')) EMAIL_RATIO,
+				                wmsys.wm_concat(to_char(MOBILE_RATIO,'FM90.99')) MOBILE_RATIO,
+				                wmsys.wm_concat(EMAIL_CHECK_TOTAL) EMAIL_CHECK_TOTAL,
+				                wmsys.wm_concat(MOBILE_CHECK_TOTAL) MOBILE_CHECK_TOTAL,
+				                wmsys.wm_concat(to_char(EMAIL_CHECK_RATIO,'FM90.99')) EMAIL_CHECK_RATIO,
+				                wmsys.wm_concat(to_char(MOBILE_CHECK_RATIO,'FM90.99')) MOBILE_CHECK_RATIO,
+				                wmsys.wm_concat(to_char(ORDER_RATIO,'FM90.99')) ORDER_RATIO,
+				                wmsys.wm_concat(to_char(REPEAT_ORDER_RADIO,'FM90.99')) REPEAT_ORDER_RADIO,
+				                wmsys.wm_concat(to_char(JC_ORDER_RADIO,'FM90.99')) JC_ORDER_RADIO,
+				                wmsys.wm_concat(to_char(SEM_ORDER_RADIO,'FM90.99')) SEM_ORDER_RADIO,
+				                wmsys.wm_concat(to_char(FREE_ORDER_RADIO,'FM90.99')) FREE_ORDER_RADIO,
+				                wmsys.wm_concat(to_char(PAY_RATIO,'FM90.99')) PAY_RATIO,
+				                wmsys.wm_concat(to_char(REPEAT_PAY_RADIO,'FM90.99')) REPEAT_PAY_RADIO,
+				                wmsys.wm_concat(to_char(JC_PAY_RADIO,'FM90.99')) JC_PAY_RADIO,
+				                wmsys.wm_concat(to_char(SEM_PAY_RADIO,'FM90.99')) SEM_PAY_RADIO,
+				                wmsys.wm_concat(to_char(FREE_PAY_RADIO,'FM90.99')) FREE_PAY_RADIO
+					FROM
+							(SELECT * FROM DATA_TOTAL_ANALYSIS_TV
+							WHERE CREATE_TIME &gt;= #endDate# - 98
+							AND CREATE_TIME &lt;= #endDate#
+							ORDER BY CREATE_TIME DESC)
+		) PO
+		) WEEK_DATA
+	</select>
+</sqlMap>

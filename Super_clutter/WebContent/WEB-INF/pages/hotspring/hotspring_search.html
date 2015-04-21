@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>景点门票</title>
+<#include "../common/define.html">
+<script src="${request.contextPath}/js/hot_spring.js"></script>
+<script type="text/javascript">
+var latitude;
+var longitude;
+$(function(){
+	// ajax加载数据 
+	getHotSpringList('1');
+});
+</script>
+</head>
+
+<body>
+<#if mobileRequest?? && !mobileRequest>
+<div  class="lv-header lv-media-width lv-header-mheight">
+  <div class="lv-operate-icon lv-pull-left"> <a href="javascript:void(0);" onclick="window.history.go(-1);"> 
+  <img src="${prefix_pic_url!}/img/return.png"> </a> </div>
+  <div class="lv-operate-sep lv-pull-left"><img src="${prefix_pic_url!}/img/operate_sep.png"></div>
+  <div class="lv-title">${keyword!}温泉</div>
+  <div class="lv-position lv-position-e"><a href="javascript:void(0);" class='home' onclick="union_skip('http://${hostName}');"><img src='http://pic.lvmama.com/img/mobile/touch/img/index/home.png'></a></div>
+</div>
+ </#if>
+<div class="lv-wrapper lv-min-height lv-media-width">
+  <div class="lv-wrapper-container">
+<input type="hidden" name="keyword" id="keyword" value="${keyword!}" data-name="">
+<input type="hidden" name="subjects" id="subjects" value="${subjects!}" data-name="">
+<input type="hidden" name="sort" id="sort" value="${sort!}" data-name="">
+<input type="hidden" name="stage" id="stage" value="2" data-name="">
+<input type="hidden" name="page" id="page" value="0" data-name="">
+  	<ul class="lv-spotticket-list jd_wrap" id="data_list">
+  	    <!--温泉列表数据 -->
+	  	
+    </ul>
+   <!-- 如果不是最后一页  -->
+   <div class="lv-nav-li lv-btn-03" id="show_more" style="display:none">
+        <a href="javascript:void(0);" onclick="getHotSpringList('0')">
+           <span>查看更多</span>
+        </a>
+    </div>
+  </div>
+</div>
+<!-- footer -->
+<div class="lv-toast lv-toast-success" style="display:none;">
+	<div class="lv-toast-div"><img src="${prefix_pic_url!}/img/smile-grey.png"></div>
+    <p></p>
+</div>
+<div class="lv-toast lv-toast-fail" style="display:none;">
+	<div class="lv-toast-div"><img src="${prefix_pic_url!}/img/sad-big.png"></div>
+    <p></p>
+</div>
+<div class="lv-toast-loading" style="display:none;">
+	<img style="width:32px;" src="${prefix_pic_url!}/img/3.gif">
+</div>
+<#if mobileRequest?? && !mobileRequest>
+<div  class="lv-footer lv-media-width">
+		<div class="lv-footer-banner">
+			<img src="${hmtPixel!}" style="display:none" width="0" name="baiduExpand" id="baiduExpand" height="0"  />
+		    <#if user??>
+			<!-- <span><a href="javascript:void(0);">已登录</a></span> -->
+			<a href="http://${hostName}/user/" class='user_name'>
+				<#if user.nickName?? && user.nickName !="">
+	              ${user.nickName!}
+	            <#else>
+	              ${user.userName!}
+	            </#if>
+			
+			</a>
+			<a class='wap_tuichu' href="javascript:log_out();" >退出</a> 
+			<#else>
+				<span><a href="${request.contextPath}/reg.htm">免费注册</a></span>
+				<span><a href="${request.contextPath}/login.htm">登录</a></span> 
+			</#if>
+				<span class="lv-back-top lv-pull-right">
+				<a href="javascript:void(0);" class="backtrack">TOP</a>
+		      </span> 
+		</div>
+		
+		<div class="lv-footer-link">
+			<a href="${request.contextPath}/wap_to_lvmama.htm">电脑版</a>
+				<#if hostName?? && hostName=="m.lvmama.com">
+					<span>|</span><a href="http://itunes.apple.com/cn/app/id443926246?mt=8" target="_blank">iPhone版下载</a>
+					<span>|</span><a href="http://m.lvmama.com/rewrite/d.php?Ch=1" target="_blank">Android版本下载</a>
+				</#if>
+		
+		
+			<a href="http://${hostName}/channel/about/about_us/">关于我们</a><span>|</span><a
+				href="${request.contextPath}/aboutus/contact_us.htm">联系我们</a> <span>|</span><a
+				href="http://${hostName}/channel/about/suggestion/">意见反馈</a> <span>|</span><a
+				href="http://${hostName}">首页</a>
+		</div>
+		<div class="lv-footer-link lv-footer-copyright">Copyright &copy;2013 lvmama.com </br>
+		  <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow" hidefocus="false">沪ICP备13011172号-3</a>
+        </div>
+</div>
+</#if>
+<!--电话弹出层 end-->
+<div class='model'></div>
+<script type="text/javascript" src="http://pic.lvmama.com/js/common/losc.js" charset="utf-8"></script> 
+<script type="text/javascript">
+<!--
+    try {
+    	$(".lv-toast-loading").hide();
+    }catch(e){
+    	
+    }
+    
+  //注销
+	function log_out() {
+		window.localStorage.removeItem("loginMsg");
+		$.getJSON("http://login.lvmama.com/nsso/mobileAjax/logout.do?jsoncallback=?",function(data) {
+			window.location.reload(true);
+		}); 
+	}
+  //百度推广
+	 $(function() {
+		 $.ajax({
+		        type: "post",
+		        url: '${request.contextPath!}/html5/baidu_expand.htm',
+		        success: function (data) {
+		        	//console.info(data.hmtPixel);
+		        	$("#baiduExpand").attr("src",data.hmtPixel);
+		        },
+		        error: function () {
+		        }
+		    });
+	 });
+   //根据referrer 判断是客户端访问还是WAP端访问(wap端显示头和尾客户端不显示头和尾)
+    <#if mobileRequest?? && mobileRequest>
+    	$(document).ready(function() {
+	    	 $(".lv-header").hide();
+			 $(".lv-footer").hide();
+		 });
+	 </#if>
+//-->
+</script>
+
+<div class="lv-transparent-div lv-transparent" style="display:none;"></div>
+</body>
+</html>

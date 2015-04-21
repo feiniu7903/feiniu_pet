@@ -1,0 +1,25 @@
+<?page title="aud_pass" contentType="text/html;charset=UTF-8"?>
+
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./aud_pass"?>
+<zk>
+	<window id="aud_pass" title="关联销售产品" border="normal" closable="true"
+		apply="com.lvmama.back.web.audit.RelateProdProductAction">
+		<listbox
+			model="@{saction.productsList }"
+			width="100%">
+			<listhead>
+				<listheader label="销售产品" />
+				<listheader label="产品类型" />
+				<listheader label="产品负责人" />
+			</listhead>
+			<listitem height="25px" self="@{each='product'}">
+				<listcell>
+					<label value="@{product.productId }"/>/
+					<label value="@{product.productName }"/>
+				</listcell>
+				<listcell label="@{product.productType }" />
+				<listcell label="@{product.productManageName }" />
+			</listitem>
+		</listbox>
+	</window>
+</zk>

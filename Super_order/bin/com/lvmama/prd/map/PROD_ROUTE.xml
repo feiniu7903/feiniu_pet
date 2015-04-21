@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROD_ROUTE" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.prod.ProdRoute" >
+    <result column="ROUTE_ID" property="routeId" />
+    <result column="PRODUCT_ID" property="productId" />
+    <result column="DAYS" property="days" />
+    <result column="INITIAL_NUM" property="initialNum" />
+    <result column="AHEAD_CONFIRM_HOURS" property="aheadConfirmHours"/>
+    <result column="E_CONTRACT" property="eContract"/>   
+    <result column="TRAVEL_GROUP_CODE" property="travelGroupCode"/>
+    <result column="ROUTE_CATEGORY" property="routeCategory"/>
+    <result column="IS_PLAY" property="isPlay"/>
+    <result column="ROUTE_TITLE" property="routeTitle"/>
+    <result column="HOTEL_TYPE" property="hotelType"/>
+    <result column="ROUTE_STANDARD" property="routeStandard"/>
+    <result column="DEPART_AREA" property="departArea"/>
+    <result column="SELF_PACK" property="selfPack"/>
+    <result column="QI_FLAG" property="qiFlag"/>
+    <result column="GROUP_TYPE" property="groupType"/>
+    <result column="TRAVEL_TIME" property="travelTime"/>
+    <result column="COUNTRY" property="country"/>
+    <result column="CITY" property="city"/>
+    <result column="VISA_TYPE" property="visaType"/>
+    <result column="IS_MULTI_JOURNEY" property="isMultiJourney"/>
+   </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.prod.ProdRoute" >
+    select *
+    from PROD_ROUTE
+    where ROUTE_ID = #routeId#
+  </select>
+  <select id="selectByProductId" resultMap="BaseResultMap">
+  select *
+    from PROD_ROUTE
+    where PRODUCT_ID = #productId#  
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.prod.ProdRoute" >
+    delete from PROD_ROUTE
+    where ROUTE_ID = #routeId#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.prod.ProdRoute" >
+    <selectKey keyProperty="routeId" resultClass="Long">
+  		select PROD_ROUTE_ID_SEQ.nextVal FROM DUAL
+  	</selectKey>
+    insert into PROD_ROUTE (ROUTE_ID, PRODUCT_ID, DAYS, INITIAL_NUM,AHEAD_CONFIRM_HOURS,E_CONTRACT,TRAVEL_GROUP_CODE,ROUTE_CATEGORY,IS_PLAY,ROUTE_TITLE,HOTEL_TYPE,ROUTE_STANDARD,DEPART_AREA,SELF_PACK
+    ,QI_FLAG,GROUP_TYPE,COUNTRY,CITY,VISA_TYPE,IS_MULTI_JOURNEY)
+    values (#routeId#, #productId#, #days#, #initialNum#,#aheadConfirmHours#,#eContract#,#travelGroupCode#,#routeCategory#,#isPlay#,#routeTitle#,#hotelType#,#routeStandard#,#departArea#,nvl(#selfPack#,'false'),
+    nvl(#qiFlag#,'false'),#groupType#,#country#,#city#,#visaType#,#isMultiJourney#)
+  </insert>
+  
+  <update id="updateByProductId" parameterClass="com.lvmama.comm.bee.po.prod.ProdRoute" >
+    update PROD_ROUTE
+    set PRODUCT_ID = #productId#,
+      DAYS = #days#,
+      INITIAL_NUM = #initialNum#,
+      AHEAD_CONFIRM_HOURS = #aheadConfirmHours#,
+      E_CONTRACT = #eContract#,
+      TRAVEL_GROUP_CODE = #travelGroupCode#,
+      ROUTE_CATEGORY=#routeCategory#,
+  	  SELF_PACK=#selfPack#,
+  	  QI_FLAG = #qiFlag#,
+  	  GROUP_TYPE = #groupType#
+  	  <isNotEmpty prepend="," property="country">
+      	COUNTRY=#country#
+  	  </isNotEmpty>
+  	  <isNotEmpty prepend="," property="city">
+      	CITY=#city#
+  	  </isNotEmpty>
+  	   <isNotEmpty prepend="," property="visaType">
+      	VISA_TYPE=#visaType#
+  	  </isNotEmpty>
+  	  <isNotEmpty prepend="," property="isPlay">
+      	IS_PLAY=#isPlay#
+  	  </isNotEmpty>
+  	  <isNotEmpty prepend="," property="routeTitle">
+      	ROUTE_TITLE=#routeTitle#  	    	  
+  	  </isNotEmpty>
+  	  <isNotEmpty prepend="," property="hotelType">
+      	HOTEL_TYPE=#hotelType#  	    	  
+  	  </isNotEmpty>
+  	  <isNotEmpty prepend="," property="routeStandard">
+      	ROUTE_STANDARD=#routeStandard#  	    	  
+  	  </isNotEmpty>
+  	  <isNotEmpty prepend="," property="routeStandard">
+      DEPART_AREA=#departArea#
+  	  </isNotEmpty>
+  	  <isNotEmpty prepend="," property="isMultiJourney">
+  	  	IS_MULTI_JOURNEY=#isMultiJourney#
+  	  </isNotEmpty>
+     where PRODUCT_ID = #productId#
+  </update>
+  <update id="updateProductRouteByProductId" parameterClass="java.util.Map">
+  	update PROD_ROUTE
+    set PRODUCT_ID=#productId#
+     <isNotNull prepend="," property="routeCateGory">
+      	ROUTE_CATEGORY=#routeCateGory#
+  	  </isNotNull>
+  	   <isNotNull prepend="," property="routeStandard">
+      	ROUTE_STANDARD=#routeStandard#
+  	  </isNotNull>
+  	   <isNotNull prepend="," property="departArea">
+      	DEPART_AREA=#departArea#
+  	  </isNotNull>
+  	  <isNotNull prepend="," property="travelTime">
+      	TRAVEL_TIME=#travelTime#
+  	  </isNotNull>
+  	  <isNotEmpty property="isClear" prepend=" , ">
+  	  	$isClear$
+  	  </isNotEmpty>
+    where PRODUCT_ID=#productId#
+  </update>
+</sqlMap>

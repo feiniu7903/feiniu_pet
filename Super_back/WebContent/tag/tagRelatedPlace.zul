@@ -1,0 +1,46 @@
+<?page title="标签管理" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./tagRelatedPlace"?>
+<window id="tagRelatedPlace" mode="embedded" title="关联产品的标签" apply="com.lvmama.back.web.tag.TagRelatedPlaceAction" closable="false">
+
+	<listbox fixedLayout="true" model="@{saction.searchPlaceTagsList,load-after='searchProdTag.onClick,_paging2.onPaging,chkPlaceTalAll.onCheck'}">
+		<listhead>
+			<listheader width="5%"><checkbox   id="chkPlaceTalAll" onCheck="saction.selectAllCheckbox(self.checked)"/></listheader>
+			<listheader width="10%" label="目的地ID" />
+			<listheader  label="目的地名称" />
+			<listheader width="15%" label="起始日期" />
+			<listheader width="15%" label="结束日期" />
+			<listheader width="10%" label="类型" />
+		</listhead>
+		<listitem self="@{each='tag'}">
+			<listcell>
+				<checkbox  onCheck='saction.onCheckboxEvent(self.getAttribute("placeTagId"), self.checked);' checked='@{tag.isChecked}'>
+					<custom-attributes placeTagId="@{tag.id}" />
+				</checkbox>
+			</listcell>
+			<listcell label="@{tag.place.placeId}" />
+			<listcell label="@{tag.place.name}" />
+			<listcell label="@{tag.strBeginTime}" />
+			<listcell label="@{tag.strEndTime}" />
+			<listcell label="@{tag.placeType}" />
+		</listitem>
+	</listbox>
+	<toolbar>
+		<grid style="border:0">
+			<rows>
+				<row>
+					<cell width="60px">
+						共
+						<label id="_totalCountLabel2" />
+						条
+					</cell>
+					<cell width="200px">
+						<paging id="_paging2" pageSize="15" onPaging='saction.searchProductTags();' />
+					</cell>
+				</row>
+			</rows>
+		</grid>
+	</toolbar>
+	<button id="delButton" label="删除" onClick="saction.delPlaceTags();" />
+
+	<button id="searchProdTag" visible="false" label="查询" onClick="saction.searchPlaceTags()" />
+</window>

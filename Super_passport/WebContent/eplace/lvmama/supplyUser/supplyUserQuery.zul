@@ -1,0 +1,107 @@
+<?page title="list PerformTarget target" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./win_sale"?>
+<?component name="toolbar_user" macroURI="/eplace/supplier/toolbar_user.zul" ?>
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window id="win_sale" mode="embedded"
+		apply="com.lvmama.eplace.web.lvmama.supplyUser.EplaceSupplerQueryAction">
+		<toolbar_user></toolbar_user>
+		<grid>
+			<columns>
+				<column width="100px"></column>
+				<column width="180px"></column>
+				<column width="100px"></column>
+				<column width="180px"></column>
+				<column width="100px"></column>
+				<column width="180px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<hbox>供应商名称：</hbox>
+					<hbox>
+						<textbox id="ordOrderId"
+							value="@{saction.serachMap.supplierName}">
+						</textbox>
+					</hbox>
+					<hbox>
+						<button label="查询" id="search" width="100px"
+							onClick="saction.search()" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<space></space>
+		<listbox
+			model="@{saction.eplaceSupplierList,load-after='search.onClick,_paging.onPaging'}">
+			<listhead>
+				<listheader label="供应商编号" width="10%" />
+				<listheader label="供应商名称" width="25%" />
+				<listheader label="电话" width="15%" />
+				<listheader label="状态"   width="10%"/>
+				<listheader label="产品经理" />
+				<listheader label="开通账号" />
+				<listheader label="操作" />
+			</listhead>
+			<listitem height="25px" self="@{each='sup'}">
+				<listcell label="@{sup.supSupplier.supplierId}" />
+				<listcell label="@{sup.supSupplier.supplierName}" />
+				<listcell label="@{sup.supSupplier.telephone}" />
+				<listcell label="@{sup.status}" />
+				<listcell>
+					<label value="@{sup.productManager}" />
+					/
+					<label value="@{sup.mobile}" />
+				</listcell>
+				<listcell>
+					<a style="color:blue" label="开通账号" visible="@{sup.editlinkVisible}"
+						onClick='saction.showWindow("/eplace/lvmama/supplyUser/eplacePortUserAddJump.zul",self.getAttributes());'>
+						<custom-attributes
+							supplierId="@{sup.supSupplier.supplierId}" />
+						<custom-attributes
+							eplaceSupplierId="@{sup.eplaceSupplierId}" />
+					</a>
+				</listcell>
+				<listcell>
+					<a style="color:blue" label="开通"
+						onClick='saction.showWindow("/eplace/lvmama/supplyUser/eplaceSupplerAdd.zul",self.getAttributes());'
+						visible="@{sup.openlinkVisible}">
+						<custom-attributes
+							supplierId="@{sup.supSupplier.supplierId}" />
+					</a>
+					<a style="color:blue" label="修改"
+						onClick='saction.showWindow("/eplace/lvmama/supplyUser/eplaceSupplerEdit.zul",self.getAttributes());'
+						visible="@{sup.editlinkVisible}">
+						<custom-attributes
+							eplaceSupplierId="@{sup.eplaceSupplierId}" />
+						<custom-attributes
+							supplierId="@{sup.supSupplier.supplierId}" />
+					</a>
+					<a style="color:blue" label="关闭"
+						onClick='saction.delEplaceSupplier(self.getAttribute("eplaceSupplierId"))'
+						visible="@{sup.closelinkVisible}">
+						<custom-attributes
+							eplaceSupplierId="@{sup.eplaceSupplierId}" />
+					</a>
+				</listcell>
+			</listitem>
+		</listbox>
+		<toolbar>
+			<grid style="border:0">
+				<rows>
+					<row>
+						<cell width="60px">
+							共
+							<label id="_totalRowCountLabel" />
+							条
+						</cell>
+						<cell>
+							<paging id="_paging" pageSize="20"
+								onPaging='saction.search()' />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+		</toolbar>
+	</window>
+</zk>

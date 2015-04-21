@@ -1,0 +1,22 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./bandPassport"?>
+<bandbox id="bandPassport" apply="com.lvmama.passport.web.pass.MacroChoosePassport"
+	onChanging="bandPassport$composer.changePassport(event)"
+	mold="rounded" autodrop="true">
+	<bandpopup>
+		<vbox>
+			<listbox width="300px" id="bandboxListBox"
+				model="@{bandPassport$composer.passPortList, load-after='bandPassport.onChanging' }"
+				onSelect='bandPassport.value=self.selectedItem.lastChild.label; targetId.value=self.selectedItem.value;Events.postEvent("onChange",targetId,null); bandPassport.close();'>
+				<listhead>
+					<listheader width="50px" label="编号" />
+					<listheader label="通关点名称" />
+				</listhead>
+				<listitem self="@{each='passPort'}" value="@{passPort.targetId}"
+					height="25px">
+					<listcell label="@{passPort.targetId}" />
+					<listcell label="@{passPort.name}" />
+				</listitem>
+			</listbox>
+		</vbox>
+	</bandpopup>
+</bandbox>

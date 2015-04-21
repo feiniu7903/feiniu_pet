@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="EBK_PROD_SNAPSHOT" >
+
+  <typeAlias alias="ebkProdSnapshotDO" type="com.lvmama.comm.bee.po.ebooking.EbkProdSnapshot" />
+
+  <resultMap id="ebkProdSnapshotDOResultMap" class="ebkProdSnapshotDO" >
+    <result property="prodSnapshotId" column="PROD_SNAPSHOT_ID" />
+    <result property="productId" column="PRODUCT_ID" />
+    <result property="content" column="CONTENT" />
+  </resultMap>
+
+  <sql id="ebkProdSnapshot_columns" >
+    a1.PROD_SNAPSHOT_ID, a1.PRODUCT_ID, a1.CONTENT
+  </sql>
+
+  <sql id="ebkProdSnapshot_do_columns" >
+    a1.PROD_SNAPSHOT_ID, a1.PRODUCT_ID, a1.CONTENT
+  </sql>
+
+  <sql id="queryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="prodSnapshotId" prepend="AND" >
+        <![CDATA[  
+        PROD_SNAPSHOT_ID = #prodSnapshotId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="content" prepend="AND" >
+        <![CDATA[  
+        CONTENT = #content#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <sql id="doQueryParams" >
+    <dynamic prepend="WHERE" >
+      <isNotNull property="prodSnapshotId" prepend="AND" >
+        <![CDATA[  
+        PROD_SNAPSHOT_ID = #prodSnapshotId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="productId" prepend="AND" >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="content" prepend="AND" >
+        <![CDATA[  
+        CONTENT = #content#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+  </sql>
+
+  <insert id="insert" parameterClass="ebkProdSnapshotDO" >
+ 	<selectKey resultClass="java.lang.Long" keyProperty="prodSnapshotId">
+		SELECT EBK_PROD_SNAPSHOT_ID_SEQ.NEXTVAL as id from DUAL
+	</selectKey>
+    INSERT INTO EBK_PROD_SNAPSHOT( PROD_SNAPSHOT_ID, PRODUCT_ID, CONTENT)
+     VALUES ( #prodSnapshotId#, #productId#, #content#)
+  </insert>
+
+  <update id="update" parameterClass="ebkProdSnapshotDO" >
+    UPDATE EBK_PROD_SNAPSHOT   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="prodSnapshotId" prepend="," >
+        <![CDATA[  
+        PROD_SNAPSHOT_ID = #prodSnapshotId#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="productId" prepend="," >
+        <![CDATA[  
+        PRODUCT_ID = #productId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="content" prepend="," >
+        <![CDATA[  
+        CONTENT = #content#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE PROD_SNAPSHOT_ID = #prodSnapshotId#  
+  </update>
+
+  <select id="findByPrimaryKey" parameterClass="java.lang.Long" resultMap="ebkProdSnapshotDOResultMap" >
+     SELECT 
+    <include refid="ebkProdSnapshot_do_columns" />
+    <![CDATA[  
+     FROM EBK_PROD_SNAPSHOT a1 WHERE PROD_SNAPSHOT_ID = #prodSnapshotId#
+    ]]>  
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    <![CDATA[  
+     DELETE FROM EBK_PROD_SNAPSHOT WHERE PROD_SNAPSHOT_ID = #prodSnapshotId#
+    ]]>  
+  </delete>
+
+  <select id="countByDOExample" parameterClass="ebkProdSnapshotDO" resultClass="java.lang.Integer" >
+    SELECT COUNT(PROD_SNAPSHOT_ID) AS num FROM EBK_PROD_SNAPSHOT 
+    <include refid="doQueryParams" />
+  </select>
+
+  <select id="findListByDO" resultMap="ebkProdSnapshotDOResultMap" parameterClass="ebkProdSnapshotDO" >
+     SELECT 
+    <include refid="ebkProdSnapshot_do_columns" />
+     FROM EBK_PROD_SNAPSHOT a1 
+    <include refid="doQueryParams" />
+  </select>
+  <select id="findListByDOAndOrderByProdSnapshotId" resultMap="ebkProdSnapshotDOResultMap" parameterClass="ebkProdSnapshotDO" >
+     SELECT 
+    <include refid="ebkProdSnapshot_do_columns" />
+     FROM EBK_PROD_SNAPSHOT a1 
+    <include refid="doQueryParams" />
+    ORDER BY PROD_SNAPSHOT_ID DESC
+  </select>
+</sqlMap>

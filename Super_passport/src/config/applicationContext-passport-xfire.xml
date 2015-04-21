@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+	<bean id="gmediaPassPortService" class="com.lvmama.passport.callback.ws.impl.GmediaPassPortService" />
+	<bean id="dinosaurTownService" class="com.lvmama.passport.callback.ws.impl.DinosaurTownService" />
+	<bean id="yanChengService" class="com.lvmama.passport.callback.ws.impl.YanChengService" />
+	<bean id="yongliguolvService" class="com.lvmama.passport.callback.ws.impl.YongliguolvService" />
+	<bean id="passportPerformCallbackService" class="com.lvmama.passport.callback.ws.impl.PassportPerformCallbackService"/>
+	<bean id="trainNotifyService" class="com.lvmama.train.service.ws.NotifyMessageServiceImpl"></bean>
+
+    <!-- 锦江之星 对接产品临时入表 定时任务 -->
+    <bean id="JinjiangProductTempStockJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="JinjiangProductTempStockJobWs"/>
+        <property name="serviceClass" value="com.lvmama.comm.TaskServiceInterface"/>
+        <property name="implementationClass" value="com.lvmama.job.JinjiangProductTempStockJob"/>
+    </bean>
+    <!-- 锦江之星 更新产品价格日历 定时任务 -->
+    <bean id="JinjiangProductUpdateJobService" class="org.codehaus.xfire.spring.ServiceBean">
+        <property name="name" value="JinjiangProductUpdateJobWs"/>
+        <property name="serviceClass" value="com.lvmama.comm.TaskServiceInterface"/>
+        <property name="implementationClass" value="com.lvmama.job.JinjiangProductUpdateJob"/>
+    </bean>
+</beans>

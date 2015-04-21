@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_PERSON" > 
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdPerson" >
+    <result column="PERSON_ID" property="personId" />
+    <result column="NAME" property="name" />
+    <result column="TEL" property="tel" />
+    <result column="MOBILE" property="mobile" />
+    <result column="QQ" property="qq" />
+    <result column="PROVINCE" property="province"/>
+    <result column="CITY" property="city"/>
+    <result column="ADDRESS" property="address" />
+    <result column="POSTCODE" property="postcode" />
+    <result column="MEMO" property="memo" />
+    <result column="FAX" property="fax" />
+    <result column="FAX_TO" property="faxTo" />
+    <result column="OBJECT_ID" property="objectId" />
+    <result column="OBJECT_TYPE" property="objectType" />
+    <result column="PERSON_TYPE" property="personType" />
+    <result column="CERT_NO" property="certNo" />
+    <result column="CERT_TYPE" property="certType" />
+    <result column="EMAIL" property="email" />
+    <result column="RECEIVER_ID" property="receiverId" />
+    <result column="NEED_INSURE" property="needInsure" />
+    <result column="BRITHDAY" property="brithday"/>
+    <result column="GENDER" property="gender"/>
+	<result column="PINYIN" property="pinyin" />
+  </resultMap>
+
+
+  <select id="select" resultMap="BaseResultMap" parameterClass="com.lvmama.comm.bee.po.ord.OrdPerson" >
+  	select *
+    from ORD_PERSON
+    where 1=1
+    <isNotNull prepend=" and" property="objectId">
+    	OBJECT_ID = #objectId#
+    </isNotNull>
+    <isNotNull prepend=" and" property="objectType">
+    	OBJECT_TYPE = #objectType#
+    </isNotNull>
+    <isNotNull prepend=" and" property="personType">
+    	PERSON_TYPE = #personType#
+    </isNotNull>
+    order by PERSON_TYPE
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select *
+    from ORD_PERSON
+    where PERSON_ID = #personId:DECIMAL#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    delete from ORD_PERSON
+    where PERSON_ID = #personId:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdPerson" >
+    <selectKey resultClass="java.lang.Long" keyProperty="personId" >
+      select ORD_PERSON_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_PERSON (PERSON_ID, NAME, TEL, MOBILE, QQ, ADDRESS, POSTCODE, MEMO, FAX, FAX_TO,
+      OBJECT_ID, OBJECT_TYPE, PERSON_TYPE, CERT_NO, CERT_TYPE, EMAIL, RECEIVER_ID,NEED_INSURE,GENDER,BRITHDAY,PINYIN)
+    values (#personId:DECIMAL#, #name:VARCHAR#, #tel:VARCHAR#, #mobile:VARCHAR#, #qq:VARCHAR#,
+      #address:VARCHAR#, #postcode:VARCHAR#, #memo:VARCHAR#, #fax:VARCHAR#, #faxTo:VARCHAR#,
+      #objectId:DECIMAL#, #objectType:VARCHAR#, #personType:VARCHAR#, #certNo:VARCHAR#,
+      #certType:VARCHAR#, #email:VARCHAR#, #receiverId:VARCHAR#,#needInsure#,#gender#,#brithday#,#pinyin#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.lvmama.comm.bee.po.ord.OrdPerson" >
+    <selectKey resultClass="java.lang.Long" keyProperty="personId" >
+      select ORD_PERSON_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_PERSON
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="personId" >
+        PERSON_ID
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        NAME
+      </isNotNull>
+      <isNotNull prepend="," property="tel" >
+        TEL
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        MOBILE
+      </isNotNull>
+      <isNotNull prepend="," property="qq" >
+        QQ
+      </isNotNull>
+      <isNotNull prepend="," property="address" >
+        ADDRESS
+      </isNotNull>
+      <isNotNull prepend="," property="postcode" >
+        POSTCODE
+      </isNotNull>
+      <isNotNull prepend="," property="memo" >
+        MEMO
+      </isNotNull>
+      <isNotNull prepend="," property="fax" >
+        FAX
+      </isNotNull>
+      <isNotNull prepend="," property="faxTo" >
+        FAX_TO
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        OBJECT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        OBJECT_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="personType" >
+        PERSON_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="certNo" >
+        CERT_NO
+      </isNotNull>
+      <isNotNull prepend="," property="certType" >
+        CERT_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="email" >
+        EMAIL
+      </isNotNull>
+      <isNotNull prepend="," property="receiverId" >
+        RECEIVER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="province">
+      	PROVINCE
+      </isNotNull>
+      <isNotNull prepend="," property="city">
+      	CITY
+      </isNotNull>
+      <isNotNull prepend="," property="brithday">
+      	BRITHDAY
+      </isNotNull>
+      <isNotNull prepend="," property="needInsure">
+      	NEED_INSURE
+      </isNotNull>
+      <isNotNull prepend="," property="gender">
+      	GENDER
+      </isNotNull>
+	  <isNotNull prepend="," property="pinyin">
+      	PINYIN
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="personId" >
+        #personId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tel" >
+        #tel:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        #mobile:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="qq" >
+        #qq:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="address" >
+        #address:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="postcode" >
+        #postcode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="memo" >
+        #memo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="fax" >
+        #fax:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="faxTo" >
+        #faxTo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        #objectId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        #objectType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="personType" >
+        #personType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="certNo" >
+        #certNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="certType" >
+        #certType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="email" >
+        #email:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="receiverId" >
+        #receiverId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="province">
+      	#province:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="city">
+      	#city:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="brithday">
+      	#brithday:DATE#
+      </isNotNull>
+      <isNotNull prepend="," property="needInsure">
+      	#needInsure#
+      </isNotNull>
+      <isNotNull prepend="," property="gender">
+      	#gender#
+      </isNotNull>
+	  <isNotNull prepend="," property="pinyin">
+      	#pinyin#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.lvmama.comm.bee.po.ord.OrdPerson" >
+    update ORD_PERSON
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="name" >
+        NAME = #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tel" >
+        TEL = #tel:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mobile" >
+        MOBILE = #mobile:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="qq" >
+        QQ = #qq:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="address" >
+        ADDRESS = #address:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="postcode" >
+        POSTCODE = #postcode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="memo" >
+        MEMO = #memo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="fax" >
+        FAX = #fax:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="faxTo" >
+        FAX_TO = #faxTo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="objectId" >
+        OBJECT_ID = #objectId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="objectType" >
+        OBJECT_TYPE = #objectType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="personType" >
+        PERSON_TYPE = #personType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="certNo" >
+        CERT_NO = #certNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="certType" >
+        CERT_TYPE = #certType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="email" >
+        EMAIL = #email:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="receiverId" >
+        RECEIVER_ID = #receiverId:VARCHAR#
+      </isNotNull>
+       <isNotNull prepend="," property="province">
+      	PROVINCE =#province:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="city">
+      	CITY = #city:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="needInsure">
+      	NEED_INSURE = #needInsure#
+      </isNotNull>
+      <isNotNull prepend="," property="gender">
+      	GENDER = #gender#
+      </isNotNull>
+	  <isNotNull prepend="," property="pinyin">
+      	PINYIN = #pinyin#
+      </isNotNull>
+      <isNotNull prepend="," property="brithday">
+      	BRITHDAY = #brithday#
+      </isNotNull>
+    </dynamic>
+    where PERSON_ID = #personId:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdPerson" >
+    update ORD_PERSON
+    set NAME = #name:VARCHAR#,
+      TEL = #tel:VARCHAR#,
+      MOBILE = #mobile:VARCHAR#,
+      QQ = #qq:VARCHAR#,
+      ADDRESS = #address:VARCHAR#,
+      POSTCODE = #postcode:VARCHAR#,
+      MEMO = #memo:VARCHAR#,
+      FAX = #fax:VARCHAR#,
+      FAX_TO = #faxTo:VARCHAR#,
+      OBJECT_ID = #objectId:DECIMAL#,
+      OBJECT_TYPE = #objectType:VARCHAR#,
+      PERSON_TYPE = #personType:VARCHAR#,
+      CERT_NO = #certNo:VARCHAR#,
+      CERT_TYPE = #certType:VARCHAR#,
+      EMAIL = #email:VARCHAR#,
+      RECEIVER_ID = #receiverId:VARCHAR#,
+      PROVINCE = #province:VARCHAR#,
+      CITY = #city:VARCHAR#,
+  	  NEED_INSURE = #needInsure#,
+  	  GENDER = #gender#,
+	  PINYIN = #pinyin#,
+  	  BRITHDAY = #brithday#
+    where PERSON_ID = #personId:DECIMAL#
+  </update>
+
+	<select id="queryOrdPersonByParams" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		<![CDATA[
+SELECT *
+  FROM ORD_PERSON
+ WHERE OBJECT_TYPE = #objectType#
+   AND OBJECT_ID = #objectId#
+   AND PERSON_TYPE = #personType#
+		]]>
+	</select>
+	<select id="queryOrdPersonByOrdOrderId" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		<![CDATA[
+SELECT *
+  FROM ORD_PERSON
+ WHERE OBJECT_TYPE = #objectType#
+   AND OBJECT_ID = #orderId#
+		]]>
+	</select>
+
+	<select id="queryOrdPerson" resultMap="BaseResultMap"
+		parameterClass="java.lang.String">
+		<![CDATA[
+		$completeSQL$
+		]]>
+	</select>
+</sqlMap>

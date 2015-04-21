@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_ITEM_PROD">
+
+	<resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrdOrderItemProd">
+		<result column="ORDER_ITEM_PROD_ID" property="orderItemProdId" />
+		<result column="VISIT_TIME" property="visitTime" />
+		<result column="ORDER_ID" property="orderId" />
+		<result column="PRODUCT_ID" property="productId" />
+		<result column="PRODUCT_NAME" property="productName" />
+		<result column="PRODUCT_TYPE" property="productType" />
+		<result column="MARKET_PRICE" property="marketPrice" />
+		<result column="PRICE" property="price" />
+		<result column="QUANTITY" property="quantity" />
+		<result column="WRAP_PAGE" property="wrapPage" />
+		<result column="ADDITIONAL" property="additional" />
+		<result column="SUB_PRODUCT_TYPE" property="subProductType" />
+		<result column="SEND_SMS" property="sendSms" />
+		<result column="NEED_CONTRACT" property="needEContract" />
+		<result column="LAST_CANCEL_HOUR" property="lastCancelHour"/>
+		<result column="IS_DEFAULT" property="isDefault"/>
+		<result column="PRODUCT_BRANCH_ID" property="prodBranchId"/>
+		<result column="BRANCH_TYPE" property="branchType"/>
+		<result column="AHEAD_HOUR" property="aheadHour"/>
+		<result column="PAID_AMOUNT" property="paidAmount"/>
+		<result column="REFUNDED_AMOUNT" property="refundedAmount"/>
+		<result property="validBeginTime" column="VALID_BEGIN_TIME" />
+		<result property="validEndTime" column="VALID_END_TIME" />
+		<result column="INVALID_DATE" property="invalidDate"/>
+		<result column="INVALID_DATE_MEMO" property="invalidDateMemo"/>
+		<result column="MULTI_JOURNEY_ID" property="multiJourneyId" />
+	</resultMap>
+	<select id="calcAmount" parameterClass="java.lang.Long"
+		resultClass="java.lang.Long">
+		select sum(PRICE*QUANTITY) from ORD_ORDER_ITEM_PROD where ORDER_ID=#orderId#
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		SELECT *
+		FROM ORD_ORDER_ITEM_PROD
+		WHERE
+		ORDER_ITEM_PROD_ID = #orderItemProdId#
+	</select>
+
+	<delete id="deleteByOrderId" parameterClass="Long">
+		delete from ORD_ORDER_ITEM_PROD
+		where ORDER_ID = #orderId#
+	</delete>
+
+	<delete id="deleteByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemProd">
+		delete from ORD_ORDER_ITEM_PROD
+		where ORDER_ITEM_PROD_ID = #orderItemProdId#
+	</delete>
+
+	<insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemProd">
+		<selectKey resultClass="java.lang.Long" keyProperty="orderItemProdId">
+			select ORD_ORDER_ITEM_PROD_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+		insert into ORD_ORDER_ITEM_PROD (ORDER_ITEM_PROD_ID, VISIT_TIME,
+		ORDER_ID, PRODUCT_ID,
+		PRODUCT_NAME, PRODUCT_TYPE, MARKET_PRICE, PRICE, QUANTITY, WRAP_PAGE, ADDITIONAL,
+		SUB_PRODUCT_TYPE, SEND_SMS, NEED_CONTRACT,LAST_CANCEL_HOUR,PRODUCT_BRANCH_ID,IS_DEFAULT,BRANCH_TYPE,AHEAD_HOUR,VALID_BEGIN_TIME,VALID_END_TIME,INVALID_DATE,INVALID_DATE_MEMO,MULTI_JOURNEY_ID)
+		values (#orderItemProdId#, #visitTime#, #orderId#, #productId#,
+		#productName#, #productType#, #marketPrice#, #price#,
+		#quantity#, #wrapPage#, #additional#, #subProductType#, #sendSms#,#needEContract#,#lastCancelHour#,#prodBranchId#,#isDefault#,#branchType#,#aheadHour#,#validBeginTime#,#validEndTime#,#invalidDate#,#invalidDateMemo#,#multiJourneyId#)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterClass="com.lvmama.comm.bee.po.ord.OrdOrderItemProd">
+		update ORD_ORDER_ITEM_PROD
+		set ORDER_ID = #orderId#,
+		PRODUCT_ID = #productId#,
+	    PRODUCT_BRANCH_ID = #prodBranchId#,
+		PRODUCT_NAME = #productName#,
+		PRODUCT_TYPE = #productType#,
+		MARKET_PRICE = #marketPrice#,
+		PRICE = #price#,
+		QUANTITY = #quantity#,
+		WRAP_PAGE = #wrapPage#,
+		ADDITIONAL = #additional#,
+		VISIT_TIME = #visitTime#,
+		SUB_PRODUCT_TYPE = #subProductType#,
+		SEND_SMS = #sendSms#,
+		NEED_CONTRACT = #needEContract#,
+		LAST_CANCEL_HOUR = #lastCancelHour#,
+		AHEAD_HOUR = #aheadHour#
+		where ORDER_ITEM_PROD_ID = #orderItemProdId#
+  </update>
+
+	<select id="queryOrdOrderItemProdByOrderId" resultMap="BaseResultMap"
+		parameterClass="java.lang.Long">
+		<![CDATA[
+			SELECT * FROM ORD_ORDER_ITEM_PROD WHERE ORDER_ID = #orderId#
+		]]>
+	</select>
+
+	<select id="queryOrdOrderItemProdByOrderIdAndProductId"
+		resultMap="BaseResultMap" parameterClass="java.util.HashMap">
+		<![CDATA[
+			SELECT * FROM ORD_ORDER_ITEM_PROD WHERE ORDER_ID = #orderId# and PRODUCT_ID = #productId#
+		]]>
+	</select>
+
+	<select id="queryOrdOrderItemProd" resultMap="BaseResultMap"
+		parameterClass="java.lang.String">
+		<![CDATA[
+			$completeSQL$
+		]]>
+	</select>
+	
+	<!-- 查询 超级自由行 的 主销售产品数 -->
+	<select id="getSuperFreeMainProdCount" parameterClass="long" resultClass="long">
+	   select count(p.order_item_prod_id) 
+	     from ord_order_item_prod p, prod_route r
+		where p.product_id = r.product_id
+		  and p.product_type = 'ROUTE'
+		  and p.is_default = 'true'
+		  and r.self_pack = 'true'
+		  and p.order_item_prod_id = #value#
+	</select>
+		
+	<!-- 更新订单子项的支付金额 -->
+	<update id="updateOrderItemProdPaidAmount" parameterClass="long">
+		update ord_order_item_prod p
+		   set p.paid_amount =
+		       NVL((select sum(m.payed_amount)
+		          from ord_order_item_meta m
+		         where m.order_item_id = p.order_item_prod_id),0)
+		 where p.order_id = #value#
+	</update>
+	
+	<update id="clearVisitTime" parameterClass="java.lang.Long">
+	update ord_order_item_prod set visit_time=null where order_id=#orderId#
+	</update>
+	
+	<!-- 根据批量productId查询订单总数 --> 
+	<select id="getOrderCountByProductIds" resultClass="java.lang.Long" parameterClass="java.util.HashMap"> 
+		select count(1) from ord_order_item_prod ooip 
+			where ooip.product_id in 
+		<iterate property="productIds" open="(" close=")" conjunction=","> 
+			#productIds[]# 
+		</iterate> 
+		
+			<isNotEmpty property="validBeginTime" prepend="AND">
+		   		valid_Begin_Time &gt;= TO_DATE(#validBeginTime#,'YYYY-MM-DD')
+		   	</isNotEmpty>
+		   	<isNotEmpty property="validEndTime" prepend="AND">
+		   		VALID_END_TIME &lt; TO_DATE(#validEndTime#,'YYYY-MM-DD') + 1
+		   	</isNotEmpty>
+	</select>
+</sqlMap>

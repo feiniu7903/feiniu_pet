@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_PARENT" >
+  <resultMap id="BaseResultMap" class="com.lvmama.comm.bee.po.ord.OrderParent" >
+    <result column="ORDER_PARENT_ID" property="orderParentId" />
+    <result column="SUB_ORDER_NUM" property="subOrderNum" />
+    <result column="USER_ID" property="userId" />
+    <result column="PHONE_NO" property="phoneNo" />
+    <result column="CREATE_TIME" property="createTime" />
+  </resultMap>
+
+  <insert id="insert" parameterClass="com.lvmama.comm.bee.po.ord.OrderParent" >
+    <selectKey resultClass="java.lang.Long" keyProperty="orderParentId" >
+      select ORD_ORDER_PARENT_ID_SEQ.nextval as id from DUAL
+    </selectKey>
+    insert into ORD_ORDER_PARENT
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="orderParentId" >
+        ORDER_PARENT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="subOrderNum" >
+        SUB_ORDER_NUM
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        USER_ID
+      </isNotNull>
+      <isNotNull prepend="," property="phoneNo" >
+        PHONE_NO
+      </isNotNull>
+		,CREATE_TIME
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+       <isNotNull prepend="," property="orderParentId" >
+        #orderParentId#
+      </isNotNull>
+      <isNotNull prepend="," property="subOrderNum" >
+        #subOrderNum#
+      </isNotNull>
+      <isNotNull prepend="," property="userId" >
+        #userId#
+      </isNotNull>
+      <isNotNull prepend="," property="phoneNo" >
+       #phoneNo#
+      </isNotNull>
+      , sysdate
+      )
+    </dynamic>
+  </insert>
+    
+    <select id="find" resultMap="BaseResultMap" parameterClass="Long">
+		SELECT *  FROM  ORD_ORDER_PARENT
+		WHERE ORDER_PARENT_ID=#parentId#
+	</select>
+  
+  <select id="queryLastOrderByPhoneOrUserId" resultMap="BaseResultMap" parameterClass="java.util.Map">
+  select * from(
+	select oop.*,rowNum as num from (
+		SELECT *  FROM  ORD_ORDER_PARENT p 
+		 WHERE 1 = 1
+  		<isNotEmpty prepend=" and" property="phoneNo">
+			p.PHONE_NO = #phoneNo#
+		</isNotEmpty>		
+		<isNotEmpty prepend=" and" property="userId">
+			p.USER_ID = #userId#
+		</isNotEmpty>  
+		 order by p.ORDER_PARENT_ID desc) oop)
+	where num=1 
+	</select>
+</sqlMap>
